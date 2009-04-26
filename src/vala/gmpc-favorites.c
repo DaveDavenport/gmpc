@@ -5,6 +5,7 @@
 #include <gmpc-connection.h>
 #include <glib/gi18n-lib.h>
 #include <main.h>
+#include <gtktransition.h>
 #include <gdk-pixbuf/gdk-pixdata.h>
 #include <gdk/gdk.h>
 #include <misc.h>

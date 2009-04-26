@@ -23,24 +23,6 @@ typedef struct _GmpcMenuItemRating GmpcMenuItemRating;
 typedef struct _GmpcMenuItemRatingClass GmpcMenuItemRatingClass;
 typedef struct _GmpcMenuItemRatingPrivate GmpcMenuItemRatingPrivate;
 
-/* Gnome Music Player Client (GMPC)
- * Copyright (C) 2004-2009 Qball Cow <qball@sarine.nl>
- * Project homepage: http://gmpc.wikia.com/
- 
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
-
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
-
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-*/
 struct _GmpcMenuItemRating {
 	GtkMenuItem parent_instance;
 	GmpcMenuItemRatingPrivate * priv;
@@ -53,6 +35,7 @@ struct _GmpcMenuItemRatingClass {
 };
 
 
+#define use_transition TRUE
 gint gmpc_menu_item_rating_get_rating (GmpcMenuItemRating* self);
 GmpcMenuItemRating* gmpc_menu_item_rating_construct (GType object_type, MpdObj* server, const mpd_Song* song);
 GmpcMenuItemRating* gmpc_menu_item_rating_new (MpdObj* server, const mpd_Song* song);

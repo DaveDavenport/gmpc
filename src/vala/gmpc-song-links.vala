@@ -25,6 +25,8 @@ using Cairo;
 using MPD;
 using Gmpc;
 
+private const bool use_transition = Gmpc.use_transition;
+
 public class Gmpc.Song.Links: Gtk.Frame 
 {
     private const string some_unique_name = Config.VERSION;

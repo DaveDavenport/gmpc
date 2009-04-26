@@ -27,6 +27,8 @@ using Gtk;
 namespace Gmpc {
     public class Liststore.Sort : Gtk.ListStore, Gtk.TreeDragSource ,Gtk.TreeDragDest
     {
+        private const bool use_transition = Gmpc.use_transition;
+
         private 
         bool row_draggable (Gtk.TreePath path)
         {

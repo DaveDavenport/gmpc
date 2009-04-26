@@ -41,10 +41,6 @@ typedef struct _GmpcImage GmpcImage;
 typedef struct _GmpcImageClass GmpcImageClass;
 typedef struct _GmpcImagePrivate GmpcImagePrivate;
 
-/**
- * Widget that shows a pixbuf by nicely fadeing in and out.
- * Draws a nice border.
- */
 struct _GmpcImage {
 	GtkEventBox parent_instance;
 	GmpcImagePrivate * priv;
@@ -55,6 +51,7 @@ struct _GmpcImageClass {
 };
 
 
+#define use_transition TRUE
 void gmpc_image_set_pixbuf (GmpcImage* self, GdkPixbuf* buf, gboolean border);
 void gmpc_image_clear_pixbuf (GmpcImage* self);
 GmpcImage* gmpc_image_construct (GType object_type);

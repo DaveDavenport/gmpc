@@ -18,6 +18,7 @@
 */
 
 #include "gmpc-liststore-sort.h"
+#include <gtktransition.h>
 
 
 
@@ -25,6 +26,7 @@
 enum  {
 	GMPC_LISTSTORE_SORT_DUMMY_PROPERTY
 };
+#define GMPC_LISTSTORE_SORT_use_transition TRUE
 static gboolean gmpc_liststore_sort_real_row_draggable (GtkTreeDragSource* base, const GtkTreePath* path);
 static gboolean gmpc_liststore_sort_real_drag_data_get (GtkTreeDragSource* base, const GtkTreePath* path, GtkSelectionData* selection_data);
 static gboolean gmpc_liststore_sort_real_drag_data_delete (GtkTreeDragSource* base, const GtkTreePath* path);

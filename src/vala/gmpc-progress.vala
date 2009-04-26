@@ -22,6 +22,8 @@ using Gtk;
 using Gdk;
 
 
+private const bool use_transition = Gmpc.use_transition;
+
 public class Gmpc.Progress : Gtk.HBox
 {
     private uint total              = 0;

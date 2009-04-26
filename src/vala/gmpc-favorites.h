@@ -63,6 +63,7 @@ struct _GmpcFavoritesButtonClass {
 
 #define some_unique_name VERSION
 extern GmpcFavoritesList* favorites;
+#define use_transition TRUE
 gboolean gmpc_favorites_list_is_favorite (GmpcFavoritesList* self, const char* path);
 void gmpc_favorites_list_set_favorite (GmpcFavoritesList* self, const char* path, gboolean favorite);
 GmpcFavoritesList* gmpc_favorites_list_construct (GType object_type);

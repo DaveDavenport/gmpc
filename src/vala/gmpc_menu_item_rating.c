@@ -1,12 +1,12 @@
 
 #include "gmpc_menu_item_rating.h"
+#include <gtktransition.h>
 #include <config.h>
 #include <gdk/gdk.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <glib/gi18n-lib.h>
-#include "gtktransition.h"
 
 
 

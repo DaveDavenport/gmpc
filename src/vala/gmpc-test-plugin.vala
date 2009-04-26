@@ -20,6 +20,7 @@ using Config;
 using Gtk;
 using Gmpc;
 
+private const bool use_transition = Gmpc.use_transition;
 
 public class Gmpc.MetaData.EditWindow : Gtk.Window {
     private const string some_unique_name = Config.VERSION;

@@ -57,6 +57,7 @@ typedef enum  {
 } GmpcSongLinksType;
 
 
+#define use_transition TRUE
 GType gmpc_song_links_type_get_type (void);
 GmpcSongLinks* gmpc_song_links_construct (GType object_type, GmpcSongLinksType type, const mpd_Song* song);
 GmpcSongLinks* gmpc_song_links_new (GmpcSongLinksType type, const mpd_Song* song);

@@ -1,12 +1,12 @@
 
 #include "gmpc_rating.h"
+#include <gtktransition.h>
 #include <float.h>
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
 #include <gmpc-connection.h>
 #include <main.h>
-#include "gtktransition.h"
 
 
 
@@ -27,6 +27,7 @@ enum  {
 	GMPC_RATING_DUMMY_PROPERTY
 };
 static gint gmpc_rating_id = 0;
+#define GMPC_RATING_use_transition TRUE
 static void gmpc_rating_status_changed (GmpcRating* self, MpdObj* server, ChangedStatusType what, GmpcConnection* conn);
 static gboolean _gmpc_rating_button_press_event_callback_gtk_widget_button_press_event (GtkEventBox* _sender, const GdkEventButton* event, gpointer self);
 static GObject * gmpc_rating_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);

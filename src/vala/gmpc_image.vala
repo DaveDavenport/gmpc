@@ -25,8 +25,12 @@
 using GLib;
 using Gtk;
 using Cairo;
+using Gmpc;
+
+private const bool use_transition = Gmpc.use_transition;
 
 public class Gmpc.Image:Gtk.EventBox {
+
 	private Gdk.Pixbuf cover = null;
 	private bool cover_border = true;
 	private Gdk.Pixbuf temp = null;

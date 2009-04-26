@@ -18,6 +18,7 @@
 */
 
 #include "gmpc-test-plugin.h"
+#include <gtktransition.h>
 #include <config.h>
 #include <gdk-pixbuf/gdk-pixdata.h>
 #include <glib/gi18n-lib.h>
@@ -31,7 +32,6 @@
 #include <plugin.h>
 #include <config1.h>
 #include <libmpd/libmpd.h>
-#include "gtktransition.h"
 
 
 

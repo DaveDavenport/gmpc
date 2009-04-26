@@ -27,6 +27,9 @@ using MPD;
 using Gmpc;
 using Gmpc.Rating;
 
+
+private const bool use_transition = Gmpc.use_transition;
+
 public class Gmpc.MenuItem.Rating : Gtk.MenuItem
 {
     private const string some_unique_name = Config.VERSION;

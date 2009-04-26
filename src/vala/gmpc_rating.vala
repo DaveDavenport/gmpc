@@ -25,8 +25,11 @@ using Cairo;
 using MPD;
 using Gmpc;
 
+
+
 public class Gmpc.Rating : Gtk.Frame
 {
+    private const bool use_transition = Gmpc.use_transition;
     private weak MPD.Server server  = null;
     private MPD.Song song       = null;
     private Gtk.Image[] rat;

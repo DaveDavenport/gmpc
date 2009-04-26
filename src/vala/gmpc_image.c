@@ -18,6 +18,7 @@
 */
 
 #include "gmpc_image.h"
+#include <gtktransition.h>
 #include <float.h>
 #include <math.h>
 #include <pango/pango.h>
@@ -25,7 +26,6 @@
 #include <cairo.h>
 #include <pango/pangocairo.h>
 #include <stdio.h>
-#include "gtktransition.h"
 
 
 
@@ -312,10 +312,6 @@ void gmpc_image_clear_pixbuf (GmpcImage* self) {
 }
 
 
-/**
- * Widget that shows a pixbuf by nicely fadeing in and out.
- * Draws a nice border.
- */
 GmpcImage* gmpc_image_construct (GType object_type) {
 	GmpcImage * self;
 	self = g_object_newv (object_type, 0, NULL);

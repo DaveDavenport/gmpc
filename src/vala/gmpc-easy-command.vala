@@ -24,7 +24,9 @@ using Cairo;
 using MPD;
 using Gmpc;
 
+
 public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
+	private const bool use_transition = Gmpc.use_transition;
 	/* hack to make gettext happy */
     private const string some_unique_name = Config.VERSION;
 

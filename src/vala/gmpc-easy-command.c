@@ -18,6 +18,7 @@
 */
 
 #include "gmpc-easy-command.h"
+#include <gtktransition.h>
 #include <config.h>
 #include <glib/gi18n-lib.h>
 #include <plugin.h>
@@ -47,6 +48,7 @@ struct _GmpcEasyCommandPrivate {
 enum  {
 	GMPC_EASY_COMMAND_DUMMY_PROPERTY
 };
+#define GMPC_EASY_COMMAND_use_transition TRUE
 #define GMPC_EASY_COMMAND_some_unique_name VERSION
 static const char* gmpc_easy_command_real_get_name (GmpcPluginBase* base);
 static gint* gmpc_easy_command_real_get_version (GmpcPluginBase* base, int* result_length1);

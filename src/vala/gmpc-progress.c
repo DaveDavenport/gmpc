@@ -18,12 +18,12 @@
 */
 
 #include "gmpc-progress.h"
+#include <gtktransition.h>
 #include <gdk/gdk.h>
 #include <stdlib.h>
 #include <string.h>
 #include <float.h>
 #include <math.h>
-#include "gtktransition.h"
 
 
 
