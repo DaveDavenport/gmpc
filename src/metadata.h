@@ -111,14 +111,11 @@ extern GmpcMetaWatcher *gmw;
 
 /*guint meta_data_get_path_callback(mpd_Song *song, MetaDataType type, MetaDataCallback callback, gpointer data);*/
 
-MetaDataResult meta_data_get_from_cache(mpd_Song *song, MetaDataType type, MetaData **met);
-void meta_data_set_cache(mpd_Song *song, MetaDataType type, MetaDataResult result, char *path);
 void meta_data_init(void);
 void meta_data_check_plugin_changed(void);
 void meta_data_handle_remove_request(guint id);
 void meta_data_destroy(void);
 
-void meta_data_cleanup(void);
 MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **path,MetaDataCallback callback, gpointer data);
 
 

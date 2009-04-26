@@ -93,7 +93,7 @@ namespace Gmpc {
         public void* get_list_cancel(void *handle);
 
 
-        [CCode ( cname="meta_data_set_cache", cheader_filename="metadata.h")]
+        [CCode ( cname="meta_data_set_cache", cheader_filename="metadata_cache.h")]
         public void set_metadata(MPD.Song song, Type type, Result result, string? path); 
 
         [CCode ( cname="gmpc_get_metadata_filename", cheader_filename="metadata.h")]

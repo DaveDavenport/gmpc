@@ -26,6 +26,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <glib/gstdio.h>
+#include <metadata_cache.h>
 #include <main.h>
 #include <gmpc-meta-watcher.h>
 #include <pango/pango.h>
