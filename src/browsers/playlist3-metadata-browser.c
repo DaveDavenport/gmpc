@@ -395,10 +395,6 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw2, mpd_Song *fsong,
                                 {
                                     GtkWidget *event = info2_similar_artist_button(data->tag, TRUE);
                                     remainder = g_list_remove(remainder, iter->data);
-                                    /**
-                                     *  View button 
-                                     */ 
-                                   
                                     list = g_list_append(list, event); 
                                     albums++;
                                 }
