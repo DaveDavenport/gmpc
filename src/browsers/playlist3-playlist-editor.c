@@ -459,6 +459,13 @@ static void playlist_editor_new_entry_changed(GtkEntry *entry, GtkWidget *button
 		gtk_widget_set_sensitive(button,FALSE);
 	}
 }
+
+static void playlist_editor_new_entry_activate(GtkEntry *entry, GtkWidget *button)
+{
+	if(strlen(gtk_entry_get_text(entry)) > 0)
+		g_signal_emit_by_name(G_OBJECT(button), "clicked");
+}
+
 static void playlist_editor_new_playlist(GtkWidget *item, gpointer data)
 {
 	int done = 0;
@@ -473,6 +480,7 @@ static void playlist_editor_new_playlist(GtkWidget *item, gpointer data)
     gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(pl3_win));
 	button = gtk_dialog_add_button(GTK_DIALOG(dialog), GTK_STOCK_NEW, GTK_RESPONSE_ACCEPT);
 	g_signal_connect(G_OBJECT(entry), "changed", G_CALLBACK(playlist_editor_new_entry_changed), button);
+	g_signal_connect(G_OBJECT(entry), "activate", G_CALLBACK(playlist_editor_new_entry_activate), button);
 	gtk_widget_set_sensitive(button, FALSE);
 	gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox), hbox, TRUE, TRUE,0);
 	
