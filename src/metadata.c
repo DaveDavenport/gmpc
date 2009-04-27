@@ -828,7 +828,11 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
             mpd_freeSong(mtd->edited);
             q_free(mtd);
             /* Steal result */
-            *path = met->content; met->content = NULL;
+
+            if(met->content_type != META_DATA_CONTENT_TEXT_LIST)
+            {
+                *path = met->content; met->content = NULL;
+            }
             meta_data_free(met);
             return ret;	
         }

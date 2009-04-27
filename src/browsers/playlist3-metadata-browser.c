@@ -1669,6 +1669,7 @@ static void info2_fill_artist_view_real(mpd_Song *song2)
 		gtk_misc_set_alignment(GTK_MISC(label), 0,0.5);
 		gtk_misc_set_padding(GTK_MISC(label), 8,0);
 		gtk_box_pack_start(GTK_BOX(resizer_vbox), label, FALSE,FALSE,0);	
+
 		/* fill the list if it' s allready available */
 		info2_fill_new_meta_callback(gmw, song2, META_ARTIST_SIMILAR, ret, similar, vbox2);
 		if(similar)
