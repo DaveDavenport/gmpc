@@ -87,7 +87,7 @@ static MetaDataResult meta_data_get_cache_list(mpd_Song *song, MetaData **met)
             rlist = g_list_prepend(rlist,g_strdup(result[i]));
         }
         if(result) g_strfreev(result);
-        (*met)->content = rlist;
+        (*met)->content = g_list_reverse(rlist);
         (*met)->content_type = META_DATA_CONTENT_TEXT_LIST;
         return META_DATA_AVAILABLE;
     }
