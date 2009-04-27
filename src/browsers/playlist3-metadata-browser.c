@@ -354,7 +354,8 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw2, mpd_Song *fsong,
             MetaData *met = NULL;
             int albums = 0;
             meta_data_get_from_cache(song,type, &met);
-            if(met)
+            printf("met type: %i\n", met->content_type);
+            if(met && met->content_type == META_DATA_CONTENT_TEXT_LIST)
             {
                 GList *iter = (GList *) meta_data_get_text_list(met);
                 GList *copy = g_list_copy((GList *)iter);

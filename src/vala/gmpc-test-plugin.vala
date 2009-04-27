@@ -237,8 +237,12 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
             var file = Gmpc.MetaData.get_metadata_filename(this.query_type, this.song,null); 
             try {
                 GLib.FileUtils.set_contents(file, (string)data, (long)data.length);
-
-                Gmpc.MetaData.set_metadata(this.song,this.query_type, Gmpc.MetaData.Result.AVAILABLE, file); 
+                var met = new MetaData.Item();
+                met.type = this.query_type;
+                met.plugin_name = "User set";
+                met.content_type = MetaData.ContentType.URI;
+                met.set_uri(file);
+                Gmpc.MetaData.set_metadata(this.song, Gmpc.MetaData.Result.AVAILABLE, met); 
                 metawatcher.data_changed(this.song, this.query_type, Gmpc.MetaData.Result.UNAVAILABLE, null);  
                 metawatcher.data_changed(this.song, this.query_type, Gmpc.MetaData.Result.AVAILABLE, file);  
             }catch (Error e) {
@@ -263,7 +267,12 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
             {
                 if(path[0]  == '/')
                 {
-                    Gmpc.MetaData.set_metadata(this.song, this.query_type, Gmpc.MetaData.Result.AVAILABLE, path); 
+                    var met = new MetaData.Item();
+                    met.type = this.query_type;
+                    met.plugin_name = "User set";
+                    met.content_type = MetaData.ContentType.URI;
+                    met.set_uri(path);
+                    Gmpc.MetaData.set_metadata(this.song, Gmpc.MetaData.Result.AVAILABLE, met); 
                     metawatcher.data_changed(this.song, this.query_type, Gmpc.MetaData.Result.UNAVAILABLE, null);  
                     metawatcher.data_changed(this.song, this.query_type, Gmpc.MetaData.Result.AVAILABLE, path);  
                 }else{
@@ -279,8 +288,12 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
                 try {
                     stdout.printf("Storing into: %s\n", file);
                     GLib.FileUtils.set_contents(file,lyric, -1); 
-
-                    Gmpc.MetaData.set_metadata(this.song,this.query_type, Gmpc.MetaData.Result.AVAILABLE, file); 
+                    var met = new MetaData.Item();
+                    met.type = this.query_type;
+                    met.plugin_name = "User set";
+                    met.content_type = MetaData.ContentType.URI;
+                    met.set_uri(file);
+                    Gmpc.MetaData.set_metadata(this.song, Gmpc.MetaData.Result.AVAILABLE, met); 
                     metawatcher.data_changed(this.song, this.query_type, Gmpc.MetaData.Result.UNAVAILABLE, null);  
                     metawatcher.data_changed(this.song, this.query_type, Gmpc.MetaData.Result.AVAILABLE, file);  
                 }catch (Error e) {

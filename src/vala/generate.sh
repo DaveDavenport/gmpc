@@ -2,6 +2,7 @@
 
 function build_file()
 {
+    echo "building: '$1'";
     if test $1 -nt $1.stamp; then 
         valac -C --pkg gtk+-2.0 --pkg cairo --pkg config --pkg gmpc --pkg libmpd --pkg gmpc-plugin --vapidir=`pwd` $1 $2 && touch $1.stamp
     fi;

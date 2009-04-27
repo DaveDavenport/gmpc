@@ -7,7 +7,10 @@
 #include "metadata_cache.h"
 
 #define CACHE_NAME "Metadata cache"
-/* TODO: Move all to this file */
+
+/**
+TODO: Find a  way to store the type of the data in the config file. (met->content_type)
+*/
 config_obj *cover_index;
 
 /**
@@ -40,7 +43,22 @@ static MetaDataResult meta_data_get_cache_uri(mpd_Song *song, MetaData **met)
         /* return that data is availible */
         if(!g_file_test(path, G_FILE_TEST_EXISTS))
         {
-            cfg_del_single_value_mm(cover_index, song->artist,song->album, NULL, "image");
+            if((*met)->type == META_ALBUM_ART){
+                cfg_del_single_value_mm(cover_index,song->artist,song->album, NULL, "image");
+              //  cfg_del_single_value_mm(cover_index,song->artist,song->album, NULL, "image_type");
+            }else if((*met)->type == META_ALBUM_TXT){
+                cfg_del_single_value_mm(cover_index,song->artist, song->album, NULL, "info");
+              //  cfg_del_single_value_mm(cover_index,song->artist,song->album, NULL, "info_type");
+            }else if ((*met)->type == META_ARTIST_ART) {
+                cfg_del_single_value_mm(cover_index,song->artist,NULL, NULL, "image");
+              //  cfg_del_single_value_mm(cover_index,song->artist,song->album, NULL, "image_type");
+            }else if ((*met)->type == META_ARTIST_TXT) {
+                cfg_del_single_value_mm(cover_index,song->artist,  NULL, NULL, "biography");
+              //  cfg_del_single_value_mm(cover_index,song->artist,song->album, NULL, "biography_type");
+            }else if ((*met)->type == META_SONG_TXT) {
+                cfg_del_single_value_mm(cover_index,song->artist,"lyrics",NULL, song->title);
+              //  cfg_del_single_value_mm(cover_index,song->artist,"lyrics_type",NULL, song->title);
+            }
             q_free(path);
             return META_DATA_FETCHING;	
         }
@@ -106,22 +124,7 @@ MetaDataResult meta_data_get_from_cache(mpd_Song *song, MetaDataType type, MetaD
 		{
 			return META_DATA_UNAVAILABLE;	
 		}
-        /*
-		path = cfg_get_single_value_as_string_mm(cover_index,song->artist,NULL, NULL,  "similar_artist");
-		if(path)
-		{
-		*/	/* if path length is NULL, then data unavailible */
-		/*	if(strlen(path) == 0)
-			{
-				q_free(path);
-				return META_DATA_UNAVAILABLE;	
-			}
-            (*met)->content_type = META_DATA_CONTENT_RAW;
-            (*met)->content = path; (*met)->size = -1;
-			return META_DATA_AVAILABLE;
-		}
-*/
-		/* else default to fetching */
+        /* else default to fetching */
         return meta_data_get_cache_list(song, met);
 	}
 
@@ -185,70 +188,117 @@ MetaDataResult meta_data_get_from_cache(mpd_Song *song, MetaDataType type, MetaD
 	return META_DATA_FETCHING;	
 }
 
+static void meta_data_set_cache_meta_data(const char *a, const char *b, const char *c, const char*d, MetaData *met)
+{
+    /* Set unavailable */
+    if(met == NULL || met->content_type == META_DATA_CONTENT_EMPTY)
+    {
+        cfg_set_single_value_as_string_mm(cover_index, a,b,c,d,"");
+    }
+    /* Set Available for different types */ 
+    else if(met->content_type == META_DATA_CONTENT_URI) 
+    {
+        const char *data =meta_data_get_uri(met);
+        cfg_set_single_value_as_string_mm(cover_index, a,b,c,d,data);
+    }
+    else if(met->content_type == META_DATA_CONTENT_TEXT_LIST) 
+    {
+        GString *string = g_string_new("");
+        GList *iter = g_list_first((GList *)meta_data_get_text_list(met));
+        for(;iter;iter = g_list_next(iter)){
+            string = g_string_append(string, iter->data);
+            if(iter->next) string = g_string_append(string, "\n");
+        }
+        cfg_set_single_value_as_string_mm(cover_index, a,b,c,d,string->str);
+        g_string_free(string,TRUE);
+    }else if (met->content_type == META_DATA_CONTENT_TEXT_VECTOR)
+    {
+        const gchar **vector = meta_data_get_text_vector(met);
+        gchar *cvector = g_strjoinv("\n", (gchar **)vector);
+        cfg_set_single_value_as_string_mm(cover_index, a,b,c,d,cvector);
+        g_free(cvector);
+    }else if (met->content_type == META_DATA_CONTENT_TEXT)
+    {
+        const char *data = meta_data_get_text(met);
+        cfg_set_single_value_as_string_mm(cover_index, a,b,c,d,data);
+    }else if (met->content_type == META_DATA_CONTENT_HTML)
+    {
+        const char *data = meta_data_get_html(met);
+        cfg_set_single_value_as_string_mm(cover_index, a,b,c,d,data);
+    }
+    else if (met->content_type == META_DATA_CONTENT_RAW)
+    {
+        gsize length=0;
+        const guchar *data = meta_data_get_raw(met, &length);
+        gchar *encoded = g_base64_encode(data, length);
+        cfg_set_single_value_as_string_mm(cover_index, a,b,c,d,encoded);
+        g_free(encoded);
+    }
+    else
+    {
+        g_error("Unkown metadata type, cannot store");
+    }
+}
 
-
-void meta_data_set_cache_real(mpd_Song *song, MetaDataType type, MetaDataResult result, char *path)
+void meta_data_set_cache_real(mpd_Song *song, MetaDataResult result, MetaData *met)
 {
 	if(!song) return;
 	/**
 	 * Save the path for the album art
 	 */
-	if(type == META_ALBUM_ART) {
+	if(met->type == META_ALBUM_ART) {
 		if(song->artist && song->album) {
-//			char *temp = g_strdup_printf("album:%s", song->album);
 			if(result == META_DATA_AVAILABLE) {
-				cfg_set_single_value_as_string_mm(cover_index, song->artist,song->album,NULL, "image",path);
+                meta_data_set_cache_meta_data(song->artist, song->album, NULL, "image", met);
 			} else {
-				cfg_set_single_value_as_string_mm(cover_index, song->artist,song->album,NULL, "image","");
+                meta_data_set_cache_meta_data(song->artist, song->album, NULL, "image", NULL);
 			}
-//			q_free(temp);
 		}
-	} else if(type == META_ALBUM_TXT) {
+	} else if(met->type == META_ALBUM_TXT) {
 		if(song->artist && song->album)	{
-//			char *temp = g_strdup_printf("albumtxt:%s", song->album);                   		
 			if(result == META_DATA_AVAILABLE) {
-				cfg_set_single_value_as_string_mm(cover_index, song->artist,song->album, NULL, "info",path);
+				meta_data_set_cache_meta_data(song->artist,song->album, NULL, "info",met);
 			} else {
-				cfg_set_single_value_as_string_mm(cover_index, song->artist,song->album, NULL, "info","");
+				meta_data_set_cache_meta_data(song->artist,song->album, NULL, "info",NULL);
 			}                                                                        		
-//			q_free(temp);
 		}
-	} else if (type == META_ARTIST_ART) {
+	} else if (met->type == META_ARTIST_ART) {
 		if(song->artist) {
 			if(result == META_DATA_AVAILABLE) {
-				cfg_set_single_value_as_string_mm(cover_index, song->artist,NULL, NULL, "image",path);
+				meta_data_set_cache_meta_data(song->artist,NULL, NULL, "image",met);
 			} else {
-				cfg_set_single_value_as_string_mm(cover_index, song->artist,NULL, NULL, "image","");
+				meta_data_set_cache_meta_data(song->artist,NULL, NULL, "image",NULL);
 			}                                                                        		
 		}
-	} else if (type == META_ARTIST_TXT) {
+	} else if (met->type == META_ARTIST_TXT) {
 		if(song->artist) {
 			if(result == META_DATA_AVAILABLE) {
-				cfg_set_single_value_as_string_mm(cover_index, song->artist,NULL, NULL, "biography",path);
+				meta_data_set_cache_meta_data(song->artist,NULL, NULL, "biography",met);
 			} else {
-				cfg_set_single_value_as_string_mm(cover_index, song->artist,NULL, NULL, "biography","");
-			}                                                                        		
+                meta_data_set_cache_meta_data(song->artist,NULL, NULL, "biography",NULL);
+            }                                                                        		
 		}
-	} else if (type == META_ARTIST_SIMILAR) {
+	} else if (met->type == META_ARTIST_SIMILAR) {
 		if(song->artist) {
 			if(result == META_DATA_AVAILABLE) {
-				cfg_set_single_value_as_string_mm(cover_index, song->artist, NULL, NULL,"similar_artist",path);
+				meta_data_set_cache_meta_data(song->artist,NULL, NULL, "similar_artist",met);
 			} else {
-				cfg_set_single_value_as_string_mm(cover_index, song->artist,NULL, NULL, "similar_artist","");
+				meta_data_set_cache_meta_data(song->artist,NULL, NULL, "similar_artist",NULL);
 			}                                                                        		
 		}
-	} else if (type == META_SONG_TXT)	{
+	} else if (met->type == META_SONG_TXT)	{
 		if(song->artist && song->title) {
 			if(result == META_DATA_AVAILABLE) {
-				cfg_set_single_value_as_string_mm(cover_index, song->artist,"lyrics", NULL, song->title,path);
-			} else {
-				cfg_set_single_value_as_string_mm(cover_index, song->artist, "lyrics", NULL, song->title,"");
-			}                                                                        		
+                meta_data_set_cache_meta_data(song->artist,"lyrics", NULL, song->title,met);
+            } else {
+                meta_data_set_cache_meta_data(song->artist, "lyrics", NULL, song->title,NULL);
+            }                                                                        		
 		}
-	}else if (type == META_SONG_SIMILAR) {
+	}else if (met->type == META_SONG_SIMILAR) {
 		if(song->artist && song->title) {
 			if(result == META_DATA_AVAILABLE) {
-				cfg_set_single_value_as_string_mm(cover_index, song->artist,"similar_song",NULL, song->title,path);
+                /* TODO FIX THIS */
+				cfg_set_single_value_as_string_mm(cover_index, song->artist,"similar_song",NULL, song->title,met->content);
 			} else {
 				cfg_set_single_value_as_string_mm(cover_index, song->artist,"similar_song",NULL, song->title,"");
 			}                                                                        		
@@ -256,21 +306,21 @@ void meta_data_set_cache_real(mpd_Song *song, MetaDataType type, MetaDataResult 
 	}
 
 }
-void meta_data_set_cache(mpd_Song *song, MetaDataType type, MetaDataResult result, char *path)
+void meta_data_set_cache(mpd_Song *song, MetaDataResult result, MetaData *met)
 {
-    mpd_Song *edited = rewrite_mpd_song(song, type);
-    meta_data_set_cache_real(edited, type, result, path);
+    mpd_Song *edited = rewrite_mpd_song(song, met->type);
+    meta_data_set_cache_real(edited, result, met);
     if(edited->artist)
     {
         if(strcmp(edited->artist, "Various Artists")!=0)
-            meta_data_set_cache_real(song, type, result, path);
+            meta_data_set_cache_real(song, result, met);
     }
-    
     mpd_freeSong(edited);
 }
 
 void metadata_import_old_db(char *url)
 {
+/*
     config_obj *old = cfg_open(url);
     if(old)
     {
@@ -288,7 +338,6 @@ void metadata_import_old_db(char *url)
                 song->artist = artist;
                 for(citer = cm; citer; citer = citer->next)
                 {
-                    /* Artist only */
                     if(strcmp(citer->key, "image") == 0)
                     {
                         meta_data_set_cache_real(song, 
@@ -305,7 +354,6 @@ void metadata_import_old_db(char *url)
                                 META_ARTIST_TXT, 
                                 (strlen(citer->value) > 0)?META_DATA_AVAILABLE:META_DATA_UNAVAILABLE, citer->value);  
                     }
-                    /* Album */
                     else if(strncmp(citer->key, "album:",6) == 0)
                     {
                         song->album = &((citer->key)[6]);
@@ -320,7 +368,6 @@ void metadata_import_old_db(char *url)
                                 META_ALBUM_TXT, 
                                 (strlen(citer->value) > 0)?META_DATA_AVAILABLE:META_DATA_UNAVAILABLE, citer->value);  
                     }
-                    /* song */
                     else if (strncmp(citer->key, "lyrics:",7) == 0) 
                     {
                         song->title = &((citer->key)[7]);
@@ -347,6 +394,7 @@ void metadata_import_old_db(char *url)
             cfg_free_multiple(mult);
         cfg_close(old); 
     }
+    */
 }
 
 void metadata_cache_init(void)

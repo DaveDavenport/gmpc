@@ -170,6 +170,7 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
     {
         if(gtk_text_view_get_editable(GTK_TEXT_VIEW(self)))
         {
+            MetaData *met;
             gchar *content = NULL;
             GtkTextIter iter_start, iter_end;
             if(self->_priv->path == NULL || g_access(self->_priv->path,W_OK|R_OK)){
@@ -199,10 +200,14 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 
             gtk_text_view_set_editable(GTK_TEXT_VIEW(self), FALSE);
             /* Copy path, because signal callback my destroy path first */
-            content = g_strdup(self->_priv->path);
-            meta_data_set_cache(self->_priv->song,self->_priv->type, META_DATA_AVAILABLE, content); 
-            gmpc_meta_watcher_data_changed(gmw, self->_priv->song, self->_priv->type, META_DATA_AVAILABLE, content);
-            g_free(content);
+            met = meta_data_new();
+            met->plugin_name = "User set";
+            met->content_type = META_DATA_CONTENT_URI;
+            met->content = g_strdup(self->_priv->path);met->size = -1;
+            met->type = self->_priv->type;
+            meta_data_set_cache(self->_priv->song, META_DATA_AVAILABLE, met); 
+            gmpc_meta_watcher_data_changed(gmw, self->_priv->song, self->_priv->type, META_DATA_AVAILABLE, met->content);
+            meta_data_free(met);
 
         }else{
             gtk_widget_show(self->_priv->cancel);
@@ -370,8 +375,13 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 	void
 	clear_entry(self)
 	{
-		meta_data_set_cache(self->_priv->song,self->_priv->type, META_DATA_UNAVAILABLE, NULL); 
+        MetaData *met = meta_data_new();
+        met->type = self->_priv->type;
+        met->plugin_name = "User set";
+        met->content_type = META_DATA_CONTENT_EMPTY;
+		meta_data_set_cache(self->_priv->song, META_DATA_UNAVAILABLE, met); 
 		gmpc_meta_watcher_data_changed(gmw, self->_priv->song, self->_priv->type, META_DATA_UNAVAILABLE, NULL);
+        meta_data_free(met);
 	}
 	public
 	void
@@ -399,10 +409,16 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 			case GTK_RESPONSE_ACCEPT:
 				{	
 					gchar *filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(fcd));
-					meta_data_set_cache(song,type, META_DATA_AVAILABLE, filename); 
+                    MetaData *met = meta_data_new();
+                    met->type = type;
+                    met->plugin_name = "User set";
+                    met->content_type = META_DATA_CONTENT_URI;
+                    met->content = filename; met->size =-1;
+					meta_data_set_cache(song, META_DATA_AVAILABLE, met); 
 					gmpc_meta_watcher_data_changed(gmw, song, type, META_DATA_AVAILABLE, filename);
 
-					g_free(filename);
+                    meta_data_free(met);
+//					g_free(filename);
 				}
 			default:
 				break;

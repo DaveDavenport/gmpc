@@ -35,7 +35,8 @@ namespace Gmpc {
             TEXT,
             RAW,
             HTML,
-            STRV
+            STRV,
+            TEXT_LIST
         }
         [CCode (cname="MetaData", cheader_filename="metadata.h")]
         [Compact]
@@ -44,7 +45,11 @@ namespace Gmpc {
         public class Item {
            public Gmpc.MetaData.Type type; 
            public weak string plugin_name;
+           public int size;
            public Gmpc.MetaData.ContentType content_type;
+
+           [CCode (cname="meta_data_set_uri")]
+           public void set_uri(string uri);
            /* add accessors? */
            [CCode (cname="meta_data_get_image")]
            public weak uchar[] get_raw();
@@ -94,7 +99,7 @@ namespace Gmpc {
 
 
         [CCode ( cname="meta_data_set_cache", cheader_filename="metadata_cache.h")]
-        public void set_metadata(MPD.Song song, Type type, Result result, string? path); 
+        public void set_metadata(MPD.Song song, Result result, Gmpc.MetaData.Item met); 
 
         [CCode ( cname="gmpc_get_metadata_filename", cheader_filename="metadata.h")]
         public string get_metadata_filename(Type type, MPD.Song song, string? extention);

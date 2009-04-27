@@ -53,7 +53,7 @@ typedef struct {
         MetaDataType type;
 	/* Resuls  */
 	MetaDataResult result;
-	char *result_path;
+    MetaData *met;
 	/* Callback */
 	gpointer data;
     int index;
@@ -241,13 +241,12 @@ static gboolean meta_data_handle_results(void)
 	 */
 	for(data = g_async_queue_try_pop(meta_results);data;
 			data = g_async_queue_try_pop(meta_results)) {	
-		gmpc_meta_watcher_data_changed(gmw,data->song, (data->type)&META_QUERY_DATA_TYPES, data->result,data->result_path);
+		gmpc_meta_watcher_data_changed(gmw,data->song, (data->type)&META_QUERY_DATA_TYPES, data->result,data->met->content);
  		if(data->callback)
 		{
-			data->callback(data->song,data->result,data->result_path, data->data);
+			data->callback(data->song,data->result,data->met->content, data->data);
 		}
-
-        if(data->result_path)q_free(data->result_path);
+        if(data->met) meta_data_free(data->met);
         if(data->song)
             mpd_freeSong(data->song);
         mpd_freeSong(data->edited);
@@ -420,7 +419,14 @@ static void metadata_download_handler(const GEADAsyncHandler *handle, GEADStatus
         if(error == NULL)
         {
             d->result = META_DATA_AVAILABLE;
-            d->result_path = filename;
+            /* Create Metadata */
+            d->met = meta_data_new();
+            d->met->type = ((MetaData *)d->iter->data)->type;
+            d->met->plugin_name = ((MetaData *)d->iter->data)->plugin_name;
+            d->met->content_type = META_DATA_CONTENT_URI;
+            d->met->content = g_strdup(filename);
+            d->met->size = -1;
+
 
             g_list_foreach(d->list,(GFunc) meta_data_free, NULL);
             g_list_free(d->list);
@@ -446,12 +452,15 @@ static void metadata_download_handler(const GEADAsyncHandler *handle, GEADStatus
             /* TODO this does not have to be a uri */
 
             if(d->iter){
-                MetaData *md = (MetaData *)d->iter;
+                MetaData *md = (MetaData *)d->iter->data;
                 if(md->content_type == META_DATA_CONTENT_URI)
                 {
                     const char *path = meta_data_get_uri(md);// d->iter->data;
                     if(path[0] == '/') {
-                        d->result_path = (char *)g_strdup(path);
+
+                        d->met = md;
+                        d->iter->data= NULL;
+                        
                         d->result = META_DATA_AVAILABLE;
                     }else{
                         GEADAsyncHandler *new_handle = gmpc_easy_async_downloader((const gchar *)path, metadata_download_handler, d);
@@ -477,18 +486,22 @@ static void metadata_download_handler(const GEADAsyncHandler *handle, GEADStatus
                     }
                     else{
                         /* If saved succesfull, pass filename back to handler */
-                        d->result_path = filename;
                         d->result = META_DATA_AVAILABLE;
+
+                        d->met = meta_data_new();
+                        d->met->type = ((MetaData *)d->iter->data)->type;
+                        d->met->plugin_name = ((MetaData *)d->iter->data)->plugin_name;
+                        d->met->content_type = META_DATA_CONTENT_URI;
+                        d->met->content = g_strdup(filename);
+                        d->met->size = -1;
                     }
                     /* similar are stored in db 
                      * TODO: Fix this*/
                 }else {
                     const char *path = md->content;//d->iter->data;
-                    d->result_path = (char *)path;
                     d->result = META_DATA_AVAILABLE;
-                    /* steal data */
-                    md->content = NULL;
-                    md->size = 0;
+                    d->met = md;
+                    d->iter->data= NULL;
                 }	
 
             }
@@ -531,8 +544,9 @@ static void result_itterate(GList *list, gpointer user_data)
     {
         const char *path = meta_data_get_uri(md);// d->iter->data;
         if(path[0] == '/') {
-            d->result_path = (char *)g_strdup(path);
             d->result = META_DATA_AVAILABLE;
+            d->met = md;
+            d->iter->data= NULL;
         }else{
             GEADAsyncHandler *handle = gmpc_easy_async_downloader(path, metadata_download_handler, d);
             if(handle != NULL)
@@ -557,24 +571,19 @@ static void result_itterate(GList *list, gpointer user_data)
         }
         else{
             /* If saved succesfull, pass filename back to handler */
-            d->result_path = filename;
+            d->met = meta_data_new();
+            d->met->type = (md)->type;
+            d->met->plugin_name = (md)->plugin_name;
+            d->met->content_type = META_DATA_CONTENT_URI;
+            d->met->content = g_strdup(filename);
+            d->met->size = -1;
             d->result = META_DATA_AVAILABLE;
         }
-    } else if (md->content_type == META_DATA_CONTENT_TEXT_VECTOR)
-    {
-        /**
-         * Concatenate so fits old style
-         */
-        const gchar **str = meta_data_get_text_vector(md);
-        d->result_path = g_strjoinv("\n",(gchar **)str);
-        d->result = META_DATA_AVAILABLE;
     }else {
-	    const char *path = md->content;//d->iter->data;
-	    d->result_path = (char *)path;
+        printf("Got type: %i\n", md->content_type);
         d->result = META_DATA_AVAILABLE;
-        /* steal data */
-        md->content = NULL;
-        md->size = 0;
+        d->met = md;
+        d->iter->data= NULL;
     }	
 
     /* Free the list. */
@@ -635,7 +644,8 @@ static gboolean process_itterate(void)
                 if(d->result != META_DATA_FETCHING){
                     if(met->content_type != META_DATA_CONTENT_TEXT_LIST)
                     {
-                        d->result_path =  met->content; met->content = NULL;
+                        d->met = met;
+                        met = NULL;
                     }
                     meta_data_free(met);
                 }
@@ -668,18 +678,25 @@ static gboolean process_itterate(void)
     /**
      * If nothing found, set unavailable
      */
-    if(d->result == META_DATA_FETCHING || d->result_path == NULL) {
+    if(d->result == META_DATA_FETCHING ) {
         d->result = META_DATA_UNAVAILABLE;
+    }
+    /* Create empty metadata object */
+    if(d->met == NULL)
+    {
+        d->met = meta_data_new();
+        d->met->type = (d->type&META_QUERY_DATA_TYPES);
+        d->met->content_type = META_DATA_CONTENT_EMPTY;
     }
     /**
      * Store result (or lack off) 
      **/
 
-    meta_data_set_cache_real(d->edited, d->type&META_QUERY_DATA_TYPES, d->result, d->result_path);
+    meta_data_set_cache_real(d->edited, d->result, d->met);
     if(d->edited->artist)
     {
         if(strcmp(d->edited->artist, "Various Artists")!=0)
-            meta_data_set_cache_real(d->song, d->type&META_QUERY_DATA_TYPES, d->result, d->result_path);
+            meta_data_set_cache_real(d->song, /*d->type&META_QUERY_DATA_TYPES,*/ d->result, d->met);
     }
     /**
      * Remove from queue
@@ -699,7 +716,7 @@ static gboolean process_itterate(void)
                 {
                     /* Copy result */
                     d2->result = d->result;
-                    d2->result_path = (d->result_path)?g_strdup(d->result_path):NULL;
+                    d2->met = meta_data_dup(d->met);
                     /* put result back */
                     g_async_queue_push(meta_results, d2);		
                 }else{
@@ -806,7 +823,7 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
         if(ret != META_DATA_FETCHING)
         {
             /* store it under the original */
-            meta_data_set_cache_real(tsong, type, ret, (char *)met->content);
+            meta_data_set_cache_real(tsong, ret,met);
 
             mpd_freeSong(mtd->edited);
             q_free(mtd);
@@ -836,7 +853,6 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
     mtd->data = data;
     mtd->index = 0;
     mtd->result = META_DATA_UNAVAILABLE;
-    mtd->result_path = NULL;
   
     if(process_queue == NULL) {
         process_queue = g_list_append(process_queue, mtd);
@@ -1162,7 +1178,7 @@ MetaData *meta_data_new(void)
 
 void meta_data_free(MetaData *data)
 {
-    g_assert(data != NULL);
+    if(data == NULL) return;
     if(data->content) {
         if(data->content_type == META_DATA_CONTENT_TEXT_VECTOR)
         {
@@ -1170,7 +1186,7 @@ void meta_data_free(MetaData *data)
         }
         else if (data->content_type == META_DATA_CONTENT_TEXT_LIST)
         {
-                g_list_foreach((GList *)data->content, g_free, NULL);
+                g_list_foreach((GList *)data->content, (GFunc)g_free, NULL);
                 g_list_free((GList *)data->content);
         }
         else
@@ -1244,6 +1260,12 @@ const gchar * meta_data_get_uri(const MetaData *data)
 {
     g_assert(data->content_type == META_DATA_CONTENT_URI);
     return (const gchar *)data->content;
+}
+void meta_data_set_uri(MetaData *data, const gchar *uri)
+{
+    g_assert(data->content_type == META_DATA_CONTENT_URI);
+    if(data->content) g_free(data->content);
+    data->content = g_strdup(uri);
 }
 const gchar * meta_data_get_text(const MetaData *data)
 {

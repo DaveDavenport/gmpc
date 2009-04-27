@@ -258,8 +258,19 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                         if(path && gdk_pixbuf_get_file_info(path, NULL,NULL))
                         {
                             mpd_Song *song = mpd_songDup(self->_priv->song);
-                            meta_data_set_cache(song,self->image_type, META_DATA_AVAILABLE, path); 
+                            /* Create MetaData object */
+                            MetaData* met = meta_data_new();
+                            met->type = self->image_type;
+                            met->plugin_name = "User set";
+                            met->content_type = META_DATA_CONTENT_URI;
+                            met->content = path; path = NULL;
+                            met->size = -1;
+                            /* set cache */
+                            meta_data_set_cache(song, META_DATA_AVAILABLE, met); 
+                            /* Signal */
                             gmpc_meta_watcher_data_changed(gmw, song, self->image_type, META_DATA_AVAILABLE, path);
+                            /* free Metadata object */
+                            meta_data_free(met);
                             found = TRUE;
                             mpd_freeSong(song);
                         }
@@ -815,8 +826,13 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 	void
 	clear_entry(self)
 	{
-		meta_data_set_cache(self->_priv->song,self->image_type, META_DATA_UNAVAILABLE, NULL); 
+        MetaData *met = meta_data_new();
+        met->content_type = META_DATA_CONTENT_EMPTY;
+        met->plugin_name = "User set";
+        met->type = self->image_type;
+		meta_data_set_cache(self->_priv->song, META_DATA_UNAVAILABLE, met); 
 		gmpc_meta_watcher_data_changed(gmw, self->_priv->song, self->image_type, META_DATA_UNAVAILABLE, NULL);
+        meta_data_free(met);
 	}
     private void
     select_metadata_editor(self)
@@ -851,9 +867,15 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 			case GTK_RESPONSE_ACCEPT:
 				{	
 					gchar *filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(fcd));
-					meta_data_set_cache(song,type, META_DATA_AVAILABLE, filename); 
+                    MetaData *met = meta_data_new();
+                    met->type = type;
+                    met->plugin_name = "User set";
+                    met->content_type = META_DATA_CONTENT_URI;
+                    met->content = filename;
+                    met->size = -1;
+					meta_data_set_cache(song,META_DATA_AVAILABLE, met); 
 					gmpc_meta_watcher_data_changed(gmw, song, type, META_DATA_AVAILABLE, filename);
-					g_free(filename);
+                    meta_data_free(met);
 				}
 			default:
 				break;
