@@ -261,6 +261,9 @@ static gboolean meta_data_handle_results(void)
  */
 void meta_data_init(void)
 {
+    g_assert(meta_commands == NULL && meta_results == NULL && meta_plugins_lock == NULL);
+
+    meta_plugins_lock = g_mutex_new();
     metadata_cache_init();
 
     /**
@@ -279,9 +282,8 @@ void meta_data_init(void)
 
 void meta_data_add_plugin(gmpcPluginParent *plug)
 {
-    if(!meta_plugins_lock){
-        meta_plugins_lock = g_mutex_new();
-    }
+    g_assert(plug != NULL);
+
     g_mutex_lock(meta_plugins_lock);
     meta_num_plugins++;
     meta_plugins = g_realloc(meta_plugins,(meta_num_plugins+1)*sizeof(gmpcPluginParent **));
@@ -295,9 +297,6 @@ static void meta_data_sort_plugins(void)
 {
     int i;
     int changed = FALSE;	
-    if(!meta_plugins_lock){
-        meta_plugins_lock = g_mutex_new();
-    }
     g_mutex_lock(meta_plugins_lock);
     do{	
         changed=0;
@@ -376,6 +375,11 @@ void meta_data_destroy(void)
     if(meta_commands){
         g_async_queue_unref(meta_commands);
         meta_commands = NULL;
+    }
+    if(meta_plugins_lock != NULL)
+    {
+        g_mutex_free(meta_plugins_lock);
+        meta_plugins_lock = NULL;
     }
     /* Close the cover database  */
     TOC("test")
