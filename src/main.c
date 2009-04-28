@@ -234,7 +234,7 @@ int main(int argc, char **argv)
 	int load_plugins = TRUE;
 	int replace = FALSE;
 	int quit = FALSE;
-	int import_old_db = FALSE;
+/*	int import_old_db = FALSE;*/
 	int do_debug_updates = FALSE;
 #ifdef WIN32
 	gchar *packagedir;
@@ -338,9 +338,11 @@ int main(int argc, char **argv)
 			/**
              * Imports the cover db in the old format.
              */
+			 /*
 			else if (check_key(_("--import-old-db"))) {
 				import_old_db = TRUE;
 			}
+			*/
 			/**
              * Puts gtk in a non-buffered modes. allows you to visually see the number of gui updates.
              */
@@ -546,8 +548,8 @@ int main(int argc, char **argv)
 			/* old version older then 0.16.2 */
 			if ((old_version[0] <= 0 && old_version[1] <= 16 && old_version[2] <= 2)) {
 				/* update old key */
-				printf("** Update of db set, because of new version\n");
-				import_old_db = TRUE;
+				//printf("** Update of db set, because of new version\n");
+				//import_old_db = TRUE;
 			}
 			/* old version older then 0.17.0-beta1 */
 			if ((old_version[0] <= 0 && old_version[1] <= 16 && old_version[2] <= 95)) {
@@ -628,8 +630,9 @@ int main(int argc, char **argv)
      * (Will spawn a new thread, so have to be after the init threading
      */
 	meta_data_init();
+	/*
 	if (import_old_db) {
-		/* import an db */
+
 		char *old_url = gmpc_get_covers_path("covers.db");
 		printf("Importing old metadata db\n");
 		if (g_file_test(old_url, G_FILE_TEST_EXISTS)) {
@@ -637,6 +640,7 @@ int main(int argc, char **argv)
 		}
 		g_free(old_url);
 	}
+	*/
 	TEC("Initializing metadata system");
 
 	/**
