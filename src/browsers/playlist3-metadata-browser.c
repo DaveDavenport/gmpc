@@ -494,7 +494,7 @@ static void as_album_clicked(GtkButton *button, gpointer userdata)
         //data = mpd_database_find(connection, MPD_TAG_ITEM_ARTIST, artist, TRUE);
         mpd_database_search_start(connection, TRUE);
         mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ALBUM,album);
-        if(albumartist)
+        if(albumartist && mpd_server_tag_supported(connection, MPD_TAG_ITEM_ALBUM_ARTIST) )
             mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ALBUM_ARTIST,albumartist);
         else
             mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, artist);
@@ -2032,7 +2032,7 @@ static void info2_fill_album_view_real(mpd_Song *song2)
 
 		mpd_database_search_start(connection, TRUE);
         mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ALBUM,song2->album);
-        if(song2->albumartist)
+        if(song2->albumartist  && mpd_server_tag_supported(connection, MPD_TAG_ITEM_ALBUM_ARTIST))
             mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ALBUM_ARTIST,song2->albumartist);
         else
             mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, song2->artist);
@@ -2314,7 +2314,7 @@ static GtkWidget * info2_create_album_button(gchar *artist, gchar *album)
 	gchar *markup;
     gchar *albumartist = NULL;
     /** Start filling in album data */
-    {
+    if(mpd_server_tag_supported(connection, MPD_TAG_ITEM_ALBUM_ARTIST)){
         MpdData *data = NULL;
         mpd_database_search_field_start(connection, MPD_TAG_ITEM_ALBUM_ARTIST);
         mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST,artist);
@@ -2334,7 +2334,7 @@ static GtkWidget * info2_create_album_button(gchar *artist, gchar *album)
     }    
 
 	mpd_database_search_start(connection, TRUE);
-    if(albumartist)
+    if(albumartist && mpd_server_tag_supported(connection, MPD_TAG_ITEM_ALBUM_ARTIST))
         mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ALBUM_ARTIST, albumartist);
     else
         mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, artist);
@@ -2787,7 +2787,8 @@ void info2_fill_album_view(const char *artist,const char *album)
     hs->song->album = g_strdup(album);
 
     /** Start filling in album data */
-    if(!hs->song->albumartist){
+    if(mpd_server_tag_supported(connection, MPD_TAG_ITEM_ALBUM_ARTIST) && !hs->song->albumartist)
+    {
         MpdData *data = NULL;
         mpd_database_search_field_start(connection, MPD_TAG_ITEM_ALBUM_ARTIST);
         mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST,hs->song->artist);
