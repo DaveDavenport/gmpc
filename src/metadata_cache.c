@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <glib.h>
 #include <glib/gstdio.h>
+#include <sqlite3.h>
 #include "main.h"
 #include "metadata.h"
 #include "config1.h"
@@ -8,303 +9,386 @@
 
 #define CACHE_NAME "Metadata cache"
 
+static const char metadata_sql_create[] = 
+    "CREATE TABLE IF NOT EXISTS metadata("
+    "   type    INT NOT NULL,  "
+    "   key_a   VARCHAR,"
+    "   key_b   VARCHAR,"
+    "   contenttype INT NOT NULL,"
+    "   content VARCHAR "
+    ");"
+    "CREATE INDEX IF NOT EXISTS"
+    " metadata_content ON metadata(type, key_a, key_b)"
+    "";
+
+enum metadata_sql {
+    META_DATA_SQL_GET,
+    META_DATA_SQL_SET,
+    META_DATA_SQL_UPDATE,
+    META_DATA_SQL_DELETE
+};
+
+static const char *const metadata_sql[] = {
+    [META_DATA_SQL_GET] = 
+    "SELECT contenttype,content FROM metadata WHERE type=? AND key_a=? AND key_b=?",
+    [META_DATA_SQL_SET] = 
+    "INSERT INTO metadata(contenttype,content,type,key_a, key_B) VALUES(?,?,?,?,?)",
+	[META_DATA_SQL_UPDATE] =
+	"UPDATE metadata SET contenttype=?,content=? WHERE type=? AND key_a=? AND key_b=?",
+    [META_DATA_SQL_DELETE] = 
+    "DELETE FROM metadata WHERE type=? AND key_a=? AND key_b=?"
+};
+
+static sqlite3 *metadata_db;
+static sqlite3_stmt *metadata_stmt[G_N_ELEMENTS(metadata_sql)];
+
+static gboolean sqlite_delete_value(MetaDataType type,const char *key_a,const char *key_b)
+{
+	sqlite3_stmt *const stmt = metadata_stmt[META_DATA_SQL_DELETE];
+	int ret;
+    sqlite3_reset(stmt);
+
+    ret = sqlite3_bind_int(stmt, 1, type);
+	if (ret != SQLITE_OK) {
+		g_warning("sqlite3_bind_int() failed: %s",
+			  sqlite3_errmsg(metadata_db));
+		return FALSE;
+	}
+
+    ret = sqlite3_bind_text(stmt, 2, key_a,-1, NULL);
+	if (ret != SQLITE_OK) {
+		g_warning("sqlite3_bind_text() failed: %s",
+			  sqlite3_errmsg(metadata_db));
+		return FALSE;
+	}
+
+    ret = sqlite3_bind_text(stmt, 3, key_b,-1, NULL);
+	if (ret != SQLITE_OK) {
+		g_warning("sqlite3_bind_text() failed: %s",
+			  sqlite3_errmsg(metadata_db));
+		return FALSE;
+	}
+	do {
+		ret = sqlite3_step(stmt);
+	} while (ret == SQLITE_BUSY);
+
+	if (ret != SQLITE_DONE) {
+		g_warning("%s: sqlite3_step() failed: %s",__FUNCTION__,
+			  sqlite3_errmsg(metadata_db));
+		return FALSE;
+	}
+
+
+	ret = sqlite3_changes(metadata_db);
+
+	sqlite3_reset(stmt);
+	sqlite3_clear_bindings(stmt);
+    return ret > 0;
+}
+
+static gboolean sqlite_update_value(MetaDataType type,const char *key_a,const char *key_b, MetaDataContentType content_type, const char *content)
+{
+	sqlite3_stmt *const stmt = metadata_stmt[META_DATA_SQL_UPDATE];
+	int ret;
+    sqlite3_reset(stmt);
+
+    ret = sqlite3_bind_int(stmt, 1, content_type);
+	if (ret != SQLITE_OK) {
+		g_warning("sqlite3_bind_int() failed: %s",
+			  sqlite3_errmsg(metadata_db));
+		return FALSE;
+	}
+    ret = sqlite3_bind_text(stmt, 2, content,-1, NULL);
+	if (ret != SQLITE_OK) {
+		g_warning("sqlite3_bind_text() failed: %s",
+			  sqlite3_errmsg(metadata_db));
+		return FALSE;
+	}
+
+    ret = sqlite3_bind_int(stmt, 3, type);
+	if (ret != SQLITE_OK) {
+		g_warning("sqlite3_bind_int() failed: %s",
+			  sqlite3_errmsg(metadata_db));
+		return FALSE;
+	}
+
+    ret = sqlite3_bind_text(stmt, 4, key_a,-1, NULL);
+	if (ret != SQLITE_OK) {
+		g_warning("sqlite3_bind_text() failed: %s",
+			  sqlite3_errmsg(metadata_db));
+		return FALSE;
+	}
+
+    ret = sqlite3_bind_text(stmt, 5, key_b,-1, NULL);
+	if (ret != SQLITE_OK) {
+		g_warning("sqlite3_bind_text() failed: %s",
+			  sqlite3_errmsg(metadata_db));
+		return FALSE;
+	}
+	do {
+		ret = sqlite3_step(stmt);
+	} while (ret == SQLITE_BUSY);
+
+	if (ret != SQLITE_DONE) {
+		g_warning("%s: sqlite3_step() failed: %s",__FUNCTION__,
+			  sqlite3_errmsg(metadata_db));
+		return FALSE;
+	}
+
+	ret = sqlite3_changes(metadata_db);
+
+	sqlite3_reset(stmt);
+	sqlite3_clear_bindings(stmt);
+    return ret > 0;
+}
+
+static gboolean sqlite_set_value(MetaDataType type,const char *key_a,const char *key_b, MetaDataContentType content_type, const char *content)
+{
+	sqlite3_stmt *const stmt = metadata_stmt[META_DATA_SQL_SET];
+	int ret;
+    sqlite3_reset(stmt);
+
+    ret = sqlite3_bind_int(stmt, 1, content_type);
+	if (ret != SQLITE_OK) {
+		g_warning("sqlite3_bind_int() failed: %s",
+			  sqlite3_errmsg(metadata_db));
+		return FALSE;
+	}
+    ret = sqlite3_bind_text(stmt, 2, content,-1, NULL);
+	if (ret != SQLITE_OK) {
+		g_warning("sqlite3_bind_text() failed: %s",
+			  sqlite3_errmsg(metadata_db));
+		return FALSE;
+	}
+
+    ret = sqlite3_bind_int(stmt, 3, type);
+	if (ret != SQLITE_OK) {
+		g_warning("sqlite3_bind_int() failed: %s",
+			  sqlite3_errmsg(metadata_db));
+		return FALSE;
+	}
+
+    ret = sqlite3_bind_text(stmt, 4, key_a,-1, NULL);
+	if (ret != SQLITE_OK) {
+		g_warning("sqlite3_bind_text() failed: %s",
+			  sqlite3_errmsg(metadata_db));
+		return FALSE;
+	}
+
+    ret = sqlite3_bind_text(stmt, 5, key_b,-1, NULL);
+	if (ret != SQLITE_OK) {
+		g_warning("sqlite3_bind_text() failed: %s",
+			  sqlite3_errmsg(metadata_db));
+		return FALSE;
+	}
+	do {
+		ret = sqlite3_step(stmt);
+	} while (ret == SQLITE_BUSY);
+
+	if (ret != SQLITE_DONE) {
+		g_warning("%s: sqlite3_step() failed %s::%s content:'%s' : %s",__FUNCTION__, key_a, key_b,content,
+			  sqlite3_errmsg(metadata_db));
+		return FALSE;
+	}
+
+
+	ret = sqlite3_changes(metadata_db);
+
+	sqlite3_reset(stmt);
+	sqlite3_clear_bindings(stmt);
+    return ret > 0;
+}
+
+static MetaData *sqlite_get_value(MetaDataType type,const char *key_a,const char *key_b)
+{
+	sqlite3_stmt *const stmt = metadata_stmt[META_DATA_SQL_GET];
+	int ret;
+    MetaData *met = NULL;
+    sqlite3_reset(stmt);
+
+    ret = sqlite3_bind_int(stmt, 1, type);
+	if (ret != SQLITE_OK) {
+		g_warning("sqlite3_bind_int() failed: %s",
+			  sqlite3_errmsg(metadata_db));
+		return NULL;
+	}
+
+    ret = sqlite3_bind_text(stmt, 2, key_a,-1, NULL);
+	if (ret != SQLITE_OK) {
+		g_warning("sqlite3_bind_text() failed: %s",
+			  sqlite3_errmsg(metadata_db));
+		return NULL;
+	}
+
+    ret = sqlite3_bind_text(stmt, 3, key_b,-1, NULL);
+	if (ret != SQLITE_OK) {
+		g_warning("sqlite3_bind_text() failed: %s",
+			  sqlite3_errmsg(metadata_db));
+		return NULL;
+	}
+
+    do {
+		ret = sqlite3_step(stmt);
+        switch(ret) {
+            case SQLITE_ROW:
+                if(!met) {
+                    met = meta_data_new();
+                    met->type = type;
+                    met->plugin_name = "Metadata Cache";
+                    met->content_type = sqlite3_column_int(stmt, 0);
+                }
+                if(met->content_type == META_DATA_CONTENT_TEXT_VECTOR) {
+                    gchar *value = (gchar *) sqlite3_column_text(stmt, 1);
+                    met->size += 1;
+                    met->content = g_realloc((gchar **)met->content, sizeof(gchar *)*(met->size+1));
+                    ((gchar **)met->content)[met->size-1] = g_strdup(value);
+                    ((gchar **)met->content)[met->size] = NULL;
+                }else if (met->content_type == META_DATA_CONTENT_TEXT_LIST) {
+                    gchar *value = (gchar *) sqlite3_column_text(stmt, 1);
+                    met->content = (void *)g_list_append((GList *)met->content, g_strdup(value));
+                    met->size = 0;
+                }else{
+                    if(met->content_type == META_DATA_CONTENT_URI || 
+                        met->content_type == META_DATA_CONTENT_TEXT  ||
+                        met->content_type == META_DATA_CONTENT_HTML)
+                    {
+                        gchar *value = (unsigned char*)sqlite3_column_text(stmt, 1);
+                        met->content = g_strdup(value);
+                        met->size = -1;
+                    }
+                    else if (met->content_type == META_DATA_CONTENT_RAW)
+                    {
+                        gchar *value = (unsigned char*) sqlite3_column_text(stmt, 1);
+                        gsize size;
+                        met->content = g_base64_decode(value, &size);
+                        met->size = size;
+                    }
+                    /* indicate we don't query anymore */
+                    ret = SQLITE_DONE;
+                }
+            case SQLITE_DONE:
+            case SQLITE_BUSY:
+                break;
+            default:
+
+                g_warning("%s: sqlite3_step() failed: %s",__FUNCTION__,
+                        sqlite3_errmsg(metadata_db));
+                if(met) meta_data_free(met);
+                sqlite3_reset(stmt);
+                sqlite3_clear_bindings(stmt);
+                return NULL;
+        }
+	} while (ret != SQLITE_DONE);
+
+
+	sqlite3_reset(stmt);
+	sqlite3_clear_bindings(stmt);
+    return met;
+}
+
+
 /**
 TODO: Find a  way to store the type of the data in the config file. (met->content_type)
 */
-config_obj *cover_index;
-
-/**
- * Checking the cache
-
- */
-
-static MetaDataResult meta_data_get_cache_uri(mpd_Song *song, MetaData **met)
-{
-    gchar *path = NULL;
-    if((*met)->type == META_ALBUM_ART){
-        path = cfg_get_single_value_as_string_mm(cover_index,song->artist,song->album, NULL, "image");
-    }else if((*met)->type == META_ALBUM_TXT){
-		path = cfg_get_single_value_as_string_mm(cover_index,song->artist, song->album, NULL, "info");
-    }else if ((*met)->type == META_ARTIST_ART) {
-		path = cfg_get_single_value_as_string_mm(cover_index,song->artist,NULL, NULL, "image");
-    }else if ((*met)->type == META_ARTIST_TXT) {
-		path = cfg_get_single_value_as_string_mm(cover_index,song->artist,  NULL, NULL, "biography");
-    }else if ((*met)->type == META_SONG_TXT) {
-		path = cfg_get_single_value_as_string_mm(cover_index,song->artist,"lyrics",NULL, song->title);
-    }
-    if(path)
-    {
-        /* if path length is NULL, then data unavailible */
-        if(strlen(path) == 0)
-        {
-            q_free(path);
-            return META_DATA_UNAVAILABLE;	
-        }
-        /* return that data is availible */
-        if(!g_file_test(path, G_FILE_TEST_EXISTS))
-        {
-            if((*met)->type == META_ALBUM_ART){
-                cfg_del_single_value_mm(cover_index,song->artist,song->album, NULL, "image");
-              //  cfg_del_single_value_mm(cover_index,song->artist,song->album, NULL, "image_type");
-            }else if((*met)->type == META_ALBUM_TXT){
-                cfg_del_single_value_mm(cover_index,song->artist, song->album, NULL, "info");
-              //  cfg_del_single_value_mm(cover_index,song->artist,song->album, NULL, "info_type");
-            }else if ((*met)->type == META_ARTIST_ART) {
-                cfg_del_single_value_mm(cover_index,song->artist,NULL, NULL, "image");
-              //  cfg_del_single_value_mm(cover_index,song->artist,song->album, NULL, "image_type");
-            }else if ((*met)->type == META_ARTIST_TXT) {
-                cfg_del_single_value_mm(cover_index,song->artist,  NULL, NULL, "biography");
-              //  cfg_del_single_value_mm(cover_index,song->artist,song->album, NULL, "biography_type");
-            }else if ((*met)->type == META_SONG_TXT) {
-                cfg_del_single_value_mm(cover_index,song->artist,"lyrics",NULL, song->title);
-              //  cfg_del_single_value_mm(cover_index,song->artist,"lyrics_type",NULL, song->title);
-            }
-            q_free(path);
-            return META_DATA_FETCHING;	
-        }
-        (*met)->content_type = META_DATA_CONTENT_URI;
-        (*met)->content =path; (*met)->size = -1;
-        return META_DATA_AVAILABLE;
-    }
-    return META_DATA_FETCHING;
-}
-
-static MetaDataResult meta_data_get_cache_list(mpd_Song *song, MetaData **met)
-{
-    gchar *list = cfg_get_single_value_as_string_mm(cover_index,song->artist,NULL, NULL,  "similar_artist");
-    if(list)
-    {
-        GList *rlist = NULL;
-        gchar **result = NULL;
-        int i;
-        if(strlen(list) == 0){
-            g_free(list);
-            return META_DATA_UNAVAILABLE;
-        }
-        result = g_strsplit(list, "\n", 0);
-        for(i=0; result && result[i];i++)
-        {
-            rlist = g_list_prepend(rlist,g_strdup(result[i]));
-        }
-        if(result) g_strfreev(result);
-        (*met)->content = g_list_reverse(rlist);
-        (*met)->content_type = META_DATA_CONTENT_TEXT_LIST;
-        return META_DATA_AVAILABLE;
-    }
-    return META_DATA_FETCHING;
-}
-
 
 MetaDataResult meta_data_get_from_cache(mpd_Song *song, MetaDataType type, MetaData **met)
 {
-    (*met) = meta_data_new();
-    (*met)->type = type;
-    (*met)->content_type = META_DATA_CONTENT_EMPTY;
-    (*met)->plugin_name = CACHE_NAME;
-    if(!song)
-    {
-		return META_DATA_UNAVAILABLE;	
-	}
-	/* Get values acording to type */
-	if(type == META_ALBUM_ART)
-	{
-		if(!song->artist || !song->album)
-		{
-			return META_DATA_UNAVAILABLE; 
-		}
-
-        return meta_data_get_cache_uri(song, met);	
-        /* else default to fetching */
-	}
-	/* Get values acording to type */
-	else if(type == META_ARTIST_SIMILAR)
-	{
-    
-		if(!song->artist)
-		{
-			return META_DATA_UNAVAILABLE;	
-		}
-        /* else default to fetching */
-        return meta_data_get_cache_list(song, met);
-	}
-
-	else if(type == META_ALBUM_TXT)
-	{
-		if(!song->artist || !song->album)
-		{
-			return META_DATA_UNAVAILABLE;	
-		}
-        return meta_data_get_cache_uri(song, met);	
-	}
-	else if (type == META_ARTIST_ART)
-	{
-		if(!song->artist)
-		{
-			return META_DATA_UNAVAILABLE;	
-		}
-        return meta_data_get_cache_uri(song, met);	
+    char *key_a= "", *key_b = "";
+    if(type == META_ALBUM_ART){
+        key_a = song->artist;
+        key_b = song->album;
+    }else if(type == META_ALBUM_TXT){
+        key_a = song->artist;
+        key_b = song->album;
+    }else if (type == META_ARTIST_ART || type == META_ARTIST_TXT || type == META_ARTIST_SIMILAR) {
+        key_a = song->artist;
+    }else if (type == META_SONG_TXT || type == META_SONG_SIMILAR) {
+        key_a = song->artist;
+        key_b = song->title;
+    }else if (type == META_GENRE_SIMILAR) {
+        key_a = song->genre;
     }
-	else if (type == META_ARTIST_TXT)
-	{
-        if(!song->artist)
-		{
-			return META_DATA_UNAVAILABLE;	
-		}
-        return meta_data_get_cache_uri(song, met);	
-	}
-	else if(type == META_SONG_TXT)
-	{
-		if(!song->artist || !song->title)
-		{
-			return META_DATA_UNAVAILABLE;	
-		}
-        return meta_data_get_cache_uri(song, met);	
-	}
-	else if(type == META_SONG_SIMILAR)
-	{
-        char *path = NULL;
-		if(!song->artist && song->title)
-		{
-			return META_DATA_UNAVAILABLE;	
-		}
 
-		path = cfg_get_single_value_as_string_mm(cover_index,song->artist,"similar_song", NULL, song->title);
-		if(path)
-		{
-			/* if path length is NULL, then data unavailible */
-			if(strlen(path) == 0)
-			{
-				q_free(path);
-				return META_DATA_UNAVAILABLE;	
-			}
-
-            (*met)->content_type = META_DATA_CONTENT_RAW;
-            (*met)->content = path; (*met)->size = -1;
-			return META_DATA_AVAILABLE;
-		}
-
-		/* else default to fetching */
-	}
-	return META_DATA_FETCHING;	
-}
-
-static void meta_data_set_cache_meta_data(const char *a, const char *b, const char *c, const char*d, MetaData *met)
-{
-    /* Set unavailable */
-    if(met == NULL || met->content_type == META_DATA_CONTENT_EMPTY)
+    *met = sqlite_get_value(type,key_a, key_b); 
+    if((*met) == NULL)
     {
-        cfg_set_single_value_as_string_mm(cover_index, a,b,c,d,"");
+        *met = meta_data_new();
+        (*met)->type = type;
+        (*met)->plugin_name = "Metadata Cache";
+        (*met)->content_type = META_DATA_CONTENT_EMPTY;
+        printf("META_DATA_FETCHING: Got from %s-%s\n", key_a, key_b);
+        return META_DATA_FETCHING;	
+	}
+    if((*met)->content_type == META_DATA_CONTENT_EMPTY)
+    {
+        printf("META_DATA_UNAVAILABLE: Got from %s-%s\n", key_a, key_b);
+        return META_DATA_UNAVAILABLE;
     }
-    /* Set Available for different types */ 
-    else if(met->content_type == META_DATA_CONTENT_URI) 
+    if((*met)->content_type == META_DATA_CONTENT_URI)
     {
-        const char *data =meta_data_get_uri(met);
-        cfg_set_single_value_as_string_mm(cover_index, a,b,c,d,data);
-    }
-    else if(met->content_type == META_DATA_CONTENT_TEXT_LIST) 
-    {
-        GString *string = g_string_new("");
-        GList *iter = g_list_first((GList *)meta_data_get_text_list(met));
-        for(;iter;iter = g_list_next(iter)){
-            string = g_string_append(string, iter->data);
-            if(iter->next) string = g_string_append(string, "\n");
+        const gchar *path = meta_data_get_uri(*met);
+        if(!g_file_test(path, G_FILE_TEST_EXISTS))
+        {
+            sqlite_delete_value(type, key_a, key_b); 
+            (*met)->content_type = META_DATA_CONTENT_EMPTY;
+            g_free((gchar *)((*met)->content));
+            (*met)->content = NULL;
+            (*met)->size = 0;
+            return META_DATA_FETCHING;
         }
-        cfg_set_single_value_as_string_mm(cover_index, a,b,c,d,string->str);
-        g_string_free(string,TRUE);
-    }else if (met->content_type == META_DATA_CONTENT_TEXT_VECTOR)
-    {
-        const gchar **vector = meta_data_get_text_vector(met);
-        gchar *cvector = g_strjoinv("\n", (gchar **)vector);
-        cfg_set_single_value_as_string_mm(cover_index, a,b,c,d,cvector);
-        g_free(cvector);
-    }else if (met->content_type == META_DATA_CONTENT_TEXT)
-    {
-        const char *data = meta_data_get_text(met);
-        cfg_set_single_value_as_string_mm(cover_index, a,b,c,d,data);
-    }else if (met->content_type == META_DATA_CONTENT_HTML)
-    {
-        const char *data = meta_data_get_html(met);
-        cfg_set_single_value_as_string_mm(cover_index, a,b,c,d,data);
     }
-    else if (met->content_type == META_DATA_CONTENT_RAW)
-    {
-        gsize length=0;
-        const guchar *data = meta_data_get_raw(met, &length);
-        gchar *encoded = g_base64_encode(data, length);
-        cfg_set_single_value_as_string_mm(cover_index, a,b,c,d,encoded);
-        g_free(encoded);
-    }
-    else
-    {
-        g_error("Unkown metadata type, cannot store");
-    }
+    printf("META_DATA_AVAILABLE: Got from %s-%s\n", key_a, key_b);
+    return META_DATA_AVAILABLE;	
 }
-
 void meta_data_set_cache_real(mpd_Song *song, MetaDataResult result, MetaData *met)
 {
+    char *key_a= "", *key_b = "";
 	if(!song) return;
-	/**
-	 * Save the path for the album art
-	 */
-	if(met->type == META_ALBUM_ART) {
-		if(song->artist && song->album) {
-			if(result == META_DATA_AVAILABLE) {
-                meta_data_set_cache_meta_data(song->artist, song->album, NULL, "image", met);
-			} else {
-                meta_data_set_cache_meta_data(song->artist, song->album, NULL, "image", NULL);
-			}
-		}
-	} else if(met->type == META_ALBUM_TXT) {
-		if(song->artist && song->album)	{
-			if(result == META_DATA_AVAILABLE) {
-				meta_data_set_cache_meta_data(song->artist,song->album, NULL, "info",met);
-			} else {
-				meta_data_set_cache_meta_data(song->artist,song->album, NULL, "info",NULL);
-			}                                                                        		
-		}
-	} else if (met->type == META_ARTIST_ART) {
-		if(song->artist) {
-			if(result == META_DATA_AVAILABLE) {
-				meta_data_set_cache_meta_data(song->artist,NULL, NULL, "image",met);
-			} else {
-				meta_data_set_cache_meta_data(song->artist,NULL, NULL, "image",NULL);
-			}                                                                        		
-		}
-	} else if (met->type == META_ARTIST_TXT) {
-		if(song->artist) {
-			if(result == META_DATA_AVAILABLE) {
-				meta_data_set_cache_meta_data(song->artist,NULL, NULL, "biography",met);
-			} else {
-                meta_data_set_cache_meta_data(song->artist,NULL, NULL, "biography",NULL);
-            }                                                                        		
-		}
-	} else if (met->type == META_ARTIST_SIMILAR) {
-		if(song->artist) {
-			if(result == META_DATA_AVAILABLE) {
-				meta_data_set_cache_meta_data(song->artist,NULL, NULL, "similar_artist",met);
-			} else {
-				meta_data_set_cache_meta_data(song->artist,NULL, NULL, "similar_artist",NULL);
-			}                                                                        		
-		}
-	} else if (met->type == META_SONG_TXT)	{
-		if(song->artist && song->title) {
-			if(result == META_DATA_AVAILABLE) {
-                meta_data_set_cache_meta_data(song->artist,"lyrics", NULL, song->title,met);
-            } else {
-                meta_data_set_cache_meta_data(song->artist, "lyrics", NULL, song->title,NULL);
-            }                                                                        		
-		}
-	}else if (met->type == META_SONG_SIMILAR) {
-		if(song->artist && song->title) {
-			if(result == META_DATA_AVAILABLE) {
-                /* TODO FIX THIS */
-				cfg_set_single_value_as_string_mm(cover_index, song->artist,"similar_song",NULL, song->title,met->content);
-			} else {
-				cfg_set_single_value_as_string_mm(cover_index, song->artist,"similar_song",NULL, song->title,"");
-			}                                                                        		
-		}
-	}
+    if((met)->type == META_ALBUM_ART){
+        key_a = song->artist;
+        key_b = song->album;
+    }else if((met)->type == META_ALBUM_TXT){
+        key_a = song->artist;
+        key_b = song->album;
+    }else if ((met)->type == META_ARTIST_ART || (met)->type == META_ARTIST_TXT || (met)->type == META_ARTIST_SIMILAR) {
+        key_a = song->artist;
+    }else if ((met)->type == META_SONG_TXT || (met)->type == META_SONG_SIMILAR) {
+        key_a = song->artist;
+        key_b = song->title;
+    }else if ((met)->type == META_GENRE_SIMILAR) {
+        key_a = song->genre;
+    }
 
+
+    if(met->content_type == META_DATA_CONTENT_URI ||
+            met->content_type == META_DATA_CONTENT_TEXT ||
+            met->content_type == META_DATA_CONTENT_HTML ||
+            met->content_type == META_DATA_CONTENT_EMPTY)
+    {
+        sqlite_update_value(met->type, key_a, key_b, met->content_type, (const gchar *)met->content) || 
+            sqlite_set_value(met->type, key_a, key_b, met->content_type, (const gchar *)met->content);
+    }else if (met->content_type == META_DATA_CONTENT_RAW) {
+        gsize size;
+        const guchar *udata = meta_data_get_raw(met, &size);
+        gchar *data = g_base64_encode(udata, size);
+        sqlite_update_value(met->type, key_a, key_b, met->content_type, (const gchar *)data);
+            sqlite_set_value(met->type, key_a, key_b, met->content_type, (const gchar *)data);
+        g_free(data);
+    }else if (met->content_type == META_DATA_CONTENT_TEXT_LIST) {
+        GList *iter;
+        sqlite_delete_value(met->type, key_a, key_b);
+        iter = g_list_first((GList *)meta_data_get_text_list(met));
+        for(;iter; iter = g_list_next(iter)){
+            sqlite_set_value(met->type, key_a, key_b, met->content_type, (const gchar *)iter->data);
+        }
+    }else if (met->content_type == META_DATA_CONTENT_TEXT_VECTOR) {
+        int i = 0;
+        const gchar **text_vector = meta_data_get_text_vector(met);
+        sqlite_delete_value(met->type, key_a, key_b);
+        for(i=0;text_vector && text_vector[i];i++){
+            sqlite_set_value(met->type, key_a, key_b, met->content_type, (const gchar *)text_vector[i]);
+        }
+    }
 }
 void meta_data_set_cache(mpd_Song *song, MetaDataResult result, MetaData *met)
 {
@@ -397,8 +481,24 @@ void metadata_import_old_db(char *url)
     */
 }
 
+static sqlite3_stmt *
+metadata_prepare(const char *sql)
+{
+	int ret;
+	sqlite3_stmt *stmt;
+
+	ret = sqlite3_prepare_v2(metadata_db, sql, -1, &stmt, NULL);
+	if (ret != SQLITE_OK)
+		g_error("sqlite3_prepare_v2() failed: %s",
+			sqlite3_errmsg(metadata_db));
+
+	return stmt;
+}
+
 void metadata_cache_init(void)
 {
+    int ret;
+    unsigned i;
     gchar *url = gmpc_get_covers_path(NULL);
     if(!g_file_test(url,G_FILE_TEST_IS_DIR)){
         if(g_mkdir(url, 0700)<0){
@@ -406,18 +506,43 @@ void metadata_cache_init(void)
         }
     }
     q_free(url);
-    url = gmpc_get_covers_path("covers.db2");
-    cover_index = cfg_open(url);
-    q_free(url);
 
+    url = gmpc_get_covers_path("covers.sql");
+    ret = sqlite3_open(url, &metadata_db);
+    if (ret != SQLITE_OK)
+        g_error("Failed to open sqlite database '%s': %s",
+                url, sqlite3_errmsg(metadata_db));
+
+	ret = sqlite3_exec(metadata_db, metadata_sql_create, NULL, NULL, NULL);
+	if (ret != SQLITE_OK)
+		g_error("Failed to create metadata table: %s",
+			sqlite3_errmsg(metadata_db));
+
+	/* prepare the statements we're going to use */
+
+	for (i = 0; i < G_N_ELEMENTS(metadata_sql); ++i) {
+		g_assert(metadata_sql[i] != NULL);
+
+		metadata_stmt[i] = metadata_prepare(metadata_sql[i]);
+	}
+
+    g_free(url);
 }
 
 
 void metadata_cache_cleanup(void)
 {
-    cfg_do_special_cleanup(cover_index);
+//    cfg_do_special_cleanup(cover_index);
 }
 void metadata_cache_destroy(void)
 {
-    cfg_close(cover_index);
+    unsigned i;
+//    cfg_close(cover_index);
+
+	for (i = 0; i < G_N_ELEMENTS(metadata_stmt); ++i) {
+		g_assert(metadata_stmt[i] != NULL);
+
+		sqlite3_finalize(metadata_stmt[i]);
+	}
+	sqlite3_close(metadata_db);
 }

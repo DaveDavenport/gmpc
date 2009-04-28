@@ -239,6 +239,12 @@ PKG_CHECK_MODULES([libsoup], libsoup-2.4)
 AC_SUBST(libsoup_LIBS)
 AC_SUBST(libsoup_CFLAGS)
 
+
+#sqlite3
+PKG_CHECK_MODULES([sqlite3], sqlite3)
+AC_SUBST(sqlite3_LIBS)
+AC_SUBST(sqlite3_CFLAGS)
+
 # libsexy 
 AC_ARG_ENABLE([system-libsexy],
               [--enable-system-libsexy Use system libsexy instead of bundles.], 

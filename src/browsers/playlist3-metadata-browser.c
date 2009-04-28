@@ -237,6 +237,7 @@ static GtkWidget *info2_similar_artist_button(gchar *artist, gboolean in_db)
 }
 static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw2, mpd_Song *fsong, MetaDataType type, MetaDataResult ret, char *path, GtkWidget *vbox)
 {
+    MetaData *met = NULL;
     mpd_Song *song = g_object_get_data(G_OBJECT(vbox), "song");
     if(!song) return;
 
@@ -249,10 +250,11 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw2, mpd_Song *fsong,
         /* clear the view, so if it's updated the old data is gone */
         remove_container_entries(vbox);
 
-        if(ret == META_DATA_AVAILABLE)
+        meta_data_get_from_cache(song,type, &met);
+        if(ret == META_DATA_AVAILABLE && met)
         {
             int i,found = 0;
-            char **str = g_strsplit(path, "\n", 0);
+            const char **str = meta_data_get_text_vector(met);
             MpdData *data = NULL;
             for(i=0;str && str[i] && found < 20;i++){
                 char **str2 = g_strsplit(str[i], "::", 2);
@@ -296,7 +298,6 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw2, mpd_Song *fsong,
                 }
                 g_strfreev(str2);
             }
-            g_strfreev(str);
 
             if(found == 0){
                 GtkWidget *label = gtk_label_new(_("Unavailable"));
@@ -339,6 +340,7 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw2, mpd_Song *fsong,
             gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, FALSE, 0);
             gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
         }
+        if(met) meta_data_free(met);
         gtk_widget_show_all(vbox);
     }
 	/* if not artist similar, we aren't interrested */
@@ -351,10 +353,8 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw2, mpd_Song *fsong,
         if(ret == META_DATA_AVAILABLE)
         {
             GList *list = NULL;
-            MetaData *met = NULL;
             int albums = 0;
             meta_data_get_from_cache(song,type, &met);
-            printf("met type: %i\n", met->content_type);
             if(met && met->content_type == META_DATA_CONTENT_TEXT_LIST)
             {
                 GList *iter = (GList *) meta_data_get_text_list(met);

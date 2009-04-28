@@ -109,6 +109,7 @@ LIBS= \
 	@gthread_LIBS@\
 	@libsoup_LIBS@\
 	@SPIFF_LIBS@\
+    @sqlite3_LIBS@\
 	@sm_LIBS@ 
 
 if USE_SYSTEM_LIBSEXY
@@ -137,6 +138,7 @@ AM_CFLAGS = @CFLAGS@\
 	@gthread_CFLAGS@\
 	@sm_CFLAGS@\
 	@libsoup_CFLAGS@\
+    @sqlite3_CFLAGS@\
 	@EXTRA_CFLAGS@\
 	-DPACKAGE_LIB_DIR=\""$(pkglibdir)"\"\
 	-DPACKAGE_DATA_DIR=\""$(datarootdir)"\"
