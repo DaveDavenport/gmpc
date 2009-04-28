@@ -29,7 +29,6 @@
 
 
 int meta_num_plugins=0;
-GMutex *meta_plugins_lock = NULL;
 gmpcPluginParent **meta_plugins = NULL;
 static void meta_data_sort_plugins(void);
 GList *process_queue = NULL;
@@ -261,9 +260,8 @@ static gboolean meta_data_handle_results(void)
  */
 void meta_data_init(void)
 {
-    g_assert(meta_commands == NULL && meta_results == NULL && meta_plugins_lock == NULL);
+    g_assert(meta_commands == NULL && meta_results == NULL );
 
-    meta_plugins_lock = g_mutex_new();
     metadata_cache_init();
 
     /**
@@ -284,12 +282,10 @@ void meta_data_add_plugin(gmpcPluginParent *plug)
 {
     g_assert(plug != NULL);
 
-    g_mutex_lock(meta_plugins_lock);
     meta_num_plugins++;
     meta_plugins = g_realloc(meta_plugins,(meta_num_plugins+1)*sizeof(gmpcPluginParent **));
     meta_plugins[meta_num_plugins-1] = plug;
     meta_plugins[meta_num_plugins] = NULL;
-    g_mutex_unlock(meta_plugins_lock);
     meta_data_sort_plugins();
 }
 
@@ -297,7 +293,6 @@ static void meta_data_sort_plugins(void)
 {
     int i;
     int changed = FALSE;	
-    g_mutex_lock(meta_plugins_lock);
     do{	
         changed=0;
         for(i=0; i< (meta_num_plugins-1);i++)
@@ -311,7 +306,6 @@ static void meta_data_sort_plugins(void)
             }
         }
     }while(changed);
-    g_mutex_unlock(meta_plugins_lock);
 }
 
 static gboolean meta_data_check_plugin_changed_message(gpointer data)
@@ -375,11 +369,6 @@ void meta_data_destroy(void)
     if(meta_commands){
         g_async_queue_unref(meta_commands);
         meta_commands = NULL;
-    }
-    if(meta_plugins_lock != NULL)
-    {
-        g_mutex_free(meta_plugins_lock);
-        meta_plugins_lock = NULL;
     }
     /* Close the cover database  */
     TOC("test")
