@@ -256,10 +256,24 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw2,
         if(ret == META_DATA_AVAILABLE && met)
         {
             int i,found = 0;
-            const char **str = meta_data_get_text_vector(met);
             MpdData *data = NULL;
-            for(i=0;str && str[i] && found < 20;i++){
-                char **str2 = g_strsplit(str[i], "::", 2);
+            GList *entries = NULL, *e_iter= NULL;
+            if(met->content_type == META_DATA_CONTENT_TEXT_VECTOR)
+            {
+                const char **str = meta_data_get_text_vector(met);
+                for(i=0;str && str[i]; i++){
+                    entries = g_list_prepend(entries,(gpointer) str[i]);
+                }
+                e_iter = entries = g_list_reverse(entries);
+            }
+            else if (met->content_type == META_DATA_CONTENT_TEXT_LIST)
+            {
+                e_iter = g_list_first((GList *)meta_data_get_text_list(met));
+            }
+            for(i=0;e_iter && found < 20; e_iter = g_list_next(e_iter))
+            {
+                gchar*tuple = e_iter->data;
+                char **str2 = g_strsplit(tuple, "::", 2);
                 if(str2[0] && str2[1]){
                     MpdData *data2;
                     mpd_database_search_start(connection, TRUE);
@@ -269,7 +283,7 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw2,
                     if(cfg_get_single_value_as_int_with_default(config, "metadata","rename",FALSE)) {
                         gchar *string = NULL;
                         int length = strlen(str2[0]); 
-                        int li = strlen(str[i]);
+                        int li = strlen(tuple);
                         string = g_malloc0((length+4)*sizeof(char ));
 
 
@@ -300,6 +314,8 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw2,
                 }
                 g_strfreev(str2);
             }
+            /* Free home made list */
+            if(entries) g_list_free(entries);
 
             if(found == 0){
                 GtkWidget *label = gtk_label_new(_("Unavailable"));
@@ -313,8 +329,8 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw2,
 
 
                 GtkWidget *tree = gmpc_mpddata_treeview_new("metadata-similar-artist-view",
-                                TRUE, 
-                                (GtkTreeModel *)gmpc_mpddata_model_new());
+                        TRUE, 
+                        (GtkTreeModel *)gmpc_mpddata_model_new());
                 gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw), GTK_POLICY_AUTOMATIC, GTK_POLICY_NEVER);
                 gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(sw), GTK_SHADOW_ETCHED_IN);
                 gmpc_mpddata_treeview_enable_click_fix(GMPC_MPDDATA_TREEVIEW(tree));
