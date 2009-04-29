@@ -483,7 +483,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		
 	private
 	void
-	meta_callback(GmpcMetaWatcher *gmv, mpd_Song *song, MetaDataType type, MetaDataResult ret, char *path,gpointer data)
+	meta_callback(GmpcMetaWatcher *gmv, mpd_Song *song, MetaDataType type, MetaDataResult ret, MetaData *met,gpointer data)
     {
         Self *self = data;
         if(!song || !self || !self->_priv || !self->_priv->song)
@@ -510,7 +510,13 @@ class Gmpc:MetaImage from Gtk:Event:Box{
         else
         {
             if(ret == META_DATA_AVAILABLE) {
-                self_set_cover_from_path(self,path); 
+                if(met->content_type == META_DATA_CONTENT_URI){
+                    const char *path = meta_data_get_uri(met);
+                    self_set_cover_from_path(self,path); 
+                }else{
+                    self_set_cover_na(self);
+                    debug_printf(DEBUG_ERROR, "Method not implemented");
+                }
             } else if (ret == META_DATA_FETCHING) {
                 self_set_cover_fetching(self);
             } else {

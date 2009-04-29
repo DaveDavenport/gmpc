@@ -240,7 +240,7 @@ static gboolean meta_data_handle_results(void)
 	 */
 	for(data = g_async_queue_try_pop(meta_results);data;
 			data = g_async_queue_try_pop(meta_results)) {	
-		gmpc_meta_watcher_data_changed(gmw,data->song, (data->type)&META_QUERY_DATA_TYPES, data->result,data->met->content);
+		gmpc_meta_watcher_data_changed(gmw,data->song, (data->type)&META_QUERY_DATA_TYPES, data->result,data->met);
  		if(data->callback)
 		{
 			data->callback(data->song,data->result,data->met, data->data);
