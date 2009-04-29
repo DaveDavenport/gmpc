@@ -683,7 +683,15 @@ void mmkeys_pref_construct(GtkWidget *container)
 {
 	gchar *path = gmpc_get_full_glade_path("preferences-mmkeys.ui");
 	mmkeys_pref_xml = gtk_builder_new();
-    gtk_builder_add_from_file(mmkeys_pref_xml, path, NULL);
+    GError *error = NULL;
+    gtk_builder_add_from_file(mmkeys_pref_xml, path, &error);
+    if(error)
+    {
+        debug_printf(DEBUG_ERROR, "Problems loading ui: %s\n", error->message);
+        g_error_free(error);
+        g_object_unref(mmkeys_pref_xml);
+        return;
+    }
 	q_free(path);
 	if(mmkeys_pref_xml)
 	{
