@@ -39,7 +39,7 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 	private gulong meta_id 			= {0};
     private GtkWidget *edit         = {NULL};
     private GtkWidget *cancel       = {NULL};
-    private gchar *path             = {NULL} destroywith g_free;
+    private MetaData *met = {NULL} destroywith meta_data_free;
 
 	init (self)
 	{
@@ -108,15 +108,10 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 			MetaData *met= NULL;
 			MetaDataResult ret;
 			ret = gmpc_meta_watcher_get_meta_path(gmw,self->_priv->song, self->_priv->type|META_QUERY_NO_CACHE, &met);
-			if(ret == META_DATA_FETCHING)
-			{
+			if(ret == META_DATA_FETCHING) {
 				self_set_text_fetching(self);
 			}else if (ret == META_DATA_AVAILABLE) {
-                if(met->content_type == META_DATA_CONTENT_URI)
-                {
-                    const gchar *path = meta_data_get_uri(met);
-    				self_set_text_from_path(self,path); 
-                }
+                self_set_text_from_metadata(self, met);
             } else {
 				self_set_text_na(self);
 			}
@@ -130,46 +125,43 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 	public 
 	void
 	query_text_from_song(self, mpd_Song *song)
-	{
+    {
         MetaData *met = NULL;
-		MetaDataResult ret;
+        MetaDataResult ret;
 
-		if(self->_priv->song)
-		{
-			mpd_freeSong(self->_priv->song);
-		}
-		self->_priv->song = mpd_songDup(song);
-		
-		
-			ret = gmpc_meta_watcher_get_meta_path(gmw,self->_priv->song, self->_priv->type, &met);
-			if(ret == META_DATA_FETCHING)
-			{
-				self_set_text_fetching(self);
-			}else if (ret == META_DATA_AVAILABLE) {
-                if(met->content_type == META_DATA_CONTENT_URI)
-                {
-                    const gchar *path = meta_data_get_uri(met);
-    				self_set_text_from_path(self,path); 
-                }
-            } else {
-				self_set_text_na(self);
-			}
-			if(met)
-			{
-			    meta_data_free(met);
-			}
-	}
+        if(self->_priv->song)
+        {
+            mpd_freeSong(self->_priv->song);
+        }
+        self->_priv->song = mpd_songDup(song);
+
+
+        ret = gmpc_meta_watcher_get_meta_path(gmw,self->_priv->song, self->_priv->type, &met);
+        if(ret == META_DATA_FETCHING)
+        {
+            self_set_text_fetching(self);
+        }else if (ret == META_DATA_AVAILABLE) {
+            self_set_text_from_metadata(self,met); 
+        } else {
+            self_set_text_na(self);
+        }
+        if(met)
+        {
+            meta_data_free(met);
+        }
+    }
 
     private void
     cancel_button_clicked(self, GtkWidget *button)
     {
         gtk_text_view_set_editable(GTK_TEXT_VIEW(self), FALSE);
-        if(self->_priv->path)
+        if(self->_priv->met)
         {
+            MetaData *met = self->_priv->met;
+            self->_priv->met = NULL;
             /* Create a copy as self_set_from_path modifies self->_priv->path */
-            gchar* path = g_strdup(self->_priv->path);
-        	self_set_text_from_path(self,path); 
-            g_free(path);
+            self_set_text_from_metadata(self, met);
+            meta_data_free(met);
         }else self_set_text_na(self);
     }
 
@@ -181,40 +173,25 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
             MetaData *met;
             gchar *content = NULL;
             GtkTextIter iter_start, iter_end;
-            if(self->_priv->path == NULL || g_access(self->_priv->path,W_OK|R_OK)){
-                if(self->_priv->path) g_free(self->_priv->path);
-                self->_priv->path = gmpc_get_metadata_filename(self->_priv->type, self->_priv->song, "txt");
-            }
+
             /* Get start and end of text, and store it */
             gtk_text_buffer_get_start_iter(self->_priv->buffer, &iter_start);
             gtk_text_buffer_get_end_iter(self->_priv->buffer, &iter_end);
             content = gtk_text_buffer_get_text(self->_priv->buffer, &iter_start, &iter_end, FALSE);
-            if(content)
-            {
-                GError *error = NULL;
-                g_file_set_contents(self->_priv->path, g_strstrip(content), -1,&error);
-                if(error != NULL)
-                {
-                    char *errorstr = g_markup_printf_escaped("%s: '%s' %s",_("Failed to store metadata file in"), self->_priv->path, error->message);
-                    playlist3_message_show(pl3_messages, errorstr, ERROR_WARNING);
-                    g_free(errorstr);
-                    g_error_free(error);
-                    error = NULL;
-                    g_free(content);
-                    return;
-                }
-                g_free(content);
-            }
-
             gtk_text_view_set_editable(GTK_TEXT_VIEW(self), FALSE);
+
             /* Copy path, because signal callback my destroy path first */
             met = meta_data_new();
             met->plugin_name = "User set";
-            met->content_type = META_DATA_CONTENT_URI;
-            met->content = g_strdup(self->_priv->path);met->size = -1;
             met->type = self->_priv->type;
+            if(content){
+                met->content_type = META_DATA_CONTENT_TEXT;
+                met->content = g_strstrip(content);met->size = -1;
+            }else {
+                met->content_type = META_DATA_CONTENT_EMPTY;
+            }
             meta_data_set_cache(self->_priv->song, META_DATA_AVAILABLE, met); 
-            gmpc_meta_watcher_data_changed(gmw, self->_priv->song, self->_priv->type, META_DATA_AVAILABLE, met->content);
+            gmpc_meta_watcher_data_changed(gmw, self->_priv->song, self->_priv->type, META_DATA_AVAILABLE, met);
             meta_data_free(met);
 
         }else{
@@ -226,7 +203,7 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
     }
     private 
     void
-    set_text(self, gchar *text, gsize length, int ro)
+    set_text(self,const gchar *text, gsize length, int ro)
     {
         gtk_text_buffer_set_text(self->_priv->buffer, text, length);
         if(!ro)
@@ -297,10 +274,23 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 				}
 			}
 			g_free(content);
-            if(self->_priv->path) g_free(self->_priv->path);
-            self->_priv->path = g_strdup(path);
 		}
 	}
+
+    private
+    void
+    set_text_from_metadata(self, MetaData *met)
+    {
+        if(met->content_type == META_DATA_CONTENT_URI) {
+            const gchar *path = meta_data_get_uri(met);
+            self_set_text_from_path(self, path);
+        }else if(met->content_type == META_DATA_CONTENT_TEXT) {
+            const gchar *text = meta_data_get_text(met);
+            self_set_text(self,text, -1, FALSE); 
+        }
+        if(self->_priv->met) meta_data_free(self->_priv->met);
+        self->_priv->met = meta_data_dup(met);
+    }
 	
 	signal last NONE (NONE)	
 	void
@@ -308,20 +298,20 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 	{
 		if(self->_priv->type == META_SONG_TXT)
 		{
-            if(self->_priv->path) g_free(self->_priv->path);
-            self->_priv->path = NULL;
+            if(self->_priv->met) meta_data_free(self->_priv->met);
+            self->_priv->met = NULL;
             self_set_text(self, _("Fetching Lyrics"), -1,TRUE);
 		}
 		else if (self->_priv->type == META_ARTIST_TXT)
 		{
-            if(self->_priv->path) g_free(self->_priv->path);
-            self->_priv->path = NULL;
+            if(self->_priv->met) meta_data_free(self->_priv->met);
+            self->_priv->met = NULL;
             self_set_text(self, _("Fetching Artist Info"), -1,TRUE);
 		}
 		else
 		{
-            if(self->_priv->path) g_free(self->_priv->path);
-            self->_priv->path = NULL;
+            if(self->_priv->met) meta_data_free(self->_priv->met);
+            self->_priv->met = NULL;
             self_set_text(self, _("Fetching Album Info"), -1,TRUE);
 		}
 	}
@@ -330,8 +320,8 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 	void
 	set_text_na(self)
 	{
-        if(self->_priv->path) g_free(self->_priv->path);
-        self->_priv->path = NULL;
+        if(self->_priv->met) meta_data_free(self->_priv->met);
+        self->_priv->met = NULL;
 
         self_set_text(self, _("Not Available"), -1,FALSE);
 	}
@@ -352,14 +342,8 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 			return;
 		}
 		if(ret == META_DATA_AVAILABLE) {
-            if(met->content_type == META_DATA_CONTENT_URI)
-            {
-                const gchar *path =meta_data_get_uri(met);
-                self_set_text_from_path(self,path); 
-            }else{
-                self_set_text_na(self);
-            }
-		} else if (ret == META_DATA_FETCHING) {
+            self_set_text_from_metadata(self,met); 
+        } else if (ret == META_DATA_FETCHING) {
 			self_set_text_fetching(self);
 		} else {
 			self_set_text_na(self);
@@ -432,9 +416,8 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 					gmpc_meta_watcher_data_changed(gmw, song, type, META_DATA_AVAILABLE, filename);
 
                     meta_data_free(met);
-//					g_free(filename);
-				}
-			default:
+                }
+            default:
 				break;
 		} 
 		gtk_widget_destroy(fcd);

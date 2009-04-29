@@ -176,6 +176,7 @@ static gboolean sqlite_update_value(MetaDataType type,const char *key_a,const ch
 
 	sqlite3_reset(stmt);
 	sqlite3_clear_bindings(stmt);
+    printf("entry updated\n");
     return ret > 0;
 }
 
