@@ -105,20 +105,24 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 	{
 		if(self->_priv->song)
 		{
-			gchar *path = NULL;
+			MetaData *met= NULL;
 			MetaDataResult ret;
-			ret = gmpc_meta_watcher_get_meta_path(gmw,self->_priv->song, self->_priv->type|META_QUERY_NO_CACHE, &path);
+			ret = gmpc_meta_watcher_get_meta_path(gmw,self->_priv->song, self->_priv->type|META_QUERY_NO_CACHE, &met);
 			if(ret == META_DATA_FETCHING)
 			{
 				self_set_text_fetching(self);
 			}else if (ret == META_DATA_AVAILABLE) {
-				self_set_text_from_path(self,path); 
-			} else {
+                if(met->content_type == META_DATA_CONTENT_URI)
+                {
+                    const gchar *path = meta_data_get_uri(met);
+    				self_set_text_from_path(self,path); 
+                }
+            } else {
 				self_set_text_na(self);
 			}
-			if(path)
+			if(met)
 			{
-				q_free(path);
+				meta_data_free(met);
 			}
 		}
 	}
@@ -127,7 +131,7 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 	void
 	query_text_from_song(self, mpd_Song *song)
 	{
-		gchar *path = NULL;
+        MetaData *met = NULL;
 		MetaDataResult ret;
 
 		if(self->_priv->song)
@@ -137,18 +141,22 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 		self->_priv->song = mpd_songDup(song);
 		
 		
-			ret = gmpc_meta_watcher_get_meta_path(gmw,self->_priv->song, self->_priv->type, &path);
+			ret = gmpc_meta_watcher_get_meta_path(gmw,self->_priv->song, self->_priv->type, &met);
 			if(ret == META_DATA_FETCHING)
 			{
 				self_set_text_fetching(self);
 			}else if (ret == META_DATA_AVAILABLE) {
-				self_set_text_from_path(self,path); 
-			} else {
+                if(met->content_type == META_DATA_CONTENT_URI)
+                {
+                    const gchar *path = meta_data_get_uri(met);
+    				self_set_text_from_path(self,path); 
+                }
+            } else {
 				self_set_text_na(self);
 			}
-			if(path)
+			if(met)
 			{
-				q_free(path);
+			    meta_data_free(met);
 			}
 	}
 
@@ -261,7 +269,7 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 
 	signal last NONE (STRING)	
 	void
-	set_text_from_path(self, gchar *path)
+	set_text_from_path(self,const gchar *path)
 	{
 		gchar *content=NULL;
 		gsize size = 0;

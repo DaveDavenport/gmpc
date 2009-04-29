@@ -405,8 +405,8 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		void
 		update_cover_from_song(self, mpd_Song *song)
 		{
-			gchar *path=  NULL;
 			MetaDataResult ret;
+            MetaData *met= NULL;
 
 
 			if(self->_priv->song)
@@ -420,37 +420,48 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 			}
             self->_priv->song = mpd_songDup(song);
 
-			ret = gmpc_meta_watcher_get_meta_path(gmw,song, self->image_type, &path);
+			ret = gmpc_meta_watcher_get_meta_path(gmw,song, self->image_type, &met);
 			if(ret == META_DATA_FETCHING)
 			{
 				self_set_cover_fetching(self);
 			}else if (ret == META_DATA_AVAILABLE) {
-					self_set_cover_from_path(self,path); 
+                    if(met->content_type == META_DATA_CONTENT_URI)
+                    {
+                        const gchar *path = meta_data_get_uri(met);
+                        self_set_cover_from_path(self,path); 
+                    }else{
+                        self_set_cover_na(self);
+                    }
 			} else {
 				self_set_cover_na(self);
 			}
-			if(path)
+			if(met)
 			{
-				q_free(path);
+			    meta_data_free(met);	
 			}
 		}
         private
         gboolean
         update_cover_from_song_delayed_real(self)
         {
-            gchar *path = NULL;
-            int ret = gmpc_meta_watcher_get_meta_path(gmw,self->_priv->song, self->image_type, &path);
+            MetaData *met= NULL;
+            int ret = gmpc_meta_watcher_get_meta_path(gmw,self->_priv->song, self->image_type, &met);
             if(ret == META_DATA_FETCHING)
             {
                 self_set_cover_fetching(self);
             }else if (ret == META_DATA_AVAILABLE) {
-                self_set_cover_from_path(self,path); 
-            } else {
-                self_set_cover_na(self);
+                if(met->content_type == META_DATA_CONTENT_URI)
+                {
+                    const gchar *path = meta_data_get_uri(met);
+                    self_set_cover_from_path(self,path); 
+                } else {
+                    self_set_cover_na(self);
+                }
+
             }
-            if(path)
+            if(met)
             {
-                q_free(path);
+                meta_data_free(met);
             }
 
             return FALSE;
@@ -767,21 +778,28 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 	{
 		if(self->_priv->song)
 		{
-			gchar *path = NULL;
 			MetaDataResult ret;
+            MetaData *met = NULL;
 
-			ret = gmpc_meta_watcher_get_meta_path(gmw,self->_priv->song, self->image_type|META_QUERY_NO_CACHE, &path);
+			ret = gmpc_meta_watcher_get_meta_path(gmw,self->_priv->song, self->image_type|META_QUERY_NO_CACHE, &met);
 			if(ret == META_DATA_FETCHING)
 			{
 				self_set_cover_fetching(self);
 			}else if (ret == META_DATA_AVAILABLE) {
-					self_set_cover_from_path(self,path); 
+                    if(met->content_type == META_DATA_CONTENT_URI)
+                    {
+                        const gchar *path = meta_data_get_uri(met);
+                        self_set_cover_from_path(self,path); 
+                    }else{
+                        debug_printf(DEBUG_ERROR, "Not implemented");
+                        self_set_cover_na(self);
+                    }
 			} else {
 				self_set_cover_na(self);
 			}
-			if(path)
+			if(met)
 			{
-				q_free(path);
+				meta_data_free(met);
 			}
 		}
 	}

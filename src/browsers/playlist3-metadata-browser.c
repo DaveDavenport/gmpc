@@ -235,9 +235,13 @@ static GtkWidget *info2_similar_artist_button(gchar *artist, gboolean in_db)
     mpd_freeSong(temp_song);
     return event;
 }
-static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw2, mpd_Song *fsong, MetaDataType type, MetaDataResult ret, char *path, GtkWidget *vbox)
+static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw2, 
+        mpd_Song *fsong, 
+        MetaDataType type,
+        MetaDataResult ret,
+        const MetaData *met,
+        GtkWidget *vbox)
 {
-    MetaData *met = NULL;
     mpd_Song *song = g_object_get_data(G_OBJECT(vbox), "song");
     if(!song) return;
 
@@ -249,8 +253,6 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw2, mpd_Song *fsong,
 
         /* clear the view, so if it's updated the old data is gone */
         remove_container_entries(vbox);
-
-        meta_data_get_from_cache(song,type, &met);
         if(ret == META_DATA_AVAILABLE && met)
         {
             int i,found = 0;
@@ -340,7 +342,6 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw2, mpd_Song *fsong,
             gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, FALSE, 0);
             gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
         }
-        if(met) meta_data_free(met);
         gtk_widget_show_all(vbox);
     }
 	/* if not artist similar, we aren't interrested */
@@ -354,7 +355,6 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw2, mpd_Song *fsong,
         {
             GList *list = NULL;
             int albums = 0;
-            meta_data_get_from_cache(song,type, &met);
             if(met && met->content_type == META_DATA_CONTENT_TEXT_LIST)
             {
                 GList *iter = (GList *) meta_data_get_text_list(met);
@@ -415,7 +415,6 @@ static void info2_fill_new_meta_callback(GmpcMetaWatcher *gmw2, mpd_Song *fsong,
                     }
                     if(remainder) g_list_free(remainder);
                 }
-                meta_data_free(met);
             }
             /* add them to the table attach */
            if(list){
@@ -725,7 +724,7 @@ static void info2_fill_song_view_sim_song_activate(GtkExpander *exp,gpointer dat
         {
             GtkWidget *misc = gtk_alignment_new(0,0.5,1,0);
             GtkWidget *vbox2 = gtk_vbox_new(FALSE, 6);
-            char *similar = NULL; 
+            MetaData *similar = NULL; 
             guint id = 0;
             mpd_Song *song = g_object_get_data(G_OBJECT(exp), "song");
             MetaDataResult ret;
@@ -739,7 +738,7 @@ static void info2_fill_song_view_sim_song_activate(GtkExpander *exp,gpointer dat
             /* fill the list if it' s allready available */
             info2_fill_new_meta_callback(gmw, song, META_SONG_SIMILAR, ret, similar, vbox2);
             if(similar)
-                g_free(similar);
+                meta_data_free(similar);
             /* if destroyed disconnect the metawatcher */
             g_signal_connect(G_OBJECT(vbox2), "destroy", G_CALLBACK(info2_fill_artist_similar_destroy), GINT_TO_POINTER(id));
 
@@ -1647,7 +1646,7 @@ static void info2_fill_artist_view_real(mpd_Song *song2)
 	if(song2 && song2->artist)
 	{
 		GtkWidget *vbox2 = gtk_table_new(2,3,TRUE);
-		char *similar = NULL; 
+		MetaData *similar = NULL; 
 		guint id = 0;
 		MetaDataResult ret;
 
@@ -1673,7 +1672,7 @@ static void info2_fill_artist_view_real(mpd_Song *song2)
 		/* fill the list if it' s allready available */
 		info2_fill_new_meta_callback(gmw, song2, META_ARTIST_SIMILAR, ret, similar, vbox2);
 		if(similar)
-			g_free(similar);
+			meta_data_free(similar);
 		/* if destroyed disconnect the metawatcher */
 		g_signal_connect(G_OBJECT(vbox2), "destroy", G_CALLBACK(info2_fill_artist_similar_destroy), GINT_TO_POINTER(id));
 		/* Add it to the view */

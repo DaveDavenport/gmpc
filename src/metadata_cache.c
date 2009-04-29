@@ -371,7 +371,7 @@ void meta_data_set_cache_real(mpd_Song *song, MetaDataResult result, MetaData *m
         gsize size;
         const guchar *udata = meta_data_get_raw(met, &size);
         gchar *data = g_base64_encode(udata, size);
-        sqlite_update_value(met->type, key_a, key_b, met->content_type, (const gchar *)data);
+        sqlite_update_value(met->type, key_a, key_b, met->content_type, (const gchar *)data) ||
             sqlite_set_value(met->type, key_a, key_b, met->content_type, (const gchar *)data);
         g_free(data);
     }else if (met->content_type == META_DATA_CONTENT_TEXT_LIST) {

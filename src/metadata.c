@@ -243,7 +243,7 @@ static gboolean meta_data_handle_results(void)
 		gmpc_meta_watcher_data_changed(gmw,data->song, (data->type)&META_QUERY_DATA_TYPES, data->result,data->met->content);
  		if(data->callback)
 		{
-			data->callback(data->song,data->result,data->met->content, data->data);
+			data->callback(data->song,data->result,data->met, data->data);
 		}
         if(data->met) meta_data_free(data->met);
         if(data->song)
@@ -743,7 +743,7 @@ static gboolean process_itterate(void)
 /**
  * Function called by the "client" 
  */
-MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **path,MetaDataCallback callback, gpointer data)
+MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData **met,MetaDataCallback callback, gpointer data)
 {
     MetaDataResult ret;
     meta_thread_data *mtd = NULL;
@@ -751,6 +751,8 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
     guint id = 0;
     /* TODO: Validate request */
 
+    g_assert(met != NULL);
+    g_assert(*met == NULL);
     /**
      * If there is no song
      * return;
@@ -775,24 +777,17 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
     }
     else
     {
-        MetaData *met = NULL;
-        ret = meta_data_get_from_cache(tsong, type&META_QUERY_DATA_TYPES, &met);
+        ret = meta_data_get_from_cache(tsong, type&META_QUERY_DATA_TYPES, met);
         /**
          * If the data is know. (and doesn't need fectching) 
          * call the callback and stop
          */
         if(ret != META_DATA_FETCHING)
         {
-
-            if(met->content_type != META_DATA_CONTENT_TEXT_LIST)
-            {
-                /* Steal result */
-                *path =  met->content; met->content = NULL;
-            }
-            meta_data_free(met);
             return ret;	
         }
-        if(met) meta_data_free(met);
+        if(*met) meta_data_free(*met);
+        *met = NULL;
     }
 
     mtd = g_malloc0(sizeof(*mtd));
@@ -806,8 +801,7 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
      */
     if((type&META_QUERY_NO_CACHE) == 0)
     {
-        MetaData *met = NULL;
-        ret = meta_data_get_from_cache(mtd->edited, type&META_QUERY_DATA_TYPES, &met);
+        ret = meta_data_get_from_cache(mtd->edited, type&META_QUERY_DATA_TYPES, met);
         /**
          * If the data is know. (and doesn't need fectching) 
          * call the callback and stop
@@ -816,20 +810,15 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **pa
         if(ret != META_DATA_FETCHING)
         {
             /* store it under the original */
-            meta_data_set_cache_real(tsong, ret,met);
+            meta_data_set_cache_real(tsong, ret,*met);
 
             mpd_freeSong(mtd->edited);
             q_free(mtd);
             /* Steal result */
-
-            if(met->content_type != META_DATA_CONTENT_TEXT_LIST)
-            {
-                *path = met->content; met->content = NULL;
-            }
-            meta_data_free(met);
             return ret;	
         }
-        if(met) meta_data_free(met);
+        if(*met) meta_data_free(*met);
+        *met = NULL;
     }
 
 

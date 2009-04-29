@@ -301,7 +301,7 @@ requires 2.0.0
         }
     private 
         void
-        cover_art_fetched(mpd_Song *song, MetaDataResult ret, char *coverpath,GtkTreeRowReference *ref)
+        cover_art_fetched(mpd_Song *song, MetaDataResult ret,MetaData *met,GtkTreeRowReference *ref)
         {
 
             if(ref)
@@ -320,8 +320,16 @@ requires 2.0.0
                     n = GPOINTER_TO_INT(iter.user_data2) ;
                     if(ret == META_DATA_AVAILABLE)
                     {
-                        GdkPixbuf *pb = gdk_pixbuf_new_from_file_at_size(coverpath,self->icon_size,self->icon_size,NULL);
-                        screenshot_add_border(&pb);
+                        
+                        GdkPixbuf *pb = NULL;
+                        if(met->content_type == META_DATA_CONTENT_URI)
+                        {
+                            const gchar *coverpath = meta_data_get_uri(met);
+                            pb = gdk_pixbuf_new_from_file_at_size(coverpath,self->icon_size,self->icon_size,NULL);
+                            screenshot_add_border(&pb);
+                        }else{
+                            pb = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gmpc-no-cover", self->icon_size, 0,NULL);
+                        }
                         if(self->_priv->images[n]) g_object_unref(self->_priv->images[n]); 
                         self->_priv->images[n] = pb;
                     }

@@ -41,7 +41,6 @@ typedef enum {
 	META_DATA_FETCHING
 } MetaDataResult;
 
-typedef void (*MetaDataCallback)(mpd_Song *song, MetaDataResult result, char *path, gpointer data);
 
 /**
  * The MetaAata object that will be used in the future to pass metadata around
@@ -82,6 +81,9 @@ typedef struct {
      */
     gsize size;
 }MetaData;
+
+
+typedef void (*MetaDataCallback)(mpd_Song *song, MetaDataResult result, MetaData *met, gpointer data);
 /**
  * Create empty MetaData
  */
@@ -121,7 +123,7 @@ void meta_data_check_plugin_changed(void);
 void meta_data_handle_remove_request(guint id);
 void meta_data_destroy(void);
 
-MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, gchar **path,MetaDataCallback callback, gpointer data);
+MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData **met,MetaDataCallback callback, gpointer data);
 
 
 #define METADATA_DIR ".covers"
