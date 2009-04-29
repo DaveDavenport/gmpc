@@ -65,9 +65,14 @@ class Gmpc:Meta:Watcher from  G:Object {
 			return FALSE;
 		switch(type)
 		{
-			case META_SONG_TXT:
-				if(song1->file && song2->file && !strcmp(song1->file, song2->file))
+            case META_GENRE_SIMILAR:
+				if(song1->genre && song2->genre && !strcmp(song1->genre, song2->genre))
 					return TRUE;
+                return FALSE;
+			case META_SONG_TXT:
+				if(song1->artist && song2->artist && !strcmp(song1->artist, song2->artist))
+                    if(song1->title && song2->title && !strcmp(song1->title, song2->title))
+                        return TRUE;
 				return FALSE;
 
 			case META_ALBUM_TXT:
@@ -111,6 +116,7 @@ class Gmpc:Meta:Watcher from  G:Object {
                 {
                     return TRUE;
                 }
+
             default:
 				break;
 		}
@@ -127,6 +133,8 @@ class Gmpc:Meta:Watcher from  G:Object {
 		if(!self_match_data(type&META_QUERY_DATA_TYPES, song,song))
 		{
 			callback(song, META_DATA_UNAVAILABLE, NULL, data);			
+            g_warning("Query is invalid");
+            return;
 		}
 		ret = meta_data_get_path(song, type, &met,callback,data);
 		callback(song,ret,met,data);
