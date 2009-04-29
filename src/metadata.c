@@ -465,7 +465,7 @@ static void metadata_download_handler(const GEADAsyncHandler *handle, GEADStatus
 
                 }
                 /* If type is text, store this in a file. */
-                else if (md->content_type == META_DATA_CONTENT_TEXT)
+                else if (FALSE /*md->content_type == META_DATA_CONTENT_TEXT*/)
                 {
                     GError *error = NULL;
                     const gchar *content = meta_data_get_text(md);
