@@ -25,7 +25,9 @@ enum metadata_sql {
     META_DATA_SQL_GET,
     META_DATA_SQL_SET,
     META_DATA_SQL_UPDATE,
-    META_DATA_SQL_DELETE
+    META_DATA_SQL_DELETE,
+    META_DATA_SQL_LIST_START,
+    META_DATA_SQL_LIST_END
 };
 
 static const char *const metadata_sql[] = {
@@ -36,12 +38,47 @@ static const char *const metadata_sql[] = {
 	[META_DATA_SQL_UPDATE] =
 	"UPDATE metadata SET contenttype=?,content=? WHERE type=? AND key_a=? AND key_b=?",
     [META_DATA_SQL_DELETE] = 
-    "DELETE FROM metadata WHERE type=? AND key_a=? AND key_b=?"
+    "DELETE FROM metadata WHERE type=? AND key_a=? AND key_b=?",
+    [META_DATA_SQL_LIST_START] = 
+    "BEGIN TRANSACTION",
+    [META_DATA_SQL_LIST_END] = 
+    "COMMIT TRANSACTION",
 };
 
 static sqlite3 *metadata_db;
 static sqlite3_stmt *metadata_stmt[G_N_ELEMENTS(metadata_sql)];
 
+static void sqlite_list_start(void)
+{
+	sqlite3_stmt *const stmt = metadata_stmt[META_DATA_SQL_LIST_START];
+	int ret;
+    sqlite3_reset(stmt);
+    do{
+        ret = sqlite3_step(stmt);
+    }while(ret == SQLITE_BUSY);
+	if (ret != SQLITE_DONE) {
+		g_warning("%s: sqlite3_step() failed: %s",__FUNCTION__,
+			  sqlite3_errmsg(metadata_db));
+		return;
+	}
+	sqlite3_reset(stmt);
+}
+
+static void sqlite_list_end(void)
+{
+	sqlite3_stmt *const stmt = metadata_stmt[META_DATA_SQL_LIST_END];
+	int ret;
+    sqlite3_reset(stmt);
+    do{
+        ret = sqlite3_step(stmt);
+    }while(ret == SQLITE_BUSY);
+	if (ret != SQLITE_DONE) {
+		g_warning("%s: sqlite3_step() failed: %s",__FUNCTION__,
+			  sqlite3_errmsg(metadata_db));
+		return ;
+	}
+	sqlite3_reset(stmt);
+}
 static gboolean sqlite_delete_value(MetaDataType type,const char *key_a,const char *key_b)
 {
 	sqlite3_stmt *const stmt = metadata_stmt[META_DATA_SQL_DELETE];
@@ -378,16 +415,20 @@ void meta_data_set_cache_real(mpd_Song *song, MetaDataResult result, MetaData *m
         GList *iter;
         sqlite_delete_value(met->type, key_a, key_b);
         iter = g_list_first((GList *)meta_data_get_text_list(met));
+        sqlite_list_start();
         for(;iter; iter = g_list_next(iter)){
             sqlite_set_value(met->type, key_a, key_b, met->content_type, (const gchar *)iter->data);
         }
+        sqlite_list_end();
     }else if (met->content_type == META_DATA_CONTENT_TEXT_VECTOR) {
         int i = 0;
         const gchar **text_vector = meta_data_get_text_vector(met);
         sqlite_delete_value(met->type, key_a, key_b);
+        sqlite_list_start();
         for(i=0;text_vector && text_vector[i];i++){
             sqlite_set_value(met->type, key_a, key_b, met->content_type, (const gchar *)text_vector[i]);
         }
+        sqlite_list_end();
     }
 }
 void meta_data_set_cache(mpd_Song *song, MetaDataResult result, MetaData *met)
