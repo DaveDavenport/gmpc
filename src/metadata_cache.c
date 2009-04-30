@@ -347,16 +347,21 @@ MetaDataResult meta_data_get_from_cache(mpd_Song *song, MetaDataType type, MetaD
         key_a = song->genre;
     }
     if(key_a == NULL || key_b == NULL) {
-
+        *met = meta_data_new(); (*met)->type = type;
+        (*met)->plugin_name = CACHE_NAME; (*met)->content_type = META_DATA_CONTENT_EMPTY;
         return META_DATA_UNAVAILABLE;
     }
     if(!g_utf8_validate(key_a, -1, NULL)){
         g_warning("Key_a is not valid utf-8");
+        (*met) = meta_data_new(); (*met)->type = type;
+        (*met)->plugin_name = CACHE_NAME; (*met)->content_type = META_DATA_CONTENT_EMPTY;
         return META_DATA_UNAVAILABLE;
     }
 
     if(!g_utf8_validate(key_b, -1, NULL)){
         g_warning("Key_b is not valid utf-8");
+        (*met) = meta_data_new(); (*met)->type = type;
+        (*met)->plugin_name = CACHE_NAME; (*met)->content_type = META_DATA_CONTENT_EMPTY;
         return META_DATA_UNAVAILABLE;
     }
     *met = sqlite_get_value(type,key_a, key_b); 
@@ -409,17 +414,16 @@ void meta_data_set_cache_real(mpd_Song *song, MetaDataResult result, MetaData *m
         key_a = song->genre;
     }
     if(key_a == NULL || key_b == NULL) {
-
-        return META_DATA_UNAVAILABLE;
+        return ;
     }
     if(!g_utf8_validate(key_a, -1, NULL)){
         g_warning("Key_a is not valid utf-8");
-        return META_DATA_UNAVAILABLE;
+        return ;
     }
 
     if(!g_utf8_validate(key_b, -1, NULL)){
         g_warning("Key_b is not valid utf-8");
-        return META_DATA_UNAVAILABLE;
+        return ;
     }
 
 
