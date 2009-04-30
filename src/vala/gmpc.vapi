@@ -14,7 +14,7 @@ namespace Gmpc {
 
     [CCode (cheader_filename="gmpc-meta-watcher.h")]
     public class MetaWatcher {
-       public void data_changed(MPD.Song song,  Gmpc.MetaData.Type type, Gmpc.MetaData.Result result, string? path); 
+       public void data_changed(MPD.Song song,  Gmpc.MetaData.Type type, Gmpc.MetaData.Result result,MetaData.Item met);
 
 
 

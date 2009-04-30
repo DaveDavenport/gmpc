@@ -243,8 +243,13 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
                 met.content_type = MetaData.ContentType.URI;
                 met.set_uri(file);
                 Gmpc.MetaData.set_metadata(this.song, Gmpc.MetaData.Result.AVAILABLE, met); 
-                metawatcher.data_changed(this.song, this.query_type, Gmpc.MetaData.Result.UNAVAILABLE, null);  
-                metawatcher.data_changed(this.song, this.query_type, Gmpc.MetaData.Result.AVAILABLE, file);  
+    
+                var met_false = new MetaData.Item();
+                met_false.type = this.query_type;
+                met_false.plugin_name = "User set";
+                met_false.content_type = MetaData.ContentType.EMPTY;
+                metawatcher.data_changed(this.song, this.query_type, Gmpc.MetaData.Result.UNAVAILABLE, met_false);  
+                metawatcher.data_changed(this.song, this.query_type, Gmpc.MetaData.Result.AVAILABLE, met);  
             }catch (Error e) {
 
             }
@@ -273,8 +278,13 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
                     met.content_type = MetaData.ContentType.URI;
                     met.set_uri(path);
                     Gmpc.MetaData.set_metadata(this.song, Gmpc.MetaData.Result.AVAILABLE, met); 
-                    metawatcher.data_changed(this.song, this.query_type, Gmpc.MetaData.Result.UNAVAILABLE, null);  
-                    metawatcher.data_changed(this.song, this.query_type, Gmpc.MetaData.Result.AVAILABLE, path);  
+
+                    var met_false = new MetaData.Item();
+                    met_false.type = this.query_type;
+                    met_false.plugin_name = "User set";
+                    met_false.content_type = MetaData.ContentType.EMPTY;
+                    metawatcher.data_changed(this.song, this.query_type, Gmpc.MetaData.Result.UNAVAILABLE, met_false);  
+                    metawatcher.data_changed(this.song, this.query_type, Gmpc.MetaData.Result.AVAILABLE, met);  
                 }else{
                     var h = Gmpc.AsyncDownload.download(path, store_image); 
                     if(h!=null)
@@ -294,8 +304,13 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
                     met.content_type = MetaData.ContentType.URI;
                     met.set_uri(file);
                     Gmpc.MetaData.set_metadata(this.song, Gmpc.MetaData.Result.AVAILABLE, met); 
-                    metawatcher.data_changed(this.song, this.query_type, Gmpc.MetaData.Result.UNAVAILABLE, null);  
-                    metawatcher.data_changed(this.song, this.query_type, Gmpc.MetaData.Result.AVAILABLE, file);  
+
+                    var met_false = new MetaData.Item();
+                    met_false.type = this.query_type;
+                    met_false.plugin_name = "User set";
+                    met_false.content_type = MetaData.ContentType.EMPTY;
+                    metawatcher.data_changed(this.song, this.query_type, Gmpc.MetaData.Result.UNAVAILABLE, met_false);  
+                    metawatcher.data_changed(this.song, this.query_type, Gmpc.MetaData.Result.AVAILABLE, met);  
                 }catch (Error e) {
 
                 }

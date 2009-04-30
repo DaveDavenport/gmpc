@@ -515,7 +515,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                     self_set_cover_from_path(self,path); 
                 }else{
                     self_set_cover_na(self);
-                    debug_printf(DEBUG_ERROR, "Method not implemented");
+                    debug_printf(DEBUG_ERROR, "Method not implemented: %i", met->content_type);
                 }
             } else if (ret == META_DATA_FETCHING) {
                 self_set_cover_fetching(self);

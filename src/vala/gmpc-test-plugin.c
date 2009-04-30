@@ -491,6 +491,7 @@ void gmpc_meta_data_edit_window_store_image (GmpcMetaDataEditWindow* self, const
 		file = gmpc_get_metadata_filename (self->priv->query_type, self->priv->song, NULL);
 		{
 			MetaData* met;
+			MetaData* met_false;
 			g_file_set_contents (file, (const char*) data, (glong) data_length1, &inner_error);
 			if (inner_error != NULL) {
 				goto __catch4_g_error;
@@ -502,9 +503,14 @@ void gmpc_meta_data_edit_window_store_image (GmpcMetaDataEditWindow* self, const
 			met->content_type = META_DATA_CONTENT_URI;
 			meta_data_set_uri (met, file);
 			meta_data_set_cache (self->priv->song, META_DATA_AVAILABLE, met);
-			gmpc_meta_watcher_data_changed (gmw, self->priv->song, self->priv->query_type, META_DATA_UNAVAILABLE, NULL);
-			gmpc_meta_watcher_data_changed (gmw, self->priv->song, self->priv->query_type, META_DATA_AVAILABLE, file);
+			met_false = g_new0 (MetaData, 1);
+			met_false->type = self->priv->query_type;
+			met_false->plugin_name = "User set";
+			met_false->content_type = META_DATA_CONTENT_EMPTY;
+			gmpc_meta_watcher_data_changed (gmw, self->priv->song, self->priv->query_type, META_DATA_UNAVAILABLE, met_false);
+			gmpc_meta_watcher_data_changed (gmw, self->priv->song, self->priv->query_type, META_DATA_AVAILABLE, met);
 			(met == NULL) ? NULL : (met = (meta_data_free (met), NULL));
+			(met_false == NULL) ? NULL : (met_false = (meta_data_free (met_false), NULL));
 		}
 		goto __finally4;
 		__catch4_g_error:
@@ -566,15 +572,21 @@ static void gmpc_meta_data_edit_window_set_metadata (GmpcMetaDataEditWindow* sel
 		if (_tmp5) {
 			if (g_utf8_get_char (g_utf8_offset_to_pointer (path, 0)) == '/') {
 				MetaData* met;
+				MetaData* met_false;
 				met = g_new0 (MetaData, 1);
 				met->type = self->priv->query_type;
 				met->plugin_name = "User set";
 				met->content_type = META_DATA_CONTENT_URI;
 				meta_data_set_uri (met, path);
 				meta_data_set_cache (self->priv->song, META_DATA_AVAILABLE, met);
-				gmpc_meta_watcher_data_changed (gmw, self->priv->song, self->priv->query_type, META_DATA_UNAVAILABLE, NULL);
-				gmpc_meta_watcher_data_changed (gmw, self->priv->song, self->priv->query_type, META_DATA_AVAILABLE, path);
+				met_false = g_new0 (MetaData, 1);
+				met_false->type = self->priv->query_type;
+				met_false->plugin_name = "User set";
+				met_false->content_type = META_DATA_CONTENT_EMPTY;
+				gmpc_meta_watcher_data_changed (gmw, self->priv->song, self->priv->query_type, META_DATA_UNAVAILABLE, met_false);
+				gmpc_meta_watcher_data_changed (gmw, self->priv->song, self->priv->query_type, META_DATA_AVAILABLE, met);
 				(met == NULL) ? NULL : (met = (meta_data_free (met), NULL));
+				(met_false == NULL) ? NULL : (met_false = (meta_data_free (met_false), NULL));
 			} else {
 				GEADAsyncHandler* h;
 				h = gmpc_easy_async_downloader (path, _gmpc_meta_data_edit_window_store_image_gmpc_async_download_callback, self);
@@ -592,6 +604,7 @@ static void gmpc_meta_data_edit_window_set_metadata (GmpcMetaDataEditWindow* sel
 			file = gmpc_get_metadata_filename (self->priv->query_type, self->priv->song, NULL);
 			{
 				MetaData* met;
+				MetaData* met_false;
 				fprintf (stdout, "Storing into: %s\n", file);
 				g_file_set_contents (file, lyric, (glong) (-1), &inner_error);
 				if (inner_error != NULL) {
@@ -604,9 +617,14 @@ static void gmpc_meta_data_edit_window_set_metadata (GmpcMetaDataEditWindow* sel
 				met->content_type = META_DATA_CONTENT_URI;
 				meta_data_set_uri (met, file);
 				meta_data_set_cache (self->priv->song, META_DATA_AVAILABLE, met);
-				gmpc_meta_watcher_data_changed (gmw, self->priv->song, self->priv->query_type, META_DATA_UNAVAILABLE, NULL);
-				gmpc_meta_watcher_data_changed (gmw, self->priv->song, self->priv->query_type, META_DATA_AVAILABLE, file);
+				met_false = g_new0 (MetaData, 1);
+				met_false->type = self->priv->query_type;
+				met_false->plugin_name = "User set";
+				met_false->content_type = META_DATA_CONTENT_EMPTY;
+				gmpc_meta_watcher_data_changed (gmw, self->priv->song, self->priv->query_type, META_DATA_UNAVAILABLE, met_false);
+				gmpc_meta_watcher_data_changed (gmw, self->priv->song, self->priv->query_type, META_DATA_AVAILABLE, met);
 				(met == NULL) ? NULL : (met = (meta_data_free (met), NULL));
+				(met_false == NULL) ? NULL : (met_false = (meta_data_free (met_false), NULL));
 			}
 			goto __finally5;
 			__catch5_g_error:
