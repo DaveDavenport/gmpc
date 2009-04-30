@@ -164,6 +164,7 @@ gmpcinclude_HEADERS = \
 		gmpc_easy_download.h\
 		vala/gmpc-easy-command.h\
 		vala/gmpc-plugin.h\
+        vala/gmpc-connection.h\
 		playlist3-messages.h\
 		gmpc-version.h\
 		metadata.h
