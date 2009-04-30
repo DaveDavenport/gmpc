@@ -408,6 +408,10 @@ void meta_data_set_cache_real(mpd_Song *song, MetaDataResult result, MetaData *m
     }else if ((met)->type == META_GENRE_SIMILAR) {
         key_a = song->genre;
     }
+    if(key_a == NULL || key_b == NULL) {
+
+        return META_DATA_UNAVAILABLE;
+    }
     if(!g_utf8_validate(key_a, -1, NULL)){
         g_warning("Key_a is not valid utf-8");
         return META_DATA_UNAVAILABLE;
