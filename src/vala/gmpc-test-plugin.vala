@@ -100,8 +100,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
         this.downloads.remove(handle);
         if(status == Gmpc.AsyncDownload.Status.DONE)
         {
-            /* get user data and take ownership */
-            weak uchar[] data = (uchar[])handle.get_data();
+            weak uchar[] data = handle.get_data();
             if(this.query_type == Gmpc.MetaData.Type.ALBUM_ART || this.query_type == Gmpc.MetaData.Type.ARTIST_ART)
             {
                 try{
