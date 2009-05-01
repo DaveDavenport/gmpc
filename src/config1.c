@@ -373,7 +373,7 @@ static void cfg_save_category(config_obj *cfg, config_node *node, FILE *fp)
 		else if (temp->type == TYPE_ITEM)
 		{
 			int i= 0;
-            int length = strlen(temp->value);
+            int length = (temp->value)?strlen(temp->value):0;
             fputs(temp->name, fp);
             fputs("=\"", fp);
 			for(i=0;i<length;i++)
