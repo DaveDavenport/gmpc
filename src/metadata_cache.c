@@ -26,6 +26,7 @@ enum metadata_sql {
     META_DATA_SQL_SET,
     META_DATA_SQL_UPDATE,
     META_DATA_SQL_DELETE,
+    META_DATA_SQL_CLEANUP,
     META_DATA_SQL_LIST_START,
     META_DATA_SQL_LIST_END
 };
@@ -39,6 +40,9 @@ static const char *const metadata_sql[] = {
 	"UPDATE metadata SET contenttype=?,content=? WHERE type=? AND key_a=? AND key_b=?",
     [META_DATA_SQL_DELETE] = 
     "DELETE FROM metadata WHERE type=? AND key_a=? AND key_b=?",
+    /* Clean all entries that are set 'UNAVAILABLE' */
+    [META_DATA_SQL_CLEANUP] = 
+    "DELETE FROM metadata WHERE contenttype=0",
     [META_DATA_SQL_LIST_START] = 
     "BEGIN TRANSACTION",
     [META_DATA_SQL_LIST_END] = 
@@ -48,6 +52,21 @@ static const char *const metadata_sql[] = {
 static sqlite3 *metadata_db;
 static sqlite3_stmt *metadata_stmt[G_N_ELEMENTS(metadata_sql)];
 
+static void sqlite_cleanup(void)
+{
+	sqlite3_stmt *const stmt = metadata_stmt[META_DATA_SQL_CLEANUP];
+	int ret;
+    sqlite3_reset(stmt);
+    do{
+        ret = sqlite3_step(stmt);
+    }while(ret == SQLITE_BUSY);
+	if (ret != SQLITE_DONE) {
+		g_warning("%s: sqlite3_step() failed: %s",__FUNCTION__,
+			  sqlite3_errmsg(metadata_db));
+		return;
+	}
+	sqlite3_reset(stmt);
+}
 static void sqlite_list_start(void)
 {
 	sqlite3_stmt *const stmt = metadata_stmt[META_DATA_SQL_LIST_START];
@@ -524,6 +543,7 @@ void metadata_cache_init(void)
 
 void metadata_cache_cleanup(void)
 {
+    sqlite_cleanup();
 }
 void metadata_cache_destroy(void)
 {
