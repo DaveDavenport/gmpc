@@ -1088,10 +1088,6 @@ static gboolean tag2_song_list_button_release_event(GtkTreeView *tree,
                 }
 
             }
-
-			/* Separator */	
-			item = gtk_separator_menu_item_new();
-			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 		}
 
         gmpc_mpddata_treeview_right_mouse_intergration(GMPC_MPDDATA_TREEVIEW(tree), GTK_MENU(menu));

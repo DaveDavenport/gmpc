@@ -911,6 +911,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 			int retv = 0;
 			int i;
 			GtkWidget *menu_item;
+			GtkTreeSelection *selection = NULL;
 			GtkWidget *submenu = gtk_menu_new();
 			for(i=0; i< num_plugins;i++)
 			{
@@ -922,9 +923,12 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 			/* If no submenu item was added, destroy the submenu */
 			if(!retv) gtk_widget_destroy(submenu);
 			else{
-				/* Add a separator in front */
-				menu_item = gtk_separator_menu_item_new();
-				gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
+				GList *temp = gtk_container_get_children(GTK_CONTAINER(menu));
+				if(temp){
+					menu_item = gtk_separator_menu_item_new();
+					g_list_free(temp);
+					gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
+				}
 				/* Add a tools menu item with the previously generated menu as submenu */
 				menu_item = gtk_menu_item_new_with_label(_("Tools"));
 				gtk_menu_item_set_submenu(GTK_MENU_ITEM(menu_item), submenu);
@@ -935,16 +939,22 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 			/**
 			 * Paste integration
 			 */
+			
+			selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(self));
+			if(selection && gtk_tree_selection_count_selected_rows(selection))
+			{
+				GList *temp = gtk_container_get_children(GTK_CONTAINER(menu));
+				if(temp){
+					menu_item = gtk_separator_menu_item_new();
+					g_list_free(temp);
+					gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
+				}
 
-			menu_item = gtk_separator_menu_item_new();
-			gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
-
-
-			menu_item = gtk_image_menu_item_new_from_stock(GTK_STOCK_COPY, NULL);
-			gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
-			g_signal_connect_swapped(G_OBJECT(menu_item), "activate", G_CALLBACK(self_paste_copy_songs), self);
-			retv++; 
-
+				menu_item = gtk_image_menu_item_new_from_stock(GTK_STOCK_COPY, NULL);
+				gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
+				g_signal_connect_swapped(G_OBJECT(menu_item), "activate", G_CALLBACK(self_paste_copy_songs), self);
+				retv++; 
+			}
 			if(paste_queue )
 			{
 				if(g_signal_has_handler_pending(G_OBJECT(self), object_signals[PASTE_BEFORE_SIGNAL], 0, TRUE))
@@ -980,9 +990,15 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 				}
 			}
 
-			menu_item = gtk_separator_menu_item_new();
-			gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
-			retv++;
+			{
+				GList *temp = gtk_container_get_children(GTK_CONTAINER(menu));
+				if(temp){
+					menu_item = gtk_separator_menu_item_new();
+					gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
+					g_list_free(temp);
+					retv++;
+				}
+			}
 			/** Edit column */
 			menu_item = gtk_image_menu_item_new_with_label(_("Edit Columns"));
 			gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(menu_item), gtk_image_new_from_stock(GTK_STOCK_EDIT, GTK_ICON_SIZE_MENU));
