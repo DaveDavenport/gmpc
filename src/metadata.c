@@ -456,34 +456,6 @@ static void metadata_download_handler(const GEADAsyncHandler *handle, GEADStatus
                             return;
                         }
                     }
-
-                }
-                /* If type is text, store this in a file. */
-                else if (FALSE /*md->content_type == META_DATA_CONTENT_TEXT*/)
-                {
-                    GError *error = NULL;
-                    const gchar *content = meta_data_get_text(md);
-                    gchar *filename = gmpc_get_metadata_filename(d->type&(~META_QUERY_NO_CACHE), d->song, NULL);
-                    g_file_set_contents(filename,(char *)content, -1, &error);
-                    if(error)
-                    {
-                        debug_printf(DEBUG_ERROR, "Failed to store file: %s: '%s'", filename, error->message);
-                        g_error_free(error);
-                        error = NULL;
-                    }
-                    else{
-                        /* If saved succesfull, pass filename back to handler */
-                        d->result = META_DATA_AVAILABLE;
-
-                        d->met = meta_data_new();
-                        d->met->type = ((MetaData *)d->iter->data)->type;
-                        d->met->plugin_name = ((MetaData *)d->iter->data)->plugin_name;
-                        d->met->content_type = META_DATA_CONTENT_URI;
-                        d->met->content = g_strdup(filename);
-                        d->met->size = -1;
-                    }
-                    /* similar are stored in db 
-                     * TODO: Fix this*/
                 }else {
                     const char *path = md->content;//d->iter->data;
                     d->result = META_DATA_AVAILABLE;
