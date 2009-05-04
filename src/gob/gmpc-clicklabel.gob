@@ -107,6 +107,14 @@ class Gmpc:ClickLabel from Gtk:Event:Box
 	{
 		gtk_misc_set_padding(GTK_MISC(self->_priv->label), x,y);
 	}
+    public
+    void
+    set_line_wrap_mode(self, PangoWrapMode wrap)
+    {
+        gtk_label_set_line_wrap_mode(GTK_LABEL(self->_priv->label), wrap);
+        gtk_label_set_line_wrap(GTK_LABEL(self->_priv->label), TRUE);
+    }
+
     /* Set the text to be displayed */
 	public
     void

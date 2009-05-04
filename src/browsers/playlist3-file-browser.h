@@ -22,4 +22,5 @@
 
 extern gmpcPlugin file_browser_plug;
 
+void pl3_file_browser_open_path(const gchar *path);
 #endif

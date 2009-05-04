@@ -1247,3 +1247,52 @@ static void pl3_file_browser_save_myself(void)
         cfg_set_single_value_as_int(config, "file-browser", "pane-pos", pos);
     }
 }
+
+static void pl3_file_browser_open_path_real(gchar **dirs, GtkTreeIter *parent)
+{
+    GtkTreeIter iter;
+    if((dirs[0]) == NULL) {
+        /* found dir */
+        gtk_tree_selection_select_iter(gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_fb_dir_tree)), parent);
+        return;
+    }
+    if(gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_fb_dir_store),&iter,parent))
+    {
+        do{
+            gchar *name=NULL;
+            gtk_tree_model_get(GTK_TREE_MODEL(pl3_fb_dir_store), &iter, PL3_FB_NAME, &name, -1);
+            if(name && g_utf8_collate(name, dirs[0]) == 0)
+            {
+                GtkTreePath *tpath = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_fb_dir_store), &iter);
+                gtk_tree_view_expand_row(GTK_TREE_VIEW(pl3_fb_dir_tree),tpath, FALSE); 
+                gtk_tree_path_free(tpath);
+                pl3_file_browser_open_path_real(&dirs[1], &iter);
+                g_free(name);
+                return;
+            }
+            if(name) g_free(name);
+        }while(gtk_tree_model_iter_next(GTK_TREE_MODEL(pl3_fb_dir_store), &iter));
+    }
+
+}
+void pl3_file_browser_open_path(const gchar *path)
+{
+    int depth = 0;
+    pl3_file_browser_activate();
+    if(pl3_fb_dir_store)
+    {
+        gchar **dirs = g_strsplit(path, G_DIR_SEPARATOR_S, -1);
+        if(dirs)
+        {
+            GtkTreeIter iter;
+            if(gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_fb_dir_store), &iter,NULL))
+            {
+                GtkTreePath *tpath = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_fb_dir_store), &iter);
+                gtk_tree_view_expand_row(GTK_TREE_VIEW(pl3_fb_dir_tree),tpath, FALSE); 
+                gtk_tree_path_free(tpath);
+                pl3_file_browser_open_path_real(dirs, &iter);
+            }
+            g_strfreev(dirs);
+        }
+    }
+}

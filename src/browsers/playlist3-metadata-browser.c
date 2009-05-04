@@ -29,10 +29,12 @@
 #include "gmpc-metaimage.h"
 #include "gmpc-mpddata-model.h"
 #include "gmpc-meta-text-view.h"
+#include "gmpc-clicklabel.h"
 #include "vala/gmpc-rating.h"
 #include "vala/gmpc-song-links.h"
 #include "vala/gmpc-favorites.h"
 #include "metadata_cache.h"
+#include "browsers/playlist3-file-browser.h"
 /**
  * Dragging 
  */
@@ -583,7 +585,7 @@ static void as_artist_clicked(GtkButton *button, gpointer userdata)
     }
 }
 
-static void info2_add_table_item(GtkWidget *table,char *name, char *value, int i, int selectable)
+static void info2_add_table_item_real(GtkWidget *table,char *name, GtkWidget *label2, int i, int selectable)
 {
 	GtkWidget *label;
 	label = gtk_label_new("");
@@ -591,14 +593,28 @@ static void info2_add_table_item(GtkWidget *table,char *name, char *value, int i
 	gtk_misc_set_alignment(GTK_MISC(label),0,0);
     
 	gtk_table_attach(GTK_TABLE(table), label,0,1,i,i+1,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
-	label = gtk_label_new(value);
-    if(selectable)
-        gtk_label_set_selectable(GTK_LABEL(label), TRUE);
-	gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
+	label = label2;
+    if(GTK_IS_LABEL(label))
+    {
+        if(selectable)
+            gtk_label_set_selectable(GTK_LABEL(label), TRUE);
+        gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
+        gtk_label_set_line_wrap_mode(GTK_LABEL(label), PANGO_WRAP_WORD);
+        gtk_label_set_line_wrap(GTK_LABEL(label), TRUE);
+    }
+    else if (GMPC_IS_CLICKLABEL(label))
+    {
+        gmpc_clicklabel_set_line_wrap_mode(GMPC_CLICKLABEL(label), PANGO_WRAP_WORD);
+        gmpc_clicklabel_set_ellipsize(GMPC_CLICKLABEL(label), PANGO_ELLIPSIZE_NONE);
+
+    }
 	gtk_table_attach(GTK_TABLE(table),label,1,2,i,i+1,GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
-    gtk_label_set_line_wrap_mode(GTK_LABEL(label), PANGO_WRAP_WORD);
-    gtk_label_set_line_wrap(GTK_LABEL(label), TRUE);
 }
+static void info2_add_table_item(GtkWidget *table,char *name, char *value, int i, int selectable)
+{
+    info2_add_table_item_real(table, name, gtk_label_new(value), i, selectable);
+}
+
 static void info2_add_table_item_widget(GtkWidget *table,char *name, GtkWidget *value, int i)
 {
 	GtkWidget *label;
@@ -980,8 +996,17 @@ static void info2_fill_song_view_real(mpd_Song *song)
 
 	if(song->file) {
 		/*** Dirname */		
-		markup =  g_markup_printf_escaped("<b>%s:</b>", _("Path"));
-		info2_add_table_item(table2,markup,song->file,i,TRUE);
+        char *filename = g_path_get_dirname(song->file);
+        markup =  g_markup_printf_escaped("<b>%s:</b>", _("Path"));
+        if(filename)
+        {
+            GtkWidget *cl = gmpc_clicklabel_new(song->file);
+            g_signal_connect_data(G_OBJECT(cl), "clicked", G_CALLBACK(pl3_file_browser_open_path), 
+                    filename,(GClosureNotify)g_free, G_CONNECT_SWAPPED);
+            info2_add_table_item_real(table2, markup, cl, i,TRUE);
+        }else{
+            info2_add_table_item(table2,markup,song->file,i,TRUE);
+        }
 		g_free(markup);	
 		i++;
 	}
@@ -2084,9 +2109,13 @@ static void info2_fill_album_view_real(mpd_Song *song2)
 				q_free(buffer); 
 			}
 			if(song->file) {
+                GtkWidget *cl;
 				char *filename = g_path_get_dirname(song->file);
 				markup = g_markup_printf_escaped("<b>%s:</b>", _("Directory"));
-				info2_add_table_item(table2, markup, filename, i,TRUE);
+                cl = gmpc_clicklabel_new(filename);
+                g_signal_connect_data(G_OBJECT(cl), "clicked", G_CALLBACK(pl3_file_browser_open_path), 
+                            g_strdup(filename),(GClosureNotify)g_free, G_CONNECT_SWAPPED);
+				info2_add_table_item_real(table2, markup, cl, i,TRUE);
 				g_free(markup);
 				q_free(filename);
 				i++;
