@@ -224,6 +224,16 @@ static void gmpc_log_func(const gchar *log_domain, GLogLevelFlags log_level, con
 		g_log_default_handler(log_domain, log_level, message, user_data);
 	}
 }
+static gboolean set_log_filter(const gchar *option_name, const gchar *value, gpointer data, GError **error)
+{
+	if(value == NULL || value[0] == 0){
+		g_set_error(error, 0, 0, "--log-filter requires a log domain as argument");
+		return FALSE;
+	}
+
+	g_log_set_handler(value, G_LOG_LEVEL_MASK|G_LOG_FLAG_FATAL|G_LOG_FLAG_RECURSION, g_log_default_handler, NULL);
+	return TRUE;
+}
 
 int main(int argc, char **argv)
 {
@@ -271,6 +281,9 @@ int main(int argc, char **argv)
 			&do_debug_updates, 	N_("Show redraw events in GTK+"),					NULL},
 		{ "bug-information",'b', 0,G_OPTION_ARG_NONE,
 			&show_bug_information, N_("Show bug information dialog"),				NULL},
+		{ "log-filter",		'f', 0,G_OPTION_ARG_CALLBACK, 
+			set_log_filter, N_("Shows all output from a certain log domain"),		"<Log domain>"},
+			
 
 		{NULL}
 	};
