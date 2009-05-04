@@ -268,7 +268,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                             /* set cache */
                             meta_data_set_cache(song, META_DATA_AVAILABLE, met); 
                             /* Signal */
-                            gmpc_meta_watcher_data_changed(gmw, song, self->image_type, META_DATA_AVAILABLE, path);
+                            gmpc_meta_watcher_data_changed(gmw, song, self->image_type, META_DATA_AVAILABLE, met);
                             /* free Metadata object */
                             meta_data_free(met);
                             found = TRUE;
@@ -900,7 +900,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                     met->content = filename;
                     met->size = -1;
 					meta_data_set_cache(song,META_DATA_AVAILABLE, met); 
-					gmpc_meta_watcher_data_changed(gmw, song, type, META_DATA_AVAILABLE, filename);
+					gmpc_meta_watcher_data_changed(gmw, song, type, META_DATA_AVAILABLE, met);
                     meta_data_free(met);
 				}
 			default:

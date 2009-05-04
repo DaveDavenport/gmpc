@@ -431,7 +431,7 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
                     met->content_type = META_DATA_CONTENT_URI;
                     met->content = filename; met->size =-1;
 					meta_data_set_cache(song, META_DATA_AVAILABLE, met); 
-					gmpc_meta_watcher_data_changed(gmw, song, type, META_DATA_AVAILABLE, filename);
+					gmpc_meta_watcher_data_changed(gmw, song, type, META_DATA_AVAILABLE, met);
 
                     meta_data_free(met);
                 }

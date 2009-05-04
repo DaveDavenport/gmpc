@@ -40,7 +40,7 @@ class Gmpc:Meta:Watcher from  G:Object {
 
     signal last NONE (POINTER, INT, INT, STRING)
     void
-    data_changed(self, mpd_Song *song, MetaDataType type,MetaDataResult result, gchar *path)
+    data_changed(self, mpd_Song *song, MetaDataType type,MetaDataResult result, MetaData *met)
     { 
     }
 
