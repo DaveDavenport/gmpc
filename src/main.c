@@ -737,7 +737,8 @@ int main(int argc, char **argv)
 	/**
      * Ask user about added/removed provider plugins
      */
-	meta_data_check_plugin_changed();
+	if(!disable_plugins)
+		meta_data_check_plugin_changed();
 	TEC("Metadata plugin changed check");
 
     /* Set window debug, this is used for developers to visualize redraws */
