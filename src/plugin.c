@@ -25,6 +25,7 @@
 #include "main.h"
 #include "metadata.h"
 
+#define PLUGIN_LOG_DOMAIN "Plugin"
 
 gmpcPluginParent **plugins = NULL;
 int num_plugins = 0;
@@ -54,18 +55,10 @@ int plugin_get_pos(int id)
 static int plugin_validate(gmpcPlugin *plug, GError **error)
 {
     int i;
-    if(plug == NULL)
-    {
-
-        g_set_error(error, plugin_quark(), 0,"%s: %s", _("Failed to load plugin"), _("plug == NULL"));
-        debug_printf(DEBUG_ERROR, "plug != NULL failed");
-        return FALSE;
-    }
     if(plug->name == NULL)
     {
-
         g_set_error(error, plugin_quark(), 0,"%s: %s", _("Failed to load plugin"), _("plugin has no name"));
-        debug_printf(DEBUG_ERROR, "Plugin has no name.");
+        g_log(PLUGIN_LOG_DOMAIN, G_LOG_LEVEL_CRITICAL, "pluging has no name: %s", plug->path);
         return FALSE;
     }
     for(i=0;i<num_plugins;i++)
@@ -73,14 +66,14 @@ static int plugin_validate(gmpcPlugin *plug, GError **error)
         if(strcmp(gmpc_plugin_get_name(plugins[i]), plug->name) == 0)
         {
             g_set_error(error, plugin_quark(), 0,"%s '%s': %s", _("Failed to load plugin"),plug->name, _("plugin with same name allready exists"));
-            debug_printf(DEBUG_ERROR, "Plugin with same name allready exists.");
+            g_log(PLUGIN_LOG_DOMAIN, G_LOG_LEVEL_CRITICAL, "pluging with same name allready exists: %s", plug->name);
             return FALSE;
         }
     }
     if(plug->set_enabled == NULL || plug->get_enabled == NULL)
     {
         g_set_error(error, plugin_quark(), 0,"%s: %s", _("Failed to load plugin"), _("plugin is missing set/get enable function"));
-        debug_printf(DEBUG_ERROR, "%s: set_enabled == NULL || get_enabled == NULL failed",plug->name);
+        g_log(PLUGIN_LOG_DOMAIN, G_LOG_LEVEL_CRITICAL, "%s: set_enabled == NULL || get_enabled == NULL failed",plug->name);
         return FALSE;
     }
     if(plug->plugin_type&GMPC_PLUGIN_PL_BROWSER)
@@ -88,13 +81,13 @@ static int plugin_validate(gmpcPlugin *plug, GError **error)
         if(plug->browser == NULL)
         {   
             g_set_error(error, plugin_quark(), 0,"%s: %s", _("Failed to load plugin"), _("plugin browser structure is incorrect"));
-            debug_printf(DEBUG_ERROR, "%s: plugin_type&GMPC_PLUGIN_PL_BROWSER && plugin->browser != NULL Failed",plug->name);
+            g_log(PLUGIN_LOG_DOMAIN, G_LOG_LEVEL_CRITICAL,"%s: plugin_type&GMPC_PLUGIN_PL_BROWSER && plugin->browser != NULL Failed",plug->name);
             return FALSE;
         }
         if(plug->browser->cat_key_press != NULL)
         {
             g_set_error(error, plugin_quark(), 0,"%s: %s", _("Failed to load plugin"), _("plugin browser structure is incorrect"));
-            debug_printf(DEBUG_ERROR, "Plugin %s implements a cat_key_press event handler that is deprecated", plug->name);
+            g_log(PLUGIN_LOG_DOMAIN, G_LOG_LEVEL_CRITICAL, "Plugin %s implements a cat_key_press event handler that is deprecated", plug->name);
         }
     }
     if(plug->plugin_type&GMPC_PLUGIN_META_DATA)
@@ -102,37 +95,42 @@ static int plugin_validate(gmpcPlugin *plug, GError **error)
         if(plug->metadata == NULL)
         {   
             g_set_error(error, plugin_quark(), 0,"%s: %s", _("Failed to load plugin"), _("plugin metadata structure is incorrect"));
-            debug_printf(DEBUG_ERROR, "%s: plugin_type&GMPC_PLUGIN_META_DATA && plugin->metadata != NULL Failed",plug->name);
+            g_log(PLUGIN_LOG_DOMAIN, G_LOG_LEVEL_CRITICAL,"%s: plugin_type&GMPC_PLUGIN_META_DATA && plugin->metadata != NULL Failed",plug->name);
             return FALSE;                                                                                             
         }
         if(plug->metadata->get_priority == NULL)
         {   
             g_set_error(error, plugin_quark(), 0,"%s: %s", _("Failed to load plugin"), _("plugin metadata structure is incorrect"));
-            debug_printf(DEBUG_ERROR, "%s: plugin_type&GMPC_PLUGIN_META_DATA && plugin->metadata->get_priority != NULL Failed",plug->name);
+            g_log(PLUGIN_LOG_DOMAIN, G_LOG_LEVEL_CRITICAL,
+                    "%s: plugin_type&GMPC_PLUGIN_META_DATA && plugin->metadata->get_priority != NULL Failed",plug->name);
             return FALSE;                                                                                             
         }
         if(plug->metadata->set_priority == NULL)
         {
             g_set_error(error, plugin_quark(), 0,"%s: %s", _("Failed to load plugin"), _("plugin metadata structure is incorrect"));
-            debug_printf(DEBUG_ERROR, "%s: plugin_type&GMPC_PLUGIN_META_DATA && plugin->metadata->set_priority != NULL Failed",plug->name);
+            g_log(PLUGIN_LOG_DOMAIN, G_LOG_LEVEL_CRITICAL,
+                    "%s: plugin_type&GMPC_PLUGIN_META_DATA && plugin->metadata->set_priority != NULL Failed",plug->name);
             return FALSE;                                                                                             
         }
         if(plug->metadata->get_image != NULL)
         {
             g_set_error(error, plugin_quark(), 0,"%s: %s %s", _("Failed to load plugin"), plug->name, _("plugin get_image api is deprecated "));
-            debug_printf(DEBUG_ERROR, "%s: plugin_type&GMPC_PLUGIN_META_DATA && plugin->metadata->get_image != NULL was true",plug->name);
+            g_log(PLUGIN_LOG_DOMAIN, G_LOG_LEVEL_CRITICAL,
+                    "%s: plugin_type&GMPC_PLUGIN_META_DATA && plugin->metadata->get_image != NULL was true",plug->name);
             return FALSE;                                                                                             
         }
         if(plug->metadata->get_uris != NULL)
         {
             g_set_error(error, plugin_quark(), 0,"%s: %s %s", _("Failed to load plugin"),plug->name, _("plugin get_uris api is deprecated "));
-            debug_printf(DEBUG_ERROR, "%s: plugin_type&GMPC_PLUGIN_META_DATA && plugin->metadata->get_uris != NULL was true",plug->name);
+            g_log(PLUGIN_LOG_DOMAIN, G_LOG_LEVEL_CRITICAL,
+                    "%s: plugin_type&GMPC_PLUGIN_META_DATA && plugin->metadata->get_uris != NULL was true",plug->name);
             return FALSE;                                                                                             
         }
         if(plug->metadata->get_metadata == NULL)
         {   
             g_set_error(error, plugin_quark(), 0,"%s: %s", _("Failed to load plugin"), _("plugin metadata structure is incorrect"));
-            debug_printf(DEBUG_ERROR, "%s: plugin_type&GMPC_PLUGIN_META_DATA && plugin->metadata->get_image != NULL Failed",plug->name);
+            g_log(PLUGIN_LOG_DOMAIN, G_LOG_LEVEL_CRITICAL,
+                    "%s: plugin_type&GMPC_PLUGIN_META_DATA && plugin->metadata->get_image != NULL Failed",plug->name);
             return FALSE;                                                                                             
         }
     }
@@ -142,7 +140,8 @@ static int plugin_validate(gmpcPlugin *plug, GError **error)
         if((plug->browser->selected && plug->browser->unselected == NULL) ||(plug->browser->selected  == NULL && plug->browser->unselected))
         {
             g_set_error(error, plugin_quark(), 0,"%s: %s", _("Failed to load plugin"), _("plugin browser structure is incorrect"));
-            debug_printf(DEBUG_ERROR, "%s: If a plugin provides a browser pane, it needs both selected and unselected",plug->name); 
+            g_log(PLUGIN_LOG_DOMAIN, G_LOG_LEVEL_CRITICAL,
+                    "%s: If a plugin provides a browser pane, it needs both selected and unselected",plug->name); 
             return FALSE;
         }
     }
@@ -152,7 +151,8 @@ static int plugin_validate(gmpcPlugin *plug, GError **error)
         if(!(plug->pref->construct && plug->pref->destroy))
         {
             g_set_error(error, plugin_quark(), 0,"%s: %s", _("Failed to load plugin"), _("plugin preferences structure is incorrect"));
-            debug_printf(DEBUG_ERROR, "%s: If a plugin has a preferences pane, it needs both construct and destroy", plug->name);
+            g_log(PLUGIN_LOG_DOMAIN, G_LOG_LEVEL_CRITICAL,
+                    "%s: If a plugin has a preferences pane, it needs both construct and destroy", plug->name);
         }
     }
 
@@ -204,12 +204,15 @@ static int plugin_load(const char *path, const char *file, GError **error)
 		return 1;
 	}
 	full_path = g_strdup_printf("%s%c%s", path,G_DIR_SEPARATOR, file);
-	debug_printf(DEBUG_INFO, "plugin_load: trying to load plugin %s", full_path);
+
+    g_log(PLUGIN_LOG_DOMAIN, G_LOG_LEVEL_DEBUG,
+            "plugin_load: trying to load plugin %s", full_path);
 
 	handle = g_module_open(full_path, G_MODULE_BIND_LOCAL);
 	q_free(full_path);
 	if (!handle) {
-		debug_printf (DEBUG_ERROR, "plugin_load: module failed to load: %s:%s\n", file, g_module_error());
+        g_log(PLUGIN_LOG_DOMAIN, G_LOG_LEVEL_CRITICAL,
+                "plugin_load: module failed to load: %s:%s\n", file, g_module_error());
         g_set_error(error, plugin_quark(), 0,"%s %s: '%s'", _("Failed to load plugin"), file, g_module_error());
 		return 1;
 	}
@@ -229,7 +232,9 @@ static int plugin_load(const char *path, const char *file, GError **error)
         return 0;
     }
 	if(!g_module_symbol(handle, "plugin_api_version", (gpointer)&api_version)){
-		debug_printf(DEBUG_ERROR, "plugin_load: symbol failed to bind: %s:%s\n",file, g_module_error());
+
+        g_log(PLUGIN_LOG_DOMAIN, G_LOG_LEVEL_CRITICAL,
+                "plugin_load: symbol failed to bind: %s:%s\n",file, g_module_error());
 
         g_set_error(error, plugin_quark(), 0,"%s %s: '%s'", _("Failed to bind symbol in plugin"), file, g_module_error());
 
@@ -239,8 +244,9 @@ static int plugin_load(const char *path, const char *file, GError **error)
 	}
 	if(*api_version != PLUGIN_API_VERSION)
 	{
-		debug_printf(DEBUG_ERROR, "Plugin '%s' has the wrong api version.\nPlugin api is %i, but we need %i",
-			       file, *api_version, PLUGIN_API_VERSION);
+        g_log(PLUGIN_LOG_DOMAIN, G_LOG_LEVEL_CRITICAL,
+                "Plugin '%s' has the wrong api version.\nPlugin api is %i, but we need %i",
+                file, *api_version, PLUGIN_API_VERSION);
 
         g_set_error(error, plugin_quark(), 0,_("Plugin %s has wrong api version: %i"), file, *api_version);
         
@@ -249,7 +255,8 @@ static int plugin_load(const char *path, const char *file, GError **error)
 		return 1;
 	}
 	if(!g_module_symbol(handle, "plugin", (gpointer)&(plug))){
-		debug_printf(DEBUG_ERROR, "plugin_load: symbol failed to bind: %s:%s\n",file, g_module_error());
+        g_log(PLUGIN_LOG_DOMAIN, G_LOG_LEVEL_CRITICAL,
+                "plugin_load: symbol failed to bind: %s:%s\n",file, g_module_error());
 
         g_set_error(error, plugin_quark(), 0,"%s %s: '%s'", _("Plugin %s has wrong no plugin structure: %s"), file, g_module_error());
         q_free(string);
@@ -259,18 +266,18 @@ static int plugin_load(const char *path, const char *file, GError **error)
 	if(plug == NULL)
 	{
         g_set_error(error, plugin_quark(), 0,"%s %s: '%s'", _("Plugin %s has wrong no plugin structure: %s"), file, g_module_error());
-		debug_printf(DEBUG_WARNING, "plugin load: unknown type of plugin.\n");
-		g_module_close(handle);
+        g_log(PLUGIN_LOG_DOMAIN, G_LOG_LEVEL_CRITICAL,
+                "%s: plugin load: unknown type of plugin.\n",file);
+        g_module_close(handle);
 		return 1;
 	}
+    /* set path, plugins might want this for images and glade files. */
+    plug->path = g_strdup(path);
     if(!plugin_validate(plug, error))
     {
-        ///debug_printf(DEBUG_ERROR, "Faled to validate plugin: %s\n", file);
         g_module_close(handle);
         return 1;
     }
-    /* set path, plugins might want this for images and glade files. */
-    plug->path = g_strdup(path);
     /* add the plugin to the list */
     plugin_add(plug,1, error);
     return 0;
@@ -299,14 +306,16 @@ void plugin_load_dir(const gchar *path)
                 {
                     failure = 1;
                     playlist3_show_error_message(error->message, ERROR_CRITICAL);
-                    debug_printf(DEBUG_ERROR, "Failed to load plugin: %s: %s\n", dirname, error->message);
+                    g_log(PLUGIN_LOG_DOMAIN, G_LOG_LEVEL_CRITICAL,
+                            "Failed to load plugin: %s: %s\n", dirname, error->message);
                     g_error_free(error);
                     error = NULL;
                 }
             }
             else
             {
-                debug_printf(DEBUG_INFO, "File not loaded, wrong extention, should be: '%s'", G_MODULE_SUFFIX);
+                g_log(PLUGIN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
+                        "%s not loaded, wrong extention, should be: '%s'", dirname,G_MODULE_SUFFIX);
             }
             q_free(full_path);
         }

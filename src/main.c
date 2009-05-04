@@ -215,6 +215,15 @@ static void bacon_on_message_received(const char *message, gpointer data)
 }
 #endif
 
+static global_log_level = G_LOG_LEVEL_MESSAGE;
+static void gmpc_log_func(const gchar *log_domain, GLogLevelFlags log_level, const gchar *message, gpointer user_data)
+{
+	if(log_level <= global_log_level)
+	{
+		g_log_default_handler(log_domain, log_level, message, user_data);
+	}
+}
+
 int main(int argc, char **argv)
 {
 	int i;
@@ -272,6 +281,7 @@ int main(int argc, char **argv)
 
 	INIT_TIC_TAC();
 
+
 	/* *
 	 * Set the default debug level
 	 * Depending if it is a git build or not
@@ -312,6 +322,8 @@ int main(int argc, char **argv)
 		print_version();
 		return EXIT_SUCCESS;
 	}
+
+	g_log_set_default_handler(gmpc_log_func, NULL);
 	/**
 	 * Set debug level, options are
 	 * 0 = No debug
@@ -320,6 +332,11 @@ int main(int argc, char **argv)
 	 * 3 = All messages
 	 */
 	if (debug_level >=0){
+		if(debug_level == 3){
+			global_log_level = G_LOG_LEVEL_DEBUG;
+		}else if (debug_level == 2){
+			global_log_level = G_LOG_LEVEL_INFO;
+		}
 		debug_set_level(debug_level);
 	}
 	/* Show the bug-information dialog */
