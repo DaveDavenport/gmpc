@@ -2447,14 +2447,18 @@ static GtkWidget * info2_create_album_button(gchar *artist, gchar *album)
 		i++;                                                    	
 		q_free(buffer); 
 	}
-	if(song->file) {
-		gchar *dirname = g_path_get_dirname(song->file);
-		markup = g_markup_printf_escaped("<b>%s:</b>", _("Directory"));
-		info2_add_table_item(table2,markup,dirname,i,FALSE);
-		g_free(markup);
-		i++;
-		q_free(dirname);
-	}
+    if(song->file) {
+        GtkWidget *cl;
+        gchar *dirname = g_path_get_dirname(song->file);
+        markup = g_markup_printf_escaped("<b>%s:</b>", _("Directory"));
+        cl = gmpc_clicklabel_new(dirname);
+        g_signal_connect_data(G_OBJECT(cl), "clicked", G_CALLBACK(pl3_file_browser_open_path), 
+                g_strdup(dirname),(GClosureNotify)g_free, G_CONNECT_SWAPPED);
+        info2_add_table_item_real(table2, markup, cl, i,TRUE);
+        g_free(markup);
+        i++;
+        q_free(dirname);
+    }
 	gtk_box_pack_start(GTK_BOX(table), table2, TRUE, TRUE,0);
 	/**
 	 * Play Button 
