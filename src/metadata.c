@@ -436,8 +436,6 @@ static void metadata_download_handler(const GEADAsyncHandler *handle, GEADStatus
         if(d->iter)
         {
             d->iter = g_list_next(d->iter);
-            /* TODO this does not have to be a uri */
-
             if(d->iter){
                 MetaData *md = (MetaData *)d->iter->data;
                 if(md->content_type == META_DATA_CONTENT_URI)
