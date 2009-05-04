@@ -2110,19 +2110,16 @@ void playlist3_new_header(void)
 		/** Title */
 		header_labels[0] = gmpc_clicklabel_new("");
 		gmpc_clicklabel_font_size(GMPC_CLICKLABEL(header_labels[0]), 4);
-		gmpc_clicklabel_set_do_bold(GMPC_CLICKLABEL(header_labels[0]), FALSE);
 
 		header_labels[1] = gtk_label_new(_("By"));
 		/** Artist */
 		header_labels[2] = gmpc_clicklabel_new("");
 		gmpc_clicklabel_set_ellipsize(GMPC_CLICKLABEL(header_labels[2]), PANGO_ELLIPSIZE_NONE);
-		gmpc_clicklabel_set_do_bold(GMPC_CLICKLABEL(header_labels[2]), FALSE);
 		gmpc_clicklabel_set_do_italic(GMPC_CLICKLABEL(header_labels[2]), TRUE);
 
 		header_labels[3] = gtk_label_new(_("From"));
 		/** Albumr */
 		header_labels[4] = gmpc_clicklabel_new("");
-		gmpc_clicklabel_set_do_bold(GMPC_CLICKLABEL(header_labels[4]), FALSE);
 		gmpc_clicklabel_set_do_italic(GMPC_CLICKLABEL(header_labels[4]), TRUE);
 
 		gtk_box_pack_start(GTK_BOX(vbox), header_labels[0], FALSE, TRUE, 0);
