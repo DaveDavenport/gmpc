@@ -1253,7 +1253,12 @@ static void pl3_file_browser_open_path_real(gchar **dirs, GtkTreeIter *parent)
     GtkTreeIter iter;
     if((dirs[0]) == NULL) {
         /* found dir */
+        GtkTreePath *path = NULL;
         gtk_tree_selection_select_iter(gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_fb_dir_tree)), parent);
+
+        path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_fb_dir_store),parent);
+        gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(pl3_fb_dir_tree), path,NULL,TRUE,0.5,0);
+        gtk_tree_path_free(path);
         return;
     }
     if(gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_fb_dir_store),&iter,parent))
@@ -1277,7 +1282,6 @@ static void pl3_file_browser_open_path_real(gchar **dirs, GtkTreeIter *parent)
 }
 void pl3_file_browser_open_path(const gchar *path)
 {
-    int depth = 0;
     pl3_file_browser_activate();
     if(pl3_fb_dir_store)
     {
