@@ -536,7 +536,6 @@ int main(int argc, char **argv)
 					while (!bacon_message_connection_get_is_server(bacon_connection)) {
 						bacon_message_connection_free(bacon_connection);
 						bacon_connection = bacon_message_connection_new("gmpc");
-						printf("Waiting te become master\n");
 						g_usleep(G_USEC_PER_SEC);
 					}
 				} else {
@@ -583,17 +582,7 @@ int main(int argc, char **argv)
      * (Will spawn a new thread, so have to be after the init threading
      */
 	meta_data_init();
-	/*
-	if (import_old_db) {
 
-		char *old_url = gmpc_get_covers_path("covers.db");
-		printf("Importing old metadata db\n");
-		if (g_file_test(old_url, G_FILE_TEST_EXISTS)) {
-			metadata_import_old_db(old_url);
-		}
-		g_free(old_url);
-	}
-	*/
 	TEC("Initializing metadata system");
 
 	/**

@@ -333,48 +333,45 @@ void meta_data_destroy(void)
 {
     meta_thread_data *mtd = NULL;
     INIT_TIC_TAC();
-    
+
+    /* remove old stuff */
+    g_async_queue_lock(meta_commands);
+    while((mtd = g_async_queue_try_pop_unlocked(meta_commands)))
     {
-        debug_printf(DEBUG_INFO,"Waiting for meta thread to terminate...");
-        /* remove old stuff */
-        g_async_queue_lock(meta_commands);
-        while((mtd = g_async_queue_try_pop_unlocked(meta_commands)))
-        {
-        }
-        /* Create the quit signal, this is just an empty request with id 0 */
-        mtd = g_malloc0(sizeof(*mtd));
-        mtd->id = 0;
-
-        /* push the request to the thread */
-        g_async_queue_push_unlocked(meta_commands, mtd);
-        g_async_queue_unlock(meta_commands);
-        /* cleanup */
-        g_free(mtd);
-        if(process_queue) {
-            GList *iter;
-            for(iter = g_list_first(process_queue); iter; iter = iter->next)
-            {
-                mtd = iter->data;
-                g_list_foreach(mtd->list, (GFunc)g_free, NULL);
-                g_list_free(mtd->list);
-                mtd->list = mtd->iter = NULL;
-                mpd_freeSong(mtd->song);
-                mpd_freeSong(mtd->edited);
-                g_free(mtd);
-            }
-            g_list_free(process_queue);
-            process_queue = NULL;
-        }
-
-        debug_printf(DEBUG_INFO,"Done..");
     }
+    /* Create the quit signal, this is just an empty request with id 0 */
+    mtd = g_malloc0(sizeof(*mtd));
+    mtd->id = 0;
+
+    /* push the request to the thread */
+    g_async_queue_push_unlocked(meta_commands, mtd);
+    g_async_queue_unlock(meta_commands);
+    /* cleanup */
+    g_free(mtd);
+    if(process_queue) {
+        GList *iter;
+        for(iter = g_list_first(process_queue); iter; iter = iter->next)
+        {
+            mtd = iter->data;
+            g_list_foreach(mtd->list, (GFunc)g_free, NULL);
+            g_list_free(mtd->list);
+            mtd->list = mtd->iter = NULL;
+            mpd_freeSong(mtd->song);
+            mpd_freeSong(mtd->edited);
+            g_free(mtd);
+        }
+        g_list_free(process_queue);
+        process_queue = NULL;
+    }
+
+    debug_printf(DEBUG_INFO,"Done..");
     if(meta_commands){
         g_async_queue_unref(meta_commands);
         meta_commands = NULL;
     }
     /* Close the cover database  */
     TOC("test")
-    metadata_cache_destroy();
+        metadata_cache_destroy();
     TOC("Config saved")
 }
 gboolean meta_compare_func(meta_thread_data *mt1, meta_thread_data *mt2)
@@ -1236,44 +1233,69 @@ MetaData *meta_data_dup_steal(MetaData *data)
     return retv;
 }
 
+gboolean meta_data_is_uri(const MetaData *data)
+{
+    return data->content_type == META_DATA_CONTENT_URI;
+}
 const gchar * meta_data_get_uri(const MetaData *data)
 {
-    g_assert(data->content_type == META_DATA_CONTENT_URI);
+    g_assert(meta_data_is_uri(data));
     return (const gchar *)data->content;
 }
 void meta_data_set_uri(MetaData *data, const gchar *uri)
 {
-    g_assert(data->content_type == META_DATA_CONTENT_URI);
+    g_assert(meta_data_is_uri(data));
     if(data->content) g_free(data->content);
     data->content = g_strdup(uri);
 }
+
+gboolean meta_data_is_text(const MetaData *data)
+{
+    return data->content_type == META_DATA_CONTENT_TEXT;
+}
 const gchar * meta_data_get_text(const MetaData *data)
 {
-    g_assert(data->content_type == META_DATA_CONTENT_TEXT);
+    g_assert(meta_data_is_text(data));
     return (const gchar *)data->content;
 }
 
+gboolean meta_data_is_html(const MetaData *data)
+{
+    return data->content_type == META_DATA_CONTENT_HTML;
+}
 const gchar * meta_data_get_html(const MetaData *data)
 {
-    g_assert(data->content_type == META_DATA_CONTENT_HTML);
+    g_assert(meta_data_is_html(data));
     return (const gchar *)data->content;
 }
-
+gboolean meta_data_is_raw(const MetaData *data)
+{
+    return data->content_type == META_DATA_CONTENT_RAW;
+}
 const guchar * meta_data_get_raw(const MetaData *data, gsize *length)
 {
-    g_assert(data->content_type == META_DATA_CONTENT_RAW);
+    g_assert(meta_data_is_raw(data));
     if(length)
         *length = data->size;
     return (guchar *)data->content;
 }
+gboolean meta_data_is_text_vector(const MetaData *data)
+{
+    return data->content_type == META_DATA_CONTENT_TEXT_VECTOR;
+}
 const gchar ** meta_data_get_text_vector(const MetaData *data)
 {
-    g_assert(data->content_type == META_DATA_CONTENT_TEXT_VECTOR);
+    g_assert(meta_data_is_text_vector(data));
     return (const gchar **)data->content;
+}
+
+gboolean meta_data_is_text_list(const MetaData *data)
+{
+    return data->content_type == META_DATA_CONTENT_TEXT_LIST;
 }
 const GList *meta_data_get_text_list(const MetaData *data)
 {
-    g_assert(data->content_type == META_DATA_CONTENT_TEXT_LIST);
+    g_assert(meta_data_is_text_list(data));
     return (const GList *)data->content;
 }
 /**

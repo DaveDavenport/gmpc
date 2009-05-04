@@ -102,12 +102,24 @@ MetaData *meta_data_dup(MetaData *data);
  **/
 MetaData *meta_data_dup_steal(MetaData *data);
 
+/* URI */
+gboolean meta_data_is_uri(const MetaData *data);
 const gchar *meta_data_get_uri(const MetaData *data);
 void meta_data_set_uri(MetaData *data, const gchar *uri);
+/* TEXT */
+gboolean meta_data_is_text(const MetaData *data);
 const gchar * meta_data_get_text(const MetaData *data);
+/* HTML */
+gboolean meta_data_is_html(const MetaData *data);
 const gchar * meta_data_get_html(const MetaData *data);
+/* RAW */
+gboolean meta_data_is_raw(const MetaData *data);
 const guchar * meta_data_get_raw(const MetaData *data, gsize *length);
+/* TEXT VECTOR */
+gboolean meta_data_is_text_vector(const MetaData *data);
 const gchar **meta_data_get_text_vector(const MetaData *data);
+/* TEXT LIST */
+gboolean meta_data_is_text_list(const MetaData *data);
 const GList *meta_data_get_text_list (const MetaData *data);
 
 /* ****************************************** */
