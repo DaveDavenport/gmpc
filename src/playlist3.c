@@ -2130,9 +2130,9 @@ void playlist3_new_header(void)
 		gtk_box_pack_start(GTK_BOX(hbox), header_labels[3], FALSE, TRUE, 0);
 		gtk_box_pack_start(GTK_BOX(hbox), header_labels[4], TRUE, TRUE, 0);
 
-		g_signal_connect(G_OBJECT(header_labels[0]), "button-press-event", G_CALLBACK(playlist3_header_song), NULL);
-		g_signal_connect(G_OBJECT(header_labels[2]), "button-press-event", G_CALLBACK(playlist3_header_artist), NULL);
-		g_signal_connect(G_OBJECT(header_labels[4]), "button-press-event", G_CALLBACK(playlist3_header_album), NULL);
+		g_signal_connect(G_OBJECT(header_labels[0]), "clicked", G_CALLBACK(playlist3_header_song), NULL);
+		g_signal_connect(G_OBJECT(header_labels[2]), "clicked", G_CALLBACK(playlist3_header_artist), NULL);
+		g_signal_connect(G_OBJECT(header_labels[4]), "clicked", G_CALLBACK(playlist3_header_album), NULL);
 		/* Create tooltip */
 		{
 			GtkWidget *win, *item = (GtkWidget *) gmpc_metaimage_new_size(META_ARTIST_ART, 200);
