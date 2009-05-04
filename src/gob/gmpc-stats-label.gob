@@ -31,7 +31,6 @@ requires 2.0.10
         ARTIST_GENRES_SONGS,
         ARTIST_DATES_SONGS
     }LabelType;
-
 %}
 %ht{
 #include <gtk/gtk.h>
@@ -54,31 +53,28 @@ class Gmpc:Stats:Label from Gtk:Label
             mpd_database_search_stats_start(connection);
             mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, self->_priv->song->artist);
             stats = mpd_database_search_stats_commit(connection);
-            if(stats)
-            {
+            if(stats) {
                 char *buffer = g_strdup_printf("%i", stats->numberOfSongs);
                 gtk_label_set_text(GTK_LABEL(self), buffer); 
                 q_free(buffer); 
                 mpd_database_search_free_stats(stats);
-            }
-            else
+            } else {
                 gtk_label_set_text(GTK_LABEL(self), ""); 
-
+            }
         }else if (self->_priv->ltype == ARTIST_PLAYTIME_SONGS)
         {
             MpdDBStats *stats = NULL;
             mpd_database_search_stats_start(connection);
             mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, self->_priv->song->artist);
             stats = mpd_database_search_stats_commit(connection);
-            if(stats)
-            {
+            if(stats) {
                 char *buffer = format_time_real(stats->playTime,"");
                 gtk_label_set_text(GTK_LABEL(self), buffer); 
                 q_free(buffer); 
                 mpd_database_search_free_stats(stats);
-            }
-            else
+            } else {
                 gtk_label_set_text(GTK_LABEL(self), ""); 
+            }
         }else if (self->_priv->ltype == ARTIST_GENRES_SONGS)
         {
             GString *string = NULL;
@@ -90,44 +86,36 @@ class Gmpc:Stats:Label from Gtk:Label
             {
                 g_string_append_printf(string, "%s%s",data->tag, (mpd_data_is_last(data))?"":", "); 
             }
-            if(string->len >0)
-            {
+            if(string->len >0) {
                 gtk_label_set_text(GTK_LABEL(self), string->str); 
-            }
-            else
-            {
+            } else {
                 gtk_label_set_text(GTK_LABEL(self), ""); 
             }
             g_string_free(string, TRUE);
         }
         else if (self->_priv->ltype == ARTIST_DATES_SONGS)
         {
-            int items = 0;
             GString *string = NULL;
             MpdData *data = NULL;
             mpd_database_search_field_start(connection, MPD_TAG_ITEM_DATE);
             mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, self->_priv->song->artist);
             string = g_string_new("");
-            items= 0;
             for(data = mpd_database_search_commit(connection);data != NULL ;data= mpd_data_get_next(data))
             {
                 g_string_append_printf(string, "%s%s",data->tag, (mpd_data_is_last(data))?"":", "); 
-                items++;
             }
-            if(string->len >0)
-            {
-
+            if(string->len >0) {
                 gtk_label_set_text(GTK_LABEL(self), string->str); 
-            }
-            else
+            } else {
                 gtk_label_set_text(GTK_LABEL(self), ""); 
+            }
             g_string_free(string, TRUE);
         }
 
         return FALSE;
     }
 
-
+    /* This implements lazy loading, the data will only be fetched when the widget is visible for the first time. */
     private
     gboolean
     expose_event(self, GdkEventExpose *event, gpointer data)
@@ -150,16 +138,8 @@ class Gmpc:Stats:Label from Gtk:Label
         Self *self = GET_NEW;
         self->_priv->song = mpd_songDup(song);
         self->_priv->ltype = ltype;
-
+        /* Set expose signal, so I know when it is visible for the first time */
         self->_priv->ll_signal = g_signal_connect(G_OBJECT(self), "expose-event", G_CALLBACK(self_expose_event), NULL);
         return (GtkWidget *)self;
     }
-    override (G:Object)
-    void
-    finalize(G:Object *obj)
-    {
-        PARENT_HANDLER(obj);
-    }
-
-
 }
