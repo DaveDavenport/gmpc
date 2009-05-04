@@ -53,6 +53,7 @@
 
 #include "gob/gmpc-mpddata-model-playlist.h"
 #include "metadata_cache.h"
+#include "bug-information.h"
 /**
  * Get revision
  */
@@ -215,7 +216,7 @@ static void bacon_on_message_received(const char *message, gpointer data)
 }
 #endif
 
-static global_log_level = G_LOG_LEVEL_MESSAGE;
+static GLogLevelFlags global_log_level = G_LOG_LEVEL_MESSAGE;
 static void gmpc_log_func(const gchar *log_domain, GLogLevelFlags log_level, const gchar *message, gpointer user_data)
 {
 	if(log_level <= global_log_level)
