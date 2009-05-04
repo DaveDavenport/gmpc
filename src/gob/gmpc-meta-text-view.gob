@@ -290,21 +290,26 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
         }else if (met->content_type == META_DATA_CONTENT_HTML) {
             /* TODO: make utf-8 compatible */
             const gchar *text = meta_data_get_html(met);
-            gsize length = strlen(text)+1;
-            gchar *data = g_malloc0(length);
-            int i=0, depth=0,j=0;
-            for(i=0; i<length;i++){
-                if(text[i] == '<') depth++;
-                else if(text[i] == '>') depth--;
-                else if(!depth){
-                    data[j] = text[i];
-                    j++;
+            if(text)
+            {
+                /* Get byte length */
+                gsize length = strlen(text);
+                gchar *data = g_malloc0(length+1);
+                int i=0, depth=0,j=0;
+                for(i=0; i<length;i++){
+                    if(text[i] == '<') depth++;
+                    else if(text[i] == '>') depth--;
+                    else if(!depth){
+                        data[j] = text[i];
+                        j++;
+                    }
                 }
+                data[j] =  '\0';
+                self_set_text(self,data, -1, FALSE); 
+                g_free(data);
+            }else{
+                self_set_text_na(self);
             }
-            data[j] =  '\0';
-
-            self_set_text(self,data, -1, FALSE); 
-            g_free(data);
         }
         if(self->_priv->met) meta_data_free(self->_priv->met);
         self->_priv->met = meta_data_dup(met);

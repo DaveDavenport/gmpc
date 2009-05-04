@@ -519,11 +519,8 @@ static void as_album_clicked(GtkButton *button, gpointer userdata)
         {
 			if(data->type == MPD_DATA_TYPE_SONG)
 			{
-			//	if(data->song->album && !strcmp(data->song->album,album))
-				{
-					mpd_playlist_queue_add(connection, data->song->file);
-				}
-			}
+                mpd_playlist_queue_add(connection, data->song->file);
+            }
 		}
 		mpd_playlist_queue_commit(connection);
 		if(clear)
@@ -790,7 +787,7 @@ static void info2_fill_song_view_real(mpd_Song *song)
 	//song = mpd_database_get_fileinfo(connection, path);
 	if(!song)
 		return;
-    if(cur && strcmp(song->file, cur->file))
+    if(cur && g_utf8_collate(song->file, cur->file))
     {
         /* disable the current songs thingy */       
         show_current_song = FALSE;
@@ -1265,7 +1262,7 @@ static void info2_fill_view_entry_activate(GtkEntry *entry, GtkWidget *table)
             do{
                 char *oldname = NULL;
                 gtk_tree_model_get(model, &iter, 0,&oldname,-1);
-                if(!strcmp(text, oldname))  skip=TRUE;
+                if(!g_utf8_collate(text, oldname))  skip=TRUE;
                 q_free(oldname);
             }while(gtk_tree_model_iter_next(model, &iter) && skip);
         }
@@ -2534,7 +2531,7 @@ void info2_show_current_song(void)
         if(history_current) {
             hs = history_current->data;
             if(hs->type == HISTORY_SONG){
-                if(strcmp(hs->song->file, song->file) == 0) {
+                if(g_utf8_collate(hs->song->file, song->file) == 0) {
                     info2_fill_song_view_real(hs->song);
                     return;
                 }
@@ -2761,7 +2758,7 @@ void info2_fill_song_view(mpd_Song *song)
     if(history_current) {
         hs = history_current->data;
         if(hs->type == HISTORY_SONG){
-            if(strcmp(hs->song->file, song->file) == 0) {
+            if(g_utf8_collate(hs->song->file, song->file) == 0) {
                 return;
             }
         }
@@ -2789,8 +2786,8 @@ void info2_fill_album_view(const char *artist,const char *album)
     if(history_current) {
         hs = history_current->data;
         if(hs->type == HISTORY_ALBUM){
-            if(strcmp(hs->song->artist, artist) == 0 && 
-                    strcmp(hs->song->album, album) == 0) {
+            if(g_utf8_collate(hs->song->artist, artist) == 0 && 
+                    g_utf8_collate(hs->song->album, album) == 0) {
                 return;
             }
         }
@@ -2838,7 +2835,7 @@ void info2_fill_artist_view(const char *artist)
     if(history_current) {
         hs = history_current->data;
         if(hs->type == HISTORY_ARTIST){
-            if(strcmp(hs->song->artist, artist) == 0) {
+            if(g_utf8_collate(hs->song->artist, artist) == 0) {
                 return;
             }
         }
