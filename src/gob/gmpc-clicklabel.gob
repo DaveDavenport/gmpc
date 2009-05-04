@@ -55,8 +55,6 @@ class Gmpc:ClickLabel from Gtk:Event:Box
     void setup_attributes(self)
     {
         PangoAttribute *attr;
-        if(self->_priv->attributes) {
-        }
 
 		if(self->do_italic)
 		{
@@ -132,7 +130,6 @@ class Gmpc:ClickLabel from Gtk:Event:Box
 			PangoContext *pc = NULL;
 			PangoFontDescription *pfd = NULL;
 			Self *lb = GET_NEW;
-			/* create strings, should make this smarter */
 			/* label */
 			lb->label = gtk_label_new(value);
 			gtk_misc_set_alignment(GTK_MISC(lb->label), 0,0.5);
