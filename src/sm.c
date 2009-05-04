@@ -112,8 +112,8 @@ void smc_connect(gint argc, gchar **argv)
 
 	/* Session manager properties - 4 are required.
 	*/
-	userid.name = SmUserID;
-	userid.type = SmARRAY8;
+	userid.name = (char *)SmUserID;
+	userid.type = (char *)SmARRAY8;
 	userid.num_vals = 1;
 	userid.vals = &userid_val;
 	uid = getuid();
@@ -124,16 +124,16 @@ void smc_connect(gint argc, gchar **argv)
 	userid_val.value = userid_string;
 	userid_val.length = strlen(userid_string);
 
-	pid.name = SmProcessID;
-	pid.type = SmARRAY8;
+	pid.name = (char  *)SmProcessID;
+	pid.type = (char *)SmARRAY8;
 	pid.num_vals = 1;
 	pid.vals = &pid_val;
 	sprintf(pid_str, "%i", getpid());
 	pid_val.value = (SmPointer) pid_str;
 	pid_val.length = strlen(pid_str);
 
-	restart.name = SmRestartCommand;
-	restart.type = SmLISTofARRAY8;
+	restart.name = (char *)SmRestartCommand;
+	restart.type = (char *)SmLISTofARRAY8;
 	restart.vals = g_new0(SmPropValue, argc + 2);
 	j = 0;
 	for (i = 0; i < argc; ++i) {
@@ -150,20 +150,20 @@ void smc_connect(gint argc, gchar **argv)
 	restart.num_vals = j;
 
 	restartstyle = SmRestartImmediately;
-	restart_style.name = SmRestartStyleHint;
-	restart_style.type = SmCARD8;
+	restart_style.name =(char *) SmRestartStyleHint;
+	restart_style.type =(char *) SmCARD8;
 	restart_style.num_vals = 1;
 	restart_style.vals = &restart_style_val;
 	restart_style_val.value = (SmPointer) &restartstyle;
 	restart_style_val.length = 1;
 
-	clone.name = SmCloneCommand;
-	clone.type = SmLISTofARRAY8;
+	clone.name = (char *)SmCloneCommand;
+	clone.type = (char *)SmLISTofARRAY8;
 	clone.vals = restart.vals;
 	clone.num_vals = restart.num_vals - 2;
 
-	program.name = SmProgram;
-	program.type = SmARRAY8;
+	program.name = (char *)SmProgram;
+	program.type = (char *)SmARRAY8;
 	program.vals = restart.vals;
 	program.num_vals = 1;
 
