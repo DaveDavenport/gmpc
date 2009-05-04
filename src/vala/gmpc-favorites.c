@@ -243,20 +243,18 @@ static gboolean gmpc_favorites_button_button_press_event_callback (GmpcFavorites
 
 /* on mouse over, do some pre-highlighting */
 static gboolean gmpc_favorites_button_enter_notify_event_callback (GmpcFavoritesButton* self, GmpcFavoritesButton* button, const GdkEventCrossing* motion) {
-	GdkPixbuf* _tmp0;
 	GdkPixbuf* pb2;
-	gboolean _tmp1;
+	gboolean _tmp0;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (button != NULL, FALSE);
-	_tmp0 = NULL;
-	pb2 = (_tmp0 = gdk_pixbuf_copy (self->priv->pb), (_tmp0 == NULL) ? NULL : g_object_ref (_tmp0));
+	pb2 = gdk_pixbuf_copy (self->priv->pb);
 	if (self->priv->fstate) {
 		colorshift_pixbuf (pb2, self->priv->pb, 10);
 	} else {
 		colorshift_pixbuf (pb2, self->priv->pb, -50);
 	}
 	gtk_image_set_from_pixbuf (self->priv->image, pb2);
-	return (_tmp1 = FALSE, (pb2 == NULL) ? NULL : (pb2 = (g_object_unref (pb2), NULL)), _tmp1);
+	return (_tmp0 = FALSE, (pb2 == NULL) ? NULL : (pb2 = (g_object_unref (pb2), NULL)), _tmp0);
 }
 
 
@@ -271,7 +269,6 @@ static gboolean gmpc_favorites_button_leave_notify_event_callback (GmpcFavorites
 
 /* Update the icon according to state */
 static void gmpc_favorites_button_update (GmpcFavoritesButton* self, GmpcFavoritesList* list) {
-	GdkPixbuf* _tmp0;
 	GdkPixbuf* pb2;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (list != NULL);
@@ -283,8 +280,7 @@ static void gmpc_favorites_button_update (GmpcFavoritesButton* self, GmpcFavorit
 		return;
 	}
 	/* Copy the pixbuf */
-	_tmp0 = NULL;
-	pb2 = (_tmp0 = gdk_pixbuf_copy (self->priv->pb), (_tmp0 == NULL) ? NULL : g_object_ref (_tmp0));
+	pb2 = gdk_pixbuf_copy (self->priv->pb);
 	/* Depending on the state colorshift the pixbuf */
 	if (self->priv->fstate) {
 		colorshift_pixbuf (pb2, self->priv->pb, 30);
