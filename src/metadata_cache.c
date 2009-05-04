@@ -29,6 +29,9 @@
 #define CACHE_NAME "Metadata cache"
 #define MDC_LOG_DOMAIN "MetaDataCache"
 
+/* function from metadata.c */
+mpd_Song *rewrite_mpd_song(mpd_Song *tsong, MetaDataType type);
+
 static const char metadata_sql_create[] = 
 "CREATE TABLE IF NOT EXISTS metadata("
 "   type	INT NOT NULL,  "

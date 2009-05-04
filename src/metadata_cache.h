@@ -19,16 +19,36 @@
 
 #ifndef __METADATA_CACHE_H__
 #define __METADATA_CACHE_H__
-
+/**
+ * Get metadata from cache. 
+ * *met needs to be free-ed.
+ */
 MetaDataResult meta_data_get_from_cache(mpd_Song *song, MetaDataType type, MetaData **met);
-mpd_Song *rewrite_mpd_song(mpd_Song *tsong, MetaDataType type);
 
+/**
+ * Set a cache entry directly. Don't use. 
+ */
 void meta_data_set_cache_real(mpd_Song *song, MetaDataResult result, MetaData *met);
-
+/**
+ * Set the rewrited value.
+ */
 void meta_data_set_cache(mpd_Song *song, MetaDataResult result, MetaData *met);
 
+/**
+ * Removes all entries that are set to META_DATA_CONTENT_EMPTY (or META_DATA_UNAVAILABLE)
+ */
+void metadata_cache_cleanup(void);
+
+
+
+/**
+ * Start the cache. 
+ * (initializes sqlite db, etc)
+ */
 void metadata_cache_init(void);
 
-void metadata_cache_cleanup(void);
+/**
+ * Destroy the cache 
+ */
 void metadata_cache_destroy(void);
 #endif

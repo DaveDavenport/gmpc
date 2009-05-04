@@ -63,6 +63,8 @@ typedef struct {
 gboolean meta_compare_func(meta_thread_data *mt1, meta_thread_data *mt2);
 static gboolean meta_data_handle_results(void);
 
+mpd_Song *rewrite_mpd_song(mpd_Song *tsong, MetaDataType type);
+
 /*
 static gboolean meta_data_handler_data_match(meta_thread_data *data, gpointer data2);
 */
@@ -391,11 +393,6 @@ gboolean meta_compare_func(meta_thread_data *mt1, meta_thread_data *mt2)
  */
 
 static gboolean process_itterate(void);
-/* TODO remove this and wrap this */
-typedef struct _gmpcPluginParent {
-    gmpcPlugin *old;
-    GmpcPluginBase *new;
-}_gmpcPluginParent;
 static void metadata_download_handler(const GEADAsyncHandler *handle, GEADStatus status, gpointer user_data)
 {
     meta_thread_data *d = user_data;
@@ -656,7 +653,7 @@ static gboolean process_itterate(void)
              * Query plugins, new type call in this thread.
              * old type, create new thread. 
              */
-            if(gmpc_plugin_get_enabled(plug) && plug->old->metadata->get_metadata != NULL)
+            if(gmpc_plugin_get_enabled(plug))
             {
                 gmpc_plugin_metadata_query_metadata_list(plug, d->edited, d->type&META_QUERY_DATA_TYPES, result_itterate, (gpointer)d);
             }
@@ -1101,7 +1098,7 @@ static void metadata_get_list_itterate(GList *list, gpointer data)
     {
         gmpcPluginParent *plug = meta_plugins[q->index]; 
         q->index++;
-        if(gmpc_plugin_get_enabled(plug) && plug->old && plug->old->metadata && plug->old->metadata->get_metadata){
+        if(gmpc_plugin_get_enabled(plug)){
             q->calls++;
             gmpc_plugin_metadata_query_metadata_list(plug, q->song, q->type&META_QUERY_DATA_TYPES,metadata_get_list_itterate, (gpointer)q); 
         }
