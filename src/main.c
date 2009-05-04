@@ -215,14 +215,6 @@ static void bacon_on_message_received(const char *message, gpointer data)
 }
 #endif
 
-/**
- * Gmpc Easy Command integration
- */
-static void pl3_call_easy_command(void)
-{
-	gmpc_easy_command_popup(gmpc_easy_command);
-}
-
 int main(int argc, char **argv)
 {
 	int i;
@@ -826,7 +818,7 @@ int main(int argc, char **argv)
 	g_signal_connect(G_OBJECT(keys), "mm_volume_down", G_CALLBACK(volume_down), NULL);
 	g_signal_connect(G_OBJECT(keys), "mm_toggle_mute", G_CALLBACK(volume_toggle_mute), NULL);
 	g_signal_connect(G_OBJECT(keys), "mm_show_notification", G_CALLBACK(tray_icon2_create_tooltip), NULL);
-	g_signal_connect(G_OBJECT(keys), "mm_show_easy_command", G_CALLBACK(pl3_call_easy_command), NULL);
+	g_signal_connect_swapped(G_OBJECT(keys), "mm_show_easy_command", G_CALLBACK(gmpc_easy_command_popup), gmpc_easy_command);
 	TEC("Setting up multimedia keys");
 
 #endif
