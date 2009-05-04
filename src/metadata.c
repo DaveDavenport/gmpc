@@ -432,44 +432,42 @@ static void metadata_download_handler(const GEADAsyncHandler *handle, GEADStatus
         }
     }
 
+    if(d->iter)
     {
-        if(d->iter)
-        {
-            d->iter = g_list_next(d->iter);
-            if(d->iter){
-                MetaData *md = (MetaData *)d->iter->data;
-                if(md->content_type == META_DATA_CONTENT_URI)
-                {
-                    const char *path = meta_data_get_uri(md);// d->iter->data;
-                    if(path[0] == '/') {
+        d->iter = g_list_next(d->iter);
+        if(d->iter){
+            MetaData *md = (MetaData *)d->iter->data;
+            if(md->content_type == META_DATA_CONTENT_URI)
+            {
+                const char *path = meta_data_get_uri(md);// d->iter->data;
+                if(path[0] == '/') {
 
-                        d->met = md;
-                        d->iter->data= NULL;
-                        
-                        d->result = META_DATA_AVAILABLE;
-                    }else{
-                        GEADAsyncHandler *new_handle = gmpc_easy_async_downloader((const gchar *)path, metadata_download_handler, d);
-                        if(new_handle != NULL)
-                        {
-                            return;
-                        }
-                    }
-                }else {
-                    const char *path = md->content;//d->iter->data;
-                    d->result = META_DATA_AVAILABLE;
                     d->met = md;
                     d->iter->data= NULL;
-                }	
 
-            }
+                    d->result = META_DATA_AVAILABLE;
+                }else{
+                    GEADAsyncHandler *new_handle = gmpc_easy_async_downloader((const gchar *)path, metadata_download_handler, d);
+                    if(new_handle != NULL)
+                    {
+                        return;
+                    }
+                }
+            }else {
+                const char *path = md->content;//d->iter->data;
+                d->result = META_DATA_AVAILABLE;
+                d->met = md;
+                d->iter->data= NULL;
+            }	
+
         }
-        g_list_foreach(d->list,(GFunc) meta_data_free, NULL);
-        g_list_free(d->list);
-        d->list = NULL;
-        d->iter = NULL;
-        d->index++;
-        process_itterate();
     }
+    g_list_foreach(d->list,(GFunc) meta_data_free, NULL);
+    g_list_free(d->list);
+    d->list = NULL;
+    d->iter = NULL;
+    d->index++;
+    process_itterate();
 }
 static void result_itterate(GList *list, gpointer user_data)
 {
