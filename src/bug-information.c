@@ -21,7 +21,7 @@
 #include <config.h>
 #include <main.h>
 #include <bug-information.h>
-
+#include <sqlite3.h>
 #include "revision.h"
 
 static void bug_information_generate_message(GtkTextBuffer *buffer)
@@ -97,8 +97,14 @@ static void bug_information_generate_message(GtkTextBuffer *buffer)
     gtk_text_buffer_insert(buffer, &iter, temp, -1);
     g_free(temp);
 
+    /* glib-2.0 */ 
+    gtk_text_buffer_insert_with_tags(buffer, &iter, "Runtime sqlite3:\t", -1, bold_tag, NULL);
+    gtk_text_buffer_insert(buffer, &iter, sqlite3_libversion(), -1);
+
+    gtk_text_buffer_insert_with_tags(buffer, &iter, "\nCompile time sqlite3:\t", -1, bold_tag, NULL);
+    gtk_text_buffer_insert(buffer, &iter, SQLITE_VERSION, -1);
     /* platform */
-    gtk_text_buffer_insert_with_tags(buffer, &iter, "Platform:\t", -1, bold_tag, NULL);
+    gtk_text_buffer_insert_with_tags(buffer, &iter, "\nPlatform:\t", -1, bold_tag, NULL);
 #ifdef WIN32
     gtk_text_buffer_insert(buffer, &iter, "Windows\n", -1);
     gtk_text_buffer_insert_with_tags(buffer, &iter, "Windows version:\t", -1, bold_tag, NULL);

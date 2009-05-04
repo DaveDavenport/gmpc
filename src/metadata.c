@@ -648,10 +648,8 @@ static gboolean process_itterate(void)
         {
             gmpcPluginParent *plug = meta_plugins[d->index];
 
-            /* TODO WRAP THIS */
             /**
-             * Query plugins, new type call in this thread.
-             * old type, create new thread. 
+             * Query plugins
              */
             if(gmpc_plugin_get_enabled(plug))
             {
@@ -690,7 +688,6 @@ static gboolean process_itterate(void)
     }
     /**
      * Remove from queue
-     * TODO: try to match identical queries?
      */
     process_queue = g_list_remove(process_queue, d);
     if(process_queue){
