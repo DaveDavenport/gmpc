@@ -401,9 +401,7 @@ void url_start(void)
 	entry = gtk_entry_new();
 	gtk_box_pack_start(GTK_BOX(vbox), entry, FALSE, TRUE, 0);
 	g_signal_connect(G_OBJECT(entry), "changed", G_CALLBACK(url_entry_changed), add_button);
-/*	if(url)
-		gtk_entry_set_text(GTK_ENTRY(entry), url);
-        */
+
 	progress = gtk_progress_bar_new();
 	gtk_box_pack_start(GTK_BOX(vbox), progress, FALSE, TRUE, 0);
 

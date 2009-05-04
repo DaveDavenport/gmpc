@@ -1,7 +1,7 @@
 /* Gnome Music Player Client (GMPC)
  * Copyright (C) 2004-2009 Qball Cow <qball@sarine.nl>
  * Project homepage: http://gmpc.wikia.com/
- 
+
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -32,7 +32,7 @@
 /* function from metadata.c */
 mpd_Song *rewrite_mpd_song(mpd_Song *tsong, MetaDataType type);
 
-static const char metadata_sql_create[] = 
+static const char metadata_sql_create[] =
 "CREATE TABLE IF NOT EXISTS metadata("
 "   type	INT NOT NULL,  "
 "   key_a   VARCHAR,"
@@ -55,20 +55,20 @@ enum metadata_sql {
 };
 
 static const char *const metadata_sql[] = {
-	[META_DATA_SQL_GET] = 
+	[META_DATA_SQL_GET] =
 		"SELECT contenttype,content FROM metadata WHERE type=? AND key_a=? AND key_b=?",
-	[META_DATA_SQL_SET] = 
+	[META_DATA_SQL_SET] =
 		"INSERT INTO metadata(contenttype,content,type,key_a, key_B) VALUES(?,?,?,?,?)",
 	[META_DATA_SQL_UPDATE] =
 		"UPDATE metadata SET contenttype=?,content=? WHERE type=? AND key_a=? AND key_b=?",
-	[META_DATA_SQL_DELETE] = 
+	[META_DATA_SQL_DELETE] =
 		"DELETE FROM metadata WHERE type=? AND key_a=? AND key_b=?",
 	/* Clean all entries that are set 'UNAVAILABLE' */
-	[META_DATA_SQL_CLEANUP] = 
+	[META_DATA_SQL_CLEANUP] =
 		"DELETE FROM metadata WHERE contenttype=0",
-	[META_DATA_SQL_LIST_START] = 
+	[META_DATA_SQL_LIST_START] =
 		"BEGIN TRANSACTION",
-	[META_DATA_SQL_LIST_END] = 
+	[META_DATA_SQL_LIST_END] =
 		"COMMIT TRANSACTION",
 };
 
@@ -317,26 +317,26 @@ static MetaData *sqlite_get_value(MetaDataType type,const char *key_a,const char
 					met->plugin_name = "Metadata Cache";
 					met->content_type = sqlite3_column_int(stmt, 0);
 				}
-				if(met->content_type == META_DATA_CONTENT_TEXT_VECTOR) {
+				if(meta_data_is_text_vector(met)) {
 					gchar *value = (gchar *) sqlite3_column_text(stmt, 1);
 					met->size += 1;
 					met->content = g_realloc((gchar **)met->content, sizeof(gchar *)*(met->size+1));
 					((gchar **)met->content)[met->size-1] = g_strdup(value);
 					((gchar **)met->content)[met->size] = NULL;
-				}else if (met->content_type == META_DATA_CONTENT_TEXT_LIST) {
+				}else if (meta_data_is_text_list(met)) {
 					gchar *value = (gchar *) sqlite3_column_text(stmt, 1);
 					met->content = (void *)g_list_append((GList *)met->content, g_strdup(value));
 					met->size = 0;
 				}else{
-					if(met->content_type == META_DATA_CONTENT_URI || 
-							met->content_type == META_DATA_CONTENT_TEXT  ||
-							met->content_type == META_DATA_CONTENT_HTML)
+					if(meta_data_is_uri(met) ||
+							meta_data_is_text(met)||
+							meta_data_is_html(met))
 					{
 						const guchar *value = sqlite3_column_text(stmt, 1);
 						met->content = g_strdup((gchar *)value);
 						met->size = -1;
 					}
-					else if (met->content_type == META_DATA_CONTENT_RAW)
+					else if (meta_data_is_raw(met))
 					{
 						const guchar *value = sqlite3_column_text(stmt, 1);
 						gsize size;
@@ -402,7 +402,7 @@ MetaDataResult meta_data_get_from_cache(mpd_Song *song, MetaDataType type, MetaD
 		(*met)->plugin_name = CACHE_NAME; (*met)->content_type = META_DATA_CONTENT_EMPTY;
 		return META_DATA_UNAVAILABLE;
 	}
-	*met = sqlite_get_value(type,key_a, key_b); 
+	*met = sqlite_get_value(type,key_a, key_b);
 	if((*met) == NULL)
 	{
 		*met = meta_data_new();
@@ -411,19 +411,19 @@ MetaDataResult meta_data_get_from_cache(mpd_Song *song, MetaDataType type, MetaD
 		(*met)->content_type = META_DATA_CONTENT_EMPTY;
 
 		g_log(MDC_LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "No entry found for: %i-%s-%s", type, key_a, key_b);
-		return META_DATA_FETCHING;	
+		return META_DATA_FETCHING;
 	}
-	if((*met)->content_type == META_DATA_CONTENT_EMPTY)
+	if(meta_data_is_empty(*met))
 	{
 		g_log(MDC_LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Empty entry found for: %i-%s-%s", type, key_a, key_b);
 		return META_DATA_UNAVAILABLE;
 	}
-	if((*met)->content_type == META_DATA_CONTENT_URI)
+	if(meta_data_is_uri(*met))
 	{
 		const gchar *path = meta_data_get_uri(*met);
 		if(!g_file_test(path, G_FILE_TEST_EXISTS))
 		{
-			sqlite_delete_value(type, key_a, key_b); 
+			sqlite_delete_value(type, key_a, key_b);
 			(*met)->content_type = META_DATA_CONTENT_EMPTY;
 			g_free((gchar *)((*met)->content));
 			(*met)->content = NULL;
@@ -434,7 +434,7 @@ MetaDataResult meta_data_get_from_cache(mpd_Song *song, MetaDataType type, MetaD
 		}
 	}
 	g_log(MDC_LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Entry found for: %i-%s-%s", type, key_a, key_b);
-	return META_DATA_AVAILABLE;	
+	return META_DATA_AVAILABLE;
 }
 void meta_data_set_cache_real(mpd_Song *song, MetaDataResult result, MetaData *met)
 {
@@ -468,21 +468,21 @@ void meta_data_set_cache_real(mpd_Song *song, MetaDataResult result, MetaData *m
 	}
 
 
-	if(met->content_type == META_DATA_CONTENT_URI ||
-			met->content_type == META_DATA_CONTENT_TEXT ||
-			met->content_type == META_DATA_CONTENT_HTML ||
-			met->content_type == META_DATA_CONTENT_EMPTY)
+	if(meta_data_is_uri(met)||
+			meta_data_is_text(met)||
+			meta_data_is_html(met)||
+			meta_data_is_empty(met))
 	{
 		if(!sqlite_update_value(met->type, key_a, key_b, met->content_type, (const gchar *)met->content))
 			sqlite_set_value(met->type, key_a, key_b, met->content_type, (const gchar *)met->content);
-	}else if (met->content_type == META_DATA_CONTENT_RAW) {
+	}else if (meta_data_is_raw(met)) {
 		gsize size;
 		const guchar *udata = meta_data_get_raw(met, &size);
 		gchar *data = g_base64_encode(udata, size);
 		if(!sqlite_update_value(met->type, key_a, key_b, met->content_type, (const gchar *)data))
 			sqlite_set_value(met->type, key_a, key_b, met->content_type, (const gchar *)data);
 		g_free(data);
-	}else if (met->content_type == META_DATA_CONTENT_TEXT_LIST) {
+	}else if (meta_data_is_text_list(met)) {
 		GList *iter;
 		sqlite_delete_value(met->type, key_a, key_b);
 		iter = g_list_first((GList *)meta_data_get_text_list(met));
@@ -491,7 +491,7 @@ void meta_data_set_cache_real(mpd_Song *song, MetaDataResult result, MetaData *m
 			sqlite_set_value(met->type, key_a, key_b, met->content_type, (const gchar *)iter->data);
 		}
 		sqlite_list_end();
-	}else if (met->content_type == META_DATA_CONTENT_TEXT_VECTOR) {
+	}else if (meta_data_is_text_vector(met)) {
 		int i = 0;
 		const gchar **text_vector = meta_data_get_text_vector(met);
 		sqlite_delete_value(met->type, key_a, key_b);

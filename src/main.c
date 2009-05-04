@@ -399,14 +399,13 @@ int main(int argc, char **argv)
 	plugin_add_new(GMPC_PLUGIN_BASE(gmpc_easy_command), 0, NULL);
 
 	gmpc_easy_command_add_entry(gmpc_easy_command, _("quit"), "",
-								_("Quit gmpc"), (GmpcEasyCommandCallback *) main_quit, NULL);
+			_("Quit gmpc"), (GmpcEasyCommandCallback *) main_quit, NULL);
 	gmpc_easy_command_add_entry(gmpc_easy_command, _("hide"), "",
-								_("Hide gmpc"), (GmpcEasyCommandCallback *) pl3_hide, NULL);
-	gmpc_easy_command_add_entry(gmpc_easy_command, _("show"), "", _("Show gmpc"), (GmpcEasyCommandCallback *)
-								create_playlist3, NULL);
-	gmpc_easy_command_add_entry(gmpc_easy_command, _("show notification"),
-								"", _("Show trayicon notification"), (GmpcEasyCommandCallback *)
-								tray_icon2_create_tooltip, NULL);
+			_("Hide gmpc"), (GmpcEasyCommandCallback *) pl3_hide, NULL);
+	gmpc_easy_command_add_entry(gmpc_easy_command, _("show"), "", 
+			_("Show gmpc"), (GmpcEasyCommandCallback *)create_playlist3, NULL);
+	gmpc_easy_command_add_entry(gmpc_easy_command, _("show notification"),"",
+			_("Show trayicon notification"), (GmpcEasyCommandCallback *)tray_icon2_create_tooltip, NULL);
 
 	TEC("Init easy command");
 
@@ -655,7 +654,6 @@ int main(int argc, char **argv)
     gmpc_mpddata_model_disable_image(GMPC_MPDDATA_MODEL(playlist));
 	/** current playlist */
 	plugin_add_new((GmpcPluginBase *)play_queue_plugin_new(), 0,NULL);
-//	plugin_add(&current_playlist_plug, 0);
 
 	/** file browser */
 	plugin_add(&file_browser_plug, 0, NULL);

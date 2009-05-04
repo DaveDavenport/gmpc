@@ -1199,7 +1199,10 @@ MetaData *meta_data_dup_steal(MetaData *data)
     data->content = NULL;
     return retv;
 }
-
+gboolean meta_data_is_empty(const MetaData *data)
+{
+    return data->content_type == META_DATA_CONTENT_EMPTY;
+}
 gboolean meta_data_is_uri(const MetaData *data)
 {
     return data->content_type == META_DATA_CONTENT_URI;

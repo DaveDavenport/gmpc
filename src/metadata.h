@@ -102,6 +102,8 @@ MetaData *meta_data_dup(MetaData *data);
  **/
 MetaData *meta_data_dup_steal(MetaData *data);
 
+
+gboolean meta_data_is_empty(const MetaData *data);
 /* URI */
 gboolean meta_data_is_uri(const MetaData *data);
 const gchar *meta_data_get_uri(const MetaData *data);
