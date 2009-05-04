@@ -2790,7 +2790,7 @@ void info2_fill_album_view(const char *artist,const char *album)
         hs = history_current->data;
         if(hs->type == HISTORY_ALBUM){
             if(strcmp(hs->song->artist, artist) == 0 && 
-                    strcmp(hs->song->artist, artist) == 0) {
+                    strcmp(hs->song->album, album) == 0) {
                 return;
             }
         }
