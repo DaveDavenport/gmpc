@@ -185,20 +185,22 @@ static void bug_information_generate_message(GtkTextBuffer *buffer)
 
 
     /** Plugins */
-    gtk_text_buffer_insert_with_tags(buffer, &iter, "\n\nPlugins:\n", -1, bold_tag, larger_tag,NULL);
-    for(i=0;i<num_plugins;i++)
+    if(num_plugins > 0)
     {
-        if(!gmpc_plugin_is_internal(plugins[i]))
+        gtk_text_buffer_insert_with_tags(buffer, &iter, "\n\nPlugins:\n", -1, bold_tag, larger_tag,NULL);
+        for(i=0;i<num_plugins;i++)
         {
-            const gchar *name = gmpc_plugin_get_name(plugins[i]);
-            const int *version = gmpc_plugin_get_version(plugins[i]);
-            gtk_text_buffer_insert_with_tags(buffer, &iter, name,-1, bold_tag, NULL);
-            temp = g_strdup_printf("\t%i.%i.%i\n", version[0], version[1], version[2]);
-            gtk_text_buffer_insert(buffer, &iter, temp, -1);
-            g_free(temp);
+            if(!gmpc_plugin_is_internal(plugins[i]))
+            {
+                const gchar *name = gmpc_plugin_get_name(plugins[i]);
+                const int *version = gmpc_plugin_get_version(plugins[i]);
+                gtk_text_buffer_insert_with_tags(buffer, &iter, name,-1, bold_tag, NULL);
+                temp = g_strdup_printf("\t%i.%i.%i\n", version[0], version[1], version[2]);
+                gtk_text_buffer_insert(buffer, &iter, temp, -1);
+                g_free(temp);
+            }
         }
     }
-
     if(mpd_check_connected(connection))
     {
         gchar **handlers;
