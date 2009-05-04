@@ -420,7 +420,7 @@ guchar *gmpc_easy_handler_get_data_vala_wrap(const GEADAsyncHandler * handle, gi
 	_GEADAsyncHandler *d = (_GEADAsyncHandler *) handle;
 	if (length)
 		*length = (gint)d->length;
-	return d->data;
+	return (guchar *)d->data;
 }
 void gmpc_easy_handler_set_user_data(const GEADAsyncHandler *handle, gpointer user_data)
 {
