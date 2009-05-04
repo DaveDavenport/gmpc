@@ -335,6 +335,11 @@ int main(int argc, char **argv)
 			else if (check_key(_("--quit"))) {
 				quit = TRUE;
 			}
+			else if (check_key(_("--bug-information"))){
+				gtk_init(&argc, &argv);
+				bug_information_window_new(NULL);
+				return EXIT_SUCCESS;
+			}
 			/**
              * Imports the cover db in the old format.
              */

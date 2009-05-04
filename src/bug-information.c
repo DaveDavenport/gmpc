@@ -251,7 +251,7 @@ void bug_information_window_new(GtkWidget *window)
 
     /* Basic dialog with a close button */
     dialog = gtk_dialog_new_with_buttons(_("Bug information"),
-                    (GtkWindow *)gtk_widget_get_toplevel(window),
+                    (window)?(GtkWindow *)gtk_widget_get_toplevel(window):NULL,
                     GTK_DIALOG_DESTROY_WITH_PARENT|GTK_DIALOG_NO_SEPARATOR,
                     GTK_STOCK_CLOSE, GTK_RESPONSE_YES,
                     NULL);
@@ -295,4 +295,7 @@ void bug_information_window_new(GtkWidget *window)
     g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(gtk_widget_destroy), NULL);
     /* show dialog */
     gtk_widget_show_all(dialog);
+    if(window == NULL){
+        gtk_dialog_run(GTK_DIALOG(dialog));
+    }
 }
