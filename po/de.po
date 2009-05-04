@@ -1627,7 +1627,7 @@ msgid ""
 "Then update the database. (Server->Update Database)"
 msgstr ""
 "Es scheint, als hätten Sie keine Musik in Ihrer Datenbank.\n"
-"Um Musik hinzuzufügen, kopieren Sie diese in das <music_directory</i>, das "
+"Um Musik hinzuzufügen, kopieren Sie diese in das <i>music_directory</i>, das "
 "in der mpd Konfigurationsdatei angegeben ist.\n"
 "Dann aktualisieren Sie die Datenbank. (Server -> Aktualisiere Datenbank)"
 
