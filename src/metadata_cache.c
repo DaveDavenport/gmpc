@@ -332,15 +332,15 @@ static MetaData *sqlite_get_value(MetaDataType type,const char *key_a,const char
 							met->content_type == META_DATA_CONTENT_TEXT  ||
 							met->content_type == META_DATA_CONTENT_HTML)
 					{
-						gchar *value = (unsigned char*)sqlite3_column_text(stmt, 1);
-						met->content = g_strdup(value);
+						const guchar *value = sqlite3_column_text(stmt, 1);
+						met->content = g_strdup((gchar *)value);
 						met->size = -1;
 					}
 					else if (met->content_type == META_DATA_CONTENT_RAW)
 					{
-						gchar *value = (unsigned char*) sqlite3_column_text(stmt, 1);
+						const guchar *value = sqlite3_column_text(stmt, 1);
 						gsize size;
-						met->content = g_base64_decode(value, &size);
+						met->content = g_base64_decode((gchar *)value, &size);
 						met->size = size;
 					}
 					/* indicate we don't query anymore */
@@ -369,7 +369,7 @@ static MetaData *sqlite_get_value(MetaDataType type,const char *key_a,const char
 
 MetaDataResult meta_data_get_from_cache(mpd_Song *song, MetaDataType type, MetaData **met)
 {
-	char *key_a= "", *key_b = "";
+	const char *key_a= "", *key_b = "";
 	if(type == META_ALBUM_ART){
 		key_a = song->artist;
 		key_b = song->album;
@@ -438,7 +438,7 @@ MetaDataResult meta_data_get_from_cache(mpd_Song *song, MetaDataType type, MetaD
 }
 void meta_data_set_cache_real(mpd_Song *song, MetaDataResult result, MetaData *met)
 {
-	char *key_a= "", *key_b = "";
+	const char *key_a= "", *key_b = "";
 	if(!song) return;
 	if((met)->type == META_ALBUM_ART){
 		key_a = song->artist;
@@ -473,13 +473,13 @@ void meta_data_set_cache_real(mpd_Song *song, MetaDataResult result, MetaData *m
 			met->content_type == META_DATA_CONTENT_HTML ||
 			met->content_type == META_DATA_CONTENT_EMPTY)
 	{
-		sqlite_update_value(met->type, key_a, key_b, met->content_type, (const gchar *)met->content) || 
+		if(!sqlite_update_value(met->type, key_a, key_b, met->content_type, (const gchar *)met->content))
 			sqlite_set_value(met->type, key_a, key_b, met->content_type, (const gchar *)met->content);
 	}else if (met->content_type == META_DATA_CONTENT_RAW) {
 		gsize size;
 		const guchar *udata = meta_data_get_raw(met, &size);
 		gchar *data = g_base64_encode(udata, size);
-		sqlite_update_value(met->type, key_a, key_b, met->content_type, (const gchar *)data) ||
+		if(!sqlite_update_value(met->type, key_a, key_b, met->content_type, (const gchar *)data))
 			sqlite_set_value(met->type, key_a, key_b, met->content_type, (const gchar *)data);
 		g_free(data);
 	}else if (met->content_type == META_DATA_CONTENT_TEXT_LIST) {
