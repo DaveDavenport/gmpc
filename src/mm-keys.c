@@ -682,8 +682,8 @@ void mmkeys_pref_destroy(GtkWidget *container)
 void mmkeys_pref_construct(GtkWidget *container)
 {
 	gchar *path = gmpc_get_full_glade_path("preferences-mmkeys.ui");
-	mmkeys_pref_xml = gtk_builder_new();
     GError *error = NULL;
+	mmkeys_pref_xml = gtk_builder_new();
     gtk_builder_add_from_file(mmkeys_pref_xml, path, &error);
     if(error)
     {
