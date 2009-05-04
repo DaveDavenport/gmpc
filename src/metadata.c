@@ -454,7 +454,6 @@ static void metadata_download_handler(const GEADAsyncHandler *handle, GEADStatus
                     }
                 }
             }else {
-                const char *path = md->content;//d->iter->data;
                 d->result = META_DATA_AVAILABLE;
                 d->met = md;
                 d->iter->data= NULL;
