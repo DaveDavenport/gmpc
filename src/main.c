@@ -227,21 +227,51 @@ int main(int argc, char **argv)
 {
 	int i;
 
-	/* config keys */
-	int clean_config = FALSE;
-	char *config_path = NULL;
-	int start_hidden = FALSE;
-	int load_plugins = TRUE;
-	int replace = FALSE;
-	int quit = FALSE;
-/*	int import_old_db = FALSE;*/
-	int do_debug_updates = FALSE;
 #ifdef WIN32
 	gchar *packagedir;
 #endif
 #ifdef ENABLE_MMKEYS
 	MmKeys *keys = NULL;
 #endif
+
+	GError			*error					= NULL;
+	GOptionContext	*context				= NULL;
+	gboolean		show_version			= FALSE;
+	gboolean		disable_plugins			= FALSE;
+	gboolean		start_hidden			= FALSE;
+	gboolean		clean_config			= FALSE;
+	gboolean		quit					= FALSE;
+	gboolean		replace					= FALSE;
+	gboolean		do_debug_updates		= FALSE;
+	gboolean		show_bug_information	= FALSE;
+	gchar			*config_path			= NULL;
+	gint			debug_level				= -1;
+	
+	GOptionEntry entries[] = 
+	{
+		{ "version",		'v', 0,G_OPTION_ARG_NONE,
+			&show_version,		N_("Show program version and revision"),			NULL},
+		{ "quit",			'q', 0,G_OPTION_ARG_NONE,
+			&quit,				N_("Quits the running gmpc"),						NULL},
+		{ "replace",		'r', 0,G_OPTION_ARG_NONE,
+			&replace,			N_("Replace the running gmpc"),						NULL},
+		{ "disable-plugins", 0 , 0,G_OPTION_ARG_NONE,
+			&disable_plugins,	N_("Don't load the plugins"),						NULL},
+		{ "config",			 0 , 0,G_OPTION_ARG_FILENAME,
+			&config_path,		N_("Load alternative config file"),				  "Path"},
+		{ "debug-level",	'd', 0,G_OPTION_ARG_INT,
+			&debug_level,		N_("Set the debug level"),						 "level"},
+		{ "start-hidden",	'h', 0,G_OPTION_ARG_NONE,
+			&start_hidden,		N_("Start gmpc hidden to tray"),					NULL},
+		{ "clean-cover-db",	 0 , 0,G_OPTION_ARG_NONE,		
+			&clean_config,		N_("Remove all failed hits from metadata cache"),	NULL},
+		{ "debug-updates",	 0 , G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_NONE, 
+			&do_debug_updates, 	N_("Show redraw events in GTK+"),					NULL},
+		{ "bug-information",'b', 0,G_OPTION_ARG_NONE,
+			&show_bug_information, N_("Show bug information dialog"),				NULL},
+
+		{NULL}
+	};
 
 	/**
      * A string used severall times to create a path
@@ -274,111 +304,37 @@ int main(int argc, char **argv)
 	gtk_set_locale();
 
 	TEC("Setting up locale");
+
+    context = g_option_context_new (_("Gnome Music Player Client"));
+    g_option_context_add_main_entries (context, entries, "gmpc");
+    g_option_context_add_group (context, gtk_get_option_group (TRUE));
+    g_option_context_parse (context, &argc, &argv, &error);
+    g_option_context_free(context);
+	if(error) {
+		g_log(NULL, G_LOG_LEVEL_ERROR, "Failed to parse commandline options: %s", error->message);
+		g_error_free(error);
+	}
+
+	/* Show the version, if requested */
+	if(show_version) {
+		print_version();
+		return EXIT_SUCCESS;
+	}
 	/**
-     * Parse Command line options
-     */
-	if (argc > 1) {
-		for (i = 1; i < argc; i++) {
-			/**
-             * Set debug level, options are
-             * 0 = No debug
-             * 1 = Error messages
-             * 2 = Error + Warning messages
-             * 3 = All messages
-             */
-			if (!strncasecmp(argv[i], _("--debug-level="), strlen(_("--debug-level=")))) {
-				int db_level = atoi(&argv[i][strlen(_("--debug-level="))]);
-				debug_set_level(db_level);
-			}
-			/**
-             * Print out version + svn revision
-             */
-			else if (!strcasecmp(argv[i], _("--version"))) {
-				print_version();
-				exit(0);
-			}
-			/**
-             * Allow the user to pick another config file
-             */
-#define check_key(a) (!strncasecmp(argv[i], a, strlen(a)))
-			else if (check_key(_("--config="))) {
-				config_path = g_strdup(&argv[i][strlen(_("--config="))]);
-			}
-			/**
-             * Starts gmpc hidden. Either tray or task-bar
-             */
-			else if (check_key(_("--start-hidden"))) {
-				start_hidden = TRUE;
-			}
-			/**
-             * Cleans all failed hits from the cover database.
-             * then exits.
-             */
-			else if (check_key(_("--clean-cover-db"))) {
-				clean_config = TRUE;
-			}
-			/**
-             * Start gmpc withouth loading any external plugins
-             */
-			else if (check_key(_("--disable-plugins"))) {
-				load_plugins = FALSE;
-			}
-			/**
-             * Tries to replace the running gmpc session with a new (this) one.
-             */
-			else if (check_key(_("--replace"))) {
-				replace = TRUE;
-			}
-			/**
-             * Quit any running gmpc session
-             */
-			else if (check_key(_("--quit"))) {
-				quit = TRUE;
-			}
-			else if (check_key(_("--bug-information"))){
-				gtk_init(&argc, &argv);
-				bug_information_window_new(NULL);
-				return EXIT_SUCCESS;
-			}
-			/**
-             * Imports the cover db in the old format.
-             */
-			 /*
-			else if (check_key(_("--import-old-db"))) {
-				import_old_db = TRUE;
-			}
-			*/
-			/**
-             * Puts gtk in a non-buffered modes. allows you to visually see the number of gui updates.
-             */
-			else if (check_key(_("--debug-updates"))) {
-				do_debug_updates = TRUE;
-			}
-
-			/**
-             * Print out help message
-             */
-			else if (check_key(_("--help"))) {
-				printf(_("Gnome Music Player Client\n"
-						 "Options:\n"
-						 "\t--start-hidden\t\tStart hidden\n"
-						 "\t--help\t\t\tThis help message.\n"
-						 "\t--debug-level=<level>\tMake gmpc print out debug information.\n"
-						 "\t\t\t\tLevel:\n"
-						 "\t\t\t\t\t0 No Output\n"
-						 "\t\t\t\t\t1 Error Messages\n"
-						 "\t\t\t\t\t2 Error + Warning Messages\n"
-						 "\t\t\t\t\t3 All messages\n"
-						 "\t--version\t\tPrint version and git revision\n"
-						 "\t--config=<file>\t\tSet config file path, default  ~/.gmpc/gmpc.cfg\n"
-						 "\t--clean-cover-db\tCleanup the cover file.\n"
-						 "\t--disable-plugins\tDon't load any plugins.\n"
-						 "\t--replace\t\tReplace the running session with the current\n"
-						 "\t--quit\t\t\tQuit the running gmpc session. Only works if multiple-instances is disabled.\n"));
-				exit(0);
-			}
-		}
-
+	 * Set debug level, options are
+	 * 0 = No debug
+	 * 1 = Error messages
+	 * 2 = Error + Warning messages
+	 * 3 = All messages
+	 */
+	if (debug_level >=0){
+		debug_set_level(debug_level);
+	}
+	/* Show the bug-information dialog */
+	if(show_bug_information){
+		gtk_init(&argc, &argv);
+		bug_information_window_new(NULL);
+		return EXIT_SUCCESS;
 	}
 	TEC("Parsing command line options");
 
@@ -737,7 +693,7 @@ int main(int argc, char **argv)
 	/**
      *  load dynamic plugins
      */
-	if (load_plugins) {
+	if (!disable_plugins) {
 #ifdef WIN32
 		packagedir = g_win32_get_package_installation_directory_of_module(NULL);
 		debug_printf(DEBUG_INFO, "Got %s as package installation dir", packagedir);
@@ -768,7 +724,7 @@ int main(int argc, char **argv)
 		 */
 		if (g_file_test(url, G_FILE_TEST_IS_DIR)) {
 			debug_printf(DEBUG_INFO, "Trying to load plugins in: %s", url);
-			if (load_plugins)
+			if (!disable_plugins)
 				plugin_load_dir(url);
 		}
 		TEC("Loading plugins from %s", url);
@@ -1379,5 +1335,4 @@ void print_version(void)
 		printf("%-25s: %s\n", ("Revision"), revision);
 	}
 }
-
 /* vim: set noexpandtab ts=4 sw=4 sts=4 tw=120: */
