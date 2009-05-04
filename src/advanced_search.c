@@ -96,6 +96,7 @@ MpdData * advanced_search(const gchar *query, int in_playlist)
             if(split)g_strfreev(split);
         }
     }
+	if(text) g_strfreev(text);
     if(found){
             if(in_playlist)
                 data = mpd_playlist_search_commit(connection);
