@@ -396,8 +396,10 @@ static void metadata_download_handler(const GEADAsyncHandler *handle, GEADStatus
     if(status == GEAD_PROGRESS) {
         return;
     }
+    printf("%s::%p\n", __FUNCTION__,user_data);
     if(status == GEAD_DONE)
     {
+        printf("%s::%p::%i::%s\n", __FUNCTION__,user_data, d->type, d->edited->artist);
         gchar *filename = gmpc_get_metadata_filename(d->type&(~META_QUERY_NO_CACHE), d->edited, NULL);
         goffset length;
         const gchar *data = gmpc_easy_handler_get_data(handle, &length);
@@ -405,7 +407,7 @@ static void metadata_download_handler(const GEADAsyncHandler *handle, GEADStatus
         g_file_set_contents(filename, data, length, &error);
         if(error == NULL)
         {
-	    MetaData *md = d->iter->data;
+            MetaData *md = d->iter->data;
             d->result = META_DATA_AVAILABLE;
             /* Create Metadata */
             d->met = meta_data_new();
@@ -449,6 +451,7 @@ static void metadata_download_handler(const GEADAsyncHandler *handle, GEADStatus
 
                     d->result = META_DATA_AVAILABLE;
                 }else{
+                    printf("download it: %p \n", d);
                     GEADAsyncHandler *new_handle = gmpc_easy_async_downloader((const gchar *)path, metadata_download_handler, d);
                     if(new_handle != NULL)
                     {
@@ -475,6 +478,7 @@ static void result_itterate(GList *list, gpointer user_data)
     MetaData *md=NULL;
     meta_thread_data *d = (meta_thread_data *)user_data;
 
+    printf("%s::%p\n", __FUNCTION__,d);
     /**
      * This plugin didn't have a result
      * Skip to next plugin, 
@@ -504,9 +508,11 @@ static void result_itterate(GList *list, gpointer user_data)
             d->met = md;
             d->iter->data= NULL;
         }else{
+            printf("download %p\n", d);
             GEADAsyncHandler *handle = gmpc_easy_async_downloader(path, metadata_download_handler, d);
             if(handle != NULL)
             {
+                printf("return\n");
                 return;
             }
         }
@@ -576,6 +582,8 @@ static gboolean process_itterate(void)
         return FALSE;
     }
 
+    printf("%s\n", __FUNCTION__);
+
     /**
      * Get the top of the list
      */
@@ -598,13 +606,10 @@ static gboolean process_itterate(void)
                 MetaData *met = NULL;
                 d->result = meta_data_get_from_cache(d->edited,d->type&META_QUERY_DATA_TYPES, &met);
                 if(d->result != META_DATA_FETCHING){
-                    if(met->content_type != META_DATA_CONTENT_TEXT_LIST)
-                    {
-                        d->met = met;
-                        met = NULL;
-                    }
-                    meta_data_free(met);
+                    d->met = met;
+                    met = NULL;
                 }
+                if(met)meta_data_free(met);
             }
         }
         /**
@@ -914,8 +919,8 @@ gchar * gmpc_get_metadata_filename(MetaDataType  type, mpd_Song *song, char *ext
         }
         filename = strip_invalid_chars(filename);
         retv = g_build_path(G_DIR_SEPARATOR_S, homedir,METADATA_DIR, dirname,filename,NULL);
-        g_free(filename);
-        g_free(dirname);
+        if(filename) g_free(filename);
+        if(dirname) g_free(dirname);
     }
     return retv;
 }
@@ -1135,7 +1140,7 @@ void meta_data_free(MetaData *data)
                 g_list_foreach((GList *)data->content, (GFunc)g_free, NULL);
                 g_list_free((GList *)data->content);
         }
-        else
+        else if(data->content_type == META_DATA_CONTENT_EMPTY)
             g_free(data->content);
         data->content = NULL;
         data->size = 0;
