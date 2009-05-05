@@ -240,17 +240,24 @@ static gboolean meta_data_handle_results(void)
 	 *  Check if there are results to handle
 	 *  do this until the list is clear
 	 */
-	for(data = g_async_queue_try_pop(meta_results);data;
-			data = g_async_queue_try_pop(meta_results)) {	
-		gmpc_meta_watcher_data_changed(gmw,data->song, (data->type)&META_QUERY_DATA_TYPES, data->result,data->met);
- 		if(data->callback)
+    while((data = g_async_queue_try_pop(meta_results)))
+    {	
+        gmpc_meta_watcher_data_changed(gmw,data->song, (data->type)&META_QUERY_DATA_TYPES, data->result,data->met);
+        if(data->callback)
 		{
 			data->callback(data->song,data->result,data->met, data->data);
 		}
-        if(data->met) meta_data_free(data->met);
+        data->iter = NULL;
+        if(data->list){
+            g_list_foreach(data->list, (GFunc)g_free, NULL);
+            g_list_free(data->list);
+        }
+        if(data->met)
+            meta_data_free(data->met);
         if(data->song)
             mpd_freeSong(data->song);
-        mpd_freeSong(data->edited);
+        if(data->edited)
+            mpd_freeSong(data->edited);
         q_free(data);
 	}
 
@@ -414,10 +421,9 @@ static void metadata_download_handler(const GEADAsyncHandler *handle, GEADStatus
             d->met->type = md->type;
             d->met->plugin_name = md->plugin_name;
             d->met->content_type = META_DATA_CONTENT_URI;
-            d->met->content = g_strdup(filename);
+            d->met->content = filename;
             d->met->size = -1;
-	    if(filename) g_free(filename);
-	    filename=NULL;
+            filename=NULL;
 
             g_list_foreach(d->list,(GFunc) meta_data_free, NULL);
             g_list_free(d->list);
@@ -660,7 +666,9 @@ static gboolean process_itterate(void)
     /**
      * Remove from queue
      */
+     int length1 = g_list_length(process_queue);
     process_queue = g_list_remove(process_queue, d);
+    printf("remaining: %i\n", length1 - g_list_length(process_queue));
     if(process_queue){
         GList *iter = g_list_first(process_queue);
         for(;iter;iter = g_list_next(iter))
@@ -678,6 +686,8 @@ static gboolean process_itterate(void)
                     /* put result back */
                     g_async_queue_push(meta_results, d2);		
                 }else{
+                    if(d2->met)
+                        meta_data_free(d2->met);
                     if(d2->edited) 
                         mpd_freeSong(d2->edited);
                     if(d2->song)
@@ -1140,7 +1150,7 @@ void meta_data_free(MetaData *data)
                 g_list_foreach((GList *)data->content, (GFunc)g_free, NULL);
                 g_list_free((GList *)data->content);
         }
-        else if(data->content_type == META_DATA_CONTENT_EMPTY)
+        else if(data->content_type != META_DATA_CONTENT_EMPTY)
             g_free(data->content);
         data->content = NULL;
         data->size = 0;
@@ -1180,9 +1190,14 @@ MetaData *meta_data_dup(MetaData *data)
         }
         data->content =(void *) g_list_reverse(list);
     }
+    else if (data->content_type == META_DATA_CONTENT_EMPTY)
+    {
+        retv->content = NULL; retv->size = 0;
+    }
     /* Text is NULL terminated */
     else
     {
+        retv->content = NULL;
         if(data->content){
             retv->content = g_strdup((gchar *)data->content);
         }
