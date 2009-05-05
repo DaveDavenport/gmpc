@@ -708,7 +708,7 @@ requires 2.0.0
         {
             if(self->_priv->req_artist) 
                 q_free(self->_priv->req_artist);
-            self->_priv->req_artist = (artist != NULL)?g_strdup(artist):NULL;
+            self->_priv->req_artist = (artist != NULL && artist[0] != '\0')?g_strdup(artist):NULL;
         }
         public
         const char *
