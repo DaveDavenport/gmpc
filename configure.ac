@@ -458,6 +458,7 @@ pixmaps/icons/scalable/categories/Makefile
 test/Makefile
 test/config/Makefile
 test/MpdDataModel/Makefile
+test/GmpcEasyDownload/Makefile
 ])
 echo ""
 echo ""
