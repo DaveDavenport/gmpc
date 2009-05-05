@@ -254,6 +254,8 @@ static gboolean meta_data_handle_results(void)
 			mpd_freeSong(data->song);
 		if(data->edited)
 			mpd_freeSong(data->edited);
+
+		printf("ID:::DESTROY:%i\n", data->id);
 		q_free(data);
 	}
 
@@ -343,6 +345,8 @@ void meta_data_destroy(void)
 			mtd->list = mtd->iter = NULL;
 			mpd_freeSong(mtd->song);
 			mpd_freeSong(mtd->edited);
+
+			printf("ID:::DESTROY:%i\n", mtd->id);
 			g_free(mtd);
 		}
 		g_list_free(process_queue);
@@ -666,6 +670,8 @@ static gboolean process_itterate(void)
 						mpd_freeSong(d2->edited);
 					if(d2->song)
 						mpd_freeSong(d2->song);
+
+					printf("ID:::DESTROY:%i\n", d2->id);
 					q_free(d2);
 				}
 			}
@@ -781,8 +787,9 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData *
 	 * Not needed, but can be usefull for debugging
 	 */
 	mtd->song = mpd_songDup(tsong);
-
-	id = mtd->id = g_random_int_range(1,2147483647);
+	static int test_id = 0;
+	id = mtd->id = ++test_id;//g_random_int_range(1,2147483647);
+	printf("ID:::CREATE:%i\n", mtd->id);
 	mtd->type = type;
 	mtd->callback = callback;
 	mtd->data = data;
