@@ -35,24 +35,34 @@ GList *process_queue = NULL;
 /**
  * This queue is used to send replies back.
  */
-GAsyncQueue *meta_results = NULL;
+GQueue *meta_results = NULL;
 
 
+/**
+ * Structure holding a metadata query */
 typedef struct {
+	/* unique id for the query (unused)*/
 	guint id;
-
+	/* The callback to call when the query is done, or NULL */
 	MetaDataCallback callback;
-	/* Data */
-	mpd_Song *song;
-	mpd_Song *edited;
-	MetaDataType type;
-	/* Resuls  */
-	MetaDataResult result;
-	MetaData *met;
-	/* Callback */
+	/* Callback user_data pointer*/
 	gpointer data;
+	/* The song the data is queries for */
+	mpd_Song *song;
+	/* The song modified by the search system.
+	 * This does albumartist, tag cleanup etc */
+	mpd_Song *edited;
+	/* The type of metadata */
+	MetaDataType type;
+	/* Result  */
+	MetaDataResult result;
+	/* The actual result data */
+	MetaData *met;
+	/* The index of the plugin being queried */
 	int index;
+	/* List with temporary result from plugin index */
 	GList *list;
+	/* The current position in the list */
 	GList *iter;
 } meta_thread_data;
 
@@ -236,7 +246,7 @@ static gboolean meta_data_handle_results(void)
 	 *  Check if there are results to handle
 	 *  do this until the list is clear
 	 */
-	while((data = g_async_queue_try_pop(meta_results)))
+	while((data = g_queue_pop_tail(meta_results)))
 	{	
 		gmpc_meta_watcher_data_changed(gmw,data->song, (data->type)&META_QUERY_DATA_TYPES, data->result,data->met);
 		if(data->callback)
@@ -274,7 +284,7 @@ void meta_data_init(void)
 	/**
 	 * the result queue
 	 */
-	meta_results = g_async_queue_new();
+	meta_results = g_queue_new();
 
 	/**
 	 * Create the retrieval thread
@@ -373,7 +383,7 @@ gboolean meta_compare_func(meta_thread_data *mt1, meta_thread_data *mt2)
 /**
  * new things *
  */
-
+static int counter = 0;
 static gboolean process_itterate(void);
 static void metadata_download_handler(const GEADAsyncHandler *handle, GEADStatus status, gpointer user_data)
 {
@@ -381,10 +391,11 @@ static void metadata_download_handler(const GEADAsyncHandler *handle, GEADStatus
 	if(status == GEAD_PROGRESS) {
 		return;
 	}
-	printf("%s::%p\n", __FUNCTION__,user_data);
+	printf("ID:%s::%i\n", __FUNCTION__,d->id);
 	if(status == GEAD_DONE)
 	{
-		printf("%s::%p::%i::%s\n", __FUNCTION__,user_data, d->type, d->edited->artist);
+		counter --;
+		printf("ID:%s::%i::%i::%s COUNTER:%i\n", __FUNCTION__,d->id, d->type, d->edited->artist, counter);
 		gchar *filename = gmpc_get_metadata_filename(d->type&(~META_QUERY_NO_CACHE), d->edited, NULL);
 		goffset length;
 		const gchar *data = gmpc_easy_handler_get_data(handle, &length);
@@ -435,10 +446,12 @@ static void metadata_download_handler(const GEADAsyncHandler *handle, GEADStatus
 
 					d->result = META_DATA_AVAILABLE;
 				}else{
-					printf("download it: %p \n", d);
+					printf("ID:download it: %i \n", d->id);
 					GEADAsyncHandler *new_handle = gmpc_easy_async_downloader((const gchar *)path, metadata_download_handler, d);
 					if(new_handle != NULL)
 					{
+						counter++;
+						printf("COUNTER: %i\n", counter);
 						return;
 					}
 				}
@@ -462,7 +475,7 @@ static void result_itterate(GList *list, gpointer user_data)
 	MetaData *md=NULL;
 	meta_thread_data *d = (meta_thread_data *)user_data;
 
-	printf("%s::%p\n", __FUNCTION__,d);
+	printf("ID:%s::%i\n", __FUNCTION__,d->id);
 	/**
 	 * This plugin didn't have a result
 	 * Skip to next plugin, 
@@ -492,10 +505,12 @@ static void result_itterate(GList *list, gpointer user_data)
 			d->met = md;
 			d->iter->data= NULL;
 		}else{
-			printf("download %p\n", d);
+			printf("ID::download %i\n", d->id);
 			GEADAsyncHandler *handle = gmpc_easy_async_downloader(path, metadata_download_handler, d);
 			if(handle != NULL)
 			{
+				counter++;
+				printf("COUNTER: %i\n", counter);
 				printf("return\n");
 				return;
 			}
@@ -645,8 +660,9 @@ static gboolean process_itterate(void)
 	 * Remove from queue
 	 */
 	int length1 = g_list_length(process_queue);
-	process_queue = g_list_remove(process_queue, d);
-	printf("remaining: %i\n", length1 - g_list_length(process_queue));
+	/* Remove top */
+	process_queue = g_list_delete_link(process_queue, process_queue);
+	printf("remaining: %i:%i\n", length1 - g_list_length(process_queue),g_list_length(process_queue));
 	if(process_queue){
 		GList *iter = g_list_first(process_queue);
 		for(;iter;iter = g_list_next(iter))
@@ -654,7 +670,7 @@ static gboolean process_itterate(void)
 			meta_thread_data *d2 = iter->data;
 			if(!meta_compare_func(d,d2)){
 				/* Remove from intput list */
-				iter = process_queue = g_list_remove(process_queue, d2);
+				iter = process_queue = g_list_remove(process_queue, iter);
 				/* if there is no old-type callback, only once is sufficient */
 				if(d2->callback)
 				{
@@ -662,7 +678,7 @@ static gboolean process_itterate(void)
 					d2->result = d->result;
 					d2->met = meta_data_dup(d->met);
 					/* put result back */
-					g_async_queue_push(meta_results, d2);		
+					g_queue_push_tail(meta_results, d2);		
 				}else{
 					if(d2->met)
 						meta_data_free(d2->met);
@@ -671,7 +687,7 @@ static gboolean process_itterate(void)
 					if(d2->song)
 						mpd_freeSong(d2->song);
 
-					printf("ID:::DESTROY:%i\n", d2->id);
+					printf("ID:::DESTROY2:%i\n", d2->id);
 					q_free(d2);
 				}
 			}
@@ -682,7 +698,7 @@ static gboolean process_itterate(void)
 	/**
 	 * push on handle result
 	 */
-	g_async_queue_push(meta_results, d);		
+	g_queue_push_tail(meta_results, d);		
 	/**
 	 * Call resuult handler 
 	 */
