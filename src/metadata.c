@@ -405,15 +405,17 @@ static void metadata_download_handler(const GEADAsyncHandler *handle, GEADStatus
         g_file_set_contents(filename, data, length, &error);
         if(error == NULL)
         {
+	    MetaData *md = d->iter->data;
             d->result = META_DATA_AVAILABLE;
             /* Create Metadata */
             d->met = meta_data_new();
-            d->met->type = ((MetaData *)d->iter->data)->type;
-            d->met->plugin_name = ((MetaData *)d->iter->data)->plugin_name;
+            d->met->type = md->type;
+            d->met->plugin_name = md->plugin_name;
             d->met->content_type = META_DATA_CONTENT_URI;
             d->met->content = g_strdup(filename);
             d->met->size = -1;
-
+	    if(filename) g_free(filename);
+	    filename=NULL;
 
             g_list_foreach(d->list,(GFunc) meta_data_free, NULL);
             g_list_free(d->list);
