@@ -398,7 +398,7 @@ static void metadata_download_handler(const GEADAsyncHandler *handle, GEADStatus
     }
     if(status == GEAD_DONE)
     {
-        gchar *filename = gmpc_get_metadata_filename(d->type&(~META_QUERY_NO_CACHE), d->song, NULL);
+        gchar *filename = gmpc_get_metadata_filename(d->type&(~META_QUERY_NO_CACHE), d->edited, NULL);
         goffset length;
         const gchar *data = gmpc_easy_handler_get_data(handle, &length);
         GError *error = NULL;
@@ -515,7 +515,7 @@ static void result_itterate(GList *list, gpointer user_data)
     {
         GError *error = NULL;
         const gchar *content = meta_data_get_text(md);
-        gchar *filename = gmpc_get_metadata_filename(d->type&(~META_QUERY_NO_CACHE), d->song, NULL);
+        gchar *filename = gmpc_get_metadata_filename(d->type&(~META_QUERY_NO_CACHE), d->edited, NULL);
         g_file_set_contents(filename,(char *)content, -1, &error);
         if(error)
         {
