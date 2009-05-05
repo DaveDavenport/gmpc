@@ -239,39 +239,6 @@ mpd_Song *rewrite_mpd_song(mpd_Song *tsong, MetaDataType type)
 	return edited;
 }
 
-static gboolean meta_data_handle_results(void)
-{
-	meta_thread_data *data = NULL;
-	/**
-	 *  Check if there are results to handle
-	 *  do this until the list is clear
-	 */
-	while((data = g_queue_pop_tail(meta_results)))
-	{	
-		gmpc_meta_watcher_data_changed(gmw,data->song, (data->type)&META_QUERY_DATA_TYPES, data->result,data->met);
-		if(data->callback)
-		{
-			data->callback(data->song,data->result,data->met, data->data);
-		}
-		data->iter = NULL;
-		if(data->list){
-			g_list_foreach(data->list, (GFunc)g_free, NULL);
-			g_list_free(data->list);
-		}
-		if(data->met)
-			meta_data_free(data->met);
-		if(data->song)
-			mpd_freeSong(data->song);
-		if(data->edited)
-			mpd_freeSong(data->edited);
-
-		printf("ID:::DESTROY:%i\n", data->id);
-		q_free(data);
-	}
-
-	return FALSE;
-}
-
 /**
  * Initialize
  */
@@ -339,7 +306,9 @@ void meta_data_check_plugin_changed(void)
 		cfg_set_single_value_as_int(config, "metadata", "num_plugins", meta_num_plugins);
 	}
 }
-
+/**
+ * TODO: Can we guarantee that all the downloads are stopped? 
+ */
 void meta_data_destroy(void)
 {
 	meta_thread_data *mtd = NULL;
@@ -347,16 +316,26 @@ void meta_data_destroy(void)
 
 	if(process_queue) {
 		GList *iter;
+		/* Iterate through the list and destroy all entries */
 		for(iter = g_list_first(process_queue); iter; iter = iter->next)
 		{
 			mtd = iter->data;
-			g_list_foreach(mtd->list, (GFunc)g_free, NULL);
+
+			/* Free any possible plugin results */
+			g_list_foreach(mtd->list, (GFunc)meta_data_free, NULL);
 			g_list_free(mtd->list);
 			mtd->list = mtd->iter = NULL;
-			mpd_freeSong(mtd->song);
-			mpd_freeSong(mtd->edited);
+			/* Destroy the result */
+			if(mtd->met) 
+				meta_data_free(mtd->met);
+			/* destroy the copied and modified song */
+			if(mtd->song)
+				mpd_freeSong(mtd->song);
+			if(mtd->edited)
+				mpd_freeSong(mtd->edited);
 
 			printf("ID:::DESTROY:%i\n", mtd->id);
+			/* Free the Request struct */
 			g_free(mtd);
 		}
 		g_list_free(process_queue);
@@ -366,7 +345,7 @@ void meta_data_destroy(void)
 	debug_printf(DEBUG_INFO,"Done..");
 	/* Close the cover database  */
 	TOC("test")
-		metadata_cache_destroy();
+	metadata_cache_destroy();
 	TOC("Config saved")
 }
 gboolean meta_compare_func(meta_thread_data *mt1, meta_thread_data *mt2)
@@ -385,26 +364,83 @@ gboolean meta_compare_func(meta_thread_data *mt1, meta_thread_data *mt2)
  */
 static int counter = 0;
 static gboolean process_itterate(void);
+/**
+ * This function actually propagets the result.
+ * It is called (during idle time) when a request is done.
+ * The queue might hold one or more items 
+ */
+
+static gboolean meta_data_handle_results(void)
+{
+	meta_thread_data *data = NULL;
+	/**
+	 *  Check if there are results to handle
+	 *  do this until the list is clear
+	 */
+	while((data = g_queue_pop_tail(meta_results)))
+	{	
+		/* Signal the result to the gmpc-meta-watcher object, any listening client is interrested in the result. */
+		gmpc_meta_watcher_data_changed(gmw,data->song, (data->type)&META_QUERY_DATA_TYPES, data->result,data->met);
+		/* If a specific callback is set, call that  */
+		if(data->callback)
+		{
+			data->callback(data->song,data->result,data->met, data->data);
+		}
+		/**
+		 * Start cleaning up the meta_thead_data 
+		 */
+		 /* Free any possible plugin results */
+		if(data->list){
+			g_list_foreach(data->list, (GFunc)meta_data_free, NULL);
+			g_list_free(data->list);
+		}
+		/* Free the result data */
+		if(data->met)
+			meta_data_free(data->met);
+		/* Free the copie and edited version of the songs */
+		if(data->song)
+			mpd_freeSong(data->song);
+		if(data->edited)
+			mpd_freeSong(data->edited);
+
+		printf("ID:::DESTROY:%i\n", data->id);
+		/* Free the Request struct */
+		g_free(data);
+	}
+	/* Make the idle handler stop */
+	return FALSE;
+}
+
+/**
+ * This function handles it when data needs to be downloaded (in the cache) for now that are images.
+ */
 static void metadata_download_handler(const GEADAsyncHandler *handle, GEADStatus status, gpointer user_data)
 {
 	meta_thread_data *d = user_data;
+
 	if(status == GEAD_PROGRESS) {
+		/* If we are still downloading, do nothing */
 		return;
 	}
-	printf("ID:%s::%i\n", __FUNCTION__,d->id);
+	counter --;
+	printf("ID:%s::%i::%i::%s COUNTER:%i\n", __FUNCTION__,d->id, d->type, d->edited->artist, counter);
 	if(status == GEAD_DONE)
 	{
-		counter --;
-		printf("ID:%s::%i::%i::%s COUNTER:%i\n", __FUNCTION__,d->id, d->type, d->edited->artist, counter);
+		/* If success, start processing  result */
+		/* Get filename where we need to store the result. */
 		gchar *filename = gmpc_get_metadata_filename(d->type&(~META_QUERY_NO_CACHE), d->edited, NULL);
 		goffset length;
+		/* Get the data we downloaded */
 		const gchar *data = gmpc_easy_handler_get_data(handle, &length);
 		GError *error = NULL;
+		/* Try to store the data in the file */
 		g_file_set_contents(filename, data, length, &error);
 		if(error == NULL)
 		{
 			MetaData *md = d->iter->data;
+			/* Set result successs */
 			d->result = META_DATA_AVAILABLE;
+			/* If success create a MetaData object */
 			/* Create Metadata */
 			d->met = meta_data_new();
 			d->met->type = md->type;
@@ -412,64 +448,95 @@ static void metadata_download_handler(const GEADAsyncHandler *handle, GEADStatus
 			d->met->content_type = META_DATA_CONTENT_URI;
 			d->met->content = filename;
 			d->met->size = -1;
-			filename=NULL;
-
+			/* Convert ownership of string to d->met */
+			filename = NULL;
+			/* Free any remaining results */ 
 			g_list_foreach(d->list,(GFunc) meta_data_free, NULL);
 			g_list_free(d->list);
+			/* Set to NULL */
 			d->list = NULL;
 			d->iter = NULL;
+			/* by setting index to the last, the process_itterate knows it should not look further */
 			d->index = meta_num_plugins;
-			process_itterate();
+			/* Iterate the */
+			g_idle_add((GSourceFunc)process_itterate, NULL);
 			/* we trown it back, quit */
 			return;
 		}
 		else{
+			/* Ok we failed to store it, now we cleanup, and try the next entry. */
 			debug_printf(DEBUG_ERROR, "Failed to store file: %s: '%s'", filename, error->message);
 			g_error_free(error); error = NULL;
 			/* If we fail, clean up and try next one */
 			g_free(filename);
 		}
 	}
-
+	/**
+	 * It seems we somehow _failed_ to get data, lets try the next result
+	 */
 	if(d->iter)
 	{
+		/* If there is a result entry, advanced it to  the next entry.*/
 		d->iter = g_list_next(d->iter);
 		if(d->iter){
+			/* Get the MetaData belonging to this result */
 			MetaData *md = (MetaData *)d->iter->data;
-			if(md->content_type == META_DATA_CONTENT_URI)
+			/* If it is an uri, we probly want to make a local copy of it. */
+			if(meta_data_is_uri(md))
 			{
 				const char *path = meta_data_get_uri(md);// d->iter->data;
-				if(path[0] == '/') {
-
+				if(path && path[0] == '/') {
+					/* if it is allready a local copy, store that */ 
+					/* set the result as final result */
 					d->met = md;
+					/* Remove it from the result list, so it does not get deleted twice */
 					d->iter->data= NULL;
-
+					/* set result available */
 					d->result = META_DATA_AVAILABLE;
-				}else{
+				}else if(path) {
+					/* Setup a new async downloader */
+					GEADAsyncHandler *new_handle = gmpc_easy_async_downloader((const gchar *)path, 
+							metadata_download_handler, d);
+					/* If it is a remote one, download it */ 
 					printf("ID:download it: %i \n", d->id);
-					GEADAsyncHandler *new_handle = gmpc_easy_async_downloader((const gchar *)path, metadata_download_handler, d);
 					if(new_handle != NULL)
 					{
+						/* if it is a success nothing left todo until the result comes in */
 						counter++;
 						printf("COUNTER: %i\n", counter);
 						return;
 					}
 				}
 			}else {
+				/* if it is not something we need to download, se the result as the final result */
 				d->result = META_DATA_AVAILABLE;
 				d->met = md;
+				/* remove result from list */
 				d->iter->data= NULL;
 			}	
 
 		}
 	}
-	g_list_foreach(d->list,(GFunc) meta_data_free, NULL);
-	g_list_free(d->list);
+	/* There are no more items to query, or we have a hit.
+	 * Cleanup the results by this plugin and advanced to the next 
+	 */
+	if(d->list){
+		g_list_foreach(d->list,(GFunc) meta_data_free, NULL);
+		g_list_free(d->list);
+	}
 	d->list = NULL;
 	d->iter = NULL;
-	d->index++;
-	process_itterate();
+	/* if we have a result, skip the rest of the plugins */
+	if(d->result == META_DATA_AVAILABLE)
+		d->index = meta_num_plugins;
+	else 
+		d->index++;
+	/* itterate the next step */
+	g_idle_add((GSourceFunc)process_itterate, NULL);
 }
+/**
+ * this function handles the result from the plugins
+ */
 static void result_itterate(GList *list, gpointer user_data)
 {
 	MetaData *md=NULL;
@@ -492,62 +559,41 @@ static void result_itterate(GList *list, gpointer user_data)
 	 * Plugin has a result, try the downloading the first, if that fails
 	 */
 	d->list = list;
-	/* Store the first one in the list */
+	/* Set the first one as the current one */
 	d->iter = g_list_first(list);
 
-	/* If type is ART we need to download something. */
+	/* Get the result of the first query */ 
 	md  = d->iter->data;
-	if(md->content_type == META_DATA_CONTENT_URI)
+	/* if the first is an uri, make a local cache copy */
+	if(meta_data_is_uri(md))
 	{
-		const char *path = meta_data_get_uri(md);// d->iter->data;
-		if(path[0] == '/') {
+		const char *path = meta_data_get_uri(md);
+		if(path && path[0] == '/') {
+			/* if it is a local copy, just set the result as final result */
 			d->result = META_DATA_AVAILABLE;
 			d->met = md;
 			d->iter->data= NULL;
-		}else{
-			printf("ID::download %i\n", d->id);
+		}else if (path){
+			/* if it is a remote uri, download it */
 			GEADAsyncHandler *handle = gmpc_easy_async_downloader(path, metadata_download_handler, d);
+			printf("ID::download %i\n", d->id);
 			if(handle != NULL)
 			{
+				/* if download is a success wait for result */
 				counter++;
 				printf("COUNTER: %i\n", counter);
-				printf("return\n");
 				return;
 			}
 		}
-
-	}
-	/* If type is text, store this in a file. */
-	else if (md->content_type == META_DATA_CONTENT_TEXT)
-	{
-		GError *error = NULL;
-		const gchar *content = meta_data_get_text(md);
-		gchar *filename = gmpc_get_metadata_filename(d->type&(~META_QUERY_NO_CACHE), d->edited, NULL);
-		g_file_set_contents(filename,(char *)content, -1, &error);
-		if(error)
-		{
-			debug_printf(DEBUG_ERROR, "Failed to store file: %s: '%s'", filename, error->message);
-			g_error_free(error);
-			error = NULL;
-		}
-		else{
-			/* If saved succesfull, pass filename back to handler */
-			d->met = meta_data_new();
-			d->met->type = (md)->type;
-			d->met->plugin_name = (md)->plugin_name;
-			d->met->content_type = META_DATA_CONTENT_URI;
-			d->met->content = g_strdup(filename);
-			d->met->size = -1;
-			d->result = META_DATA_AVAILABLE;
-		}
 	}else {
+		/* if it is not something to download, set the result as final */
 		printf("Got type: %i\n", md->content_type);
 		d->result = META_DATA_AVAILABLE;
 		d->met = md;
 		d->iter->data= NULL;
 	}	
 
-	/* Free the list. */
+	/* Free the remaining results. */
 	if(d->list)
 	{
 		g_list_foreach(d->list, (GFunc)meta_data_free, NULL);
@@ -559,7 +605,7 @@ static void result_itterate(GList *list, gpointer user_data)
 	/**
 	 * If still no result, try next plugin
 	 */
-	if(d->result == META_DATA_UNAVAILABLE)
+	if(d->result != META_DATA_AVAILABLE)
 	{
 		d->index++;
 	}
@@ -569,13 +615,17 @@ static void result_itterate(GList *list, gpointer user_data)
 	 */
 	else
 		d->index = meta_num_plugins;
-
+	/* Continue processing */
 	g_idle_add((GSourceFunc)process_itterate, NULL);
 }
+/**
+ * This functions processes the requests, one by one 
+ */
 static gboolean process_itterate(void)
 {
+	int length1;
 
-	meta_thread_data *d;
+	meta_thread_data *d = NULL;
 	/* If queue is empty, do nothing */
 	if(process_queue == NULL){
 		return FALSE;
@@ -584,7 +634,7 @@ static gboolean process_itterate(void)
 	printf("%s\n", __FUNCTION__);
 
 	/**
-	 * Get the top of the list
+	 * Get the first entry in the queue (this is the active one, or will be the active request 
 	 */
 	d = process_queue->data;
 	/**
@@ -598,13 +648,15 @@ static gboolean process_itterate(void)
 		 */
 		if(d->index == 0)
 		{
+			/* if the user requested a bypass of the cache, don't query it */
 			if(d->type&META_QUERY_NO_CACHE)
 			{
-				d->result = META_DATA_UNAVAILABLE;
+				d->result = META_DATA_FETCHING;
 			} else {
 				MetaData *met = NULL;
 				d->result = meta_data_get_from_cache(d->edited,d->type&META_QUERY_DATA_TYPES, &met);
 				if(d->result != META_DATA_FETCHING){
+					/* Copy the result to the final result */
 					d->met = met;
 					met = NULL;
 				}
@@ -613,11 +665,12 @@ static gboolean process_itterate(void)
 		}
 		/**
 		 * If cache has no reesult, query plugin
+		 * Only query when the cache returns
 		 */
-		if(d->result != META_DATA_AVAILABLE)
+		if(d->result == META_DATA_FETCHING)
 		{
+			/* Get the current plugin to query */
 			gmpcPluginParent *plug = meta_plugins[d->index];
-
 			/**
 			 * Query plugins
 			 */
@@ -627,8 +680,10 @@ static gboolean process_itterate(void)
 			}
 			else
 			{
+				/* advance to the next plugin */
 				d->index++;
-				g_idle_add((GSourceFunc)process_itterate, NULL);
+				/* do the next itteration */
+				return TRUE;
 			}
 			return FALSE;
 		}
@@ -645,11 +700,11 @@ static gboolean process_itterate(void)
 		d->met = meta_data_new();
 		d->met->type = (d->type&META_QUERY_DATA_TYPES);
 		d->met->content_type = META_DATA_CONTENT_EMPTY;
+		d->met->content = NULL; d->met->size = -1;
 	}
 	/**
 	 * Store result (or lack off) 
 	 **/
-
 	meta_data_set_cache_real(d->edited, d->result, d->met);
 	if(d->edited->artist)
 	{
@@ -659,7 +714,7 @@ static gboolean process_itterate(void)
 	/**
 	 * Remove from queue
 	 */
-	int length1 = g_list_length(process_queue);
+	length1 = g_list_length(process_queue);
 	/* Remove top */
 	process_queue = g_list_delete_link(process_queue, process_queue);
 	printf("remaining: %i:%i\n", length1 - g_list_length(process_queue),g_list_length(process_queue));
@@ -670,18 +725,20 @@ static gboolean process_itterate(void)
 			meta_thread_data *d2 = iter->data;
 			if(!meta_compare_func(d,d2)){
 				/* Remove from intput list */
-				iter = process_queue = g_list_remove(process_queue, iter);
-				/* if there is no old-type callback, only once is sufficient */
+				iter = process_queue = g_list_delete_link(process_queue, iter);
 				if(d2->callback)
 				{
-					/* Copy result */
+					/* If old fasion query, copy result and push to result-handling */
 					d2->result = d->result;
 					d2->met = meta_data_dup(d->met);
 					/* put result back */
 					g_queue_push_tail(meta_results, d2);		
 				}else{
+					/* if there is no old-type callback, We can remove it completely */
+					/* Free result */
 					if(d2->met)
 						meta_data_free(d2->met);
+					/* free stored song copies */
 					if(d2->edited) 
 						mpd_freeSong(d2->edited);
 					if(d2->song)
@@ -707,8 +764,7 @@ static gboolean process_itterate(void)
 	/**
 	 * Next in queue 
 	 */
-	g_idle_add((GSourceFunc)process_itterate, NULL);
-	return FALSE;
+	return TRUE;
 }
 
 /**
@@ -716,29 +772,30 @@ static gboolean process_itterate(void)
  */
 MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData **met,MetaDataCallback callback, gpointer data)
 {
+	static int test_id = 0;
 	MetaDataResult ret;
 	meta_thread_data *mtd = NULL;
 	mpd_Song *song =NULL;
-	guint id = 0;
 	/* TODO: Validate request */
 
 	g_assert(met != NULL);
 	g_assert(*met == NULL);
 	/**
 	 * If there is no song
-	 * return;
+	 * return there is not metadata available;
 	 */
 	if(tsong == NULL)
 	{
 		return META_DATA_UNAVAILABLE;	
 	}
 
-	/**
-	 * Check cache for result.
-	 */
 	if(type&META_QUERY_NO_CACHE)
 	{
-		/* For others */
+		/**
+		 * If the users did request a bypass,
+		 * Don't Check cache for result.
+		 * But signal an update 
+		 */
 		gmpc_meta_watcher_data_changed(gmw,tsong, (type)&META_QUERY_DATA_TYPES,META_DATA_FETCHING, NULL); 
 		if(callback)
 		{
@@ -763,7 +820,7 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData *
 
 	mtd = g_malloc0(sizeof(*mtd));
 	/**
-	 * Make a copy
+	 * Get the 'edited' version we prefer to use when requesting metadata 
 	 */
 	mtd->edited = rewrite_mpd_song(tsong, type);
 
@@ -772,22 +829,23 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData *
 	 */
 	if((type&META_QUERY_NO_CACHE) == 0)
 	{
+		/* Query the cache for the edited version of the cache, if no bypass is requested */
 		ret = meta_data_get_from_cache(mtd->edited, type&META_QUERY_DATA_TYPES, met);
 		/**
 		 * If the data is know. (and doesn't need fectching) 
 		 * call the callback and stop
 		 */
-
 		if(ret != META_DATA_FETCHING)
 		{
 			/* store it under the original */
 			meta_data_set_cache_real(tsong, ret,*met);
-
+			/* Cleanup what we had so far */
 			mpd_freeSong(mtd->edited);
-			q_free(mtd);
+			g_free(mtd);
 			/* Steal result */
 			return ret;	
 		}
+		/* If it is fetching free the result */
 		if(*met) meta_data_free(*met);
 		*met = NULL;
 	}
@@ -802,21 +860,30 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData *
 	 * unique id 
 	 * Not needed, but can be usefull for debugging
 	 */
+	mtd->id = ++test_id;
+	/* Create a copy of the original song */
 	mtd->song = mpd_songDup(tsong);
-	static int test_id = 0;
-	id = mtd->id = ++test_id;//g_random_int_range(1,2147483647);
 	printf("ID:::CREATE:%i\n", mtd->id);
+	/* Set the type */
 	mtd->type = type;
+	/* the callback */
 	mtd->callback = callback;
+	/* the callback data */
 	mtd->data = data;
+	/* start at the first plugin */
 	mtd->index = 0;
-	mtd->result = META_DATA_UNAVAILABLE;
-
+	/* Set that we are fetching */
+	mtd->result = META_DATA_FETCHING;
+	/* set result NULL */
+	mtd->met = NULL;
+	
 	if(process_queue == NULL) {
+		/* If queue is empty, add it, and call the processing function. */
 		process_queue = g_list_append(process_queue, mtd);
 		g_idle_add((GSourceFunc)process_itterate, NULL);
 		return META_DATA_FETCHING;
 	}
+	/* if queue not empy, append itand do nothing else */
 	process_queue = g_list_append(process_queue, mtd);
 
 	return META_DATA_FETCHING;
