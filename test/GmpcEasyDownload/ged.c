@@ -35,6 +35,7 @@ void cfg_set_single_value_as_int(gpointer *config, const gchar *a, const gchar *
 
 void downloaded(const GEADAsyncHandler *handle, GEADStatus status, gpointer user_data)
 {
+    GMainLoop *loop = user_data;
     if(status == GEAD_PROGRESS) return;
     else if(status == GEAD_DONE){
         gsize length;
@@ -43,16 +44,19 @@ void downloaded(const GEADAsyncHandler *handle, GEADStatus status, gpointer user
     }else{
         g_error("Download failed\n");
     }
-
-    gtk_main_quit();
+    g_main_loop_quit(loop);
 }
 int main(int argc, char **argv)
 {
     GEADAsyncHandler *handle;
+    GMainLoop *loop;
+    g_type_init(); 
+    loop = g_main_loop_new(NULL, FALSE);
     if(!g_thread_supported())
         g_thread_init(NULL);
-    gtk_init(&argc, &argv);
-    handle = gmpc_easy_async_downloader("http://www.google.nl", downloaded, NULL);
-    gtk_main();
+    handle = gmpc_easy_async_downloader("http://www.google.nl", downloaded, loop);
+    g_main_loop_run(loop);
+    gmpc_easy_async_quit();
+    g_main_loop_unref(loop);
     return EXIT_FAILURE;
 }
