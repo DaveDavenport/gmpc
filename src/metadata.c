@@ -33,10 +33,6 @@ gmpcPluginParent **meta_plugins = NULL;
 static void meta_data_sort_plugins(void);
 GList *process_queue = NULL;
 /**
- * This is queue is used to send commands to the retrieval queue
- */
-GAsyncQueue *meta_commands = NULL;
-/**
  * This queue is used to send replies back.
  */
 GAsyncQueue *meta_results = NULL;
@@ -269,14 +265,10 @@ static gboolean meta_data_handle_results(void)
  */
 void meta_data_init(void)
 {
-	g_assert(meta_commands == NULL && meta_results == NULL );
+	g_assert(meta_results == NULL );
 
 	metadata_cache_init();
 
-	/**
-	 * The command queue
-	 */
-	meta_commands = g_async_queue_new();
 	/**
 	 * the result queue
 	 */
@@ -341,20 +333,6 @@ void meta_data_destroy(void)
 	meta_thread_data *mtd = NULL;
 	INIT_TIC_TAC();
 
-	/* remove old stuff */
-	g_async_queue_lock(meta_commands);
-	while((mtd = g_async_queue_try_pop_unlocked(meta_commands)))
-	{
-	}
-	/* Create the quit signal, this is just an empty request with id 0 */
-	mtd = g_malloc0(sizeof(*mtd));
-	mtd->id = 0;
-
-	/* push the request to the thread */
-	g_async_queue_push_unlocked(meta_commands, mtd);
-	g_async_queue_unlock(meta_commands);
-	/* cleanup */
-	g_free(mtd);
 	if(process_queue) {
 		GList *iter;
 		for(iter = g_list_first(process_queue); iter; iter = iter->next)
@@ -372,10 +350,6 @@ void meta_data_destroy(void)
 	}
 
 	debug_printf(DEBUG_INFO,"Done..");
-	if(meta_commands){
-		g_async_queue_unref(meta_commands);
-		meta_commands = NULL;
-	}
 	/* Close the cover database  */
 	TOC("test")
 		metadata_cache_destroy();
