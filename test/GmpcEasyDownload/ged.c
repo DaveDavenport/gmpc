@@ -33,7 +33,7 @@ void cfg_set_single_value_as_int(gpointer *config, const gchar *a, const gchar *
 {
 }
 
-void downloaded(const GEADAsyncHandler *handle, GEADStatus status, gpointer user_data)
+void downloaded2(const GEADAsyncHandler *handle, GEADStatus status, gpointer user_data)
 {
     GMainLoop *loop = user_data;
     if(status == GEAD_PROGRESS) return;
@@ -41,10 +41,27 @@ void downloaded(const GEADAsyncHandler *handle, GEADStatus status, gpointer user
         gsize length;
         const guchar *data = gmpc_easy_handler_get_data(handle, &length); 
         printf("Download: %li bytes\n", length);
+
     }else{
         g_error("Download failed\n");
     }
     g_main_loop_quit(loop);
+}
+
+void downloaded(const GEADAsyncHandler *handle, GEADStatus status, gpointer user_data)
+{
+    GMainLoop *loop = user_data;
+    if(status == GEAD_PROGRESS) return;
+    else if(status == GEAD_DONE){
+        GEADAsyncHandler *handle2;
+        gsize length;
+        const guchar *data = gmpc_easy_handler_get_data(handle, &length); 
+        printf("Download: %li bytes\n", length);
+        handle2 = gmpc_easy_async_downloader("http://maps.google.nl", downloaded2, loop);
+    }else{
+        g_error("Download failed\n");
+        g_main_loop_quit(loop);
+    }
 }
 int main(int argc, char **argv)
 {
