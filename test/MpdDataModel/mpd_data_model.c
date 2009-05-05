@@ -12,6 +12,11 @@ GObject *config = NULL;
 GObject *gmw = NULL;
 GObject *gmpc_signals = NULL;
 
+const gchar *meta_data_get_uri(gpointer input)
+{
+    return NULL;
+}
+
 int cfg_get_single_value_as_int_with_default(GObject *config, const gchar *a, const gchar *b, int def)
 {
     return def;
