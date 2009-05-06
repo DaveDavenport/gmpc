@@ -283,13 +283,13 @@ GType gmpc_plugin_browser_iface_get_type (void) {
 }
 
 
-void gmpc_plugin_preferences_iface_pane_construct (GmpcPluginPreferencesIface* self, GtkContainer* container) {
-	GMPC_PLUGIN_PREFERENCES_IFACE_GET_INTERFACE (self)->pane_construct (self, container);
+void gmpc_plugin_preferences_iface_preferences_pane_construct (GmpcPluginPreferencesIface* self, GtkContainer* container) {
+	GMPC_PLUGIN_PREFERENCES_IFACE_GET_INTERFACE (self)->preferences_pane_construct (self, container);
 }
 
 
-void gmpc_plugin_preferences_iface_pane_destroy (GmpcPluginPreferencesIface* self, GtkContainer* container) {
-	GMPC_PLUGIN_PREFERENCES_IFACE_GET_INTERFACE (self)->pane_destroy (self, container);
+void gmpc_plugin_preferences_iface_preferences_pane_destroy (GmpcPluginPreferencesIface* self, GtkContainer* container) {
+	GMPC_PLUGIN_PREFERENCES_IFACE_GET_INTERFACE (self)->preferences_pane_destroy (self, container);
 }
 
 

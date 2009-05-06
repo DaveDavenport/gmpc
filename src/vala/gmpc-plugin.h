@@ -131,8 +131,8 @@ struct _GmpcPluginBrowserIfaceIface {
 
 struct _GmpcPluginPreferencesIfaceIface {
 	GTypeInterface parent_iface;
-	void (*pane_construct) (GmpcPluginPreferencesIface* self, GtkContainer* container);
-	void (*pane_destroy) (GmpcPluginPreferencesIface* self, GtkContainer* container);
+	void (*preferences_pane_construct) (GmpcPluginPreferencesIface* self, GtkContainer* container);
+	void (*preferences_pane_destroy) (GmpcPluginPreferencesIface* self, GtkContainer* container);
 };
 
 /* untested */
@@ -160,8 +160,8 @@ void gmpc_plugin_browser_iface_browser_unselected (GmpcPluginBrowserIface* self,
 gint gmpc_plugin_browser_iface_browser_option_menu (GmpcPluginBrowserIface* self, GtkMenu* menu);
 gint gmpc_plugin_browser_iface_browser_add_go_menu (GmpcPluginBrowserIface* self, GtkMenu* menu);
 GType gmpc_plugin_browser_iface_get_type (void);
-void gmpc_plugin_preferences_iface_pane_construct (GmpcPluginPreferencesIface* self, GtkContainer* container);
-void gmpc_plugin_preferences_iface_pane_destroy (GmpcPluginPreferencesIface* self, GtkContainer* container);
+void gmpc_plugin_preferences_iface_preferences_pane_construct (GmpcPluginPreferencesIface* self, GtkContainer* container);
+void gmpc_plugin_preferences_iface_preferences_pane_destroy (GmpcPluginPreferencesIface* self, GtkContainer* container);
 GType gmpc_plugin_preferences_iface_get_type (void);
 gint gmpc_plugin_song_list_iface_song_list (GmpcPluginSongListIface* self, GtkWidget* tree, GtkMenu* menu);
 GType gmpc_plugin_song_list_iface_get_type (void);

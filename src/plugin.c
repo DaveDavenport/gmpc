@@ -624,7 +624,7 @@ void gmpc_plugin_preferences_construct(gmpcPluginParent *plug,GtkWidget *wid)
     if(gmpc_plugin_has_preferences(plug))
     {
         if(plug->new) {
-            gmpc_plugin_preferences_iface_pane_construct(GMPC_PLUGIN_PREFERENCES_IFACE(plug->new), GTK_CONTAINER(wid));
+            gmpc_plugin_preferences_iface_preferences_pane_construct(GMPC_PLUGIN_PREFERENCES_IFACE(plug->new), GTK_CONTAINER(wid));
             return;
         }
         g_assert(plug->old->pref != NULL);
@@ -638,7 +638,7 @@ void gmpc_plugin_preferences_destroy(gmpcPluginParent *plug,GtkWidget *wid)
     if(gmpc_plugin_has_preferences(plug))
     {
         if(plug->new) {
-            gmpc_plugin_preferences_iface_pane_destroy(GMPC_PLUGIN_PREFERENCES_IFACE(plug->new), GTK_CONTAINER(wid));
+            gmpc_plugin_preferences_iface_preferences_pane_destroy(GMPC_PLUGIN_PREFERENCES_IFACE(plug->new), GTK_CONTAINER(wid));
             return;
         }
         g_assert(plug->old->pref != NULL);

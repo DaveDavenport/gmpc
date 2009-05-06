@@ -125,8 +125,8 @@ namespace Gmpc {
             }
         }
         public interface PreferencesIface : Base {
-            public abstract void pane_construct (Gtk.Container container);
-            public abstract void pane_destroy (Gtk.Container container);
+            public abstract void preferences_pane_construct (Gtk.Container container);
+            public abstract void preferences_pane_destroy (Gtk.Container container);
 
         }
 

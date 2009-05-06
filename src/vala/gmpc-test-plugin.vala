@@ -609,7 +609,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
 
 
 
-public class  Gmpc.TestPlugin : Gmpc.Plugin.Base, Gmpc.Plugin.PreferencesIface, Gmpc.Plugin.ToolMenuIface, Gmpc.Plugin.SongListIface {
+public class  Gmpc.TestPlugin : Gmpc.Plugin.Base,Gmpc.Plugin.ToolMenuIface, Gmpc.Plugin.SongListIface {
     public const int[3] version = {0,0,2};
     /*********************************************************************************
      * Plugin base functions 
@@ -648,25 +648,6 @@ public class  Gmpc.TestPlugin : Gmpc.Plugin.Base, Gmpc.Plugin.PreferencesIface, 
     }
 
      
-    /*********************************************************************************
-     * Plugin preferences functions 
-     ********************************************************************************/
-    public void pane_construct(Gtk.Container container)
-    {
-        var box = new Gtk.HBox(false,6);
-        var label = new Gtk.Label ("This is a test preferences pane");
-        box.pack_start(label, false, false,0);
-
-        container.add(box);
-
-        container.show_all();
-        stdout.printf("%s: Create preferences panel\n",this.get_name());
-    }
-    public void pane_destroy(Gtk.Container container)
-    {
-        Gtk.Bin bin = (Gtk.Bin) container;
-        bin.child.destroy();
-    }
 
     /*********************************************************************************
      * Private  

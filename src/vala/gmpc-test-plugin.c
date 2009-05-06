@@ -82,8 +82,6 @@ static const char* gmpc_test_plugin_real_get_name (GmpcPluginBase* base);
 static void gmpc_test_plugin_real_save_yourself (GmpcPluginBase* base);
 static gboolean gmpc_test_plugin_real_get_enabled (GmpcPluginBase* base);
 static void gmpc_test_plugin_real_set_enabled (GmpcPluginBase* base, gboolean state);
-static void gmpc_test_plugin_real_pane_construct (GmpcPluginPreferencesIface* base, GtkContainer* container);
-static void gmpc_test_plugin_real_pane_destroy (GmpcPluginPreferencesIface* base, GtkContainer* container);
 static void _g_list_free_gtk_tree_path_free (GList* self);
 static void gmpc_test_plugin_menu_activate_tree (GmpcTestPlugin* self, GtkMenuItem* item);
 static void _gmpc_test_plugin_menu_activate_tree_gtk_menu_item_activate (GtkImageMenuItem* _sender, gpointer self);
@@ -92,7 +90,6 @@ static void _gmpc_test_plugin_menu_activated_album_gtk_menu_item_activate (GtkMe
 static gint gmpc_test_plugin_real_tool_menu_integration (GmpcPluginToolMenuIface* base, GtkMenu* menu);
 static GObject * gmpc_test_plugin_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);
 static gpointer gmpc_test_plugin_parent_class = NULL;
-static GmpcPluginPreferencesIfaceIface* gmpc_test_plugin_gmpc_plugin_preferences_iface_parent_iface = NULL;
 static GmpcPluginToolMenuIfaceIface* gmpc_test_plugin_gmpc_plugin_tool_menu_iface_parent_iface = NULL;
 static GmpcPluginSongListIfaceIface* gmpc_test_plugin_gmpc_plugin_song_list_iface_parent_iface = NULL;
 
@@ -1174,39 +1171,6 @@ static void gmpc_test_plugin_real_set_enabled (GmpcPluginBase* base, gboolean st
 }
 
 
-/*********************************************************************************
-     * Plugin preferences functions 
-     ********************************************************************************/
-static void gmpc_test_plugin_real_pane_construct (GmpcPluginPreferencesIface* base, GtkContainer* container) {
-	GmpcTestPlugin * self;
-	GtkHBox* box;
-	GtkLabel* label;
-	self = (GmpcTestPlugin*) base;
-	g_return_if_fail (container != NULL);
-	box = g_object_ref_sink ((GtkHBox*) gtk_hbox_new (FALSE, 6));
-	label = g_object_ref_sink ((GtkLabel*) gtk_label_new ("This is a test preferences pane"));
-	gtk_box_pack_start ((GtkBox*) box, (GtkWidget*) label, FALSE, FALSE, (guint) 0);
-	gtk_container_add (container, (GtkWidget*) box);
-	gtk_widget_show_all ((GtkWidget*) container);
-	fprintf (stdout, "%s: Create preferences panel\n", gmpc_plugin_base_get_name ((GmpcPluginBase*) self));
-	(box == NULL) ? NULL : (box = (g_object_unref (box), NULL));
-	(label == NULL) ? NULL : (label = (g_object_unref (label), NULL));
-}
-
-
-static void gmpc_test_plugin_real_pane_destroy (GmpcPluginPreferencesIface* base, GtkContainer* container) {
-	GmpcTestPlugin * self;
-	GtkBin* _tmp0;
-	GtkBin* bin;
-	self = (GmpcTestPlugin*) base;
-	g_return_if_fail (container != NULL);
-	_tmp0 = NULL;
-	bin = (_tmp0 = GTK_BIN (container), (_tmp0 == NULL) ? NULL : g_object_ref (_tmp0));
-	gtk_object_destroy ((GtkObject*) bin->child);
-	(bin == NULL) ? NULL : (bin = (g_object_unref (bin), NULL));
-}
-
-
 static void _g_list_free_gtk_tree_path_free (GList* self) {
 	g_list_foreach (self, (GFunc) gtk_tree_path_free, NULL);
 	g_list_free (self);
@@ -1379,13 +1343,6 @@ static void gmpc_test_plugin_class_init (GmpcTestPluginClass * klass) {
 }
 
 
-static void gmpc_test_plugin_gmpc_plugin_preferences_iface_interface_init (GmpcPluginPreferencesIfaceIface * iface) {
-	gmpc_test_plugin_gmpc_plugin_preferences_iface_parent_iface = g_type_interface_peek_parent (iface);
-	iface->pane_construct = gmpc_test_plugin_real_pane_construct;
-	iface->pane_destroy = gmpc_test_plugin_real_pane_destroy;
-}
-
-
 static void gmpc_test_plugin_gmpc_plugin_tool_menu_iface_interface_init (GmpcPluginToolMenuIfaceIface * iface) {
 	gmpc_test_plugin_gmpc_plugin_tool_menu_iface_parent_iface = g_type_interface_peek_parent (iface);
 	iface->tool_menu_integration = gmpc_test_plugin_real_tool_menu_integration;
@@ -1406,11 +1363,9 @@ GType gmpc_test_plugin_get_type (void) {
 	static GType gmpc_test_plugin_type_id = 0;
 	if (gmpc_test_plugin_type_id == 0) {
 		static const GTypeInfo g_define_type_info = { sizeof (GmpcTestPluginClass), (GBaseInitFunc) NULL, (GBaseFinalizeFunc) NULL, (GClassInitFunc) gmpc_test_plugin_class_init, (GClassFinalizeFunc) NULL, NULL, sizeof (GmpcTestPlugin), 0, (GInstanceInitFunc) gmpc_test_plugin_instance_init, NULL };
-		static const GInterfaceInfo gmpc_plugin_preferences_iface_info = { (GInterfaceInitFunc) gmpc_test_plugin_gmpc_plugin_preferences_iface_interface_init, (GInterfaceFinalizeFunc) NULL, NULL};
 		static const GInterfaceInfo gmpc_plugin_tool_menu_iface_info = { (GInterfaceInitFunc) gmpc_test_plugin_gmpc_plugin_tool_menu_iface_interface_init, (GInterfaceFinalizeFunc) NULL, NULL};
 		static const GInterfaceInfo gmpc_plugin_song_list_iface_info = { (GInterfaceInitFunc) gmpc_test_plugin_gmpc_plugin_song_list_iface_interface_init, (GInterfaceFinalizeFunc) NULL, NULL};
 		gmpc_test_plugin_type_id = g_type_register_static (GMPC_PLUGIN_TYPE_BASE, "GmpcTestPlugin", &g_define_type_info, 0);
-		g_type_add_interface_static (gmpc_test_plugin_type_id, GMPC_PLUGIN_TYPE_PREFERENCES_IFACE, &gmpc_plugin_preferences_iface_info);
 		g_type_add_interface_static (gmpc_test_plugin_type_id, GMPC_PLUGIN_TYPE_TOOL_MENU_IFACE, &gmpc_plugin_tool_menu_iface_info);
 		g_type_add_interface_static (gmpc_test_plugin_type_id, GMPC_PLUGIN_TYPE_SONG_LIST_IFACE, &gmpc_plugin_song_list_iface_info);
 	}
