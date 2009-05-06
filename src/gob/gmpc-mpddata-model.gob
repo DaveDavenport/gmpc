@@ -706,9 +706,35 @@ requires 2.0.0
         void 
         set_request_artist(self, const char *artist)
         {
+            int i;
+            GtkTreePath *path = NULL;
+            GtkTreeIter iter;
             if(self->_priv->req_artist) 
                 q_free(self->_priv->req_artist);
             self->_priv->req_artist = (artist != NULL && artist[0] != '\0')?g_strdup(artist):NULL;
+            /* Free possible stored images */
+            if(self->_priv->images && self->_priv->use_images)
+            {
+                MpdData *data2 = mpd_data_get_first(self->_priv->data); 
+                for(i=0;i<self->num_rows;i++)
+                {
+                    if(self->_priv->images[i]){
+                        g_object_unref(self->_priv->images[i]);
+                        self->_priv->images[i] = NULL;
+                    
+                        /* Update the view */
+                        path = gtk_tree_path_new();
+                        gtk_tree_path_append_index(path,i);
+                        iter.stamp = self->_priv->stamp;
+                        iter.user_data = data2;
+                        iter.user_data2 =  GINT_TO_POINTER(i);
+                        /* propegate change */
+                        gtk_tree_model_row_changed(GTK_TREE_MODEL(self), path, &iter);
+                        gtk_tree_path_free(path);
+                    }
+                    data2 = mpd_data_get_next_real(data2,FALSE);
+                }
+            }
         }
         public
         const char *
@@ -965,6 +991,7 @@ requires 2.0.0
 
                     /* propegate change */
                     gtk_tree_model_row_changed(GTK_TREE_MODEL(self), path, &iter);
+                    gtk_tree_path_free(path);
                     i++;
                 }
             }

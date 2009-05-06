@@ -491,32 +491,53 @@ static void tag2_changed(GtkTreeSelection *sel2, tag_element *te)
 	    return;
     }
     working = 1;
-
 	/* Clear songs list */
-    /* clear the depending browsers */
-	while(tel)
-	{
-		tag_element *te2 =tel->data;
-		if(te2)
-        {
-            gmpc_mpddata_model_set_request_artist(GMPC_MPDDATA_MODEL(te2->model), NULL);
-        }
-        tel = tel->next;
-	}
     tel = g_list_first(browser->tag_lists);
     /* check if the user selected a row, if not do nothing */
-	while(tel)
+
+    /* Set on all tags the request artist, if available. */
     {
-        te = tel->data;
+        gchar *artist = NULL;
+        GList *first_te = NULL;        
+        for(first_te = tel;first_te && !artist;first_te = first_te->next) 
+        {
+            tag_element *te3 = first_te->data;
+            GtkTreeIter iter;
+            GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(te3->tree));	
+            if(gtk_tree_selection_get_selected(sel, &(te3->model), &iter))
+            {	
+                if(mpd_server_tag_supported(connection,te3->type))
+                {
+                    gchar *value;
+                    gtk_tree_model_get(te3->model, &iter, MPDDATA_MODEL_COL_SONG_TITLE, &value, -1);
+                    if(te3->type == MPD_TAG_ITEM_ARTIST || te3->type == MPD_TAG_ITEM_ALBUM_ARTIST)
+                    {
+                        artist = g_strdup(value);
+                    }
+                    g_free(value);
+                }
+            }
+        }
+
+        for(first_te = tel;first_te;first_te = first_te->next) {
+            tag_element *te3 = first_te->data;
+            if(te3->index != not_to_update){
+                gmpc_mpddata_model_set_request_artist(GMPC_MPDDATA_MODEL(te3->model), artist);
+            }
+        }
+        q_free(artist);
+    }
+
+    while(tel)
+    {
+        tag_element *te = tel->data;
         if(te->index != not_to_update && mpd_server_tag_supported(connection,te->type))
         {
             GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(te->tree));
             GtkTreeIter iter;
-            gchar *artist = NULL;
             GList *first = g_list_first(browser->tag_lists);
             /* only do the following query if it isn't the last one */
 
-            int artist_seen = 0;
             /* Search for the fields of the next tag, this needs the value/type of all the previous,
              * Parsed from left to right 
              */
@@ -535,36 +556,12 @@ static void tag2_changed(GtkTreeSelection *sel2, tag_element *te)
                             gtk_tree_model_get(te3->model, &iter, MPDDATA_MODEL_COL_SONG_TITLE, &value, -1);
                             if(!nfilter || te3->index < te->index)
                                 mpd_database_search_add_constraint(connection, te3->type, (value)?value:"");
-                            if(te3->index < (te->index) && !artist_seen)
-                            {           
-                                if(te3->type == MPD_TAG_ITEM_ARTIST || te3->type == MPD_TAG_ITEM_ALBUM_ARTIST)
-                                {
-                                    artist = g_strdup(value);
-                                    artist_seen = 1;
-                                }
-                            }
-
                             g_free(value);
                         }
                     }
                 }
                 first =first->next;
             }
-           
-            /* Set on all tags the request artist, if available. */
-            /* TODO: This sets it many, uneeded times, fix that.. */
-            if(artist){
-                if(!artist_set) {
-                    GList *first_te = g_list_first(browser->tag_lists);
-                    for(;first_te;first_te = first_te->next) {
-                        tag_element *te3 = first_te->data;
-                        gmpc_mpddata_model_set_request_artist(GMPC_MPDDATA_MODEL(te3->model), artist);
-                    }
-                    artist_set = TRUE;
-                }
-                q_free(artist);
-            }
-
             data = mpd_database_search_commit(connection);
             /* Delete items that match */
             if(strlen(gtk_entry_get_text(GTK_ENTRY(te->sentry))) > 0)
@@ -627,7 +624,7 @@ static void tag2_changed(GtkTreeSelection *sel2, tag_element *te)
         }
         tel = tel->next;
     }
-
+    
     tel = g_list_first(browser->tag_lists);
     data = NULL;
     while(tel)
@@ -961,7 +958,9 @@ static void tag2_songlist_add_tag(tag_browser *browser,const gchar *name, int ty
 
 	
 	/* Signal */
-	g_signal_connect(G_OBJECT(gtk_tree_view_get_selection(GTK_TREE_VIEW(te->tree))), "changed", G_CALLBACK(tag2_changed), te);
+    printf("add tag: %i=%s\n", te->index, mpdTagItemKeys[te->type]);
+	g_signal_connect(G_OBJECT(gtk_tree_view_get_selection(GTK_TREE_VIEW(te->tree))), 
+            "changed", G_CALLBACK(tag2_changed), te);
 
 }
 
