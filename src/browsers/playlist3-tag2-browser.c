@@ -1516,15 +1516,17 @@ static void tag2_pref_column_add(GtkWidget *but, GtkComboBox *box)
 		gtk_widget_show_all(tb->tag_hbox);
 		tag2_save_browser(tb);
 		/* if it's the first, update */
-		if(g_list_length(tb->tag_lists) == 1)
+		/*if(g_list_length(tb->tag_lists) == 1)
 		{
-			GList *giter = g_list_first(tb->tag_lists);
+			GList *giter;
+            
+            giter = g_list_first(tb->tag_lists);
 			if(giter)
 			{
 				MpdData *data;
 				tag_element *te2 = giter->data;
-				/* update the content */	
-                if(mpd_server_tag_supported(connection,te2->type))
+		*/		/* update the content */	
+          /*      if(mpd_server_tag_supported(connection,te2->type))
                 {
                     mpd_database_search_field_start(connection, te2->type);
                     data = mpd_database_search_commit(connection);                        			
@@ -1534,6 +1536,9 @@ static void tag2_pref_column_add(GtkWidget *but, GtkComboBox *box)
                 }
 			}
 		}
+        */
+        /* just reset the whole thing */
+        tag2_songlist_clear_selection(NULL, tb);
 	}
 }
 /**
