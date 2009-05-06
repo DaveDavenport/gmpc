@@ -90,6 +90,9 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 		return false;
 	}
 	construct {
+        /* Mark the plugin as an internal dummy */
+        this.plugin_type = 8+4;
+
 		this.store =
 			new Gtk.ListStore(6, typeof(uint), typeof(string), typeof(string), typeof(void *), typeof(void *),
 							  typeof(string));

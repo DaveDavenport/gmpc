@@ -661,6 +661,8 @@ static GObject * gmpc_easy_command_constructor (GType type, guint n_construct_pr
 		GtkListStore* _tmp1;
 		GtkEntryCompletion* _tmp2;
 		GtkCellRendererText* renderer;
+		/* Mark the plugin as an internal dummy */
+		((GmpcPluginBase*) self)->plugin_type = 8 + 4;
 		_tmp1 = NULL;
 		self->store = (_tmp1 = gtk_list_store_new (6, G_TYPE_UINT, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_POINTER, G_TYPE_POINTER, G_TYPE_STRING, NULL), (self->store == NULL) ? NULL : (self->store = (g_object_unref (self->store), NULL)), _tmp1);
 		_tmp2 = NULL;

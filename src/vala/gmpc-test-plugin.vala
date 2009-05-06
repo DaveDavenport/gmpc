@@ -615,6 +615,10 @@ public class  Gmpc.TestPlugin : Gmpc.Plugin.Base, Gmpc.Plugin.PreferencesIface, 
      * Plugin base functions 
      * These functions are required.
      ********************************************************************************/
+    construct {
+        /* Mark the plugin as an internal dummy */
+        this.plugin_type = 8+4;
+    }
     public override weak int[] get_version() {
         return (int[3])this.version;
     }

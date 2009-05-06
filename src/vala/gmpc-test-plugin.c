@@ -90,6 +90,7 @@ static void _gmpc_test_plugin_menu_activate_tree_gtk_menu_item_activate (GtkImag
 static gint gmpc_test_plugin_real_song_list (GmpcPluginSongListIface* base, GtkWidget* tree, GtkMenu* menu);
 static void _gmpc_test_plugin_menu_activated_album_gtk_menu_item_activate (GtkMenuItem* _sender, gpointer self);
 static gint gmpc_test_plugin_real_tool_menu_integration (GmpcPluginToolMenuIface* base, GtkMenu* menu);
+static GObject * gmpc_test_plugin_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);
 static gpointer gmpc_test_plugin_parent_class = NULL;
 static GmpcPluginPreferencesIfaceIface* gmpc_test_plugin_gmpc_plugin_preferences_iface_parent_iface = NULL;
 static GmpcPluginToolMenuIfaceIface* gmpc_test_plugin_gmpc_plugin_tool_menu_iface_parent_iface = NULL;
@@ -1127,10 +1128,6 @@ GType gmpc_meta_data_edit_window_get_type (void) {
 }
 
 
-/*********************************************************************************
-     * Plugin base functions 
-     * These functions are required.
-     ********************************************************************************/
 static gint* gmpc_test_plugin_real_get_version (GmpcPluginBase* base, int* result_length1) {
 	GmpcTestPlugin * self;
 	gint* _tmp0;
@@ -1350,8 +1347,30 @@ GmpcTestPlugin* gmpc_test_plugin_new (void) {
 }
 
 
+/*********************************************************************************
+     * Plugin base functions 
+     * These functions are required.
+     ********************************************************************************/
+static GObject * gmpc_test_plugin_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties) {
+	GObject * obj;
+	GmpcTestPluginClass * klass;
+	GObjectClass * parent_class;
+	GmpcTestPlugin * self;
+	klass = GMPC_TEST_PLUGIN_CLASS (g_type_class_peek (GMPC_TYPE_TEST_PLUGIN));
+	parent_class = G_OBJECT_CLASS (g_type_class_peek_parent (klass));
+	obj = parent_class->constructor (type, n_construct_properties, construct_properties);
+	self = GMPC_TEST_PLUGIN (obj);
+	{
+		/* Mark the plugin as an internal dummy */
+		((GmpcPluginBase*) self)->plugin_type = 8 + 4;
+	}
+	return obj;
+}
+
+
 static void gmpc_test_plugin_class_init (GmpcTestPluginClass * klass) {
 	gmpc_test_plugin_parent_class = g_type_class_peek_parent (klass);
+	G_OBJECT_CLASS (klass)->constructor = gmpc_test_plugin_constructor;
 	GMPC_PLUGIN_BASE_CLASS (klass)->get_version = gmpc_test_plugin_real_get_version;
 	GMPC_PLUGIN_BASE_CLASS (klass)->get_name = gmpc_test_plugin_real_get_name;
 	GMPC_PLUGIN_BASE_CLASS (klass)->save_yourself = gmpc_test_plugin_real_save_yourself;

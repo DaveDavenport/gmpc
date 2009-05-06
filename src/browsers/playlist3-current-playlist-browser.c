@@ -312,13 +312,15 @@ static void mod_fill_clear_search_entry(GtkEntry *entry, GtkEntryIconPosition ic
 static void pl3_current_playlist_browser_init(PlayQueuePlugin *self)
 {
 	GtkWidget *entry = NULL,*tree = NULL,*sw = NULL, *pl3_cp_sw;
+    /* Mark the plugin internal */
+    GMPC_PLUGIN_BASE(self)->plugin_type = GMPC_INTERNALL|GMPC_PLUGIN_PL_BROWSER;
+
 	self->priv->pl3_cp_vbox = gtk_vbox_new(FALSE,6);
     tree = gmpc_mpddata_treeview_new("current-pl", FALSE, GTK_TREE_MODEL(playlist));
 
     g_signal_connect(G_OBJECT(tree), "paste_before", G_CALLBACK(pl3_current_playlist_browser_paste_before_songs), self);
     g_signal_connect(G_OBJECT(tree), "paste_after", G_CALLBACK(pl3_current_playlist_browser_paste_after_songs), self);
     g_signal_connect_swapped(G_OBJECT(tree), "cut", G_CALLBACK(pl3_current_playlist_browser_delete_selected_songs), self);
-
 
     /* filter */
     self->priv->mod_fill = (GtkTreeModel *)gmpc_mpddata_model_new();

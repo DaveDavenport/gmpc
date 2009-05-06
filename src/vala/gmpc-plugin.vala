@@ -44,6 +44,7 @@ namespace Gmpc {
             /**
              * The type of the plugin. see #PluginType. 
              * This is inherited from the old style plugins and no longer used.
+             * It will be used to mark a plugin internal
              */
             public int plugin_type = 1;
             /**
