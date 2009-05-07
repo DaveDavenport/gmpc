@@ -362,6 +362,8 @@ requires 2.0.0
             MpdData_real *data = iter->user_data;	
             int n = GPOINTER_TO_INT(iter->user_data2);
 
+            if(self->_priv->data == NULL)
+                g_warning("self->_priv->data == NULL");
             /* set value to the correct type */
             g_value_init(value, self->types[column]);
 
@@ -807,10 +809,10 @@ requires 2.0.0
                 iter.user_data = NULL; 
                 iter.user_data2 =  GINT_TO_POINTER(self->num_rows);
 
+                self->num_rows++;
                 /* propegate change */
                 gtk_tree_model_row_inserted(GTK_TREE_MODEL(self), path, &iter);
                 gtk_tree_path_free(path);
-                self->num_rows++;
             }
             for(data2 = mpd_data_get_first(self->_priv->data);data2; data2 = mpd_data_get_next_real(data2,FALSE)) {
                 path = gtk_tree_path_new();
@@ -819,10 +821,10 @@ requires 2.0.0
                 iter.user_data = data2;
                 iter.user_data2 =  GINT_TO_POINTER(self->num_rows);
 
+                self->num_rows++;
                 /* propegate change */
                 gtk_tree_model_row_inserted(GTK_TREE_MODEL(self), path, &iter);
                 gtk_tree_path_free(path);
-                self->num_rows++;
                 if(data2->type == MPD_DATA_TYPE_SONG)
                 {
                     if(data2->song && data2->song->time > 0)
@@ -1019,7 +1021,6 @@ requires 2.0.0
             MpdData_real *new = (MpdData_real *) data2;
             GtkTreePath *path =NULL;
             GtkTreeIter iter;
-
             /* Free possible stored images */
             if(self->_priv->images && self->_priv->use_images)
             {
@@ -1028,10 +1029,9 @@ requires 2.0.0
                     if(self->_priv->images[i])
                         g_object_unref(self->_priv->images[i]);
                 }
-                q_free(self->_priv->images);
+                g_free(self->_priv->images);
+                self->_priv->images = NULL;
             }
-
-
 
             /* sort it identical */
             new = (MpdData_real *)misc_sort_mpddata(data2,(GCompareDataFunc)self_test_sort_func,self ); 
@@ -1048,7 +1048,6 @@ requires 2.0.0
             /* compare lists */
             if(original)
             {
-
                 int has_next;
                 do
                 {
@@ -1085,17 +1084,10 @@ requires 2.0.0
                             new_list = n;
 
                             /* add */
-                            path = gtk_tree_path_new();
-                            gtk_tree_path_append_index(path,i);
-                            iter.stamp = self->_priv->stamp;
-                            iter.user_data = n;
-                            iter.user_data2 =  GINT_TO_POINTER(i);
 
-                            /* propegate change */
-                            gtk_tree_model_row_inserted(GTK_TREE_MODEL(self), path, &iter);
-                            gtk_tree_path_free(path);
                             self->num_rows++;
-
+                            /* mark for insert */
+                            new_list->userdata = GINT_TO_POINTER(1);
                             new=new->next;
                             i++;
                             has_next = 1;
@@ -1118,6 +1110,7 @@ requires 2.0.0
                             new_list->type = MPD_DATA_TYPE_TAG;
                             new_list->tag_type = new->tag_type;
                             new_list->tag = new->tag;
+                            new_list->userdata = GINT_TO_POINTER(0);
                             new->tag = NULL;
 
                             new = new->next;
@@ -1138,31 +1131,45 @@ requires 2.0.0
                     new_list->tag = new->tag;
                     new->tag = NULL;
 
-                    /* add */
-                    path = gtk_tree_path_new();
-                    gtk_tree_path_append_index(path,self->num_rows);
-                    iter.stamp = self->_priv->stamp;
-                    iter.user_data = new_list;
-                    iter.user_data2 =  GINT_TO_POINTER(self->num_rows);
-
-                    /* propegate change */
-                    gtk_tree_model_row_inserted(GTK_TREE_MODEL(self), path, &iter);
-                    gtk_tree_path_free(path);
+                    /* mark inserted */
+                    new_list->userdata = GINT_TO_POINTER(1);
                     self->num_rows++;
 
                     new = new->next;
                     i++;
                 }while(new);
             }
+
+
             if(self->_priv->data)
                 mpd_data_free(self->_priv->data);
+            if(self->_priv->use_images)
+                self->_priv->images = g_malloc0((self->num_rows)*sizeof(*(self->_priv->images)));
 
             self->_priv->data = mpd_data_get_first((MpdData*)new_list);
+
+            i = 0;
+            for(new = mpd_data_get_first(new_list); new; new = (MpdData *)mpd_data_get_next_real(new, FALSE))
+            {
+                if(GPOINTER_TO_INT(new->userdata) == 1)
+                {
+                    path = gtk_tree_path_new();
+                    gtk_tree_path_append_index(path,i);
+                    iter.stamp = self->_priv->stamp;
+                    iter.user_data = new_list;
+                    iter.user_data2 =  GINT_TO_POINTER(i);
+                    new->userdata = NULL;
+
+                    gtk_tree_model_row_inserted(GTK_TREE_MODEL(self), path, &iter);
+                    gtk_tree_path_free(path);
+                }
+                i++;
+            }
+
+
             if(data2)
                 g_assert(self->_priv->data != NULL);
 
-            if(self->_priv->use_images)
-                self->_priv->images = g_malloc0((self->num_rows)*sizeof(*(self->_priv->images)));
             if(data2)
                 mpd_data_free(data2);
             g_assert(items == self->num_rows);
