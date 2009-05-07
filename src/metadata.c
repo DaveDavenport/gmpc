@@ -93,7 +93,7 @@ mpd_Song *rewrite_mpd_song(mpd_Song *tsong, MetaDataType type)
 				data2->song = NULL;
 				mpd_data_free(data2);
 			}
-			else if(tsong->albumartist)
+			else if(mpd_server_tag_supported(connection,MPD_TAG_ITEM_ALBUM_ARTIST) && tsong->albumartist)
 			{
 				mpd_database_search_start(connection, TRUE);
 				mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ALBUM_ARTIST, tsong->albumartist);
