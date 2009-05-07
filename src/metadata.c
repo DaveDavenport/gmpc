@@ -434,42 +434,48 @@ static void metadata_download_handler(const GEADAsyncHandler *handle, GEADStatus
 		const gchar *data = gmpc_easy_handler_get_data(handle, &length);
 		GError *error = NULL;
 		/* Try to store the data in the file */
-		g_file_set_contents(filename, data, length, &error);
-		if(error == NULL)
+		if(length > 0)
 		{
-			MetaData *md = d->iter->data;
-			/* Set result successs */
-			d->result = META_DATA_AVAILABLE;
-			/* If success create a MetaData object */
-			/* Create Metadata */
-			d->met = meta_data_new();
-			d->met->type = md->type;
-			d->met->plugin_name = md->plugin_name;
-			d->met->content_type = META_DATA_CONTENT_URI;
-			d->met->content = filename;
-			d->met->size = -1;
-			/* Convert ownership of string to d->met */
-			filename = NULL;
-			/* Free any remaining results */ 
-			g_list_foreach(d->list,(GFunc) meta_data_free, NULL);
-			g_list_free(d->list);
-			/* Set to NULL */
-			d->list = NULL;
-			d->iter = NULL;
-			/* by setting index to the last, the process_itterate knows it should not look further */
-			d->index = meta_num_plugins;
-			/* Iterate the */
-			g_idle_add((GSourceFunc)process_itterate, NULL);
-			/* we trown it back, quit */
-			return;
+			g_file_set_contents(filename, data, length, &error);
+			if(error == NULL)
+			{
+				MetaData *md = d->iter->data;
+				/* Set result successs */
+				d->result = META_DATA_AVAILABLE;
+				/* If success create a MetaData object */
+				/* Create Metadata */
+				d->met = meta_data_new();
+				d->met->type = md->type;
+				d->met->plugin_name = md->plugin_name;
+				d->met->content_type = META_DATA_CONTENT_URI;
+				d->met->content = filename;
+				d->met->size = -1;
+				/* Convert ownership of string to d->met */
+				filename = NULL;
+				/* Free any remaining results */ 
+				g_list_foreach(d->list,(GFunc) meta_data_free, NULL);
+				g_list_free(d->list);
+				/* Set to NULL */
+				d->list = NULL;
+				d->iter = NULL;
+				/* by setting index to the last, the process_itterate knows it should not look further */
+				d->index = meta_num_plugins;
+				/* Iterate the */
+				g_idle_add((GSourceFunc)process_itterate, NULL);
+				/* we trown it back, quit */
+				return;
+			}
 		}
-		else{
+
+		if(error){
 			/* Ok we failed to store it, now we cleanup, and try the next entry. */
 			debug_printf(DEBUG_ERROR, "Failed to store file: %s: '%s'", filename, error->message);
 			g_error_free(error); error = NULL;
-			/* If we fail, clean up and try next one */
-			g_free(filename);
 		}
+		else
+			debug_printf(DEBUG_ERROR, "Failed to store file: %s: '%li'", gmpc_easy_handler_get_uri(handle),length);
+		/* If we fail, clean up and try next one */
+		g_free(filename);
 	}
 	/**
 	 * It seems we somehow _failed_ to get data, lets try the next result
