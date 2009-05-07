@@ -334,7 +334,6 @@ void meta_data_destroy(void)
 			if(mtd->edited)
 				mpd_freeSong(mtd->edited);
 
-			printf("ID:::DESTROY:%i\n", mtd->id);
 			/* Free the Request struct */
 			g_free(mtd);
 		}
@@ -403,7 +402,6 @@ static gboolean meta_data_handle_results(void)
 		if(data->edited)
 			mpd_freeSong(data->edited);
 
-		printf("ID:::DESTROY:%i\n", data->id);
 		/* Free the Request struct */
 		g_free(data);
 	}
@@ -414,6 +412,7 @@ static gboolean meta_data_handle_results(void)
 /**
  * This function handles it when data needs to be downloaded (in the cache) for now that are images.
  */
+/* TODO REMOVE */
 static void metadata_download_handler(const GEADAsyncHandler *handle, GEADStatus status, gpointer user_data)
 {
 	meta_thread_data *d = user_data;
@@ -423,7 +422,6 @@ static void metadata_download_handler(const GEADAsyncHandler *handle, GEADStatus
 		return;
 	}
 	counter --;
-	printf("ID:%s::%i::%i::%s COUNTER:%i\n", __FUNCTION__,d->id, d->type, d->edited->artist, counter);
 	if(status == GEAD_DONE)
 	{
 		/* If success, start processing  result */
@@ -461,7 +459,9 @@ static void metadata_download_handler(const GEADAsyncHandler *handle, GEADStatus
 				/* by setting index to the last, the process_itterate knows it should not look further */
 				d->index = meta_num_plugins;
 				/* Iterate the */
+
 				g_idle_add((GSourceFunc)process_itterate, NULL);
+				//process_itterate();
 				/* we trown it back, quit */
 				return;
 			}
@@ -501,15 +501,14 @@ static void metadata_download_handler(const GEADAsyncHandler *handle, GEADStatus
 					d->result = META_DATA_AVAILABLE;
 				}else if(path) {
 					/* Setup a new async downloader */
+
 					GEADAsyncHandler *new_handle = gmpc_easy_async_downloader((const gchar *)path, 
 							metadata_download_handler, d);
 					/* If it is a remote one, download it */ 
-					printf("ID:download it: %i \n", d->id);
 					if(new_handle != NULL)
 					{
 						/* if it is a success nothing left todo until the result comes in */
 						counter++;
-						printf("COUNTER: %i\n", counter);
 						return;
 					}
 				}
@@ -539,6 +538,7 @@ static void metadata_download_handler(const GEADAsyncHandler *handle, GEADStatus
 		d->index++;
 	/* itterate the next step */
 	g_idle_add((GSourceFunc)process_itterate, NULL);
+	//process_itterate();
 }
 /**
  * this function handles the result from the plugins
@@ -548,7 +548,6 @@ static void result_itterate(GList *list, gpointer user_data)
 	MetaData *md=NULL;
 	meta_thread_data *d = (meta_thread_data *)user_data;
 
-	printf("ID:%s::%i\n", __FUNCTION__,d->id);
 	/**
 	 * This plugin didn't have a result
 	 * Skip to next plugin, 
@@ -557,7 +556,9 @@ static void result_itterate(GList *list, gpointer user_data)
 	if(list == NULL){
 		d->index++;
 		/* retry */
+
 		g_idle_add((GSourceFunc)process_itterate, NULL);
+		//process_itterate();
 		return;
 	}
 
@@ -581,19 +582,17 @@ static void result_itterate(GList *list, gpointer user_data)
 			d->iter->data= NULL;
 		}else if (path){
 			/* if it is a remote uri, download it */
+
 			GEADAsyncHandler *handle = gmpc_easy_async_downloader(path, metadata_download_handler, d);
-			printf("ID::download %i\n", d->id);
 			if(handle != NULL)
 			{
 				/* if download is a success wait for result */
 				counter++;
-				printf("COUNTER: %i\n", counter);
 				return;
 			}
 		}
 	}else {
 		/* if it is not something to download, set the result as final */
-		printf("Got type: %i\n", md->content_type);
 		d->result = META_DATA_AVAILABLE;
 		d->met = md;
 		d->iter->data= NULL;
@@ -622,7 +621,9 @@ static void result_itterate(GList *list, gpointer user_data)
 	else
 		d->index = meta_num_plugins;
 	/* Continue processing */
-	g_idle_add((GSourceFunc)process_itterate, NULL);
+
+	g_idle_add((GSourceFunc)process_itterate,NULL);
+	//process_itterate();
 }
 /**
  * This functions processes the requests, one by one 
@@ -637,7 +638,6 @@ static gboolean process_itterate(void)
 		return FALSE;
 	}
 
-	printf("%s\n", __FUNCTION__);
 
 	/**
 	 * Get the first entry in the queue (this is the active one, or will be the active request 
@@ -682,13 +682,19 @@ static gboolean process_itterate(void)
 			 */
 			if(gmpc_plugin_get_enabled(plug))
 			{
-				gmpc_plugin_metadata_query_metadata_list(plug, d->edited, d->type&META_QUERY_DATA_TYPES, result_itterate, (gpointer)d);
+				gmpc_plugin_metadata_query_metadata_list(plug, 
+					d->edited,
+					d->type&META_QUERY_DATA_TYPES,
+					result_itterate, 
+					(gpointer)d);
+				return FALSE;
 			}
 			else
 			{
 				/* advance to the next plugin */
 				d->index++;
 				/* do the next itteration */
+				//process_itterate();
 				return TRUE;
 			}
 			return FALSE;
@@ -723,7 +729,6 @@ static gboolean process_itterate(void)
 	length1 = g_list_length(process_queue);
 	/* Remove top */
 	process_queue = g_list_delete_link(process_queue, process_queue);
-	printf("remaining: %i:%i\n", length1 - g_list_length(process_queue),g_list_length(process_queue));
 	if(process_queue){
 		GList *iter = g_list_first(process_queue);
 		for(;iter;iter = g_list_next(iter))
@@ -750,7 +755,6 @@ static gboolean process_itterate(void)
 					if(d2->song)
 						mpd_freeSong(d2->song);
 
-					printf("ID:::DESTROY2:%i\n", d2->id);
 					q_free(d2);
 				}
 			}
@@ -770,7 +774,14 @@ static gboolean process_itterate(void)
 	/**
 	 * Next in queue 
 	 */
-	return TRUE;
+
+	if(process_queue){
+		/* Make it be called again, if there are still items in the queue*/
+		return TRUE;
+	}
+	//	g_idle_add((GSourceFunc)process_itterate, __FUNCTION__);
+	//process_itterate();
+	return FALSE;
 }
 
 /**
@@ -869,7 +880,6 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData *
 	mtd->id = ++test_id;
 	/* Create a copy of the original song */
 	mtd->song = mpd_songDup(tsong);
-	printf("ID:::CREATE:%i\n", mtd->id);
 	/* Set the type */
 	mtd->type = type;
 	/* the callback */
@@ -886,7 +896,9 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData *
 	if(process_queue == NULL) {
 		/* If queue is empty, add it, and call the processing function. */
 		process_queue = g_list_append(process_queue, mtd);
+
 		g_idle_add((GSourceFunc)process_itterate, NULL);
+		//process_itterate();
 		return META_DATA_FETCHING;
 	}
 	/* if queue not empy, append itand do nothing else */

@@ -293,7 +293,10 @@ typedef struct {
 	int is_deflate;
 	z_stream *z;
 	gpointer extra_data;
+	guint uid;
 } _GEADAsyncHandler;
+
+static guint uid = 0;
 static void gmpc_easy_async_headers_update(SoupMessage * msg, gpointer data)
 {
 	const gchar *encoding = soup_message_headers_get(msg->response_headers, "Content-Encoding");
@@ -475,6 +478,7 @@ GEADAsyncHandler *gmpc_easy_async_downloader_with_headers(const gchar * uri, GEA
 	va_end(ap);
 
 	d = g_malloc0(sizeof(*d));
+	d->uid = ++uid;
 	d->is_gzip = 0;
 	d->is_deflate = 0;
 	d->z = NULL;
