@@ -35,6 +35,7 @@
 #include "vala/gmpc-favorites.h"
 #include "metadata_cache.h"
 #include "browsers/playlist3-file-browser.h"
+#include "browsers/playlist3-find2-browser.h"
 /**
  * Dragging 
  */
@@ -1608,8 +1609,16 @@ static void info2_fill_artist_view_real(mpd_Song *song2)
 	ali = gtk_alignment_new(0,0.5,0,0);
 	gtk_container_add(GTK_CONTAINER(ali), button);
 	gtk_box_pack_start(GTK_BOX(hbox), ali, FALSE,TRUE,0);
-	gtk_table_attach(GTK_TABLE(table), hbox, 1,2,1,2,GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL,0,0);
+	/* Search Button */
+	button = gtk_button_new_from_stock(GTK_STOCK_FIND);
+	g_object_set_data_full(G_OBJECT(button), "artist", g_strdup(song2->artist), g_free);
+	g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(pl3_find2_ec_database), song2->artist);
+	gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
+	ali = gtk_alignment_new(0, 0.5, 0, 0);
+	gtk_container_add(GTK_CONTAINER(ali), button);
+	gtk_box_pack_start(GTK_BOX(hbox), ali, FALSE,TRUE, 0);
 
+	gtk_table_attach(GTK_TABLE(table), hbox, 1, 2, 1, 2, GTK_SHRINK|GTK_FILL, GTK_SHRINK|GTK_FILL, 0, 0);
 	vbox = gtk_vbox_new(FALSE, 6);
 	gtk_container_set_border_width(GTK_CONTAINER(vbox), 6);
 

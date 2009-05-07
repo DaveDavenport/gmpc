@@ -913,7 +913,7 @@ static void pl3_find2_save_myself(void)
 }
 /* Easy command integration */
 
-static void pl3_find2_ec_database(gpointer user_data, const char *param)
+void pl3_find2_ec_database(gpointer user_data, const char *param)
 {
     GtkTreeIter iter;
     GtkTreeModel *model;
