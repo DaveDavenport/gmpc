@@ -1017,24 +1017,25 @@ requires 2.0.0
             MpdData_real *new_list = NULL;
             int i=0;
             int items=0;
-            MpdData_real *original = (MpdData_real *)self->_priv->data;
+            MpdData_real *original = (MpdData_real *)mpd_data_get_first(self->_priv->data);
             MpdData_real *new = (MpdData_real *) data2;
             GtkTreePath *path =NULL;
             GtkTreeIter iter;
             /* Free possible stored images */
-            if(self->_priv->images && self->_priv->use_images)
+            if(self->_priv->images)
             {
                 for(i=0;i<self->num_rows;i++)
                 {
                     if(self->_priv->images[i])
                         g_object_unref(self->_priv->images[i]);
                 }
+                /* set image structure on NULL, this should void it being read out (wrong) */
                 g_free(self->_priv->images);
                 self->_priv->images = NULL;
             }
 
             /* sort it identical */
-            new = (MpdData_real *)misc_sort_mpddata(data2,(GCompareDataFunc)self_test_sort_func,self ); 
+            data2 = new = (MpdData_real *)misc_sort_mpddata(data2,(GCompareDataFunc)self_test_sort_func,self ); 
 
 
             if(new) {
@@ -1044,9 +1045,11 @@ requires 2.0.0
                     n = n->next;
                 }
             }
+            printf("%i-%i::%p\n",items, self->num_rows, new);
             i=0;
             /* compare lists */
-            if(original)
+            if(self->_priv->data && original == NULL) g_warning("weirdness\n");
+            if(self->_priv->data)
             {
                 int has_next;
                 do
@@ -1054,6 +1057,7 @@ requires 2.0.0
                     has_next = 0;
                     if(new == NULL)
                     {
+                        printf("skim rows: %i %i\n", self->num_rows, items);
                         if(self->num_rows > items)
                         {
                             /* remove current row */
@@ -1065,29 +1069,61 @@ requires 2.0.0
                             /* propegate change */
                             gtk_tree_model_row_deleted(GTK_TREE_MODEL(self), path);
                             gtk_tree_path_free(path);
+                            printf("Row deleted\n");
+                           
+                            MpdData_real *n = original->next;
+                            original = mpd_data_delete_item(original); 
+                            self->_priv->data = mpd_data_get_first(original);
 
-                            original = original->next;
+                            original=n;
                             has_next = (original )?1:0;
                         }
                     }
                     else
                     {
                         int compare = strcmp(new->tag, original->tag);
+                        printf("%s-%s\n", new->tag, original->tag);
                         if(compare < 0)
                         {
                             /* add */
-                            MpdData_real *n = (MpdData_real *) mpd_new_data_struct_append((MpdData *)new_list); 
+                            MpdData_real *n = (MpdData_real *) mpd_new_data_struct();
                             n->type = MPD_DATA_TYPE_TAG;
                             n->tag_type = new->tag_type;
                             n->tag = new->tag;
                             new->tag = NULL;
-                            new_list = n;
 
                             /* add */
+                            printf("row inserted\n");
 
                             self->num_rows++;
+                            n->prev = original->prev;
+
+                            if(original->prev)
+                                original->prev->next = n;
+                            n->next = original;
+                            n->first = original->first;
+                            original->prev = n;
+                            if(n->prev == NULL){
+                                MpdData_real *iter;
+                                for(iter = n;iter;iter = iter->next){
+                                    iter->first = n;
+                                }
+                            }
+
+                            self->_priv->data = mpd_data_get_first(original);
+                            {
+                                path = gtk_tree_path_new();
+                                gtk_tree_path_append_index(path,i);
+                                iter.stamp = self->_priv->stamp;
+                                iter.user_data = n;
+                                iter.user_data2 =  GINT_TO_POINTER(i);
+                                new->userdata = NULL;
+                                printf("*row inserted %i*\n",i);
+
+                                gtk_tree_model_row_inserted(GTK_TREE_MODEL(self), path, &iter);
+                                gtk_tree_path_free(path);
+                            }
                             /* mark for insert */
-                            new_list->userdata = GINT_TO_POINTER(1);
                             new=new->next;
                             i++;
                             has_next = 1;
@@ -1097,22 +1133,22 @@ requires 2.0.0
                             path = gtk_tree_path_new();
                             gtk_tree_path_append_index(path,i);
                             /* propegate change */
+
+                            self->num_rows--;
+                            printf("*row deleted2: %i*\n", i);
                             gtk_tree_model_row_deleted(GTK_TREE_MODEL(self), path);
                             gtk_tree_path_free(path);
-                            self->num_rows--;
 
 
-                            original = original->next; 
+                            MpdData_real *n = original->next;
+                            original = mpd_data_delete_item(original); 
+                            self->_priv->data = mpd_data_get_first(original);
+                            original = n;
+                            //original = original->next; 
                             has_next = (original )?1:0;
 
                         }else{
-                            new_list = (MpdData_real *)mpd_new_data_struct_append((MpdData*)new_list); 
-                            new_list->type = MPD_DATA_TYPE_TAG;
-                            new_list->tag_type = new->tag_type;
-                            new_list->tag = new->tag;
-                            new_list->userdata = GINT_TO_POINTER(0);
-                            new->tag = NULL;
-
+                            printf("skip\n");
                             new = new->next;
                             original = original->next;
                             has_next = (original )?1:0;
@@ -1124,6 +1160,9 @@ requires 2.0.0
             /* add entries remaining in new */
             if(new)
             {
+                
+                new_list = self->_priv->data;
+                while(new_list && new_list->next) new_list = new_list->next;
                 do{
                     new_list = (MpdData_real *)mpd_new_data_struct_append((MpdData*)new_list); 
                     new_list->type = MPD_DATA_TYPE_TAG;
@@ -1131,9 +1170,21 @@ requires 2.0.0
                     new_list->tag = new->tag;
                     new->tag = NULL;
 
-                    /* mark inserted */
-                    new_list->userdata = GINT_TO_POINTER(1);
+                    self->_priv->data = mpd_data_get_first(new_list);
+                    if(self->_priv->data == NULL) g_warning("self->_priv->data == NULL");
                     self->num_rows++;
+                    {
+                        path = gtk_tree_path_new();
+                        gtk_tree_path_append_index(path,i);
+                        iter.stamp = self->_priv->stamp;
+                        iter.user_data = new_list;
+                        iter.user_data2 =  GINT_TO_POINTER(i);
+                        new->userdata = NULL;
+                        printf("*row inserted2: %i*\n",i);
+
+                        gtk_tree_model_row_inserted(GTK_TREE_MODEL(self), path, &iter);
+                        gtk_tree_path_free(path);
+                    }
 
                     new = new->next;
                     i++;
@@ -1141,37 +1192,15 @@ requires 2.0.0
             }
 
 
-            if(self->_priv->data)
-                mpd_data_free(self->_priv->data);
             if(self->_priv->use_images)
                 self->_priv->images = g_malloc0((self->num_rows)*sizeof(*(self->_priv->images)));
 
-            self->_priv->data = mpd_data_get_first((MpdData*)new_list);
-
-            i = 0;
-            for(new = mpd_data_get_first(new_list); new; new = (MpdData *)mpd_data_get_next_real(new, FALSE))
-            {
-                if(GPOINTER_TO_INT(new->userdata) == 1)
-                {
-                    path = gtk_tree_path_new();
-                    gtk_tree_path_append_index(path,i);
-                    iter.stamp = self->_priv->stamp;
-                    iter.user_data = new_list;
-                    iter.user_data2 =  GINT_TO_POINTER(i);
-                    new->userdata = NULL;
-
-                    gtk_tree_model_row_inserted(GTK_TREE_MODEL(self), path, &iter);
-                    gtk_tree_path_free(path);
-                }
-                i++;
-            }
-
-
-            if(data2)
-                g_assert(self->_priv->data != NULL);
+   
+            printf("items: %i %i, %i\n",i, items, self->num_rows);
 
             if(data2)
                 mpd_data_free(data2);
+
             g_assert(items == self->num_rows);
             return 0;                    
         }
