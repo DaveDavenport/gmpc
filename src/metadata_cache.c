@@ -51,7 +51,9 @@ enum metadata_sql {
 	META_DATA_SQL_DELETE,
 	META_DATA_SQL_CLEANUP,
 	META_DATA_SQL_LIST_START,
-	META_DATA_SQL_LIST_END
+	META_DATA_SQL_LIST_END,
+	META_DATA_SQL_SET_SYNCHRONOUS,
+	META_DATA_SQL_CHECK_INTEGRETY
 };
 
 static const char *const metadata_sql[] = {
@@ -70,11 +72,57 @@ static const char *const metadata_sql[] = {
 		"BEGIN TRANSACTION",
 	[META_DATA_SQL_LIST_END] =
 		"COMMIT TRANSACTION",
+	[META_DATA_SQL_SET_SYNCHRONOUS] = 
+		"PRAGMA synchronous = 1",
+	[META_DATA_SQL_CHECK_INTEGRETY] = 
+		"PRAGMA integrity_check;"
 };
 
 static sqlite3 *metadata_db;
 static sqlite3_stmt *metadata_stmt[G_N_ELEMENTS(metadata_sql)];
-
+static void sqlite_set_synchronous(void)
+{
+	sqlite3_stmt *const stmt = metadata_stmt[META_DATA_SQL_SET_SYNCHRONOUS];
+	int ret;
+	sqlite3_reset(stmt);
+	do{
+		ret = sqlite3_step(stmt);
+	}while(ret == SQLITE_BUSY);
+	if (ret != SQLITE_DONE) {
+		g_log(MDC_LOG_DOMAIN, G_LOG_LEVEL_WARNING,"%s: sqlite3_step() failed: %s",__FUNCTION__,
+				sqlite3_errmsg(metadata_db));
+		return;
+	}
+	sqlite3_reset(stmt);
+}
+static gboolean sqlite_check_integrity(void)
+{
+	int database_check = FALSE;
+	sqlite3_stmt *const stmt = metadata_stmt[META_DATA_SQL_CHECK_INTEGRETY];
+	int ret;
+	sqlite3_reset(stmt);
+	do{
+		ret = sqlite3_step(stmt);
+		if(ret == SQLITE_ROW)
+		{
+			const gchar *value = (const gchar *)sqlite3_column_text(stmt, 0);
+			if(strcmp(value, "ok") == 0){
+				database_check = TRUE;
+			}else{
+				g_log(MDC_LOG_DOMAIN, G_LOG_LEVEL_WARNING, "%s: Sqlite database integrety check failed: %s\n",
+						__FUNCTION__,
+						value);
+			}
+		}
+	}while(ret == SQLITE_BUSY || ret == SQLITE_ROW);
+	if (ret != SQLITE_DONE) {
+		g_log(MDC_LOG_DOMAIN, G_LOG_LEVEL_WARNING,"%s: sqlite3_step() failed: %s",__FUNCTION__,
+				sqlite3_errmsg(metadata_db));
+		return;
+	}
+	sqlite3_reset(stmt);
+	return database_check;
+}
 static void sqlite_cleanup(void)
 {
 	sqlite3_stmt *const stmt = metadata_stmt[META_DATA_SQL_CLEANUP];
@@ -532,6 +580,7 @@ void metadata_cache_init(void)
 {
 	int ret;
 	unsigned i;
+	gboolean database_valid = FALSE;
 	gchar *url = gmpc_get_covers_path(NULL);
 	if(!g_file_test(url,G_FILE_TEST_IS_DIR)){
 		if(g_mkdir(url, 0700)<0){
@@ -541,25 +590,46 @@ void metadata_cache_init(void)
 	q_free(url);
 
 	url = gmpc_get_covers_path("covers.sql");
-	ret = sqlite3_open(url, &metadata_db);
-	if (ret != SQLITE_OK)
-		g_log(MDC_LOG_DOMAIN, G_LOG_LEVEL_ERROR, "Failed to open sqlite database '%s': %s",
-				url, sqlite3_errmsg(metadata_db));
+	do{
+		ret = sqlite3_open(url, &metadata_db);
+		if (ret != SQLITE_OK)
+			g_log(MDC_LOG_DOMAIN, G_LOG_LEVEL_ERROR, "Failed to open sqlite database '%s': %s",
+					url, sqlite3_errmsg(metadata_db));
 
-	ret = sqlite3_exec(metadata_db, metadata_sql_create, NULL, NULL, NULL);
-	if (ret != SQLITE_OK)
-		g_log(MDC_LOG_DOMAIN, G_LOG_LEVEL_ERROR, "Failed to create metadata table: %s",
-				sqlite3_errmsg(metadata_db));
+		ret = sqlite3_exec(metadata_db, metadata_sql_create, NULL, NULL, NULL);
+		if (ret != SQLITE_OK)
+			g_log(MDC_LOG_DOMAIN, G_LOG_LEVEL_ERROR, "Failed to create metadata table: %s",
+					sqlite3_errmsg(metadata_db));
 
-	/* prepare the statements we're going to use */
+		/* prepare the statements we're going to use */
 
-	for (i = 0; i < G_N_ELEMENTS(metadata_sql); ++i) {
-		g_assert(metadata_sql[i] != NULL);
+		for (i = 0; i < G_N_ELEMENTS(metadata_sql); ++i) {
+			g_assert(metadata_sql[i] != NULL);
 
-		metadata_stmt[i] = metadata_prepare(metadata_sql[i]);
-	}
+			metadata_stmt[i] = metadata_prepare(metadata_sql[i]);
+		}
+		database_valid = sqlite_check_integrity();
+		if(!database_valid){
+			gchar buffer[128];
+			gchar *new_uri = NULL;
+			const time_t tt= time(NULL);
+			struct tm *tm = localtime(&tt);
+			strftime(buffer, 128, "%H%M-%d-%m-%Y", tm);
+			new_uri = g_strdup_printf("%s-%s", url,buffer); 
 
+			metadata_cache_destroy();
+			g_log(MDC_LOG_DOMAIN, G_LOG_LEVEL_WARNING, "Database was invalid. Renaming db to %s and trying again.",
+					new_uri);
+			if(g_rename(url, new_uri) <0){
+				g_log(MDC_LOG_DOMAIN, G_LOG_LEVEL_ERROR, "Failed to rename corrupt database: %s",
+						url);
+			}
+			g_free(new_uri);
+		}
+		g_log(MDC_LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Database integrity check: valid");
+	}while(!database_valid);
 	g_free(url);
+	sqlite_set_synchronous();
 }
 
 
