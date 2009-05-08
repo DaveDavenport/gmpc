@@ -73,7 +73,7 @@ static const char *const metadata_sql[] = {
 	[META_DATA_SQL_LIST_END] =
 		"COMMIT TRANSACTION",
 	[META_DATA_SQL_SET_SYNCHRONOUS] = 
-		"PRAGMA synchronous = 1",
+		"PRAGMA synchronous = 0",
 	[META_DATA_SQL_CHECK_INTEGRETY] = 
 		"PRAGMA integrity_check;"
 };
