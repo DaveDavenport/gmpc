@@ -29,14 +29,13 @@
 #include <float.h>
 #include <math.h>
 #include <glib/gi18n-lib.h>
-#include <misc.h>
 #include <gdk/gdk.h>
 
 
 
 
-static glong string_get_length (const char* self);
 static char* string_replace (const char* self, const char* old, const char* replacement);
+static glong string_get_length (const char* self);
 struct _GmpcSongLinksPrivate {
 	GmpcSongLinksType type;
 	mpd_Song* song;
@@ -53,22 +52,14 @@ static void gmpc_song_links_download (GmpcSongLinks* self, GtkImageMenuItem* ite
 static void _gmpc_song_links_download_gtk_menu_item_activate (GtkImageMenuItem* _sender, gpointer self);
 static gboolean gmpc_song_links_button_press_event_callback (GmpcSongLinks* self, GtkEventBox* label, const GdkEventButton* event);
 static gboolean _gmpc_song_links_button_press_event_callback_gtk_widget_button_press_event (GtkEventBox* _sender, const GdkEventButton* event, gpointer self);
-static void gmpc_song_links_open_uri (GmpcSongLinks* self, GtkLinkButton* button);
 static guchar* _vala_array_dup1 (guchar* self, int length);
 static void gmpc_song_links_download_file (GmpcSongLinks* self, const GEADAsyncHandler* handle, GEADStatus status);
-static void _gmpc_song_links_open_uri_gtk_button_clicked (GtkLinkButton* _sender, gpointer self);
 static void gmpc_song_links_parse_uris (GmpcSongLinks* self);
 static gpointer gmpc_song_links_parent_class = NULL;
 static void gmpc_song_links_finalize (GObject* obj);
 static void _vala_array_free (gpointer array, gint array_length, GDestroyNotify destroy_func);
 static gint _vala_array_length (gpointer array);
 
-
-
-static glong string_get_length (const char* self) {
-	g_return_val_if_fail (self != NULL, 0L);
-	return g_utf8_strlen (self, -1);
-}
 
 
 static char* string_replace (const char* self, const char* old, const char* replacement) {
@@ -120,6 +111,12 @@ static char* string_replace (const char* self, const char* old, const char* repl
 		g_clear_error (&inner_error);
 		return NULL;
 	}
+}
+
+
+static glong string_get_length (const char* self) {
+	g_return_val_if_fail (self != NULL, 0L);
+	return g_utf8_strlen (self, -1);
 }
 
 
@@ -226,18 +223,6 @@ GmpcSongLinks* gmpc_song_links_new (GmpcSongLinksType type, const mpd_Song* song
 }
 
 
-static void gmpc_song_links_open_uri (GmpcSongLinks* self, GtkLinkButton* button) {
-	GtkLinkButton* _tmp0;
-	GtkLinkButton* lb;
-	g_return_if_fail (self != NULL);
-	g_return_if_fail (button != NULL);
-	_tmp0 = NULL;
-	lb = (_tmp0 = button, (_tmp0 == NULL) ? NULL : g_object_ref (_tmp0));
-	open_uri (gtk_link_button_get_uri (lb));
-	(lb == NULL) ? NULL : (lb = (g_object_unref (lb), NULL));
-}
-
-
 static guchar* _vala_array_dup1 (guchar* self, int length) {
 	return g_memdup (self, length * sizeof (guchar));
 }
@@ -341,11 +326,6 @@ static void gmpc_song_links_download_file (GmpcSongLinks* self, const GEADAsyncH
 }
 
 
-static void _gmpc_song_links_open_uri_gtk_button_clicked (GtkLinkButton* _sender, gpointer self) {
-	gmpc_song_links_open_uri (self, _sender);
-}
-
-
 static void gmpc_song_links_parse_uris (GmpcSongLinks* self) {
 	GError * inner_error;
 	GtkWidget* _tmp0;
@@ -431,17 +411,17 @@ static void gmpc_song_links_parse_uris (GmpcSongLinks* self) {
 		entry_collection = groups;
 		entry_collection_length1 = groups_length1;
 		for (entry_it = 0; entry_it < groups_length1; entry_it = entry_it + 1) {
-			const char* _tmp18;
+			const char* _tmp24;
 			char* entry;
-			_tmp18 = NULL;
-			entry = (_tmp18 = entry_collection[entry_it], (_tmp18 == NULL) ? NULL : g_strdup (_tmp18));
+			_tmp24 = NULL;
+			entry = (_tmp24 = entry_collection[entry_it], (_tmp24 == NULL) ? NULL : g_strdup (_tmp24));
 			{
 				{
 					char* typestr;
 					char* uri;
 					GmpcSongLinksType type;
-					GQuark _tmp12;
-					char* _tmp11;
+					GQuark _tmp18;
+					char* _tmp17;
 					typestr = g_key_file_get_string (file, entry, "type", &inner_error);
 					if (inner_error != NULL) {
 						goto __catch4_g_error;
@@ -454,51 +434,69 @@ static void gmpc_song_links_parse_uris (GmpcSongLinks* self) {
 						goto __finally4;
 					}
 					type = 0;
-					_tmp11 = NULL;
-					static GQuark _tmp12_label0 = 0;
-					static GQuark _tmp12_label1 = 0;
-					_tmp11 = typestr;
-					_tmp12 = (NULL == _tmp11) ? 0 : g_quark_from_string (_tmp11);
-					if (_tmp12 == ((0 != _tmp12_label0) ? _tmp12_label0 : (_tmp12_label0 = g_quark_from_static_string ("artist"))))
+					_tmp17 = NULL;
+					static GQuark _tmp18_label0 = 0;
+					static GQuark _tmp18_label1 = 0;
+					_tmp17 = typestr;
+					_tmp18 = (NULL == _tmp17) ? 0 : g_quark_from_string (_tmp17);
+					if (_tmp18 == ((0 != _tmp18_label0) ? _tmp18_label0 : (_tmp18_label0 = g_quark_from_static_string ("artist"))))
 					do {
 						type = GMPC_SONG_LINKS_TYPE_ARTIST;
 						if (self->priv->song->artist != NULL) {
+							char* _tmp6;
 							char* _tmp5;
+							_tmp6 = NULL;
 							_tmp5 = NULL;
-							uri = (_tmp5 = string_replace (uri, "%ARTIST%", self->priv->song->artist), uri = (g_free (uri), NULL), _tmp5);
+							uri = (_tmp6 = string_replace (uri, "%ARTIST%", _tmp5 = gmpc_easy_download_uri_escape (self->priv->song->artist)), uri = (g_free (uri), NULL), _tmp6);
+							_tmp5 = (g_free (_tmp5), NULL);
 						}
 						break;
-					} while (0); else if (_tmp12 == ((0 != _tmp12_label1) ? _tmp12_label1 : (_tmp12_label1 = g_quark_from_static_string ("album"))))
+					} while (0); else if (_tmp18 == ((0 != _tmp18_label1) ? _tmp18_label1 : (_tmp18_label1 = g_quark_from_static_string ("album"))))
 					do {
 						type = GMPC_SONG_LINKS_TYPE_ALBUM;
 						if (self->priv->song->album != NULL) {
-							char* _tmp6;
-							_tmp6 = NULL;
-							uri = (_tmp6 = string_replace (uri, "%ALBUM%", self->priv->song->album), uri = (g_free (uri), NULL), _tmp6);
+							char* _tmp8;
+							char* _tmp7;
+							_tmp8 = NULL;
+							_tmp7 = NULL;
+							uri = (_tmp8 = string_replace (uri, "%ALBUM%", _tmp7 = gmpc_easy_download_uri_escape (self->priv->song->album)), uri = (g_free (uri), NULL), _tmp8);
+							_tmp7 = (g_free (_tmp7), NULL);
 						}
 						if (self->priv->song->artist != NULL) {
-							char* _tmp7;
-							_tmp7 = NULL;
-							uri = (_tmp7 = string_replace (uri, "%ARTIST%", self->priv->song->artist), uri = (g_free (uri), NULL), _tmp7);
+							char* _tmp10;
+							char* _tmp9;
+							_tmp10 = NULL;
+							_tmp9 = NULL;
+							uri = (_tmp10 = string_replace (uri, "%ARTIST%", _tmp9 = gmpc_easy_download_uri_escape (self->priv->song->artist)), uri = (g_free (uri), NULL), _tmp10);
+							_tmp9 = (g_free (_tmp9), NULL);
 						}
 						break;
 					} while (0); else
 					do {
 						type = GMPC_SONG_LINKS_TYPE_SONG;
 						if (self->priv->song->title != NULL) {
-							char* _tmp8;
-							_tmp8 = NULL;
-							uri = (_tmp8 = string_replace (uri, "%TITLE%", self->priv->song->title), uri = (g_free (uri), NULL), _tmp8);
+							char* _tmp12;
+							char* _tmp11;
+							_tmp12 = NULL;
+							_tmp11 = NULL;
+							uri = (_tmp12 = string_replace (uri, "%TITLE%", _tmp11 = gmpc_easy_download_uri_escape (self->priv->song->title)), uri = (g_free (uri), NULL), _tmp12);
+							_tmp11 = (g_free (_tmp11), NULL);
 						}
 						if (self->priv->song->album != NULL) {
-							char* _tmp9;
-							_tmp9 = NULL;
-							uri = (_tmp9 = string_replace (uri, "%ALBUM%", self->priv->song->album), uri = (g_free (uri), NULL), _tmp9);
+							char* _tmp14;
+							char* _tmp13;
+							_tmp14 = NULL;
+							_tmp13 = NULL;
+							uri = (_tmp14 = string_replace (uri, "%ALBUM%", _tmp13 = gmpc_easy_download_uri_escape (self->priv->song->album)), uri = (g_free (uri), NULL), _tmp14);
+							_tmp13 = (g_free (_tmp13), NULL);
 						}
 						if (self->priv->song->artist != NULL) {
-							char* _tmp10;
-							_tmp10 = NULL;
-							uri = (_tmp10 = string_replace (uri, "%ARTIST%", self->priv->song->artist), uri = (g_free (uri), NULL), _tmp10);
+							char* _tmp16;
+							char* _tmp15;
+							_tmp16 = NULL;
+							_tmp15 = NULL;
+							uri = (_tmp16 = string_replace (uri, "%ARTIST%", _tmp15 = gmpc_easy_download_uri_escape (self->priv->song->artist)), uri = (g_free (uri), NULL), _tmp16);
+							_tmp15 = (g_free (_tmp15), NULL);
 						}
 						break;
 					} while (0); {
@@ -509,19 +507,19 @@ static void gmpc_song_links_parse_uris (GmpcSongLinks* self) {
 							goto __finally5;
 						}
 						if (sar != NULL) {
-							char** _tmp14;
+							char** _tmp20;
 							gint s_size;
 							gint s_length1;
-							char** _tmp13;
+							char** _tmp19;
 							char** s;
-							_tmp14 = NULL;
-							_tmp13 = NULL;
-							s = (_tmp14 = _tmp13 = g_strsplit (sar, "::", 0), s_length1 = _vala_array_length (_tmp13), s_size = s_length1, _tmp14);
+							_tmp20 = NULL;
+							_tmp19 = NULL;
+							s = (_tmp20 = _tmp19 = g_strsplit (sar, "::", 0), s_length1 = _vala_array_length (_tmp19), s_size = s_length1, _tmp20);
 							if (s_length1 == 2) {
 								{
 									GRegex* regex;
-									char* _tmp15;
-									char* _tmp16;
+									char* _tmp21;
+									char* _tmp22;
 									regex = g_regex_new (s[0], 0, 0, &inner_error);
 									if (inner_error != NULL) {
 										if (inner_error->domain == G_REGEX_ERROR) {
@@ -529,7 +527,7 @@ static void gmpc_song_links_parse_uris (GmpcSongLinks* self) {
 										}
 										goto __finally6;
 									}
-									_tmp15 = g_regex_replace_literal (regex, uri, (glong) (-1), 0, s[1], 0, &inner_error);
+									_tmp21 = g_regex_replace_literal (regex, uri, (glong) (-1), 0, s[1], 0, &inner_error);
 									if (inner_error != NULL) {
 										(regex == NULL) ? NULL : (regex = (g_regex_unref (regex), NULL));
 										if (inner_error->domain == G_REGEX_ERROR) {
@@ -537,8 +535,8 @@ static void gmpc_song_links_parse_uris (GmpcSongLinks* self) {
 										}
 										goto __finally6;
 									}
-									_tmp16 = NULL;
-									uri = (_tmp16 = _tmp15, uri = (g_free (uri), NULL), _tmp16);
+									_tmp22 = NULL;
+									uri = (_tmp22 = _tmp21, uri = (g_free (uri), NULL), _tmp22);
 									(regex == NULL) ? NULL : (regex = (g_regex_unref (regex), NULL));
 								}
 								goto __finally6;
@@ -583,14 +581,13 @@ static void gmpc_song_links_parse_uris (GmpcSongLinks* self) {
 					}
 					if (((gint) type) <= ((gint) self->priv->type)) {
 						GtkLinkButton* label;
-						char* _tmp17;
+						char* _tmp23;
 						label = g_object_ref_sink ((GtkLinkButton*) gtk_link_button_new (uri));
-						_tmp17 = NULL;
-						gtk_button_set_label ((GtkButton*) label, _tmp17 = g_strdup_printf (_ ("Lookup %s on %s"), _ (typestr), entry));
-						_tmp17 = (g_free (_tmp17), NULL);
+						_tmp23 = NULL;
+						gtk_button_set_label ((GtkButton*) label, _tmp23 = g_strdup_printf (_ ("Lookup %s on %s"), _ (typestr), entry));
+						_tmp23 = (g_free (_tmp23), NULL);
 						gtk_button_set_alignment ((GtkButton*) label, 0.0f, 0.5f);
 						gtk_box_pack_start ((GtkBox*) vbox, (GtkWidget*) label, FALSE, TRUE, (guint) 0);
-						g_signal_connect_object ((GtkButton*) label, "clicked", (GCallback) _gmpc_song_links_open_uri_gtk_button_clicked, self, 0);
 						(label == NULL) ? NULL : (label = (g_object_unref (label), NULL));
 					}
 					typestr = (g_free (typestr), NULL);

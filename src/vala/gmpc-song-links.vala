@@ -86,11 +86,6 @@ public class Gmpc.Song.Links: Gtk.Frame
         event.button_press_event += button_press_event_callback;
         parse_uris();
     }
-    private void open_uri(Gtk.LinkButton button)
-    {
-        Gtk.LinkButton lb = button;
-        Gmpc.open_uri(lb.get_uri());
-    }
 
     private void download_file(Gmpc.AsyncDownload.Handle handle, Gmpc.AsyncDownload.Status status)
     {
@@ -177,29 +172,29 @@ public class Gmpc.Song.Links: Gtk.Frame
                     case "artist":
                         type = Type.ARTIST;
                         if(this.song.artist != null)
-                            uri = uri.replace("%ARTIST%", this.song.artist);
+                            uri = uri.replace("%ARTIST%", Gmpc.AsyncDownload.escape_uri(this.song.artist));
                         break;
                     case "album":
                         type = Type.ALBUM;
 
                         if(this.song.album != null)
-                            uri = uri.replace("%ALBUM%", this.song.album);
+                            uri = uri.replace("%ALBUM%", Gmpc.AsyncDownload.escape_uri(this.song.album));
 
                         if(this.song.artist != null)
-                            uri = uri.replace("%ARTIST%", this.song.artist);
+                            uri = uri.replace("%ARTIST%", Gmpc.AsyncDownload.escape_uri(this.song.artist));
                         break;
                     case "song":
                     default:
                         type = Type.SONG;
 
                         if(this.song.title != null)
-                            uri = uri.replace("%TITLE%", this.song.title);
+                            uri = uri.replace("%TITLE%", Gmpc.AsyncDownload.escape_uri(this.song.title));
 
                         if(this.song.album != null)
-                            uri = uri.replace("%ALBUM%", this.song.album);
+                            uri = uri.replace("%ALBUM%", Gmpc.AsyncDownload.escape_uri(this.song.album));
 
                         if(this.song.artist != null)
-                            uri = uri.replace("%ARTIST%", this.song.artist);
+                            uri = uri.replace("%ARTIST%", Gmpc.AsyncDownload.escape_uri(this.song.artist));
                         break;
                 }
                 try{
@@ -225,7 +220,6 @@ public class Gmpc.Song.Links: Gtk.Frame
                     label.set_label(_("Lookup %s on %s").printf(_(typestr),entry));
                     label.set_alignment(0.0f, 0.5f);
                     vbox.pack_start(label, false, true, 0);
-                    label.clicked += open_uri;
                 }
             }catch(Error e){
                 stdout.printf("Failed to get entry from %s: '%s'\n", path, e.message);
