@@ -1021,18 +1021,7 @@ requires 2.0.0
             MpdData_real *new = (MpdData_real *) data2;
             GtkTreePath *path =NULL;
             GtkTreeIter iter;
-            /* Free possible stored images */
-            if(self->_priv->images)
-            {
-                for(i=0;i<self->num_rows;i++)
-                {
-                    if(self->_priv->images[i])
-                        g_object_unref(self->_priv->images[i]);
-                }
-                /* set image structure on NULL, this should void it being read out (wrong) */
-                g_free(self->_priv->images);
-                self->_priv->images = NULL;
-            }
+            int old_list_size = self->num_rows;
 
             /* sort it identical */
             data2 = misc_sort_mpddata(data2,(GCompareDataFunc)self_test_sort_func,self ); 
@@ -1045,6 +1034,37 @@ requires 2.0.0
                     n = n->next;
                 }
             }
+
+
+            /* Free possible stored images */
+            /**
+             * TODO: Don't free the list, but grow it to MAX(items, self->num_rows);
+             * Then after updating, resize it to new size 
+             */
+            /* Grow the list when needed */
+
+            if(self->_priv->use_images)
+            {
+                /* Clean them, they might not be in the right place anymore */
+                for(i=0;i< old_list_size; i++)
+                {
+                    if(self->_priv->images[i] != NULL) g_object_unref(self->_priv->images[i]);
+                    self->_priv->images[i] = NULL;
+                }
+                if(items > self->num_rows)
+                {
+                    self->_priv->images = g_realloc(self->_priv->images, items*sizeof(GdkPixbuf *));
+                    /* set the new ones to NUll */
+                    for(i=self->num_rows;i<items;i++)
+                    {
+                        self->_priv->images[i] = NULL;
+                    }
+                }
+            }
+
+
+
+
             i=0;
             /* compare lists */
             if(self->_priv->data && original == NULL) g_warning("weirdness\n");
@@ -1183,8 +1203,16 @@ requires 2.0.0
             }
 
 
-            if(self->_priv->use_images)
-                self->_priv->images = g_malloc0((self->num_rows)*sizeof(*(self->_priv->images)));
+            if(self->_priv->use_images){
+                if(self->num_rows < old_list_size){
+                    for(i=self->num_rows;i< old_list_size; i++)
+                    {
+                        /* clean it */
+                        if(self->_priv->images[i] != NULL) g_object_unref(self->_priv->images[i]);
+                    }
+                    self->_priv->images = g_realloc(self->_priv->images, (self->num_rows)*sizeof(GdkPixbuf *));
+                }
+            }
 
    
 
