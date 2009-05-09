@@ -294,28 +294,57 @@ typedef struct {
 	z_stream *z;
 	gpointer extra_data;
 	guint uid;
+	int old_status_code;
 } _GEADAsyncHandler;
 
 static guint uid = 0;
 static void gmpc_easy_async_headers_update(SoupMessage * msg, gpointer data)
 {
-	const gchar *encoding = soup_message_headers_get(msg->response_headers, "Content-Encoding");
 	_GEADAsyncHandler *d = data;
+	const gchar *encoding = soup_message_headers_get(msg->response_headers, "Content-Encoding");
 	if (encoding) {
 		if (strcmp(encoding, "gzip") == 0) {
 			d->is_gzip = 1;
             debug_printf(DEBUG_WARNING, "Url is gzipped");
 		} else if (strcmp(encoding, "deflate") == 0) {
 			d->is_deflate = 1;
-
             debug_printf(DEBUG_WARNING, "Url is enflated");
 		}
 	}
+	/* If a second set comes in, close that */
+	else{
+		d->is_gzip = 0;
+		d->is_deflate = 0;
+	}
+
+	/**
+	 * Don't record data from redirection, in a while it _will_ be redirected,
+	 * We care about that
+	 */
+	if(d->old_status_code !=  0 &&  d->old_status_code != msg->status_code)
+	{
+		g_log("EasyDownloader", G_LOG_LEVEL_DEBUG,
+		"Cleaning out the previous block of data: status_code:  %i(old) ->%i(new)",
+		d->old_status_code,
+		msg->status_code);
+		/* Clear buffer */
+		g_free(d->data);
+		d->data = NULL;
+		d->length = 0;
+		if (d->z)
+			close_cb(d->z);
+		d->z = NULL;
+	}
+	d->old_status_code = msg->status_code;
 }
 
 static void gmpc_easy_async_status_update(SoupMessage * msg, SoupBuffer * buffer, gpointer data)
 {
 	_GEADAsyncHandler *d = data;
+	/* don't store error data, not used anyway */
+	if(!SOUP_STATUS_IS_SUCCESSFUL(msg->status_code)){
+		return;
+	}
 	if (d->is_gzip || d->is_deflate) {
 		if (d->z == NULL) {
 			long data_start;
@@ -488,6 +517,7 @@ GEADAsyncHandler *gmpc_easy_async_downloader_with_headers(const gchar * uri, GEA
 	d->callback = callback;
 	d->userdata = user_data;
 	d->extra_data = NULL;
+	d->old_status_code = 0;
 	soup_message_body_set_accumulate(msg->response_body, FALSE);
 	g_signal_connect_after(msg, "got-chunk", G_CALLBACK(gmpc_easy_async_status_update), d);
 	g_signal_connect_after(msg, "got-headers", G_CALLBACK(gmpc_easy_async_headers_update), d);
