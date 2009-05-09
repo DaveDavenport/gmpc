@@ -1418,6 +1418,7 @@ static void info2_fill_view_real(void)
 		}
 	}
 	gtk_entry_set_completion(GTK_ENTRY(info2_entry), GTK_ENTRY_COMPLETION(entry_completion));
+    gtk_widget_grab_focus(info2_entry);
 
 	gtk_widget_show_all(resizer_vbox);
 }
@@ -2239,7 +2240,11 @@ static void info2_init(void)
     
 }
 
-
+static gboolean info2_entry_select(void)
+{
+    gtk_widget_grab_focus(info2_entry);
+    return FALSE;
+}
 
 static void info2_selected(GtkWidget *container)
 {
@@ -2248,7 +2253,7 @@ static void info2_selected(GtkWidget *container)
 	}
 	gtk_container_add(GTK_CONTAINER(container), info2_vbox);
 	gtk_widget_show_all(info2_vbox);
-
+    if(info2_entry) g_idle_add((GSourceFunc)info2_entry_select, NULL);
 }
 
 static void info2_unselected(GtkWidget *container)
