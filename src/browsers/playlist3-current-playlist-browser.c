@@ -1200,7 +1200,9 @@ GType play_queue_plugin_get_type(void) {
 	return play_queue_plugin_type_id;
 }
 PlayQueuePlugin * play_queue_plugin_new(void) {
-	return g_object_newv(play_queue_plugin_get_type(), 0, NULL);
+	PlayQueuePlugin *plug  =g_object_newv(play_queue_plugin_get_type(), 0, NULL);
+
+    return plug;
 }
 
 
