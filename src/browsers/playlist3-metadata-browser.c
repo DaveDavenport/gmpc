@@ -2240,12 +2240,6 @@ static void info2_init(void)
     
 }
 
-static gboolean info2_entry_select(void)
-{
-    gtk_widget_grab_focus(info2_entry);
-    return FALSE;
-}
-
 static void info2_selected(GtkWidget *container)
 {
 	if(info2_vbox== NULL) {
@@ -2253,7 +2247,6 @@ static void info2_selected(GtkWidget *container)
 	}
 	gtk_container_add(GTK_CONTAINER(container), info2_vbox);
 	gtk_widget_show_all(info2_vbox);
-    if(info2_entry) g_idle_add((GSourceFunc)info2_entry_select, NULL);
 }
 
 static void info2_unselected(GtkWidget *container)
