@@ -63,7 +63,7 @@ static void gmpc_plugin_metadata_prefetcher_status_changed (GmpcPluginMetadataPr
 				MetaData* _tmp3;
 				met = NULL;
 				result = 0;
-				g_log ("MetadataPrefetcher", G_LOG_LEVEL_DEBUG, "gmpc-metadata-prefetcher.vala:60: Pre-fetching %s", song->file);
+				g_log ("MetadataPrefetcher", G_LOG_LEVEL_DEBUG, "gmpc-metadata-prefetcher.vala:58: Pre-fetching %s", song->file);
 				/* Query artist */
 				_tmp2 = NULL;
 				_tmp0 = NULL;
@@ -109,6 +109,7 @@ static GObject * gmpc_plugin_metadata_prefetcher_constructor (GType type, guint 
 	{
 		/* Mark the plugin as an internal dummy */
 		((GmpcPluginBase*) self)->plugin_type = 8 + 4;
+		/* Attach status changed signal */
 		g_signal_connect_object (gmpcconn, "status-changed", (GCallback) _gmpc_plugin_metadata_prefetcher_status_changed_gmpc_connection_status_changed, self, 0);
 	}
 	return obj;

@@ -23,7 +23,6 @@ using Gmpc;
 
 private const bool use_transition = Gmpc.use_transition;
 
-
 public class  Gmpc.Plugin.MetadataPrefetcher : Gmpc.Plugin.Base {
     public const int[3] version = {0,0,2};
 
@@ -35,11 +34,10 @@ public class  Gmpc.Plugin.MetadataPrefetcher : Gmpc.Plugin.Base {
         return "Metadata pre-fetcher";
     }
 
-
     construct {
         /* Mark the plugin as an internal dummy */
         this.plugin_type = 8+4;
-
+        /* Attach status changed signal */
         gmpcconn.status_changed += status_changed;
     }
 
