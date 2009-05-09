@@ -17,6 +17,8 @@ namespace Gmpc {
        public void data_changed(MPD.Song song,  Gmpc.MetaData.Type type, Gmpc.MetaData.Result result,MetaData.Item met);
 
 
+        [CCode ( cname="gmpc_meta_watcher_get_meta_path", cheader_filename="gmpc-meta-watcher.h" )]
+        public MetaData.Result query(MPD.Song song, Gmpc.MetaData.Type type, out MetaData.Item met);
 
     }
 
@@ -83,13 +85,13 @@ namespace Gmpc {
             QUERY_NO_CACHE   = 256
         }
 
-        [CCode (cprefix = "META_DATA_", cheader_filename = "metadata.h")]
+        [CCode (cname="MetaDataResult", cprefix = "META_DATA_", cheader_filename = "metadata.h")]
         public enum Result {
             AVAILABLE,
             UNAVAILABLE,
             FETCHING
         }
-        
+       
 
         public delegate void Callback (void *handle,string? plugin_name, GLib.List<MetaData.Item>? list);
         [CCode ( cname="metadata_get_list", cheader_filename="metadata.h" )]

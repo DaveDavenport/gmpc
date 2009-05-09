@@ -1132,7 +1132,6 @@ requires 2.0.0
                                 iter.stamp = self->_priv->stamp;
                                 iter.user_data = n;
                                 iter.user_data2 =  GINT_TO_POINTER(i);
-                                new->userdata = NULL;
 
                                 gtk_tree_model_row_inserted(GTK_TREE_MODEL(self), path, &iter);
                                 gtk_tree_path_free(path);
@@ -1191,7 +1190,6 @@ requires 2.0.0
                         iter.stamp = self->_priv->stamp;
                         iter.user_data = new_list;
                         iter.user_data2 =  GINT_TO_POINTER(i);
-                        new->userdata = NULL;
 
                         gtk_tree_model_row_inserted(GTK_TREE_MODEL(self), path, &iter);
                         gtk_tree_path_free(path);

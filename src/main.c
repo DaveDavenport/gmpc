@@ -50,6 +50,7 @@
 #include "vala/gmpc-easy-command.h"
 #include "vala/gmpc-test-plugin.h"
 #include "vala/gmpc-test-plugin.h"
+#include "vala/gmpc-metadata-prefetcher.h"
 
 #include "gob/gmpc-mpddata-model-playlist.h"
 #include "metadata_cache.h"
@@ -699,6 +700,7 @@ int main(int argc, char **argv)
 
 	TEC("Loading internal plugins");
 	plugin_add_new(GMPC_PLUGIN_BASE(gmpc_test_plugin_new()), 0, NULL);
+	plugin_add_new(GMPC_PLUGIN_BASE(gmpc_plugin_metadata_prefetcher_new()), 0,NULL);
 	TEC("Loading new plugins");
 	/**
      *  load dynamic plugins

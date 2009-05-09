@@ -6,8 +6,9 @@ namespace MPD {
     [Compact]
     public class Server {
 
-        public MPD.Song playlist_get_song(MPD.Server server, int songid);
+        public MPD.Song playlist_get_song(int songid);
         public weak MPD.Song playlist_get_current_song();
+        public int player_get_next_song_id();
     }
 
 
@@ -88,7 +89,10 @@ namespace MPD {
                 /** output changed */
                 OUTPUT              = 0x80000,
                 /** sticker changed */
-                STICKER             = 0x100000
+                STICKER             = 0x100000,
+                NEXTSONG            = 0x200000,
+                SINGLE_MODE         = 0x400000,
+                CONSUME_MODE        = 0x800000
             }
     }
     namespace Data{
