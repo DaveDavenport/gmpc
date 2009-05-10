@@ -60,7 +60,6 @@ src/gob/gmpc-profiles.gob
 src/gob/gmpc-meta-text-view.gob
 src/gob/gmpc-metaimage.gob
 src/gob/gmpc-clicklabel.gob
-src/gob/gmpc-connection.gob
 src/gob/gmpc-clicklabel.gob
 src/gob/gmpc-meta-watcher.gob
 src/gob/gmpc-stats-label.gob

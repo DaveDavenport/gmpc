@@ -1078,6 +1078,7 @@ requires 2.0.0
                     {
                         if(self->num_rows > items)
                         {
+                            MpdData_real *n = original->next;
                             /* remove current row */
                             self->num_rows--;
 
@@ -1088,7 +1089,6 @@ requires 2.0.0
                             gtk_tree_model_row_deleted(GTK_TREE_MODEL(self), path);
                             gtk_tree_path_free(path);
                            
-                            MpdData_real *n = original->next;
                             original =(MpdData_real *) mpd_data_delete_item((MpdData *)original); 
                             self->_priv->data = mpd_data_get_first((MpdData *)original);
 
@@ -1119,9 +1119,9 @@ requires 2.0.0
                             n->first = original->first;
                             original->prev = n;
                             if(n->prev == NULL){
-                                MpdData_real *iter;
-                                for(iter = n;iter;iter = iter->next){
-                                    iter->first = n;
+                                MpdData_real *fiter;
+                                for(fiter = n;fiter;fiter = fiter->next){
+                                    fiter->first = n;
                                 }
                             }
 
@@ -1143,6 +1143,7 @@ requires 2.0.0
                         }
                         else if (compare > 0)
                         {
+                            MpdData_real *n = original->next;
                             path = gtk_tree_path_new();
                             gtk_tree_path_append_index(path,i);
                             /* propegate change */
@@ -1152,7 +1153,6 @@ requires 2.0.0
                             gtk_tree_path_free(path);
 
 
-                            MpdData_real *n = original->next;
                             original = (MpdData_real *)mpd_data_delete_item((MpdData *)original); 
                             self->_priv->data = mpd_data_get_first((MpdData *)original);
                             original = n;
