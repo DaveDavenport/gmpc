@@ -835,6 +835,7 @@ static void playlist_editor_browser_init(void)
     playlist_editor_store = gtk_list_store_new(PL_NUM_COLS, G_TYPE_STRING, G_TYPE_STRING,GDK_TYPE_PIXBUF);
 
     playlist_editor_icon_view = tree = gtk_tree_view_new_with_model(GTK_TREE_MODEL(playlist_editor_store));//gtk_icon_view_new_with_model(GTK_TREE_MODEL(playlist_editor_store));
+    gtk_tree_view_set_rules_hint(GTK_TREE_VIEW(tree), TRUE);
 
     column = gtk_tree_view_column_new(); 
 	gtk_tree_view_column_set_title(column, _("Playlists"));
