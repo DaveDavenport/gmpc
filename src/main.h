@@ -49,7 +49,6 @@
 #include "vala/gmpc-easy-command.h"
 
 extern GmpcEasyCommand *gmpc_easy_command;
-extern GmpcConnection 	*gmpcconn;
 extern int 				gmpc_connected;
 extern GtkTreeModel 	*playlist;
 
