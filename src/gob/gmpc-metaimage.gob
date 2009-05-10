@@ -93,7 +93,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 	public gchar *loading_cover_icon = {g_strdup("gmpc-loading-cover")} destroywith g_free;
 
     private gulong expose_id = {0};
-
+    public gboolean scale_up = FALSE;
 	/**
 	 * I want fully set/get control,so I don't use property stuff,
 	 * is there a way around this?
@@ -120,6 +120,13 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		default_value = FALSE,
 		export,
 		link);
+
+    property BOOLEAN scale_up
+        (nick = "Scale image up",
+        blurb = "Scale cover art up",
+        default_value = FALSE,
+        export,
+        link);
 
 	property BOOLEAN squared
 		(nick = "Squared",
@@ -681,6 +688,9 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                     GtkIconInfo *ii = gtk_icon_theme_lookup_icon(gtk_icon_theme_get_default(),
                             "stylized-cover", 
                             size, 0);
+                    if(self->scale_up) {
+                        size = self->size;
+                    }
                     /* load the case */
                     if(ii){
                         path2 = gtk_icon_info_get_filename(ii);
