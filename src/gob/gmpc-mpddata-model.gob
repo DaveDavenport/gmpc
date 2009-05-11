@@ -1258,8 +1258,6 @@ requires 2.0.0
         int i;
         int old_num_rows = self->num_rows;
         MpdData *data = self->_priv->data; 
-        /* Clear */
-        self->_priv->data = NULL;
         while ( self->num_rows > 0 ) {
             path = gtk_tree_path_new();
             gtk_tree_path_append_index(path, self->num_rows - 1 );
@@ -1268,6 +1266,9 @@ requires 2.0.0
             gtk_tree_path_free(path);
             self->num_rows--;
         }
+
+        /* Clear */
+        self->_priv->data = NULL;
         /* Free possible stored images */
         if(self->_priv->images && self->_priv->use_images)
         {
@@ -1281,6 +1282,6 @@ requires 2.0.0
         self->_priv->playtime = 0;
         self_playtime_changed(self, self->_priv->playtime);
 
-        return data;
+        return mpd_data_get_first(data);
     }
 }

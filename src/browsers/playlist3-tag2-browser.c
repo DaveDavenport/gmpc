@@ -1471,7 +1471,12 @@ static void tag2_pref_column_type_edited(GtkCellRendererText *text, gchar *path,
 		tag_element *te;
 		gtk_list_store_set(GTK_LIST_STORE(model), &iter, 0, new_data,1,tag, -1);
 		gtk_tree_model_get(model, &iter, 2, &te, -1);
-	}
+        te->type = tag;
+
+        gtk_tree_view_column_set_title(te->column,
+                _(mpdTagItemKeys[te->type]));
+        tag2_songlist_clear_selection(NULL, te->browser); 
+    }
 }
 /**
  * Add's a column to the selected tag browser
