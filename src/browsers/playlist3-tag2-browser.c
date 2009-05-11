@@ -1176,13 +1176,13 @@ static void tag2_init_browser(tag_browser *browser) {
 	/* create the pane that separates the song list from the browsers */
 	key = g_strdup_printf("tag2-plugin:%s", browser->key);
 	pp = cfg_get_single_value_as_int_with_default(config, key, "pane-pos",150); 
-	browser->tag2_vbox = gtk_vpaned_new(); 
+	browser->tag2_vbox = gtk_hpaned_new(); 
 	/* set the previous pane position */
 	gtk_paned_set_position(GTK_PANED(browser->tag2_vbox), pp);
 
 
 	/* box with tag treeviews (browsers) */
-	browser->tag_hbox = gtk_hbox_new(TRUE, 6);
+	browser->tag_hbox = gtk_vbox_new(TRUE, 6);
 
 	/* Add this to the 1st pane*/
 	gtk_paned_add1(GTK_PANED(browser->tag2_vbox), browser->tag_hbox);
