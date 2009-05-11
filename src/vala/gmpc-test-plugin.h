@@ -82,6 +82,7 @@ void gmpc_meta_data_edit_window_destroy_popup (GmpcMetaDataEditWindow* self, Gtk
 void gmpc_meta_data_edit_window_refresh_query (GmpcMetaDataEditWindow* self, GtkButton* button);
 GmpcMetaDataEditWindow* gmpc_meta_data_edit_window_construct (GType object_type, const mpd_Song* song, MetaDataType type);
 GmpcMetaDataEditWindow* gmpc_meta_data_edit_window_new (const mpd_Song* song, MetaDataType type);
+void gmpc_meta_data_edit_window_b_cancel (GmpcMetaDataEditWindow* self);
 GType gmpc_meta_data_edit_window_get_type (void);
 void gmpc_test_plugin_menu_activated_album (GmpcTestPlugin* self, GtkMenuItem* item);
 GmpcTestPlugin* gmpc_test_plugin_construct (GType object_type);

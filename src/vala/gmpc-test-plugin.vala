@@ -35,11 +35,12 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
     private void *handle = null;
     private void *handle2 = null;
 
-
+    private Gtk.HBox pbox = null;
     private Gtk.Label warning_label = null;
     private Gtk.Entry artist_entry;
     private Gtk.Entry album_entry;
     private Gtk.Entry title_entry;
+    private Gtk.Button cancel = null;
     private Gtk.Button refresh = null;
     private Gtk.ComboBox combo = null;
     private Gtk.ProgressBar bar = null;
@@ -98,6 +99,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
     {
         if(status == Gmpc.AsyncDownload.Status.PROGRESS) return;
         this.downloads.remove(handle);
+        this.bar.pulse();
         if(status == Gmpc.AsyncDownload.Status.DONE)
         {
             weak uchar[] data = handle.get_data();
@@ -127,19 +129,22 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
         
         if(this.handle == null && this.handle2 == null && this.downloads == null)
         {
-        this.refresh.sensitive = true;
-        this.combo.sensitive = true;
+            this.pbox.hide();
+            this.refresh.sensitive = true;
+            this.combo.sensitive = true;
         }
 
     }
     public void callback(void *handle,string? plugin_name,GLib.List<MetaData.Item>? list)
     {
+        bar.pulse();
         if(list == null) {
             if(this.handle == handle)
             {
                 this.handle = null;
                 if(this.handle == null && this.downloads == null)
                 {
+                    this.pbox.hide();
                     this.refresh.sensitive = true;
                     this.combo.sensitive = true;
                 }
@@ -151,6 +156,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
 
                 if(this.handle == null && this.downloads == null)
                 {
+                    this.pbox.hide();
                     this.combo.sensitive = true;
                     this.refresh.sensitive = true;
                 }
@@ -220,7 +226,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
         if(status == Gmpc.AsyncDownload.Status.PROGRESS){
             weak uchar[] data =handle.get_data();
             this.sensitive = false;
-            this.bar.show();
+            this.pbox.show();
             int64 total_size = handle.get_content_size(); 
             if(data.length > 0 && total_size > 0){
                 double progress = data.length/(double)total_size;
@@ -253,7 +259,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
 
             }
         }
-        this.bar.hide();
+        this.pbox.hide();
         this.sensitive = true;
 
     }
@@ -337,6 +343,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
             this.handle = Gmpc.MetaData.get_list(ss, this.query_type, callback);
             this.refresh.sensitive = false;
             this.combo.sensitive = false;
+            this.pbox.show();
         }
         
     }
@@ -438,11 +445,17 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
         var vbox = new Gtk.VBox(false, 6);
         this.song = song;
         this.query_type = type;
-        
+        this.pbox = new Gtk.HBox(false, 6); 
         this.bar = new Gtk.ProgressBar();
-        vbox.pack_start(this.bar, false, false, 0);
-        this.bar.hide();
-        this.bar.no_show_all = true;
+        vbox.pack_start(this.pbox, false, false, 0);
+        this.cancel = new Gtk.Button.from_stock("gtk-cancel");
+        this.cancel.clicked += this.b_cancel;
+        this.pbox.pack_start(this.bar, true, true, 0);
+        this.pbox.pack_start(this.cancel, false, false, 0);
+        this.bar.show();
+        this.cancel.show();
+        this.pbox.no_show_all = true;
+        this.pbox.hide();
 
         this.model = new Gtk.ListStore(4,typeof(Gdk.Pixbuf), typeof(string),typeof(string),typeof(string));
         var sw = new Gtk.ScrolledWindow(null, null);
@@ -582,9 +595,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
         }
         */
     }
-    ~EditWindow() {
-
-
+    public void b_cancel(){
         if(this.handle != null){
             stdout.printf("cancel 1\n");
             Gmpc.MetaData.get_list_cancel(this.handle);
@@ -603,6 +614,13 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
             handle.cancel(); 
             this.downloads.first();
         }
+
+        this.pbox.hide();
+        this.refresh.sensitive = true;
+        this.combo.sensitive = true;
+    }
+    ~EditWindow() {
+        this.b_cancel();
         stdout.printf("song window destroy\n");
     }
 }
