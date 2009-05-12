@@ -201,6 +201,9 @@ static void bacon_on_message_received(const char *message, gpointer data)
 		} else if (strcmp(message, "SHOW_VIEW") == 0) {
 			create_playlist3();
 		}
+		else if (strcmp(message, "CONNECT") == 0) {
+			connect_to_mpd();
+		}
 		/**
          * pass gmpc an url to parse with the url_parser.
          */
