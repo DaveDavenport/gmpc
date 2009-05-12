@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc SVN\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-05-10 13:17+0200\n"
+"POT-Creation-Date: 2009-05-12 19:52+0200\n"
 "PO-Revision-Date: 2009-02-13 14:53+0000\n"
 "Last-Translator: Qball Cow <qball@qballcow.nl>\n"
 "Language-Team: Galician\n"
@@ -16,14 +16,14 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-04-24 14:04+0000\n"
+"X-Launchpad-Export-Date: 2009-05-12 17:36+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
 msgid "A gnome frontend for the mpd daemon"
 msgstr "Um cliente para o escritório gnome do mpd"
 
-#: ../data/gmpc.desktop.in.h:2 ../src/main.c:325 ../src/tray-icon2.c:608
+#: ../data/gmpc.desktop.in.h:2 ../src/main.c:328 ../src/tray-icon2.c:608
 #: ../src/tray-icon2.c:803 ../src/tray-icon2.c:806 ../src/tray-icon2.c:816
 #: ../src/tray-icon2.c:819 ../src/tray-icon2.c:844
 msgid "Gnome Music Player Client"
@@ -195,101 +195,100 @@ msgstr "Servidor de streaming do MPD"
 msgid "Proxy"
 msgstr ""
 
-#: ../src/main.c:266
+#: ../src/main.c:269
 msgid "Show program version and revision"
 msgstr ""
 
-#: ../src/main.c:268
+#: ../src/main.c:271
 msgid "Quits the running gmpc"
 msgstr ""
 
-#: ../src/main.c:270
+#: ../src/main.c:273
 msgid "Replace the running gmpc"
 msgstr ""
 
-#: ../src/main.c:272
-#, fuzzy
+#: ../src/main.c:275
 msgid "Don't load the plugins"
-msgstr "Erro ao configurar libmpd"
+msgstr ""
 
-#: ../src/main.c:274
+#: ../src/main.c:277
 msgid "Load alternative config file"
 msgstr ""
 
-#: ../src/main.c:276
+#: ../src/main.c:279
 #, fuzzy
 msgid "Set the debug level"
 msgstr "--debug-level="
 
-#: ../src/main.c:278
+#: ../src/main.c:281
 msgid "Start gmpc hidden to tray"
 msgstr ""
 
-#: ../src/main.c:280
+#: ../src/main.c:283
 msgid "Remove all failed hits from metadata cache"
 msgstr ""
 
-#: ../src/main.c:282
+#: ../src/main.c:285
 msgid "Show redraw events in GTK+"
 msgstr ""
 
-#: ../src/main.c:284
+#: ../src/main.c:287
 msgid "Show bug information dialog"
 msgstr ""
 
-#: ../src/main.c:286
+#: ../src/main.c:289
 msgid "Shows all output from a certain log domain"
 msgstr ""
 
-#: ../src/main.c:415
+#: ../src/main.c:418
 msgid "quit"
 msgstr ""
 
-#: ../src/main.c:416
+#: ../src/main.c:419
 msgid "Quit gmpc"
 msgstr ""
 
-#: ../src/main.c:417
+#: ../src/main.c:420
 msgid "hide"
 msgstr ""
 
-#: ../src/main.c:418
+#: ../src/main.c:421
 msgid "Hide gmpc"
 msgstr ""
 
-#: ../src/main.c:419
+#: ../src/main.c:422
 msgid "show"
 msgstr ""
 
-#: ../src/main.c:420
+#: ../src/main.c:423
 msgid "Show gmpc"
 msgstr ""
 
-#: ../src/main.c:421
+#: ../src/main.c:424
 msgid "show notification"
 msgstr ""
 
-#: ../src/main.c:422
+#: ../src/main.c:425
 msgid "Show trayicon notification"
 msgstr ""
 
-#: ../src/main.c:476
+#: ../src/main.c:479
 msgid "Failed to load the configuration system."
 msgstr ""
 
-#: ../src/main.c:495
+#: ../src/main.c:498
 msgid "Failed to load debug-log file."
 msgstr ""
 
-#: ../src/main.c:634
+#: ../src/main.c:637
 msgid "Failed to setup libmpd"
 msgstr "Erro ao configurar libmpd"
 
-#: ../src/main.c:1045
+#: ../src/main.c:1048
 msgid "GMPC has insufficient permissions on the mpd server."
 msgstr "O GMPC nom tem as suficiêntes permissões para aceder ao servidor mpd."
 
-#: ../src/main.c:1071
+#: ../src/main.c:1074
 #, c-format
 msgid ""
 "Failed to set password on: '%s'\n"
@@ -298,41 +297,41 @@ msgstr ""
 "Nom se puido estabelecer a palavra-chave em: '%s'\n"
 "Por favor, tenta-o de novo."
 
-#: ../src/main.c:1073
+#: ../src/main.c:1076
 #, c-format
 msgid "Please enter your password for: '%s'"
 msgstr "Introduz a palavra-chave para: '%s'"
 
-#: ../src/main.c:1102 ../src/main.c:1123
+#: ../src/main.c:1105 ../src/main.c:1126
 msgid "error code"
 msgstr ""
 
-#: ../src/main.c:1112
+#: ../src/main.c:1115
 msgid "Insufficient permission to connect to mpd. Check password"
 msgstr ""
 
-#: ../src/main.c:1147
+#: ../src/main.c:1150
 msgid "MPD versions before 0.13.0 are not supported"
 msgstr ""
 
-#: ../src/main.c:1214
+#: ../src/main.c:1217
 msgid "Connected to mpd"
 msgstr ""
 
-#: ../src/main.c:1216
+#: ../src/main.c:1219
 msgid "Disconnected from mpd"
 msgstr ""
 
-#: ../src/main.c:1250
+#: ../src/main.c:1253
 msgid "Error occurred during operation"
 msgstr ""
 
 #. Create label
-#: ../src/main.c:1274
+#: ../src/main.c:1277
 msgid "The following error(s) occurred:"
 msgstr ""
 
-#: ../src/main.c:1291
+#: ../src/main.c:1294
 msgid "Error Message"
 msgstr "Mensagem de erro"
 
@@ -488,14 +487,12 @@ msgid "Shortcut"
 msgstr "Atalho"
 
 #: ../src/mpdinteraction.c:91
-#, fuzzy
 msgid "enable"
-msgstr "Activar"
+msgstr ""
 
 #: ../src/mpdinteraction.c:94
-#, fuzzy
 msgid "disable"
-msgstr "Deshabilitado"
+msgstr ""
 
 #: ../src/mpdinteraction.c:107 ../src/playlist3.c:1667 ../src/playlist3.c:1680
 #: ../src/playlist3.c:1692 ../src/playlist3.c:1705
@@ -610,9 +607,8 @@ msgid "mute"
 msgstr ""
 
 #: ../src/mpdinteraction.c:281
-#, fuzzy
 msgid "crossfade"
-msgstr "Activar esvaecimento"
+msgstr ""
 
 #: ../src/mpdinteraction.c:281
 msgctxt "Regex for matching crossfade, translate off"
@@ -821,7 +817,7 @@ msgid "Update Database"
 msgstr ""
 
 #. Server Information
-#: ../src/playlist3.c:2035 ../src/vala/gmpc-test-plugin.c:910
+#: ../src/playlist3.c:2035 ../src/vala/gmpc-test-plugin.c:935
 msgid "Information"
 msgstr ""
 
@@ -866,9 +862,8 @@ msgstr ""
 #: ../src/plugin.c:110 ../src/plugin.c:117 ../src/plugin.c:124
 #: ../src/plugin.c:131 ../src/plugin.c:142 ../src/plugin.c:153
 #: ../src/plugin.c:216
-#, fuzzy
 msgid "Failed to load plugin"
-msgstr "Erro ao configurar libmpd"
+msgstr ""
 
 #: ../src/plugin.c:60
 msgid "plugin has no name"
@@ -1116,13 +1111,12 @@ msgid "Host:"
 msgstr "Host:"
 
 #: ../glade/preferences-connection.ui.h:4
-#, fuzzy
 msgid "Music Directory:"
-msgstr "<b>Cartafol:</b>"
+msgstr ""
 
 #: ../glade/preferences-connection.ui.h:5
-#: ../src/browsers/playlist3-playlist-editor.c:478
-#: ../src/browsers/playlist3-playlist-editor.c:518
+#: ../src/browsers/playlist3-playlist-editor.c:455
+#: ../src/browsers/playlist3-playlist-editor.c:495
 msgid "Name:"
 msgstr "Nome:"
 
@@ -1456,10 +1450,10 @@ msgstr "Engadido o cartafol '%s' recursivamente"
 #: ../src/browsers/playlist3-metadata-browser.c:1847
 #: ../src/browsers/playlist3-metadata-browser.c:1990
 #: ../src/browsers/playlist3-metadata-browser.c:2474
-#: ../src/browsers/playlist3-playlist-editor.c:563
-#: ../src/browsers/playlist3-playlist-editor.c:627
-#: ../src/browsers/playlist3-tag2-browser.c:397
-#: ../src/browsers/playlist3-tag2-browser.c:1063
+#: ../src/browsers/playlist3-playlist-editor.c:540
+#: ../src/browsers/playlist3-playlist-editor.c:605
+#: ../src/browsers/playlist3-tag2-browser.c:396
+#: ../src/browsers/playlist3-tag2-browser.c:1081
 msgid "Replace"
 msgstr "Reemprazar"
 
@@ -1474,12 +1468,12 @@ msgid "Loaded playlist"
 msgstr "Lista carregada"
 
 #: ../src/browsers/playlist3-file-browser.c:1005
-#: ../src/browsers/playlist3-playlist-editor.c:410
+#: ../src/browsers/playlist3-playlist-editor.c:387
 msgid "Added"
 msgstr "Engadida"
 
 #: ../src/browsers/playlist3-file-browser.c:1007
-#: ../src/browsers/playlist3-playlist-editor.c:410
+#: ../src/browsers/playlist3-playlist-editor.c:387
 msgid "song"
 msgid_plural "songs"
 msgstr[0] ""
@@ -1503,7 +1497,7 @@ msgid "Are you sure you want to clear the selected playlist?"
 msgstr "Seguro que ques limpar a lista seleccionada?"
 
 #: ../src/browsers/playlist3-find2-browser.c:102
-#: ../src/vala/gmpc-test-plugin.c:997
+#: ../src/vala/gmpc-test-plugin.c:1022
 msgid "Query"
 msgstr ""
 
@@ -1579,7 +1573,7 @@ msgstr ""
 #: ../src/browsers/playlist3-metadata-browser.c:669
 #: ../src/browsers/playlist3-metadata-browser.c:956
 #: ../src/gob/gmpc-mpddata-treeview.gob:70
-#: ../src/gob/gmpc-mpddata-treeview.gob:631 ../src/vala/gmpc-test-plugin.c:947
+#: ../src/gob/gmpc-mpddata-treeview.gob:631 ../src/vala/gmpc-test-plugin.c:972
 msgid "Artist"
 msgstr "Artista"
 
@@ -1623,7 +1617,8 @@ msgstr ""
 
 #: ../src/browsers/playlist3-metadata-browser.c:940
 #: ../src/gob/gmpc-mpddata-treeview.gob:72
-#: ../src/gob/gmpc-mpddata-treeview.gob:618 ../src/vala/gmpc-test-plugin.c:980
+#: ../src/gob/gmpc-mpddata-treeview.gob:618
+#: ../src/vala/gmpc-test-plugin.c:1005
 msgid "Title"
 msgstr "Título"
 
@@ -1637,7 +1632,7 @@ msgstr ""
 #: ../src/browsers/playlist3-metadata-browser.c:2053
 #: ../src/browsers/playlist3-metadata-browser.c:2423
 #: ../src/gob/gmpc-mpddata-treeview.gob:71
-#: ../src/gob/gmpc-mpddata-treeview.gob:645 ../src/vala/gmpc-test-plugin.c:962
+#: ../src/gob/gmpc-mpddata-treeview.gob:645 ../src/vala/gmpc-test-plugin.c:987
 msgid "Album"
 msgstr "Álbum"
 
@@ -1840,45 +1835,50 @@ msgid "Show the current album information"
 msgstr ""
 
 #: ../src/browsers/playlist3-playlist-editor.c:132
-#: ../src/browsers/playlist3-playlist-editor.c:1029
+#: ../src/browsers/playlist3-playlist-editor.c:1026
 msgid "Playlist Editor"
 msgstr ""
 
 #. Add it
-#: ../src/browsers/playlist3-playlist-editor.c:256
-#: ../src/browsers/playlist3-playlist-editor.c:278
-#: ../src/browsers/playlist3-playlist-editor.c:967
-#: ../src/browsers/playlist3-playlist-editor.c:1021
+#: ../src/browsers/playlist3-playlist-editor.c:255
+#: ../src/browsers/playlist3-playlist-editor.c:277
+#: ../src/browsers/playlist3-playlist-editor.c:964
+#: ../src/browsers/playlist3-playlist-editor.c:1018
 #: ../src/vala/gmpc-favorites.c:70 ../src/vala/gmpc-favorites.c:90
 #: ../src/vala/gmpc-favorites.c:128 ../src/vala/gmpc-favorites.c:138
 msgid "Favorites"
 msgstr ""
 
-#: ../src/browsers/playlist3-playlist-editor.c:473
+#: ../src/browsers/playlist3-playlist-editor.c:450
 msgid "New playlist"
 msgstr ""
 
-#: ../src/browsers/playlist3-playlist-editor.c:513
+#: ../src/browsers/playlist3-playlist-editor.c:490
 msgid "Rename Playlist"
 msgstr ""
 
 #. delete
-#: ../src/browsers/playlist3-playlist-editor.c:520
-#: ../src/browsers/playlist3-playlist-editor.c:647
+#: ../src/browsers/playlist3-playlist-editor.c:497
+#: ../src/browsers/playlist3-playlist-editor.c:625
 msgid "Rename"
 msgstr ""
 
+#: ../src/browsers/playlist3-playlist-editor.c:841
+#, fuzzy
+msgid "Playlists"
+msgstr "L_ista"
+
 #. Add
-#: ../src/browsers/playlist3-playlist-editor.c:984
+#: ../src/browsers/playlist3-playlist-editor.c:981
 msgid "Add to playlist"
 msgstr ""
 
-#: ../src/browsers/playlist3-playlist-editor.c:1022
+#: ../src/browsers/playlist3-playlist-editor.c:1019
 msgid "Added playing song to favorites list."
 msgstr ""
 
 #. *
-#: ../src/browsers/playlist3-playlist-editor.c:1042
+#: ../src/browsers/playlist3-playlist-editor.c:1039
 msgid "Add Current Song to favorites"
 msgstr ""
 
@@ -1886,7 +1886,7 @@ msgstr ""
 msgid "Tag based browser"
 msgstr ""
 
-#: ../src/browsers/playlist3-tag2-browser.c:1811
+#: ../src/browsers/playlist3-tag2-browser.c:1833
 msgid "Reset browser"
 msgstr ""
 
@@ -2006,19 +2006,18 @@ msgstr ""
 msgid "Removed profile"
 msgstr ""
 
-#: ../src/gob/gmpc-meta-text-view.gob:73 ../src/gob/gmpc-metaimage.gob:825
+#: ../src/gob/gmpc-meta-text-view.gob:73 ../src/gob/gmpc-metaimage.gob:835
 msgid "Refetch"
 msgstr "Descarregar de novo"
 
-#: ../src/gob/gmpc-meta-text-view.gob:78 ../src/gob/gmpc-metaimage.gob:830
+#: ../src/gob/gmpc-meta-text-view.gob:78 ../src/gob/gmpc-metaimage.gob:840
 msgid "Select file"
 msgstr ""
 
-#: ../src/gob/gmpc-meta-text-view.gob:87 ../src/gob/gmpc-metaimage.gob:839
-#: ../src/vala/gmpc-test-plugin.c:1259
-#, fuzzy
+#: ../src/gob/gmpc-meta-text-view.gob:87 ../src/gob/gmpc-metaimage.gob:849
+#: ../src/vala/gmpc-test-plugin.c:1310
 msgid "Metadata selector"
-msgstr "Navegador de metadatos"
+msgstr ""
 
 #: ../src/gob/gmpc-meta-text-view.gob:271
 msgid "Failed to open file:"
@@ -2044,7 +2043,7 @@ msgstr ""
 msgid "Not Available"
 msgstr ""
 
-#: ../src/gob/gmpc-meta-text-view.gob:414 ../src/gob/gmpc-metaimage.gob:876
+#: ../src/gob/gmpc-meta-text-view.gob:414 ../src/gob/gmpc-metaimage.gob:886
 msgid "Select File"
 msgstr ""
 
@@ -2052,11 +2051,11 @@ msgstr ""
 msgid "Text Document"
 msgstr ""
 
-#: ../src/gob/gmpc-meta-text-view.gob:423 ../src/gob/gmpc-metaimage.gob:886
+#: ../src/gob/gmpc-meta-text-view.gob:423 ../src/gob/gmpc-metaimage.gob:896
 msgid "All"
 msgstr ""
 
-#: ../src/gob/gmpc-metaimage.gob:881
+#: ../src/gob/gmpc-metaimage.gob:891
 msgid "Images"
 msgstr ""
 
@@ -2091,9 +2090,8 @@ msgid "Easy Command help"
 msgstr ""
 
 #: ../src/vala/gmpc-easy-command.c:597
-#, fuzzy
 msgid "Command"
-msgstr "Comentário"
+msgstr ""
 
 #: ../src/vala/gmpc-easy-command.c:608
 msgid "Usage"
@@ -2106,70 +2104,62 @@ msgid ""
 msgstr ""
 
 #: ../src/vala/gmpc-easy-command.c:680
-#, fuzzy
 msgid "Help"
-msgstr "_Ajuda"
+msgstr ""
 
 #: ../src/vala/gmpc-easy-command.c:680
 msgid "Get a list of available commands"
 msgstr ""
 
-#: ../src/vala/gmpc-test-plugin.c:110 ../src/vala/gmpc-test-plugin.c:161
+#: ../src/vala/gmpc-test-plugin.c:113 ../src/vala/gmpc-test-plugin.c:164
 msgid "Uri"
 msgstr ""
 
-#: ../src/vala/gmpc-test-plugin.c:116 ../src/vala/gmpc-test-plugin.c:167
-#, fuzzy
+#: ../src/vala/gmpc-test-plugin.c:119 ../src/vala/gmpc-test-plugin.c:170
 msgid "Provider"
-msgstr "Consultar fornecedores"
+msgstr ""
 
-#: ../src/vala/gmpc-test-plugin.c:124
+#: ../src/vala/gmpc-test-plugin.c:127
 msgid "Filetype"
 msgstr ""
 
-#: ../src/vala/gmpc-test-plugin.c:132
+#: ../src/vala/gmpc-test-plugin.c:135
 msgid "Size"
 msgstr "Tamanho"
 
-#: ../src/vala/gmpc-test-plugin.c:132
+#: ../src/vala/gmpc-test-plugin.c:135
 msgid "wxh"
 msgstr ""
 
-#: ../src/vala/gmpc-test-plugin.c:808
-#, fuzzy
+#: ../src/vala/gmpc-test-plugin.c:817
 msgid "Cover"
-msgstr "Compositor"
+msgstr ""
 
-#: ../src/vala/gmpc-test-plugin.c:822
-#, fuzzy
+#: ../src/vala/gmpc-test-plugin.c:831
 msgid "Lyric"
-msgstr "letras"
+msgstr ""
 
-#: ../src/vala/gmpc-test-plugin.c:924
+#: ../src/vala/gmpc-test-plugin.c:949
 msgid "Insufficient information to store/fetch this metadata"
 msgstr ""
 
-#: ../src/vala/gmpc-test-plugin.c:937
-#, fuzzy
+#: ../src/vala/gmpc-test-plugin.c:962
 msgid "Artist art"
-msgstr "Imagem do a_rtista"
+msgstr ""
 
-#: ../src/vala/gmpc-test-plugin.c:938
-#, fuzzy
+#: ../src/vala/gmpc-test-plugin.c:963
 msgid "Album art"
-msgstr "Álbum"
+msgstr ""
 
-#: ../src/vala/gmpc-test-plugin.c:939
-#, fuzzy
+#: ../src/vala/gmpc-test-plugin.c:964
 msgid "Song Lyrics"
-msgstr "Guardar as letras"
+msgstr ""
 
-#: ../src/vala/gmpc-test-plugin.c:940
-#, fuzzy
+#: ../src/vala/gmpc-test-plugin.c:965
 msgid "Album Info"
-msgstr "Álbum"
+msgstr ""
 
-#: ../src/vala/gmpc-test-plugin.c:941
+#: ../src/vala/gmpc-test-plugin.c:966
 msgid "Artist Biography"
 msgstr ""
 
@@ -2190,369 +2180,3 @@ msgstr ""
 
 #~ msgid "Edit _Browser Markup"
 #~ msgstr "Editar as marcas do na_vegador"
-
-#~ msgid "Find:"
-#~ msgstr "Procurar:"
-
-#~ msgid "/"
-#~ msgstr "/"
-
-#~ msgid "<b><span size=\"x-large\">An Error Occured</span></b>"
-#~ msgstr "<b><span size=\"x-large\">Ocorreu um erro</span></b>"
-
-#~ msgid "<b>Name:</b>"
-#~ msgstr "<b>Nome:</b>"
-
-#~ msgid "<b>Sort by:</b>"
-#~ msgstr "<b>Ordenar por:</b>"
-
-#~ msgid ""
-#~ "<span size=\"small\"><i>The configured Tag browsers will only show up "
-#~ "with mpd version 0.12 or above.</i></span>"
-#~ msgstr ""
-#~ "<span size=\"small\"><i>Os navegadores de etiquetas configurados só serám "
-#~ "\"\n"
-#~ "mostrados a partires da versom 0.12 do gmpc</i></span>"
-
-#~ msgid ""
-#~ "At the notification area icon\n"
-#~ "Upper Left Corner\n"
-#~ "Upper Right Corner\n"
-#~ "Lower Left Corner\n"
-#~ "Lower Right Corner"
-#~ msgstr ""
-#~ "Na icona de notificaçom\n"
-#~ "Canto superior esquerdo\n"
-#~ "Canto superior direito\n"
-#~ "Canto inferior esquerdo\n"
-#~ "Canto inferior direito"
-
-#~ msgid "Error Dialog"
-#~ msgstr "Janela de erro"
-
-#~ msgid "Error msg"
-#~ msgstr "Mensagem de erro"
-
-#~ msgid "_Reconnect"
-#~ msgstr "_Reconectar"
-
-#~ msgid "Trying to run gmpc with a wrong libmpd version."
-#~ msgstr "Estás a tentar executar o gmpc com a versom incorrecta de libmpd."
-
-#~ msgid ""
-#~ "Gmpc is currently connected to mpd version lower then 0.12.0.\n"
-#~ "This might work, but is no longer supported."
-#~ msgstr ""
-#~ "O gmpc está actualmente conectado a um mpd com versom anterior à 0.12.0.\n"
-#~ "Pode funcionar mais já nom está suportado."
-
-#~ msgid "Error occured during operation"
-#~ msgstr "Ocorreu um erro durante a operaçom"
-
-#~ msgid "The following error(s) occured:"
-#~ msgstr "Ocorreu/Ocorrerom o(s) seguinte(s) erro(s):"
-
-#~ msgid ""
-#~ "A new metadata plugin was added, gmpc will now purge all missing metadata "
-#~ "from the cache"
-#~ msgstr ""
-#~ "Foi engadida umha nova extensom para os metadatos, o gmpc purgará agora\n"
-#~ "os metadatos inexistentes da caché"
-
-#~ msgid "<span size=\"xx-large\"><b>Plugins</b></span>"
-#~ msgstr "<span size=\"xx-large\"><b>Extensões</b></span>"
-
-#~ msgid "Failed to contact url: '%s'"
-#~ msgstr "Nom se puido ligar à URL: '%s'"
-
-#~ msgid "<b>Genre:</b>"
-#~ msgstr "<b>Estilo:</b>"
-
-#~ msgid "<b>Date:</b>"
-#~ msgstr "<b>Data:</b>"
-
-#~ msgid "<b>Album:</b>"
-#~ msgstr "<b>Álbum:</b>"
-
-#~ msgid "<b>Track:</b>"
-#~ msgstr "<b>Pista:</b>"
-
-#~ msgid "<b>Composer:</b>"
-#~ msgstr "<b>Compositor:</b>"
-
-#~ msgid "<b>Performer:</b>"
-#~ msgstr "<b>Executante:</b>"
-
-#~ msgid "<b>Dirname:</b>"
-#~ msgstr "<b>Cartafol:</b>"
-
-#~ msgid "<b>Tracks:</b>"
-#~ msgstr "<b>Pistas:</b>"
-
-#~ msgid "New accelerator..."
-#~ msgstr "Novo atalho..."
-
-#~ msgid "Accelerator key"
-#~ msgstr "Tecla de acesso rápido"
-
-#~ msgid "Accelerator modifiers"
-#~ msgstr "Modificadores da tecla de acesso rápido"
-
-#~ msgid "Accelerator keycode"
-#~ msgstr "Código (keycode) da tecla de acesso rápido"
-
-#~ msgid "Accel Mode"
-#~ msgstr "Modo de acesso rápido"
-
-#~ msgid "The type of accelerator."
-#~ msgstr "O tipo de tecla de acesso rápido."
-
-#~ msgid "Center opened folder"
-#~ msgstr "Centrar o cartafol aberto"
-
-#~ msgid "_Edit Playlist Markup"
-#~ msgstr "_Editar a marca da lista"
-
-#~ msgid "gmpc"
-#~ msgstr "gmpc"
-
-#~ msgid "<span size=\"large\" weight=\"bold\">Not Playing</span>"
-#~ msgstr "<span size=\"large\" weight=\"bold\">Sem reproduçom</span>"
-
-#~ msgid "N/A"
-#~ msgstr "N/D"
-
-#~ msgid "Current Playlist"
-#~ msgstr "Lista actual"
-
-#~ msgid "<span size='xx-large' weight='bold'>Playlist Search</span>"
-#~ msgstr "<span size='xx-large' weight='bold'>Procurar na lista</span>"
-
-#~ msgid "Loading Cover Icon"
-#~ msgstr "Icona ao carregar a portada"
-
-#~ msgid "No Cover Icon"
-#~ msgstr "Sem icona de portada"
-
-#~ msgid "Size of the image"
-#~ msgstr "Tamanho da imagem"
-
-#~ msgid "HideOnNA"
-#~ msgstr "AgocharSeND"
-
-#~ msgid "DrawBorder"
-#~ msgstr "Debuxar perfil"
-
-#~ msgid "Draw a border around the image"
-#~ msgstr "Debuxar um perfil ao redor da imagem"
-
-#~ msgid "DrawShadow"
-#~ msgstr "Debuxar sombra"
-
-#~ msgid "Draw a shadow under the image"
-#~ msgstr "Debuxar umha sombra debaixo da imagem"
-
-#~ msgid "Length"
-#~ msgstr "Duraçom"
-
-#~ msgid "Pos"
-#~ msgstr "Posiçom"
-
-#~ msgid ""
-#~ "<span size=\"small\"><i>Changes become active on reconnect</i></span>"
-#~ msgstr ""
-#~ "<span size=\"small\"><i>As mudanças activarám-se ao reconectar</i></span>"
-
-#~ msgid "Configure tag browsers"
-#~ msgstr "Configurar o navegador de etiquetas"
-
-#~ msgid "Format"
-#~ msgstr "Formato"
-
-#~ msgid "<b>Comment:</b>"
-#~ msgstr "<b>Comentário:</b>"
-
-#~ msgid "<b>Disc:</b>"
-#~ msgstr "<b>Disco:</b>"
-
-#~ msgid "<b>Filename:</b>"
-#~ msgstr "<b>Nome do ficheiro:</b>"
-
-#~ msgid "<b>Length:</b>"
-#~ msgstr "<b>Duraçom:</b>"
-
-#~ msgid "<b>Path:</b>"
-#~ msgstr "<b>Rota:</b>"
-
-#~ msgid "A_lbum text"
-#~ msgstr "Texto do á_lbum"
-
-#~ msgid "Ar_tist Text"
-#~ msgstr "Texto do ar_tista"
-
-#~ msgid "Refetch Artist Art"
-#~ msgstr "Descarregar de novo a imagem do artista"
-
-#~ msgid "Refetch cover art"
-#~ msgstr "Descarregar de novo a portada"
-
-#~ msgid "Select A File"
-#~ msgstr "Seleccionar um ficheiro"
-
-#~ msgid "gmpc - song info"
-#~ msgstr "gmpc - informaçom da cançom"
-
-#~ msgid "The following error occured: %i:'%s'"
-#~ msgstr "Ocorreu o seguinte erro: %i:'%s'"
-
-#~ msgid "days"
-#~ msgstr "dias"
-
-#~ msgid "hours"
-#~ msgstr "horas"
-
-#~ msgid "minutes"
-#~ msgstr "minutos"
-
-#~ msgid "<b>Gnome Music Player Client</b>"
-#~ msgstr "<b>Gnome Music Player Client</b>"
-
-#~ msgid "streams"
-#~ msgstr "streams"
-
-#~ msgid "Browse Artists"
-#~ msgstr "Navegador por artista"
-
-#~ msgid "albums"
-#~ msgstr "álbumes"
-
-#~ msgid "Browse Filesystem"
-#~ msgstr "Navegador de ficheiros"
-
-#~ msgid "playlists"
-#~ msgstr "listas"
-
-#~ msgid "<b>Genres: </b>"
-#~ msgstr "<b>Estilos:</b>"
-
-#~ msgid "<b>Dates: </b>"
-#~ msgstr "<b>Datas: </b>"
-
-#~ msgid "Save Album Text"
-#~ msgstr "Guardar texto do álbum"
-
-#~ msgid "Save Artist Text"
-#~ msgstr "Guardar texto do artista"
-
-#~ msgid "Working...."
-#~ msgstr "A trabalhar..."
-
-#~ msgid "<b>%s:</b>"
-#~ msgstr "<b>%s:</b>"
-
-#~ msgid "<i>No %s found</i>"
-#~ msgstr "<i>Nom se atopou %s</i>"
-
-#~ msgid "Added a song"
-#~ msgstr "Umha cançom engadida"
-
-#~ msgid "_Next"
-#~ msgstr "_Seguinte"
-
-#~ msgid "_Previous"
-#~ msgstr "_Anterior"
-
-#~ msgid "Search in playlist"
-#~ msgstr "Procurar na lista"
-
-#~ msgid "<b>Statistics:</b>"
-#~ msgstr "<b>Estatísticas:</b>"
-
-#~ msgid "<i>Albums:</i>"
-#~ msgstr "<i>Álbumes:</i>"
-
-#~ msgid "<i>Artists:</i>"
-#~ msgstr "<i>Artistas:</i>"
-
-#~ msgid "<i>Uptime:</i>"
-#~ msgstr "<i>Tempo activo:</i>"
-
-#~ msgid "Edit Cover Art"
-#~ msgstr "Editar a portada"
-
-#~ msgid "Enable Covert Art"
-#~ msgstr "Activar as portadas"
-
-#~ msgid "Remove Image"
-#~ msgstr "Eliminar a imagem"
-
-#~ msgid "Add Location"
-#~ msgstr "Engadir localizaçom"
-
-#~ msgid "Url:"
-#~ msgstr "Url:"
-
-#~ msgid "%i %s %02i %s %02i %s"
-#~ msgstr "%i %s %02i %s %02i %s"
-
-#~ msgid "+"
-#~ msgstr "+"
-
-#~ msgid "-"
-#~ msgstr "-"
-
-#~ msgid "Stock icon to use when loading a cover"
-#~ msgstr "Icona por defeito para utilizar ao se carregar a portada"
-
-#~ msgid "Stock icon to use when no cover is present"
-#~ msgstr "Icona por defeito quando nom há portada"
-
-#~ msgid "Type of the image, like artist art"
-#~ msgstr "Tipo da imagem, como imagem de artista"
-
-#~ msgid "Pl_ay/Pause"
-#~ msgstr "Reproduzir/P_arar\""
-
-#~ msgid "_Stop"
-#~ msgstr "_Parar"
-
-#~ msgid "*"
-#~ msgstr "*"
-
-#~ msgid ""
-#~ "<span size=\"x-small\"><i>Enter a local or remote stream or playlist</i></"
-#~ "span>"
-#~ msgstr ""
-#~ "<span size=\"x-small\"><i>Introduz um stream local ou remoto ou umha "
-#~ "lista de reproduçom</i></span>\""
-
-#~ msgid "You can drop a link or file directly from a browser on this window."
-#~ msgstr ""
-#~ "Podes arrastar um enlace ou ficheiro directamente dende un navegador "
-#~ "nesta janela."
-
-#~ msgid "Add Online Stream list"
-#~ msgstr "Engadir umha lista de streaming online"
-
-#~ msgid "A mpdObj to check on"
-#~ msgstr "Um mpdObj para provar"
-
-#~ msgid "Clear cover art cache"
-#~ msgstr "Eliminar a caché das portadas"
-
-#~ msgid "Cover Art Manager"
-#~ msgstr "Gestor de portadas"
-
-#~ msgid "Cover Art Viewer"
-#~ msgstr "Vissualizador de portadas"
-
-#~ msgid ""
-#~ "Gmpc doesn't fetch the cover art itself.\n"
-#~ "To fetch covers it uses providers plugins.\n"
-#~ "These plugins fetch the cover image and stores them locally.\n"
-#~ "You can download provider plugins: http://cms.qballcow.nl/"
-#~ msgstr ""
-#~ "O Gmpc nom descarga as portadas de seu.\n"
-#~ "Para obter as portadas emprega extensões.\n"
-#~ "Estas extensões procuram as portadas e guardam-nas no teu computador.\n"
-#~ "Podes descarregar extensões: http://cms.qballcow.nl/"
