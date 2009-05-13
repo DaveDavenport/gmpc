@@ -820,7 +820,7 @@ int main(int argc, char **argv)
      * If the user wants gmpc to be started hidden, call pl3_hide after the mainloop started running
      */
 	if (cfg_get_single_value_as_int_with_default(config, "Default", "start-hidden", FALSE) || start_hidden) {
-		g_timeout_add(100, (GSourceFunc)hide_on_start, NULL);
+		g_timeout_add(250, (GSourceFunc)hide_on_start, NULL);
 	}
 	TEC("Setting up timers");
 
