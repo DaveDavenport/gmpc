@@ -773,7 +773,6 @@ static void tag2_column_header_clicked(GtkTreeViewColumn *column, tag_element *t
 {
     int i=0;
     GtkWidget *menu = gtk_menu_new();
-    printf("header clicked\n");
     for(i=0; i< MPD_TAG_ITEM_ANY;i++)
     {
         if(mpd_server_tag_supported(connection,i))
@@ -976,7 +975,6 @@ static void tag2_songlist_add_tag(tag_browser *browser,const gchar *name, int ty
 
 	
 	/* Signal */
-    printf("add tag: %i=%s\n", te->index, mpdTagItemKeys[te->type]);
 	g_signal_connect(G_OBJECT(gtk_tree_view_get_selection(GTK_TREE_VIEW(te->tree))), 
             "changed", G_CALLBACK(tag2_changed), te);
 
