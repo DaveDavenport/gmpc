@@ -189,6 +189,11 @@ void plugin_add_new(GmpcPluginBase *plug, int plugin, GError **error)
 	plugins = g_realloc(plugins,(num_plugins+1)*sizeof(gmpcPlugin **));
 	plugins[num_plugins-1] = parent;
 	plugins[num_plugins] = NULL;
+
+    if(plug->plugin_type&GMPC_PLUGIN_META_DATA)
+    {
+		meta_data_add_plugin(parent);
+    }
 }
 
 static int plugin_load(const char *path, const char *file, GError **error)
@@ -684,6 +689,9 @@ int gmpc_plugin_get_id(gmpcPluginParent *plug)
 
 gboolean gmpc_plugin_is_metadata(gmpcPluginParent *plug)
 {
+    if(plug->new){
+        return GMPC_PLUGIN_IS_META_DATA_IFACE(plug->new);
+    }
     return (plug->old->metadata != NULL);
 }
 
@@ -691,6 +699,7 @@ int gmpc_plugin_metadata_get_priority(gmpcPluginParent *plug)
 {
     if(gmpc_plugin_is_metadata(plug))
     {
+        if(plug->new) return gmpc_plugin_meta_data_iface_get_priority(GMPC_PLUGIN_META_DATA_IFACE(plug->new));
         return plug->old->metadata->get_priority();
     }
     return 100;
@@ -700,6 +709,7 @@ void gmpc_plugin_metadata_set_priority(gmpcPluginParent *plug, int priority)
 {
     if(gmpc_plugin_is_metadata(plug))
     {
+        if(plug->new) return gmpc_plugin_meta_data_iface_set_priority(GMPC_PLUGIN_META_DATA_IFACE(plug->new),priority);
         return plug->old->metadata->set_priority(priority);
     }
 }
@@ -708,6 +718,12 @@ void gmpc_plugin_metadata_query_metadata_list(gmpcPluginParent *plug, mpd_Song *
 {
     if(gmpc_plugin_is_metadata(plug))
     {
+        printf("trying: %s\n", gmpc_plugin_get_name(plug));
+        if(plug->new)
+        {
+            gmpc_plugin_meta_data_iface_get_data(GMPC_PLUGIN_META_DATA_IFACE(plug->new), song, type, callback, data);
+            return;
+        }
         if(plug->old->metadata->get_metadata)
         {
             plug->old->metadata->get_metadata(song, type, callback, data);

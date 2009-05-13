@@ -185,8 +185,8 @@ GType gmpc_plugin_tool_menu_iface_get_type (void) {
 }
 
 
-gint gmpc_plugin_meta_data_iface_get_data (GmpcPluginMetaDataIface* self) {
-	return GMPC_PLUGIN_META_DATA_IFACE_GET_INTERFACE (self)->get_data (self);
+gint gmpc_plugin_meta_data_iface_get_data (GmpcPluginMetaDataIface* self, const mpd_Song* song, MetaDataType type, GmpcPluginMetaDataCallback callback, void* callback_target) {
+	return GMPC_PLUGIN_META_DATA_IFACE_GET_INTERFACE (self)->get_data (self, song, type, callback, callback_target);
 }
 
 

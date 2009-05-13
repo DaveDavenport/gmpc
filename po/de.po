@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-05-12 19:52+0200\n"
+"POT-Creation-Date: 2009-05-13 17:08+0200\n"
 "PO-Revision-Date: 2009-05-10 12:02+0000\n"
 "Last-Translator: André Klitzing <aklitzing@online.de>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
@@ -23,7 +23,7 @@ msgstr ""
 msgid "A gnome frontend for the mpd daemon"
 msgstr "Ein Gnome-Front-End für den Music Player Daemon"
 
-#: ../data/gmpc.desktop.in.h:2 ../src/main.c:328 ../src/tray-icon2.c:608
+#: ../data/gmpc.desktop.in.h:2 ../src/main.c:336 ../src/tray-icon2.c:608
 #: ../src/tray-icon2.c:803 ../src/tray-icon2.c:806 ../src/tray-icon2.c:816
 #: ../src/tray-icon2.c:819 ../src/tray-icon2.c:844
 msgid "Gnome Music Player Client"
@@ -195,102 +195,102 @@ msgstr "MPD's Streaming-Server"
 msgid "Proxy"
 msgstr "Proxy"
 
-#: ../src/main.c:269
+#: ../src/main.c:277
 msgid "Show program version and revision"
 msgstr ""
 
-#: ../src/main.c:271
+#: ../src/main.c:279
 msgid "Quits the running gmpc"
 msgstr ""
 
-#: ../src/main.c:273
+#: ../src/main.c:281
 msgid "Replace the running gmpc"
 msgstr ""
 
-#: ../src/main.c:275
+#: ../src/main.c:283
 #, fuzzy
 msgid "Don't load the plugins"
 msgstr "Plugin konnte nicht geladen werden"
 
-#: ../src/main.c:277
-msgid "Load alternative config file"
-msgstr ""
-
-#: ../src/main.c:279
-#, fuzzy
-msgid "Set the debug level"
-msgstr "--nivel-debugging="
-
-#: ../src/main.c:281
-msgid "Start gmpc hidden to tray"
-msgstr ""
-
-#: ../src/main.c:283
-msgid "Remove all failed hits from metadata cache"
-msgstr ""
-
 #: ../src/main.c:285
-msgid "Show redraw events in GTK+"
+msgid "Load alternative config file"
 msgstr ""
 
 #: ../src/main.c:287
 #, fuzzy
+msgid "Set the debug level"
+msgstr "--nivel-debugging="
+
+#: ../src/main.c:289
+msgid "Start gmpc hidden to tray"
+msgstr ""
+
+#: ../src/main.c:291
+msgid "Remove all failed hits from metadata cache"
+msgstr ""
+
+#: ../src/main.c:293
+msgid "Show redraw events in GTK+"
+msgstr ""
+
+#: ../src/main.c:295
+#, fuzzy
 msgid "Show bug information dialog"
 msgstr "Bug-Informationen:"
 
-#: ../src/main.c:289
+#: ../src/main.c:297
 msgid "Shows all output from a certain log domain"
 msgstr ""
 
-#: ../src/main.c:418
+#: ../src/main.c:426
 msgid "quit"
 msgstr "Beenden"
 
-#: ../src/main.c:419
+#: ../src/main.c:427
 msgid "Quit gmpc"
 msgstr "gmpc beenden"
 
-#: ../src/main.c:420
+#: ../src/main.c:428
 msgid "hide"
 msgstr "Verstecken"
 
-#: ../src/main.c:421
+#: ../src/main.c:429
 msgid "Hide gmpc"
 msgstr "gmpc verstecken"
 
-#: ../src/main.c:422
+#: ../src/main.c:430
 msgid "show"
 msgstr "Zeigen"
 
-#: ../src/main.c:423
+#: ../src/main.c:431
 msgid "Show gmpc"
 msgstr "gmpc zeigen"
 
-#: ../src/main.c:424
+#: ../src/main.c:432
 msgid "show notification"
 msgstr "Benachrichtigung anzeigen"
 
-#: ../src/main.c:425
+#: ../src/main.c:433
 msgid "Show trayicon notification"
 msgstr "Zeige Benachrichtigungen im Tray"
 
-#: ../src/main.c:479
+#: ../src/main.c:487
 msgid "Failed to load the configuration system."
 msgstr "Fehler beim Laden des Konfigurationssystems"
 
-#: ../src/main.c:498
+#: ../src/main.c:506
 msgid "Failed to load debug-log file."
 msgstr "Das Laden der Debug-Log Dateien ist fehlgeschlagen."
 
-#: ../src/main.c:637
+#: ../src/main.c:645
 msgid "Failed to setup libmpd"
 msgstr "Einrichten von libmpd fehlgeschlagen"
 
-#: ../src/main.c:1048
+#: ../src/main.c:1056
 msgid "GMPC has insufficient permissions on the mpd server."
 msgstr "GMPC hat nicht genügend Rechte am MPD-Server"
 
-#: ../src/main.c:1074
+#: ../src/main.c:1082
 #, c-format
 msgid ""
 "Failed to set password on: '%s'\n"
@@ -299,43 +299,43 @@ msgstr ""
 "Setzen des folgenden Passwortes fehlgeschlagen: '%s'\n"
 "Bitte versuchen Sie es erneut"
 
-#: ../src/main.c:1076
+#: ../src/main.c:1084
 #, c-format
 msgid "Please enter your password for: '%s'"
 msgstr "Bitte geben sie ihr Passwort für '%s' ein:"
 
-#: ../src/main.c:1105 ../src/main.c:1126
+#: ../src/main.c:1113 ../src/main.c:1134
 msgid "error code"
 msgstr "Fehlernummer"
 
-#: ../src/main.c:1115
+#: ../src/main.c:1123
 msgid "Insufficient permission to connect to mpd. Check password"
 msgstr ""
 "Unzureichende Berechtigung um Verbindung mit mpd herzustellen. Bitte "
 "Passwort überprüfen"
 
-#: ../src/main.c:1150
+#: ../src/main.c:1158
 msgid "MPD versions before 0.13.0 are not supported"
 msgstr "MPD versionen vor 0.13.0 werden nicht unterstützt"
 
-#: ../src/main.c:1217
+#: ../src/main.c:1225
 msgid "Connected to mpd"
 msgstr "mit mpd verbunden"
 
-#: ../src/main.c:1219
+#: ../src/main.c:1227
 msgid "Disconnected from mpd"
 msgstr "Verbindung von mpd getrennt"
 
-#: ../src/main.c:1253
+#: ../src/main.c:1261
 msgid "Error occurred during operation"
 msgstr "Fehler während der Ausführung"
 
 #. Create label
-#: ../src/main.c:1277
+#: ../src/main.c:1285
 msgid "The following error(s) occurred:"
 msgstr "Die folgenden Fehler traten auf:"
 
-#: ../src/main.c:1294
+#: ../src/main.c:1302
 msgid "Error Message"
 msgstr "Fehlermeldung"
 
@@ -723,37 +723,37 @@ msgstr "Serveroptionen"
 msgid "Connection"
 msgstr "Verbindung"
 
-#: ../src/mpdinteraction.c:444
+#: ../src/mpdinteraction.c:436
 msgid "Connecting"
 msgstr "Verbinde"
 
 #. Add all from album
-#: ../src/mpdinteraction.c:1457
+#: ../src/mpdinteraction.c:1443
 msgid "All from album"
 msgstr "Alles vom Album"
 
 #. Add all from artist
-#: ../src/mpdinteraction.c:1469
+#: ../src/mpdinteraction.c:1455
 msgid "All from artist"
 msgstr "Alles vom Künstler"
 
 #. Add all from genre
-#: ../src/mpdinteraction.c:1479
+#: ../src/mpdinteraction.c:1465
 msgid "All from genre"
 msgstr "Alles aus dem Genre"
 
 #. Add all from file
-#: ../src/mpdinteraction.c:1487
+#: ../src/mpdinteraction.c:1473
 msgid "All from same directory"
 msgstr "Alles aus dem gleichen Verzeichnis"
 
 #. Create sub menu
 #. Add
-#: ../src/mpdinteraction.c:1495
+#: ../src/mpdinteraction.c:1481
 msgid "Add more"
 msgstr "Mehr hinzufügen"
 
-#: ../src/mpdinteraction.c:1505
+#: ../src/mpdinteraction.c:1491
 msgid "Set Rating"
 msgstr "Bewerten"
 
@@ -1563,7 +1563,7 @@ msgstr "Verzeichnis '%s' rekursiv hinzugefügt"
 #: ../src/browsers/playlist3-playlist-editor.c:540
 #: ../src/browsers/playlist3-playlist-editor.c:605
 #: ../src/browsers/playlist3-tag2-browser.c:396
-#: ../src/browsers/playlist3-tag2-browser.c:1081
+#: ../src/browsers/playlist3-tag2-browser.c:1079
 msgid "Replace"
 msgstr "Ersetzen"
 
@@ -1999,7 +1999,7 @@ msgstr "Song zu Favoriten hinzufügen"
 msgid "Tag based browser"
 msgstr "Tag-basierter Browser"
 
-#: ../src/browsers/playlist3-tag2-browser.c:1833
+#: ../src/browsers/playlist3-tag2-browser.c:1831
 msgid "Reset browser"
 msgstr "Browser zurücksetzen"
 

@@ -25,6 +25,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <gtk/gtk.h>
+#include <libmpd/libmpdclient.h>
+#include <metadata.h>
 
 G_BEGIN_DECLS
 
@@ -47,6 +49,7 @@ typedef struct _GmpcPluginBasePrivate GmpcPluginBasePrivate;
 
 typedef struct _GmpcPluginToolMenuIface GmpcPluginToolMenuIface;
 typedef struct _GmpcPluginToolMenuIfaceIface GmpcPluginToolMenuIfaceIface;
+typedef void (*GmpcPluginMetaDataCallback) (GList* list, void* user_data);
 
 #define GMPC_PLUGIN_TYPE_META_DATA_IFACE (gmpc_plugin_meta_data_iface_get_type ())
 #define GMPC_PLUGIN_META_DATA_IFACE(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), GMPC_PLUGIN_TYPE_META_DATA_IFACE, GmpcPluginMetaDataIface))
@@ -115,7 +118,7 @@ struct _GmpcPluginToolMenuIfaceIface {
 /* untested */
 struct _GmpcPluginMetaDataIfaceIface {
 	GTypeInterface parent_iface;
-	gint (*get_data) (GmpcPluginMetaDataIface* self);
+	gint (*get_data) (GmpcPluginMetaDataIface* self, const mpd_Song* song, MetaDataType type, GmpcPluginMetaDataCallback callback, void* callback_target);
 	gint (*get_priority) (GmpcPluginMetaDataIface* self);
 	void (*set_priority) (GmpcPluginMetaDataIface* self, gint priority);
 };
@@ -150,7 +153,7 @@ void gmpc_plugin_base_set_enabled (GmpcPluginBase* self, gboolean state);
 GType gmpc_plugin_base_get_type (void);
 gint gmpc_plugin_tool_menu_iface_tool_menu_integration (GmpcPluginToolMenuIface* self, GtkMenu* menu);
 GType gmpc_plugin_tool_menu_iface_get_type (void);
-gint gmpc_plugin_meta_data_iface_get_data (GmpcPluginMetaDataIface* self);
+gint gmpc_plugin_meta_data_iface_get_data (GmpcPluginMetaDataIface* self, const mpd_Song* song, MetaDataType type, GmpcPluginMetaDataCallback callback, void* callback_target);
 gint gmpc_plugin_meta_data_iface_get_priority (GmpcPluginMetaDataIface* self);
 void gmpc_plugin_meta_data_iface_set_priority (GmpcPluginMetaDataIface* self, gint priority);
 GType gmpc_plugin_meta_data_iface_get_type (void);
