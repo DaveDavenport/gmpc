@@ -33,6 +33,7 @@
 #include "main.h"
 #include "sm.h"
 
+#define LOG_DOMAIN "SessionManagement"
 static gchar 	*client_id;
 static gchar	*session_id = NULL;
 
@@ -40,14 +41,14 @@ static gchar	*session_id = NULL;
 static void cb_smc_save_yourself(SmcConn smc_conn, SmPointer client_data, gint save_type,
 		gboolean shutdown, gint interact_style, gboolean fast)
 {
-	debug_printf(DEBUG_INFO,"Save myself\n");
+	g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG,"Save myself\n");
 	SmcSaveYourselfDone(smc_conn, True);
 }
 
 	static void
 cb_smc_die(SmcConn smc_conn, SmPointer client_data)
 {
-	debug_printf(DEBUG_INFO,"gmpc die\n");
+	g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG,"gmpc die\n");
 	SmcCloseConnection(smc_conn, 0, NULL);
 	main_quit();
 }
@@ -55,20 +56,20 @@ cb_smc_die(SmcConn smc_conn, SmPointer client_data)
 	static void
 cb_smc_save_complete(SmcConn smc_conn, SmPointer client_data)
 {
-	debug_printf(DEBUG_INFO,"gmpc save complete\n");
+	g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG,"gmpc save complete\n");
 }
 
 	static void
 cb_smc_shutdown_cancelled(SmcConn smc_conn, SmPointer client_data)
 {
-	debug_printf(DEBUG_INFO,"shutdown cancelled\n");
+	g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG,"shutdown cancelled\n");
 }
 
 	static void
 cb_ice_connection_messages(IceConn ice_connection, gint source,
 		GdkInputCondition condition)
 {
-	debug_printf(DEBUG_INFO, "Ice connection");
+	g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Ice connection");
 	IceProcessMessages(ice_connection, NULL, NULL);
 }
 
