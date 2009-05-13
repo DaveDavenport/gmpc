@@ -26,7 +26,7 @@ namespace Gmpc {
 		}
 		[CCode (cheader_filename = "gmpc-plugin.h")]
 		public interface MetaDataIface : Gmpc.Plugin.Base {
-			public abstract int get_data (MPD.Song song, Gmpc.MetaData.Type type, Gmpc.Plugin.MetaDataCallback callback);
+			public abstract void get_data (MPD.Song song, Gmpc.MetaData.Type type, Gmpc.Plugin.MetaDataCallback callback);
 			public abstract int get_priority ();
 			public abstract void set_priority (int priority);
 		}

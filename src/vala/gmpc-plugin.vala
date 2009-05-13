@@ -102,7 +102,7 @@ namespace Gmpc {
         public delegate void MetaDataCallback(GLib.List<Gmpc.MetaData.Item> list);
         /* untested */
         public interface MetaDataIface : Base {
-            public abstract int get_data (MPD.Song song, Gmpc.MetaData.Type type, MetaDataCallback callback);
+            public abstract void get_data (MPD.Song song, Gmpc.MetaData.Type type, MetaDataCallback callback);
             /* Set get priority */
             public abstract int get_priority ();
             public abstract void set_priority (int priority);
