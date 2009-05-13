@@ -55,6 +55,9 @@
 #include "gob/gmpc-mpddata-model-playlist.h"
 #include "metadata_cache.h"
 #include "bug-information.h"
+
+
+#define LOG_DOMAIN "Gmpc"
 /**
  * Get revision
  */
@@ -159,11 +162,12 @@ static BaconMessageConnection *bacon_connection = NULL;
  * Handle incoming (IPC) messages.
  * GMPC ships a utility called "gmpc-remote" that uses this interface.
  */
+ #define LOG_DOMAIN_IPC "IPC"
 static void bacon_on_message_received(const char *message, gpointer data)
 {
 
 	if (message) {
-		debug_printf(DEBUG_INFO, "got message: '%s'\n", message);
+		g_log(LOG_DOMAIN_IPC, G_LOG_LEVEL_DEBUG, "got message: '%s'\n", message);
 		/**
          * Makes mpd quit.
          */
@@ -316,7 +320,7 @@ int main(int argc, char **argv)
      * Setup NLS
      */
 #ifdef ENABLE_NLS
-	debug_printf(DEBUG_INFO, "Setting NLS");
+	g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Setting NLS");
 	bindtextdomain(GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
 	bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
 	textdomain(GETTEXT_PACKAGE);
@@ -368,7 +372,7 @@ int main(int argc, char **argv)
 	/**
      *  initialize threading
      */
-	debug_printf(DEBUG_INFO, "Initializing threading");
+	g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Initializing threading");
 
 	/**
      * Init libxml.
@@ -392,7 +396,7 @@ int main(int argc, char **argv)
 	/*
 	 * initialize gtk
 	 */
-	debug_printf(DEBUG_INFO, "Initializing gtk ");
+	g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Initializing gtk ");
 
 #ifdef WIN32
 	/**
@@ -400,7 +404,7 @@ int main(int argc, char **argv)
      * This is used to re-enable rule-hint in the treeview. (this is forced off on windows).
      */
 	packagedir = g_win32_get_package_installation_directory_of_module(NULL);
-	debug_printf(DEBUG_INFO, "Got %s as package installation dir", packagedir);
+	g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Got %s as package installation dir", packagedir);
 	url = g_build_filename(packagedir, "share", "gmpc", "gmpc-gtk-win32.rc", NULL);
 	q_free(packagedir);
 	gtk_rc_add_default_file(url);
@@ -467,7 +471,7 @@ int main(int argc, char **argv)
 	/**
      * Open it
      */
-	debug_printf(DEBUG_INFO, "Trying to open the config file: %s", url);
+	g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Trying to open the config file: %s", url);
 	config = cfg_open(url);
 
 	/** test if config opened correct  */
@@ -475,7 +479,7 @@ int main(int argc, char **argv)
 	/**
          * Show gtk error message and quit
          */
-		debug_printf(DEBUG_ERROR, "Failed to save/load configuration:\n%s\n", url);
+		g_log(LOG_DOMAIN, G_LOG_LEVEL_ERROR, "Failed to save/load configuration:\n%s\n", url);
 		show_error_message(_("Failed to load the configuration system."), TRUE);
 		/* this is an error so bail out correctly */
 		abort();
@@ -494,7 +498,7 @@ int main(int argc, char **argv)
 		if (url) {
 			FILE *fp = g_fopen(url, "a");
 			if (!fp) {
-				debug_printf(DEBUG_ERROR, "Failed to open debug-log file: \"%s\"\n", url);
+				g_log(LOG_DOMAIN, G_LOG_LEVEL_ERROR, "Failed to open debug-log file: \"%s\"\n", url);
 				show_error_message(_("Failed to load debug-log file."), TRUE);
 				abort();
 			}
@@ -502,7 +506,7 @@ int main(int argc, char **argv)
 			debug_set_output(fp);
 			/* Force highest level */
 			debug_set_level(DEBUG_INFO);
-			debug_printf(DEBUG_INFO, "***** Opened debug log file\n");
+			g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "***** Opened debug log file\n");
 			q_free(url);
 			TEC("Enabled Debug log");
 		}
@@ -515,17 +519,17 @@ int main(int argc, char **argv)
 		int *new_version = split_version(VERSION);
 		if (url) {
 			int *old_version = split_version((const char *)url);
-			debug_printf(DEBUG_INFO, "Welcome to a new version of gmpc.\n");
+			g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Welcome to a new version of gmpc.\n");
 			/* Do possible cleanup of config files and stuff */
 			/* old version older then 0.1.15.4.98 */
 			if ((old_version[0] <= 0 && old_version[1] <= 15 && old_version[2] <= 4 && old_version[3] <= 98)) {
 				conf_mult_obj *iter, *cmo = cfg_get_class_list(config);
-				debug_printf(DEBUG_INFO, "Purging old keys from the config file.\n");
+				g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Purging old keys from the config file.\n");
 				for (iter = cmo; iter; iter = iter->next) {
 					if (strstr(iter->key, "colpos")
 						|| strstr(iter->key, "colshow")
 						|| strstr(iter->key, "colsize")) {
-						debug_printf(DEBUG_INFO, "Removing entry: %s\n", iter->key);
+						g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Removing entry: %s\n", iter->key);
 						cfg_remove_class(config, iter->key);
 					}
 				}
@@ -573,7 +577,7 @@ int main(int argc, char **argv)
 						g_usleep(G_USEC_PER_SEC);
 					}
 				} else {
-					debug_printf(DEBUG_WARNING, "gmpc is allready running\n");
+					g_log(LOG_DOMAIN_IPC, G_LOG_LEVEL_WARNING, "gmpc is allready running\n");
 					bacon_message_connection_send(bacon_connection, "PRESENT");
 					bacon_message_connection_free(bacon_connection);
 					cfg_close(config);
@@ -622,7 +626,7 @@ int main(int argc, char **argv)
 	/**
      * stock icons
      */
-	debug_printf(DEBUG_INFO, "Loading stock icons");
+	g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Loading stock icons");
 	init_stock_icons();
 	TEC("Init stock icons");
 	/**
@@ -633,7 +637,7 @@ int main(int argc, char **argv)
 	/**
          * if failed, print error message
          */
-		debug_printf(DEBUG_ERROR, "Failed to create connection object\n");
+		g_log(LOG_DOMAIN, G_LOG_LEVEL_ERROR, "Failed to create connection object\n");
 		show_error_message(_("Failed to setup libmpd"), TRUE);
 		abort();
 	}
@@ -711,7 +715,7 @@ int main(int argc, char **argv)
 	if (!disable_plugins) {
 #ifdef WIN32
 		packagedir = g_win32_get_package_installation_directory_of_module(NULL);
-		debug_printf(DEBUG_INFO, "Got %s as package installation dir", packagedir);
+		g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Got %s as package installation dir", packagedir);
 		url = g_build_filename(packagedir, "lib", "gmpc", "plugins", NULL);
 		q_free(packagedir);
 
@@ -738,7 +742,7 @@ int main(int argc, char **argv)
 		 * if dir exists, try to load the plugins.
 		 */
 		if (g_file_test(url, G_FILE_TEST_IS_DIR)) {
-			debug_printf(DEBUG_INFO, "Trying to load plugins in: %s", url);
+			g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Trying to load plugins in: %s", url);
 			if (!disable_plugins)
 				plugin_load_dir(url);
 		}
@@ -759,7 +763,7 @@ int main(int argc, char **argv)
 	TEC("Metadata plugin changed check");
 
     /* Set window debug, this is used for developers to visualize redraws */
-	debug_printf(DEBUG_INFO, "Create main window\n");
+	g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Create main window\n");
 	gdk_window_set_debug_updates(do_debug_updates);
 	/**
      * Create the main window
@@ -867,7 +871,7 @@ int main(int argc, char **argv)
 
 	/* tell the plugins to save themself. */
 	for (i = 0; i < num_plugins && plugins[i] != NULL; i++) {
-		debug_printf(DEBUG_INFO, "Telling '%s' to save itself\n", gmpc_plugin_get_name(plugins[i]));
+		g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Telling '%s' to save itself\n", gmpc_plugin_get_name(plugins[i]));
 		gmpc_plugin_save_yourself(plugins[i]);
 	}
 	/* Should fix some possible crashes */
@@ -880,7 +884,7 @@ int main(int argc, char **argv)
 
 	/* time todo some destruction of plugins */
 	for (i = 0; i < num_plugins && plugins[i] != NULL; i++) {
-		debug_printf(DEBUG_INFO, "Telling '%s' to destroy itself\n", gmpc_plugin_get_name(plugins[i]));
+		g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Telling '%s' to destroy itself\n", gmpc_plugin_get_name(plugins[i]));
 		gmpc_plugin_destroy(plugins[i]);
 	}
 
@@ -912,7 +916,7 @@ int main(int argc, char **argv)
 	/* cleanup */
 	gmpc_mpddata_treeview_cleanup();
 
-	debug_printf(DEBUG_INFO, "Quit....\n");
+	g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Quit....\n");
 	return 0;
 }
 
@@ -921,7 +925,7 @@ int main(int argc, char **argv)
  */
 void main_quit(void)
 {
-	debug_printf(DEBUG_INFO, "Quiting gmpc....");
+	g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Quiting gmpc....");
 	/**
 	 * close playlist and store size
 	 */
@@ -1139,7 +1143,7 @@ static void connection_changed(MpdObj * mi, int connected, gpointer data)
 {
 	/* propagate the signal to the connection object */
 	if (mpd_check_connected(mi) != connected) {
-		debug_printf(DEBUG_ERROR,
+		g_log(LOG_DOMAIN, G_LOG_LEVEL_ERROR,
 					 "Connection state differs from actual state: act: %i\n", !connected);
 	}
 	/**
@@ -1181,7 +1185,7 @@ static void connection_changed(MpdObj * mi, int connected, gpointer data)
 	if (connected) {
 		mpd_status_update(mi);
 		if (connected != mpd_check_connected(mi)) {
-			debug_printf(DEBUG_ERROR, "State differs, exit");
+			g_log(LOG_DOMAIN, G_LOG_LEVEL_ERROR, "State differs, exit");
 			/* Probly disconnected when getting status..   exiting */
 			return;
 		}
@@ -1199,9 +1203,9 @@ static void connection_changed_real(GmpcConnection * obj, MpdObj * mi, int conne
 	/**
      * propegate signals
      */
-	debug_printf(DEBUG_INFO, "Connection changed %i-%i \n", connected, mpd_check_connected(mi));
+	g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Connection changed %i-%i \n", connected, mpd_check_connected(mi));
 	for (i = 0; i < num_plugins; i++) {
-		debug_printf(DEBUG_INFO, "Connection changed plugin: %s\n", gmpc_plugin_get_name(plugins[i]));
+		g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Connection changed plugin: %s\n", gmpc_plugin_get_name(plugins[i]));
 		gmpc_plugin_mpd_connection_changed(plugins[i], mi, connected, NULL);
 		TEC("Connection changed plugin: %s", gmpc_plugin_get_name(plugins[i]));
 
@@ -1322,7 +1326,7 @@ static void create_gmpc_paths(void)
 	 */
 	if (!g_file_test(url, G_FILE_TEST_EXISTS)) {
 		if (g_mkdir_with_parents(url, 0700) < 0) {
-			debug_printf(DEBUG_ERROR, "Failed to create: %s\n", url);
+			g_log(LOG_DOMAIN, G_LOG_LEVEL_ERROR, "Failed to create: %s\n", url);
 			show_error_message("Failed to create config directory.", TRUE);
 			abort();
 		}
@@ -1334,7 +1338,7 @@ static void create_gmpc_paths(void)
 		show_error_message("The config directory is not a directory.", TRUE);
 		abort();
 	} else {
-		debug_printf(DEBUG_INFO, "%s exist and is directory", url);
+		g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "%s exist and is directory", url);
 	}
 	/* Free the path */
 	q_free(url);
