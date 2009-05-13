@@ -242,7 +242,11 @@ static gboolean set_log_filter(const gchar *option_name, const gchar *value, gpo
 	g_log_set_handler(value, G_LOG_LEVEL_MASK|G_LOG_FLAG_FATAL|G_LOG_FLAG_RECURSION, g_log_default_handler, NULL);
 	return TRUE;
 }
-
+static gboolean hide_on_start(void)
+{
+	pl3_hide();
+	return FALSE;
+}
 int main(int argc, char **argv)
 {
 	int i;
@@ -816,7 +820,7 @@ int main(int argc, char **argv)
      * If the user wants gmpc to be started hidden, call pl3_hide after the mainloop started running
      */
 	if (cfg_get_single_value_as_int_with_default(config, "Default", "start-hidden", FALSE) || start_hidden) {
-		gtk_init_add((GSourceFunc) pl3_hide, NULL);
+		g_timeout_add(100, (GSourceFunc)hide_on_start, NULL);
 	}
 	TEC("Setting up timers");
 
