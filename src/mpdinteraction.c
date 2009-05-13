@@ -406,7 +406,6 @@ int connect_to_mpd(void)
 	}
 	if(!/*G_TRYLOCK*/g_mutex_trylock(connecting_lock))
 	{
-		debug_printf(DEBUG_ERROR, "Allready busy connecting to mpd.. not doing anything");
 		return FALSE;
 	}
 	/**
@@ -432,13 +431,6 @@ int connect_to_mpd(void)
 	{
 		mpd_set_password(connection,"");
 	}
-	/*
-	   if(mpd_connect(connection) < 0)
-	   {
-	   debug_printf(DEBUG_INFO,"Connection failed\n");
-	   return TRUE;
-	   }
-	 */
 	g_thread_create((GThreadFunc)connection_thread, NULL, FALSE,NULL);
 	connecting_pulse = g_timeout_add(200,(GSourceFunc)(connecting_pulse_callback),NULL);
 	gtk_progress_bar_set_text(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pl3_progressbar")), _("Connecting"));
@@ -922,7 +914,6 @@ static void gmpc_profiles_changed_pref_win(GmpcProfiles *prof,const int changed,
 
 static void gmpc_connection_changed_pref_win(GmpcConnection *object, MpdObj *mi, int connected, GtkBuilder *xml)
 { 
-	debug_printf(DEBUG_INFO, "set buttons %i", connected);
 	if(connected != mpd_check_connected(mi)) return;
 	if(!connected)
 	{
@@ -1116,7 +1107,6 @@ void preferences_window_disconnect(GtkWidget *but)
 {
 	/* set that user doesn't want to connect */
 	gmpc_connected = FALSE;
-	debug_printf(DEBUG_INFO,"**DEBUG** disconnect\n");    
 	mpd_disconnect(connection);
 }
 
@@ -1131,10 +1121,6 @@ static void connection_pref_destroy(GtkWidget *container)
 			g_object_unref(connection_pref_xml);
 			connection_pref_xml = NULL;
 		}
-	}
-	else
-	{
-		debug_printf(DEBUG_ERROR, "No child widget to destroy\n");
 	}
 }
 void connection_profiles_changed(GtkComboBox *combo, gpointer data)
