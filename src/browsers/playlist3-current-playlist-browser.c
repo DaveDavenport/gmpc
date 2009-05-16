@@ -819,7 +819,6 @@ static void pl3_current_playlist_browser_selected(GmpcPluginBrowserIface *obj, G
     gtk_container_add(GTK_CONTAINER(container), self->priv->pl3_cp_vbox);
     gtk_widget_show(self->priv->pl3_cp_vbox);
 
-    gtk_widget_grab_focus(self->priv->pl3_cp_tree);
     gmpc_mpddata_model_playlist_get_total_playtime(GMPC_MPDDATA_MODEL_PLAYLIST(playlist), &a, &b);
     __real_pl3_total_playtime_changed(GMPC_MPDDATA_MODEL_PLAYLIST(playlist),a,b,NULL);
 
