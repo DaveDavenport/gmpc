@@ -1033,6 +1033,7 @@ static void pl3_current_playlist_browser_activate(PlayQueuePlugin *self)
         gtk_tree_selection_select_path(selec, path);
         gtk_tree_path_free(path);
     }
+    gtk_widget_grab_focus(self->priv->pl3_cp_tree);
 }
 
 
