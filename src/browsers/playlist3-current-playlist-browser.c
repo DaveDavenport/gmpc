@@ -337,7 +337,7 @@ static void pl3_current_playlist_browser_init(PlayQueuePlugin *self)
     gtk_entry_set_icon_activatable(GTK_ENTRY(entry), GTK_ENTRY_ICON_PRIMARY, FALSE);
 #endif
 #endif    
-    gtk_box_pack_start(GTK_BOX(self->priv->pl3_cp_vbox), entry, FALSE, TRUE,0);
+    gtk_box_pack_end(GTK_BOX(self->priv->pl3_cp_vbox), entry, FALSE, TRUE,0);
     self->priv->filter_entry= entry;
     g_signal_connect(G_OBJECT(entry), "changed", G_CALLBACK(mod_fill_entry_changed), self);
     g_signal_connect(G_OBJECT(entry), "key-press-event", G_CALLBACK(mod_fill_entry_key_press_event), self);
