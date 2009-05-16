@@ -408,106 +408,105 @@ int pl3_window_key_press_event(GtkWidget * mw, GdkEventKey * event)
 			gmpc_plugin_browser_key_press_event(plugins[i], mw, event, type);
 		}
 	}
-
-	list = cfg_get_key_list(config, KB_GLOBAL);
-	/* If no keybindings are found, add the default ones */
-	if (list == NULL) {
-		for (i = 0; i < KB_NUM; i++) {
-			cfg_set_single_value_as_int(config, KB_GLOBAL, Keybindname[i], KeybindingDefault[i][0]);
-			cfg_set_single_value_as_int(config, MK_GLOBAL, Keybindname[i], KeybindingDefault[i][1]);
-			cfg_set_single_value_as_int(config, AC_GLOBAL, Keybindname[i], KeybindingDefault[i][2]);
-		}
+	if(event->keyval > 0)
+	{
 		list = cfg_get_key_list(config, KB_GLOBAL);
-	}
-	/* Walk through the keybinding list */
-	if (list) {
-		int edited = 0;
-		conf_mult_obj *iter = NULL;
-		/* Sort list on name. so chains can be defined */
-		do {
-			edited = 0;
-			iter = list;
+		/* If no keybindings are found, add the default ones */
+		if (list == NULL) {
+			for (i = 0; i < KB_NUM; i++) {
+				cfg_set_single_value_as_int(config, KB_GLOBAL, Keybindname[i], KeybindingDefault[i][0]);
+				cfg_set_single_value_as_int(config, MK_GLOBAL, Keybindname[i], KeybindingDefault[i][1]);
+				cfg_set_single_value_as_int(config, AC_GLOBAL, Keybindname[i], KeybindingDefault[i][2]);
+			}
+			list = cfg_get_key_list(config, KB_GLOBAL);
+		}
+		/* Walk through the keybinding list */
+		if (list) {
+			int edited = 0;
+			conf_mult_obj *iter = NULL;
+			/* Sort list on name. so chains can be defined */
 			do {
-				if (iter->next) {
-					if (strcmp(iter->key, iter->next->key) > 0) {
-						char *temp = iter->key;
-						iter->key = iter->next->key;
-						iter->next->key = temp;
-						edited = 1;
+				edited = 0;
+				iter = list;
+				do {
+					if (iter->next) {
+						if (strcmp(iter->key, iter->next->key) > 0) {
+							char *temp = iter->key;
+							iter->key = iter->next->key;
+							iter->next->key = temp;
+							edited = 1;
+						}
 					}
-				}
-				iter = iter->next;
-			} while (iter);
-		} while (edited);
+					iter = iter->next;
+				} while (iter);
+			} while (edited);
 
-		for (iter = list; iter; iter = iter->next) {
-			guint keycode = (guint)cfg_get_single_value_as_int_with_default(config, KB_GLOBAL,
-																   iter->key, -1);
-			guint keymask = (guint)cfg_get_single_value_as_int_with_default(config, MK_GLOBAL,
-																   iter->key, 0);
-			printf("%i->%i %i->%i\n",event->state&(GDK_SHIFT_MASK|GDK_CONTROL_MASK|GDK_MOD1_MASK),(keymask), 
-					keycode, event->keyval);
+			for (iter = list; iter; iter = iter->next) {
+				guint keycode = (guint)cfg_get_single_value_as_int_with_default(config, KB_GLOBAL,
+						iter->key, -1);
+				guint keymask = (guint)cfg_get_single_value_as_int_with_default(config, MK_GLOBAL,
+						iter->key, 0);
 
-			/* ignore numpad and caps lock */
-			if (keycode >= 0 && ((event->state&(GDK_SHIFT_MASK|GDK_CONTROL_MASK|GDK_MOD1_MASK)) == (keymask))
-				&& (keycode == event->keyval)) {
-				int action = cfg_get_single_value_as_int_with_default(config, AC_GLOBAL,
-																	  iter->key, -1);
-				found = 1;
-				printf("Found\n");
-				/* Play control */
-				if (action == KB_ACTION_PLAY)
-					play_song();
-				else if (action == KB_ACTION_NEXT)
-					next_song();
-				else if (action == KB_ACTION_PREV)
-					prev_song();
-				else if (action == KB_ACTION_STOP)
-					stop_song();
-				else if (action == KB_ACTION_FF)
-					seek_ps(5);	
-				else if (action == KB_ACTION_REW)
-					seek_ps(-5);	
-				/* Other actions */
-				else if (action == KB_ACTION_CLEAR_PLAYLIST)
-					mpd_playlist_clear(connection);
-				else if (action == KB_ACTION_FULL_ADD_PLAYLIST)
-					mpd_playlist_add(connection, "/");
-				/* View control */
-				else if (action == KB_ACTION_INTERFACE_COLLAPSE)
-					playlist_zoom_out();
-				else if (action == KB_ACTION_INTERFACE_EXPAND)
-					playlist_zoom_in();
-				else if (action == KB_ACTION_FULLSCREEN)
-					pl3_window_fullscreen();
-				/* Program control */
-				else if (action == KB_ACTION_QUIT)
-					main_quit();
-				else if (action == KB_ACTION_CLOSE)
-					pl3_close();
-				else if (action == KB_ACTION_SINGLE_MODE){
-					mpd_player_set_single(connection, !mpd_player_get_single(connection));
+				/* ignore numpad and caps lock */
+				if (keycode >= 0 && ((event->state&(GDK_SHIFT_MASK|GDK_CONTROL_MASK|GDK_MOD1_MASK)) == (keymask))
+						&& (keycode == event->keyval)) {
+					int action = cfg_get_single_value_as_int_with_default(config, AC_GLOBAL,
+							iter->key, -1);
+					found = 1;
+					/* Play control */
+					if (action == KB_ACTION_PLAY)
+						play_song();
+					else if (action == KB_ACTION_NEXT)
+						next_song();
+					else if (action == KB_ACTION_PREV)
+						prev_song();
+					else if (action == KB_ACTION_STOP)
+						stop_song();
+					else if (action == KB_ACTION_FF)
+						seek_ps(5);	
+					else if (action == KB_ACTION_REW)
+						seek_ps(-5);	
+					/* Other actions */
+					else if (action == KB_ACTION_CLEAR_PLAYLIST)
+						mpd_playlist_clear(connection);
+					else if (action == KB_ACTION_FULL_ADD_PLAYLIST)
+						mpd_playlist_add(connection, "/");
+					/* View control */
+					else if (action == KB_ACTION_INTERFACE_COLLAPSE)
+						playlist_zoom_out();
+					else if (action == KB_ACTION_INTERFACE_EXPAND)
+						playlist_zoom_in();
+					else if (action == KB_ACTION_FULLSCREEN)
+						pl3_window_fullscreen();
+					/* Program control */
+					else if (action == KB_ACTION_QUIT)
+						main_quit();
+					else if (action == KB_ACTION_CLOSE)
+						pl3_close();
+					else if (action == KB_ACTION_SINGLE_MODE){
+						mpd_player_set_single(connection, !mpd_player_get_single(connection));
 					}
-				else if (action == KB_ACTION_CONSUME){
-					mpd_player_set_consume(connection, !mpd_player_get_consume(connection));
-				}
-				else if (action == KB_ACTION_REPEAT)
-					mpd_player_set_repeat(connection, !mpd_player_get_repeat(connection));
-				else if (action == KB_ACTION_RANDOM)
-					mpd_player_set_random(connection, !mpd_player_get_random(connection));
-				else if (action == KB_ACTION_TOGGLE_MUTE)
-					volume_toggle_mute();
-				else {
-					debug_printf(DEBUG_ERROR,
-								 "Keybinding action (%i) for: %i %i is invalid\n", action, event->state, event->keyval);
-					found = 0;
+					else if (action == KB_ACTION_CONSUME){
+						mpd_player_set_consume(connection, !mpd_player_get_consume(connection));
+					}
+					else if (action == KB_ACTION_REPEAT)
+						mpd_player_set_repeat(connection, !mpd_player_get_repeat(connection));
+					else if (action == KB_ACTION_RANDOM)
+						mpd_player_set_random(connection, !mpd_player_get_random(connection));
+					else if (action == KB_ACTION_TOGGLE_MUTE)
+						volume_toggle_mute();
+					else {
+						debug_printf(DEBUG_ERROR,
+								"Keybinding action (%i) for: %i %i is invalid\n", action, event->state, event->keyval);
+						found = 0;
+					}
 				}
 			}
+			cfg_free_multiple(list);
 		}
-		cfg_free_multiple(list);
-	}
-	if (!found) {
-		return FALSE;
+		if (!found) {
+			return FALSE;
+		}
 	}
 
 	/* don't propagate */
