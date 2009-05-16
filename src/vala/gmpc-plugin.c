@@ -227,13 +227,13 @@ void gmpc_plugin_browser_iface_browser_add (GmpcPluginBrowserIface* self, GtkWid
 
 
 /* This gets called, the plugin should add it view in container */
-void gmpc_plugin_browser_iface_browser_selected (GmpcPluginBrowserIface* self, GtkWidget* container) {
+void gmpc_plugin_browser_iface_browser_selected (GmpcPluginBrowserIface* self, GtkContainer* container) {
 	GMPC_PLUGIN_BROWSER_IFACE_GET_INTERFACE (self)->browser_selected (self, container);
 }
 
 
 /* Plugin should remove itself from container */
-void gmpc_plugin_browser_iface_browser_unselected (GmpcPluginBrowserIface* self, GtkWidget* container) {
+void gmpc_plugin_browser_iface_browser_unselected (GmpcPluginBrowserIface* self, GtkContainer* container) {
 	GMPC_PLUGIN_BROWSER_IFACE_GET_INTERFACE (self)->browser_unselected (self, container);
 }
 

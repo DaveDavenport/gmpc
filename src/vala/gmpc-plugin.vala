@@ -111,9 +111,9 @@ namespace Gmpc {
             /* Function is called by gmpc, the plugin should then insert itself in the left tree  */
             public abstract  void browser_add (Gtk.Widget category_tree);
             /* This gets called, the plugin should add it view in container */
-            public abstract void  browser_selected (Gtk.Widget container);
+            public abstract void  browser_selected (Gtk.Container container);
             /* Plugin should remove itself from container */
-            public abstract void  browser_unselected (Gtk.Widget container);
+            public abstract void  browser_unselected (Gtk.Container container);
             /* Option menu */
             public virtual int browser_option_menu(Gtk.Menu menu)
             {

@@ -84,12 +84,13 @@ class Gmpc:Stats:Label from Gtk:Label
             string = g_string_new("");
             for(data = mpd_database_search_commit(connection);data != NULL ;data= mpd_data_get_next(data))
             {
-                g_string_append_printf(string, "%s%s",data->tag, (mpd_data_is_last(data))?"":", "); 
+                if(strlen(data->tag) > 0)
+                    g_string_append_printf(string, "%s%s",data->tag, (mpd_data_is_last(data))?"":", "); 
             }
             if(string->len >0) {
                 gtk_label_set_text(GTK_LABEL(self), string->str); 
             } else {
-                gtk_label_set_text(GTK_LABEL(self), ""); 
+                gtk_label_set_text(GTK_LABEL(self),_("n/a")); 
             }
             g_string_free(string, TRUE);
         }
@@ -102,12 +103,13 @@ class Gmpc:Stats:Label from Gtk:Label
             string = g_string_new("");
             for(data = mpd_database_search_commit(connection);data != NULL ;data= mpd_data_get_next(data))
             {
-                g_string_append_printf(string, "%s%s",data->tag, (mpd_data_is_last(data))?"":", "); 
+                if(strlen(data->tag) > 0)
+                    g_string_append_printf(string, "%s%s",data->tag, (mpd_data_is_last(data))?"":", "); 
             }
             if(string->len >0) {
                 gtk_label_set_text(GTK_LABEL(self), string->str); 
             } else {
-                gtk_label_set_text(GTK_LABEL(self), ""); 
+                gtk_label_set_text(GTK_LABEL(self), _("n/a")); 
             }
             g_string_free(string, TRUE);
         }

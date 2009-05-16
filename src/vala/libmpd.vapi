@@ -114,6 +114,7 @@ namespace MPD {
             public class Item {
                 public Data.Type type;
                 public MPD.Song  song;
+                public string tag;
                
                 [CCode (cname="mpd_data_get_next_real")] 
                 public weak Item? next(bool free);
@@ -126,7 +127,36 @@ namespace MPD {
         public MPD.Data.Item? get_playlist_content(MPD.Server server, string playlist_name); 
         public void playlist_list_add(MPD.Server server, string playlist_name, string path);
         public void playlist_list_delete(MPD.Server server, string playlist_name, int pos);
+
+        [CCode (cname="mpd_database_search_field_start")]
+        public void search_field_start(MPD.Server server,MPD.Tag.Type type);
+
+        [CCode (cname="mpd_database_search_start")]
+        public void search_start(MPD.Server server,bool exact);
+        public MPD.Data.Item? search_commit(MPD.Server server);
+
+        [CCode (cname="mpd_database_search_add_constraint")]
+        public void search_add_constraint(MPD.Server server, MPD.Tag.Type type, string value);
     }
 
+    namespace Tag {
+        [CCode (cname="mpd_TagItems", cprefix = "MPD_TAG_ITEM_", cheader_filename = "libmpd/libmpdclient.h")]
+            public enum Type{
+                ARTIST,
+                    ALBUM,
+                    TITLE,
+                    TRACK,
+                    NAME,
+                    GENRE,
+                    DATE,
+                    COMPOSER,
+                    PERFORMER,
+                    COMMENT,
+                    DISC,
+                    FILENAME,
+                    ALBUM_ARTIST,
+                    ANY
+            }
+    }
 
 }

@@ -106,6 +106,29 @@ namespace Gmpc {
 
         [CCode ( cname="gmpc_get_metadata_filename", cheader_filename="metadata.h")]
         public string get_metadata_filename(Type type, MPD.Song song, string? extention);
+
+        [CCode ( cname="GmpcMetaImage", cheader_filename="gmpc-metaimage.h")]
+        public class Image: Gtk.Widget {
+            [CCode (cname="gmpc_metaimage_new_size")]
+            public Image(Type type, int size);
+            [CCode (cname="gmpc_metaimage_update_cover_from_song")]
+            public void update_from_song(MPD.Song song);
+            [CCode (cname="gmpc_metaimage_set_squared")]
+            public void set_squared(bool squared);
+
+        }
+        [CCode ( cname="GmpcStatsLabel", cheader_filename="gmpc-stats-label.h")]
+        public class StatsLabel : Gtk.Label {
+            [CCode (cprefix="")]
+            public enum Type {
+                ARTIST_NUM_SONGS,
+                ARTIST_PLAYTIME_SONGS,
+                ARTIST_GENRES_SONGS,
+                ARTIST_DATES_SONGS
+            }
+            [CCode (cname="gmpc_stats_label_new")]
+            public StatsLabel(Type type, MPD.Song song);
+        }
    }
    namespace Messages {
        [CCode (cprefix = "ERROR_", cheader_filename = "playlist3-messages.h")]
@@ -194,5 +217,30 @@ namespace Gmpc {
     namespace Misc{
         [CCode (cname="colorshift_pixbuf",cheader_filename="misc.h")]
         public void colorshift_pixbuf(Gdk.Pixbuf dest, Gdk.Pixbuf src, int shift);
+    }
+
+    /* Browser */
+    namespace Browser{
+        [CCode (cname="playlist3_insert_browser")]
+        public void insert(out Gtk.TreeIter iter, int position);
+    }
+
+    /* objects */
+    namespace MpdData {
+        [CCode (cheader_filename="misc.h", cname="misc_sort_mpddata_by_album_disc_track")]
+        public weak MPD.Data.Item? sort_album_disc_track(owned MPD.Data.Item ?data);
+        [CCode (cheader_filename="gmpc-mpddata-model.h")]
+        public class Model : GLib.Object, Gtk.TreeModel{
+            [CCode (has_construct_function = true,cname="gmpc_mpddata_model_new")]
+            public Model();
+
+            [CCode (cname="gmpc_mpddata_model_set_mpd_data")]
+            public void set_mpd_data(owned MPD.Data.Item? list);
+
+            [CCode (cname="gmpc_mpddata_model_set_request_artist")]
+            public void set_request_artist(string? list);
+
+            public int icon_size;
+        }
     }
 }
