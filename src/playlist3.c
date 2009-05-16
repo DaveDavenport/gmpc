@@ -445,8 +445,8 @@ int pl3_window_key_press_event(GtkWidget * mw, GdkEventKey * event)
 																   iter->key, -1);
 			int keymask = cfg_get_single_value_as_int_with_default(config, MK_GLOBAL,
 																   iter->key, 0);
-
-			if (keycode >= 0 && (event->state == (unsigned)keymask)
+			/* ignore numpad and caps lock */
+			if (keycode >= 0 && (event->state&(GDK_SHIFT_MASK|GDK_CONTROL_MASK) == (unsigned)(keymask))
 				&& ((unsigned)keycode == event->keyval)) {
 				int action = cfg_get_single_value_as_int_with_default(config, AC_GLOBAL,
 																	  iter->key, -1);
@@ -460,6 +460,10 @@ int pl3_window_key_press_event(GtkWidget * mw, GdkEventKey * event)
 					prev_song();
 				else if (action == KB_ACTION_STOP)
 					stop_song();
+				else if (action == KB_ACTION_FF)
+					seek_ps(5);	
+				else if (action == KB_ACTION_REW)
+					seek_ps(-5);	
 				/* Other actions */
 				else if (action == KB_ACTION_CLEAR_PLAYLIST)
 					mpd_playlist_clear(connection);
@@ -1159,7 +1163,8 @@ void create_playlist3(void)
 			cfg_set_single_value_as_int(config, AC_GLOBAL, Keybindname[i], KeybindingDefault[i][2]);
 		}
 		list = cfg_get_key_list(config, KB_GLOBAL);
-	} else {
+	} 
+	if(list){
 		GtkAccelGroup *ac = gtk_accel_group_new();
 		GtkWidget *pl3_win = playlist3_get_window();
 		int action_seen = 0;
