@@ -108,16 +108,24 @@ static void __real_pl3_total_playtime_changed(GmpcMpdDataModelPlaylist *model, u
          guint playtime = total_playtime*((gdouble)(total_songs/(gdouble)loaded_songs));
          gchar *string = format_time(playtime);
          gchar *mesg = NULL;
+         GString *tstring = g_string_new("");
 
-         mesg = g_strdup_printf("%lu %s%c %s %s (%lu%% counted)", total_songs, 
-                 ngettext("item", "items", total_songs ), (string[0])?',':' ', string,     
-                 (string[0] == 0 || total_songs == loaded_songs)? "":_("(Estimation)"),(loaded_songs*100)/total_songs);
-
-         pl3_push_rsb_message(mesg);
+         g_string_append_printf(tstring, "%lu %s",
+                 total_songs, 
+                 ngettext("item", "items", total_songs ) 
+                 );
+         if(string)
+         {
+             g_string_append_printf(tstring, ", %s ", string);
+             if(loaded_songs != total_songs) {
+                tstring = g_string_append(tstring, _("(Estimation)"));
+            }
+         }
+         pl3_push_rsb_message(tstring->str);
 
          q_free(string);
 
-         q_free(mesg);
+         g_string_free(tstring, TRUE);
 
      } else {
 
