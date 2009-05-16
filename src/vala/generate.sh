@@ -23,6 +23,6 @@ build_file "gmpc_menu_item_rating.vala" "gmpc-rating.vala"
 build_file "gmpc-liststore-sort.vala"
 build_file "gmpc-metadata-prefetcher.vala"
 
-build_file "gmpc-metadata-browser2.vala"
+build_file "gmpc-metadata-browser2.vala" "gmpc-song-links.vala"
 
 valac -C --pkg libmpd --vapidir=`pwd` "gmpc-connection.vala"

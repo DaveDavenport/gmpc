@@ -51,7 +51,7 @@ struct _GmpcMetadataBrowserClass {
 };
 
 
-#define use_transition TRUE
+#define use_transition_mb TRUE
 #define some_unique_name VERSION
 GmpcMetadataBrowser* gmpc_metadata_browser_construct (GType object_type);
 GmpcMetadataBrowser* gmpc_metadata_browser_new (void);

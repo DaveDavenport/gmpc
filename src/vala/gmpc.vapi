@@ -124,11 +124,23 @@ namespace Gmpc {
                 ARTIST_NUM_SONGS,
                 ARTIST_PLAYTIME_SONGS,
                 ARTIST_GENRES_SONGS,
-                ARTIST_DATES_SONGS
+                ARTIST_DATES_SONGS,
+                ALBUM_NUM_SONGS,
+                ALBUM_PLAYTIME_SONGS,
+                ALBUM_GENRES_SONGS,
+                ALBUM_DATES_SONGS
             }
             [CCode (cname="gmpc_stats_label_new")]
             public StatsLabel(Type type, MPD.Song song);
         }
+        [CCode ( cname="GmpcMetaTextView", cheader_filename="gmpc-meta-text-view.h")]
+        public class TextView: Gtk.TextView {
+            [CCode (cname="gmpc_meta_text_view_new")]
+                public TextView(Type type);
+            [CCode (cname="gmpc_meta_text_view_query_text_from_song")]
+                public void query_from_song(MPD.Song song);
+        }
+
    }
    namespace Messages {
        [CCode (cprefix = "ERROR_", cheader_filename = "playlist3-messages.h")]

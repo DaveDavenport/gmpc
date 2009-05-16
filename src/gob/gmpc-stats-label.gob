@@ -29,7 +29,11 @@ requires 2.0.10
         ARTIST_NUM_SONGS,
         ARTIST_PLAYTIME_SONGS,
         ARTIST_GENRES_SONGS,
-        ARTIST_DATES_SONGS
+        ARTIST_DATES_SONGS,
+        ALBUM_NUM_SONGS,
+        ALBUM_PLAYTIME_SONGS,
+        ALBUM_GENRES_SONGS,
+        ALBUM_DATES_SONGS
     }LabelType;
 %}
 %ht{
@@ -47,11 +51,14 @@ class Gmpc:Stats:Label from Gtk:Label
     gboolean
     idle_handler(self)
     {
-        if(self->_priv->ltype == ARTIST_NUM_SONGS)
+        if(self->_priv->ltype == ARTIST_NUM_SONGS || self->_priv->ltype == ALBUM_NUM_SONGS)
         {
             MpdDBStats *stats = NULL;
             mpd_database_search_stats_start(connection);
             mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, self->_priv->song->artist);
+            if(self->_priv->ltype == ALBUM_NUM_SONGS) {
+                mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ALBUM, self->_priv->song->album);
+            }
             stats = mpd_database_search_stats_commit(connection);
             if(stats) {
                 char *buffer = g_strdup_printf("%i", stats->numberOfSongs);
@@ -61,11 +68,14 @@ class Gmpc:Stats:Label from Gtk:Label
             } else {
                 gtk_label_set_text(GTK_LABEL(self), ""); 
             }
-        }else if (self->_priv->ltype == ARTIST_PLAYTIME_SONGS)
+        }else if (self->_priv->ltype == ARTIST_PLAYTIME_SONGS || self->_priv->ltype == ALBUM_PLAYTIME_SONGS )
         {
             MpdDBStats *stats = NULL;
             mpd_database_search_stats_start(connection);
             mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, self->_priv->song->artist);
+            if(self->_priv->ltype == ALBUM_PLAYTIME_SONGS) {
+                mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ALBUM, self->_priv->song->album);
+            }
             stats = mpd_database_search_stats_commit(connection);
             if(stats) {
                 char *buffer = format_time_real(stats->playTime,"");
@@ -75,12 +85,15 @@ class Gmpc:Stats:Label from Gtk:Label
             } else {
                 gtk_label_set_text(GTK_LABEL(self), ""); 
             }
-        }else if (self->_priv->ltype == ARTIST_GENRES_SONGS)
+        }else if (self->_priv->ltype == ARTIST_GENRES_SONGS|| self->_priv->ltype == ALBUM_GENRES_SONGS)
         {
             GString *string = NULL;
             MpdData *data = NULL;
             mpd_database_search_field_start(connection, MPD_TAG_ITEM_GENRE);
             mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, self->_priv->song->artist);
+            if(self->_priv->ltype == ALBUM_GENRES_SONGS) {
+                mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ALBUM, self->_priv->song->album);
+            }
             string = g_string_new("");
             for(data = mpd_database_search_commit(connection);data != NULL ;data= mpd_data_get_next(data))
             {
@@ -94,12 +107,15 @@ class Gmpc:Stats:Label from Gtk:Label
             }
             g_string_free(string, TRUE);
         }
-        else if (self->_priv->ltype == ARTIST_DATES_SONGS)
+        else if (self->_priv->ltype == ARTIST_DATES_SONGS || self->_priv->ltype == ALBUM_DATES_SONGS)
         {
             GString *string = NULL;
             MpdData *data = NULL;
             mpd_database_search_field_start(connection, MPD_TAG_ITEM_DATE);
             mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ARTIST, self->_priv->song->artist);
+            if(self->_priv->ltype == ALBUM_DATES_SONGS) {
+                mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ALBUM, self->_priv->song->album);
+            }
             string = g_string_new("");
             for(data = mpd_database_search_commit(connection);data != NULL ;data= mpd_data_get_next(data))
             {

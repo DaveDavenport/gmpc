@@ -18,7 +18,6 @@
 */
 
 #include "gmpc-song-links.h"
-#include <gtktransition.h>
 #include <gmpc_easy_download.h>
 #include <config.h>
 #include <plugin.h>
@@ -30,6 +29,7 @@
 #include <math.h>
 #include <glib/gi18n-lib.h>
 #include <gdk/gdk.h>
+#include <gtktransition.h>
 
 
 
