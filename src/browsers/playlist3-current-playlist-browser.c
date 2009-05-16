@@ -289,6 +289,11 @@ static gboolean mod_fill_entry_key_press_event(GtkWidget *entry, GdkEventKey *ev
         self->priv->search_keep_open = FALSE;
         gtk_entry_set_text(GTK_ENTRY(entry), "");
     }
+    else if (event->keyval == GDK_Up || event->keyval == GDK_Down)
+    {
+        gtk_widget_grab_focus(self->priv->pl3_cp_tree);
+        return TRUE;
+    }
     return FALSE;
 }
 
