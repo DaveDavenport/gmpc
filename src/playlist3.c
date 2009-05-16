@@ -441,16 +441,20 @@ int pl3_window_key_press_event(GtkWidget * mw, GdkEventKey * event)
 		} while (edited);
 
 		for (iter = list; iter; iter = iter->next) {
-			int keycode = cfg_get_single_value_as_int_with_default(config, KB_GLOBAL,
+			guint keycode = (guint)cfg_get_single_value_as_int_with_default(config, KB_GLOBAL,
 																   iter->key, -1);
-			int keymask = cfg_get_single_value_as_int_with_default(config, MK_GLOBAL,
+			guint keymask = (guint)cfg_get_single_value_as_int_with_default(config, MK_GLOBAL,
 																   iter->key, 0);
+			printf("%i->%i %i->%i\n",event->state&(GDK_SHIFT_MASK|GDK_CONTROL_MASK|GDK_MOD1_MASK),(keymask), 
+					keycode, event->keyval);
+
 			/* ignore numpad and caps lock */
-			if (keycode >= 0 && (event->state&(GDK_SHIFT_MASK|GDK_CONTROL_MASK) == (unsigned)(keymask))
-				&& ((unsigned)keycode == event->keyval)) {
+			if (keycode >= 0 && ((event->state&(GDK_SHIFT_MASK|GDK_CONTROL_MASK|GDK_MOD1_MASK)) == (keymask))
+				&& (keycode == event->keyval)) {
 				int action = cfg_get_single_value_as_int_with_default(config, AC_GLOBAL,
 																	  iter->key, -1);
 				found = 1;
+				printf("Found\n");
 				/* Play control */
 				if (action == KB_ACTION_PLAY)
 					play_song();
