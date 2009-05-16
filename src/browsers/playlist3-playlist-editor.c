@@ -454,6 +454,7 @@ static void playlist_editor_new_playlist(GtkWidget *item, gpointer data)
 	GtkWidget *hbox = gtk_hbox_new(FALSE,6);
 	GtkWidget *label = gtk_label_new(_("Name:"));	
 	GtkWidget *entry = gtk_entry_new();
+    gtk_entry_set_activates_default(GTK_ENTRY(entry), TRUE);
     gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(pl3_win));
 	button = gtk_dialog_add_button(GTK_DIALOG(dialog), GTK_STOCK_NEW, GTK_RESPONSE_ACCEPT);
 	g_signal_connect(G_OBJECT(entry), "changed", G_CALLBACK(playlist_editor_new_entry_changed), button);
