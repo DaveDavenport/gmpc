@@ -20,6 +20,7 @@
 #include "gmpc-metadata-browser2.h"
 #include <gtktransition.h>
 #include <config.h>
+#include <glib/gi18n-lib.h>
 #include <gdk/gdk.h>
 #include <stdio.h>
 #include <float.h>
@@ -27,7 +28,6 @@
 #include <gmpc-mpddata-model.h>
 #include <plugin.h>
 #include <config1.h>
-#include <glib/gi18n-lib.h>
 #include <libmpd/libmpd.h>
 #include <main.h>
 #include <libmpd/libmpdclient.h>
@@ -46,6 +46,8 @@ struct _GmpcWidgetMorePrivate {
 	gint expand_state;
 	GtkButton* expand_button;
 	gint max_height;
+	GtkEventBox* eventbox;
+	GtkWidget* pchild;
 };
 
 #define GMPC_WIDGET_MORE_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GMPC_WIDGET_TYPE_MORE, GmpcWidgetMorePrivate))
@@ -54,6 +56,8 @@ enum  {
 };
 static void gmpc_widget_more_expand (GmpcWidgetMore* self, GtkButton* but);
 static void gmpc_widget_more_size_changed (GmpcWidgetMore* self, GtkWidget* child, const GdkRectangle* alloc);
+static void gmpc_widget_more_bg_style_changed (GmpcWidgetMore* self, GtkWidget* frame, GtkStyle* style);
+static void _gmpc_widget_more_bg_style_changed_gtk_widget_style_set (GtkAlignment* _sender, GtkStyle* previous_style, gpointer self);
 static void _gmpc_widget_more_expand_gtk_button_clicked (GtkButton* _sender, gpointer self);
 static void _gmpc_widget_more_size_changed_gtk_widget_size_allocate (GtkWidget* _sender, const GdkRectangle* allocation, gpointer self);
 static GmpcWidgetMore* gmpc_widget_more_construct (GType object_type, const char* markup, GtkWidget* child);
@@ -81,6 +85,8 @@ static gint* gmpc_metadata_browser_real_get_version (GmpcPluginBase* base, int* 
 static const char* gmpc_metadata_browser_real_get_name (GmpcPluginBase* base);
 static void gmpc_metadata_browser_real_save_yourself (GmpcPluginBase* base);
 static void gmpc_metadata_browser_browser_bg_style_changed (GmpcMetadataBrowser* self, GtkScrolledWindow* bg, GtkStyle* style);
+static gboolean gmpc_metadata_browser_browser_button_press_event (GmpcMetadataBrowser* self, GtkTreeView* tree, const GdkEventButton* event);
+static gboolean _gmpc_metadata_browser_browser_button_press_event_gtk_widget_button_press_event (GtkTreeView* _sender, const GdkEventButton* event, gpointer self);
 static void _gmpc_metadata_browser_browser_artist_changed_gtk_tree_selection_changed (GtkTreeSelection* _sender, gpointer self);
 static void _gmpc_metadata_browser_browser_album_changed_gtk_tree_selection_changed (GtkTreeSelection* _sender, gpointer self);
 static void _gmpc_metadata_browser_browser_songs_changed_gtk_tree_selection_changed (GtkTreeSelection* _sender, gpointer self);
@@ -112,11 +118,11 @@ static void gmpc_widget_more_expand (GmpcWidgetMore* self, GtkButton* but) {
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (but != NULL);
 	if (self->priv->expand_state == 0) {
-		gtk_button_set_label (but, "(less)");
+		gtk_button_set_label (but, _ ("(less)"));
 		gtk_widget_set_size_request ((GtkWidget*) self->priv->ali, -1, -1);
 		self->priv->expand_state = 1;
 	} else {
-		gtk_button_set_label (but, "(more)");
+		gtk_button_set_label (but, _ ("(more)"));
 		gtk_widget_set_size_request ((GtkWidget*) self->priv->ali, -1, self->priv->max_height);
 		self->priv->expand_state = 0;
 	}
@@ -135,6 +141,29 @@ static void gmpc_widget_more_size_changed (GmpcWidgetMore* self, GtkWidget* chil
 }
 
 
+static void gmpc_widget_more_bg_style_changed (GmpcWidgetMore* self, GtkWidget* frame, GtkStyle* style) {
+	GdkColor _tmp0 = {0};
+	GdkColor _tmp1 = {0};
+	GdkColor _tmp2 = {0};
+	GdkColor _tmp3 = {0};
+	GdkColor _tmp4 = {0};
+	GdkColor _tmp5 = {0};
+	g_return_if_fail (self != NULL);
+	g_return_if_fail (frame != NULL);
+	gtk_widget_modify_bg ((GtkWidget*) self, GTK_STATE_NORMAL, (_tmp0 = gtk_widget_get_style ((GtkWidget*) gtk_widget_get_parent ((GtkWidget*) self))->mid[GTK_STATE_NORMAL], &_tmp0));
+	gtk_widget_modify_base ((GtkWidget*) self, GTK_STATE_NORMAL, (_tmp1 = gtk_widget_get_style ((GtkWidget*) gtk_widget_get_parent ((GtkWidget*) self))->mid[GTK_STATE_NORMAL], &_tmp1));
+	gtk_widget_modify_bg ((GtkWidget*) self->priv->eventbox, GTK_STATE_NORMAL, (_tmp2 = gtk_widget_get_style ((GtkWidget*) gtk_widget_get_parent ((GtkWidget*) self))->mid[GTK_STATE_NORMAL], &_tmp2));
+	gtk_widget_modify_base ((GtkWidget*) self->priv->eventbox, GTK_STATE_NORMAL, (_tmp3 = gtk_widget_get_style ((GtkWidget*) gtk_widget_get_parent ((GtkWidget*) self))->mid[GTK_STATE_NORMAL], &_tmp3));
+	gtk_widget_modify_bg (self->priv->pchild, GTK_STATE_NORMAL, (_tmp4 = gtk_widget_get_style ((GtkWidget*) gtk_widget_get_parent ((GtkWidget*) self))->mid[GTK_STATE_NORMAL], &_tmp4));
+	gtk_widget_modify_base (self->priv->pchild, GTK_STATE_NORMAL, (_tmp5 = gtk_widget_get_style ((GtkWidget*) gtk_widget_get_parent ((GtkWidget*) self))->mid[GTK_STATE_NORMAL], &_tmp5));
+}
+
+
+static void _gmpc_widget_more_bg_style_changed_gtk_widget_style_set (GtkAlignment* _sender, GtkStyle* previous_style, gpointer self) {
+	gmpc_widget_more_bg_style_changed (self, _sender, previous_style);
+}
+
+
 static void _gmpc_widget_more_expand_gtk_button_clicked (GtkButton* _sender, gpointer self) {
 	gmpc_widget_more_expand (self, _sender);
 }
@@ -147,26 +176,36 @@ static void _gmpc_widget_more_size_changed_gtk_widget_size_allocate (GtkWidget* 
 
 static GmpcWidgetMore* gmpc_widget_more_construct (GType object_type, const char* markup, GtkWidget* child) {
 	GmpcWidgetMore * self;
-	GtkAlignment* _tmp0;
+	GtkWidget* _tmp1;
+	GtkWidget* _tmp0;
+	GtkAlignment* _tmp2;
+	GtkEventBox* _tmp3;
 	GtkHBox* hbox;
 	GtkLabel* label;
-	GtkButton* _tmp1;
+	GtkButton* _tmp4;
 	g_return_val_if_fail (markup != NULL, NULL);
 	g_return_val_if_fail (child != NULL, NULL);
 	self = g_object_newv (object_type, 0, NULL);
-	gtk_frame_set_shadow_type ((GtkFrame*) self, GTK_SHADOW_NONE);
+	_tmp1 = NULL;
 	_tmp0 = NULL;
-	self->priv->ali = (_tmp0 = g_object_ref_sink ((GtkAlignment*) gtk_alignment_new (0.f, 0.f, 1.f, 0.f)), (self->priv->ali == NULL) ? NULL : (self->priv->ali = (g_object_unref (self->priv->ali), NULL)), _tmp0);
+	self->priv->pchild = (_tmp1 = (_tmp0 = child, (_tmp0 == NULL) ? NULL : g_object_ref (_tmp0)), (self->priv->pchild == NULL) ? NULL : (self->priv->pchild = (g_object_unref (self->priv->pchild), NULL)), _tmp1);
+	_tmp2 = NULL;
+	self->priv->ali = (_tmp2 = g_object_ref_sink ((GtkAlignment*) gtk_alignment_new (0.f, 0.f, 1.f, 0.f)), (self->priv->ali == NULL) ? NULL : (self->priv->ali = (g_object_unref (self->priv->ali), NULL)), _tmp2);
 	gtk_alignment_set_padding (self->priv->ali, (guint) 6, (guint) 6, (guint) 12, (guint) 12);
-	gtk_container_add ((GtkContainer*) self, (GtkWidget*) self->priv->ali);
+	_tmp3 = NULL;
+	self->priv->eventbox = (_tmp3 = g_object_ref_sink ((GtkEventBox*) gtk_event_box_new ()), (self->priv->eventbox == NULL) ? NULL : (self->priv->eventbox = (g_object_unref (self->priv->eventbox), NULL)), _tmp3);
+	gtk_event_box_set_visible_window (self->priv->eventbox, TRUE);
+	gtk_container_add ((GtkContainer*) self, (GtkWidget*) self->priv->eventbox);
+	gtk_container_add ((GtkContainer*) self->priv->eventbox, (GtkWidget*) self->priv->ali);
 	gtk_widget_set_size_request ((GtkWidget*) self->priv->ali, -1, self->priv->max_height);
 	gtk_container_add ((GtkContainer*) self->priv->ali, child);
+	g_signal_connect_object ((GtkWidget*) self->priv->ali, "style-set", (GCallback) _gmpc_widget_more_bg_style_changed_gtk_widget_style_set, self, 0);
 	hbox = g_object_ref_sink ((GtkHBox*) gtk_hbox_new (FALSE, 6));
 	label = g_object_ref_sink ((GtkLabel*) gtk_label_new (""));
 	gtk_label_set_markup (label, markup);
 	gtk_box_pack_start ((GtkBox*) hbox, (GtkWidget*) label, FALSE, FALSE, (guint) 0);
-	_tmp1 = NULL;
-	self->priv->expand_button = (_tmp1 = g_object_ref_sink ((GtkButton*) gtk_button_new_with_label ("(more)")), (self->priv->expand_button == NULL) ? NULL : (self->priv->expand_button = (g_object_unref (self->priv->expand_button), NULL)), _tmp1);
+	_tmp4 = NULL;
+	self->priv->expand_button = (_tmp4 = g_object_ref_sink ((GtkButton*) gtk_button_new_with_label (_ ("(more)"))), (self->priv->expand_button == NULL) ? NULL : (self->priv->expand_button = (g_object_unref (self->priv->expand_button), NULL)), _tmp4);
 	gtk_button_set_relief (self->priv->expand_button, GTK_RELIEF_NONE);
 	g_signal_connect_object (self->priv->expand_button, "clicked", (GCallback) _gmpc_widget_more_expand_gtk_button_clicked, self, 0);
 	gtk_box_pack_start ((GtkBox*) hbox, (GtkWidget*) self->priv->expand_button, FALSE, FALSE, (guint) 0);
@@ -194,6 +233,8 @@ static void gmpc_widget_more_instance_init (GmpcWidgetMore * self) {
 	self->priv->expand_state = 0;
 	self->priv->expand_button = NULL;
 	self->priv->max_height = 100;
+	self->priv->eventbox = NULL;
+	self->priv->pchild = NULL;
 }
 
 
@@ -202,6 +243,8 @@ static void gmpc_widget_more_finalize (GObject* obj) {
 	self = GMPC_WIDGET_MORE (obj);
 	(self->priv->ali == NULL) ? NULL : (self->priv->ali = (g_object_unref (self->priv->ali), NULL));
 	(self->priv->expand_button == NULL) ? NULL : (self->priv->expand_button = (g_object_unref (self->priv->expand_button), NULL));
+	(self->priv->eventbox == NULL) ? NULL : (self->priv->eventbox = (g_object_unref (self->priv->eventbox), NULL));
+	(self->priv->pchild == NULL) ? NULL : (self->priv->pchild = (g_object_unref (self->priv->pchild), NULL));
 	G_OBJECT_CLASS (gmpc_widget_more_parent_class)->finalize (obj);
 }
 
@@ -251,6 +294,38 @@ static void gmpc_metadata_browser_browser_bg_style_changed (GmpcMetadataBrowser*
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (bg != NULL);
 	gtk_widget_modify_bg ((GtkWidget*) self->priv->metadata_box, GTK_STATE_NORMAL, (_tmp0 = gtk_widget_get_style ((GtkWidget*) self->priv->metadata_sw)->base[GTK_STATE_NORMAL], &_tmp0));
+}
+
+
+/* This hack makes clicking a selected row again, unselect it */
+static gboolean gmpc_metadata_browser_browser_button_press_event (GmpcMetadataBrowser* self, GtkTreeView* tree, const GdkEventButton* event) {
+	GtkTreePath* path;
+	GtkTreePath* _tmp3;
+	gboolean _tmp2;
+	GtkTreePath* _tmp1;
+	gboolean _tmp5;
+	g_return_val_if_fail (self != NULL, FALSE);
+	g_return_val_if_fail (tree != NULL, FALSE);
+	path = NULL;
+	if ((*event).button != 1) {
+		gboolean _tmp0;
+		return (_tmp0 = FALSE, (path == NULL) ? NULL : (path = (gtk_tree_path_free (path), NULL)), _tmp0);
+	}
+	_tmp3 = NULL;
+	_tmp1 = NULL;
+	if ((_tmp2 = gtk_tree_view_get_path_at_pos (tree, (gint) (*event).x, (gint) (*event).y, &_tmp1, NULL, NULL, NULL), path = (_tmp3 = _tmp1, (path == NULL) ? NULL : (path = (gtk_tree_path_free (path), NULL)), _tmp3), _tmp2)) {
+		if (gtk_tree_selection_path_is_selected (gtk_tree_view_get_selection (tree), path)) {
+			gboolean _tmp4;
+			gtk_tree_selection_unselect_path (gtk_tree_view_get_selection (tree), path);
+			return (_tmp4 = TRUE, (path == NULL) ? NULL : (path = (gtk_tree_path_free (path), NULL)), _tmp4);
+		}
+	}
+	return (_tmp5 = FALSE, (path == NULL) ? NULL : (path = (gtk_tree_path_free (path), NULL)), _tmp5);
+}
+
+
+static gboolean _gmpc_metadata_browser_browser_button_press_event_gtk_widget_button_press_event (GtkTreeView* _sender, const GdkEventButton* event, gpointer self) {
+	return gmpc_metadata_browser_browser_button_press_event (self, _sender, event);
 }
 
 
@@ -316,6 +391,7 @@ static void gmpc_metadata_browser_browser_init (GmpcMetadataBrowser* self) {
 		self->priv->model_artist = (_tmp2 = gmpc_mpddata_model_new (), (self->priv->model_artist == NULL) ? NULL : (self->priv->model_artist = (g_object_unref (self->priv->model_artist), NULL)), _tmp2);
 		_tmp3 = NULL;
 		self->priv->tree_artist = (_tmp3 = g_object_ref_sink ((GtkTreeView*) gtk_tree_view_new_with_model ((GtkTreeModel*) self->priv->model_artist)), (self->priv->tree_artist == NULL) ? NULL : (self->priv->tree_artist = (g_object_unref (self->priv->tree_artist), NULL)), _tmp3);
+		g_signal_connect_object ((GtkWidget*) self->priv->tree_artist, "button-press-event", (GCallback) _gmpc_metadata_browser_browser_button_press_event_gtk_widget_button_press_event, self, 0);
 		gtk_container_add ((GtkContainer*) sw, (GtkWidget*) self->priv->tree_artist);
 		/* setup the columns */
 		column = g_object_ref_sink (gtk_tree_view_column_new ());
@@ -343,6 +419,7 @@ static void gmpc_metadata_browser_browser_init (GmpcMetadataBrowser* self) {
 		self->priv->model_albums = (_tmp5 = gmpc_mpddata_model_new (), (self->priv->model_albums == NULL) ? NULL : (self->priv->model_albums = (g_object_unref (self->priv->model_albums), NULL)), _tmp5);
 		_tmp6 = NULL;
 		self->priv->tree_album = (_tmp6 = g_object_ref_sink ((GtkTreeView*) gtk_tree_view_new_with_model ((GtkTreeModel*) self->priv->model_albums)), (self->priv->tree_album == NULL) ? NULL : (self->priv->tree_album = (g_object_unref (self->priv->tree_album), NULL)), _tmp6);
+		g_signal_connect_object ((GtkWidget*) self->priv->tree_album, "button-press-event", (GCallback) _gmpc_metadata_browser_browser_button_press_event_gtk_widget_button_press_event, self, 0);
 		gtk_container_add ((GtkContainer*) sw, (GtkWidget*) self->priv->tree_album);
 		/* setup the columns */
 		_tmp7 = NULL;
@@ -373,6 +450,7 @@ static void gmpc_metadata_browser_browser_init (GmpcMetadataBrowser* self) {
 		self->priv->model_songs = (_tmp11 = gmpc_mpddata_model_new (), (self->priv->model_songs == NULL) ? NULL : (self->priv->model_songs = (g_object_unref (self->priv->model_songs), NULL)), _tmp11);
 		_tmp12 = NULL;
 		self->priv->tree_songs = (_tmp12 = g_object_ref_sink ((GtkTreeView*) gtk_tree_view_new_with_model ((GtkTreeModel*) self->priv->model_songs)), (self->priv->tree_songs == NULL) ? NULL : (self->priv->tree_songs = (g_object_unref (self->priv->tree_songs), NULL)), _tmp12);
+		g_signal_connect_object ((GtkWidget*) self->priv->tree_songs, "button-press-event", (GCallback) _gmpc_metadata_browser_browser_button_press_event_gtk_widget_button_press_event, self, 0);
 		gtk_container_add ((GtkContainer*) sw, (GtkWidget*) self->priv->tree_songs);
 		/* setup the columns */
 		_tmp13 = NULL;

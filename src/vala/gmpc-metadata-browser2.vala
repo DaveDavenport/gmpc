@@ -29,16 +29,17 @@ public class Gmpc.Widget.More : Gtk.Frame {
     private int expand_state = 0;
     private Gtk.Button expand_button = null;
     private int max_height = 100;
+    private Gtk.EventBox eventbox = null;
+    private Gtk.Widget pchild = null;
 
     private void expand(Gtk.Button but)
     {
-        if(this.expand_state == 0)
-        {
-            but.set_label("(less)");
+        if(this.expand_state == 0) {
+            but.set_label(_("(less)"));
             this.ali.set_size_request(-1, -1);
             this.expand_state = 1;
         }else{
-            but.set_label("(more)");
+            but.set_label(_("(more)"));
             this.ali.set_size_request(-1, this.max_height);
             this.expand_state = 0;
         }
@@ -53,20 +54,35 @@ public class Gmpc.Widget.More : Gtk.Frame {
             this.expand_button.show();
         }
     }
+
+    private void bg_style_changed(Gtk.Widget frame,Gtk.Style? style)
+    {
+        this.modify_bg(Gtk.StateType.NORMAL,this.parent.style.mid[Gtk.StateType.NORMAL]);
+        this.modify_base(Gtk.StateType.NORMAL,this.parent.style.mid[Gtk.StateType.NORMAL]);
+        this.eventbox.modify_bg(Gtk.StateType.NORMAL,this.parent.style.mid[Gtk.StateType.NORMAL]);
+        this.eventbox.modify_base(Gtk.StateType.NORMAL,this.parent.style.mid[Gtk.StateType.NORMAL]);
+        this.pchild.modify_bg(Gtk.StateType.NORMAL,this.parent.style.mid[Gtk.StateType.NORMAL]);
+        this.pchild.modify_base(Gtk.StateType.NORMAL,this.parent.style.mid[Gtk.StateType.NORMAL]);
+    }
     More(string markup,Gtk.Widget child)
     {
-        this.set_shadow_type(Gtk.ShadowType.NONE);
+        this.pchild = child;
 
         this.ali = new Gtk.Alignment(0f,0f,1f,0f); ali.set_padding(6,6,12,12);
-        this.add(ali);
+        this.eventbox = new Gtk.EventBox();
+        this.eventbox.set_visible_window(true);
+        this.add(eventbox);
+        this.eventbox.add(ali);
         this.ali.set_size_request(-1, this.max_height);
         this.ali.add(child);
+
+        this.ali.style_set += bg_style_changed;
 
         var hbox = new Gtk.HBox(false, 6);
         var label= new Gtk.Label("");
         label.set_markup(markup);
         hbox.pack_start(label, false, false,0);
-        this.expand_button = new Gtk.Button.with_label("(more)");
+        this.expand_button = new Gtk.Button.with_label(_("(more)"));
         this.expand_button.set_relief(Gtk.ReliefStyle.NONE);
         this.expand_button.clicked+=expand;
         hbox.pack_start(this.expand_button, false, false,0);
@@ -125,6 +141,20 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
      {
         this.metadata_box.modify_bg(Gtk.StateType.NORMAL,this.metadata_sw.style.base[Gtk.StateType.NORMAL]);
      }
+     /* This hack makes clicking a selected row again, unselect it */
+     private bool browser_button_press_event(Gtk.TreeView tree, Gdk.EventButton event)
+     {
+        Gtk.TreePath path= null;
+        if(event.button != 1) return false;
+        if(tree.get_path_at_pos((int)event.x,(int)event.y,out path, null, null, null))
+        {
+            if(tree.get_selection().path_is_selected(path)){
+                tree.get_selection().unselect_path(path);
+                return true;
+            }
+        }
+        return false;
+     }
 
     private void browser_init()
     {
@@ -143,6 +173,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
             this.browser_box.pack_start(sw, true, true, 0);
             this.model_artist = new Gmpc.MpdData.Model();
             this.tree_artist = new Gtk.TreeView.with_model(this.model_artist);
+            this.tree_artist.button_press_event+=browser_button_press_event;
             sw.add(tree_artist);
             /* setup the columns */ 
             var column = new Gtk.TreeViewColumn();
@@ -170,6 +201,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
             this.browser_box.pack_start(sw, true, true, 0);
             this.model_albums = new Gmpc.MpdData.Model();
             this.tree_album = new Gtk.TreeView.with_model(this.model_albums);
+            this.tree_album.button_press_event+=browser_button_press_event;
             sw.add(tree_album);
             /* setup the columns */ 
             column = new Gtk.TreeViewColumn();
@@ -198,6 +230,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
             this.browser_box.pack_start(sw, true, true, 0);
             this.model_songs = new Gmpc.MpdData.Model();
             this.tree_songs = new Gtk.TreeView.with_model(this.model_songs);
+            this.tree_songs.button_press_event+=browser_button_press_event;
             sw.add(tree_songs);
             /* setup the columns */ 
             column = new Gtk.TreeViewColumn();
