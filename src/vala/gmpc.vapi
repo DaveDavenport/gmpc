@@ -255,4 +255,11 @@ namespace Gmpc {
             public int icon_size;
         }
     }
+
+
+    namespace Misc {
+        [CCode (cname="play_path")]
+        public void play_path(string path);
+
+    }
 }

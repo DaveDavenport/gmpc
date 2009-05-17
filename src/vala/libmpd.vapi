@@ -123,6 +123,24 @@ namespace MPD {
                 public weak Item? first();
             }
     }
+    namespace PlayQueue {
+        [CCode (cname="mpd_playlist_add")]
+        public void add_song(MPD.Server server, string path);
+
+        [CCode (cname="mpd_playlist_queue_add")]
+        public void queue_add_song(MPD.Server server, string path);
+        [CCode (cname="mpd_playlist_queue_commit")]
+        public void queue_commit(MPD.Server server);
+        [CCode (cname="mpd_playlist_clear")]
+        public void clear(MPD.Server server);
+    }
+
+    namespace Player {
+        [CCode (cname="mpd_player_play")]
+        public void play(MPD.Server server);
+
+    }
+
     namespace Database {
         public MPD.Data.Item? get_playlist_content(MPD.Server server, string playlist_name); 
         public void playlist_list_add(MPD.Server server, string playlist_name, string path);
