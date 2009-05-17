@@ -295,6 +295,12 @@ static void gmpc_metadata_browser_real_save_yourself (GmpcPluginBase* base) {
 		pos = gtk_paned_get_position (self->priv->paned);
 		cfg_set_single_value_as_int (config, "Metadata Browser 2", "pane-pos", pos);
 	}
+	if (self->priv->model_artist != NULL) {
+		gmpc_mpddata_model_set_mpd_data (self->priv->model_artist, NULL);
+	}
+	if (self->priv->model_albums != NULL) {
+		gmpc_mpddata_model_set_mpd_data (self->priv->model_albums, NULL);
+	}
 }
 
 

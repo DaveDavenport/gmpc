@@ -113,6 +113,9 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
             int pos = this.paned.get_position();
             config.set_int("Metadata Browser 2", "pane-pos", pos);
         }
+        
+        if(this.model_artist != null) this.model_artist.set_mpd_data(null);
+        if(this.model_albums != null)this.model_albums.set_mpd_data(null);
     }
 
     /**
@@ -833,4 +836,6 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         stdout.printf("blob\n");
         container.remove(this.paned);
     }
+
+
 }
