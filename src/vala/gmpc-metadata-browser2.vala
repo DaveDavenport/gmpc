@@ -326,6 +326,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
     private void browser_artist_changed(Gtk.TreeSelection sel)
     {
         this.model_albums.set_mpd_data(null);
+        this.model_songs.set_mpd_data(null);
         this.metadata_box_clear();
 
         string artist = browser_get_selected_artist();
@@ -340,6 +341,12 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
             this.model_albums.set_request_artist(artist);
             this.model_albums.set_mpd_data((owned)data);
 
+            MPD.Database.search_start(server,true);
+            MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, artist);
+            data = MPD.Database.search_commit(server);
+            data = Gmpc.MpdData.sort_album_disc_track((owned)data);
+            this.model_songs.set_mpd_data((owned)data);
+
         }
         this.metadata_box_update();
     }
@@ -348,19 +355,19 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         this.model_songs.set_mpd_data(null);
         this.metadata_box_clear();
 
-        string album = browser_get_selected_album();
-        if(album != null)
+        string artist = browser_get_selected_artist();
+        if(artist != null)
         {
-            string artist = browser_get_selected_artist();
-            if(artist != null){
-                /* Fill in the first browser */
-                MPD.Database.search_start(server,true);
-                MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, artist);
+            string album = browser_get_selected_album();
+            /* Fill in the first browser */
+            MPD.Database.search_start(server,true);
+
+            MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, artist);
+            if(album != null)
                 MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM, album);
-                var data = MPD.Database.search_commit(server);
-                data = Gmpc.MpdData.sort_album_disc_track((owned)data);
-                this.model_songs.set_mpd_data((owned)data);
-            }
+            var data = MPD.Database.search_commit(server);
+            data = Gmpc.MpdData.sort_album_disc_track((owned)data);
+            this.model_songs.set_mpd_data((owned)data);
         }
         this.metadata_box_update();
     }
@@ -723,7 +730,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         string album = browser_get_selected_album();
         MPD.Song? song = browser_get_selected_song();
 
-        if(album != null && artist != null && song != null) {
+        if(song != null) {
             metadata_box_show_song(song);
         }else if(album != null && artist != null) {
             metadata_box_show_album(artist,album);
