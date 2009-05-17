@@ -22,13 +22,24 @@
 
 #include <glib.h>
 #include <glib-object.h>
+#include <gtk/gtk.h>
 #include <gmpc-plugin.h>
 #include <stdlib.h>
 #include <string.h>
-#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 
+
+#define GMPC_WIDGET_TYPE_MORE (gmpc_widget_more_get_type ())
+#define GMPC_WIDGET_MORE(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), GMPC_WIDGET_TYPE_MORE, GmpcWidgetMore))
+#define GMPC_WIDGET_MORE_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), GMPC_WIDGET_TYPE_MORE, GmpcWidgetMoreClass))
+#define GMPC_WIDGET_IS_MORE(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GMPC_WIDGET_TYPE_MORE))
+#define GMPC_WIDGET_IS_MORE_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GMPC_WIDGET_TYPE_MORE))
+#define GMPC_WIDGET_MORE_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), GMPC_WIDGET_TYPE_MORE, GmpcWidgetMoreClass))
+
+typedef struct _GmpcWidgetMore GmpcWidgetMore;
+typedef struct _GmpcWidgetMoreClass GmpcWidgetMoreClass;
+typedef struct _GmpcWidgetMorePrivate GmpcWidgetMorePrivate;
 
 #define GMPC_TYPE_METADATA_BROWSER (gmpc_metadata_browser_get_type ())
 #define GMPC_METADATA_BROWSER(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), GMPC_TYPE_METADATA_BROWSER, GmpcMetadataBrowser))
@@ -41,6 +52,17 @@ typedef struct _GmpcMetadataBrowser GmpcMetadataBrowser;
 typedef struct _GmpcMetadataBrowserClass GmpcMetadataBrowserClass;
 typedef struct _GmpcMetadataBrowserPrivate GmpcMetadataBrowserPrivate;
 
+struct _GmpcWidgetMore {
+	GtkFrame parent_instance;
+	GmpcWidgetMorePrivate * priv;
+};
+
+struct _GmpcWidgetMoreClass {
+	GtkFrameClass parent_class;
+};
+
+/* set shadow 
+this.set_shadow_type(Gtk.ShadowType.ETCHED_IN);*/
 struct _GmpcMetadataBrowser {
 	GmpcPluginBase parent_instance;
 	GmpcMetadataBrowserPrivate * priv;
@@ -53,6 +75,7 @@ struct _GmpcMetadataBrowserClass {
 
 #define use_transition_mb TRUE
 #define some_unique_name VERSION
+GType gmpc_widget_more_get_type (void);
 GmpcMetadataBrowser* gmpc_metadata_browser_construct (GType object_type);
 GmpcMetadataBrowser* gmpc_metadata_browser_new (void);
 GType gmpc_metadata_browser_get_type (void);
