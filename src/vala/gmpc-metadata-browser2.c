@@ -20,12 +20,13 @@
 #include "gmpc-metadata-browser2.h"
 #include <gtktransition.h>
 #include <config.h>
+#include <gdk/gdk.h>
+#include <stdio.h>
 #include <float.h>
 #include <math.h>
 #include <gmpc-mpddata-model.h>
 #include <plugin.h>
 #include <config1.h>
-#include <gdk/gdk.h>
 #include <glib/gi18n-lib.h>
 #include <libmpd/libmpd.h>
 #include <main.h>
@@ -35,7 +36,6 @@
 #include <metadata.h>
 #include <gmpc-meta-text-view.h>
 #include <gmpc-stats-label.h>
-#include <stdio.h>
 #include "gmpc-song-links.h"
 
 
@@ -43,8 +43,9 @@
 
 struct _GmpcWidgetMorePrivate {
 	GtkAlignment* ali;
-	char* markup;
 	gint expand_state;
+	GtkButton* expand_button;
+	gint max_height;
 };
 
 #define GMPC_WIDGET_MORE_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GMPC_WIDGET_TYPE_MORE, GmpcWidgetMorePrivate))
@@ -52,7 +53,9 @@ enum  {
 	GMPC_WIDGET_MORE_DUMMY_PROPERTY
 };
 static void gmpc_widget_more_expand (GmpcWidgetMore* self, GtkButton* but);
+static void gmpc_widget_more_size_changed (GmpcWidgetMore* self, GtkWidget* child, const GdkRectangle* alloc);
 static void _gmpc_widget_more_expand_gtk_button_clicked (GtkButton* _sender, gpointer self);
+static void _gmpc_widget_more_size_changed_gtk_widget_size_allocate (GtkWidget* _sender, const GdkRectangle* allocation, gpointer self);
 static GmpcWidgetMore* gmpc_widget_more_construct (GType object_type, const char* markup, GtkWidget* child);
 static GmpcWidgetMore* gmpc_widget_more_new (const char* markup, GtkWidget* child);
 static gpointer gmpc_widget_more_parent_class = NULL;
@@ -114,8 +117,20 @@ static void gmpc_widget_more_expand (GmpcWidgetMore* self, GtkButton* but) {
 		self->priv->expand_state = 1;
 	} else {
 		gtk_button_set_label (but, "(more)");
-		gtk_widget_set_size_request ((GtkWidget*) self->priv->ali, -1, 80);
+		gtk_widget_set_size_request ((GtkWidget*) self->priv->ali, -1, self->priv->max_height);
 		self->priv->expand_state = 0;
+	}
+}
+
+
+static void gmpc_widget_more_size_changed (GmpcWidgetMore* self, GtkWidget* child, const GdkRectangle* alloc) {
+	g_return_if_fail (self != NULL);
+	g_return_if_fail (child != NULL);
+	fprintf (stdout, "height: %i\n", (*alloc).height);
+	if ((*alloc).height < (self->priv->max_height - 12)) {
+		gtk_widget_hide ((GtkWidget*) self->priv->expand_button);
+	} else {
+		gtk_widget_show ((GtkWidget*) self->priv->expand_button);
 	}
 }
 
@@ -125,34 +140,38 @@ static void _gmpc_widget_more_expand_gtk_button_clicked (GtkButton* _sender, gpo
 }
 
 
+static void _gmpc_widget_more_size_changed_gtk_widget_size_allocate (GtkWidget* _sender, const GdkRectangle* allocation, gpointer self) {
+	gmpc_widget_more_size_changed (self, _sender, allocation);
+}
+
+
 static GmpcWidgetMore* gmpc_widget_more_construct (GType object_type, const char* markup, GtkWidget* child) {
 	GmpcWidgetMore * self;
-	char* _tmp1;
-	const char* _tmp0;
-	GtkAlignment* _tmp2;
+	GtkAlignment* _tmp0;
 	GtkHBox* hbox;
 	GtkLabel* label;
-	GtkButton* button;
+	GtkButton* _tmp1;
 	g_return_val_if_fail (markup != NULL, NULL);
+	g_return_val_if_fail (child != NULL, NULL);
 	self = g_object_newv (object_type, 0, NULL);
-	_tmp1 = NULL;
+	gtk_frame_set_shadow_type ((GtkFrame*) self, GTK_SHADOW_NONE);
 	_tmp0 = NULL;
-	self->priv->markup = (_tmp1 = (_tmp0 = markup, (_tmp0 == NULL) ? NULL : g_strdup (_tmp0)), self->priv->markup = (g_free (self->priv->markup), NULL), _tmp1);
-	_tmp2 = NULL;
-	self->priv->ali = (_tmp2 = g_object_ref_sink ((GtkAlignment*) gtk_alignment_new (0.f, 0.f, 1.f, 0.f)), (self->priv->ali == NULL) ? NULL : (self->priv->ali = (g_object_unref (self->priv->ali), NULL)), _tmp2);
+	self->priv->ali = (_tmp0 = g_object_ref_sink ((GtkAlignment*) gtk_alignment_new (0.f, 0.f, 1.f, 0.f)), (self->priv->ali == NULL) ? NULL : (self->priv->ali = (g_object_unref (self->priv->ali), NULL)), _tmp0);
 	gtk_alignment_set_padding (self->priv->ali, (guint) 6, (guint) 6, (guint) 12, (guint) 12);
 	gtk_container_add ((GtkContainer*) self, (GtkWidget*) self->priv->ali);
-	gtk_widget_set_size_request ((GtkWidget*) self->priv->ali, -1, 80);
+	gtk_widget_set_size_request ((GtkWidget*) self->priv->ali, -1, self->priv->max_height);
 	gtk_container_add ((GtkContainer*) self->priv->ali, child);
 	hbox = g_object_ref_sink ((GtkHBox*) gtk_hbox_new (FALSE, 6));
 	label = g_object_ref_sink ((GtkLabel*) gtk_label_new (""));
-	gtk_label_set_markup (label, self->priv->markup);
+	gtk_label_set_markup (label, markup);
 	gtk_box_pack_start ((GtkBox*) hbox, (GtkWidget*) label, FALSE, FALSE, (guint) 0);
-	button = g_object_ref_sink ((GtkButton*) gtk_button_new_with_label ("(more)"));
-	gtk_button_set_relief (button, GTK_RELIEF_NONE);
-	g_signal_connect_object (button, "clicked", (GCallback) _gmpc_widget_more_expand_gtk_button_clicked, self, 0);
-	gtk_box_pack_start ((GtkBox*) hbox, (GtkWidget*) button, FALSE, FALSE, (guint) 0);
+	_tmp1 = NULL;
+	self->priv->expand_button = (_tmp1 = g_object_ref_sink ((GtkButton*) gtk_button_new_with_label ("(more)")), (self->priv->expand_button == NULL) ? NULL : (self->priv->expand_button = (g_object_unref (self->priv->expand_button), NULL)), _tmp1);
+	gtk_button_set_relief (self->priv->expand_button, GTK_RELIEF_NONE);
+	g_signal_connect_object (self->priv->expand_button, "clicked", (GCallback) _gmpc_widget_more_expand_gtk_button_clicked, self, 0);
+	gtk_box_pack_start ((GtkBox*) hbox, (GtkWidget*) self->priv->expand_button, FALSE, FALSE, (guint) 0);
 	gtk_frame_set_label_widget ((GtkFrame*) self, (GtkWidget*) hbox);
+	g_signal_connect_object (child, "size-allocate", (GCallback) _gmpc_widget_more_size_changed_gtk_widget_size_allocate, self, 0);
 	return self;
 }
 
@@ -172,8 +191,9 @@ static void gmpc_widget_more_class_init (GmpcWidgetMoreClass * klass) {
 static void gmpc_widget_more_instance_init (GmpcWidgetMore * self) {
 	self->priv = GMPC_WIDGET_MORE_GET_PRIVATE (self);
 	self->priv->ali = NULL;
-	self->priv->markup = NULL;
 	self->priv->expand_state = 0;
+	self->priv->expand_button = NULL;
+	self->priv->max_height = 100;
 }
 
 
@@ -181,7 +201,7 @@ static void gmpc_widget_more_finalize (GObject* obj) {
 	GmpcWidgetMore * self;
 	self = GMPC_WIDGET_MORE (obj);
 	(self->priv->ali == NULL) ? NULL : (self->priv->ali = (g_object_unref (self->priv->ali), NULL));
-	self->priv->markup = (g_free (self->priv->markup), NULL);
+	(self->priv->expand_button == NULL) ? NULL : (self->priv->expand_button = (g_object_unref (self->priv->expand_button), NULL));
 	G_OBJECT_CLASS (gmpc_widget_more_parent_class)->finalize (obj);
 }
 
@@ -837,7 +857,7 @@ static void gmpc_metadata_browser_metadata_box_show_song (GmpcMetadataBrowser* s
 	text_view = g_object_ref_sink (gmpc_meta_text_view_new (META_SONG_TXT));
 	_tmp30 = NULL;
 	_tmp31 = NULL;
-	frame = (_tmp31 = g_object_ref_sink (gmpc_widget_more_new (_tmp30 = g_markup_printf_escaped ("<b>%s:</b>", _ ("Lyrics")), text_view)), _tmp30 = (g_free (_tmp30), NULL), _tmp31);
+	frame = (_tmp31 = g_object_ref_sink (gmpc_widget_more_new (_tmp30 = g_markup_printf_escaped ("<b>%s:</b>", _ ("Lyrics")), (GtkWidget*) text_view)), _tmp30 = (g_free (_tmp30), NULL), _tmp31);
 	gmpc_meta_text_view_query_text_from_song (text_view, song);
 	gtk_box_pack_start ((GtkBox*) vbox, (GtkWidget*) frame, FALSE, FALSE, (guint) 0);
 	song_links = g_object_ref_sink (gmpc_song_links_new (GMPC_SONG_LINKS_TYPE_SONG, song));
@@ -982,7 +1002,7 @@ static void gmpc_metadata_browser_metadata_box_show_album (GmpcMetadataBrowser* 
 	text_view = g_object_ref_sink (gmpc_meta_text_view_new (META_ALBUM_TXT));
 	_tmp16 = NULL;
 	_tmp17 = NULL;
-	frame = (_tmp17 = g_object_ref_sink (gmpc_widget_more_new (_tmp16 = g_markup_printf_escaped ("<b>%s:</b>", _ ("Album information")), text_view)), _tmp16 = (g_free (_tmp16), NULL), _tmp17);
+	frame = (_tmp17 = g_object_ref_sink (gmpc_widget_more_new (_tmp16 = g_markup_printf_escaped ("<b>%s:</b>", _ ("Album information")), (GtkWidget*) text_view)), _tmp16 = (g_free (_tmp16), NULL), _tmp17);
 	gmpc_meta_text_view_query_text_from_song (text_view, song);
 	gtk_box_pack_start ((GtkBox*) vbox, (GtkWidget*) frame, FALSE, FALSE, (guint) 0);
 	song_links = g_object_ref_sink (gmpc_song_links_new (GMPC_SONG_LINKS_TYPE_ALBUM, song));
@@ -1122,7 +1142,7 @@ static void gmpc_metadata_browser_metadata_box_show_artist (GmpcMetadataBrowser*
 	text_view = g_object_ref_sink (gmpc_meta_text_view_new (META_ARTIST_TXT));
 	_tmp14 = NULL;
 	_tmp15 = NULL;
-	frame = (_tmp15 = g_object_ref_sink (gmpc_widget_more_new (_tmp14 = g_markup_printf_escaped ("<b>%s:</b>", _ ("Artist information")), text_view)), _tmp14 = (g_free (_tmp14), NULL), _tmp15);
+	frame = (_tmp15 = g_object_ref_sink (gmpc_widget_more_new (_tmp14 = g_markup_printf_escaped ("<b>%s:</b>", _ ("Artist information")), (GtkWidget*) text_view)), _tmp14 = (g_free (_tmp14), NULL), _tmp15);
 	gmpc_meta_text_view_query_text_from_song (text_view, song);
 	gtk_box_pack_start ((GtkBox*) vbox, (GtkWidget*) frame, FALSE, FALSE, (guint) 0);
 	song_links = g_object_ref_sink (gmpc_song_links_new (GMPC_SONG_LINKS_TYPE_ARTIST, song));
@@ -1234,8 +1254,6 @@ static void gmpc_metadata_browser_real_browser_unselected (GmpcPluginBrowserIfac
 }
 
 
-/* set shadow 
-this.set_shadow_type(Gtk.ShadowType.ETCHED_IN);*/
 GmpcMetadataBrowser* gmpc_metadata_browser_construct (GType object_type) {
 	GmpcMetadataBrowser * self;
 	self = g_object_newv (object_type, 0, NULL);

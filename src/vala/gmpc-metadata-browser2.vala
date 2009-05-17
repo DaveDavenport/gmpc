@@ -26,8 +26,9 @@ private const string some_unique_name = Config.VERSION;
 
 public class Gmpc.Widget.More : Gtk.Frame {
     private Gtk.Alignment ali = null;
-    private string markup = null;
     private int expand_state = 0;
+    private Gtk.Button expand_button = null;
+    private int max_height = 100;
 
     private void expand(Gtk.Button but)
     {
@@ -38,32 +39,40 @@ public class Gmpc.Widget.More : Gtk.Frame {
             this.expand_state = 1;
         }else{
             but.set_label("(more)");
-            this.ali.set_size_request(-1, 80);
+            this.ali.set_size_request(-1, this.max_height);
             this.expand_state = 0;
         }
 
     }
-    More(string markup,Gtk.Widget *child)
+    private void size_changed(Gtk.Widget child, Gdk.Rectangle alloc)
     {
-        this.markup = markup;
+        stdout.printf("height: %i\n",alloc.height);
+        if(alloc.height < (this.max_height-12)){
+            this.expand_button.hide();
+        }else{
+            this.expand_button.show();
+        }
+    }
+    More(string markup,Gtk.Widget child)
+    {
+        this.set_shadow_type(Gtk.ShadowType.NONE);
 
         this.ali = new Gtk.Alignment(0f,0f,1f,0f); ali.set_padding(6,6,12,12);
         this.add(ali);
-        this.ali.set_size_request(-1, 80);
+        this.ali.set_size_request(-1, this.max_height);
         this.ali.add(child);
 
         var hbox = new Gtk.HBox(false, 6);
         var label= new Gtk.Label("");
-        label.set_markup(this.markup);
+        label.set_markup(markup);
         hbox.pack_start(label, false, false,0);
-        var button = new Gtk.Button.with_label("(more)");
-        button.set_relief(Gtk.ReliefStyle.NONE);
-        button.clicked+=expand;
-        hbox.pack_start(button, false, false,0);
+        this.expand_button = new Gtk.Button.with_label("(more)");
+        this.expand_button.set_relief(Gtk.ReliefStyle.NONE);
+        this.expand_button.clicked+=expand;
+        hbox.pack_start(this.expand_button, false, false,0);
         
         this.set_label_widget(hbox);
-        /* set shadow */
-        //this.set_shadow_type(Gtk.ShadowType.ETCHED_IN);
+        child.size_allocate += size_changed;
     }
 }
 

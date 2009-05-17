@@ -61,8 +61,6 @@ struct _GmpcWidgetMoreClass {
 	GtkFrameClass parent_class;
 };
 
-/* set shadow 
-this.set_shadow_type(Gtk.ShadowType.ETCHED_IN);*/
 struct _GmpcMetadataBrowser {
 	GmpcPluginBase parent_instance;
 	GmpcMetadataBrowserPrivate * priv;
