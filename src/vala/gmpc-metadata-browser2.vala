@@ -125,8 +125,16 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
     /* The 3 browsers */
     private Gtk.TreeView tree_artist = null;
     private Gmpc.MpdData.Model model_artist = null;
+    private Gtk.TreeModelFilter model_filter_artist = null; 
+    private Gtk.Entry artist_filter_entry = null;
+
+    /* album */
     private Gtk.TreeView tree_album  = null;
     private Gmpc.MpdData.Model model_albums = null;
+    private Gtk.TreeModelFilter model_filter_album = null; 
+    private Gtk.Entry album_filter_entry = null;
+    
+    /* song */
     private Gtk.TreeView tree_songs  = null;
     private Gmpc.MpdData.Model model_songs = null;
 
@@ -155,6 +163,45 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         }
         return false;
      }
+     private bool visible_func_artist (Gtk.TreeModel model, Gtk.TreeIter  iter)
+     {
+         string text = this.artist_filter_entry.get_text();
+         /* Visible if row is non-empty and first column is "HI" */
+         string str = null;
+         bool visible = false;
+
+         if(text[0] == '\0') return true;
+
+         model.get (iter, 7, out str, -1);
+         if (str != null && str.casefold().normalize().str(text.casefold().normalize()) != null)
+             visible = true;
+
+         return visible;
+     }
+
+     private bool visible_func_album (Gtk.TreeModel model, Gtk.TreeIter  iter)
+     {
+         string text = this.album_filter_entry.get_text();
+         /* Visible if row is non-empty and first column is "HI" */
+         string str = null;
+         bool visible = false;
+
+         if(text[0] == '\0') return true;
+
+         model.get (iter, 7, out str, -1);
+         if (str != null && str.casefold().normalize().str(text.casefold().normalize()) != null)
+             visible = true;
+
+         return visible;
+     }
+     private void browser_artist_entry_changed(Gtk.Entry entry)
+     {
+        this.model_filter_artist.refilter();
+     }
+     private void browser_album_entry_changed(Gtk.Entry entry)
+     {
+        this.model_filter_album.refilter();
+     }
 
     private void browser_init()
     {
@@ -167,12 +214,23 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
             this.paned.add1(this.browser_box);
 
             /* Artist list  */
+            var box = new Gtk.VBox(false, 6);
+            this.browser_box.pack_start(box, true, true, 0);
+
+            this.artist_filter_entry = new Gtk.Entry();
+            this.artist_filter_entry.changed += browser_artist_entry_changed;
+
+            box.pack_start(this.artist_filter_entry, false, false, 0);
+
             var sw = new Gtk.ScrolledWindow(null, null);
             sw.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC);
             sw.set_shadow_type(Gtk.ShadowType.ETCHED_IN);
-            this.browser_box.pack_start(sw, true, true, 0);
+            box.pack_start(sw, true, true, 0);
+
             this.model_artist = new Gmpc.MpdData.Model();
-            this.tree_artist = new Gtk.TreeView.with_model(this.model_artist);
+            this.model_filter_artist = new Gtk.TreeModelFilter(this.model_artist, null);
+            this.model_filter_artist.set_visible_func(visible_func_artist);
+            this.tree_artist = new Gtk.TreeView.with_model(this.model_filter_artist);
             this.tree_artist.button_press_event+=browser_button_press_event;
             sw.add(tree_artist);
             /* setup the columns */ 
@@ -195,12 +253,22 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
 
 
             /* Album list */
+
+            box = new Gtk.VBox(false, 6);
+            this.browser_box.pack_start(box, true, true, 0);
+
+            this.album_filter_entry = new Gtk.Entry();
+            this.album_filter_entry.changed += browser_album_entry_changed;
+            box.pack_start(this.album_filter_entry, false, false, 0);
+
             sw = new Gtk.ScrolledWindow(null, null);
             sw.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC);
             sw.set_shadow_type(Gtk.ShadowType.ETCHED_IN);
-            this.browser_box.pack_start(sw, true, true, 0);
+            box.pack_start(sw, true, true, 0);
             this.model_albums = new Gmpc.MpdData.Model();
-            this.tree_album = new Gtk.TreeView.with_model(this.model_albums);
+            this.model_filter_album = new Gtk.TreeModelFilter(this.model_albums, null);
+            this.model_filter_album.set_visible_func(visible_func_album);
+            this.tree_album = new Gtk.TreeView.with_model(this.model_filter_album);
             this.tree_album.button_press_event+=browser_button_press_event;
             sw.add(tree_album);
             /* setup the columns */ 
@@ -290,10 +358,11 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
     {
         Gtk.TreeIter iter;
         var sel = this.tree_artist.get_selection();
-        if(sel.get_selected(out this.model_artist, out iter))
+        Gtk.TreeModel model = null;//this.model_artist;
+        if(sel.get_selected(out model, out iter))
         {
             string artist = null;
-            this.model_artist.get(iter, 7,out artist, -1);
+            model.get(iter, 7,out artist, -1);
             return artist;
         }
         return null;
@@ -303,10 +372,11 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
     {
         Gtk.TreeIter iter;
         var sel = this.tree_album.get_selection();
-        if(sel.get_selected(out this.model_albums, out iter))
+        Gtk.TreeModel model = null;//this.model_albums;
+        if(sel.get_selected(out model, out iter))
         {
             string album = null;
-            this.model_albums.get(iter, 7,out album, -1);
+            model.get(iter, 7,out album, -1);
             return album;
         }
         return null;

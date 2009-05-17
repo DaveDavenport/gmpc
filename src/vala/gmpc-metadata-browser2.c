@@ -69,8 +69,12 @@ struct _GmpcMetadataBrowserPrivate {
 	GtkBox* browser_box;
 	GtkTreeView* tree_artist;
 	GmpcMpdDataModel* model_artist;
+	GtkTreeModelFilter* model_filter_artist;
+	GtkEntry* artist_filter_entry;
 	GtkTreeView* tree_album;
 	GmpcMpdDataModel* model_albums;
+	GtkTreeModelFilter* model_filter_album;
+	GtkEntry* album_filter_entry;
 	GtkTreeView* tree_songs;
 	GmpcMpdDataModel* model_songs;
 	GtkScrolledWindow* metadata_sw;
@@ -86,8 +90,16 @@ static const char* gmpc_metadata_browser_real_get_name (GmpcPluginBase* base);
 static void gmpc_metadata_browser_real_save_yourself (GmpcPluginBase* base);
 static void gmpc_metadata_browser_browser_bg_style_changed (GmpcMetadataBrowser* self, GtkScrolledWindow* bg, GtkStyle* style);
 static gboolean gmpc_metadata_browser_browser_button_press_event (GmpcMetadataBrowser* self, GtkTreeView* tree, const GdkEventButton* event);
+static gboolean gmpc_metadata_browser_visible_func_artist (GmpcMetadataBrowser* self, GtkTreeModel* model, GtkTreeIter* iter);
+static gboolean gmpc_metadata_browser_visible_func_album (GmpcMetadataBrowser* self, GtkTreeModel* model, GtkTreeIter* iter);
+static void gmpc_metadata_browser_browser_artist_entry_changed (GmpcMetadataBrowser* self, GtkEntry* entry);
+static void gmpc_metadata_browser_browser_album_entry_changed (GmpcMetadataBrowser* self, GtkEntry* entry);
+static void _gmpc_metadata_browser_browser_artist_entry_changed_gtk_editable_changed (GtkEntry* _sender, gpointer self);
+static gboolean _gmpc_metadata_browser_visible_func_artist_gtk_tree_model_filter_visible_func (GtkTreeModel* model, GtkTreeIter* iter, gpointer self);
 static gboolean _gmpc_metadata_browser_browser_button_press_event_gtk_widget_button_press_event (GtkTreeView* _sender, const GdkEventButton* event, gpointer self);
 static void _gmpc_metadata_browser_browser_artist_changed_gtk_tree_selection_changed (GtkTreeSelection* _sender, gpointer self);
+static void _gmpc_metadata_browser_browser_album_entry_changed_gtk_editable_changed (GtkEntry* _sender, gpointer self);
+static gboolean _gmpc_metadata_browser_visible_func_album_gtk_tree_model_filter_visible_func (GtkTreeModel* model, GtkTreeIter* iter, gpointer self);
 static void _gmpc_metadata_browser_browser_album_changed_gtk_tree_selection_changed (GtkTreeSelection* _sender, gpointer self);
 static void _gmpc_metadata_browser_browser_songs_changed_gtk_tree_selection_changed (GtkTreeSelection* _sender, gpointer self);
 static void _gmpc_metadata_browser_browser_bg_style_changed_gtk_widget_style_set (GtkScrolledWindow* _sender, GtkStyle* previous_style, gpointer self);
@@ -324,6 +336,118 @@ static gboolean gmpc_metadata_browser_browser_button_press_event (GmpcMetadataBr
 }
 
 
+static gboolean gmpc_metadata_browser_visible_func_artist (GmpcMetadataBrowser* self, GtkTreeModel* model, GtkTreeIter* iter) {
+	const char* _tmp0;
+	char* text;
+	char* str;
+	gboolean visible;
+	gboolean _tmp2;
+	gboolean _tmp7;
+	g_return_val_if_fail (self != NULL, FALSE);
+	g_return_val_if_fail (model != NULL, FALSE);
+	_tmp0 = NULL;
+	text = (_tmp0 = gtk_entry_get_text (self->priv->artist_filter_entry), (_tmp0 == NULL) ? NULL : g_strdup (_tmp0));
+	/* Visible if row is non-empty and first column is "HI" */
+	str = NULL;
+	visible = FALSE;
+	if (g_utf8_get_char (g_utf8_offset_to_pointer (text, 0)) == '\0') {
+		gboolean _tmp1;
+		return (_tmp1 = TRUE, text = (g_free (text), NULL), str = (g_free (str), NULL), _tmp1);
+	}
+	gtk_tree_model_get (model, &(*iter), 7, &str, -1, -1);
+	_tmp2 = FALSE;
+	if (str != NULL) {
+		char* _tmp6;
+		char* _tmp5;
+		char* _tmp4;
+		char* _tmp3;
+		_tmp6 = NULL;
+		_tmp5 = NULL;
+		_tmp4 = NULL;
+		_tmp3 = NULL;
+		_tmp2 = strstr (_tmp4 = g_utf8_normalize (_tmp3 = g_utf8_casefold (str, -1), -1, G_NORMALIZE_DEFAULT), _tmp6 = g_utf8_normalize (_tmp5 = g_utf8_casefold (text, -1), -1, G_NORMALIZE_DEFAULT)) != NULL;
+		_tmp6 = (g_free (_tmp6), NULL);
+		_tmp5 = (g_free (_tmp5), NULL);
+		_tmp4 = (g_free (_tmp4), NULL);
+		_tmp3 = (g_free (_tmp3), NULL);
+	} else {
+		_tmp2 = FALSE;
+	}
+	if (_tmp2) {
+		visible = TRUE;
+	}
+	return (_tmp7 = visible, text = (g_free (text), NULL), str = (g_free (str), NULL), _tmp7);
+}
+
+
+static gboolean gmpc_metadata_browser_visible_func_album (GmpcMetadataBrowser* self, GtkTreeModel* model, GtkTreeIter* iter) {
+	const char* _tmp0;
+	char* text;
+	char* str;
+	gboolean visible;
+	gboolean _tmp2;
+	gboolean _tmp7;
+	g_return_val_if_fail (self != NULL, FALSE);
+	g_return_val_if_fail (model != NULL, FALSE);
+	_tmp0 = NULL;
+	text = (_tmp0 = gtk_entry_get_text (self->priv->album_filter_entry), (_tmp0 == NULL) ? NULL : g_strdup (_tmp0));
+	/* Visible if row is non-empty and first column is "HI" */
+	str = NULL;
+	visible = FALSE;
+	if (g_utf8_get_char (g_utf8_offset_to_pointer (text, 0)) == '\0') {
+		gboolean _tmp1;
+		return (_tmp1 = TRUE, text = (g_free (text), NULL), str = (g_free (str), NULL), _tmp1);
+	}
+	gtk_tree_model_get (model, &(*iter), 7, &str, -1, -1);
+	_tmp2 = FALSE;
+	if (str != NULL) {
+		char* _tmp6;
+		char* _tmp5;
+		char* _tmp4;
+		char* _tmp3;
+		_tmp6 = NULL;
+		_tmp5 = NULL;
+		_tmp4 = NULL;
+		_tmp3 = NULL;
+		_tmp2 = strstr (_tmp4 = g_utf8_normalize (_tmp3 = g_utf8_casefold (str, -1), -1, G_NORMALIZE_DEFAULT), _tmp6 = g_utf8_normalize (_tmp5 = g_utf8_casefold (text, -1), -1, G_NORMALIZE_DEFAULT)) != NULL;
+		_tmp6 = (g_free (_tmp6), NULL);
+		_tmp5 = (g_free (_tmp5), NULL);
+		_tmp4 = (g_free (_tmp4), NULL);
+		_tmp3 = (g_free (_tmp3), NULL);
+	} else {
+		_tmp2 = FALSE;
+	}
+	if (_tmp2) {
+		visible = TRUE;
+	}
+	return (_tmp7 = visible, text = (g_free (text), NULL), str = (g_free (str), NULL), _tmp7);
+}
+
+
+static void gmpc_metadata_browser_browser_artist_entry_changed (GmpcMetadataBrowser* self, GtkEntry* entry) {
+	g_return_if_fail (self != NULL);
+	g_return_if_fail (entry != NULL);
+	gtk_tree_model_filter_refilter (self->priv->model_filter_artist);
+}
+
+
+static void gmpc_metadata_browser_browser_album_entry_changed (GmpcMetadataBrowser* self, GtkEntry* entry) {
+	g_return_if_fail (self != NULL);
+	g_return_if_fail (entry != NULL);
+	gtk_tree_model_filter_refilter (self->priv->model_filter_album);
+}
+
+
+static void _gmpc_metadata_browser_browser_artist_entry_changed_gtk_editable_changed (GtkEntry* _sender, gpointer self) {
+	gmpc_metadata_browser_browser_artist_entry_changed (self, _sender);
+}
+
+
+static gboolean _gmpc_metadata_browser_visible_func_artist_gtk_tree_model_filter_visible_func (GtkTreeModel* model, GtkTreeIter* iter, gpointer self) {
+	return gmpc_metadata_browser_visible_func_artist (self, model, iter);
+}
+
+
 static gboolean _gmpc_metadata_browser_browser_button_press_event_gtk_widget_button_press_event (GtkTreeView* _sender, const GdkEventButton* event, gpointer self) {
 	return gmpc_metadata_browser_browser_button_press_event (self, _sender, event);
 }
@@ -331,6 +455,16 @@ static gboolean _gmpc_metadata_browser_browser_button_press_event_gtk_widget_but
 
 static void _gmpc_metadata_browser_browser_artist_changed_gtk_tree_selection_changed (GtkTreeSelection* _sender, gpointer self) {
 	gmpc_metadata_browser_browser_artist_changed (self, _sender);
+}
+
+
+static void _gmpc_metadata_browser_browser_album_entry_changed_gtk_editable_changed (GtkEntry* _sender, gpointer self) {
+	gmpc_metadata_browser_browser_album_entry_changed (self, _sender);
+}
+
+
+static gboolean _gmpc_metadata_browser_visible_func_album_gtk_tree_model_filter_visible_func (GtkTreeModel* model, GtkTreeIter* iter, gpointer self) {
+	return gmpc_metadata_browser_visible_func_album (self, model, iter);
 }
 
 
@@ -354,27 +488,33 @@ static void gmpc_metadata_browser_browser_init (GmpcMetadataBrowser* self) {
 	if (self->priv->paned == NULL) {
 		GtkPaned* _tmp0;
 		GtkBox* _tmp1;
+		GtkVBox* box;
+		GtkEntry* _tmp2;
 		GtkScrolledWindow* sw;
-		GmpcMpdDataModel* _tmp2;
-		GtkTreeView* _tmp3;
+		GmpcMpdDataModel* _tmp3;
+		GtkTreeModelFilter* _tmp4;
+		GtkTreeView* _tmp5;
 		GtkTreeViewColumn* column;
 		GtkCellRendererPixbuf* prenderer;
 		GtkCellRendererText* trenderer;
-		GtkScrolledWindow* _tmp4;
-		GmpcMpdDataModel* _tmp5;
-		GtkTreeView* _tmp6;
-		GtkTreeViewColumn* _tmp7;
-		GtkCellRendererPixbuf* _tmp8;
-		GtkCellRendererText* _tmp9;
-		GtkScrolledWindow* _tmp10;
-		GmpcMpdDataModel* _tmp11;
-		GtkTreeView* _tmp12;
-		GtkTreeViewColumn* _tmp13;
-		GtkCellRendererPixbuf* _tmp14;
-		GtkCellRendererText* _tmp15;
-		GtkCellRendererText* _tmp16;
-		GtkScrolledWindow* _tmp17;
-		GtkEventBox* _tmp18;
+		GtkVBox* _tmp6;
+		GtkEntry* _tmp7;
+		GtkScrolledWindow* _tmp8;
+		GmpcMpdDataModel* _tmp9;
+		GtkTreeModelFilter* _tmp10;
+		GtkTreeView* _tmp11;
+		GtkTreeViewColumn* _tmp12;
+		GtkCellRendererPixbuf* _tmp13;
+		GtkCellRendererText* _tmp14;
+		GtkScrolledWindow* _tmp15;
+		GmpcMpdDataModel* _tmp16;
+		GtkTreeView* _tmp17;
+		GtkTreeViewColumn* _tmp18;
+		GtkCellRendererPixbuf* _tmp19;
+		GtkCellRendererText* _tmp20;
+		GtkCellRendererText* _tmp21;
+		GtkScrolledWindow* _tmp22;
+		GtkEventBox* _tmp23;
 		_tmp0 = NULL;
 		self->priv->paned = (_tmp0 = (GtkPaned*) g_object_ref_sink ((GtkHPaned*) gtk_hpaned_new ()), (self->priv->paned == NULL) ? NULL : (self->priv->paned = (g_object_unref (self->priv->paned), NULL)), _tmp0);
 		gtk_paned_set_position (self->priv->paned, cfg_get_single_value_as_int_with_default (config, "Metadata Browser 2", "pane-pos", 150));
@@ -383,14 +523,23 @@ static void gmpc_metadata_browser_browser_init (GmpcMetadataBrowser* self) {
 		self->priv->browser_box = (_tmp1 = (GtkBox*) g_object_ref_sink ((GtkVBox*) gtk_vbox_new (TRUE, 6)), (self->priv->browser_box == NULL) ? NULL : (self->priv->browser_box = (g_object_unref (self->priv->browser_box), NULL)), _tmp1);
 		gtk_paned_add1 (self->priv->paned, (GtkWidget*) self->priv->browser_box);
 		/* Artist list  */
+		box = g_object_ref_sink ((GtkVBox*) gtk_vbox_new (FALSE, 6));
+		gtk_box_pack_start (self->priv->browser_box, (GtkWidget*) box, TRUE, TRUE, (guint) 0);
+		_tmp2 = NULL;
+		self->priv->artist_filter_entry = (_tmp2 = g_object_ref_sink ((GtkEntry*) gtk_entry_new ()), (self->priv->artist_filter_entry == NULL) ? NULL : (self->priv->artist_filter_entry = (g_object_unref (self->priv->artist_filter_entry), NULL)), _tmp2);
+		g_signal_connect_object ((GtkEditable*) self->priv->artist_filter_entry, "changed", (GCallback) _gmpc_metadata_browser_browser_artist_entry_changed_gtk_editable_changed, self, 0);
+		gtk_box_pack_start ((GtkBox*) box, (GtkWidget*) self->priv->artist_filter_entry, FALSE, FALSE, (guint) 0);
 		sw = g_object_ref_sink ((GtkScrolledWindow*) gtk_scrolled_window_new (NULL, NULL));
 		gtk_scrolled_window_set_policy (sw, GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 		gtk_scrolled_window_set_shadow_type (sw, GTK_SHADOW_ETCHED_IN);
-		gtk_box_pack_start (self->priv->browser_box, (GtkWidget*) sw, TRUE, TRUE, (guint) 0);
-		_tmp2 = NULL;
-		self->priv->model_artist = (_tmp2 = gmpc_mpddata_model_new (), (self->priv->model_artist == NULL) ? NULL : (self->priv->model_artist = (g_object_unref (self->priv->model_artist), NULL)), _tmp2);
+		gtk_box_pack_start ((GtkBox*) box, (GtkWidget*) sw, TRUE, TRUE, (guint) 0);
 		_tmp3 = NULL;
-		self->priv->tree_artist = (_tmp3 = g_object_ref_sink ((GtkTreeView*) gtk_tree_view_new_with_model ((GtkTreeModel*) self->priv->model_artist)), (self->priv->tree_artist == NULL) ? NULL : (self->priv->tree_artist = (g_object_unref (self->priv->tree_artist), NULL)), _tmp3);
+		self->priv->model_artist = (_tmp3 = gmpc_mpddata_model_new (), (self->priv->model_artist == NULL) ? NULL : (self->priv->model_artist = (g_object_unref (self->priv->model_artist), NULL)), _tmp3);
+		_tmp4 = NULL;
+		self->priv->model_filter_artist = (_tmp4 = (GtkTreeModelFilter*) gtk_tree_model_filter_new ((GtkTreeModel*) self->priv->model_artist, NULL), (self->priv->model_filter_artist == NULL) ? NULL : (self->priv->model_filter_artist = (g_object_unref (self->priv->model_filter_artist), NULL)), _tmp4);
+		gtk_tree_model_filter_set_visible_func (self->priv->model_filter_artist, _gmpc_metadata_browser_visible_func_artist_gtk_tree_model_filter_visible_func, g_object_ref (self), g_object_unref);
+		_tmp5 = NULL;
+		self->priv->tree_artist = (_tmp5 = g_object_ref_sink ((GtkTreeView*) gtk_tree_view_new_with_model ((GtkTreeModel*) self->priv->model_filter_artist)), (self->priv->tree_artist == NULL) ? NULL : (self->priv->tree_artist = (g_object_unref (self->priv->tree_artist), NULL)), _tmp5);
 		g_signal_connect_object ((GtkWidget*) self->priv->tree_artist, "button-press-event", (GCallback) _gmpc_metadata_browser_browser_button_press_event_gtk_widget_button_press_event, self, 0);
 		gtk_container_add ((GtkContainer*) sw, (GtkWidget*) self->priv->tree_artist);
 		/* setup the columns */
@@ -410,27 +559,37 @@ static void gmpc_metadata_browser_browser_init (GmpcMetadataBrowser* self) {
 		gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_FIXED);
 		gtk_tree_view_set_fixed_height_mode (self->priv->tree_artist, TRUE);
 		/* Album list */
-		_tmp4 = NULL;
-		sw = (_tmp4 = g_object_ref_sink ((GtkScrolledWindow*) gtk_scrolled_window_new (NULL, NULL)), (sw == NULL) ? NULL : (sw = (g_object_unref (sw), NULL)), _tmp4);
+		_tmp6 = NULL;
+		box = (_tmp6 = g_object_ref_sink ((GtkVBox*) gtk_vbox_new (FALSE, 6)), (box == NULL) ? NULL : (box = (g_object_unref (box), NULL)), _tmp6);
+		gtk_box_pack_start (self->priv->browser_box, (GtkWidget*) box, TRUE, TRUE, (guint) 0);
+		_tmp7 = NULL;
+		self->priv->album_filter_entry = (_tmp7 = g_object_ref_sink ((GtkEntry*) gtk_entry_new ()), (self->priv->album_filter_entry == NULL) ? NULL : (self->priv->album_filter_entry = (g_object_unref (self->priv->album_filter_entry), NULL)), _tmp7);
+		g_signal_connect_object ((GtkEditable*) self->priv->album_filter_entry, "changed", (GCallback) _gmpc_metadata_browser_browser_album_entry_changed_gtk_editable_changed, self, 0);
+		gtk_box_pack_start ((GtkBox*) box, (GtkWidget*) self->priv->album_filter_entry, FALSE, FALSE, (guint) 0);
+		_tmp8 = NULL;
+		sw = (_tmp8 = g_object_ref_sink ((GtkScrolledWindow*) gtk_scrolled_window_new (NULL, NULL)), (sw == NULL) ? NULL : (sw = (g_object_unref (sw), NULL)), _tmp8);
 		gtk_scrolled_window_set_policy (sw, GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 		gtk_scrolled_window_set_shadow_type (sw, GTK_SHADOW_ETCHED_IN);
-		gtk_box_pack_start (self->priv->browser_box, (GtkWidget*) sw, TRUE, TRUE, (guint) 0);
-		_tmp5 = NULL;
-		self->priv->model_albums = (_tmp5 = gmpc_mpddata_model_new (), (self->priv->model_albums == NULL) ? NULL : (self->priv->model_albums = (g_object_unref (self->priv->model_albums), NULL)), _tmp5);
-		_tmp6 = NULL;
-		self->priv->tree_album = (_tmp6 = g_object_ref_sink ((GtkTreeView*) gtk_tree_view_new_with_model ((GtkTreeModel*) self->priv->model_albums)), (self->priv->tree_album == NULL) ? NULL : (self->priv->tree_album = (g_object_unref (self->priv->tree_album), NULL)), _tmp6);
+		gtk_box_pack_start ((GtkBox*) box, (GtkWidget*) sw, TRUE, TRUE, (guint) 0);
+		_tmp9 = NULL;
+		self->priv->model_albums = (_tmp9 = gmpc_mpddata_model_new (), (self->priv->model_albums == NULL) ? NULL : (self->priv->model_albums = (g_object_unref (self->priv->model_albums), NULL)), _tmp9);
+		_tmp10 = NULL;
+		self->priv->model_filter_album = (_tmp10 = (GtkTreeModelFilter*) gtk_tree_model_filter_new ((GtkTreeModel*) self->priv->model_albums, NULL), (self->priv->model_filter_album == NULL) ? NULL : (self->priv->model_filter_album = (g_object_unref (self->priv->model_filter_album), NULL)), _tmp10);
+		gtk_tree_model_filter_set_visible_func (self->priv->model_filter_album, _gmpc_metadata_browser_visible_func_album_gtk_tree_model_filter_visible_func, g_object_ref (self), g_object_unref);
+		_tmp11 = NULL;
+		self->priv->tree_album = (_tmp11 = g_object_ref_sink ((GtkTreeView*) gtk_tree_view_new_with_model ((GtkTreeModel*) self->priv->model_filter_album)), (self->priv->tree_album == NULL) ? NULL : (self->priv->tree_album = (g_object_unref (self->priv->tree_album), NULL)), _tmp11);
 		g_signal_connect_object ((GtkWidget*) self->priv->tree_album, "button-press-event", (GCallback) _gmpc_metadata_browser_browser_button_press_event_gtk_widget_button_press_event, self, 0);
 		gtk_container_add ((GtkContainer*) sw, (GtkWidget*) self->priv->tree_album);
 		/* setup the columns */
-		_tmp7 = NULL;
-		column = (_tmp7 = g_object_ref_sink (gtk_tree_view_column_new ()), (column == NULL) ? NULL : (column = (g_object_unref (column), NULL)), _tmp7);
-		_tmp8 = NULL;
-		prenderer = (_tmp8 = g_object_ref_sink ((GtkCellRendererPixbuf*) gtk_cell_renderer_pixbuf_new ()), (prenderer == NULL) ? NULL : (prenderer = (g_object_unref (prenderer), NULL)), _tmp8);
+		_tmp12 = NULL;
+		column = (_tmp12 = g_object_ref_sink (gtk_tree_view_column_new ()), (column == NULL) ? NULL : (column = (g_object_unref (column), NULL)), _tmp12);
+		_tmp13 = NULL;
+		prenderer = (_tmp13 = g_object_ref_sink ((GtkCellRendererPixbuf*) gtk_cell_renderer_pixbuf_new ()), (prenderer == NULL) ? NULL : (prenderer = (g_object_unref (prenderer), NULL)), _tmp13);
 		g_object_set ((GObject*) prenderer, "height", self->priv->model_albums->icon_size, NULL);
 		gtk_cell_layout_pack_start ((GtkCellLayout*) column, (GtkCellRenderer*) prenderer, FALSE);
 		gtk_cell_layout_add_attribute ((GtkCellLayout*) column, (GtkCellRenderer*) prenderer, "pixbuf", 27);
-		_tmp9 = NULL;
-		trenderer = (_tmp9 = g_object_ref_sink ((GtkCellRendererText*) gtk_cell_renderer_text_new ()), (trenderer == NULL) ? NULL : (trenderer = (g_object_unref (trenderer), NULL)), _tmp9);
+		_tmp14 = NULL;
+		trenderer = (_tmp14 = g_object_ref_sink ((GtkCellRendererText*) gtk_cell_renderer_text_new ()), (trenderer == NULL) ? NULL : (trenderer = (g_object_unref (trenderer), NULL)), _tmp14);
 		gtk_cell_layout_pack_start ((GtkCellLayout*) column, (GtkCellRenderer*) trenderer, TRUE);
 		gtk_cell_layout_add_attribute ((GtkCellLayout*) column, (GtkCellRenderer*) trenderer, "text", 7);
 		gtk_tree_view_append_column (self->priv->tree_album, column);
@@ -441,30 +600,30 @@ static void gmpc_metadata_browser_browser_init (GmpcMetadataBrowser* self) {
 		gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_FIXED);
 		gtk_tree_view_set_fixed_height_mode (self->priv->tree_album, TRUE);
 		/* Song list */
-		_tmp10 = NULL;
-		sw = (_tmp10 = g_object_ref_sink ((GtkScrolledWindow*) gtk_scrolled_window_new (NULL, NULL)), (sw == NULL) ? NULL : (sw = (g_object_unref (sw), NULL)), _tmp10);
+		_tmp15 = NULL;
+		sw = (_tmp15 = g_object_ref_sink ((GtkScrolledWindow*) gtk_scrolled_window_new (NULL, NULL)), (sw == NULL) ? NULL : (sw = (g_object_unref (sw), NULL)), _tmp15);
 		gtk_scrolled_window_set_policy (sw, GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 		gtk_scrolled_window_set_shadow_type (sw, GTK_SHADOW_ETCHED_IN);
 		gtk_box_pack_start (self->priv->browser_box, (GtkWidget*) sw, TRUE, TRUE, (guint) 0);
-		_tmp11 = NULL;
-		self->priv->model_songs = (_tmp11 = gmpc_mpddata_model_new (), (self->priv->model_songs == NULL) ? NULL : (self->priv->model_songs = (g_object_unref (self->priv->model_songs), NULL)), _tmp11);
-		_tmp12 = NULL;
-		self->priv->tree_songs = (_tmp12 = g_object_ref_sink ((GtkTreeView*) gtk_tree_view_new_with_model ((GtkTreeModel*) self->priv->model_songs)), (self->priv->tree_songs == NULL) ? NULL : (self->priv->tree_songs = (g_object_unref (self->priv->tree_songs), NULL)), _tmp12);
+		_tmp16 = NULL;
+		self->priv->model_songs = (_tmp16 = gmpc_mpddata_model_new (), (self->priv->model_songs == NULL) ? NULL : (self->priv->model_songs = (g_object_unref (self->priv->model_songs), NULL)), _tmp16);
+		_tmp17 = NULL;
+		self->priv->tree_songs = (_tmp17 = g_object_ref_sink ((GtkTreeView*) gtk_tree_view_new_with_model ((GtkTreeModel*) self->priv->model_songs)), (self->priv->tree_songs == NULL) ? NULL : (self->priv->tree_songs = (g_object_unref (self->priv->tree_songs), NULL)), _tmp17);
 		g_signal_connect_object ((GtkWidget*) self->priv->tree_songs, "button-press-event", (GCallback) _gmpc_metadata_browser_browser_button_press_event_gtk_widget_button_press_event, self, 0);
 		gtk_container_add ((GtkContainer*) sw, (GtkWidget*) self->priv->tree_songs);
 		/* setup the columns */
-		_tmp13 = NULL;
-		column = (_tmp13 = g_object_ref_sink (gtk_tree_view_column_new ()), (column == NULL) ? NULL : (column = (g_object_unref (column), NULL)), _tmp13);
-		_tmp14 = NULL;
-		prenderer = (_tmp14 = g_object_ref_sink ((GtkCellRendererPixbuf*) gtk_cell_renderer_pixbuf_new ()), (prenderer == NULL) ? NULL : (prenderer = (g_object_unref (prenderer), NULL)), _tmp14);
+		_tmp18 = NULL;
+		column = (_tmp18 = g_object_ref_sink (gtk_tree_view_column_new ()), (column == NULL) ? NULL : (column = (g_object_unref (column), NULL)), _tmp18);
+		_tmp19 = NULL;
+		prenderer = (_tmp19 = g_object_ref_sink ((GtkCellRendererPixbuf*) gtk_cell_renderer_pixbuf_new ()), (prenderer == NULL) ? NULL : (prenderer = (g_object_unref (prenderer), NULL)), _tmp19);
 		gtk_cell_layout_pack_start ((GtkCellLayout*) column, (GtkCellRenderer*) prenderer, FALSE);
 		gtk_cell_layout_add_attribute ((GtkCellLayout*) column, (GtkCellRenderer*) prenderer, "icon-name", 23);
-		_tmp15 = NULL;
-		trenderer = (_tmp15 = g_object_ref_sink ((GtkCellRendererText*) gtk_cell_renderer_text_new ()), (trenderer == NULL) ? NULL : (trenderer = (g_object_unref (trenderer), NULL)), _tmp15);
+		_tmp20 = NULL;
+		trenderer = (_tmp20 = g_object_ref_sink ((GtkCellRendererText*) gtk_cell_renderer_text_new ()), (trenderer == NULL) ? NULL : (trenderer = (g_object_unref (trenderer), NULL)), _tmp20);
 		gtk_cell_layout_pack_start ((GtkCellLayout*) column, (GtkCellRenderer*) trenderer, FALSE);
 		gtk_cell_layout_add_attribute ((GtkCellLayout*) column, (GtkCellRenderer*) trenderer, "text", 10);
-		_tmp16 = NULL;
-		trenderer = (_tmp16 = g_object_ref_sink ((GtkCellRendererText*) gtk_cell_renderer_text_new ()), (trenderer == NULL) ? NULL : (trenderer = (g_object_unref (trenderer), NULL)), _tmp16);
+		_tmp21 = NULL;
+		trenderer = (_tmp21 = g_object_ref_sink ((GtkCellRendererText*) gtk_cell_renderer_text_new ()), (trenderer == NULL) ? NULL : (trenderer = (g_object_unref (trenderer), NULL)), _tmp21);
 		gtk_cell_layout_pack_start ((GtkCellLayout*) column, (GtkCellRenderer*) trenderer, TRUE);
 		gtk_cell_layout_add_attribute ((GtkCellLayout*) column, (GtkCellRenderer*) trenderer, "text", 7);
 		gtk_tree_view_append_column (self->priv->tree_songs, column);
@@ -475,16 +634,17 @@ static void gmpc_metadata_browser_browser_init (GmpcMetadataBrowser* self) {
 		gtk_tree_view_set_fixed_height_mode (self->priv->tree_songs, TRUE);
 		g_signal_connect_object (gtk_tree_view_get_selection (self->priv->tree_songs), "changed", (GCallback) _gmpc_metadata_browser_browser_songs_changed_gtk_tree_selection_changed, self, 0);
 		/* The right view */
-		_tmp17 = NULL;
-		self->priv->metadata_sw = (_tmp17 = g_object_ref_sink ((GtkScrolledWindow*) gtk_scrolled_window_new (NULL, NULL)), (self->priv->metadata_sw == NULL) ? NULL : (self->priv->metadata_sw = (g_object_unref (self->priv->metadata_sw), NULL)), _tmp17);
+		_tmp22 = NULL;
+		self->priv->metadata_sw = (_tmp22 = g_object_ref_sink ((GtkScrolledWindow*) gtk_scrolled_window_new (NULL, NULL)), (self->priv->metadata_sw == NULL) ? NULL : (self->priv->metadata_sw = (g_object_unref (self->priv->metadata_sw), NULL)), _tmp22);
 		gtk_scrolled_window_set_policy (self->priv->metadata_sw, GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 		g_signal_connect_object ((GtkWidget*) self->priv->metadata_sw, "style-set", (GCallback) _gmpc_metadata_browser_browser_bg_style_changed_gtk_widget_style_set, self, 0);
-		_tmp18 = NULL;
-		self->priv->metadata_box = (_tmp18 = g_object_ref_sink ((GtkEventBox*) gtk_event_box_new ()), (self->priv->metadata_box == NULL) ? NULL : (self->priv->metadata_box = (g_object_unref (self->priv->metadata_box), NULL)), _tmp18);
+		_tmp23 = NULL;
+		self->priv->metadata_box = (_tmp23 = g_object_ref_sink ((GtkEventBox*) gtk_event_box_new ()), (self->priv->metadata_box == NULL) ? NULL : (self->priv->metadata_box = (g_object_unref (self->priv->metadata_box), NULL)), _tmp23);
 		gtk_event_box_set_visible_window (self->priv->metadata_box, TRUE);
 		gtk_scrolled_window_add_with_viewport (self->priv->metadata_sw, (GtkWidget*) self->priv->metadata_box);
 		gtk_paned_add2 (self->priv->paned, (GtkWidget*) self->priv->metadata_sw);
 		gmpc_metadata_browser_reload_browsers (self);
+		(box == NULL) ? NULL : (box = (g_object_unref (box), NULL));
 		(sw == NULL) ? NULL : (sw = (g_object_unref (sw), NULL));
 		(column == NULL) ? NULL : (column = (g_object_unref (column), NULL));
 		(prenderer == NULL) ? NULL : (prenderer = (g_object_unref (prenderer), NULL));
@@ -524,27 +684,30 @@ static char* gmpc_metadata_browser_browser_get_selected_artist (GmpcMetadataBrow
 	GtkTreeIter iter = {0};
 	GtkTreeSelection* _tmp0;
 	GtkTreeSelection* sel;
-	GmpcMpdDataModel* _tmp4;
-	GmpcMpdDataModel* _tmp3;
+	GtkTreeModel* model;
+	GtkTreeModel* _tmp4;
+	GtkTreeModel* _tmp3;
 	gboolean _tmp2;
 	GtkTreeModel* _tmp1;
 	char* _tmp6;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0 = NULL;
 	sel = (_tmp0 = gtk_tree_view_get_selection (self->priv->tree_artist), (_tmp0 == NULL) ? NULL : g_object_ref (_tmp0));
+	model = NULL;
+	/*this.model_artist;*/
 	_tmp4 = NULL;
 	_tmp3 = NULL;
 	_tmp1 = NULL;
-	if ((_tmp2 = gtk_tree_selection_get_selected (sel, &_tmp1, &iter), self->priv->model_artist = (_tmp3 = (_tmp4 = (GmpcMpdDataModel*) _tmp1, (_tmp4 == NULL) ? NULL : g_object_ref (_tmp4)), (self->priv->model_artist == NULL) ? NULL : (self->priv->model_artist = (g_object_unref (self->priv->model_artist), NULL)), _tmp3), _tmp2)) {
+	if ((_tmp2 = gtk_tree_selection_get_selected (sel, &_tmp1, &iter), model = (_tmp3 = (_tmp4 = _tmp1, (_tmp4 == NULL) ? NULL : g_object_ref (_tmp4)), (model == NULL) ? NULL : (model = (g_object_unref (model), NULL)), _tmp3), _tmp2)) {
 		char* artist;
 		char* _tmp5;
 		artist = NULL;
-		gtk_tree_model_get ((GtkTreeModel*) self->priv->model_artist, &iter, 7, &artist, -1, -1);
+		gtk_tree_model_get (model, &iter, 7, &artist, -1, -1);
 		_tmp5 = NULL;
-		return (_tmp5 = artist, (sel == NULL) ? NULL : (sel = (g_object_unref (sel), NULL)), _tmp5);
+		return (_tmp5 = artist, (sel == NULL) ? NULL : (sel = (g_object_unref (sel), NULL)), (model == NULL) ? NULL : (model = (g_object_unref (model), NULL)), _tmp5);
 	}
 	_tmp6 = NULL;
-	return (_tmp6 = NULL, (sel == NULL) ? NULL : (sel = (g_object_unref (sel), NULL)), _tmp6);
+	return (_tmp6 = NULL, (sel == NULL) ? NULL : (sel = (g_object_unref (sel), NULL)), (model == NULL) ? NULL : (model = (g_object_unref (model), NULL)), _tmp6);
 }
 
 
@@ -552,27 +715,30 @@ static char* gmpc_metadata_browser_browser_get_selected_album (GmpcMetadataBrows
 	GtkTreeIter iter = {0};
 	GtkTreeSelection* _tmp0;
 	GtkTreeSelection* sel;
-	GmpcMpdDataModel* _tmp4;
-	GmpcMpdDataModel* _tmp3;
+	GtkTreeModel* model;
+	GtkTreeModel* _tmp4;
+	GtkTreeModel* _tmp3;
 	gboolean _tmp2;
 	GtkTreeModel* _tmp1;
 	char* _tmp6;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0 = NULL;
 	sel = (_tmp0 = gtk_tree_view_get_selection (self->priv->tree_album), (_tmp0 == NULL) ? NULL : g_object_ref (_tmp0));
+	model = NULL;
+	/*this.model_albums;*/
 	_tmp4 = NULL;
 	_tmp3 = NULL;
 	_tmp1 = NULL;
-	if ((_tmp2 = gtk_tree_selection_get_selected (sel, &_tmp1, &iter), self->priv->model_albums = (_tmp3 = (_tmp4 = (GmpcMpdDataModel*) _tmp1, (_tmp4 == NULL) ? NULL : g_object_ref (_tmp4)), (self->priv->model_albums == NULL) ? NULL : (self->priv->model_albums = (g_object_unref (self->priv->model_albums), NULL)), _tmp3), _tmp2)) {
+	if ((_tmp2 = gtk_tree_selection_get_selected (sel, &_tmp1, &iter), model = (_tmp3 = (_tmp4 = _tmp1, (_tmp4 == NULL) ? NULL : g_object_ref (_tmp4)), (model == NULL) ? NULL : (model = (g_object_unref (model), NULL)), _tmp3), _tmp2)) {
 		char* album;
 		char* _tmp5;
 		album = NULL;
-		gtk_tree_model_get ((GtkTreeModel*) self->priv->model_albums, &iter, 7, &album, -1, -1);
+		gtk_tree_model_get (model, &iter, 7, &album, -1, -1);
 		_tmp5 = NULL;
-		return (_tmp5 = album, (sel == NULL) ? NULL : (sel = (g_object_unref (sel), NULL)), _tmp5);
+		return (_tmp5 = album, (sel == NULL) ? NULL : (sel = (g_object_unref (sel), NULL)), (model == NULL) ? NULL : (model = (g_object_unref (model), NULL)), _tmp5);
 	}
 	_tmp6 = NULL;
-	return (_tmp6 = NULL, (sel == NULL) ? NULL : (sel = (g_object_unref (sel), NULL)), _tmp6);
+	return (_tmp6 = NULL, (sel == NULL) ? NULL : (sel = (g_object_unref (sel), NULL)), (model == NULL) ? NULL : (model = (g_object_unref (model), NULL)), _tmp6);
 }
 
 
@@ -1388,8 +1554,12 @@ static void gmpc_metadata_browser_instance_init (GmpcMetadataBrowser * self) {
 	self->priv->browser_box = NULL;
 	self->priv->tree_artist = NULL;
 	self->priv->model_artist = NULL;
+	self->priv->model_filter_artist = NULL;
+	self->priv->artist_filter_entry = NULL;
 	self->priv->tree_album = NULL;
 	self->priv->model_albums = NULL;
+	self->priv->model_filter_album = NULL;
+	self->priv->album_filter_entry = NULL;
 	self->priv->tree_songs = NULL;
 	self->priv->model_songs = NULL;
 	self->priv->metadata_sw = NULL;
@@ -1404,8 +1574,12 @@ static void gmpc_metadata_browser_finalize (GObject* obj) {
 	(self->priv->browser_box == NULL) ? NULL : (self->priv->browser_box = (g_object_unref (self->priv->browser_box), NULL));
 	(self->priv->tree_artist == NULL) ? NULL : (self->priv->tree_artist = (g_object_unref (self->priv->tree_artist), NULL));
 	(self->priv->model_artist == NULL) ? NULL : (self->priv->model_artist = (g_object_unref (self->priv->model_artist), NULL));
+	(self->priv->model_filter_artist == NULL) ? NULL : (self->priv->model_filter_artist = (g_object_unref (self->priv->model_filter_artist), NULL));
+	(self->priv->artist_filter_entry == NULL) ? NULL : (self->priv->artist_filter_entry = (g_object_unref (self->priv->artist_filter_entry), NULL));
 	(self->priv->tree_album == NULL) ? NULL : (self->priv->tree_album = (g_object_unref (self->priv->tree_album), NULL));
 	(self->priv->model_albums == NULL) ? NULL : (self->priv->model_albums = (g_object_unref (self->priv->model_albums), NULL));
+	(self->priv->model_filter_album == NULL) ? NULL : (self->priv->model_filter_album = (g_object_unref (self->priv->model_filter_album), NULL));
+	(self->priv->album_filter_entry == NULL) ? NULL : (self->priv->album_filter_entry = (g_object_unref (self->priv->album_filter_entry), NULL));
 	(self->priv->tree_songs == NULL) ? NULL : (self->priv->tree_songs = (g_object_unref (self->priv->tree_songs), NULL));
 	(self->priv->model_songs == NULL) ? NULL : (self->priv->model_songs = (g_object_unref (self->priv->model_songs), NULL));
 	(self->priv->metadata_sw == NULL) ? NULL : (self->priv->metadata_sw = (g_object_unref (self->priv->metadata_sw), NULL));
