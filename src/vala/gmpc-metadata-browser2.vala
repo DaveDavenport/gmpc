@@ -97,6 +97,9 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
     construct {
         /* Set the plugin as an internal one and of type pl_browser */
         this.plugin_type = 2|8; 
+
+        gmpcconn.connection_changed += con_changed;
+        gmpcconn.status_changed += status_changed;
     }
 
     public const int[3] version =  {0,0,0};
@@ -338,6 +341,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
             this.paned.add2(this.metadata_sw);
 
             this.reload_browsers();
+            this.metadata_box_update();
         }
         this.paned.show_all();
     }
@@ -924,7 +928,12 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         }else if (artist != null) {
             metadata_box_show_artist(artist);
         }
-
+        else
+        {
+            song = server.playlist_get_current_song(); 
+            if(song != null)
+                metadata_box_show_song(song);
+        }
     }
     /** 
      * Browser Interface bindings
@@ -950,6 +959,27 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         stdout.printf("blob\n");
         container.remove(this.paned);
     }
-
-
+    private
+    void 
+    con_changed(Gmpc.Connection conn, MPD.Server server, int connect)
+    {
+        if(this.paned == null) return;
+        this.reload_browsers();
+        metadata_box_clear();
+        metadata_box_update();
+    }
+    private 
+    void
+    status_changed(Gmpc.Connection conn, MPD.Server server, MPD.Status.Changed what)
+    {
+        if(this.paned == null) return;
+        if((what&MPD.Status.Changed.SONGID) == MPD.Status.Changed.SONGID)
+        {
+            string artist = browser_get_selected_artist();
+            if(artist == null) {
+                metadata_box_clear();
+                metadata_box_update();
+            }
+        }
+    }
 }

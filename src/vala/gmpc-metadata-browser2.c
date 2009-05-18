@@ -36,6 +36,7 @@
 #include <metadata.h>
 #include <gmpc-meta-text-view.h>
 #include <gmpc-stats-label.h>
+#include <gmpc-connection.h>
 #include "gmpc-song-links.h"
 
 
@@ -125,6 +126,10 @@ static void gmpc_metadata_browser_metadata_box_update (GmpcMetadataBrowser* self
 static void gmpc_metadata_browser_real_browser_add (GmpcPluginBrowserIface* base, GtkWidget* category_tree);
 static void gmpc_metadata_browser_real_browser_selected (GmpcPluginBrowserIface* base, GtkContainer* container);
 static void gmpc_metadata_browser_real_browser_unselected (GmpcPluginBrowserIface* base, GtkContainer* container);
+static void gmpc_metadata_browser_con_changed (GmpcMetadataBrowser* self, GmpcConnection* conn, MpdObj* server, gint connect);
+static void gmpc_metadata_browser_status_changed (GmpcMetadataBrowser* self, GmpcConnection* conn, MpdObj* server, ChangedStatusType what);
+static void _gmpc_metadata_browser_con_changed_gmpc_connection_connection_changed (GmpcConnection* _sender, MpdObj* server, gint connect, gpointer self);
+static void _gmpc_metadata_browser_status_changed_gmpc_connection_status_changed (GmpcConnection* _sender, MpdObj* server, ChangedStatusType what, gpointer self);
 static GObject * gmpc_metadata_browser_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);
 static gpointer gmpc_metadata_browser_parent_class = NULL;
 static GmpcPluginBrowserIfaceIface* gmpc_metadata_browser_gmpc_plugin_browser_iface_parent_iface = NULL;
@@ -656,6 +661,7 @@ static void gmpc_metadata_browser_browser_init (GmpcMetadataBrowser* self) {
 		gtk_scrolled_window_add_with_viewport (self->priv->metadata_sw, (GtkWidget*) self->priv->metadata_box);
 		gtk_paned_add2 (self->priv->paned, (GtkWidget*) self->priv->metadata_sw);
 		gmpc_metadata_browser_reload_browsers (self);
+		gmpc_metadata_browser_metadata_box_update (self);
 		(box == NULL) ? NULL : (box = (g_object_unref (box), NULL));
 		(sw == NULL) ? NULL : (sw = (g_object_unref (sw), NULL));
 		(column == NULL) ? NULL : (column = (g_object_unref (column), NULL));
@@ -1635,6 +1641,15 @@ static void gmpc_metadata_browser_metadata_box_update (GmpcMetadataBrowser* self
 		} else {
 			if (artist != NULL) {
 				gmpc_metadata_browser_metadata_box_show_artist (self, artist);
+			} else {
+				mpd_Song* _tmp2;
+				const mpd_Song* _tmp1;
+				_tmp2 = NULL;
+				_tmp1 = NULL;
+				song = (_tmp2 = (_tmp1 = mpd_playlist_get_current_song (connection), (_tmp1 == NULL) ? NULL : mpd_songDup (_tmp1)), (song == NULL) ? NULL : (song = (mpd_freeSong (song), NULL)), _tmp2);
+				if (song != NULL) {
+					gmpc_metadata_browser_metadata_box_show_song (self, song);
+				}
 			}
 		}
 	}
@@ -1686,6 +1701,38 @@ static void gmpc_metadata_browser_real_browser_unselected (GmpcPluginBrowserIfac
 }
 
 
+static void gmpc_metadata_browser_con_changed (GmpcMetadataBrowser* self, GmpcConnection* conn, MpdObj* server, gint connect) {
+	g_return_if_fail (self != NULL);
+	g_return_if_fail (conn != NULL);
+	g_return_if_fail (server != NULL);
+	if (self->priv->paned == NULL) {
+		return;
+	}
+	gmpc_metadata_browser_reload_browsers (self);
+	gmpc_metadata_browser_metadata_box_clear (self);
+	gmpc_metadata_browser_metadata_box_update (self);
+}
+
+
+static void gmpc_metadata_browser_status_changed (GmpcMetadataBrowser* self, GmpcConnection* conn, MpdObj* server, ChangedStatusType what) {
+	g_return_if_fail (self != NULL);
+	g_return_if_fail (conn != NULL);
+	g_return_if_fail (server != NULL);
+	if (self->priv->paned == NULL) {
+		return;
+	}
+	if ((what & MPD_CST_SONGID) == MPD_CST_SONGID) {
+		char* artist;
+		artist = gmpc_metadata_browser_browser_get_selected_artist (self);
+		if (artist == NULL) {
+			gmpc_metadata_browser_metadata_box_clear (self);
+			gmpc_metadata_browser_metadata_box_update (self);
+		}
+		artist = (g_free (artist), NULL);
+	}
+}
+
+
 GmpcMetadataBrowser* gmpc_metadata_browser_construct (GType object_type) {
 	GmpcMetadataBrowser * self;
 	self = g_object_newv (object_type, 0, NULL);
@@ -1695,6 +1742,16 @@ GmpcMetadataBrowser* gmpc_metadata_browser_construct (GType object_type) {
 
 GmpcMetadataBrowser* gmpc_metadata_browser_new (void) {
 	return gmpc_metadata_browser_construct (GMPC_TYPE_METADATA_BROWSER);
+}
+
+
+static void _gmpc_metadata_browser_con_changed_gmpc_connection_connection_changed (GmpcConnection* _sender, MpdObj* server, gint connect, gpointer self) {
+	gmpc_metadata_browser_con_changed (self, _sender, server, connect);
+}
+
+
+static void _gmpc_metadata_browser_status_changed_gmpc_connection_status_changed (GmpcConnection* _sender, MpdObj* server, ChangedStatusType what, gpointer self) {
+	gmpc_metadata_browser_status_changed (self, _sender, server, what);
 }
 
 
@@ -1710,6 +1767,8 @@ static GObject * gmpc_metadata_browser_constructor (GType type, guint n_construc
 	{
 		/* Set the plugin as an internal one and of type pl_browser */
 		((GmpcPluginBase*) self)->plugin_type = 2 | 8;
+		g_signal_connect_object (gmpcconn, "connection-changed", (GCallback) _gmpc_metadata_browser_con_changed_gmpc_connection_connection_changed, self, 0);
+		g_signal_connect_object (gmpcconn, "status-changed", (GCallback) _gmpc_metadata_browser_status_changed_gmpc_connection_status_changed, self, 0);
 	}
 	return obj;
 }
