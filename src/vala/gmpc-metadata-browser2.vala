@@ -21,7 +21,7 @@ using Gtk;
 using Gmpc;
 
 private const bool use_transition_mb = Gmpc.use_transition;
-private const string some_unique_name = Config.VERSION;
+private const string some_unique_name_mb = Config.VERSION;
 
 
 public class Gmpc.Widget.More : Gtk.Frame {
@@ -654,6 +654,21 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
             info_box.attach(pt_label, 1,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
             i++;
         }
+
+
+        var fav_button = new Gmpc.Favorites.Button();
+        fav_button.set_song(song);
+        label = new Gtk.Label("");
+        label.set_alignment(0.0f, 0.5f);
+        label.set_markup(Markup.printf_escaped("<b>%s:</b>",_("Favored")));
+        info_box.attach(label, 0,1,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
+        ali = new Gtk.Alignment(0.0f, 0.5f,0f,0f);
+        ali.add(fav_button);
+        info_box.attach(ali, 1,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
+        i++;
+
+
+
         /* Comment */
         if(song.comment != null) {
             pt_label = new Gtk.Label(song.comment); 

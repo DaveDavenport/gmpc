@@ -4,7 +4,7 @@ function build_file()
 {
     echo "building: '$1'";
     if test $1 -nt $1.stamp; then 
-        valac -C --pkg gtk+-2.0 --pkg cairo --pkg config --pkg gmpc --pkg libmpd --pkg gmpc-plugin --vapidir=`pwd` $1 $2 && touch $1.stamp
+        valac -C --pkg gtk+-2.0 --pkg cairo --pkg config --pkg gmpc --pkg libmpd --pkg gmpc-plugin --vapidir=`pwd` $2 $1 && touch $1.stamp
     fi;
 
 }
@@ -23,6 +23,6 @@ build_file "gmpc_menu_item_rating.vala" "gmpc-rating.vala"
 build_file "gmpc-liststore-sort.vala"
 build_file "gmpc-metadata-prefetcher.vala"
 
-build_file "gmpc-metadata-browser2.vala" "gmpc-song-links.vala"
+build_file "gmpc-metadata-browser2.vala" "gmpc-song-links.vala gmpc-favorites.vala gmpc-rating.vala"
 
 valac -C --pkg libmpd --vapidir=`pwd` "gmpc-connection.vala"

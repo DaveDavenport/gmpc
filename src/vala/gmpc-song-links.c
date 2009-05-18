@@ -18,6 +18,7 @@
 */
 
 #include "gmpc-song-links.h"
+#include <gtktransition.h>
 #include <gmpc_easy_download.h>
 #include <config.h>
 #include <plugin.h>
@@ -29,13 +30,12 @@
 #include <math.h>
 #include <glib/gi18n-lib.h>
 #include <gdk/gdk.h>
-#include <gtktransition.h>
 
 
 
 
-static char* string_replace (const char* self, const char* old, const char* replacement);
 static glong string_get_length (const char* self);
+static char* string_replace (const char* self, const char* old, const char* replacement);
 struct _GmpcSongLinksPrivate {
 	GmpcSongLinksType type;
 	mpd_Song* song;
@@ -60,6 +60,12 @@ static void gmpc_song_links_finalize (GObject* obj);
 static void _vala_array_free (gpointer array, gint array_length, GDestroyNotify destroy_func);
 static gint _vala_array_length (gpointer array);
 
+
+
+static glong string_get_length (const char* self) {
+	g_return_val_if_fail (self != NULL, 0L);
+	return g_utf8_strlen (self, -1);
+}
 
 
 static char* string_replace (const char* self, const char* old, const char* replacement) {
@@ -111,12 +117,6 @@ static char* string_replace (const char* self, const char* old, const char* repl
 		g_clear_error (&inner_error);
 		return NULL;
 	}
-}
-
-
-static glong string_get_length (const char* self) {
-	g_return_val_if_fail (self != NULL, 0L);
-	return g_utf8_strlen (self, -1);
 }
 
 

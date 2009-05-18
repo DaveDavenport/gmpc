@@ -1,11 +1,11 @@
 
 #include "gmpc-favorites.h"
 #include <config.h>
+#include <gtktransition.h>
 #include <libmpd/libmpd.h>
 #include <gmpc-connection.h>
 #include <glib/gi18n-lib.h>
 #include <main.h>
-#include <gtktransition.h>
 #include <gdk-pixbuf/gdk-pixdata.h>
 #include <gdk/gdk.h>
 #include <misc.h>
@@ -399,15 +399,15 @@ static GObject * gmpc_favorites_button_constructor (GType type, guint n_construc
 			GdkPixbuf* _tmp2;
 			_tmp1 = gtk_icon_theme_load_icon (it, "emblem-favorite", 24, 0, &inner_error);
 			if (inner_error != NULL) {
-				goto __catch0_g_error;
-				goto __finally0;
+				goto __catch7_g_error;
+				goto __finally7;
 			}
 			_tmp3 = NULL;
 			_tmp2 = NULL;
 			self->priv->pb = (_tmp3 = (_tmp2 = _tmp1, (_tmp2 == NULL) ? NULL : g_object_ref (_tmp2)), (self->priv->pb == NULL) ? NULL : (self->priv->pb = (g_object_unref (self->priv->pb), NULL)), _tmp3);
 		}
-		goto __finally0;
-		__catch0_g_error:
+		goto __finally7;
+		__catch7_g_error:
 		{
 			GError * e;
 			e = inner_error;
@@ -417,7 +417,7 @@ static GObject * gmpc_favorites_button_constructor (GType type, guint n_construc
 				(e == NULL) ? NULL : (e = (g_error_free (e), NULL));
 			}
 		}
-		__finally0:
+		__finally7:
 		if (inner_error != NULL) {
 			(it == NULL) ? NULL : (it = (g_object_unref (it), NULL));
 			g_critical ("file %s: line %d: uncaught error: %s", __FILE__, __LINE__, inner_error->message);

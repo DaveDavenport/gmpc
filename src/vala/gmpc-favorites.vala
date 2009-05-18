@@ -24,9 +24,9 @@ using Gdk;
 using MPD;
 
 /* trick to get config.h included */
-static const string some_unique_name = Config.VERSION;
+static const string some_unique_name_fav = Config.VERSION;
+private const bool use_transition_fav = Gmpc.use_transition;
 static Gmpc.Favorites.List favorites = null;
-private const bool use_transition = Gmpc.use_transition;
 
 namespace Gmpc.Favorites{
     /**
