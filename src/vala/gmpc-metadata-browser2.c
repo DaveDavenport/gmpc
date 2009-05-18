@@ -59,7 +59,7 @@ enum  {
 static void gmpc_widget_more_expand (GmpcWidgetMore* self, GtkButton* but);
 static void gmpc_widget_more_size_changed (GmpcWidgetMore* self, GtkWidget* child, const GdkRectangle* alloc);
 static void gmpc_widget_more_bg_style_changed (GmpcWidgetMore* self, GtkWidget* frame, GtkStyle* style);
-static void _gmpc_widget_more_bg_style_changed_gtk_widget_style_set (GtkAlignment* _sender, GtkStyle* previous_style, gpointer self);
+static void _gmpc_widget_more_bg_style_changed_gtk_widget_style_set (GmpcWidgetMore* _sender, GtkStyle* previous_style, gpointer self);
 static void _gmpc_widget_more_expand_gtk_button_clicked (GtkButton* _sender, gpointer self);
 static void _gmpc_widget_more_size_changed_gtk_widget_size_allocate (GtkWidget* _sender, const GdkRectangle* allocation, gpointer self);
 static GmpcWidgetMore* gmpc_widget_more_construct (GType object_type, const char* markup, GtkWidget* child);
@@ -81,6 +81,7 @@ struct _GmpcMetadataBrowserPrivate {
 	GmpcMpdDataModel* model_songs;
 	GtkScrolledWindow* metadata_sw;
 	GtkEventBox* metadata_box;
+	gboolean selected;
 };
 
 #define GMPC_METADATA_BROWSER_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GMPC_TYPE_METADATA_BROWSER, GmpcMetadataBrowserPrivate))
@@ -158,8 +159,12 @@ static void gmpc_widget_more_size_changed (GmpcWidgetMore* self, GtkWidget* chil
 	g_return_if_fail (child != NULL);
 	fprintf (stdout, "height: %i\n", (*alloc).height);
 	if ((*alloc).height < (self->priv->max_height - 12)) {
+		gtk_widget_set_size_request ((GtkWidget*) self->priv->ali, -1, -1);
 		gtk_widget_hide ((GtkWidget*) self->priv->expand_button);
 	} else {
+		if (self->priv->expand_state == 0) {
+			gtk_widget_set_size_request ((GtkWidget*) self->priv->ali, -1, self->priv->max_height);
+		}
 		gtk_widget_show ((GtkWidget*) self->priv->expand_button);
 	}
 }
@@ -170,20 +175,16 @@ static void gmpc_widget_more_bg_style_changed (GmpcWidgetMore* self, GtkWidget* 
 	GdkColor _tmp1 = {0};
 	GdkColor _tmp2 = {0};
 	GdkColor _tmp3 = {0};
-	GdkColor _tmp4 = {0};
-	GdkColor _tmp5 = {0};
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (frame != NULL);
-	gtk_widget_modify_bg ((GtkWidget*) self, GTK_STATE_NORMAL, (_tmp0 = gtk_widget_get_style ((GtkWidget*) gtk_widget_get_parent ((GtkWidget*) self))->mid[GTK_STATE_NORMAL], &_tmp0));
-	gtk_widget_modify_base ((GtkWidget*) self, GTK_STATE_NORMAL, (_tmp1 = gtk_widget_get_style ((GtkWidget*) gtk_widget_get_parent ((GtkWidget*) self))->mid[GTK_STATE_NORMAL], &_tmp1));
-	gtk_widget_modify_bg ((GtkWidget*) self->priv->eventbox, GTK_STATE_NORMAL, (_tmp2 = gtk_widget_get_style ((GtkWidget*) gtk_widget_get_parent ((GtkWidget*) self))->mid[GTK_STATE_NORMAL], &_tmp2));
-	gtk_widget_modify_base ((GtkWidget*) self->priv->eventbox, GTK_STATE_NORMAL, (_tmp3 = gtk_widget_get_style ((GtkWidget*) gtk_widget_get_parent ((GtkWidget*) self))->mid[GTK_STATE_NORMAL], &_tmp3));
-	gtk_widget_modify_bg (self->priv->pchild, GTK_STATE_NORMAL, (_tmp4 = gtk_widget_get_style ((GtkWidget*) gtk_widget_get_parent ((GtkWidget*) self))->mid[GTK_STATE_NORMAL], &_tmp4));
-	gtk_widget_modify_base (self->priv->pchild, GTK_STATE_NORMAL, (_tmp5 = gtk_widget_get_style ((GtkWidget*) gtk_widget_get_parent ((GtkWidget*) self))->mid[GTK_STATE_NORMAL], &_tmp5));
+	gtk_widget_modify_bg (self->priv->pchild, GTK_STATE_NORMAL, (_tmp0 = gtk_widget_get_style ((GtkWidget*) gtk_widget_get_parent ((GtkWidget*) self))->mid[GTK_STATE_NORMAL], &_tmp0));
+	gtk_widget_modify_base (self->priv->pchild, GTK_STATE_NORMAL, (_tmp1 = gtk_widget_get_style ((GtkWidget*) gtk_widget_get_parent ((GtkWidget*) self))->mid[GTK_STATE_NORMAL], &_tmp1));
+	gtk_widget_modify_bg ((GtkWidget*) self->priv->eventbox, GTK_STATE_NORMAL, (_tmp2 = gtk_widget_get_style ((GtkWidget*) gtk_widget_get_parent ((GtkWidget*) self))->dark[GTK_STATE_NORMAL], &_tmp2));
+	gtk_widget_modify_base ((GtkWidget*) self->priv->eventbox, GTK_STATE_NORMAL, (_tmp3 = gtk_widget_get_style ((GtkWidget*) gtk_widget_get_parent ((GtkWidget*) self))->dark[GTK_STATE_NORMAL], &_tmp3));
 }
 
 
-static void _gmpc_widget_more_bg_style_changed_gtk_widget_style_set (GtkAlignment* _sender, GtkStyle* previous_style, gpointer self) {
+static void _gmpc_widget_more_bg_style_changed_gtk_widget_style_set (GmpcWidgetMore* _sender, GtkStyle* previous_style, gpointer self) {
 	gmpc_widget_more_bg_style_changed (self, _sender, previous_style);
 }
 
@@ -210,12 +211,13 @@ static GmpcWidgetMore* gmpc_widget_more_construct (GType object_type, const char
 	g_return_val_if_fail (markup != NULL, NULL);
 	g_return_val_if_fail (child != NULL, NULL);
 	self = g_object_newv (object_type, 0, NULL);
+	gtk_frame_set_shadow_type ((GtkFrame*) self, GTK_SHADOW_NONE);
 	_tmp1 = NULL;
 	_tmp0 = NULL;
 	self->priv->pchild = (_tmp1 = (_tmp0 = child, (_tmp0 == NULL) ? NULL : g_object_ref (_tmp0)), (self->priv->pchild == NULL) ? NULL : (self->priv->pchild = (g_object_unref (self->priv->pchild), NULL)), _tmp1);
 	_tmp2 = NULL;
 	self->priv->ali = (_tmp2 = g_object_ref_sink ((GtkAlignment*) gtk_alignment_new (0.f, 0.f, 1.f, 0.f)), (self->priv->ali == NULL) ? NULL : (self->priv->ali = (g_object_unref (self->priv->ali), NULL)), _tmp2);
-	gtk_alignment_set_padding (self->priv->ali, (guint) 6, (guint) 6, (guint) 12, (guint) 12);
+	gtk_alignment_set_padding (self->priv->ali, (guint) 1, (guint) 1, (guint) 1, (guint) 1);
 	_tmp3 = NULL;
 	self->priv->eventbox = (_tmp3 = g_object_ref_sink ((GtkEventBox*) gtk_event_box_new ()), (self->priv->eventbox == NULL) ? NULL : (self->priv->eventbox = (g_object_unref (self->priv->eventbox), NULL)), _tmp3);
 	gtk_event_box_set_visible_window (self->priv->eventbox, TRUE);
@@ -223,7 +225,7 @@ static GmpcWidgetMore* gmpc_widget_more_construct (GType object_type, const char
 	gtk_container_add ((GtkContainer*) self->priv->eventbox, (GtkWidget*) self->priv->ali);
 	gtk_widget_set_size_request ((GtkWidget*) self->priv->ali, -1, self->priv->max_height);
 	gtk_container_add ((GtkContainer*) self->priv->ali, child);
-	g_signal_connect_object ((GtkWidget*) self->priv->ali, "style-set", (GCallback) _gmpc_widget_more_bg_style_changed_gtk_widget_style_set, self, 0);
+	g_signal_connect_object ((GtkWidget*) self, "style-set", (GCallback) _gmpc_widget_more_bg_style_changed_gtk_widget_style_set, self, 0);
 	hbox = g_object_ref_sink ((GtkHBox*) gtk_hbox_new (FALSE, 6));
 	label = g_object_ref_sink ((GtkLabel*) gtk_label_new (""));
 	gtk_label_set_markup (label, markup);
@@ -662,7 +664,6 @@ static void gmpc_metadata_browser_browser_init (GmpcMetadataBrowser* self) {
 		gtk_scrolled_window_add_with_viewport (self->priv->metadata_sw, (GtkWidget*) self->priv->metadata_box);
 		gtk_paned_add2 (self->priv->paned, (GtkWidget*) self->priv->metadata_sw);
 		gmpc_metadata_browser_reload_browsers (self);
-		gmpc_metadata_browser_metadata_box_update (self);
 		(box == NULL) ? NULL : (box = (g_object_unref (box), NULL));
 		(sw == NULL) ? NULL : (sw = (g_object_unref (sw), NULL));
 		(column == NULL) ? NULL : (column = (g_object_unref (column), NULL));
@@ -1223,6 +1224,7 @@ static void gmpc_metadata_browser_metadata_box_show_song (GmpcMetadataBrowser* s
 		gtk_table_attach (info_box, (GtkWidget*) pt_label, (guint) 1, (guint) 2, (guint) i, (guint) (i + 1), GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL, (guint) 0, (guint) 0);
 		i++;
 	}
+	/* Favored button */
 	fav_button = g_object_ref_sink (gmpc_favorites_button_new ());
 	gmpc_favorites_button_set_song (fav_button, song);
 	_tmp27 = NULL;
@@ -1281,6 +1283,7 @@ static void gmpc_metadata_browser_metadata_box_show_song (GmpcMetadataBrowser* s
 	i++;
 	/* Lyrics */
 	text_view = g_object_ref_sink (gmpc_meta_text_view_new (META_SONG_TXT));
+	gtk_text_view_set_left_margin ((GtkTextView*) text_view, 8);
 	_tmp37 = NULL;
 	_tmp38 = NULL;
 	frame = (_tmp38 = g_object_ref_sink (gmpc_widget_more_new (_tmp37 = g_markup_printf_escaped ("<b>%s:</b>", _ ("Lyrics")), (GtkWidget*) text_view)), _tmp37 = (g_free (_tmp37), NULL), _tmp38);
@@ -1449,6 +1452,7 @@ static void gmpc_metadata_browser_metadata_box_show_album (GmpcMetadataBrowser* 
 	gtk_table_attach (info_box, (GtkWidget*) hbox, (guint) 0, (guint) 2, (guint) i, (guint) (i + 1), GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL, (guint) 0, (guint) 0);
 	i++;
 	text_view = g_object_ref_sink (gmpc_meta_text_view_new (META_ALBUM_TXT));
+	gtk_text_view_set_left_margin ((GtkTextView*) text_view, 8);
 	_tmp19 = NULL;
 	_tmp20 = NULL;
 	frame = (_tmp20 = g_object_ref_sink (gmpc_widget_more_new (_tmp19 = g_markup_printf_escaped ("<b>%s:</b>", _ ("Album information")), (GtkWidget*) text_view)), _tmp19 = (g_free (_tmp19), NULL), _tmp20);
@@ -1611,6 +1615,7 @@ static void gmpc_metadata_browser_metadata_box_show_artist (GmpcMetadataBrowser*
 	gtk_table_attach (info_box, (GtkWidget*) hbox, (guint) 0, (guint) 2, (guint) i, (guint) (i + 1), GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL, (guint) 0, (guint) 0);
 	i++;
 	text_view = g_object_ref_sink (gmpc_meta_text_view_new (META_ARTIST_TXT));
+	gtk_text_view_set_left_margin ((GtkTextView*) text_view, 8);
 	_tmp17 = NULL;
 	_tmp18 = NULL;
 	frame = (_tmp18 = g_object_ref_sink (gmpc_widget_more_new (_tmp17 = g_markup_printf_escaped ("<b>%s:</b>", _ ("Artist information")), (GtkWidget*) text_view)), _tmp17 = (g_free (_tmp17), NULL), _tmp18);
@@ -1704,11 +1709,23 @@ static void gmpc_metadata_browser_real_browser_add (GmpcPluginBrowserIface* base
 
 static void gmpc_metadata_browser_real_browser_selected (GmpcPluginBrowserIface* base, GtkContainer* container) {
 	GmpcMetadataBrowser * self;
+	char* artist;
+	char* _tmp0;
 	self = (GmpcMetadataBrowser*) base;
 	g_return_if_fail (container != NULL);
+	artist = NULL;
+	self->priv->selected = TRUE;
 	gmpc_metadata_browser_browser_init (self);
 	fprintf (stdout, "blub\n");
 	gtk_container_add (container, (GtkWidget*) self->priv->paned);
+	/* update if non selected */
+	_tmp0 = NULL;
+	artist = (_tmp0 = gmpc_metadata_browser_browser_get_selected_artist (self), artist = (g_free (artist), NULL), _tmp0);
+	if (artist == NULL) {
+		gmpc_metadata_browser_metadata_box_clear (self);
+		gmpc_metadata_browser_metadata_box_update (self);
+	}
+	artist = (g_free (artist), NULL);
 }
 
 
@@ -1716,6 +1733,7 @@ static void gmpc_metadata_browser_real_browser_unselected (GmpcPluginBrowserIfac
 	GmpcMetadataBrowser * self;
 	self = (GmpcMetadataBrowser*) base;
 	g_return_if_fail (container != NULL);
+	self->priv->selected = FALSE;
 	fprintf (stdout, "blob\n");
 	gtk_container_remove (container, (GtkWidget*) self->priv->paned);
 }
@@ -1735,13 +1753,20 @@ static void gmpc_metadata_browser_con_changed (GmpcMetadataBrowser* self, GmpcCo
 
 
 static void gmpc_metadata_browser_status_changed (GmpcMetadataBrowser* self, GmpcConnection* conn, MpdObj* server, ChangedStatusType what) {
+	gboolean _tmp0;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (conn != NULL);
 	g_return_if_fail (server != NULL);
 	if (self->priv->paned == NULL) {
 		return;
 	}
+	_tmp0 = FALSE;
 	if ((what & MPD_CST_SONGID) == MPD_CST_SONGID) {
+		_tmp0 = self->priv->selected;
+	} else {
+		_tmp0 = FALSE;
+	}
+	if (_tmp0) {
 		char* artist;
 		artist = gmpc_metadata_browser_browser_get_selected_artist (self);
 		if (artist == NULL) {
@@ -1829,6 +1854,7 @@ static void gmpc_metadata_browser_instance_init (GmpcMetadataBrowser * self) {
 	self->priv->model_songs = NULL;
 	self->priv->metadata_sw = NULL;
 	self->priv->metadata_box = NULL;
+	self->priv->selected = FALSE;
 }
 
 

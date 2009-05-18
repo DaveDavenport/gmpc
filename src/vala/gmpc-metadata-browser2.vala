@@ -49,26 +49,30 @@ public class Gmpc.Widget.More : Gtk.Frame {
     {
         stdout.printf("height: %i\n",alloc.height);
         if(alloc.height < (this.max_height-12)){
+            this.ali.set_size_request(-1,-1);
             this.expand_button.hide();
         }else{
+            if(this.expand_state == 0)
+                this.ali.set_size_request(-1, this.max_height);
             this.expand_button.show();
         }
     }
 
     private void bg_style_changed(Gtk.Widget frame,Gtk.Style? style)
     {
-        this.modify_bg(Gtk.StateType.NORMAL,this.parent.style.mid[Gtk.StateType.NORMAL]);
-        this.modify_base(Gtk.StateType.NORMAL,this.parent.style.mid[Gtk.StateType.NORMAL]);
-        this.eventbox.modify_bg(Gtk.StateType.NORMAL,this.parent.style.mid[Gtk.StateType.NORMAL]);
-        this.eventbox.modify_base(Gtk.StateType.NORMAL,this.parent.style.mid[Gtk.StateType.NORMAL]);
         this.pchild.modify_bg(Gtk.StateType.NORMAL,this.parent.style.mid[Gtk.StateType.NORMAL]);
         this.pchild.modify_base(Gtk.StateType.NORMAL,this.parent.style.mid[Gtk.StateType.NORMAL]);
+
+        this.eventbox.modify_bg(Gtk.StateType.NORMAL,this.parent.style.dark[Gtk.StateType.NORMAL]);
+        this.eventbox.modify_base(Gtk.StateType.NORMAL,this.parent.style.dark[Gtk.StateType.NORMAL]);
     }
     More(string markup,Gtk.Widget child)
     {
+        this.set_shadow_type(Gtk.ShadowType.NONE);
+        
         this.pchild = child;
-
-        this.ali = new Gtk.Alignment(0f,0f,1f,0f); ali.set_padding(6,6,12,12);
+        
+        this.ali = new Gtk.Alignment(0f,0f,1f,0f); ali.set_padding(1,1,1,1);
         this.eventbox = new Gtk.EventBox();
         this.eventbox.set_visible_window(true);
         this.add(eventbox);
@@ -76,7 +80,7 @@ public class Gmpc.Widget.More : Gtk.Frame {
         this.ali.set_size_request(-1, this.max_height);
         this.ali.add(child);
 
-        this.ali.style_set += bg_style_changed;
+        this.style_set += bg_style_changed;
 
         var hbox = new Gtk.HBox(false, 6);
         var label= new Gtk.Label("");
@@ -341,7 +345,6 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
             this.paned.add2(this.metadata_sw);
 
             this.reload_browsers();
-            this.metadata_box_update();
         }
         this.paned.show_all();
     }
@@ -655,7 +658,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
             i++;
         }
 
-
+        /* Favored button */
         var fav_button = new Gmpc.Favorites.Button();
         fav_button.set_song(song);
         label = new Gtk.Label("");
@@ -711,6 +714,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         /* Lyrics */
 
         var text_view = new Gmpc.MetaData.TextView(Gmpc.MetaData.Type.SONG_TXT);
+        text_view.set_left_margin(8);
         var frame = new Gmpc.Widget.More(Markup.printf_escaped("<b>%s:</b>", _("Lyrics")),text_view);
         text_view.query_from_song(song);
 
@@ -814,6 +818,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         info_box.attach(hbox, 0,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
         i++;
         var text_view = new Gmpc.MetaData.TextView(Gmpc.MetaData.Type.ALBUM_TXT);
+        text_view.set_left_margin(8);
         var frame = new Gmpc.Widget.More(Markup.printf_escaped("<b>%s:</b>", _("Album information")),text_view);
         text_view.query_from_song(song);
 
@@ -916,6 +921,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         i++;
 
         var text_view = new Gmpc.MetaData.TextView(Gmpc.MetaData.Type.ARTIST_TXT);
+        text_view.set_left_margin(8);
         var frame = new Gmpc.Widget.More(Markup.printf_escaped("<b>%s:</b>", _("Artist information")),text_view);
         text_view.query_from_song(song);
 
@@ -964,13 +970,24 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
     }
     public void browser_selected (Gtk.Container container)
     {
+        string artist;
+        this.selected = true;
         this.browser_init();
         stdout.printf("blub\n");
         container.add(this.paned);
+
+        /* update if non selected */
+        artist = browser_get_selected_artist();
+        if(artist == null) {
+            metadata_box_clear();
+            metadata_box_update();
+        }
     }
 
+    private bool selected = false;
     public void browser_unselected(Gtk.Container container)
     {
+        this.selected = false;
         stdout.printf("blob\n");
         container.remove(this.paned);
     }
@@ -988,7 +1005,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
     status_changed(Gmpc.Connection conn, MPD.Server server, MPD.Status.Changed what)
     {
         if(this.paned == null) return;
-        if((what&MPD.Status.Changed.SONGID) == MPD.Status.Changed.SONGID)
+        if((what&MPD.Status.Changed.SONGID) == MPD.Status.Changed.SONGID && this.selected)
         {
             string artist = browser_get_selected_artist();
             if(artist == null) {
