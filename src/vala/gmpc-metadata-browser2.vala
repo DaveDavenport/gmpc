@@ -215,12 +215,61 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
 
          return visible;
      }
+
+     private bool browser_artist_key_press_event(Gtk.Widget widget, Gdk.EventKey event)
+     {
+        unichar uc = Gdk.keyval_to_unicode(event.keyval);
+        stdout.printf("set key press event artist");
+        if(uc > 0)
+        {
+            string outbuf = "       ";
+            int i = uc.to_utf8(outbuf);
+            ((char[])outbuf)[i] = '\0';
+            this.artist_filter_entry.set_text(outbuf);
+            this.artist_filter_entry.grab_focus();
+            this.artist_filter_entry.set_position(1);
+
+           return true; 
+        }
+        return false;
+     }
+     private bool browser_album_key_press_event(Gtk.Widget widget, Gdk.EventKey event)
+     {
+        unichar uc = Gdk.keyval_to_unicode(event.keyval);
+        stdout.printf("set key press event album");
+        if(uc > 0)
+        {
+            string outbuf = "       ";
+            int i = uc.to_utf8(outbuf);
+            ((char[])outbuf)[i] = '\0';
+            this.album_filter_entry.set_text(outbuf);
+            this.album_filter_entry.grab_focus();
+            this.album_filter_entry.set_position(1);
+
+           return true; 
+        }
+        return false;
+     }
      private void browser_artist_entry_changed(Gtk.Entry entry)
      {
+        string text = entry.get_text();
+        if(text.size() > 0) {
+            entry.show();
+        }else{
+            entry.hide();
+            this.tree_artist.grab_focus();
+        }
         this.model_filter_artist.refilter();
      }
      private void browser_album_entry_changed(Gtk.Entry entry)
      {
+        string text = entry.get_text();
+        if(text.size() > 0) {
+            entry.show();
+        }else{
+            entry.hide();
+            this.tree_album.grab_focus();
+        }
         this.model_filter_album.refilter();
      }
 
@@ -239,6 +288,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
             this.browser_box.pack_start(box, true, true, 0);
 
             this.artist_filter_entry = new Gtk.Entry();
+            this.artist_filter_entry.set_no_show_all(true);
             this.artist_filter_entry.changed += browser_artist_entry_changed;
 
             box.pack_start(this.artist_filter_entry, false, false, 0);
@@ -253,6 +303,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
             this.model_filter_artist.set_visible_func(visible_func_artist);
             this.tree_artist = new Gtk.TreeView.with_model(this.model_filter_artist);
             this.tree_artist.button_press_event+=browser_button_press_event;
+            this.tree_artist.key_press_event += browser_artist_key_press_event;
             sw.add(tree_artist);
             /* setup the columns */ 
             var column = new Gtk.TreeViewColumn();
@@ -279,6 +330,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
             this.browser_box.pack_start(box, true, true, 0);
 
             this.album_filter_entry = new Gtk.Entry();
+            this.album_filter_entry.set_no_show_all(true);
             this.album_filter_entry.changed += browser_album_entry_changed;
             box.pack_start(this.album_filter_entry, false, false, 0);
 
@@ -291,6 +343,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
             this.model_filter_album.set_visible_func(visible_func_album);
             this.tree_album = new Gtk.TreeView.with_model(this.model_filter_album);
             this.tree_album.button_press_event+=browser_button_press_event;
+            this.tree_album.key_press_event += browser_album_key_press_event;
             sw.add(tree_album);
             /* setup the columns */ 
             column = new Gtk.TreeViewColumn();

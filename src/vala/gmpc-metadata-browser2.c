@@ -96,14 +96,18 @@ static void gmpc_metadata_browser_browser_bg_style_changed (GmpcMetadataBrowser*
 static gboolean gmpc_metadata_browser_browser_button_press_event (GmpcMetadataBrowser* self, GtkTreeView* tree, const GdkEventButton* event);
 static gboolean gmpc_metadata_browser_visible_func_artist (GmpcMetadataBrowser* self, GtkTreeModel* model, GtkTreeIter* iter);
 static gboolean gmpc_metadata_browser_visible_func_album (GmpcMetadataBrowser* self, GtkTreeModel* model, GtkTreeIter* iter);
+static gboolean gmpc_metadata_browser_browser_artist_key_press_event (GmpcMetadataBrowser* self, GtkWidget* widget, const GdkEventKey* event);
+static gboolean gmpc_metadata_browser_browser_album_key_press_event (GmpcMetadataBrowser* self, GtkWidget* widget, const GdkEventKey* event);
 static void gmpc_metadata_browser_browser_artist_entry_changed (GmpcMetadataBrowser* self, GtkEntry* entry);
 static void gmpc_metadata_browser_browser_album_entry_changed (GmpcMetadataBrowser* self, GtkEntry* entry);
 static void _gmpc_metadata_browser_browser_artist_entry_changed_gtk_editable_changed (GtkEntry* _sender, gpointer self);
 static gboolean _gmpc_metadata_browser_visible_func_artist_gtk_tree_model_filter_visible_func (GtkTreeModel* model, GtkTreeIter* iter, gpointer self);
 static gboolean _gmpc_metadata_browser_browser_button_press_event_gtk_widget_button_press_event (GtkTreeView* _sender, const GdkEventButton* event, gpointer self);
+static gboolean _gmpc_metadata_browser_browser_artist_key_press_event_gtk_widget_key_press_event (GtkTreeView* _sender, const GdkEventKey* event, gpointer self);
 static void _gmpc_metadata_browser_browser_artist_changed_gtk_tree_selection_changed (GtkTreeSelection* _sender, gpointer self);
 static void _gmpc_metadata_browser_browser_album_entry_changed_gtk_editable_changed (GtkEntry* _sender, gpointer self);
 static gboolean _gmpc_metadata_browser_visible_func_album_gtk_tree_model_filter_visible_func (GtkTreeModel* model, GtkTreeIter* iter, gpointer self);
+static gboolean _gmpc_metadata_browser_browser_album_key_press_event_gtk_widget_key_press_event (GtkTreeView* _sender, const GdkEventKey* event, gpointer self);
 static void _gmpc_metadata_browser_browser_album_changed_gtk_tree_selection_changed (GtkTreeSelection* _sender, gpointer self);
 static void _gmpc_metadata_browser_browser_songs_changed_gtk_tree_selection_changed (GtkTreeSelection* _sender, gpointer self);
 static void _gmpc_metadata_browser_browser_bg_style_changed_gtk_widget_style_set (GtkScrolledWindow* _sender, GtkStyle* previous_style, gpointer self);
@@ -459,17 +463,83 @@ static gboolean gmpc_metadata_browser_visible_func_album (GmpcMetadataBrowser* s
 }
 
 
+static gboolean gmpc_metadata_browser_browser_artist_key_press_event (GmpcMetadataBrowser* self, GtkWidget* widget, const GdkEventKey* event) {
+	gunichar uc;
+	g_return_val_if_fail (self != NULL, FALSE);
+	g_return_val_if_fail (widget != NULL, FALSE);
+	uc = (gunichar) gdk_keyval_to_unicode ((*event).keyval);
+	fprintf (stdout, "set key press event artist");
+	if (uc > 0) {
+		char* outbuf;
+		gint i;
+		gboolean _tmp0;
+		outbuf = g_strdup ("       ");
+		i = g_unichar_to_utf8 (uc, outbuf);
+		((gchar*) outbuf)[i] = '\0';
+		gtk_entry_set_text (self->priv->artist_filter_entry, outbuf);
+		gtk_widget_grab_focus ((GtkWidget*) self->priv->artist_filter_entry);
+		gtk_editable_set_position ((GtkEditable*) self->priv->artist_filter_entry, 1);
+		return (_tmp0 = TRUE, outbuf = (g_free (outbuf), NULL), _tmp0);
+	}
+	return FALSE;
+}
+
+
+static gboolean gmpc_metadata_browser_browser_album_key_press_event (GmpcMetadataBrowser* self, GtkWidget* widget, const GdkEventKey* event) {
+	gunichar uc;
+	g_return_val_if_fail (self != NULL, FALSE);
+	g_return_val_if_fail (widget != NULL, FALSE);
+	uc = (gunichar) gdk_keyval_to_unicode ((*event).keyval);
+	fprintf (stdout, "set key press event album");
+	if (uc > 0) {
+		char* outbuf;
+		gint i;
+		gboolean _tmp0;
+		outbuf = g_strdup ("       ");
+		i = g_unichar_to_utf8 (uc, outbuf);
+		((gchar*) outbuf)[i] = '\0';
+		gtk_entry_set_text (self->priv->album_filter_entry, outbuf);
+		gtk_widget_grab_focus ((GtkWidget*) self->priv->album_filter_entry);
+		gtk_editable_set_position ((GtkEditable*) self->priv->album_filter_entry, 1);
+		return (_tmp0 = TRUE, outbuf = (g_free (outbuf), NULL), _tmp0);
+	}
+	return FALSE;
+}
+
+
 static void gmpc_metadata_browser_browser_artist_entry_changed (GmpcMetadataBrowser* self, GtkEntry* entry) {
+	const char* _tmp0;
+	char* text;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (entry != NULL);
+	_tmp0 = NULL;
+	text = (_tmp0 = gtk_entry_get_text (entry), (_tmp0 == NULL) ? NULL : g_strdup (_tmp0));
+	if (strlen (text) > 0) {
+		gtk_widget_show ((GtkWidget*) entry);
+	} else {
+		gtk_widget_hide ((GtkWidget*) entry);
+		gtk_widget_grab_focus ((GtkWidget*) self->priv->tree_artist);
+	}
 	gtk_tree_model_filter_refilter (self->priv->model_filter_artist);
+	text = (g_free (text), NULL);
 }
 
 
 static void gmpc_metadata_browser_browser_album_entry_changed (GmpcMetadataBrowser* self, GtkEntry* entry) {
+	const char* _tmp0;
+	char* text;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (entry != NULL);
+	_tmp0 = NULL;
+	text = (_tmp0 = gtk_entry_get_text (entry), (_tmp0 == NULL) ? NULL : g_strdup (_tmp0));
+	if (strlen (text) > 0) {
+		gtk_widget_show ((GtkWidget*) entry);
+	} else {
+		gtk_widget_hide ((GtkWidget*) entry);
+		gtk_widget_grab_focus ((GtkWidget*) self->priv->tree_album);
+	}
 	gtk_tree_model_filter_refilter (self->priv->model_filter_album);
+	text = (g_free (text), NULL);
 }
 
 
@@ -488,6 +558,11 @@ static gboolean _gmpc_metadata_browser_browser_button_press_event_gtk_widget_but
 }
 
 
+static gboolean _gmpc_metadata_browser_browser_artist_key_press_event_gtk_widget_key_press_event (GtkTreeView* _sender, const GdkEventKey* event, gpointer self) {
+	return gmpc_metadata_browser_browser_artist_key_press_event (self, _sender, event);
+}
+
+
 static void _gmpc_metadata_browser_browser_artist_changed_gtk_tree_selection_changed (GtkTreeSelection* _sender, gpointer self) {
 	gmpc_metadata_browser_browser_artist_changed (self, _sender);
 }
@@ -500,6 +575,11 @@ static void _gmpc_metadata_browser_browser_album_entry_changed_gtk_editable_chan
 
 static gboolean _gmpc_metadata_browser_visible_func_album_gtk_tree_model_filter_visible_func (GtkTreeModel* model, GtkTreeIter* iter, gpointer self) {
 	return gmpc_metadata_browser_visible_func_album (self, model, iter);
+}
+
+
+static gboolean _gmpc_metadata_browser_browser_album_key_press_event_gtk_widget_key_press_event (GtkTreeView* _sender, const GdkEventKey* event, gpointer self) {
+	return gmpc_metadata_browser_browser_album_key_press_event (self, _sender, event);
 }
 
 
@@ -562,6 +642,7 @@ static void gmpc_metadata_browser_browser_init (GmpcMetadataBrowser* self) {
 		gtk_box_pack_start (self->priv->browser_box, (GtkWidget*) box, TRUE, TRUE, (guint) 0);
 		_tmp2 = NULL;
 		self->priv->artist_filter_entry = (_tmp2 = g_object_ref_sink ((GtkEntry*) gtk_entry_new ()), (self->priv->artist_filter_entry == NULL) ? NULL : (self->priv->artist_filter_entry = (g_object_unref (self->priv->artist_filter_entry), NULL)), _tmp2);
+		gtk_widget_set_no_show_all ((GtkWidget*) self->priv->artist_filter_entry, TRUE);
 		g_signal_connect_object ((GtkEditable*) self->priv->artist_filter_entry, "changed", (GCallback) _gmpc_metadata_browser_browser_artist_entry_changed_gtk_editable_changed, self, 0);
 		gtk_box_pack_start ((GtkBox*) box, (GtkWidget*) self->priv->artist_filter_entry, FALSE, FALSE, (guint) 0);
 		sw = g_object_ref_sink ((GtkScrolledWindow*) gtk_scrolled_window_new (NULL, NULL));
@@ -576,6 +657,7 @@ static void gmpc_metadata_browser_browser_init (GmpcMetadataBrowser* self) {
 		_tmp5 = NULL;
 		self->priv->tree_artist = (_tmp5 = g_object_ref_sink ((GtkTreeView*) gtk_tree_view_new_with_model ((GtkTreeModel*) self->priv->model_filter_artist)), (self->priv->tree_artist == NULL) ? NULL : (self->priv->tree_artist = (g_object_unref (self->priv->tree_artist), NULL)), _tmp5);
 		g_signal_connect_object ((GtkWidget*) self->priv->tree_artist, "button-press-event", (GCallback) _gmpc_metadata_browser_browser_button_press_event_gtk_widget_button_press_event, self, 0);
+		g_signal_connect_object ((GtkWidget*) self->priv->tree_artist, "key-press-event", (GCallback) _gmpc_metadata_browser_browser_artist_key_press_event_gtk_widget_key_press_event, self, 0);
 		gtk_container_add ((GtkContainer*) sw, (GtkWidget*) self->priv->tree_artist);
 		/* setup the columns */
 		column = g_object_ref_sink (gtk_tree_view_column_new ());
@@ -599,6 +681,7 @@ static void gmpc_metadata_browser_browser_init (GmpcMetadataBrowser* self) {
 		gtk_box_pack_start (self->priv->browser_box, (GtkWidget*) box, TRUE, TRUE, (guint) 0);
 		_tmp7 = NULL;
 		self->priv->album_filter_entry = (_tmp7 = g_object_ref_sink ((GtkEntry*) gtk_entry_new ()), (self->priv->album_filter_entry == NULL) ? NULL : (self->priv->album_filter_entry = (g_object_unref (self->priv->album_filter_entry), NULL)), _tmp7);
+		gtk_widget_set_no_show_all ((GtkWidget*) self->priv->album_filter_entry, TRUE);
 		g_signal_connect_object ((GtkEditable*) self->priv->album_filter_entry, "changed", (GCallback) _gmpc_metadata_browser_browser_album_entry_changed_gtk_editable_changed, self, 0);
 		gtk_box_pack_start ((GtkBox*) box, (GtkWidget*) self->priv->album_filter_entry, FALSE, FALSE, (guint) 0);
 		_tmp8 = NULL;
@@ -614,6 +697,7 @@ static void gmpc_metadata_browser_browser_init (GmpcMetadataBrowser* self) {
 		_tmp11 = NULL;
 		self->priv->tree_album = (_tmp11 = g_object_ref_sink ((GtkTreeView*) gtk_tree_view_new_with_model ((GtkTreeModel*) self->priv->model_filter_album)), (self->priv->tree_album == NULL) ? NULL : (self->priv->tree_album = (g_object_unref (self->priv->tree_album), NULL)), _tmp11);
 		g_signal_connect_object ((GtkWidget*) self->priv->tree_album, "button-press-event", (GCallback) _gmpc_metadata_browser_browser_button_press_event_gtk_widget_button_press_event, self, 0);
+		g_signal_connect_object ((GtkWidget*) self->priv->tree_album, "key-press-event", (GCallback) _gmpc_metadata_browser_browser_album_key_press_event_gtk_widget_key_press_event, self, 0);
 		gtk_container_add ((GtkContainer*) sw, (GtkWidget*) self->priv->tree_album);
 		/* setup the columns */
 		_tmp12 = NULL;
