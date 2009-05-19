@@ -97,6 +97,8 @@ public class Gmpc.Widget.More : Gtk.Frame {
 }
 
 public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface {
+    /* Stores the location in the cat_tree */
+    private Gtk.TreeRowReference rref = null;
 
     construct {
         /* Set the plugin as an internal one and of type pl_browser */
@@ -123,6 +125,14 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         
         if(this.model_artist != null) this.model_artist.set_mpd_data(null);
         if(this.model_albums != null)this.model_albums.set_mpd_data(null);
+
+        if(this.rref != null) {
+            var path = rref.get_path();
+            if(path != null) {
+                weak int[] indices  = path.get_indices();
+                config.set_int("Metadata Browser 2", "position", indices[0]);
+            }
+        }
     }
 
     /**
@@ -963,8 +973,11 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
     {
         Gtk.TreeView tree = (Gtk.TreeView)category_tree;
         Gtk.ListStore store = (Gtk.ListStore)tree.get_model();
+        Gtk.TreeModel model = tree.get_model();
         Gtk.TreeIter iter;
-        Gmpc.Browser.insert(out iter, 100);
+        Gmpc.Browser.insert(out iter, config.get_int_with_default("Metadata Browser 2", "position", 100));
+        /* Create a row reference */
+        this.rref = new Gtk.TreeRowReference(model,  model.get_path(iter));
 
         store.set(iter, 0, this.id, 1, _("Metadata Browser 2"), 3, "gtk-info"); 
     }

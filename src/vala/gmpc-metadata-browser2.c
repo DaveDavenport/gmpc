@@ -67,6 +67,7 @@ static GmpcWidgetMore* gmpc_widget_more_new (const char* markup, GtkWidget* chil
 static gpointer gmpc_widget_more_parent_class = NULL;
 static void gmpc_widget_more_finalize (GObject* obj);
 struct _GmpcMetadataBrowserPrivate {
+	GtkTreeRowReference* rref;
 	GtkPaned* paned;
 	GtkBox* browser_box;
 	GtkTreeView* tree_artist;
@@ -314,6 +315,20 @@ static void gmpc_metadata_browser_real_save_yourself (GmpcPluginBase* base) {
 	}
 	if (self->priv->model_albums != NULL) {
 		gmpc_mpddata_model_set_mpd_data (self->priv->model_albums, NULL);
+	}
+	if (self->priv->rref != NULL) {
+		GtkTreePath* path;
+		path = gtk_tree_row_reference_get_path (self->priv->rref);
+		if (path != NULL) {
+			gint* _tmp0;
+			gint indices_size;
+			gint indices_length1;
+			gint* indices;
+			_tmp0 = NULL;
+			indices = (_tmp0 = gtk_tree_path_get_indices (path), indices_length1 = -1, indices_size = indices_length1, _tmp0);
+			cfg_set_single_value_as_int (config, "Metadata Browser 2", "position", indices[0]);
+		}
+		(path == NULL) ? NULL : (path = (gtk_tree_path_free (path), NULL));
 	}
 }
 
@@ -1693,17 +1708,29 @@ static void gmpc_metadata_browser_real_browser_add (GmpcPluginBrowserIface* base
 	GtkTreeView* tree;
 	GtkListStore* _tmp1;
 	GtkListStore* store;
+	GtkTreeModel* _tmp2;
+	GtkTreeModel* model;
 	GtkTreeIter iter = {0};
+	GtkTreeRowReference* _tmp4;
+	GtkTreePath* _tmp3;
 	self = (GmpcMetadataBrowser*) base;
 	g_return_if_fail (category_tree != NULL);
 	_tmp0 = NULL;
 	tree = (_tmp0 = GTK_TREE_VIEW (category_tree), (_tmp0 == NULL) ? NULL : g_object_ref (_tmp0));
 	_tmp1 = NULL;
 	store = (_tmp1 = GTK_LIST_STORE (gtk_tree_view_get_model (tree)), (_tmp1 == NULL) ? NULL : g_object_ref (_tmp1));
-	playlist3_insert_browser (&iter, 100);
+	_tmp2 = NULL;
+	model = (_tmp2 = gtk_tree_view_get_model (tree), (_tmp2 == NULL) ? NULL : g_object_ref (_tmp2));
+	playlist3_insert_browser (&iter, cfg_get_single_value_as_int_with_default (config, "Metadata Browser 2", "position", 100));
+	/* Create a row reference */
+	_tmp4 = NULL;
+	_tmp3 = NULL;
+	self->priv->rref = (_tmp4 = gtk_tree_row_reference_new (model, _tmp3 = gtk_tree_model_get_path (model, &iter)), (self->priv->rref == NULL) ? NULL : (self->priv->rref = (gtk_tree_row_reference_free (self->priv->rref), NULL)), _tmp4);
+	(_tmp3 == NULL) ? NULL : (_tmp3 = (gtk_tree_path_free (_tmp3), NULL));
 	gtk_list_store_set (store, &iter, 0, ((GmpcPluginBase*) self)->id, 1, _ ("Metadata Browser 2"), 3, "gtk-info", -1);
 	(tree == NULL) ? NULL : (tree = (g_object_unref (tree), NULL));
 	(store == NULL) ? NULL : (store = (g_object_unref (store), NULL));
+	(model == NULL) ? NULL : (model = (g_object_unref (model), NULL));
 }
 
 
@@ -1840,6 +1867,7 @@ static void gmpc_metadata_browser_gmpc_plugin_browser_iface_interface_init (Gmpc
 
 static void gmpc_metadata_browser_instance_init (GmpcMetadataBrowser * self) {
 	self->priv = GMPC_METADATA_BROWSER_GET_PRIVATE (self);
+	self->priv->rref = NULL;
 	self->priv->paned = NULL;
 	self->priv->browser_box = NULL;
 	self->priv->tree_artist = NULL;
@@ -1861,6 +1889,7 @@ static void gmpc_metadata_browser_instance_init (GmpcMetadataBrowser * self) {
 static void gmpc_metadata_browser_finalize (GObject* obj) {
 	GmpcMetadataBrowser * self;
 	self = GMPC_METADATA_BROWSER (obj);
+	(self->priv->rref == NULL) ? NULL : (self->priv->rref = (gtk_tree_row_reference_free (self->priv->rref), NULL));
 	(self->priv->paned == NULL) ? NULL : (self->priv->paned = (g_object_unref (self->priv->paned), NULL));
 	(self->priv->browser_box == NULL) ? NULL : (self->priv->browser_box = (g_object_unref (self->priv->browser_box), NULL));
 	(self->priv->tree_artist == NULL) ? NULL : (self->priv->tree_artist = (g_object_unref (self->priv->tree_artist), NULL));
