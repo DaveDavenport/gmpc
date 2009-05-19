@@ -298,7 +298,7 @@ static gint* gmpc_metadata_browser_real_get_version (GmpcPluginBase* base, int* 
 static const char* gmpc_metadata_browser_real_get_name (GmpcPluginBase* base) {
 	GmpcMetadataBrowser * self;
 	self = (GmpcMetadataBrowser*) base;
-	return "MetaData Browser 2";
+	return N_ ("Metadata Browser 2");
 }
 
 
@@ -308,7 +308,7 @@ static void gmpc_metadata_browser_real_save_yourself (GmpcPluginBase* base) {
 	if (self->priv->paned != NULL) {
 		gint pos;
 		pos = gtk_paned_get_position (self->priv->paned);
-		cfg_set_single_value_as_int (config, "Metadata Browser 2", "pane-pos", pos);
+		cfg_set_single_value_as_int (config, gmpc_plugin_base_get_name ((GmpcPluginBase*) self), "pane-pos", pos);
 	}
 	if (self->priv->model_artist != NULL) {
 		gmpc_mpddata_model_set_mpd_data (self->priv->model_artist, NULL);
@@ -326,7 +326,7 @@ static void gmpc_metadata_browser_real_save_yourself (GmpcPluginBase* base) {
 			gint* indices;
 			_tmp0 = NULL;
 			indices = (_tmp0 = gtk_tree_path_get_indices (path), indices_length1 = -1, indices_size = indices_length1, _tmp0);
-			cfg_set_single_value_as_int (config, "Metadata Browser 2", "position", indices[0]);
+			cfg_set_single_value_as_int (config, gmpc_plugin_base_get_name ((GmpcPluginBase*) self), "position", indices[0]);
 		}
 		(path == NULL) ? NULL : (path = (gtk_tree_path_free (path), NULL));
 	}
@@ -552,7 +552,7 @@ static void gmpc_metadata_browser_browser_init (GmpcMetadataBrowser* self) {
 		GtkEventBox* _tmp23;
 		_tmp0 = NULL;
 		self->priv->paned = (_tmp0 = (GtkPaned*) g_object_ref_sink ((GtkHPaned*) gtk_hpaned_new ()), (self->priv->paned == NULL) ? NULL : (self->priv->paned = (g_object_unref (self->priv->paned), NULL)), _tmp0);
-		gtk_paned_set_position (self->priv->paned, cfg_get_single_value_as_int_with_default (config, "Metadata Browser 2", "pane-pos", 150));
+		gtk_paned_set_position (self->priv->paned, cfg_get_single_value_as_int_with_default (config, gmpc_plugin_base_get_name ((GmpcPluginBase*) self), "pane-pos", 150));
 		/* Bow with browsers */
 		_tmp1 = NULL;
 		self->priv->browser_box = (_tmp1 = (GtkBox*) g_object_ref_sink ((GtkVBox*) gtk_vbox_new (TRUE, 6)), (self->priv->browser_box == NULL) ? NULL : (self->priv->browser_box = (g_object_unref (self->priv->browser_box), NULL)), _tmp1);
@@ -1721,13 +1721,13 @@ static void gmpc_metadata_browser_real_browser_add (GmpcPluginBrowserIface* base
 	store = (_tmp1 = GTK_LIST_STORE (gtk_tree_view_get_model (tree)), (_tmp1 == NULL) ? NULL : g_object_ref (_tmp1));
 	_tmp2 = NULL;
 	model = (_tmp2 = gtk_tree_view_get_model (tree), (_tmp2 == NULL) ? NULL : g_object_ref (_tmp2));
-	playlist3_insert_browser (&iter, cfg_get_single_value_as_int_with_default (config, "Metadata Browser 2", "position", 100));
+	playlist3_insert_browser (&iter, cfg_get_single_value_as_int_with_default (config, gmpc_plugin_base_get_name ((GmpcPluginBase*) self), "position", 100));
 	/* Create a row reference */
 	_tmp4 = NULL;
 	_tmp3 = NULL;
 	self->priv->rref = (_tmp4 = gtk_tree_row_reference_new (model, _tmp3 = gtk_tree_model_get_path (model, &iter)), (self->priv->rref == NULL) ? NULL : (self->priv->rref = (gtk_tree_row_reference_free (self->priv->rref), NULL)), _tmp4);
 	(_tmp3 == NULL) ? NULL : (_tmp3 = (gtk_tree_path_free (_tmp3), NULL));
-	gtk_list_store_set (store, &iter, 0, ((GmpcPluginBase*) self)->id, 1, _ ("Metadata Browser 2"), 3, "gtk-info", -1);
+	gtk_list_store_set (store, &iter, 0, ((GmpcPluginBase*) self)->id, 1, _ (gmpc_plugin_base_get_name ((GmpcPluginBase*) self)), 3, "gtk-info", -1);
 	(tree == NULL) ? NULL : (tree = (g_object_unref (tree), NULL));
 	(store == NULL) ? NULL : (store = (g_object_unref (store), NULL));
 	(model == NULL) ? NULL : (model = (g_object_unref (model), NULL));

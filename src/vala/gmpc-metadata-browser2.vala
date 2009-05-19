@@ -114,13 +114,13 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
     }
 
     public override weak string get_name() {
-        return "MetaData Browser 2";
+        return N_("Metadata Browser 2");
     }
 
     public override void save_yourself() {
         if(this.paned != null) {
             int pos = this.paned.get_position();
-            config.set_int("Metadata Browser 2", "pane-pos", pos);
+            config.set_int(this.get_name(), "pane-pos", pos);
         }
         
         if(this.model_artist != null) this.model_artist.set_mpd_data(null);
@@ -130,10 +130,11 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
             var path = rref.get_path();
             if(path != null) {
                 weak int[] indices  = path.get_indices();
-                config.set_int("Metadata Browser 2", "position", indices[0]);
+                config.set_int(this.get_name(), "position", indices[0]);
             }
         }
     }
+
 
     /**
      * Browser part
@@ -228,7 +229,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         if(this.paned == null)
         {
             this.paned = new Gtk.HPaned();
-            this.paned.set_position(config.get_int_with_default("Metadata Browser 2", "pane-pos", 150));
+            this.paned.set_position(config.get_int_with_default(this.get_name(), "pane-pos", 150));
             /* Bow with browsers */
             this.browser_box = new Gtk.VBox(true, 6);
             this.paned.add1(this.browser_box);
@@ -975,11 +976,11 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         Gtk.ListStore store = (Gtk.ListStore)tree.get_model();
         Gtk.TreeModel model = tree.get_model();
         Gtk.TreeIter iter;
-        Gmpc.Browser.insert(out iter, config.get_int_with_default("Metadata Browser 2", "position", 100));
+        Gmpc.Browser.insert(out iter, config.get_int_with_default(this.get_name(), "position", 100));
         /* Create a row reference */
         this.rref = new Gtk.TreeRowReference(model,  model.get_path(iter));
 
-        store.set(iter, 0, this.id, 1, _("Metadata Browser 2"), 3, "gtk-info"); 
+        store.set(iter, 0, this.id, 1, _(this.get_name()), 3, "gtk-info"); 
     }
     public void browser_selected (Gtk.Container container)
     {
