@@ -421,6 +421,9 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         this.model_albums.set_mpd_data(null);
         this.model_artist.set_mpd_data(null);
 
+        this.artist_filter_entry.set_text("");
+        this.album_filter_entry.set_text("");
+
         /* Fill in the first browser */
         MPD.Database.search_field_start(server,MPD.Tag.Type.ARTIST);
         var data = MPD.Database.search_commit(server);

@@ -786,6 +786,8 @@ static void gmpc_metadata_browser_reload_browsers (GmpcMetadataBrowser* self) {
 	gmpc_mpddata_model_set_mpd_data (self->priv->model_songs, NULL);
 	gmpc_mpddata_model_set_mpd_data (self->priv->model_albums, NULL);
 	gmpc_mpddata_model_set_mpd_data (self->priv->model_artist, NULL);
+	gtk_entry_set_text (self->priv->artist_filter_entry, "");
+	gtk_entry_set_text (self->priv->album_filter_entry, "");
 	/* Fill in the first browser */
 	mpd_database_search_field_start (connection, MPD_TAG_ITEM_ARTIST);
 	data = mpd_database_search_commit (connection);
