@@ -1018,16 +1018,20 @@ void create_playlist3(void)
 	new_pb = pb;
 
 	/* Add volume slider. */
-	favorites_button = gmpc_favorites_button_new();
-	gtk_box_pack_end(GTK_BOX(glade_xml_get_widget(pl3_xml, "hbox10" /*playlist_player" */ )),
-					 GTK_WIDGET(favorites_button), FALSE, FALSE, 0);
-	gtk_widget_show(GTK_WIDGET(favorites_button));
 
 	volume_button = gtk_volume_button_new();
 	gtk_button_set_relief(GTK_BUTTON(volume_button), GTK_RELIEF_NORMAL);
 	gtk_box_pack_end(GTK_BOX(glade_xml_get_widget(pl3_xml, "hbox12" /*playlist_player" */ )),
 					 volume_button, FALSE, FALSE, 0);
 	gtk_widget_show_all(volume_button);
+	/* Make sure change is applied */
+
+	playlist3_new_header();
+	favorites_button = gmpc_favorites_button_new();
+	gtk_box_pack_start(GTK_BOX(glade_xml_get_widget(pl3_xml, "hbox10")),
+					 GTK_WIDGET(favorites_button), FALSE, FALSE, 0);
+	gtk_widget_show(GTK_WIDGET(favorites_button));
+
 	playlist_status_changed(connection,
 							MPD_CST_STATE | MPD_CST_SONGID | MPD_CST_NEXTSONG | 
 							MPD_CST_ELAPSED_TIME | MPD_CST_VOLUME |
@@ -1043,9 +1047,8 @@ void create_playlist3(void)
 								   cfg_get_single_value_as_int_with_default
 								   (config, "playlist", "cover-image-enable", 0));
 
-	/* Make sure change is applied */
 
-	playlist3_new_header();
+
 	/* connect signals that are defined in the gui description */
 	glade_xml_signal_autoconnect(pl3_xml);
 
