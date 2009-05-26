@@ -968,6 +968,8 @@ void main_quit(void)
  * and tries to autoconnect
  * (when enabled)
  */
+
+static int autoconnect_backoff = 0;
 static int autoconnect_callback(void)
 {
 	/* check if there is an connection. */
@@ -979,8 +981,13 @@ static int autoconnect_callback(void)
 			connect_to_mpd();
 		}
 	}
+	if(autoconnect_backoff < 60) autoconnect_backoff += 1;
 	/* keep the timeout running */
-	return TRUE;
+	printf("timeout: %i\n", 5+autoconnect_backoff);
+	if(autoconnect_timeout) 
+		g_source_remove(autoconnect_timeout);
+	autoconnect_timeout = g_timeout_add_seconds(5+autoconnect_backoff, (GSourceFunc) autoconnect_callback, NULL);
+	return FALSE;
 }
 
 static void init_stock_icons(void)
@@ -1169,6 +1176,7 @@ static void connection_changed(MpdObj * mi, int connected, gpointer data)
 		if (autoconnect_timeout)
 			g_source_remove(autoconnect_timeout);
 		autoconnect_timeout = 0;
+		autoconnect_backoff = 0;
 	}
 	/**
      * send password, first thing we do, if connected
@@ -1232,7 +1240,7 @@ static void connection_changed_real(GmpcConnection * obj, MpdObj * mi, int conne
 		if (autoconnect_timeout)
 			g_source_remove(autoconnect_timeout);
 		autoconnect_timeout = g_timeout_add_seconds(5, (GSourceFunc) autoconnect_callback, NULL);
-
+		autoconnect_backoff = 0;
 	}
 }
 
