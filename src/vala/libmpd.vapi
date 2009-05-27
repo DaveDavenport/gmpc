@@ -9,6 +9,8 @@ namespace MPD {
         public MPD.Song playlist_get_song(int songid);
         public weak MPD.Song playlist_get_current_song();
         public int player_get_next_song_id();
+
+        public bool sticker_supported();
     }
 
 

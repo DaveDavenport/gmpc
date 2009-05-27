@@ -736,7 +736,20 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         ali.add(fav_button);
         info_box.attach(ali, 1,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
         i++;
-
+        
+        if(server.sticker_supported())
+        {
+            /* Favored button */
+            var rating_button = new Gmpc.Rating(server, song);
+            label = new Gtk.Label("");
+            label.set_alignment(0.0f, 0.5f);
+            label.set_markup(Markup.printf_escaped("<b>%s:</b>",_("Rating")));
+            info_box.attach(label, 0,1,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
+            ali = new Gtk.Alignment(0.0f, 0.5f,0f,0f);
+            ali.add(rating_button);
+            info_box.attach(ali, 1,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
+            i++;
+        }
 
 
         /* Comment */
