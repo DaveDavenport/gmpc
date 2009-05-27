@@ -737,7 +737,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         info_box.attach(ali, 1,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
         i++;
         
-        if(server.sticker_supported())
+        if(MPD.Sticker.supported(server))
         {
             /* Favored button */
             var rating_button = new Gmpc.Rating(server, song);

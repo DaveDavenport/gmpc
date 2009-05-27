@@ -10,7 +10,6 @@ namespace MPD {
         public weak MPD.Song playlist_get_current_song();
         public int player_get_next_song_id();
 
-        public bool sticker_supported();
     }
 
 
@@ -47,7 +46,7 @@ namespace MPD {
             public void     set(MPD.Server connection, string file, string tag, string value);
             public string   get(MPD.Server connection, string file, string tag);
         }
-
+        public bool supported(MPD.Server connection);
     }
     namespace Status {
         [CCode (cname="ChangedStatusType", cprefix = "MPD_CST_", cheader_filename = "libmpd/libmpd.h")]
