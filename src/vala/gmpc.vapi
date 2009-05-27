@@ -14,7 +14,7 @@ namespace Gmpc {
 
     [CCode (cheader_filename="gmpc-meta-watcher.h")]
     public class MetaWatcher {
-       public void data_changed(MPD.Song song,  Gmpc.MetaData.Type type, Gmpc.MetaData.Result result,MetaData.Item met);
+        signal void data_changed(MPD.Song song,  Gmpc.MetaData.Type type, Gmpc.MetaData.Result result,MetaData.Item met);
 
 
         [CCode ( cname="gmpc_meta_watcher_get_meta_path", cheader_filename="gmpc-meta-watcher.h" )]
@@ -50,6 +50,9 @@ namespace Gmpc {
            public int size;
            public Gmpc.MetaData.ContentType content_type;
 
+           [CCode (cname="meta_data_is_empty")]
+           public bool is_empty();
+
            [CCode (cname="meta_data_set_uri")]
            public void set_uri(string uri);
            /* add accessors? */
@@ -68,6 +71,12 @@ namespace Gmpc {
 
            [CCode (cname="meta_data_get_text_vector")]
            public weak string[] get_text_vector();
+
+           [CCode (cname="meta_data_get_text_list")]
+           public weak GLib.List<weak string> get_text_list();
+
+           [CCode (cname="meta_data_is_text_list")]
+           public bool  is_text_list();
            [CCode (cname="meta_data_dup_steal")]
            public MetaData.Item dup_steal();
         }
@@ -113,6 +122,9 @@ namespace Gmpc {
             public Image(Type type, int size);
             [CCode (cname="gmpc_metaimage_update_cover_from_song")]
             public void update_from_song(MPD.Song song);
+
+            [CCode (cname="gmpc_metaimage_update_cover_from_song_delayed")]
+            public void update_from_song_delayed(MPD.Song song);
             [CCode (cname="gmpc_metaimage_set_squared")]
             public void set_squared(bool squared);
 
@@ -229,6 +241,8 @@ namespace Gmpc {
     namespace Misc{
         [CCode (cname="colorshift_pixbuf",cheader_filename="misc.h")]
         public void colorshift_pixbuf(Gdk.Pixbuf dest, Gdk.Pixbuf src, int shift);
+        [CCode (cname="misc_header_expose_event",cheader_filename="misc.h")]
+        public bool misc_header_expose_event(Gtk.Widget widget, Gdk.EventExpose event);
     }
 
     /* Browser */

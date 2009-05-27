@@ -30,6 +30,17 @@
 G_BEGIN_DECLS
 
 
+#define GMPC_WIDGET_TYPE_SIMILAR_ARTIST (gmpc_widget_similar_artist_get_type ())
+#define GMPC_WIDGET_SIMILAR_ARTIST(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), GMPC_WIDGET_TYPE_SIMILAR_ARTIST, GmpcWidgetSimilarArtist))
+#define GMPC_WIDGET_SIMILAR_ARTIST_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), GMPC_WIDGET_TYPE_SIMILAR_ARTIST, GmpcWidgetSimilarArtistClass))
+#define GMPC_WIDGET_IS_SIMILAR_ARTIST(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GMPC_WIDGET_TYPE_SIMILAR_ARTIST))
+#define GMPC_WIDGET_IS_SIMILAR_ARTIST_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GMPC_WIDGET_TYPE_SIMILAR_ARTIST))
+#define GMPC_WIDGET_SIMILAR_ARTIST_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), GMPC_WIDGET_TYPE_SIMILAR_ARTIST, GmpcWidgetSimilarArtistClass))
+
+typedef struct _GmpcWidgetSimilarArtist GmpcWidgetSimilarArtist;
+typedef struct _GmpcWidgetSimilarArtistClass GmpcWidgetSimilarArtistClass;
+typedef struct _GmpcWidgetSimilarArtistPrivate GmpcWidgetSimilarArtistPrivate;
+
 #define GMPC_WIDGET_TYPE_MORE (gmpc_widget_more_get_type ())
 #define GMPC_WIDGET_MORE(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), GMPC_WIDGET_TYPE_MORE, GmpcWidgetMore))
 #define GMPC_WIDGET_MORE_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), GMPC_WIDGET_TYPE_MORE, GmpcWidgetMoreClass))
@@ -52,6 +63,15 @@ typedef struct _GmpcMetadataBrowser GmpcMetadataBrowser;
 typedef struct _GmpcMetadataBrowserClass GmpcMetadataBrowserClass;
 typedef struct _GmpcMetadataBrowserPrivate GmpcMetadataBrowserPrivate;
 
+struct _GmpcWidgetSimilarArtist {
+	GtkTable parent_instance;
+	GmpcWidgetSimilarArtistPrivate * priv;
+};
+
+struct _GmpcWidgetSimilarArtistClass {
+	GtkTableClass parent_class;
+};
+
 struct _GmpcWidgetMore {
 	GtkFrame parent_instance;
 	GmpcWidgetMorePrivate * priv;
@@ -73,7 +93,11 @@ struct _GmpcMetadataBrowserClass {
 
 #define use_transition_mb TRUE
 #define some_unique_name_mb VERSION
+GtkWidget* gmpc_widget_similar_artist_new_artist_button (GmpcWidgetSimilarArtist* self, const char* artist, gboolean in_db);
+GType gmpc_widget_similar_artist_get_type (void);
 GType gmpc_widget_more_get_type (void);
+void gmpc_metadata_browser_set_artist (GmpcMetadataBrowser* self, const char* artist);
+void gmpc_metadata_browser_select_browser (GmpcMetadataBrowser* self, GtkTreeView* tree);
 GmpcMetadataBrowser* gmpc_metadata_browser_construct (GType object_type);
 GmpcMetadataBrowser* gmpc_metadata_browser_new (void);
 GType gmpc_metadata_browser_get_type (void);

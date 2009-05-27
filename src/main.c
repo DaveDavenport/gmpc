@@ -78,6 +78,8 @@ extern gmpcPlugin proxyplug;
 extern gmpcPlugin metab_plugin;
 extern gmpcPlugin playlist_editor_plugin;
 extern gmpcPlugin statistics_plugin;
+
+GmpcMetadataBrowser *metadata_browser = NULL;
 /**
  * Global objects that give signals
  */
@@ -711,7 +713,8 @@ int main(int argc, char **argv)
 
 	TEC("Loading internal plugins");
 	plugin_add_new(GMPC_PLUGIN_BASE(gmpc_test_plugin_new()), 0, NULL);
-	plugin_add_new(GMPC_PLUGIN_BASE(gmpc_metadata_browser_new()), 0, NULL);
+	metadata_browser = gmpc_metadata_browser_new();
+	plugin_add_new(GMPC_PLUGIN_BASE(metadata_browser), 0, NULL);
 	plugin_add_new(GMPC_PLUGIN_BASE(gmpc_plugin_metadata_prefetcher_new()), 0,NULL);
 	TEC("Loading new plugins");
 	/**

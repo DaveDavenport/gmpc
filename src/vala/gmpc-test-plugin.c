@@ -28,7 +28,6 @@
 #include <glib/gstdio.h>
 #include <metadata_cache.h>
 #include <main.h>
-#include <gmpc-meta-watcher.h>
 #include <pango/pango.h>
 #include <plugin.h>
 #include <config1.h>
@@ -512,8 +511,8 @@ void gmpc_meta_data_edit_window_store_image (GmpcMetaDataEditWindow* self, const
 			met_false->type = self->priv->query_type;
 			met_false->plugin_name = "User set";
 			met_false->content_type = META_DATA_CONTENT_EMPTY;
-			gmpc_meta_watcher_data_changed (gmw, self->priv->song, self->priv->query_type, META_DATA_UNAVAILABLE, met_false);
-			gmpc_meta_watcher_data_changed (gmw, self->priv->song, self->priv->query_type, META_DATA_AVAILABLE, met);
+			g_signal_emit_by_name (gmw, "data-changed", self->priv->song, self->priv->query_type, META_DATA_UNAVAILABLE, met_false);
+			g_signal_emit_by_name (gmw, "data-changed", self->priv->song, self->priv->query_type, META_DATA_AVAILABLE, met);
 			(met == NULL) ? NULL : (met = (meta_data_free (met), NULL));
 			(met_false == NULL) ? NULL : (met_false = (meta_data_free (met_false), NULL));
 		}
@@ -588,8 +587,8 @@ static void gmpc_meta_data_edit_window_set_metadata (GmpcMetaDataEditWindow* sel
 				met_false->type = self->priv->query_type;
 				met_false->plugin_name = "User set";
 				met_false->content_type = META_DATA_CONTENT_EMPTY;
-				gmpc_meta_watcher_data_changed (gmw, self->priv->song, self->priv->query_type, META_DATA_UNAVAILABLE, met_false);
-				gmpc_meta_watcher_data_changed (gmw, self->priv->song, self->priv->query_type, META_DATA_AVAILABLE, met);
+				g_signal_emit_by_name (gmw, "data-changed", self->priv->song, self->priv->query_type, META_DATA_UNAVAILABLE, met_false);
+				g_signal_emit_by_name (gmw, "data-changed", self->priv->song, self->priv->query_type, META_DATA_AVAILABLE, met);
 				(met == NULL) ? NULL : (met = (meta_data_free (met), NULL));
 				(met_false == NULL) ? NULL : (met_false = (meta_data_free (met_false), NULL));
 			} else {
@@ -626,8 +625,8 @@ static void gmpc_meta_data_edit_window_set_metadata (GmpcMetaDataEditWindow* sel
 				met_false->type = self->priv->query_type;
 				met_false->plugin_name = "User set";
 				met_false->content_type = META_DATA_CONTENT_EMPTY;
-				gmpc_meta_watcher_data_changed (gmw, self->priv->song, self->priv->query_type, META_DATA_UNAVAILABLE, met_false);
-				gmpc_meta_watcher_data_changed (gmw, self->priv->song, self->priv->query_type, META_DATA_AVAILABLE, met);
+				g_signal_emit_by_name (gmw, "data-changed", self->priv->song, self->priv->query_type, META_DATA_UNAVAILABLE, met_false);
+				g_signal_emit_by_name (gmw, "data-changed", self->priv->song, self->priv->query_type, META_DATA_AVAILABLE, met);
 				(met == NULL) ? NULL : (met = (meta_data_free (met), NULL));
 				(met_false == NULL) ? NULL : (met_false = (meta_data_free (met_false), NULL));
 			}

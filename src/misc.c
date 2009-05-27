@@ -620,7 +620,7 @@ void misc_header_style_set_process_containers(GtkWidget *container, GtkStyle *ol
 	}	
 
 }
-gboolean misc_header_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
+gboolean misc_header_expose_event(GtkWidget *widget, GdkEventExpose *event)
 {
 	int width = widget->allocation.width;
 	int height = widget->allocation.height;

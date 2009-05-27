@@ -33,6 +33,7 @@
 #include "gmpc-metaimage.h"
 #include "vala/gmpc-progress.h"
 #include "vala/gmpc-favorites.h"
+#include "vala/gmpc-metadata-browser2.h"
 #ifdef ENABLE_IGE
 #include "ige-mac-menu.h"
 #include "ige-mac-dock.h"
@@ -2086,12 +2087,16 @@ static void playlist3_header_song(void)
 	}
 }
 
+extern GmpcMetadataBrowser *metadata_browser;
 static void playlist3_header_artist(void)
 {
 	mpd_Song *song = mpd_playlist_get_current_song(connection);
 	if (song && song->artist) {
-		info2_activate();
-		info2_fill_artist_view(song->artist);
+		GtkTreeView *tree = (GtkTreeView *) glade_xml_get_widget(pl3_xml, "cat_tree");
+		gmpc_metadata_browser_select_browser(metadata_browser, tree);
+		gmpc_metadata_browser_set_artist(metadata_browser, song->artist);
+//		info2_activate();
+//		info2_fill_artist_view(song->artist);
 	}
 }
 

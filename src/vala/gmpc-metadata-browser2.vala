@@ -23,6 +23,137 @@ using Gmpc;
 private const bool use_transition_mb = Gmpc.use_transition;
 private const string some_unique_name_mb = Config.VERSION;
 
+public class Gmpc.Widget.SimilarArtist : Gtk.Table {
+    private MPD.Song song = null;
+    private Gmpc.MetadataBrowser more = null;
+
+    private void metadata_changed(MetaWatcher gmw, MPD.Song song, Gmpc.MetaData.Type type, Gmpc.MetaData.Result result, Gmpc.MetaData.Item met)
+    {
+        if(this.song.artist.collate(song.artist)!=0) return;
+
+        stdout.printf("%s-%s: %i\n", this.song.artist, song.artist, result);
+        /* clear widgets */
+        var child_list = this.get_children();
+        foreach(Gtk.Widget child in child_list)
+        {
+            child.destroy();
+        }
+
+        if(result == Gmpc.MetaData.Result.UNAVAILABLE || met.is_empty() || !met.is_text_list())
+        {
+            var label = new Gtk.Label(_("Unavailable"));
+            this.attach(label, 0,1,0,1,Gtk.AttachOptions.SHRINK, Gtk.AttachOptions.SHRINK, 0,0);
+        }
+        else if(result == Gmpc.MetaData.Result.FETCHING){
+            var label = new Gtk.Label(_("Fetching"));
+            this.attach(label, 0,1,0,1,Gtk.AttachOptions.SHRINK, Gtk.AttachOptions.SHRINK, 0,0);
+        }else
+        {
+            List<Gtk.Widget> in_db_list = null;
+            GLib.List<weak string> list = met.get_text_list().copy();
+            if(list != null)
+            {
+                MPD.Database.search_field_start(server, MPD.Tag.Type.ARTIST);
+                var data = MPD.Database.search_commit(server);
+                weak MPD.Data.Item iter = data.first();
+                while(iter != null && list != null)
+                {
+                    weak List<weak string> liter= list.first();
+                    var artist = GLib.Regex.escape_string(iter.tag);
+                    try{
+                        var reg = new GLib.Regex(artist, GLib.RegexCompileFlags.CASELESS);
+                        do{
+                            if(reg.match(liter.data))
+                            {
+                                in_db_list.prepend(new_artist_button(liter.data, true));
+                                list.remove(liter.data);
+                                liter = null;
+                            }
+                        }while(liter != null && (liter = liter.next) != null);
+                    }catch (Error E)
+                    {
+                        GLib.assert_not_reached ();
+                    }
+                    iter = iter.next(false);
+                }
+            }
+            foreach(string artist in list)
+            {
+                in_db_list.prepend(new_artist_button(artist, false));
+            }
+            in_db_list.reverse();
+            int i=0;
+            foreach(Gtk.Widget item in in_db_list)
+            {
+                if(i<50){
+                    this.attach(item, i%4,i%4+1,i/4,i/4+1,Gtk.AttachOptions.EXPAND|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK, 0,0);
+                }else{
+                    item.ref_sink();
+                    item.destroy();
+                }
+                i++;
+            }
+
+        }
+
+        this.show_all();
+    }
+    
+    public
+    Gtk.Widget
+    new_artist_button(string artist, bool in_db)
+    {
+        var hbox = new Gtk.HBox(false, 6);
+        hbox.border_width = 6;
+
+        var event = new Gtk.EventBox();
+        event.app_paintable = true;
+        event.expose_event += Gmpc.Misc.misc_header_expose_event;
+
+        var image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ARTIST_ART, 48);
+        var song = new MPD.Song();
+        song.artist = artist;
+        image.update_from_song_delayed(song);
+        hbox.pack_start(image,false,false,0);
+
+        var label = new Gtk.Label(artist);
+        label.set_alignment(0.0f, 0.5f);
+        label.ellipsize = Pango.EllipsizeMode.END; 
+        hbox.pack_start(label,true,true,0);
+
+        if(in_db)
+        {
+            var find = new Gtk.Button.from_stock("gtk-find");
+            find.set_relief(Gtk.ReliefStyle.NONE);
+            hbox.pack_start(find,false,false,0);
+        }
+
+        event.add(hbox);
+        event.set_size_request(180,60);
+        return event;
+    }
+
+    SimilarArtist(Gmpc.MetadataBrowser more,MPD.Server server, MPD.Song song)
+    {
+        MetaData.Item item = null;
+        this.more = more;
+        this.song = song;
+
+        this.set_homogeneous(true);
+
+        this.set_row_spacings(6);
+        this.set_col_spacings(6);
+
+        metawatcher.data_changed += metadata_changed;
+
+        Gmpc.MetaData.Result result = metawatcher.query(song, Gmpc.MetaData.Type.ARTIST_SIMILAR,out item);
+        if(result == Gmpc.MetaData.Result.AVAILABLE)
+        {
+            this.metadata_changed(metawatcher, this.song, Gmpc.MetaData.Type.ARTIST_SIMILAR, result, item); 
+        }
+    }
+
+}
 
 public class Gmpc.Widget.More : Gtk.Frame {
     private Gtk.Alignment ali = null;
@@ -549,7 +680,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
                 MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM, album);
             var data = MPD.Database.search_commit(server);
             if(data != null) {
-                weak MPD.Data.Item iter = data.first();
+                weak MPD.Data.Item iter = Gmpc.MpdData.sort_album_disc_track(data);
                 do{
                     MPD.PlayQueue.queue_add_song(server, iter.tag);
                 }while((iter = iter.next(false)) != null);
@@ -574,7 +705,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
                 MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM, album);
             var data = MPD.Database.search_commit(server);
             if(data != null) {
-                weak MPD.Data.Item iter = data.first();
+                weak MPD.Data.Item iter = Gmpc.MpdData.sort_album_disc_track(data);
                 MPD.PlayQueue.clear(server);
                 do{
                     MPD.PlayQueue.queue_add_song(server, iter.tag);
@@ -1000,6 +1131,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         info_box.attach(hbox, 0,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
         i++;
 
+
         var text_view = new Gmpc.MetaData.TextView(Gmpc.MetaData.Type.ARTIST_TXT);
         text_view.set_left_margin(8);
         var frame = new Gmpc.Widget.More(Markup.printf_escaped("<b>%s:</b>", _("Artist information")),text_view);
@@ -1008,6 +1140,15 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         vbox.pack_start(frame, false, false, 0);
 
 
+        label = new Gtk.Label(_("Similar artist"));
+        label.set_markup("<span weight='bold'>%s</span>".printf(_("Similar artist")));
+        label.set_alignment(0.0f, 0.0f);
+        vbox.pack_start(label, false, false, 0);
+
+        var similar_artist = new Gmpc.Widget.SimilarArtist(this,server, song); 
+
+
+        vbox.pack_start(similar_artist, false, false, 0);
         var song_links = new Gmpc.Song.Links(Gmpc.Song.Links.Type.ARTIST,song);
         vbox.pack_start(song_links,false, false, 0);
         /**
@@ -1096,5 +1237,43 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
                 metadata_box_update();
             }
         }
+    }
+
+    public
+    void
+    set_artist(string artist)
+    {
+        /* clear */
+        this.artist_filter_entry.set_text("");
+        Gtk.TreeIter iter;
+        if(this.model_filter_artist.get_iter_first(out iter))
+        {
+            do{
+                string lartist= null;
+                this.model_filter_artist.get(iter, 7, out lartist, -1);
+                stdout.printf("%s::%s\n", lartist, artist);
+                if( lartist != null && lartist.collate(artist) == 0){
+                    this.tree_artist.get_selection().select_iter(iter);
+                    this.tree_artist.scroll_to_cell(this.model_filter_artist.get_path(iter), null, true, 0.5f,0f);
+                    return;
+                }
+            }while((this.model_filter_artist).iter_next(ref iter));
+        }
+    }
+
+    public 
+    void
+    select_browser(Gtk.TreeView tree)
+    {
+        var path = rref.get_path();
+        var model = rref.get_model();
+        if(path != null){
+            Gtk.TreeIter iter;
+            if(model.get_iter(out iter, path))
+            {
+                tree.get_selection().select_iter(iter);
+            }
+        }
+
     }
 }
