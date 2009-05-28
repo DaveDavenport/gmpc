@@ -410,6 +410,16 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
                 this.refresh.sensitive = true;
            }
            else this.warning_label.show();
+        }else  if (active == 5) {
+           this.query_type = Gmpc.MetaData.Type.SONG_GUITAR_TAB;  
+
+           if(this.song.artist != null && this.song.title != null)
+           {
+                this.artist_entry.sensitive = true;
+                this.title_entry.sensitive = true;
+                this.refresh.sensitive = true;
+           }
+           else this.warning_label.show();
         }
 
 
@@ -517,6 +527,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
         this.combo.append_text(_("Song Lyrics"));
         this.combo.append_text(_("Album Info"));
         this.combo.append_text(_("Artist Biography"));
+        this.combo.append_text(_("Guitar Tab"));
 
         this.combo.changed += combo_box_changed;
 
@@ -581,6 +592,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
         else if(type == Gmpc.MetaData.Type.SONG_TXT)  this.combo.set_active(2);
         else if(type == Gmpc.MetaData.Type.ALBUM_TXT)  this.combo.set_active(3);
         else if(type == Gmpc.MetaData.Type.ARTIST_TXT)this.combo.set_active(4);
+        else if(type == Gmpc.MetaData.Type.SONG_GUITAR_TAB)this.combo.set_active(5);
 /*
         this.refresh.sensitive = false;
         this.combo.sensitive = false;

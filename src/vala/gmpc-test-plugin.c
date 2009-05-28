@@ -797,6 +797,24 @@ static void gmpc_meta_data_edit_window_combo_box_changed (GmpcMetaDataEditWindow
 						} else {
 							gtk_widget_show ((GtkWidget*) self->priv->warning_label);
 						}
+					} else {
+						if (active == 5) {
+							gboolean _tmp4;
+							self->priv->query_type = META_SONG_GUITAR_TAB;
+							_tmp4 = FALSE;
+							if (self->priv->song->artist != NULL) {
+								_tmp4 = self->priv->song->title != NULL;
+							} else {
+								_tmp4 = FALSE;
+							}
+							if (_tmp4) {
+								g_object_set ((GtkWidget*) self->priv->artist_entry, "sensitive", TRUE, NULL);
+								g_object_set ((GtkWidget*) self->priv->title_entry, "sensitive", TRUE, NULL);
+								g_object_set ((GtkWidget*) self->priv->refresh, "sensitive", TRUE, NULL);
+							} else {
+								gtk_widget_show ((GtkWidget*) self->priv->warning_label);
+							}
+						}
 					}
 				}
 			}
@@ -804,10 +822,10 @@ static void gmpc_meta_data_edit_window_combo_box_changed (GmpcMetaDataEditWindow
 	}
 	if (active < 2) {
 		GtkCellRendererPixbuf* renderer;
-		GtkTreeViewColumn* _tmp4;
+		GtkTreeViewColumn* _tmp5;
 		renderer = g_object_ref_sink ((GtkCellRendererPixbuf*) gtk_cell_renderer_pixbuf_new ());
-		_tmp4 = NULL;
-		self->priv->column = (_tmp4 = g_object_ref_sink (gtk_tree_view_column_new ()), (self->priv->column == NULL) ? NULL : (self->priv->column = (g_object_unref (self->priv->column), NULL)), _tmp4);
+		_tmp5 = NULL;
+		self->priv->column = (_tmp5 = g_object_ref_sink (gtk_tree_view_column_new ()), (self->priv->column == NULL) ? NULL : (self->priv->column = (g_object_unref (self->priv->column), NULL)), _tmp5);
 		gtk_tree_view_column_set_resizable (self->priv->column, TRUE);
 		gtk_cell_layout_pack_start ((GtkCellLayout*) self->priv->column, (GtkCellRenderer*) renderer, FALSE);
 		g_object_set ((GObject*) renderer, "xalign", 0.0f, NULL);
@@ -818,10 +836,10 @@ static void gmpc_meta_data_edit_window_combo_box_changed (GmpcMetaDataEditWindow
 		(renderer == NULL) ? NULL : (renderer = (g_object_unref (renderer), NULL));
 	} else {
 		GtkCellRendererText* renderer;
-		GtkTreeViewColumn* _tmp5;
+		GtkTreeViewColumn* _tmp6;
 		renderer = g_object_ref_sink ((GtkCellRendererText*) gtk_cell_renderer_text_new ());
-		_tmp5 = NULL;
-		self->priv->column = (_tmp5 = g_object_ref_sink (gtk_tree_view_column_new ()), (self->priv->column == NULL) ? NULL : (self->priv->column = (g_object_unref (self->priv->column), NULL)), _tmp5);
+		_tmp6 = NULL;
+		self->priv->column = (_tmp6 = g_object_ref_sink (gtk_tree_view_column_new ()), (self->priv->column == NULL) ? NULL : (self->priv->column = (g_object_unref (self->priv->column), NULL)), _tmp6);
 		gtk_tree_view_column_set_resizable (self->priv->column, TRUE);
 		gtk_cell_layout_pack_start ((GtkCellLayout*) self->priv->column, (GtkCellRenderer*) renderer, FALSE);
 		gtk_tree_view_append_column (self->priv->tree, self->priv->column);
@@ -963,6 +981,7 @@ GmpcMetaDataEditWindow* gmpc_meta_data_edit_window_construct (GType object_type,
 	gtk_combo_box_append_text (self->priv->combo, _ ("Song Lyrics"));
 	gtk_combo_box_append_text (self->priv->combo, _ ("Album Info"));
 	gtk_combo_box_append_text (self->priv->combo, _ ("Artist Biography"));
+	gtk_combo_box_append_text (self->priv->combo, _ ("Guitar Tab"));
 	g_signal_connect_object (self->priv->combo, "changed", (GCallback) _gmpc_meta_data_edit_window_combo_box_changed_gtk_combo_box_changed, self, 0);
 	gtk_box_pack_start ((GtkBox*) vbox, (GtkWidget*) qhbox, FALSE, FALSE, (guint) 0);
 	_tmp12 = NULL;
@@ -1042,6 +1061,10 @@ GmpcMetaDataEditWindow* gmpc_meta_data_edit_window_construct (GType object_type,
 				} else {
 					if (type == META_ARTIST_TXT) {
 						gtk_combo_box_set_active (self->priv->combo, 4);
+					} else {
+						if (type == META_SONG_GUITAR_TAB) {
+							gtk_combo_box_set_active (self->priv->combo, 5);
+						}
 					}
 				}
 			}

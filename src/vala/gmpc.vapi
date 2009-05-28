@@ -90,8 +90,9 @@ namespace Gmpc {
             ARTIST_SIMILAR  = 32,
             SONG_SIMILAR    = 64,
             GENRE_SIMILAR   = 128,
-            QUERY_DATA_TYPES = 255,
-            QUERY_NO_CACHE   = 256
+            SONG_GUITAR_TAB = 256,
+            QUERY_DATA_TYPES = 65535,
+            QUERY_NO_CACHE   = 65536
         }
 
         [CCode (cname="MetaDataResult", cprefix = "META_DATA_", cheader_filename = "metadata.h")]
