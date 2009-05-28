@@ -56,7 +56,13 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 		Self *gmi =  GET_NEW;
 		gmi->_priv->type = type;
         gtk_text_buffer_create_tag (gmi->_priv->buffer, "not_editable",
-                "editable", FALSE, NULL);
+                "editable", FALSE, 
+                NULL);
+
+        gtk_text_buffer_create_tag (gmi->_priv->buffer, "monospace",
+                "family", "Monospace",
+                "family-set", TRUE,
+                NULL);
 		return (GtkWidget *)gmi;
 	}
 
@@ -205,11 +211,15 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
     void
     set_text(self,const gchar *text, gsize length, int ro)
     {
+        GtkTextIter iter;
+        GtkTextIter end_iter;
         gtk_text_buffer_set_text(self->_priv->buffer, text, length);
+
+        gtk_text_buffer_get_start_iter(self->_priv->buffer, &iter);
+        gtk_text_buffer_get_end_iter(self->_priv->buffer, &end_iter);
+        gtk_text_buffer_apply_tag_by_name(self->_priv->buffer, "monospace",&iter, &end_iter);
         if(!ro)
         {
-            GtkTextIter iter;
-            GtkTextIter end_iter;
             GtkTextChildAnchor *anch;
             self->_priv->edit = gtk_button_new_from_stock(GTK_STOCK_EDIT); 
             self->_priv->cancel = gtk_button_new_from_stock(GTK_STOCK_CANCEL); 
