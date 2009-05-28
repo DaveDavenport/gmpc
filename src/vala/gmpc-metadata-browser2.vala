@@ -944,6 +944,14 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
 
         vbox.pack_start(frame, false, false, 0);
 
+        /* Guitar Tab */
+        text_view = new Gmpc.MetaData.TextView(Gmpc.MetaData.Type.SONG_GUITAR_TAB);
+        text_view.set_left_margin(8);
+        frame = new Gmpc.Widget.More(Markup.printf_escaped("<b>%s:</b>", _("Guitar Tabs")),text_view);
+        text_view.query_from_song(song);
+
+        vbox.pack_start(frame, false, false, 0);
+
 
         var song_links = new Gmpc.Song.Links(Gmpc.Song.Links.Type.SONG,song);
         vbox.pack_start(song_links,false, false, 0);

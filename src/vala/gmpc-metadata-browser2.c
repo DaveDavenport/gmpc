@@ -1521,6 +1521,9 @@ static void gmpc_metadata_browser_metadata_box_show_song (GmpcMetadataBrowser* s
 	char* _tmp40;
 	GmpcWidgetMore* _tmp41;
 	GmpcWidgetMore* frame;
+	GmpcMetaTextView* _tmp42;
+	GmpcWidgetMore* _tmp44;
+	char* _tmp43;
 	GmpcSongLinks* song_links;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (song != NULL);
@@ -1790,6 +1793,16 @@ static void gmpc_metadata_browser_metadata_box_show_song (GmpcMetadataBrowser* s
 	_tmp40 = NULL;
 	_tmp41 = NULL;
 	frame = (_tmp41 = g_object_ref_sink (gmpc_widget_more_new (_tmp40 = g_markup_printf_escaped ("<b>%s:</b>", _ ("Lyrics")), (GtkWidget*) text_view)), _tmp40 = (g_free (_tmp40), NULL), _tmp41);
+	gmpc_meta_text_view_query_text_from_song (text_view, song);
+	gtk_box_pack_start ((GtkBox*) vbox, (GtkWidget*) frame, FALSE, FALSE, (guint) 0);
+	/* Guitar Tab */
+	_tmp42 = NULL;
+	text_view = (_tmp42 = g_object_ref_sink (gmpc_meta_text_view_new (META_SONG_GUITAR_TAB)), (text_view == NULL) ? NULL : (text_view = (g_object_unref (text_view), NULL)), _tmp42);
+	gtk_text_view_set_left_margin ((GtkTextView*) text_view, 8);
+	_tmp44 = NULL;
+	_tmp43 = NULL;
+	frame = (_tmp44 = g_object_ref_sink (gmpc_widget_more_new (_tmp43 = g_markup_printf_escaped ("<b>%s:</b>", _ ("Guitar Tabs")), (GtkWidget*) text_view)), (frame == NULL) ? NULL : (frame = (g_object_unref (frame), NULL)), _tmp44);
+	_tmp43 = (g_free (_tmp43), NULL);
 	gmpc_meta_text_view_query_text_from_song (text_view, song);
 	gtk_box_pack_start ((GtkBox*) vbox, (GtkWidget*) frame, FALSE, FALSE, (guint) 0);
 	song_links = g_object_ref_sink (gmpc_song_links_new (GMPC_SONG_LINKS_TYPE_SONG, song));

@@ -70,6 +70,7 @@ class Gmpc:Meta:Watcher from  G:Object {
 					return TRUE;
                 return FALSE;
 			case META_SONG_TXT:
+            case META_SONG_GUITAR_TAB:
 				if(song1->artist && song2->artist && !strcmp(song1->artist, song2->artist))
                     if(song1->title && song2->title && !strcmp(song1->title, song2->title))
                         return TRUE;
