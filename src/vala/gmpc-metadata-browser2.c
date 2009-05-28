@@ -46,9 +46,10 @@
 
 
 
+static glong string_get_length (const char* self);
 struct _GmpcWidgetSimilarArtistPrivate {
 	mpd_Song* song;
-	GmpcMetadataBrowser* more;
+	GmpcMetadataBrowser* browser;
 };
 
 #define GMPC_WIDGET_SIMILAR_ARTIST_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GMPC_WIDGET_TYPE_SIMILAR_ARTIST, GmpcWidgetSimilarArtistPrivate))
@@ -57,10 +58,12 @@ enum  {
 };
 static void _g_list_free_g_object_unref (GList* self);
 static void gmpc_widget_similar_artist_metadata_changed (GmpcWidgetSimilarArtist* self, GmpcMetaWatcher* gmw, const mpd_Song* song, MetaDataType type, MetaDataResult result, const MetaData* met);
+static void gmpc_widget_similar_artist_artist_button_clicked (GmpcWidgetSimilarArtist* self, GtkButton* button);
 static gboolean _misc_header_expose_event_gtk_widget_expose_event (GtkEventBox* _sender, const GdkEventExpose* event, gpointer self);
+static void _gmpc_widget_similar_artist_artist_button_clicked_gtk_button_clicked (GtkButton* _sender, gpointer self);
 static void _gmpc_widget_similar_artist_metadata_changed_gmpc_meta_watcher_data_changed (GmpcMetaWatcher* _sender, const mpd_Song* song, MetaDataType type, MetaDataResult result, const MetaData* met, gpointer self);
-static GmpcWidgetSimilarArtist* gmpc_widget_similar_artist_construct (GType object_type, GmpcMetadataBrowser* more, MpdObj* server, const mpd_Song* song);
-static GmpcWidgetSimilarArtist* gmpc_widget_similar_artist_new (GmpcMetadataBrowser* more, MpdObj* server, const mpd_Song* song);
+static GmpcWidgetSimilarArtist* gmpc_widget_similar_artist_construct (GType object_type, GmpcMetadataBrowser* browser, MpdObj* server, const mpd_Song* song);
+static GmpcWidgetSimilarArtist* gmpc_widget_similar_artist_new (GmpcMetadataBrowser* browser, MpdObj* server, const mpd_Song* song);
 static gpointer gmpc_widget_similar_artist_parent_class = NULL;
 static void gmpc_widget_similar_artist_finalize (GObject* obj);
 struct _GmpcWidgetMorePrivate {
@@ -164,6 +167,12 @@ static void gmpc_metadata_browser_finalize (GObject* obj);
 
 
 
+static glong string_get_length (const char* self) {
+	g_return_val_if_fail (self != NULL, 0L);
+	return g_utf8_strlen (self, -1);
+}
+
+
 static void _g_list_free_g_object_unref (GList* self) {
 	g_list_foreach (self, (GFunc) g_object_unref, NULL);
 	g_list_free (self);
@@ -181,6 +190,9 @@ static void gmpc_widget_similar_artist_metadata_changed (GmpcWidgetSimilarArtist
 	g_return_if_fail (met != NULL);
 	inner_error = NULL;
 	if (g_utf8_collate (self->priv->song->artist, song->artist) != 0) {
+		return;
+	}
+	if (type != META_ARTIST_SIMILAR) {
 		return;
 	}
 	fprintf (stdout, "%s-%s: %i\n", self->priv->song->artist, song->artist, (gint) result);
@@ -238,8 +250,7 @@ static void gmpc_widget_similar_artist_metadata_changed (GmpcWidgetSimilarArtist
 				iter = mpd_data_get_first (data);
 				while (TRUE) {
 					gboolean _tmp3;
-					GList* liter;
-					char* artist;
+					gboolean _tmp4;
 					_tmp3 = FALSE;
 					if (iter != NULL) {
 						_tmp3 = list != NULL;
@@ -249,63 +260,73 @@ static void gmpc_widget_similar_artist_metadata_changed (GmpcWidgetSimilarArtist
 					if (!_tmp3) {
 						break;
 					}
-					liter = g_list_first (list);
-					artist = g_regex_escape_string (iter->tag, -1);
-					{
-						GRegex* reg;
-						gboolean _tmp4;
-						reg = g_regex_new (artist, G_REGEX_CASELESS, 0, &inner_error);
-						if (inner_error != NULL) {
-							goto __catch8_g_error;
-							goto __finally8;
-						}
+					_tmp4 = FALSE;
+					if (iter->tag != NULL) {
+						_tmp4 = string_get_length (iter->tag) > 0;
+					} else {
 						_tmp4 = FALSE;
-						do {
-							if (_tmp4) {
-								gboolean _tmp5;
-								_tmp5 = FALSE;
-								if (liter != NULL) {
-									_tmp5 = (liter = liter->next) != NULL;
-								} else {
-									_tmp5 = FALSE;
-								}
-								if (!_tmp5) {
-									break;
-								}
-							}
-							_tmp4 = TRUE;
-							if (g_regex_match (reg, (const char*) liter->data, 0, NULL)) {
-								in_db_list = g_list_prepend (in_db_list, gmpc_widget_similar_artist_new_artist_button (self, (const char*) liter->data, TRUE));
-								list = g_list_remove (list, (const char*) liter->data);
-								liter = NULL;
-							}
-						} while (TRUE);
-						(reg == NULL) ? NULL : (reg = (g_regex_unref (reg), NULL));
 					}
-					goto __finally8;
-					__catch8_g_error:
-					{
-						GError * E;
-						E = inner_error;
-						inner_error = NULL;
+					if (_tmp4) {
+						GList* liter;
+						char* artist;
+						liter = g_list_first (list);
+						artist = g_regex_escape_string (iter->tag, -1);
 						{
-							g_assert_not_reached ();
-							(E == NULL) ? NULL : (E = (g_error_free (E), NULL));
+							GRegex* reg;
+							gboolean _tmp5;
+							reg = g_regex_new (artist, G_REGEX_CASELESS, 0, &inner_error);
+							if (inner_error != NULL) {
+								goto __catch8_g_error;
+								goto __finally8;
+							}
+							_tmp5 = FALSE;
+							do {
+								if (_tmp5) {
+									gboolean _tmp6;
+									_tmp6 = FALSE;
+									if (liter != NULL) {
+										_tmp6 = (liter = liter->next) != NULL;
+									} else {
+										_tmp6 = FALSE;
+									}
+									if (!_tmp6) {
+										break;
+									}
+								}
+								_tmp5 = TRUE;
+								if (g_regex_match (reg, (const char*) liter->data, 0, NULL)) {
+									in_db_list = g_list_prepend (in_db_list, gmpc_widget_similar_artist_new_artist_button (self, iter->tag, TRUE));
+									list = g_list_remove (list, (const char*) liter->data);
+									liter = NULL;
+								}
+							} while (TRUE);
+							(reg == NULL) ? NULL : (reg = (g_regex_unref (reg), NULL));
 						}
-					}
-					__finally8:
-					if (inner_error != NULL) {
+						goto __finally8;
+						__catch8_g_error:
+						{
+							GError * E;
+							E = inner_error;
+							inner_error = NULL;
+							{
+								g_assert_not_reached ();
+								(E == NULL) ? NULL : (E = (g_error_free (E), NULL));
+							}
+						}
+						__finally8:
+						if (inner_error != NULL) {
+							artist = (g_free (artist), NULL);
+							(data == NULL) ? NULL : (data = (mpd_data_free (data), NULL));
+							(in_db_list == NULL) ? NULL : (in_db_list = (_g_list_free_g_object_unref (in_db_list), NULL));
+							(list == NULL) ? NULL : (list = (g_list_free (list), NULL));
+							(child_list == NULL) ? NULL : (child_list = (g_list_free (child_list), NULL));
+							g_critical ("file %s: line %d: uncaught error: %s", __FILE__, __LINE__, inner_error->message);
+							g_clear_error (&inner_error);
+							return;
+						}
 						artist = (g_free (artist), NULL);
-						(data == NULL) ? NULL : (data = (mpd_data_free (data), NULL));
-						(in_db_list == NULL) ? NULL : (in_db_list = (_g_list_free_g_object_unref (in_db_list), NULL));
-						(list == NULL) ? NULL : (list = (g_list_free (list), NULL));
-						(child_list == NULL) ? NULL : (child_list = (g_list_free (child_list), NULL));
-						g_critical ("file %s: line %d: uncaught error: %s", __FILE__, __LINE__, inner_error->message);
-						g_clear_error (&inner_error);
-						return;
 					}
 					iter = mpd_data_get_next_real (iter, FALSE);
-					artist = (g_free (artist), NULL);
 				}
 				(data == NULL) ? NULL : (data = (mpd_data_free (data), NULL));
 			}
@@ -314,10 +335,10 @@ static void gmpc_widget_similar_artist_metadata_changed (GmpcWidgetSimilarArtist
 				GList* artist_it;
 				artist_collection = list;
 				for (artist_it = artist_collection; artist_it != NULL; artist_it = artist_it->next) {
-					const char* _tmp6;
+					const char* _tmp7;
 					char* artist;
-					_tmp6 = NULL;
-					artist = (_tmp6 = (const char*) artist_it->data, (_tmp6 == NULL) ? NULL : g_strdup (_tmp6));
+					_tmp7 = NULL;
+					artist = (_tmp7 = (const char*) artist_it->data, (_tmp7 == NULL) ? NULL : g_strdup (_tmp7));
 					{
 						in_db_list = g_list_prepend (in_db_list, gmpc_widget_similar_artist_new_artist_button (self, artist, FALSE));
 						artist = (g_free (artist), NULL);
@@ -331,18 +352,18 @@ static void gmpc_widget_similar_artist_metadata_changed (GmpcWidgetSimilarArtist
 				GList* item_it;
 				item_collection = in_db_list;
 				for (item_it = item_collection; item_it != NULL; item_it = item_it->next) {
-					GtkWidget* _tmp8;
+					GtkWidget* _tmp9;
 					GtkWidget* item;
-					_tmp8 = NULL;
-					item = (_tmp8 = (GtkWidget*) item_it->data, (_tmp8 == NULL) ? NULL : g_object_ref (_tmp8));
+					_tmp9 = NULL;
+					item = (_tmp9 = (GtkWidget*) item_it->data, (_tmp9 == NULL) ? NULL : g_object_ref (_tmp9));
 					{
 						if (i < 50) {
 							gtk_table_attach ((GtkTable*) self, item, (guint) (i % 4), (guint) ((i % 4) + 1), (guint) (i / 4), (guint) ((i / 4) + 1), GTK_EXPAND | GTK_FILL, GTK_SHRINK, (guint) 0, (guint) 0);
 						} else {
-							GObject* _tmp7;
-							_tmp7 = NULL;
-							_tmp7 = g_object_ref_sink ((GObject*) item);
-							(_tmp7 == NULL) ? NULL : (_tmp7 = (g_object_unref (_tmp7), NULL));
+							GObject* _tmp8;
+							_tmp8 = NULL;
+							_tmp8 = g_object_ref_sink ((GObject*) item);
+							(_tmp8 == NULL) ? NULL : (_tmp8 = (g_object_unref (_tmp8), NULL));
 							gtk_object_destroy ((GtkObject*) item);
 						}
 						i++;
@@ -359,8 +380,22 @@ static void gmpc_widget_similar_artist_metadata_changed (GmpcWidgetSimilarArtist
 }
 
 
+static void gmpc_widget_similar_artist_artist_button_clicked (GmpcWidgetSimilarArtist* self, GtkButton* button) {
+	const char* artist;
+	g_return_if_fail (self != NULL);
+	g_return_if_fail (button != NULL);
+	artist = (const char*) g_object_get_data ((GObject*) button, "artist");
+	gmpc_metadata_browser_set_artist (self->priv->browser, artist);
+}
+
+
 static gboolean _misc_header_expose_event_gtk_widget_expose_event (GtkEventBox* _sender, const GdkEventExpose* event, gpointer self) {
 	return misc_header_expose_event (_sender, event);
+}
+
+
+static void _gmpc_widget_similar_artist_artist_button_clicked_gtk_button_clicked (GtkButton* _sender, gpointer self) {
+	gmpc_widget_similar_artist_artist_button_clicked (self, _sender);
 }
 
 
@@ -396,6 +431,8 @@ GtkWidget* gmpc_widget_similar_artist_new_artist_button (GmpcWidgetSimilarArtist
 		find = g_object_ref_sink ((GtkButton*) gtk_button_new_from_stock ("gtk-find"));
 		gtk_button_set_relief (find, GTK_RELIEF_NONE);
 		gtk_box_pack_start ((GtkBox*) hbox, (GtkWidget*) find, FALSE, FALSE, (guint) 0);
+		g_object_set_data_full ((GObject*) find, "artist", (void*) g_strdup_printf ("%s", artist), g_free);
+		g_signal_connect_object (find, "clicked", (GCallback) _gmpc_widget_similar_artist_artist_button_clicked_gtk_button_clicked, self, 0);
 		(find == NULL) ? NULL : (find = (g_object_unref (find), NULL));
 	}
 	gtk_container_add ((GtkContainer*) event, (GtkWidget*) hbox);
@@ -410,7 +447,7 @@ static void _gmpc_widget_similar_artist_metadata_changed_gmpc_meta_watcher_data_
 }
 
 
-static GmpcWidgetSimilarArtist* gmpc_widget_similar_artist_construct (GType object_type, GmpcMetadataBrowser* more, MpdObj* server, const mpd_Song* song) {
+static GmpcWidgetSimilarArtist* gmpc_widget_similar_artist_construct (GType object_type, GmpcMetadataBrowser* browser, MpdObj* server, const mpd_Song* song) {
 	GmpcWidgetSimilarArtist * self;
 	MetaData* item;
 	GmpcMetadataBrowser* _tmp1;
@@ -421,14 +458,14 @@ static GmpcWidgetSimilarArtist* gmpc_widget_similar_artist_construct (GType obje
 	MetaDataResult _tmp5;
 	MetaData* _tmp4;
 	MetaDataResult result;
-	g_return_val_if_fail (more != NULL, NULL);
+	g_return_val_if_fail (browser != NULL, NULL);
 	g_return_val_if_fail (server != NULL, NULL);
 	g_return_val_if_fail (song != NULL, NULL);
 	self = g_object_newv (object_type, 0, NULL);
 	item = NULL;
 	_tmp1 = NULL;
 	_tmp0 = NULL;
-	self->priv->more = (_tmp1 = (_tmp0 = more, (_tmp0 == NULL) ? NULL : g_object_ref (_tmp0)), (self->priv->more == NULL) ? NULL : (self->priv->more = (g_object_unref (self->priv->more), NULL)), _tmp1);
+	self->priv->browser = (_tmp1 = (_tmp0 = browser, (_tmp0 == NULL) ? NULL : g_object_ref (_tmp0)), (self->priv->browser == NULL) ? NULL : (self->priv->browser = (g_object_unref (self->priv->browser), NULL)), _tmp1);
 	_tmp3 = NULL;
 	_tmp2 = NULL;
 	self->priv->song = (_tmp3 = (_tmp2 = song, (_tmp2 == NULL) ? NULL : mpd_songDup (_tmp2)), (self->priv->song == NULL) ? NULL : (self->priv->song = (mpd_freeSong (self->priv->song), NULL)), _tmp3);
@@ -446,8 +483,8 @@ static GmpcWidgetSimilarArtist* gmpc_widget_similar_artist_construct (GType obje
 }
 
 
-static GmpcWidgetSimilarArtist* gmpc_widget_similar_artist_new (GmpcMetadataBrowser* more, MpdObj* server, const mpd_Song* song) {
-	return gmpc_widget_similar_artist_construct (GMPC_WIDGET_TYPE_SIMILAR_ARTIST, more, server, song);
+static GmpcWidgetSimilarArtist* gmpc_widget_similar_artist_new (GmpcMetadataBrowser* browser, MpdObj* server, const mpd_Song* song) {
+	return gmpc_widget_similar_artist_construct (GMPC_WIDGET_TYPE_SIMILAR_ARTIST, browser, server, song);
 }
 
 
@@ -461,7 +498,7 @@ static void gmpc_widget_similar_artist_class_init (GmpcWidgetSimilarArtistClass 
 static void gmpc_widget_similar_artist_instance_init (GmpcWidgetSimilarArtist * self) {
 	self->priv = GMPC_WIDGET_SIMILAR_ARTIST_GET_PRIVATE (self);
 	self->priv->song = NULL;
-	self->priv->more = NULL;
+	self->priv->browser = NULL;
 }
 
 
@@ -469,7 +506,7 @@ static void gmpc_widget_similar_artist_finalize (GObject* obj) {
 	GmpcWidgetSimilarArtist * self;
 	self = GMPC_WIDGET_SIMILAR_ARTIST (obj);
 	(self->priv->song == NULL) ? NULL : (self->priv->song = (mpd_freeSong (self->priv->song), NULL));
-	(self->priv->more == NULL) ? NULL : (self->priv->more = (g_object_unref (self->priv->more), NULL));
+	(self->priv->browser == NULL) ? NULL : (self->priv->browser = (g_object_unref (self->priv->browser), NULL));
 	G_OBJECT_CLASS (gmpc_widget_similar_artist_parent_class)->finalize (obj);
 }
 

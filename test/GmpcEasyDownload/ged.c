@@ -57,8 +57,7 @@ void downloaded(const GEADAsyncHandler *handle, GEADStatus status, gpointer user
         gsize length;
         const guchar *data = gmpc_easy_handler_get_data(handle, &length); 
         printf("Download: %li bytes\n", length);
-        printf("%s\n", data);
-        handle2 = gmpc_easy_async_downloader("http://maps.google.nl", downloaded2, loop);
+        handle2 = gmpc_easy_async_downloader("http://maps.google.com", downloaded2, loop);
     }else{
         g_error("Download failed\n");
         g_main_loop_quit(loop);

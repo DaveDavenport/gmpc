@@ -25,11 +25,12 @@ private const string some_unique_name_mb = Config.VERSION;
 
 public class Gmpc.Widget.SimilarArtist : Gtk.Table {
     private MPD.Song song = null;
-    private Gmpc.MetadataBrowser more = null;
+    private Gmpc.MetadataBrowser browser = null;
 
     private void metadata_changed(MetaWatcher gmw, MPD.Song song, Gmpc.MetaData.Type type, Gmpc.MetaData.Result result, Gmpc.MetaData.Item met)
     {
         if(this.song.artist.collate(song.artist)!=0) return;
+        if(type != Gmpc.MetaData.Type.ARTIST_SIMILAR) return;
 
         stdout.printf("%s-%s: %i\n", this.song.artist, song.artist, result);
         /* clear widgets */
@@ -58,21 +59,24 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
                 weak MPD.Data.Item iter = data.first();
                 while(iter != null && list != null)
                 {
-                    weak List<weak string> liter= list.first();
-                    var artist = GLib.Regex.escape_string(iter.tag);
-                    try{
-                        var reg = new GLib.Regex(artist, GLib.RegexCompileFlags.CASELESS);
-                        do{
-                            if(reg.match(liter.data))
-                            {
-                                in_db_list.prepend(new_artist_button(liter.data, true));
-                                list.remove(liter.data);
-                                liter = null;
-                            }
-                        }while(liter != null && (liter = liter.next) != null);
-                    }catch (Error E)
+                    if(iter.tag != null && iter.tag.length > 0)
                     {
-                        GLib.assert_not_reached ();
+                        weak List<weak string> liter= list.first();
+                        var artist = GLib.Regex.escape_string(iter.tag);
+                        try{
+                            var reg = new GLib.Regex(artist, GLib.RegexCompileFlags.CASELESS);
+                            do{
+                                if(reg.match(liter.data))
+                                {
+                                    in_db_list.prepend(new_artist_button(iter.tag, true));
+                                    list.remove(liter.data);
+                                    liter = null;
+                                }
+                            }while(liter != null && (liter = liter.next) != null);
+                        }catch (Error E)
+                        {
+                            GLib.assert_not_reached ();
+                        }
                     }
                     iter = iter.next(false);
                 }
@@ -98,7 +102,13 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
 
         this.show_all();
     }
-    
+    private
+    void
+    artist_button_clicked(Gtk.Button button)
+    {
+        weak string artist = (string)button.get_data("artist");
+        this.browser.set_artist(artist);
+    }
     public
     Gtk.Widget
     new_artist_button(string artist, bool in_db)
@@ -126,6 +136,9 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
             var find = new Gtk.Button.from_stock("gtk-find");
             find.set_relief(Gtk.ReliefStyle.NONE);
             hbox.pack_start(find,false,false,0);
+
+            find.set_data_full("artist",(void *)"%s".printf(artist), g_free);
+            find.clicked+= artist_button_clicked;
         }
 
         event.add(hbox);
@@ -133,10 +146,10 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
         return event;
     }
 
-    SimilarArtist(Gmpc.MetadataBrowser more,MPD.Server server, MPD.Song song)
+    SimilarArtist(Gmpc.MetadataBrowser browser,MPD.Server server, MPD.Song song)
     {
         MetaData.Item item = null;
-        this.more = more;
+        this.browser = browser;
         this.song = song;
 
         this.set_homogeneous(true);
