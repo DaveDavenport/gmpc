@@ -948,7 +948,7 @@ gchar * gmpc_get_metadata_filename(MetaDataType  type, mpd_Song *song, char *ext
 	{
 		GError *error = NULL;
 		gchar *filename = NULL, *dirname = NULL;
-		const gchar *extention= (type&(META_ALBUM_TXT|META_ARTIST_TXT|META_SONG_TXT))?"txt":((ext == NULL)?((type&(META_ALBUM_ART|META_ARTIST_ART))?"jpg":""):ext);
+		const gchar *extention= (type&(META_ALBUM_TXT|META_ARTIST_TXT|META_SONG_TXT|META_SONG_GUITAR_TAB))?"txt":((ext == NULL)?((type&(META_ALBUM_ART|META_ARTIST_ART))?"jpg":""):ext);
 
 		/* Convert it so the filesystem likes it */
 		/* TODO: Add error checking */
@@ -1007,6 +1007,12 @@ gchar * gmpc_get_metadata_filename(MetaDataType  type, mpd_Song *song, char *ext
 			g_assert(song->title != NULL);
 			temp =g_filename_from_utf8(song->title,-1,NULL,NULL,NULL); 
 			filename = g_strdup_printf("%s_LYRIC.%s", temp,extention);
+			g_free(temp);
+		}else if (type&META_SONG_GUITAR_TAB) {
+			gchar *temp ;
+			g_assert(song->title != NULL);
+			temp =g_filename_from_utf8(song->title,-1,NULL,NULL,NULL); 
+			filename = g_strdup_printf("%s_GUITAR_TAB.%s", temp,extention);
 			g_free(temp);
 		}
 		filename = strip_invalid_chars(filename);

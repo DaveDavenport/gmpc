@@ -31,6 +31,7 @@ typedef enum {
 	META_ARTIST_SIMILAR 	= 32,		/* Similar artists */
 	META_SONG_SIMILAR       = 64,       /* Similar songs */
     META_GENRE_SIMILAR      = 128,
+    META_SONG_GUITAR_TAB    = 256,
 	META_QUERY_DATA_TYPES  	= 65535,		/* Bitmask for getting the metadata types only */
 	META_QUERY_NO_CACHE 	= 65536 /* Do the query withouth checking the cache first */
 }MetaDataType;

@@ -426,7 +426,7 @@ MetaDataResult meta_data_get_from_cache(mpd_Song *song, MetaDataType type, MetaD
 		key_b = song->album;
 	}else if (type == META_ARTIST_ART || type == META_ARTIST_TXT || type == META_ARTIST_SIMILAR) {
 		key_a = song->artist;
-	}else if (type == META_SONG_TXT || type == META_SONG_SIMILAR) {
+	}else if (type == META_SONG_TXT || type == META_SONG_SIMILAR || type == META_SONG_GUITAR_TAB) {
 		key_a = song->artist;
 		key_b = song->title;
 	}else if (type == META_GENRE_SIMILAR) {
@@ -496,7 +496,7 @@ void meta_data_set_cache_real(mpd_Song *song, MetaDataResult result, MetaData *m
 		key_b = song->album;
 	}else if ((met)->type == META_ARTIST_ART || (met)->type == META_ARTIST_TXT || (met)->type == META_ARTIST_SIMILAR) {
 		key_a = song->artist;
-	}else if ((met)->type == META_SONG_TXT || (met)->type == META_SONG_SIMILAR) {
+	}else if ((met)->type == META_SONG_TXT || (met)->type == META_SONG_SIMILAR || (met)->type == META_SONG_GUITAR_TAB) {
 		key_a = song->artist;
 		key_b = song->title;
 	}else if ((met)->type == META_GENRE_SIMILAR) {
