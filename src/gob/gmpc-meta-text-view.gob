@@ -329,22 +329,22 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 	void
 	set_text_fetching(self)
 	{
+        if(self->_priv->met) meta_data_free(self->_priv->met);
+        self->_priv->met = NULL;
 		if(self->_priv->type == META_SONG_TXT)
 		{
-            if(self->_priv->met) meta_data_free(self->_priv->met);
-            self->_priv->met = NULL;
             self_set_text(self, _("Fetching Lyrics"), -1,TRUE);
 		}
 		else if (self->_priv->type == META_ARTIST_TXT)
 		{
-            if(self->_priv->met) meta_data_free(self->_priv->met);
-            self->_priv->met = NULL;
             self_set_text(self, _("Fetching Artist Info"), -1,TRUE);
 		}
+        else if (self->_priv->type == META_SONG_GUITAR_TAB)
+        {
+            self_set_text(self, _("Fetching Guitar tab"), -1,TRUE);
+        }
 		else
 		{
-            if(self->_priv->met) meta_data_free(self->_priv->met);
-            self->_priv->met = NULL;
             self_set_text(self, _("Fetching Album Info"), -1,TRUE);
 		}
 	}
