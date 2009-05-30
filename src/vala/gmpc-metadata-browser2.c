@@ -24,14 +24,13 @@
 #include <libmpd/libmpd.h>
 #include <glib/gi18n-lib.h>
 #include <main.h>
-#include <stdio.h>
+#include <gdk/gdk.h>
 #include <gmpc-mpddata-model.h>
 #include <float.h>
 #include <math.h>
 #include <gmpc-meta-watcher.h>
 #include <plugin.h>
 #include <config1.h>
-#include <gdk/gdk.h>
 #include <misc.h>
 #include <gmpc-metaimage.h>
 #include <gmpc-meta-text-view.h>
@@ -63,6 +62,17 @@ enum  {
 };
 static GmpcWidgetSimilarSongs* gmpc_widget_similar_songs_construct (GType object_type, const mpd_Song* song);
 static GmpcWidgetSimilarSongs* gmpc_widget_similar_songs_new (const mpd_Song* song);
+static void _g_list_free_gtk_tree_path_free (GList* self);
+static void gmpc_widget_similar_songs_add_clicked (GmpcWidgetSimilarSongs* self, GtkImageMenuItem* item);
+static void gmpc_widget_similar_songs_play_clicked (GmpcWidgetSimilarSongs* self, GtkImageMenuItem* item);
+static void gmpc_widget_similar_songs_replace_clicked (GmpcWidgetSimilarSongs* self, GtkImageMenuItem* item);
+static void gmpc_widget_similar_songs_tree_row_activated (GmpcWidgetSimilarSongs* self, GmpcMpdDataTreeview* tree, const GtkTreePath* path, GtkTreeViewColumn* column);
+static void _gmpc_widget_similar_songs_play_clicked_gtk_menu_item_activate (GtkImageMenuItem* _sender, gpointer self);
+static void _gmpc_widget_similar_songs_add_clicked_gtk_menu_item_activate (GtkImageMenuItem* _sender, gpointer self);
+static void _gmpc_widget_similar_songs_replace_clicked_gtk_menu_item_activate (GtkImageMenuItem* _sender, gpointer self);
+static gboolean gmpc_widget_similar_songs_tree_right_menu (GmpcWidgetSimilarSongs* self, GmpcMpdDataTreeview* tree, const GdkEventButton* event);
+static gboolean _gmpc_widget_similar_songs_tree_right_menu_gtk_widget_button_release_event (GmpcMpdDataTreeview* _sender, const GdkEventButton* event, gpointer self);
+static void _gmpc_widget_similar_songs_tree_row_activated_gtk_tree_view_row_activated (GmpcMpdDataTreeview* _sender, const GtkTreePath* path, GtkTreeViewColumn* column, gpointer self);
 static gboolean gmpc_widget_similar_songs_update_sim_song (GmpcWidgetSimilarSongs* self);
 static gboolean _gmpc_widget_similar_songs_update_sim_song_gsource_func (gpointer self);
 static void gmpc_widget_similar_songs_metadata_changed (GmpcWidgetSimilarSongs* self, GmpcMetaWatcher* gmw, const mpd_Song* song, MetaDataType type, MetaDataResult result, const MetaData* met);
@@ -258,6 +268,254 @@ static GmpcWidgetSimilarSongs* gmpc_widget_similar_songs_new (const mpd_Song* so
 }
 
 
+static void _g_list_free_gtk_tree_path_free (GList* self) {
+	g_list_foreach (self, (GFunc) gtk_tree_path_free, NULL);
+	g_list_free (self);
+}
+
+
+static void gmpc_widget_similar_songs_add_clicked (GmpcWidgetSimilarSongs* self, GtkImageMenuItem* item) {
+	GtkTreeView* _tmp0;
+	GtkTreeView* tree;
+	GtkTreeSelection* _tmp1;
+	GtkTreeSelection* sel;
+	GtkTreeModel* model;
+	GtkTreeIter iter = {0};
+	GtkTreeModel* _tmp5;
+	GtkTreeModel* _tmp4;
+	GList* _tmp3;
+	GtkTreeModel* _tmp2;
+	GList* list;
+	g_return_if_fail (self != NULL);
+	g_return_if_fail (item != NULL);
+	_tmp0 = NULL;
+	tree = (_tmp0 = GTK_TREE_VIEW (self->priv->pchild), (_tmp0 == NULL) ? NULL : g_object_ref (_tmp0));
+	_tmp1 = NULL;
+	sel = (_tmp1 = gtk_tree_view_get_selection (tree), (_tmp1 == NULL) ? NULL : g_object_ref (_tmp1));
+	model = NULL;
+	_tmp5 = NULL;
+	_tmp4 = NULL;
+	_tmp3 = NULL;
+	_tmp2 = NULL;
+	list = (_tmp3 = gtk_tree_selection_get_selected_rows (sel, &_tmp2), model = (_tmp4 = (_tmp5 = _tmp2, (_tmp5 == NULL) ? NULL : g_object_ref (_tmp5)), (model == NULL) ? NULL : (model = (g_object_unref (model), NULL)), _tmp4), _tmp3);
+	{
+		GList* path_collection;
+		GList* path_it;
+		path_collection = list;
+		for (path_it = path_collection; path_it != NULL; path_it = path_it->next) {
+			const GtkTreePath* _tmp6;
+			GtkTreePath* path;
+			_tmp6 = NULL;
+			path = (_tmp6 = (const GtkTreePath*) path_it->data, (_tmp6 == NULL) ? NULL : gtk_tree_path_copy (_tmp6));
+			{
+				if (gtk_tree_model_get_iter (model, &iter, path)) {
+					const mpd_Song* song;
+					song = NULL;
+					gtk_tree_model_get (model, &iter, 0, &song, -1, -1);
+					if (song != NULL) {
+						mpd_playlist_queue_add (connection, song->file);
+					}
+				}
+				(path == NULL) ? NULL : (path = (gtk_tree_path_free (path), NULL));
+			}
+		}
+	}
+	mpd_playlist_queue_commit (connection);
+	(tree == NULL) ? NULL : (tree = (g_object_unref (tree), NULL));
+	(sel == NULL) ? NULL : (sel = (g_object_unref (sel), NULL));
+	(model == NULL) ? NULL : (model = (g_object_unref (model), NULL));
+	(list == NULL) ? NULL : (list = (_g_list_free_gtk_tree_path_free (list), NULL));
+}
+
+
+static void gmpc_widget_similar_songs_play_clicked (GmpcWidgetSimilarSongs* self, GtkImageMenuItem* item) {
+	GtkTreeView* _tmp0;
+	GtkTreeView* tree;
+	GtkTreeSelection* _tmp1;
+	GtkTreeSelection* sel;
+	GtkTreeModel* model;
+	GtkTreeIter iter = {0};
+	GtkTreeModel* _tmp5;
+	GtkTreeModel* _tmp4;
+	GList* _tmp3;
+	GtkTreeModel* _tmp2;
+	GList* list;
+	g_return_if_fail (self != NULL);
+	g_return_if_fail (item != NULL);
+	_tmp0 = NULL;
+	tree = (_tmp0 = GTK_TREE_VIEW (self->priv->pchild), (_tmp0 == NULL) ? NULL : g_object_ref (_tmp0));
+	_tmp1 = NULL;
+	sel = (_tmp1 = gtk_tree_view_get_selection (tree), (_tmp1 == NULL) ? NULL : g_object_ref (_tmp1));
+	model = NULL;
+	_tmp5 = NULL;
+	_tmp4 = NULL;
+	_tmp3 = NULL;
+	_tmp2 = NULL;
+	list = (_tmp3 = gtk_tree_selection_get_selected_rows (sel, &_tmp2), model = (_tmp4 = (_tmp5 = _tmp2, (_tmp5 == NULL) ? NULL : g_object_ref (_tmp5)), (model == NULL) ? NULL : (model = (g_object_unref (model), NULL)), _tmp4), _tmp3);
+	if (list != NULL) {
+		const GtkTreePath* _tmp6;
+		GtkTreePath* path;
+		_tmp6 = NULL;
+		path = (_tmp6 = (const GtkTreePath*) list->data, (_tmp6 == NULL) ? NULL : gtk_tree_path_copy (_tmp6));
+		if (gtk_tree_model_get_iter (model, &iter, path)) {
+			const mpd_Song* song;
+			song = NULL;
+			gtk_tree_model_get (model, &iter, 0, &song, -1, -1);
+			if (song != NULL) {
+				play_path (song->file);
+			}
+		}
+		(path == NULL) ? NULL : (path = (gtk_tree_path_free (path), NULL));
+	}
+	(tree == NULL) ? NULL : (tree = (g_object_unref (tree), NULL));
+	(sel == NULL) ? NULL : (sel = (g_object_unref (sel), NULL));
+	(model == NULL) ? NULL : (model = (g_object_unref (model), NULL));
+	(list == NULL) ? NULL : (list = (_g_list_free_gtk_tree_path_free (list), NULL));
+}
+
+
+static void gmpc_widget_similar_songs_replace_clicked (GmpcWidgetSimilarSongs* self, GtkImageMenuItem* item) {
+	gboolean found;
+	GtkTreeView* _tmp0;
+	GtkTreeView* tree;
+	GtkTreeSelection* _tmp1;
+	GtkTreeSelection* sel;
+	GtkTreeModel* model;
+	GtkTreeIter iter = {0};
+	GtkTreeModel* _tmp5;
+	GtkTreeModel* _tmp4;
+	GList* _tmp3;
+	GtkTreeModel* _tmp2;
+	GList* list;
+	g_return_if_fail (self != NULL);
+	g_return_if_fail (item != NULL);
+	found = FALSE;
+	_tmp0 = NULL;
+	tree = (_tmp0 = GTK_TREE_VIEW (self->priv->pchild), (_tmp0 == NULL) ? NULL : g_object_ref (_tmp0));
+	_tmp1 = NULL;
+	sel = (_tmp1 = gtk_tree_view_get_selection (tree), (_tmp1 == NULL) ? NULL : g_object_ref (_tmp1));
+	model = NULL;
+	_tmp5 = NULL;
+	_tmp4 = NULL;
+	_tmp3 = NULL;
+	_tmp2 = NULL;
+	list = (_tmp3 = gtk_tree_selection_get_selected_rows (sel, &_tmp2), model = (_tmp4 = (_tmp5 = _tmp2, (_tmp5 == NULL) ? NULL : g_object_ref (_tmp5)), (model == NULL) ? NULL : (model = (g_object_unref (model), NULL)), _tmp4), _tmp3);
+	{
+		GList* path_collection;
+		GList* path_it;
+		path_collection = list;
+		for (path_it = path_collection; path_it != NULL; path_it = path_it->next) {
+			const GtkTreePath* _tmp6;
+			GtkTreePath* path;
+			_tmp6 = NULL;
+			path = (_tmp6 = (const GtkTreePath*) path_it->data, (_tmp6 == NULL) ? NULL : gtk_tree_path_copy (_tmp6));
+			{
+				if (gtk_tree_model_get_iter (model, &iter, path)) {
+					const mpd_Song* song;
+					song = NULL;
+					gtk_tree_model_get (model, &iter, 0, &song, -1, -1);
+					if (song != NULL) {
+						mpd_playlist_queue_add (connection, song->file);
+						found = TRUE;
+					}
+				}
+				(path == NULL) ? NULL : (path = (gtk_tree_path_free (path), NULL));
+			}
+		}
+	}
+	if (found) {
+		mpd_playlist_clear (connection);
+		mpd_playlist_queue_commit (connection);
+		mpd_player_play (connection);
+	}
+	gmpc_widget_similar_songs_play_clicked (self, item);
+	(tree == NULL) ? NULL : (tree = (g_object_unref (tree), NULL));
+	(sel == NULL) ? NULL : (sel = (g_object_unref (sel), NULL));
+	(model == NULL) ? NULL : (model = (g_object_unref (model), NULL));
+	(list == NULL) ? NULL : (list = (_g_list_free_gtk_tree_path_free (list), NULL));
+}
+
+
+static void gmpc_widget_similar_songs_tree_row_activated (GmpcWidgetSimilarSongs* self, GmpcMpdDataTreeview* tree, const GtkTreePath* path, GtkTreeViewColumn* column) {
+	GtkTreeModel* _tmp0;
+	GtkTreeModel* model;
+	GtkTreeIter iter = {0};
+	g_return_if_fail (self != NULL);
+	g_return_if_fail (tree != NULL);
+	g_return_if_fail (path != NULL);
+	g_return_if_fail (column != NULL);
+	_tmp0 = NULL;
+	model = (_tmp0 = gtk_tree_view_get_model ((GtkTreeView*) tree), (_tmp0 == NULL) ? NULL : g_object_ref (_tmp0));
+	if (gtk_tree_model_get_iter (model, &iter, path)) {
+		const mpd_Song* song;
+		song = NULL;
+		gtk_tree_model_get (model, &iter, 0, &song, -1, -1);
+		if (song != NULL) {
+			play_path (song->file);
+		}
+	}
+	(model == NULL) ? NULL : (model = (g_object_unref (model), NULL));
+}
+
+
+static void _gmpc_widget_similar_songs_play_clicked_gtk_menu_item_activate (GtkImageMenuItem* _sender, gpointer self) {
+	gmpc_widget_similar_songs_play_clicked (self, _sender);
+}
+
+
+static void _gmpc_widget_similar_songs_add_clicked_gtk_menu_item_activate (GtkImageMenuItem* _sender, gpointer self) {
+	gmpc_widget_similar_songs_add_clicked (self, _sender);
+}
+
+
+static void _gmpc_widget_similar_songs_replace_clicked_gtk_menu_item_activate (GtkImageMenuItem* _sender, gpointer self) {
+	gmpc_widget_similar_songs_replace_clicked (self, _sender);
+}
+
+
+static gboolean gmpc_widget_similar_songs_tree_right_menu (GmpcWidgetSimilarSongs* self, GmpcMpdDataTreeview* tree, const GdkEventButton* event) {
+	g_return_val_if_fail (self != NULL, FALSE);
+	g_return_val_if_fail (tree != NULL, FALSE);
+	if ((*event).button == 3) {
+		GtkMenu* menu;
+		GtkImageMenuItem* item;
+		GtkImageMenuItem* _tmp0;
+		GtkImageMenuItem* _tmp1;
+		GtkImage* _tmp2;
+		gboolean _tmp3;
+		menu = g_object_ref_sink ((GtkMenu*) gtk_menu_new ());
+		item = g_object_ref_sink ((GtkImageMenuItem*) gtk_image_menu_item_new_from_stock ("gtk-media-play", NULL));
+		g_signal_connect_object ((GtkMenuItem*) item, "activate", (GCallback) _gmpc_widget_similar_songs_play_clicked_gtk_menu_item_activate, self, 0);
+		gtk_menu_shell_append ((GtkMenuShell*) menu, (GtkWidget*) ((GtkMenuItem*) item));
+		_tmp0 = NULL;
+		item = (_tmp0 = g_object_ref_sink ((GtkImageMenuItem*) gtk_image_menu_item_new_from_stock ("gtk-add", NULL)), (item == NULL) ? NULL : (item = (g_object_unref (item), NULL)), _tmp0);
+		g_signal_connect_object ((GtkMenuItem*) item, "activate", (GCallback) _gmpc_widget_similar_songs_add_clicked_gtk_menu_item_activate, self, 0);
+		gtk_menu_shell_append ((GtkMenuShell*) menu, (GtkWidget*) ((GtkMenuItem*) item));
+		_tmp1 = NULL;
+		item = (_tmp1 = g_object_ref_sink ((GtkImageMenuItem*) gtk_image_menu_item_new_with_mnemonic ("_Replace")), (item == NULL) ? NULL : (item = (g_object_unref (item), NULL)), _tmp1);
+		_tmp2 = NULL;
+		gtk_image_menu_item_set_image (item, (GtkWidget*) (_tmp2 = g_object_ref_sink ((GtkImage*) gtk_image_new_from_stock ("gtk-redo", GTK_ICON_SIZE_MENU))));
+		(_tmp2 == NULL) ? NULL : (_tmp2 = (g_object_unref (_tmp2), NULL));
+		g_signal_connect_object ((GtkMenuItem*) item, "activate", (GCallback) _gmpc_widget_similar_songs_replace_clicked_gtk_menu_item_activate, self, 0);
+		gtk_menu_shell_append ((GtkMenuShell*) menu, (GtkWidget*) ((GtkMenuItem*) item));
+		gtk_menu_popup (menu, NULL, NULL, NULL, NULL, (*event).button, (*event).time);
+		gtk_widget_show_all ((GtkWidget*) menu);
+		return (_tmp3 = TRUE, (menu == NULL) ? NULL : (menu = (g_object_unref (menu), NULL)), (item == NULL) ? NULL : (item = (g_object_unref (item), NULL)), _tmp3);
+	}
+	return FALSE;
+}
+
+
+static gboolean _gmpc_widget_similar_songs_tree_right_menu_gtk_widget_button_release_event (GmpcMpdDataTreeview* _sender, const GdkEventButton* event, gpointer self) {
+	return gmpc_widget_similar_songs_tree_right_menu (self, _sender, event);
+}
+
+
+static void _gmpc_widget_similar_songs_tree_row_activated_gtk_tree_view_row_activated (GmpcMpdDataTreeview* _sender, const GtkTreePath* path, GtkTreeViewColumn* column, gpointer self) {
+	gmpc_widget_similar_songs_tree_row_activated (self, _sender, path, column);
+}
+
+
 static gboolean gmpc_widget_similar_songs_update_sim_song (GmpcWidgetSimilarSongs* self) {
 	MetaData* _tmp11;
 	g_return_val_if_fail (self != NULL, FALSE);
@@ -311,11 +569,13 @@ static gboolean gmpc_widget_similar_songs_update_sim_song (GmpcWidgetSimilarSong
 		GmpcMpdDataTreeview* tree;
 		GtkWidget* _tmp8;
 		GtkWidget* _tmp7;
-		fprintf (stdout, "items\n");
 		model = gmpc_mpddata_model_new ();
 		_tmp6 = NULL;
 		gmpc_mpddata_model_set_mpd_data (model, (_tmp6 = self->priv->item, self->priv->item = NULL, _tmp6));
 		tree = g_object_ref_sink (gmpc_mpddata_treeview_new ("similar-song", TRUE, (GtkTreeModel*) model));
+		gmpc_mpddata_treeview_enable_click_fix (tree);
+		g_signal_connect_object ((GtkWidget*) tree, "button-release-event", (GCallback) _gmpc_widget_similar_songs_tree_right_menu_gtk_widget_button_release_event, self, 0);
+		g_signal_connect_object ((GtkTreeView*) tree, "row-activated", (GCallback) _gmpc_widget_similar_songs_tree_row_activated_gtk_tree_view_row_activated, self, 0);
 		gtk_container_add ((GtkContainer*) self, (GtkWidget*) tree);
 		_tmp8 = NULL;
 		_tmp7 = NULL;
@@ -351,7 +611,6 @@ static void gmpc_widget_similar_songs_metadata_changed (GmpcWidgetSimilarSongs* 
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (gmw != NULL);
 	g_return_if_fail (song != NULL);
-	g_return_if_fail (met != NULL);
 	if (g_utf8_collate (self->priv->song->artist, song->artist) != 0) {
 		return;
 	}
@@ -443,7 +702,6 @@ static void gmpc_widget_similar_songs_real_activate (GtkExpander* base) {
 	} else {
 		gtk_expander_set_expanded ((GtkExpander*) self, FALSE);
 	}
-	fprintf (stdout, "expanded\n");
 }
 
 
@@ -2943,7 +3201,6 @@ static gboolean gmpc_metadata_browser_metadata_box_update_real (GmpcMetadataBrow
 	mpd_Song* song;
 	gboolean _tmp2;
 	g_return_val_if_fail (self != NULL, FALSE);
-	fprintf (stdout, "Block update: %i\n", self->priv->block_update);
 	if (self->priv->block_update > 0) {
 		self->priv->update_timeout = (guint) 0;
 		return FALSE;

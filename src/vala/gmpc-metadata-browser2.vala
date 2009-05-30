@@ -45,6 +45,121 @@ public class Gmpc.Widget.SimilarSongs : Gtk.Expander {
         this.set_label_widget(label);
         label.show();
     }
+    private void add_clicked(Gtk.ImageMenuItem item)
+    {
+        Gtk.TreeView tree = (Gtk.TreeView)this.pchild;
+
+        var sel = tree.get_selection();
+        Gtk.TreeModel model = null;
+        Gtk.TreeIter iter;
+        List<Gtk.TreePath> list = sel.get_selected_rows(out model);
+        foreach(Gtk.TreePath path in list)
+        {
+            if(model.get_iter(out iter, path))
+            {
+                weak MPD.Song song = null;
+                model.get(iter, 0, out song, -1);
+                if(song != null)
+                {
+                   MPD.PlayQueue.queue_add_song(server, song.file); 
+                }
+            }
+        }
+        MPD.PlayQueue.queue_commit(server);
+
+    }
+    private void play_clicked(Gtk.ImageMenuItem item)
+    {
+        Gtk.TreeView tree = (Gtk.TreeView)this.pchild;
+
+        var sel = tree.get_selection();
+        Gtk.TreeModel model = null;
+        Gtk.TreeIter iter;
+        List<Gtk.TreePath> list = sel.get_selected_rows(out model);
+        if(list != null)
+        {
+            Gtk.TreePath path = list.data;
+            if(model.get_iter(out iter, path))
+            {
+                weak MPD.Song song = null;
+                model.get(iter, 0, out song, -1);
+                if(song != null)
+                {
+                    Gmpc.Misc.play_path(song.file);
+                }
+            }
+        }
+    }
+    private void replace_clicked(Gtk.ImageMenuItem item)
+    {
+        bool found = false;
+        Gtk.TreeView tree = (Gtk.TreeView)this.pchild;
+        var sel = tree.get_selection();
+        Gtk.TreeModel model = null;
+        Gtk.TreeIter iter;
+        List<Gtk.TreePath> list = sel.get_selected_rows(out model);
+        foreach(Gtk.TreePath path in list)
+        {
+            if(model.get_iter(out iter, path))
+            {
+                weak MPD.Song song = null;
+                model.get(iter, 0, out song, -1);
+                if(song != null)
+                {
+                   MPD.PlayQueue.queue_add_song(server, song.file); 
+                   found = true;
+                }
+            }
+        }
+        if(found)
+        {
+            MPD.PlayQueue.clear(server);
+            MPD.PlayQueue.queue_commit(server);
+            MPD.Player.play(server);
+        }
+
+
+        this.play_clicked(item);
+    }
+    private void tree_row_activated(Gmpc.MpdData.TreeView tree, Gtk.TreePath path , Gtk.TreeViewColumn column)
+    {
+        var model = tree.get_model();
+        Gtk.TreeIter iter;
+        if(model.get_iter(out iter, path))
+        {
+            weak MPD.Song song = null;
+            model.get(iter, 0, out song, -1);
+            if(song != null)
+            {
+                Gmpc.Misc.play_path(song.file);
+            }
+        }
+    }
+    private bool tree_right_menu(Gmpc.MpdData.TreeView tree, Gdk.EventButton event)
+    {
+        if(event.button == 3)
+        {
+            var menu = new Gtk.Menu();
+            var item = new Gtk.ImageMenuItem.from_stock("gtk-media-play",null);
+            item.activate += play_clicked;
+            menu.append(item);
+
+            item = new Gtk.ImageMenuItem.from_stock("gtk-add",null);
+            item.activate += add_clicked;
+            menu.append(item);
+
+            item = new Gtk.ImageMenuItem.with_mnemonic("_Replace");
+            item.set_image(new Gtk.Image.from_stock("gtk-redo", Gtk.IconSize.MENU));
+            item.activate += replace_clicked;
+            menu.append(item);
+
+            menu.popup(null, null, null, event.button, event.time);
+            menu.show_all();
+            return true;
+        }
+        return false;
+    }
+
     private Gmpc.MetaData.Item copy = null;
     MPD.Data.Item item = null;
     private weak List <weak string> current = null;
@@ -77,10 +192,12 @@ public class Gmpc.Widget.SimilarSongs : Gtk.Expander {
         this.pchild.destroy();
         if(item != null)
         {
-            stdout.printf("items\n");
             var model = new Gmpc.MpdData.Model();
             model.set_mpd_data((owned)item);
             Gmpc.MpdData.TreeView tree = new Gmpc.MpdData.TreeView("similar-song", true, model);
+            tree.enable_click_fix();
+            tree.button_release_event += tree_right_menu;
+            tree.row_activated += tree_row_activated;
             this.add(tree);
 
             this.pchild = tree;
@@ -97,7 +214,7 @@ public class Gmpc.Widget.SimilarSongs : Gtk.Expander {
         this.show_all();
         return false;
     }
-    private void metadata_changed(MetaWatcher gmw, MPD.Song song, Gmpc.MetaData.Type type, Gmpc.MetaData.Result result, Gmpc.MetaData.Item met)
+    private void metadata_changed(MetaWatcher gmw, MPD.Song song, Gmpc.MetaData.Type type, Gmpc.MetaData.Result result, Gmpc.MetaData.Item? met)
     {
         if(this.song.artist.collate(song.artist)!=0) return;
         if(type != Gmpc.MetaData.Type.SONG_SIMILAR) return;
@@ -151,7 +268,6 @@ public class Gmpc.Widget.SimilarSongs : Gtk.Expander {
         else{
             this.set_expanded(false);
         }
-        stdout.printf("expanded\n");
     }
 
 }
@@ -1484,7 +1600,6 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
     }
     private bool metadata_box_update_real()
     {
-        stdout.printf("Block update: %i\n", this.block_update);
         if(this.block_update > 0){
             this.update_timeout = 0;
             return false;
