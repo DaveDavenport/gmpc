@@ -331,6 +331,9 @@ static void tag2_browser_add_selected(GtkWidget *item, tag_element *te)
 /**
  * Redirect to metadata browser 
  */
+
+#include "vala/gmpc-metadata-browser2.h"
+extern GmpcMetadataBrowser *metadata_browser;
 static void tag2_browser_header_information(GtkWidget *item, tag_element *te)
 {
 	GtkTreeIter iter;
@@ -344,13 +347,18 @@ static void tag2_browser_header_information(GtkWidget *item, tag_element *te)
             if(te->type == MPD_TAG_ITEM_ARTIST || te->type == MPD_TAG_ITEM_ALBUM_ARTIST)
             {
                 info2_activate();
-                info2_fill_artist_view(value);
+                gmpc_metadata_browser_set_artist(metadata_browser, value);
 
             }else if (te->type == MPD_TAG_ITEM_ALBUM){
                 const gchar *artist =  gmpc_mpddata_model_get_request_artist(GMPC_MPDDATA_MODEL(te->model));
                 if(artist) {
                     info2_activate();
+                    gmpc_metadata_browser_set_album(metadata_browser, artist,value);
+                /*
+                    info2_activate();
                     info2_fill_album_view(artist,value);
+                    */
+
                 }
             }
 

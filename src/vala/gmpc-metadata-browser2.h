@@ -26,6 +26,7 @@
 #include <gmpc-plugin.h>
 #include <stdlib.h>
 #include <string.h>
+#include <libmpd/libmpdclient.h>
 
 G_BEGIN_DECLS
 
@@ -51,6 +52,17 @@ typedef struct _GmpcWidgetSimilarArtistPrivate GmpcWidgetSimilarArtistPrivate;
 typedef struct _GmpcWidgetMore GmpcWidgetMore;
 typedef struct _GmpcWidgetMoreClass GmpcWidgetMoreClass;
 typedef struct _GmpcWidgetMorePrivate GmpcWidgetMorePrivate;
+
+#define GMPC_TYPE_NOW_PLAYING (gmpc_now_playing_get_type ())
+#define GMPC_NOW_PLAYING(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), GMPC_TYPE_NOW_PLAYING, GmpcNowPlaying))
+#define GMPC_NOW_PLAYING_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), GMPC_TYPE_NOW_PLAYING, GmpcNowPlayingClass))
+#define GMPC_IS_NOW_PLAYING(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GMPC_TYPE_NOW_PLAYING))
+#define GMPC_IS_NOW_PLAYING_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GMPC_TYPE_NOW_PLAYING))
+#define GMPC_NOW_PLAYING_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), GMPC_TYPE_NOW_PLAYING, GmpcNowPlayingClass))
+
+typedef struct _GmpcNowPlaying GmpcNowPlaying;
+typedef struct _GmpcNowPlayingClass GmpcNowPlayingClass;
+typedef struct _GmpcNowPlayingPrivate GmpcNowPlayingPrivate;
 
 #define GMPC_TYPE_METADATA_BROWSER (gmpc_metadata_browser_get_type ())
 #define GMPC_METADATA_BROWSER(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), GMPC_TYPE_METADATA_BROWSER, GmpcMetadataBrowser))
@@ -81,6 +93,17 @@ struct _GmpcWidgetMoreClass {
 	GtkFrameClass parent_class;
 };
 
+/**
+ * Now playing uses the MetaDataBrowser plugin to "plot" the view */
+struct _GmpcNowPlaying {
+	GmpcPluginBase parent_instance;
+	GmpcNowPlayingPrivate * priv;
+};
+
+struct _GmpcNowPlayingClass {
+	GmpcPluginBaseClass parent_class;
+};
+
 struct _GmpcMetadataBrowser {
 	GmpcPluginBase parent_instance;
 	GmpcMetadataBrowserPrivate * priv;
@@ -96,12 +119,19 @@ struct _GmpcMetadataBrowserClass {
 GtkWidget* gmpc_widget_similar_artist_new_artist_button (GmpcWidgetSimilarArtist* self, const char* artist, gboolean in_db);
 GType gmpc_widget_similar_artist_get_type (void);
 GType gmpc_widget_more_get_type (void);
+GmpcNowPlaying* gmpc_now_playing_construct (GType object_type);
+GmpcNowPlaying* gmpc_now_playing_new (void);
+GType gmpc_now_playing_get_type (void);
+GtkWidget* gmpc_metadata_browser_metadata_box_show_song (GmpcMetadataBrowser* self, const mpd_Song* song);
 void gmpc_metadata_browser_set_artist (GmpcMetadataBrowser* self, const char* artist);
+void gmpc_metadata_browser_set_album (GmpcMetadataBrowser* self, const char* artist, const char* album);
+void gmpc_metadata_browser_set_song (GmpcMetadataBrowser* self, const mpd_Song* song);
 void gmpc_metadata_browser_select_browser (GmpcMetadataBrowser* self, GtkTreeView* tree);
 GmpcMetadataBrowser* gmpc_metadata_browser_construct (GType object_type);
 GmpcMetadataBrowser* gmpc_metadata_browser_new (void);
 GType gmpc_metadata_browser_get_type (void);
 
+static const gint GMPC_NOW_PLAYING_version[] = {0, 0, 0};
 static const gint GMPC_METADATA_BROWSER_version[] = {0, 0, 0};
 
 G_END_DECLS

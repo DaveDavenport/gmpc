@@ -2077,17 +2077,39 @@ static void playlist3_fill_server_menu(void)
 /**
  * new header
  */
+/* glue code */
 
+extern GmpcMetadataBrowser *metadata_browser;
+
+void info2_activate()
+{
+	GtkTreeView *tree = (GtkTreeView *) glade_xml_get_widget(pl3_xml, "cat_tree");
+	gmpc_metadata_browser_select_browser(metadata_browser, tree);
+}
+void info2_fill_song_view(mpd_Song *song)
+{
+	gmpc_metadata_browser_set_song(metadata_browser, song);
+}
+void info2_fill_artist_view(const gchar *artist)
+{
+	gmpc_metadata_browser_set_artist(metadata_browser,artist);
+}
+
+void info2_fill_album_view(const gchar *artist,const gchar *album)
+{
+	gmpc_metadata_browser_set_album(metadata_browser,artist,album);
+}
 static void playlist3_header_song(void)
 {
 	mpd_Song *song = mpd_playlist_get_current_song(connection);
 	if (song) {
-		info2_activate();
-		info2_fill_song_view(song);
+		GtkTreeView *tree = (GtkTreeView *) glade_xml_get_widget(pl3_xml, "cat_tree");
+		gmpc_metadata_browser_select_browser(metadata_browser, tree);
+		gmpc_metadata_browser_set_song(metadata_browser, song);
+		//info2_fill_song_view(song);
 	}
 }
 
-extern GmpcMetadataBrowser *metadata_browser;
 static void playlist3_header_artist(void)
 {
 	mpd_Song *song = mpd_playlist_get_current_song(connection);
@@ -2110,8 +2132,9 @@ static void playlist3_header_album(void)
 {
 	mpd_Song *song = mpd_playlist_get_current_song(connection);
 	if (song && song->artist && song->album) {
-		info2_activate();
-		info2_fill_album_view(song->artist, song->album);
+		GtkTreeView *tree = (GtkTreeView *) glade_xml_get_widget(pl3_xml, "cat_tree");
+		gmpc_metadata_browser_select_browser(metadata_browser, tree);
+		gmpc_metadata_browser_set_album(metadata_browser, song->artist, song->album);
 	}
 }
 

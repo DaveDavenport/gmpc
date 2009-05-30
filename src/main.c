@@ -75,7 +75,6 @@ extern gmpcPlugin playlist_plug;
 extern gmpcPlugin cover_art_plug;
 extern gmpcPlugin tray_icon2_plug;
 extern gmpcPlugin proxyplug;
-extern gmpcPlugin metab_plugin;
 extern gmpcPlugin playlist_editor_plugin;
 extern gmpcPlugin statistics_plugin;
 
@@ -701,13 +700,10 @@ int main(int argc, char **argv)
 	plugin_add(&tray_icon2_plug, 0, NULL);
 
 	/* Info3 data browser */
-	/* Meta data browser */
-	plugin_add(&metab_plugin, 0, NULL);
 	/* Playlist editor */
 	plugin_add(&playlist_editor_plugin, 0, NULL);
 
 	plugin_add(&statistics_plugin, 0, NULL);
-
 	plugin_add(&metadata_plug, 0, NULL);
 	plugin_add(&proxyplug, 0, NULL);
 
@@ -715,6 +711,7 @@ int main(int argc, char **argv)
 	plugin_add_new(GMPC_PLUGIN_BASE(gmpc_test_plugin_new()), 0, NULL);
 	metadata_browser = gmpc_metadata_browser_new();
 	plugin_add_new(GMPC_PLUGIN_BASE(metadata_browser), 0, NULL);
+	plugin_add_new(GMPC_PLUGIN_BASE(gmpc_now_playing_new()), 0, NULL);
 	plugin_add_new(GMPC_PLUGIN_BASE(gmpc_plugin_metadata_prefetcher_new()), 0,NULL);
 	TEC("Loading new plugins");
 	/**

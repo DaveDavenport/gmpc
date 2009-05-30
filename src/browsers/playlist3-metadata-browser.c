@@ -2791,7 +2791,7 @@ void info2_button_back(void)
         info2_update_from_history(hs);
     }
 }
-void info2_fill_song_view(mpd_Song *song)
+void info2_fill_song_view_old(mpd_Song *song)
 {
     History *hs;
     /* if current is same page, don't reload.  */

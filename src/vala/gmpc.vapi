@@ -275,6 +275,7 @@ namespace Gmpc {
     namespace Misc {
         [CCode (cname="play_path")]
         public void play_path(string path);
-
+        [CCode (cname="mpd_song_checksum",cheader_filename="misc.h")]
+        public string? song_checksum(MPD.Song? song);
     }
 }

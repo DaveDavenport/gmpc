@@ -236,4 +236,11 @@ void pl3_tool_menu_update(void);
 /***/
 
 char *connection_get_music_directory(void);
+/* glue */
+
+void info2_fill_song_view(mpd_Song *song);
+void info2_activate();
+
+void info2_fill_artist_view(const gchar *artist);
+void info2_fill_album_view(const gchar *artist,const gchar *album);
 #endif

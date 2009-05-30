@@ -139,7 +139,14 @@ namespace MPD {
     namespace Player {
         [CCode (cname="mpd_player_play")]
         public void play(MPD.Server server);
-
+        public MPD.Player.State get_state(MPD.Server server);
+        [CCode (cprefix="MPD_STATUS_STATE_")]
+        public enum State{
+            UNKNOWN = 0,
+            STOP    = 1,
+            PLAY    = 2,
+            PAUSE   = 3
+        }
     }
 
     namespace Database {

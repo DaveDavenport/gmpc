@@ -28,7 +28,6 @@ gmpc_SOURCES=\
 	browsers/playlist3-file-browser.c\
 	browsers/playlist3-current-playlist-browser.c\
 	browsers/playlist3-find2-browser.c\
-	browsers/playlist3-metadata-browser.c\
 	browsers/playlist3-playlist-editor.c\
 	vala/gmpc-image.c\
 	vala/gmpc-progress.c\
