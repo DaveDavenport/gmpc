@@ -894,7 +894,11 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         var vbox = new Gtk.VBox (false,6);
         vbox.border_width = 8;
         var label = new Gtk.Label("");
-        label.set_markup(Markup.printf_escaped("<span size='xx-large' weight='bold'>%s</span>",song.title));
+        if(song.title != null) {
+            label.set_markup(Markup.printf_escaped("<span size='xx-large' weight='bold'>%s</span>",song.title));
+        }else {
+            label.set_markup(Markup.printf_escaped("<span size='xx-large' weight='bold'>%s</span>",_("Unknown")));
+        }
         label.set_alignment(0.0f, 0.5f);
         vbox.pack_start(label, false, false, 0);
 
@@ -1123,7 +1127,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         var vbox = new Gtk.VBox (false,6);
         vbox.border_width = 8;
         var label = new Gtk.Label("");
-        label.set_markup(Markup.printf_escaped("<span size='xx-large' weight='bold'>%s - %s</span>",artist, album));
+        label.set_markup(Markup.printf_escaped("<span size='xx-large' weight='bold'>%s - %s</span>",(artist != null)?artist:_("Unknown"), (album!= null)?album:_("Unknown")));
         label.set_alignment(0.0f, 0.5f);
         vbox.pack_start(label, false, false, 0);
 
@@ -1227,7 +1231,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         var vbox = new Gtk.VBox (false,6);
         vbox.border_width = 8;
         var label = new Gtk.Label("");
-        label.set_markup(Markup.printf_escaped("<span size='xx-large' weight='bold'>%s</span>",artist));
+        label.set_markup(Markup.printf_escaped("<span size='xx-large' weight='bold'>%s</span>",(artist != null)?artist:_("Unknown")));
         label.set_alignment(0.0f, 0.5f);
         vbox.pack_start(label, false, false, 0);
 
