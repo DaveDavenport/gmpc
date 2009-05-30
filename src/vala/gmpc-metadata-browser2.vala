@@ -362,6 +362,33 @@ public class  Gmpc.NowPlaying : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface {
             foreach(Gtk.Widget child in list){
                 child.destroy();
             }
+            var it = Gtk.IconTheme.get_default();
+            weak Gtk.IconInfo info = it.lookup_icon("gmpc", 150, 0);
+            var path = info.get_filename();
+            Gtk.Image image = null;
+            if(path != null)
+            {
+                try {
+                var pb = new Gdk.Pixbuf.from_file_at_scale(path, 150, 150, true);
+                image = new Gtk.Image.from_pixbuf(pb);
+                } catch (Error e)
+                {
+
+                }
+            }
+            if(image == null){
+                image = new Gtk.Image.from_icon_name("gmpc", Gtk.IconSize.DIALOG);
+            }
+            
+            var hbox = new Gtk.HBox(false, 6);
+            var label = new Gtk.Label(_("Gnome Music Player Client"));
+            label.set_markup("<span size='%i' weight='bold'>%s</span>".printf(28*Pango.SCALE,_("Gnome Music Player Client")));
+            hbox.pack_start(image, false, false, 0);
+            hbox.pack_start(label, false, false, 0);
+
+            var ali = new Gtk.Alignment(0.5f,0.5f,0.0f, 0.0f);
+            ali.add(hbox);
+            this.container.add(ali);
         }
         this.paned.show_all();
     }

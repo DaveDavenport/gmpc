@@ -38,6 +38,7 @@
 #include <gmpc-connection.h>
 #include <gmpc-meta-watcher.h>
 #include <pango/pango.h>
+#include <gdk-pixbuf/gdk-pixdata.h>
 #include "gmpc-favorites.h"
 #include "gmpc-rating.h"
 #include "gmpc-song-links.h"
@@ -860,10 +861,12 @@ static void gmpc_now_playing_browser_init (GmpcNowPlaying* self) {
 
 
 static void gmpc_now_playing_update (GmpcNowPlaying* self) {
+	GError * inner_error;
 	const mpd_Song* _tmp0;
 	mpd_Song* song;
 	gboolean _tmp1;
 	g_return_if_fail (self != NULL);
+	inner_error = NULL;
 	if (self->priv->paned == NULL) {
 		return;
 	}
@@ -912,6 +915,16 @@ static void gmpc_now_playing_update (GmpcNowPlaying* self) {
 	} else {
 		char* _tmp5;
 		GList* list;
+		GtkIconTheme* _tmp7;
+		GtkIconTheme* it;
+		GtkIconInfo* info;
+		const char* _tmp8;
+		char* path;
+		GtkImage* image;
+		GtkHBox* hbox;
+		GtkLabel* label;
+		char* _tmp11;
+		GtkAlignment* ali;
 		_tmp5 = NULL;
 		self->priv->song_checksum = (_tmp5 = NULL, self->priv->song_checksum = (g_free (self->priv->song_checksum), NULL), _tmp5);
 		/* Clear */
@@ -931,7 +944,69 @@ static void gmpc_now_playing_update (GmpcNowPlaying* self) {
 				}
 			}
 		}
+		_tmp7 = NULL;
+		it = (_tmp7 = gtk_icon_theme_get_default (), (_tmp7 == NULL) ? NULL : g_object_ref (_tmp7));
+		info = gtk_icon_theme_lookup_icon (it, "gmpc", 150, 0);
+		_tmp8 = NULL;
+		path = (_tmp8 = gtk_icon_info_get_filename (info), (_tmp8 == NULL) ? NULL : g_strdup (_tmp8));
+		image = NULL;
+		if (path != NULL) {
+			{
+				GdkPixbuf* pb;
+				GtkImage* _tmp9;
+				pb = gdk_pixbuf_new_from_file_at_scale (path, 150, 150, TRUE, &inner_error);
+				if (inner_error != NULL) {
+					goto __catch9_g_error;
+					goto __finally9;
+				}
+				_tmp9 = NULL;
+				image = (_tmp9 = g_object_ref_sink ((GtkImage*) gtk_image_new_from_pixbuf (pb)), (image == NULL) ? NULL : (image = (g_object_unref (image), NULL)), _tmp9);
+				(pb == NULL) ? NULL : (pb = (g_object_unref (pb), NULL));
+			}
+			goto __finally9;
+			__catch9_g_error:
+			{
+				GError * e;
+				e = inner_error;
+				inner_error = NULL;
+				{
+					(e == NULL) ? NULL : (e = (g_error_free (e), NULL));
+				}
+			}
+			__finally9:
+			if (inner_error != NULL) {
+				(list == NULL) ? NULL : (list = (g_list_free (list), NULL));
+				(it == NULL) ? NULL : (it = (g_object_unref (it), NULL));
+				path = (g_free (path), NULL);
+				(image == NULL) ? NULL : (image = (g_object_unref (image), NULL));
+				(song == NULL) ? NULL : (song = (mpd_freeSong (song), NULL));
+				g_critical ("file %s: line %d: uncaught error: %s", __FILE__, __LINE__, inner_error->message);
+				g_clear_error (&inner_error);
+				return;
+			}
+		}
+		if (image == NULL) {
+			GtkImage* _tmp10;
+			_tmp10 = NULL;
+			image = (_tmp10 = g_object_ref_sink ((GtkImage*) gtk_image_new_from_icon_name ("gmpc", GTK_ICON_SIZE_DIALOG)), (image == NULL) ? NULL : (image = (g_object_unref (image), NULL)), _tmp10);
+		}
+		hbox = g_object_ref_sink ((GtkHBox*) gtk_hbox_new (FALSE, 6));
+		label = g_object_ref_sink ((GtkLabel*) gtk_label_new (_ ("Gnome Music Player Client")));
+		_tmp11 = NULL;
+		gtk_label_set_markup (label, _tmp11 = g_strdup_printf ("<span size='%i' weight='bold'>%s</span>", 28 * PANGO_SCALE, _ ("Gnome Music Player Client")));
+		_tmp11 = (g_free (_tmp11), NULL);
+		gtk_box_pack_start ((GtkBox*) hbox, (GtkWidget*) image, FALSE, FALSE, (guint) 0);
+		gtk_box_pack_start ((GtkBox*) hbox, (GtkWidget*) label, FALSE, FALSE, (guint) 0);
+		ali = g_object_ref_sink ((GtkAlignment*) gtk_alignment_new (0.5f, 0.5f, 0.0f, 0.0f));
+		gtk_container_add ((GtkContainer*) ali, (GtkWidget*) hbox);
+		gtk_container_add ((GtkContainer*) self->priv->container, (GtkWidget*) ali);
 		(list == NULL) ? NULL : (list = (g_list_free (list), NULL));
+		(it == NULL) ? NULL : (it = (g_object_unref (it), NULL));
+		path = (g_free (path), NULL);
+		(image == NULL) ? NULL : (image = (g_object_unref (image), NULL));
+		(hbox == NULL) ? NULL : (hbox = (g_object_unref (hbox), NULL));
+		(label == NULL) ? NULL : (label = (g_object_unref (label), NULL));
+		(ali == NULL) ? NULL : (ali = (g_object_unref (ali), NULL));
 	}
 	gtk_widget_show_all ((GtkWidget*) self->priv->paned);
 	(song == NULL) ? NULL : (song = (mpd_freeSong (song), NULL));
