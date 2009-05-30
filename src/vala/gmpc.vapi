@@ -254,6 +254,11 @@ namespace Gmpc {
 
     /* objects */
     namespace MpdData {
+        [CCode (chader_filename="gmpc-mpddata-treeview.h",cname="GmpcMpdDataTreeview")]
+        public class TreeView : Gtk.TreeView {
+            [CCode (cname="gmpc_mpddata_treeview_new")]
+            TreeView(string name, bool sort, Gtk.TreeModel model);
+        }
         [CCode (cheader_filename="misc.h", cname="misc_sort_mpddata_by_album_disc_track")]
         public weak MPD.Data.Item? sort_album_disc_track(owned MPD.Data.Item ?data);
         [CCode (cheader_filename="gmpc-mpddata-model.h")]

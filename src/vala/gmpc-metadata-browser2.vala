@@ -23,6 +23,139 @@ using Gmpc;
 private const bool use_transition_mb = Gmpc.use_transition;
 private const string some_unique_name_mb = Config.VERSION;
 
+
+public class Gmpc.Widget.SimilarSongs : Gtk.Expander {
+    private MPD.Song song = null;
+    private bool filled = false;
+    private Gtk.Widget pchild = null;
+    private uint idle_add = 0;
+    ~SimilarSongs ()
+    {
+        if(this.idle_add > 0){
+            GLib.Source.remove(this.idle_add);
+            this.idle_add = 0;
+        }
+    }
+
+    SimilarSongs (MPD.Song song) 
+    {
+        this.song = song;
+        var label  = new Gtk.Label(_("Similar songs"));
+        label.set_markup("<b>%s</b>".printf(_("Similar songs")));
+        this.set_label_widget(label);
+        label.show();
+    }
+    private Gmpc.MetaData.Item copy = null;
+    MPD.Data.Item item = null;
+    private weak List <weak string> current = null;
+    private bool update_sim_song()
+    {
+        if(current == null){
+           current = copy.get_text_list(); 
+           pchild = new Gtk.ProgressBar();
+           this.add(pchild);
+           this.show_all();
+        }
+        ((Gtk.ProgressBar)pchild).pulse();
+        if(current != null)
+        {
+            string entry = current.data;
+            if(entry != null){
+                var split = entry.split("::",2);
+                MPD.Database.search_start(server, false);
+                MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, split[0]);
+                MPD.Database.search_add_constraint(server, MPD.Tag.Type.TITLE, split[1]);
+                var data = MPD.Database.search_commit(server);
+                if(data != null)
+                {
+                    item.concatenate((owned)data); 
+                }
+            }
+            current = current.next;
+            if(current != null) return true;
+        }
+        this.pchild.destroy();
+        if(item != null)
+        {
+            stdout.printf("items\n");
+            var model = new Gmpc.MpdData.Model();
+            model.set_mpd_data((owned)item);
+            Gmpc.MpdData.TreeView tree = new Gmpc.MpdData.TreeView("similar-song", true, model);
+            this.add(tree);
+
+            this.pchild = tree;
+        }else {
+            var label = new Gtk.Label(_("Unavailable"));
+            label.set_alignment(0.0f, 0.0f);
+            this.add(label);
+            this.pchild = label;
+        }
+
+        copy = null;
+        this.idle_add = 0;
+
+        this.show_all();
+        return false;
+    }
+    private void metadata_changed(MetaWatcher gmw, MPD.Song song, Gmpc.MetaData.Type type, Gmpc.MetaData.Result result, Gmpc.MetaData.Item met)
+    {
+        if(this.song.artist.collate(song.artist)!=0) return;
+        if(type != Gmpc.MetaData.Type.SONG_SIMILAR) return;
+        
+        if(this.pchild != null) this.pchild.destroy(); 
+
+        if(result == Gmpc.MetaData.Result.FETCHING) {
+            var label = new Gtk.Label(_("Fetching .. "));
+            label.set_alignment(0.0f, 0.0f);
+            this.add(label);
+            this.pchild = label;
+        }else if (result == Gmpc.MetaData.Result.UNAVAILABLE)
+        {
+            var label = new Gtk.Label(_("Unavailable"));
+            label.set_alignment(0.0f, 0.0f);
+            this.add(label);
+            this.pchild = label;
+        }else{
+            if(met.is_text_list())
+            {
+                this.copy = met.dup_steal();
+                this.idle_add =  GLib.Idle.add(this.update_sim_song);
+                return;
+            }else {
+                var label = new Gtk.Label(_("Unavailable"));
+                label.set_alignment(0.0f, 0.0f);
+                this.add(label);
+                this.pchild = label;
+            }
+        }
+        this.show_all();
+
+    }
+    private void update()
+    {
+        MetaData.Item item = null;
+        metawatcher.data_changed += metadata_changed;
+        Gmpc.MetaData.Result result = metawatcher.query(song, Gmpc.MetaData.Type.SONG_SIMILAR,out item);
+        this.metadata_changed(metawatcher, this.song, Gmpc.MetaData.Type.SONG_SIMILAR, result, item); 
+    }
+
+    override void activate()
+    {
+        if(!this.expanded) {
+            this.set_expanded(true);
+            if(!filled) {
+                this.update();
+                filled = true;
+            }
+        }
+        else{
+            this.set_expanded(false);
+        }
+        stdout.printf("expanded\n");
+    }
+
+}
+
 public class Gmpc.Widget.SimilarArtist : Gtk.Table {
     private MPD.Song song = null;
     private Gmpc.MetadataBrowser browser = null;
@@ -1110,6 +1243,8 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
 
         vbox.pack_start(frame, false, false, 0);
 
+        var similar_songs = new Gmpc.Widget.SimilarSongs(song);
+        vbox.pack_start(similar_songs, false, false, 0);
 
         var song_links = new Gmpc.Song.Links(Gmpc.Song.Links.Type.SONG,song);
         vbox.pack_start(song_links,false, false, 0);

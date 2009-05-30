@@ -122,6 +122,10 @@ namespace MPD {
 
                 [CCode (cname="mpd_data_get_first")] 
                 public weak Item? first();
+
+                [CCode (cname="mpd_data_concatenate")]
+                [ReturnsModifiedPointer ()]
+                public void concatenate(owned MPD.Data.Item b); 
             }
     }
     namespace PlayQueue {

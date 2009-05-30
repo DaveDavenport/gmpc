@@ -31,6 +31,17 @@
 G_BEGIN_DECLS
 
 
+#define GMPC_WIDGET_TYPE_SIMILAR_SONGS (gmpc_widget_similar_songs_get_type ())
+#define GMPC_WIDGET_SIMILAR_SONGS(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), GMPC_WIDGET_TYPE_SIMILAR_SONGS, GmpcWidgetSimilarSongs))
+#define GMPC_WIDGET_SIMILAR_SONGS_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), GMPC_WIDGET_TYPE_SIMILAR_SONGS, GmpcWidgetSimilarSongsClass))
+#define GMPC_WIDGET_IS_SIMILAR_SONGS(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GMPC_WIDGET_TYPE_SIMILAR_SONGS))
+#define GMPC_WIDGET_IS_SIMILAR_SONGS_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GMPC_WIDGET_TYPE_SIMILAR_SONGS))
+#define GMPC_WIDGET_SIMILAR_SONGS_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), GMPC_WIDGET_TYPE_SIMILAR_SONGS, GmpcWidgetSimilarSongsClass))
+
+typedef struct _GmpcWidgetSimilarSongs GmpcWidgetSimilarSongs;
+typedef struct _GmpcWidgetSimilarSongsClass GmpcWidgetSimilarSongsClass;
+typedef struct _GmpcWidgetSimilarSongsPrivate GmpcWidgetSimilarSongsPrivate;
+
 #define GMPC_WIDGET_TYPE_SIMILAR_ARTIST (gmpc_widget_similar_artist_get_type ())
 #define GMPC_WIDGET_SIMILAR_ARTIST(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), GMPC_WIDGET_TYPE_SIMILAR_ARTIST, GmpcWidgetSimilarArtist))
 #define GMPC_WIDGET_SIMILAR_ARTIST_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), GMPC_WIDGET_TYPE_SIMILAR_ARTIST, GmpcWidgetSimilarArtistClass))
@@ -75,6 +86,15 @@ typedef struct _GmpcMetadataBrowser GmpcMetadataBrowser;
 typedef struct _GmpcMetadataBrowserClass GmpcMetadataBrowserClass;
 typedef struct _GmpcMetadataBrowserPrivate GmpcMetadataBrowserPrivate;
 
+struct _GmpcWidgetSimilarSongs {
+	GtkExpander parent_instance;
+	GmpcWidgetSimilarSongsPrivate * priv;
+};
+
+struct _GmpcWidgetSimilarSongsClass {
+	GtkExpanderClass parent_class;
+};
+
 struct _GmpcWidgetSimilarArtist {
 	GtkTable parent_instance;
 	GmpcWidgetSimilarArtistPrivate * priv;
@@ -116,6 +136,7 @@ struct _GmpcMetadataBrowserClass {
 
 #define use_transition_mb TRUE
 #define some_unique_name_mb VERSION
+GType gmpc_widget_similar_songs_get_type (void);
 GtkWidget* gmpc_widget_similar_artist_new_artist_button (GmpcWidgetSimilarArtist* self, const char* artist, gboolean in_db);
 GType gmpc_widget_similar_artist_get_type (void);
 GType gmpc_widget_more_get_type (void);
