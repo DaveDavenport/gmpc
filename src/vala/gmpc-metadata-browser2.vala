@@ -178,7 +178,12 @@ public class Gmpc.Widget.SimilarSongs : Gtk.Expander {
             if(entry != null){
                 var split = entry.split("::",2);
                 MPD.Database.search_start(server, false);
-                MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, split[0]);
+                var art_split = split[0].split(" ");
+                foreach(string artist in art_split)
+                {
+                    MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, artist);
+                }
+
                 MPD.Database.search_add_constraint(server, MPD.Tag.Type.TITLE, split[1]);
                 var data = MPD.Database.search_commit(server);
                 if(data != null)
@@ -930,6 +935,10 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
             column.pack_start(trenderer, false);
             column.add_attribute(trenderer, "text", 10);
 
+            column.set_title(_("Track"));
+            this.tree_songs.append_column(column);
+
+            column = new Gtk.TreeViewColumn();
             trenderer = new Gtk.CellRendererText();
             column.pack_start(trenderer, true);
             column.add_attribute(trenderer, "text", 7);
@@ -938,10 +947,6 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
             this.tree_songs.append_column(column);
             this.tree_songs.set_search_column(7);
             column.set_title(_("Songs"));
-
-            /* set fixed height mode */
-            column.sizing = Gtk.TreeViewColumnSizing.FIXED;
-            this.tree_songs.set_fixed_height_mode(true);
 
             this.tree_songs.get_selection().changed += browser_songs_changed;
 

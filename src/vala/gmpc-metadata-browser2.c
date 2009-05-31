@@ -517,7 +517,7 @@ static void _gmpc_widget_similar_songs_tree_row_activated_gtk_tree_view_row_acti
 
 
 static gboolean gmpc_widget_similar_songs_update_sim_song (GmpcWidgetSimilarSongs* self) {
-	MetaData* _tmp11;
+	MetaData* _tmp14;
 	g_return_val_if_fail (self != NULL, FALSE);
 	if (self->priv->current == NULL) {
 		GtkWidget* _tmp0;
@@ -539,63 +539,88 @@ static gboolean gmpc_widget_similar_songs_update_sim_song (GmpcWidgetSimilarSong
 			gint split_length1;
 			char** _tmp2;
 			char** split;
+			char** _tmp5;
+			gint art_split_size;
+			gint art_split_length1;
+			char** _tmp4;
+			char** art_split;
 			MpdData* data;
 			_tmp3 = NULL;
 			_tmp2 = NULL;
 			split = (_tmp3 = _tmp2 = g_strsplit (entry, "::", 2), split_length1 = _vala_array_length (_tmp2), split_size = split_length1, _tmp3);
 			mpd_database_search_start (connection, FALSE);
-			mpd_database_search_add_constraint (connection, MPD_TAG_ITEM_ARTIST, split[0]);
+			_tmp5 = NULL;
+			_tmp4 = NULL;
+			art_split = (_tmp5 = _tmp4 = g_strsplit (split[0], " ", 0), art_split_length1 = _vala_array_length (_tmp4), art_split_size = art_split_length1, _tmp5);
+			{
+				char** artist_collection;
+				int artist_collection_length1;
+				int artist_it;
+				artist_collection = art_split;
+				artist_collection_length1 = art_split_length1;
+				for (artist_it = 0; artist_it < art_split_length1; artist_it = artist_it + 1) {
+					const char* _tmp6;
+					char* artist;
+					_tmp6 = NULL;
+					artist = (_tmp6 = artist_collection[artist_it], (_tmp6 == NULL) ? NULL : g_strdup (_tmp6));
+					{
+						mpd_database_search_add_constraint (connection, MPD_TAG_ITEM_ARTIST, artist);
+						artist = (g_free (artist), NULL);
+					}
+				}
+			}
 			mpd_database_search_add_constraint (connection, MPD_TAG_ITEM_TITLE, split[1]);
 			data = mpd_database_search_commit (connection);
 			if (data != NULL) {
-				MpdData* _tmp4;
-				_tmp4 = NULL;
-				self->priv->item = mpd_data_concatenate (self->priv->item, (_tmp4 = data, data = NULL, _tmp4));
+				MpdData* _tmp7;
+				_tmp7 = NULL;
+				self->priv->item = mpd_data_concatenate (self->priv->item, (_tmp7 = data, data = NULL, _tmp7));
 			}
 			split = (_vala_array_free (split, split_length1, (GDestroyNotify) g_free), NULL);
+			art_split = (_vala_array_free (art_split, art_split_length1, (GDestroyNotify) g_free), NULL);
 			(data == NULL) ? NULL : (data = (mpd_data_free (data), NULL));
 		}
 		self->priv->current = self->priv->current->next;
 		if (self->priv->current != NULL) {
-			gboolean _tmp5;
-			return (_tmp5 = TRUE, entry = (g_free (entry), NULL), _tmp5);
+			gboolean _tmp8;
+			return (_tmp8 = TRUE, entry = (g_free (entry), NULL), _tmp8);
 		}
 		entry = (g_free (entry), NULL);
 	}
 	gtk_object_destroy ((GtkObject*) self->priv->pchild);
 	if (self->priv->item != NULL) {
 		GmpcMpdDataModel* model;
-		MpdData* _tmp6;
+		MpdData* _tmp9;
 		GmpcMpdDataTreeview* tree;
-		GtkWidget* _tmp8;
-		GtkWidget* _tmp7;
+		GtkWidget* _tmp11;
+		GtkWidget* _tmp10;
 		model = gmpc_mpddata_model_new ();
-		_tmp6 = NULL;
-		gmpc_mpddata_model_set_mpd_data (model, (_tmp6 = self->priv->item, self->priv->item = NULL, _tmp6));
+		_tmp9 = NULL;
+		gmpc_mpddata_model_set_mpd_data (model, (_tmp9 = self->priv->item, self->priv->item = NULL, _tmp9));
 		tree = g_object_ref_sink (gmpc_mpddata_treeview_new ("similar-song", TRUE, (GtkTreeModel*) model));
 		gmpc_mpddata_treeview_enable_click_fix (tree);
 		g_signal_connect_object ((GtkWidget*) tree, "button-release-event", (GCallback) _gmpc_widget_similar_songs_tree_right_menu_gtk_widget_button_release_event, self, 0);
 		g_signal_connect_object ((GtkTreeView*) tree, "row-activated", (GCallback) _gmpc_widget_similar_songs_tree_row_activated_gtk_tree_view_row_activated, self, 0);
 		gtk_container_add ((GtkContainer*) self, (GtkWidget*) tree);
-		_tmp8 = NULL;
-		_tmp7 = NULL;
-		self->priv->pchild = (_tmp8 = (_tmp7 = (GtkWidget*) tree, (_tmp7 == NULL) ? NULL : g_object_ref (_tmp7)), (self->priv->pchild == NULL) ? NULL : (self->priv->pchild = (g_object_unref (self->priv->pchild), NULL)), _tmp8);
+		_tmp11 = NULL;
+		_tmp10 = NULL;
+		self->priv->pchild = (_tmp11 = (_tmp10 = (GtkWidget*) tree, (_tmp10 == NULL) ? NULL : g_object_ref (_tmp10)), (self->priv->pchild == NULL) ? NULL : (self->priv->pchild = (g_object_unref (self->priv->pchild), NULL)), _tmp11);
 		(model == NULL) ? NULL : (model = (g_object_unref (model), NULL));
 		(tree == NULL) ? NULL : (tree = (g_object_unref (tree), NULL));
 	} else {
 		GtkLabel* label;
-		GtkWidget* _tmp10;
-		GtkWidget* _tmp9;
+		GtkWidget* _tmp13;
+		GtkWidget* _tmp12;
 		label = g_object_ref_sink ((GtkLabel*) gtk_label_new (_ ("Unavailable")));
 		gtk_misc_set_alignment ((GtkMisc*) label, 0.0f, 0.0f);
 		gtk_container_add ((GtkContainer*) self, (GtkWidget*) label);
-		_tmp10 = NULL;
-		_tmp9 = NULL;
-		self->priv->pchild = (_tmp10 = (_tmp9 = (GtkWidget*) label, (_tmp9 == NULL) ? NULL : g_object_ref (_tmp9)), (self->priv->pchild == NULL) ? NULL : (self->priv->pchild = (g_object_unref (self->priv->pchild), NULL)), _tmp10);
+		_tmp13 = NULL;
+		_tmp12 = NULL;
+		self->priv->pchild = (_tmp13 = (_tmp12 = (GtkWidget*) label, (_tmp12 == NULL) ? NULL : g_object_ref (_tmp12)), (self->priv->pchild == NULL) ? NULL : (self->priv->pchild = (g_object_unref (self->priv->pchild), NULL)), _tmp13);
 		(label == NULL) ? NULL : (label = (g_object_unref (label), NULL));
 	}
-	_tmp11 = NULL;
-	self->priv->copy = (_tmp11 = NULL, (self->priv->copy == NULL) ? NULL : (self->priv->copy = (meta_data_free (self->priv->copy), NULL)), _tmp11);
+	_tmp14 = NULL;
+	self->priv->copy = (_tmp14 = NULL, (self->priv->copy == NULL) ? NULL : (self->priv->copy = (meta_data_free (self->priv->copy), NULL)), _tmp14);
 	self->priv->idle_add = (guint) 0;
 	gtk_widget_show_all ((GtkWidget*) self);
 	return FALSE;
@@ -1989,9 +2014,10 @@ static void gmpc_metadata_browser_browser_init (GmpcMetadataBrowser* self) {
 		GtkTreeViewColumn* _tmp18;
 		GtkCellRendererPixbuf* _tmp19;
 		GtkCellRendererText* _tmp20;
-		GtkCellRendererText* _tmp21;
-		GtkScrolledWindow* _tmp22;
-		GtkEventBox* _tmp23;
+		GtkTreeViewColumn* _tmp21;
+		GtkCellRendererText* _tmp22;
+		GtkScrolledWindow* _tmp23;
+		GtkEventBox* _tmp24;
 		_tmp0 = NULL;
 		self->priv->paned = (_tmp0 = (GtkPaned*) g_object_ref_sink ((GtkHPaned*) gtk_hpaned_new ()), (self->priv->paned == NULL) ? NULL : (self->priv->paned = (g_object_unref (self->priv->paned), NULL)), _tmp0);
 		gtk_paned_set_position (self->priv->paned, cfg_get_single_value_as_int_with_default (config, gmpc_plugin_base_get_name ((GmpcPluginBase*) self), "pane-pos", 150));
@@ -2103,24 +2129,25 @@ static void gmpc_metadata_browser_browser_init (GmpcMetadataBrowser* self) {
 		trenderer = (_tmp20 = g_object_ref_sink ((GtkCellRendererText*) gtk_cell_renderer_text_new ()), (trenderer == NULL) ? NULL : (trenderer = (g_object_unref (trenderer), NULL)), _tmp20);
 		gtk_cell_layout_pack_start ((GtkCellLayout*) column, (GtkCellRenderer*) trenderer, FALSE);
 		gtk_cell_layout_add_attribute ((GtkCellLayout*) column, (GtkCellRenderer*) trenderer, "text", 10);
+		gtk_tree_view_column_set_title (column, _ ("Track"));
+		gtk_tree_view_append_column (self->priv->tree_songs, column);
 		_tmp21 = NULL;
-		trenderer = (_tmp21 = g_object_ref_sink ((GtkCellRendererText*) gtk_cell_renderer_text_new ()), (trenderer == NULL) ? NULL : (trenderer = (g_object_unref (trenderer), NULL)), _tmp21);
+		column = (_tmp21 = g_object_ref_sink (gtk_tree_view_column_new ()), (column == NULL) ? NULL : (column = (g_object_unref (column), NULL)), _tmp21);
+		_tmp22 = NULL;
+		trenderer = (_tmp22 = g_object_ref_sink ((GtkCellRendererText*) gtk_cell_renderer_text_new ()), (trenderer == NULL) ? NULL : (trenderer = (g_object_unref (trenderer), NULL)), _tmp22);
 		gtk_cell_layout_pack_start ((GtkCellLayout*) column, (GtkCellRenderer*) trenderer, TRUE);
 		gtk_cell_layout_add_attribute ((GtkCellLayout*) column, (GtkCellRenderer*) trenderer, "text", 7);
 		gtk_tree_view_append_column (self->priv->tree_songs, column);
 		gtk_tree_view_set_search_column (self->priv->tree_songs, 7);
 		gtk_tree_view_column_set_title (column, _ ("Songs"));
-		/* set fixed height mode */
-		gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_FIXED);
-		gtk_tree_view_set_fixed_height_mode (self->priv->tree_songs, TRUE);
 		g_signal_connect_object (gtk_tree_view_get_selection (self->priv->tree_songs), "changed", (GCallback) _gmpc_metadata_browser_browser_songs_changed_gtk_tree_selection_changed, self, 0);
 		/* The right view */
-		_tmp22 = NULL;
-		self->priv->metadata_sw = (_tmp22 = g_object_ref_sink ((GtkScrolledWindow*) gtk_scrolled_window_new (NULL, NULL)), (self->priv->metadata_sw == NULL) ? NULL : (self->priv->metadata_sw = (g_object_unref (self->priv->metadata_sw), NULL)), _tmp22);
+		_tmp23 = NULL;
+		self->priv->metadata_sw = (_tmp23 = g_object_ref_sink ((GtkScrolledWindow*) gtk_scrolled_window_new (NULL, NULL)), (self->priv->metadata_sw == NULL) ? NULL : (self->priv->metadata_sw = (g_object_unref (self->priv->metadata_sw), NULL)), _tmp23);
 		gtk_scrolled_window_set_policy (self->priv->metadata_sw, GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 		g_signal_connect_object ((GtkWidget*) self->priv->metadata_sw, "style-set", (GCallback) _gmpc_metadata_browser_browser_bg_style_changed_gtk_widget_style_set, self, 0);
-		_tmp23 = NULL;
-		self->priv->metadata_box = (_tmp23 = g_object_ref_sink ((GtkEventBox*) gtk_event_box_new ()), (self->priv->metadata_box == NULL) ? NULL : (self->priv->metadata_box = (g_object_unref (self->priv->metadata_box), NULL)), _tmp23);
+		_tmp24 = NULL;
+		self->priv->metadata_box = (_tmp24 = g_object_ref_sink ((GtkEventBox*) gtk_event_box_new ()), (self->priv->metadata_box == NULL) ? NULL : (self->priv->metadata_box = (g_object_unref (self->priv->metadata_box), NULL)), _tmp24);
 		gtk_event_box_set_visible_window (self->priv->metadata_box, TRUE);
 		gtk_scrolled_window_add_with_viewport (self->priv->metadata_sw, (GtkWidget*) self->priv->metadata_box);
 		gtk_paned_add2 (self->priv->paned, (GtkWidget*) self->priv->metadata_sw);
