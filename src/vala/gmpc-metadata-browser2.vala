@@ -1078,6 +1078,14 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
     /** 
      * Metadata box
      */
+
+     private void play_song(Gtk.Button button)
+     {
+        MPD.Song? song = (MPD.Song )button.get_data("song"); 
+        if(song != null){
+            Gmpc.Misc.play_path(song.file);
+        }
+     }
      private void play_selected_song(Gtk.Button button)
      {
         MPD.Song? song = browser_get_selected_song(); 
@@ -1086,6 +1094,24 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         }
      }
 
+     private void add_song(Gtk.Button button)
+     {
+        MPD.Song? song = (MPD.Song )button.get_data("song"); 
+        if(song != null){
+            MPD.PlayQueue.add_song(server,song.file);
+            return;
+        }
+     }
+     private void replace_song(Gtk.Button button)
+     {
+         MPD.Song? song = (MPD.Song )button.get_data("song"); 
+         if(song != null){
+             MPD.PlayQueue.clear(server);
+             MPD.PlayQueue.add_song(server,song.file);
+             MPD.Player.play(server);
+             return;
+         }
+     }
      private void add_selected_song(Gtk.Button button)
      {
         string artist = browser_get_selected_artist(); 
@@ -1093,6 +1119,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         MPD.Song? song = browser_get_selected_song(); 
         if(song != null){
             MPD.PlayQueue.add_song(server,song.file);
+            return;
         }
         if(artist != null ) {
             MPD.Database.search_field_start(server,MPD.Tag.Type.FILENAME);
@@ -1118,6 +1145,8 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         if(song != null){
             MPD.PlayQueue.clear(server);
             MPD.PlayQueue.add_song(server,song.file);
+            MPD.Player.play(server);
+            return;
         }
         if(artist != null) {
             MPD.Database.search_field_start(server,MPD.Tag.Type.FILENAME);
@@ -1322,25 +1351,26 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         }
 
         vbox.pack_start(hbox , false, false, 0);
-
         /* Player controls */
         var button = new Gtk.Button.from_stock("gtk-media-play");
         button.set_relief(Gtk.ReliefStyle.NONE);
-        button.clicked += play_selected_song;
+        button.set_data_full("song", song.copy(), MPD.Song.free);
+        button.clicked += play_song;
         hbox = new Gtk.HBox (false, 6);
         hbox.pack_start(button, false, false,0);
 
         button = new Gtk.Button.from_stock("gtk-add");
         button.set_relief(Gtk.ReliefStyle.NONE);
-        button.clicked += add_selected_song;
+        button.set_data_full("song", song.copy(), MPD.Song.free);
+        button.clicked += add_song;
         hbox.pack_start(button, false, false,0);
 
         button = new Gtk.Button.with_mnemonic("_Replace");
         button.set_image(new Gtk.Image.from_stock("gtk-redo", Gtk.IconSize.BUTTON));
         button.set_relief(Gtk.ReliefStyle.NONE);
-        button.clicked += replace_selected_song;
+        button.set_data_full("song", song.copy(), MPD.Song.free);
+        button.clicked += replace_song;
         hbox.pack_start(button, false, false,0);
-
 
         info_box.attach(hbox, 0,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
         i++;

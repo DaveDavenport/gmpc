@@ -207,11 +207,16 @@ static mpd_Song* gmpc_metadata_browser_browser_get_selected_song (GmpcMetadataBr
 static void gmpc_metadata_browser_browser_artist_changed (GmpcMetadataBrowser* self, GtkTreeSelection* sel);
 static void gmpc_metadata_browser_browser_album_changed (GmpcMetadataBrowser* self, GtkTreeSelection* album_sel);
 static void gmpc_metadata_browser_browser_songs_changed (GmpcMetadataBrowser* self, GtkTreeSelection* song_sel);
+static void gmpc_metadata_browser_play_song (GmpcMetadataBrowser* self, GtkButton* button);
 static void gmpc_metadata_browser_play_selected_song (GmpcMetadataBrowser* self, GtkButton* button);
+static void gmpc_metadata_browser_add_song (GmpcMetadataBrowser* self, GtkButton* button);
+static void gmpc_metadata_browser_replace_song (GmpcMetadataBrowser* self, GtkButton* button);
 static void gmpc_metadata_browser_add_selected_song (GmpcMetadataBrowser* self, GtkButton* button);
 static void gmpc_metadata_browser_replace_selected_song (GmpcMetadataBrowser* self, GtkButton* button);
 static void gmpc_metadata_browser_metadata_box_clear (GmpcMetadataBrowser* self);
-static void _gmpc_metadata_browser_play_selected_song_gtk_button_clicked (GtkButton* _sender, gpointer self);
+static void _gmpc_metadata_browser_play_song_gtk_button_clicked (GtkButton* _sender, gpointer self);
+static void _gmpc_metadata_browser_add_song_gtk_button_clicked (GtkButton* _sender, gpointer self);
+static void _gmpc_metadata_browser_replace_song_gtk_button_clicked (GtkButton* _sender, gpointer self);
 static void _gmpc_metadata_browser_add_selected_song_gtk_button_clicked (GtkButton* _sender, gpointer self);
 static void _gmpc_metadata_browser_replace_selected_song_gtk_button_clicked (GtkButton* _sender, gpointer self);
 static void gmpc_metadata_browser_metadata_box_show_album (GmpcMetadataBrowser* self, const char* artist, const char* album);
@@ -2376,6 +2381,20 @@ static void gmpc_metadata_browser_browser_songs_changed (GmpcMetadataBrowser* se
 /** 
      * Metadata box
      */
+static void gmpc_metadata_browser_play_song (GmpcMetadataBrowser* self, GtkButton* button) {
+	const mpd_Song* _tmp0;
+	mpd_Song* song;
+	g_return_if_fail (self != NULL);
+	g_return_if_fail (button != NULL);
+	_tmp0 = NULL;
+	song = (_tmp0 = (const mpd_Song*) g_object_get_data ((GObject*) button, "song"), (_tmp0 == NULL) ? NULL : mpd_songDup (_tmp0));
+	if (song != NULL) {
+		play_path (song->file);
+	}
+	(song == NULL) ? NULL : (song = (mpd_freeSong (song), NULL));
+}
+
+
 static void gmpc_metadata_browser_play_selected_song (GmpcMetadataBrowser* self, GtkButton* button) {
 	mpd_Song* song;
 	g_return_if_fail (self != NULL);
@@ -2383,6 +2402,40 @@ static void gmpc_metadata_browser_play_selected_song (GmpcMetadataBrowser* self,
 	song = gmpc_metadata_browser_browser_get_selected_song (self);
 	if (song != NULL) {
 		play_path (song->file);
+	}
+	(song == NULL) ? NULL : (song = (mpd_freeSong (song), NULL));
+}
+
+
+static void gmpc_metadata_browser_add_song (GmpcMetadataBrowser* self, GtkButton* button) {
+	const mpd_Song* _tmp0;
+	mpd_Song* song;
+	g_return_if_fail (self != NULL);
+	g_return_if_fail (button != NULL);
+	_tmp0 = NULL;
+	song = (_tmp0 = (const mpd_Song*) g_object_get_data ((GObject*) button, "song"), (_tmp0 == NULL) ? NULL : mpd_songDup (_tmp0));
+	if (song != NULL) {
+		mpd_playlist_add (connection, song->file);
+		(song == NULL) ? NULL : (song = (mpd_freeSong (song), NULL));
+		return;
+	}
+	(song == NULL) ? NULL : (song = (mpd_freeSong (song), NULL));
+}
+
+
+static void gmpc_metadata_browser_replace_song (GmpcMetadataBrowser* self, GtkButton* button) {
+	const mpd_Song* _tmp0;
+	mpd_Song* song;
+	g_return_if_fail (self != NULL);
+	g_return_if_fail (button != NULL);
+	_tmp0 = NULL;
+	song = (_tmp0 = (const mpd_Song*) g_object_get_data ((GObject*) button, "song"), (_tmp0 == NULL) ? NULL : mpd_songDup (_tmp0));
+	if (song != NULL) {
+		mpd_playlist_clear (connection);
+		mpd_playlist_add (connection, song->file);
+		mpd_player_play (connection);
+		(song == NULL) ? NULL : (song = (mpd_freeSong (song), NULL));
+		return;
 	}
 	(song == NULL) ? NULL : (song = (mpd_freeSong (song), NULL));
 }
@@ -2399,6 +2452,10 @@ static void gmpc_metadata_browser_add_selected_song (GmpcMetadataBrowser* self, 
 	song = gmpc_metadata_browser_browser_get_selected_song (self);
 	if (song != NULL) {
 		mpd_playlist_add (connection, song->file);
+		artist = (g_free (artist), NULL);
+		album = (g_free (album), NULL);
+		(song == NULL) ? NULL : (song = (mpd_freeSong (song), NULL));
+		return;
 	}
 	if (artist != NULL) {
 		MpdData* data;
@@ -2438,6 +2495,11 @@ static void gmpc_metadata_browser_replace_selected_song (GmpcMetadataBrowser* se
 	if (song != NULL) {
 		mpd_playlist_clear (connection);
 		mpd_playlist_add (connection, song->file);
+		mpd_player_play (connection);
+		artist = (g_free (artist), NULL);
+		album = (g_free (album), NULL);
+		(song == NULL) ? NULL : (song = (mpd_freeSong (song), NULL));
+		return;
 	}
 	if (artist != NULL) {
 		MpdData* data;
@@ -2490,18 +2552,18 @@ static void gmpc_metadata_browser_metadata_box_clear (GmpcMetadataBrowser* self)
 }
 
 
-static void _gmpc_metadata_browser_play_selected_song_gtk_button_clicked (GtkButton* _sender, gpointer self) {
-	gmpc_metadata_browser_play_selected_song (self, _sender);
+static void _gmpc_metadata_browser_play_song_gtk_button_clicked (GtkButton* _sender, gpointer self) {
+	gmpc_metadata_browser_play_song (self, _sender);
 }
 
 
-static void _gmpc_metadata_browser_add_selected_song_gtk_button_clicked (GtkButton* _sender, gpointer self) {
-	gmpc_metadata_browser_add_selected_song (self, _sender);
+static void _gmpc_metadata_browser_add_song_gtk_button_clicked (GtkButton* _sender, gpointer self) {
+	gmpc_metadata_browser_add_song (self, _sender);
 }
 
 
-static void _gmpc_metadata_browser_replace_selected_song_gtk_button_clicked (GtkButton* _sender, gpointer self) {
-	gmpc_metadata_browser_replace_selected_song (self, _sender);
+static void _gmpc_metadata_browser_replace_song_gtk_button_clicked (GtkButton* _sender, gpointer self) {
+	gmpc_metadata_browser_replace_song (self, _sender);
 }
 
 
@@ -2789,14 +2851,16 @@ GtkWidget* gmpc_metadata_browser_metadata_box_show_song (GmpcMetadataBrowser* se
 	/* Player controls */
 	button = g_object_ref_sink ((GtkButton*) gtk_button_new_from_stock ("gtk-media-play"));
 	gtk_button_set_relief (button, GTK_RELIEF_NONE);
-	g_signal_connect_object (button, "clicked", (GCallback) _gmpc_metadata_browser_play_selected_song_gtk_button_clicked, self, 0);
+	g_object_set_data_full ((GObject*) button, "song", mpd_songDup (song), mpd_freeSong);
+	g_signal_connect_object (button, "clicked", (GCallback) _gmpc_metadata_browser_play_song_gtk_button_clicked, self, 0);
 	_tmp37 = NULL;
 	hbox = (_tmp37 = g_object_ref_sink ((GtkHBox*) gtk_hbox_new (FALSE, 6)), (hbox == NULL) ? NULL : (hbox = (g_object_unref (hbox), NULL)), _tmp37);
 	gtk_box_pack_start ((GtkBox*) hbox, (GtkWidget*) button, FALSE, FALSE, (guint) 0);
 	_tmp38 = NULL;
 	button = (_tmp38 = g_object_ref_sink ((GtkButton*) gtk_button_new_from_stock ("gtk-add")), (button == NULL) ? NULL : (button = (g_object_unref (button), NULL)), _tmp38);
 	gtk_button_set_relief (button, GTK_RELIEF_NONE);
-	g_signal_connect_object (button, "clicked", (GCallback) _gmpc_metadata_browser_add_selected_song_gtk_button_clicked, self, 0);
+	g_object_set_data_full ((GObject*) button, "song", mpd_songDup (song), mpd_freeSong);
+	g_signal_connect_object (button, "clicked", (GCallback) _gmpc_metadata_browser_add_song_gtk_button_clicked, self, 0);
 	gtk_box_pack_start ((GtkBox*) hbox, (GtkWidget*) button, FALSE, FALSE, (guint) 0);
 	_tmp39 = NULL;
 	button = (_tmp39 = g_object_ref_sink ((GtkButton*) gtk_button_new_with_mnemonic ("_Replace")), (button == NULL) ? NULL : (button = (g_object_unref (button), NULL)), _tmp39);
@@ -2804,7 +2868,8 @@ GtkWidget* gmpc_metadata_browser_metadata_box_show_song (GmpcMetadataBrowser* se
 	gtk_button_set_image (button, (GtkWidget*) (_tmp40 = g_object_ref_sink ((GtkImage*) gtk_image_new_from_stock ("gtk-redo", GTK_ICON_SIZE_BUTTON))));
 	(_tmp40 == NULL) ? NULL : (_tmp40 = (g_object_unref (_tmp40), NULL));
 	gtk_button_set_relief (button, GTK_RELIEF_NONE);
-	g_signal_connect_object (button, "clicked", (GCallback) _gmpc_metadata_browser_replace_selected_song_gtk_button_clicked, self, 0);
+	g_object_set_data_full ((GObject*) button, "song", mpd_songDup (song), mpd_freeSong);
+	g_signal_connect_object (button, "clicked", (GCallback) _gmpc_metadata_browser_replace_song_gtk_button_clicked, self, 0);
 	gtk_box_pack_start ((GtkBox*) hbox, (GtkWidget*) button, FALSE, FALSE, (guint) 0);
 	gtk_table_attach (info_box, (GtkWidget*) hbox, (guint) 0, (guint) 2, (guint) i, (guint) (i + 1), GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL, (guint) 0, (guint) 0);
 	i++;
@@ -2839,6 +2904,16 @@ GtkWidget* gmpc_metadata_browser_metadata_box_show_song (GmpcMetadataBrowser* se
 	        */
 	_tmp46 = NULL;
 	return (_tmp46 = (GtkWidget*) vbox, (label == NULL) ? NULL : (label = (g_object_unref (label), NULL)), (hbox == NULL) ? NULL : (hbox = (g_object_unref (hbox), NULL)), (ali == NULL) ? NULL : (ali = (g_object_unref (ali), NULL)), (artist_image == NULL) ? NULL : (artist_image = (g_object_unref (artist_image), NULL)), (info_box == NULL) ? NULL : (info_box = (g_object_unref (info_box), NULL)), (pt_label == NULL) ? NULL : (pt_label = (g_object_unref (pt_label), NULL)), (fav_button == NULL) ? NULL : (fav_button = (g_object_unref (fav_button), NULL)), (button == NULL) ? NULL : (button = (g_object_unref (button), NULL)), (text_view == NULL) ? NULL : (text_view = (g_object_unref (text_view), NULL)), (frame == NULL) ? NULL : (frame = (g_object_unref (frame), NULL)), (similar_songs == NULL) ? NULL : (similar_songs = (g_object_unref (similar_songs), NULL)), (song_links == NULL) ? NULL : (song_links = (g_object_unref (song_links), NULL)), _tmp46);
+}
+
+
+static void _gmpc_metadata_browser_add_selected_song_gtk_button_clicked (GtkButton* _sender, gpointer self) {
+	gmpc_metadata_browser_add_selected_song (self, _sender);
+}
+
+
+static void _gmpc_metadata_browser_replace_selected_song_gtk_button_clicked (GtkButton* _sender, gpointer self) {
+	gmpc_metadata_browser_replace_selected_song (self, _sender);
 }
 
 
