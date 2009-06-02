@@ -147,6 +147,9 @@ static void gmpc_now_playing_browser_bg_style_changed (GmpcNowPlaying* self, Gtk
 static void _gmpc_now_playing_browser_bg_style_changed_gtk_widget_style_set (GtkScrolledWindow* _sender, GtkStyle* previous_style, gpointer self);
 static void gmpc_now_playing_browser_init (GmpcNowPlaying* self);
 static void gmpc_now_playing_update (GmpcNowPlaying* self);
+static void gmpc_now_playing_select_now_playing_browser (GmpcNowPlaying* self, GtkImageMenuItem* item);
+static void _gmpc_now_playing_select_now_playing_browser_gtk_menu_item_activate (GtkImageMenuItem* _sender, gpointer self);
+static gint gmpc_now_playing_real_browser_add_go_menu (GmpcPluginBrowserIface* base, GtkMenu* menu);
 static void _gmpc_now_playing_status_changed_gmpc_connection_status_changed (GmpcConnection* _sender, MpdObj* server, ChangedStatusType what, gpointer self);
 static GObject * gmpc_now_playing_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);
 static gpointer gmpc_now_playing_parent_class = NULL;
@@ -1589,6 +1592,46 @@ static void gmpc_now_playing_update (GmpcNowPlaying* self) {
 }
 
 
+static void gmpc_now_playing_select_now_playing_browser (GmpcNowPlaying* self, GtkImageMenuItem* item) {
+	GtkTreeView* tree;
+	GtkTreeSelection* _tmp0;
+	GtkTreeSelection* sel;
+	GtkTreePath* path;
+	g_return_if_fail (self != NULL);
+	g_return_if_fail (item != NULL);
+	tree = playlist3_get_category_tree_view ();
+	_tmp0 = NULL;
+	sel = (_tmp0 = gtk_tree_view_get_selection (tree), (_tmp0 == NULL) ? NULL : g_object_ref (_tmp0));
+	path = gtk_tree_row_reference_get_path (self->priv->np_ref);
+	gtk_tree_selection_select_path (sel, path);
+	(sel == NULL) ? NULL : (sel = (g_object_unref (sel), NULL));
+	(path == NULL) ? NULL : (path = (gtk_tree_path_free (path), NULL));
+}
+
+
+static void _gmpc_now_playing_select_now_playing_browser_gtk_menu_item_activate (GtkImageMenuItem* _sender, gpointer self) {
+	gmpc_now_playing_select_now_playing_browser (self, _sender);
+}
+
+
+static gint gmpc_now_playing_real_browser_add_go_menu (GmpcPluginBrowserIface* base, GtkMenu* menu) {
+	GmpcNowPlaying * self;
+	GtkImageMenuItem* item;
+	GtkImage* _tmp0;
+	gint _tmp1;
+	self = (GmpcNowPlaying*) base;
+	g_return_val_if_fail (menu != NULL, 0);
+	item = g_object_ref_sink ((GtkImageMenuItem*) gtk_image_menu_item_new_with_mnemonic (_ ("Now Playing")));
+	_tmp0 = NULL;
+	gtk_image_menu_item_set_image (item, (GtkWidget*) (_tmp0 = g_object_ref_sink ((GtkImage*) gtk_image_new_from_stock ("gtk-info", GTK_ICON_SIZE_MENU))));
+	(_tmp0 == NULL) ? NULL : (_tmp0 = (g_object_unref (_tmp0), NULL));
+	g_signal_connect_object ((GtkMenuItem*) item, "activate", (GCallback) _gmpc_now_playing_select_now_playing_browser_gtk_menu_item_activate, self, 0);
+	gtk_widget_add_accelerator ((GtkWidget*) item, "activate", gtk_menu_get_accel_group (menu), (guint) 0x069, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+	gtk_menu_shell_append ((GtkMenuShell*) menu, (GtkWidget*) ((GtkMenuItem*) item));
+	return (_tmp1 = 1, (item == NULL) ? NULL : (item = (g_object_unref (item), NULL)), _tmp1);
+}
+
+
 /**
  * Now playing uses the MetaDataBrowser plugin to "plot" the view */
 GmpcNowPlaying* gmpc_now_playing_construct (GType object_type) {
@@ -1646,6 +1689,7 @@ static void gmpc_now_playing_gmpc_plugin_browser_iface_interface_init (GmpcPlugi
 	iface->browser_add = gmpc_now_playing_real_browser_add;
 	iface->browser_selected = gmpc_now_playing_real_browser_selected;
 	iface->browser_unselected = gmpc_now_playing_real_browser_unselected;
+	iface->browser_add_go_menu = gmpc_now_playing_real_browser_add_go_menu;
 }
 
 

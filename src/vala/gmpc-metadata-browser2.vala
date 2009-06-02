@@ -646,6 +646,23 @@ public class  Gmpc.NowPlaying : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface {
         }
         this.paned.show_all();
     }
+    private void select_now_playing_browser(Gtk.ImageMenuItem item)
+    {
+        weak Gtk.TreeView tree = Gmpc.Playlist3.get_category_tree_view();
+        var sel = tree.get_selection();
+        var path = np_ref.get_path();
+        sel.select_path(path);
+    }
+    private int browser_add_go_menu(Gtk.Menu menu)
+    {
+        var item = new Gtk.ImageMenuItem.with_mnemonic(_("Now Playing"));
+        item.set_image(new Gtk.Image.from_stock("gtk-info", Gtk.IconSize.MENU));
+        item.activate += select_now_playing_browser;
+        item.add_accelerator("activate", menu.get_accel_group(),0x069, Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
+        menu.append(item);
+
+        return 1;
+    }
 }
 
 public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface {

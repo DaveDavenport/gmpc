@@ -251,6 +251,11 @@ namespace Gmpc {
         [CCode (cname="playlist3_insert_browser")]
         public void insert(out Gtk.TreeIter iter, int position);
     }
+    namespace Playlist3 {
+        [CCode (cname="playlist3_get_category_tree_view")]
+        public unowned Gtk.TreeView get_category_tree_view();
+
+    }
 
     /* objects */
     namespace MpdData {
