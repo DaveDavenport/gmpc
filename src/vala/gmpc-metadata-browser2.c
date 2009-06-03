@@ -958,6 +958,7 @@ static void gmpc_widget_similar_artist_metadata_changed (GmpcWidgetSimilarArtist
 			}
 			in_db_list = g_list_reverse (in_db_list);
 			i = 0;
+			gtk_widget_hide ((GtkWidget*) self);
 			{
 				GList* item_collection;
 				GList* item_it;

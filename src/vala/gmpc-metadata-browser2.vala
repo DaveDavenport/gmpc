@@ -340,6 +340,7 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
             }
             in_db_list.reverse();
             int i=0;
+            this.hide();
             foreach(Gtk.Widget item in in_db_list)
             {
                 if(i<50){
@@ -350,7 +351,6 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
                 }
                 i++;
             }
-
         }
 
         this.show_all();
