@@ -487,7 +487,7 @@ void gmpc_plugin_browser_unselected(gmpcPluginParent *plug, GtkWidget *container
 {
     if(gmpc_plugin_is_browser(plug)) {
         if(plug->new) {
-            gmpc_plugin_browser_iface_browser_unselected((GmpcPluginBrowserIface *)plug->new, container);
+            gmpc_plugin_browser_iface_browser_unselected((GmpcPluginBrowserIface *)plug->new, GTK_CONTAINER(container));
             return;
         }
         g_assert(plug->old->browser != NULL);
@@ -499,7 +499,7 @@ void gmpc_plugin_browser_selected(gmpcPluginParent *plug, GtkWidget *container)
 {
     if(gmpc_plugin_is_browser(plug)) {
         if(plug->new) {
-            gmpc_plugin_browser_iface_browser_selected((GmpcPluginBrowserIface *)plug->new, container);
+            gmpc_plugin_browser_iface_browser_selected((GmpcPluginBrowserIface *)plug->new, GTK_CONTAINER(container));
             return;
         }
         g_assert(plug->old->browser != NULL);
@@ -666,9 +666,9 @@ const int * gmpc_plugin_get_version(gmpcPluginParent *plug)
 {
     if(plug->new) {
         gint length;
-        return (int *)gmpc_plugin_base_get_version(plug->new, &length);
+        return (const int *)gmpc_plugin_base_get_version(plug->new, &length);
     }
-    return (int *)plug->old->version;
+    return (const int *)plug->old->version;
 }
 
 int gmpc_plugin_get_type(gmpcPluginParent *plug)
@@ -718,7 +718,6 @@ void gmpc_plugin_metadata_query_metadata_list(gmpcPluginParent *plug, mpd_Song *
 {
     if(gmpc_plugin_is_metadata(plug))
     {
-        printf("trying: %s\n", gmpc_plugin_get_name(plug));
         if(plug->new)
         {
             gmpc_plugin_meta_data_iface_get_data(GMPC_PLUGIN_META_DATA_IFACE(plug->new), song, type, callback, data);

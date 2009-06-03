@@ -28,6 +28,8 @@ typedef struct _GmpcPluginMetadataPrefetcherPrivate GmpcPluginMetadataPrefetcher
 struct _GmpcPluginMetadataPrefetcher {
 	GmpcPluginBase parent_instance;
 	GmpcPluginMetadataPrefetcherPrivate * priv;
+	gint* version;
+	gint version_length1;
 };
 
 struct _GmpcPluginMetadataPrefetcherClass {
@@ -50,8 +52,8 @@ GmpcPluginMetadataPrefetcher* gmpc_plugin_metadata_prefetcher_new (void);
 static void _gmpc_plugin_metadata_prefetcher_status_changed_gmpc_connection_status_changed (GmpcConnection* _sender, MpdObj* server, ChangedStatusType what, gpointer self);
 static GObject * gmpc_plugin_metadata_prefetcher_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);
 static gpointer gmpc_plugin_metadata_prefetcher_parent_class = NULL;
+static void gmpc_plugin_metadata_prefetcher_finalize (GObject* obj);
 
-static const gint GMPC_PLUGIN_METADATA_PREFETCHER_version[] = {0, 0, 2};
 
 
 static gint* gmpc_plugin_metadata_prefetcher_real_get_version (GmpcPluginBase* base, int* result_length1) {
@@ -59,7 +61,7 @@ static gint* gmpc_plugin_metadata_prefetcher_real_get_version (GmpcPluginBase* b
 	gint* _tmp0_;
 	self = (GmpcPluginMetadataPrefetcher*) base;
 	_tmp0_ = NULL;
-	return (_tmp0_ = GMPC_PLUGIN_METADATA_PREFETCHER_version, *result_length1 = G_N_ELEMENTS (GMPC_PLUGIN_METADATA_PREFETCHER_version), _tmp0_);
+	return (_tmp0_ = self->version, *result_length1 = self->version_length1, _tmp0_);
 }
 
 
@@ -152,10 +154,23 @@ static void gmpc_plugin_metadata_prefetcher_class_init (GmpcPluginMetadataPrefet
 	GMPC_PLUGIN_BASE_CLASS (klass)->get_version = gmpc_plugin_metadata_prefetcher_real_get_version;
 	GMPC_PLUGIN_BASE_CLASS (klass)->get_name = gmpc_plugin_metadata_prefetcher_real_get_name;
 	G_OBJECT_CLASS (klass)->constructor = gmpc_plugin_metadata_prefetcher_constructor;
+	G_OBJECT_CLASS (klass)->finalize = gmpc_plugin_metadata_prefetcher_finalize;
 }
 
 
 static void gmpc_plugin_metadata_prefetcher_instance_init (GmpcPluginMetadataPrefetcher * self) {
+	gint* _tmp0_;
+	self->version = (_tmp0_ = g_new0 (gint, 3), _tmp0_[0] = 0, _tmp0_[1] = 0, _tmp0_[2] = 2, _tmp0_);
+	self->version_length1 = 3;
+	_tmp0_ = NULL;
+}
+
+
+static void gmpc_plugin_metadata_prefetcher_finalize (GObject* obj) {
+	GmpcPluginMetadataPrefetcher * self;
+	self = GMPC_PLUGIN_METADATA_PREFETCHER (obj);
+	self->version = (g_free (self->version), NULL);
+	G_OBJECT_CLASS (gmpc_plugin_metadata_prefetcher_parent_class)->finalize (obj);
 }
 
 

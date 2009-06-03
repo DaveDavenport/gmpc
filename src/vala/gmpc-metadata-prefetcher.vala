@@ -24,7 +24,7 @@ using Gmpc;
 private const bool use_transition = Gmpc.use_transition;
 
 public class  Gmpc.Plugin.MetadataPrefetcher : Gmpc.Plugin.Base {
-    public const int[] version = {0,0,2};
+    public int[] version = {0,0,2};
 
     public override weak int[] get_version() {
         return this.version;

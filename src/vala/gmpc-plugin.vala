@@ -51,7 +51,7 @@ namespace Gmpc {
             /**
              * Function should return the version of the plugin
              */
-            public abstract weak int[3] get_version();
+            public abstract weak int[] get_version();
             /**
              * Return the name of the plugin
              */

@@ -67,8 +67,8 @@ static void pl3_current_playlist_browser_delete_selected_songs (PlayQueuePlugin 
 
 static void pl3_current_playlist_browser_add(GmpcPluginBrowserIface *obj, GtkWidget *cat_tree);
 
-static void pl3_current_playlist_browser_selected(GmpcPluginBrowserIface *obj, GtkWidget *container);
-static void pl3_current_playlist_browser_unselected(GmpcPluginBrowserIface *obj, GtkWidget *container);
+static void pl3_current_playlist_browser_selected(GmpcPluginBrowserIface *obj, GtkContainer *container);
+static void pl3_current_playlist_browser_unselected(GmpcPluginBrowserIface *obj, GtkContainer *container);
 
 static void pl3_current_playlist_browser_activate(PlayQueuePlugin *self);
 
@@ -821,7 +821,7 @@ static void pl3_current_playlist_browser_show_info(PlayQueuePlugin *self)
     }
 }
 
-static void pl3_current_playlist_browser_selected(GmpcPluginBrowserIface *obj, GtkWidget *container)
+static void pl3_current_playlist_browser_selected(GmpcPluginBrowserIface *obj, GtkContainer *container)
 {
     PlayQueuePlugin *self = (PlayQueuePlugin *)obj;
     unsigned long a = 0,b = 0;
@@ -837,7 +837,7 @@ static void pl3_current_playlist_browser_selected(GmpcPluginBrowserIface *obj, G
 
     gtk_widget_grab_focus(self->priv->pl3_cp_tree);
 }
-static void pl3_current_playlist_browser_unselected(GmpcPluginBrowserIface *obj, GtkWidget *container)
+static void pl3_current_playlist_browser_unselected(GmpcPluginBrowserIface *obj, GtkContainer *container)
 {
     PlayQueuePlugin *self = (PlayQueuePlugin *)obj;
     gtk_container_remove(GTK_CONTAINER(container), self->priv->pl3_cp_vbox);

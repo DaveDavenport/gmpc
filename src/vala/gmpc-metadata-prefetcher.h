@@ -22,6 +22,8 @@ typedef struct _GmpcPluginMetadataPrefetcherPrivate GmpcPluginMetadataPrefetcher
 struct _GmpcPluginMetadataPrefetcher {
 	GmpcPluginBase parent_instance;
 	GmpcPluginMetadataPrefetcherPrivate * priv;
+	gint* version;
+	gint version_length1;
 };
 
 struct _GmpcPluginMetadataPrefetcherClass {
@@ -33,7 +35,6 @@ GType gmpc_plugin_metadata_prefetcher_get_type (void);
 GmpcPluginMetadataPrefetcher* gmpc_plugin_metadata_prefetcher_new (void);
 GmpcPluginMetadataPrefetcher* gmpc_plugin_metadata_prefetcher_construct (GType object_type);
 
-static const gint GMPC_PLUGIN_METADATA_PREFETCHER_version[] = {0, 0, 2};
 
 G_END_DECLS
 

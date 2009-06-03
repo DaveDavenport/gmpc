@@ -80,7 +80,7 @@ struct _GmpcPluginBase {
 
 struct _GmpcPluginBaseClass {
 	GObjectClass parent_class;
-	gint (*get_version) (GmpcPluginBase* self, int* result_length1);
+	gint* (*get_version) (GmpcPluginBase* self, int* result_length1);
 	const char* (*get_name) (GmpcPluginBase* self);
 	void (*save_yourself) (GmpcPluginBase* self);
 	gboolean (*get_enabled) (GmpcPluginBase* self);
@@ -129,7 +129,7 @@ struct _GmpcPluginSongListIfaceIface {
 
 
 GType gmpc_plugin_base_get_type (void);
-gint gmpc_plugin_base_get_version (GmpcPluginBase* self, int* result_length1);
+gint* gmpc_plugin_base_get_version (GmpcPluginBase* self, int* result_length1);
 const char* gmpc_plugin_base_get_name (GmpcPluginBase* self);
 void gmpc_plugin_base_save_yourself (GmpcPluginBase* self);
 gboolean gmpc_plugin_base_get_enabled (GmpcPluginBase* self);

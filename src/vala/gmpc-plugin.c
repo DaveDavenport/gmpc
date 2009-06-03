@@ -95,7 +95,7 @@ struct _GmpcPluginBase {
 
 struct _GmpcPluginBaseClass {
 	GObjectClass parent_class;
-	gint (*get_version) (GmpcPluginBase* self, int* result_length1);
+	gint* (*get_version) (GmpcPluginBase* self, int* result_length1);
 	const char* (*get_name) (GmpcPluginBase* self);
 	void (*save_yourself) (GmpcPluginBase* self);
 	gboolean (*get_enabled) (GmpcPluginBase* self);
@@ -148,8 +148,8 @@ GType gmpc_plugin_base_get_type (void);
 enum  {
 	GMPC_PLUGIN_BASE_DUMMY_PROPERTY
 };
-gint gmpc_plugin_base_get_version (GmpcPluginBase* self, int* result_length1);
-static gint gmpc_plugin_base_real_get_version (GmpcPluginBase* self, int* result_length1);
+gint* gmpc_plugin_base_get_version (GmpcPluginBase* self, int* result_length1);
+static gint* gmpc_plugin_base_real_get_version (GmpcPluginBase* self, int* result_length1);
 const char* gmpc_plugin_base_get_name (GmpcPluginBase* self);
 static const char* gmpc_plugin_base_real_get_name (GmpcPluginBase* self);
 void gmpc_plugin_base_save_yourself (GmpcPluginBase* self);
@@ -182,16 +182,17 @@ gint gmpc_plugin_song_list_iface_song_list (GmpcPluginSongListIface* self, GtkWi
 
 
 
-static gint gmpc_plugin_base_real_get_version (GmpcPluginBase* self, int* result_length1) {
+static gint* gmpc_plugin_base_real_get_version (GmpcPluginBase* self, int* result_length1) {
+	g_return_val_if_fail (self != NULL, NULL);
 	g_critical ("Type `%s' does not implement abstract method `gmpc_plugin_base_get_version'", g_type_name (G_TYPE_FROM_INSTANCE (self)));
-	return;
+	return NULL;
 }
 
 
 /**
              * Function should return the version of the plugin
              */
-gint gmpc_plugin_base_get_version (GmpcPluginBase* self, int* result_length1) {
+gint* gmpc_plugin_base_get_version (GmpcPluginBase* self, int* result_length1) {
 	return GMPC_PLUGIN_BASE_GET_CLASS (self)->get_version (self, result_length1);
 }
 
