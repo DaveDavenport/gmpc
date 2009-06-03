@@ -1103,10 +1103,26 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         if(artist != null)
         {
             string album = browser_get_selected_album();
-            /* Fill in the first browser */
-            MPD.Database.search_start(server,true);
+            string albumartist = null;
 
-            MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, artist);
+            if(album != null)
+            {
+                MPD.Database.search_field_start(server, MPD.Tag.Type.ALBUM_ARTIST);
+                MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM, album);
+                var ydata = MPD.Database.search_commit(server);
+                if(ydata != null)
+                {
+                    if(ydata.tag.length > 0)
+                        albumartist = ydata.tag;
+                }
+            } 
+            /* Fill in the first browser */ 
+            MPD.Database.search_start(server,true);
+            if(albumartist != null)
+                MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM_ARTIST, albumartist);
+            else
+                MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, artist);
+
             if(album != null)
                 MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM, album);
             var data = MPD.Database.search_commit(server);
@@ -1167,8 +1183,25 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
             return;
         }
         if(artist != null ) {
+            /* Hunt albumartist */
+            string albumartist = null;
+            if(album != null)
+            {
+                MPD.Database.search_field_start(server, MPD.Tag.Type.ALBUM_ARTIST);
+                MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM, album);
+                var ydata = MPD.Database.search_commit(server);
+                if(ydata != null)
+                {
+                    if(ydata.tag.length > 0)
+                        albumartist = ydata.tag;
+                }
+            }
+
             MPD.Database.search_field_start(server,MPD.Tag.Type.FILENAME);
-            MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, artist);
+            if(albumartist != null)
+                MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM_ARTIST, albumartist);
+            else
+                MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, artist);
             if(album != null)
                 MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM, album);
             var data = MPD.Database.search_commit(server);
@@ -1184,39 +1217,17 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
 
      private void replace_selected_song(Gtk.Button button)
      {
-        string artist = browser_get_selected_artist(); 
-        string album = browser_get_selected_album(); 
-        MPD.Song? song = browser_get_selected_song(); 
-        if(song != null){
             MPD.PlayQueue.clear(server);
-            MPD.PlayQueue.add_song(server,song.file);
+            this.add_selected_song(button);
             MPD.Player.play(server);
-            return;
-        }
-        if(artist != null) {
-            MPD.Database.search_field_start(server,MPD.Tag.Type.FILENAME);
-            MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, artist);
-            if(album != null)
-                MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM, album);
-            var data = MPD.Database.search_commit(server);
-            if(data != null) {
-                weak MPD.Data.Item iter = Gmpc.MpdData.sort_album_disc_track(data);
-                MPD.PlayQueue.clear(server);
-                do{
-                    MPD.PlayQueue.queue_add_song(server, iter.tag);
-                }while((iter = iter.next(false)) != null);
-                MPD.PlayQueue.queue_commit(server);
-                MPD.Player.play(server);
-            }   
-        }
      }
-    private void metadata_box_clear()
-    {
-        var list = this.metadata_box.get_children();
-        foreach(Gtk.Widget child in list){
-            child.destroy();
-        }
-    }
+     private void metadata_box_clear()
+     {
+         var list = this.metadata_box.get_children();
+         foreach(Gtk.Widget child in list){
+             child.destroy();
+         }
+     }
     public Gtk.Widget metadata_box_show_song(MPD.Song song)
     {
         var vbox = new Gtk.VBox (false,6);

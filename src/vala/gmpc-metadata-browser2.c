@@ -2444,26 +2444,49 @@ static void gmpc_metadata_browser_browser_album_changed (GmpcMetadataBrowser* se
 	artist = gmpc_metadata_browser_browser_get_selected_artist (self);
 	if (artist != NULL) {
 		char* album;
+		char* albumartist;
 		MpdData* data;
+		MpdData* _tmp4;
+		const MpdData* _tmp3;
 		MpdData* _tmp2;
-		const MpdData* _tmp1;
-		MpdData* _tmp0;
-		MpdData* _tmp3;
+		MpdData* _tmp5;
 		album = gmpc_metadata_browser_browser_get_selected_album (self);
+		albumartist = NULL;
+		if (album != NULL) {
+			MpdData* ydata;
+			mpd_database_search_field_start (connection, MPD_TAG_ITEM_ALBUM_ARTIST);
+			mpd_database_search_add_constraint (connection, MPD_TAG_ITEM_ALBUM, album);
+			ydata = mpd_database_search_commit (connection);
+			if (ydata != NULL) {
+				if (string_get_length (ydata->tag) > 0) {
+					char* _tmp1;
+					const char* _tmp0;
+					_tmp1 = NULL;
+					_tmp0 = NULL;
+					albumartist = (_tmp1 = (_tmp0 = ydata->tag, (_tmp0 == NULL) ? NULL : g_strdup (_tmp0)), albumartist = (g_free (albumartist), NULL), _tmp1);
+				}
+			}
+			(ydata == NULL) ? NULL : (ydata = (mpd_data_free (ydata), NULL));
+		}
 		/* Fill in the first browser */
 		mpd_database_search_start (connection, TRUE);
-		mpd_database_search_add_constraint (connection, MPD_TAG_ITEM_ARTIST, artist);
+		if (albumartist != NULL) {
+			mpd_database_search_add_constraint (connection, MPD_TAG_ITEM_ALBUM_ARTIST, albumartist);
+		} else {
+			mpd_database_search_add_constraint (connection, MPD_TAG_ITEM_ARTIST, artist);
+		}
 		if (album != NULL) {
 			mpd_database_search_add_constraint (connection, MPD_TAG_ITEM_ALBUM, album);
 		}
 		data = mpd_database_search_commit (connection);
-		_tmp2 = NULL;
-		_tmp1 = NULL;
-		_tmp0 = NULL;
-		data = (_tmp2 = (_tmp1 = misc_sort_mpddata_by_album_disc_track ((_tmp0 = data, data = NULL, _tmp0)), (_tmp1 == NULL) ? NULL :  (_tmp1)), (data == NULL) ? NULL : (data = (mpd_data_free (data), NULL)), _tmp2);
+		_tmp4 = NULL;
 		_tmp3 = NULL;
-		gmpc_mpddata_model_set_mpd_data (self->priv->model_songs, (_tmp3 = data, data = NULL, _tmp3));
+		_tmp2 = NULL;
+		data = (_tmp4 = (_tmp3 = misc_sort_mpddata_by_album_disc_track ((_tmp2 = data, data = NULL, _tmp2)), (_tmp3 == NULL) ? NULL :  (_tmp3)), (data == NULL) ? NULL : (data = (mpd_data_free (data), NULL)), _tmp4);
+		_tmp5 = NULL;
+		gmpc_mpddata_model_set_mpd_data (self->priv->model_songs, (_tmp5 = data, data = NULL, _tmp5));
 		album = (g_free (album), NULL);
+		albumartist = (g_free (albumartist), NULL);
 		(data == NULL) ? NULL : (data = (mpd_data_free (data), NULL));
 	}
 	gmpc_metadata_browser_metadata_box_update (self);
@@ -2559,23 +2582,47 @@ static void gmpc_metadata_browser_add_selected_song (GmpcMetadataBrowser* self, 
 		return;
 	}
 	if (artist != NULL) {
+		char* albumartist;
 		MpdData* data;
+		/* Hunt albumartist */
+		albumartist = NULL;
+		if (album != NULL) {
+			MpdData* ydata;
+			mpd_database_search_field_start (connection, MPD_TAG_ITEM_ALBUM_ARTIST);
+			mpd_database_search_add_constraint (connection, MPD_TAG_ITEM_ALBUM, album);
+			ydata = mpd_database_search_commit (connection);
+			if (ydata != NULL) {
+				if (string_get_length (ydata->tag) > 0) {
+					char* _tmp1;
+					const char* _tmp0;
+					_tmp1 = NULL;
+					_tmp0 = NULL;
+					albumartist = (_tmp1 = (_tmp0 = ydata->tag, (_tmp0 == NULL) ? NULL : g_strdup (_tmp0)), albumartist = (g_free (albumartist), NULL), _tmp1);
+				}
+			}
+			(ydata == NULL) ? NULL : (ydata = (mpd_data_free (ydata), NULL));
+		}
 		mpd_database_search_field_start (connection, MPD_TAG_ITEM_FILENAME);
-		mpd_database_search_add_constraint (connection, MPD_TAG_ITEM_ARTIST, artist);
+		if (albumartist != NULL) {
+			mpd_database_search_add_constraint (connection, MPD_TAG_ITEM_ALBUM_ARTIST, albumartist);
+		} else {
+			mpd_database_search_add_constraint (connection, MPD_TAG_ITEM_ARTIST, artist);
+		}
 		if (album != NULL) {
 			mpd_database_search_add_constraint (connection, MPD_TAG_ITEM_ALBUM, album);
 		}
 		data = mpd_database_search_commit (connection);
 		if (data != NULL) {
-			const MpdData* _tmp0;
+			const MpdData* _tmp2;
 			const MpdData* iter;
-			_tmp0 = NULL;
-			iter = misc_sort_mpddata_by_album_disc_track ((_tmp0 = data, (_tmp0 == NULL) ? NULL :  (_tmp0)));
+			_tmp2 = NULL;
+			iter = misc_sort_mpddata_by_album_disc_track ((_tmp2 = data, (_tmp2 == NULL) ? NULL :  (_tmp2)));
 			do {
 				mpd_playlist_queue_add (connection, iter->tag);
 			} while ((iter = mpd_data_get_next_real (iter, FALSE)) != NULL);
 			mpd_playlist_queue_commit (connection);
 		}
+		albumartist = (g_free (albumartist), NULL);
 		(data == NULL) ? NULL : (data = (mpd_data_free (data), NULL));
 	}
 	artist = (g_free (artist), NULL);
@@ -2585,48 +2632,11 @@ static void gmpc_metadata_browser_add_selected_song (GmpcMetadataBrowser* self, 
 
 
 static void gmpc_metadata_browser_replace_selected_song (GmpcMetadataBrowser* self, GtkButton* button) {
-	char* artist;
-	char* album;
-	mpd_Song* song;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (button != NULL);
-	artist = gmpc_metadata_browser_browser_get_selected_artist (self);
-	album = gmpc_metadata_browser_browser_get_selected_album (self);
-	song = gmpc_metadata_browser_browser_get_selected_song (self);
-	if (song != NULL) {
-		mpd_playlist_clear (connection);
-		mpd_playlist_add (connection, song->file);
-		mpd_player_play (connection);
-		artist = (g_free (artist), NULL);
-		album = (g_free (album), NULL);
-		(song == NULL) ? NULL : (song = (mpd_freeSong (song), NULL));
-		return;
-	}
-	if (artist != NULL) {
-		MpdData* data;
-		mpd_database_search_field_start (connection, MPD_TAG_ITEM_FILENAME);
-		mpd_database_search_add_constraint (connection, MPD_TAG_ITEM_ARTIST, artist);
-		if (album != NULL) {
-			mpd_database_search_add_constraint (connection, MPD_TAG_ITEM_ALBUM, album);
-		}
-		data = mpd_database_search_commit (connection);
-		if (data != NULL) {
-			const MpdData* _tmp0;
-			const MpdData* iter;
-			_tmp0 = NULL;
-			iter = misc_sort_mpddata_by_album_disc_track ((_tmp0 = data, (_tmp0 == NULL) ? NULL :  (_tmp0)));
-			mpd_playlist_clear (connection);
-			do {
-				mpd_playlist_queue_add (connection, iter->tag);
-			} while ((iter = mpd_data_get_next_real (iter, FALSE)) != NULL);
-			mpd_playlist_queue_commit (connection);
-			mpd_player_play (connection);
-		}
-		(data == NULL) ? NULL : (data = (mpd_data_free (data), NULL));
-	}
-	artist = (g_free (artist), NULL);
-	album = (g_free (album), NULL);
-	(song == NULL) ? NULL : (song = (mpd_freeSong (song), NULL));
+	mpd_playlist_clear (connection);
+	gmpc_metadata_browser_add_selected_song (self, button);
+	mpd_player_play (connection);
 }
 
 
