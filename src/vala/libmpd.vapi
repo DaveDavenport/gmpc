@@ -129,6 +129,10 @@ namespace MPD {
                 [CCode (cname="mpd_data_concatenate")]
                 [ReturnsModifiedPointer ()]
                 public void concatenate(owned MPD.Data.Item b); 
+
+                [CCode (cname="mpd_new_data_struct_append")]
+                [ReturnsModifiedPointer ()]
+                public void append_new();
             }
     }
     namespace PlayQueue {

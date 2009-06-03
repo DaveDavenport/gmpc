@@ -437,6 +437,22 @@ requires 2.0.0
                             mpd_freeSong(song);	
                             gtk_tree_path_free(path);
                         }
+                        else if(data->type == MPD_DATA_TYPE_SONG&& data->song && data->song->album && (data->song->artist || self->_priv->req_artist)) 
+                        {
+                            mpd_Song *song;
+                            GtkTreePath *path;
+                            GtkTreeRowReference *ref;
+                            self->_priv->images[n] = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gmpc-loading-cover", self->icon_size, 0,NULL);
+                            song = mpd_newSong();
+                            song->artist = g_strdup((data->song->artist)?data->song->artist:self->_priv->req_artist); 
+                            song->albumartist = g_strdup((data->song->albumartist)?data->song->albumartist:self->_priv->req_artist); 
+                            song->album = g_strdup(data->song->album);
+                            path = gtk_tree_model_get_path(GTK_TREE_MODEL(self), iter);
+                            ref = gtk_tree_row_reference_new(GTK_TREE_MODEL(self),path);
+                            gmpc_meta_watcher_get_meta_path_callback(gmw,song, META_ALBUM_ART, (MetaDataCallback)self_cover_art_fetched, ref);
+                            mpd_freeSong(song);	
+                            gtk_tree_path_free(path);
+                        }
                         else 
                         {
                             self->_priv->images[n] = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gmpc-no-cover", self->icon_size, 0,NULL);

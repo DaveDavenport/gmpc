@@ -1875,7 +1875,7 @@ static gboolean gmpc_metadata_browser_visible_func_album (GmpcMetadataBrowser* s
 		gboolean _tmp1;
 		return (_tmp1 = TRUE, text = (g_free (text), NULL), str = (g_free (str), NULL), _tmp1);
 	}
-	gtk_tree_model_get (model, &(*iter), 7, &str, -1, -1);
+	gtk_tree_model_get (model, &(*iter), 6, &str, -1, -1);
 	_tmp2 = FALSE;
 	if (str != NULL) {
 		char* _tmp6;
@@ -2147,9 +2147,9 @@ static void gmpc_metadata_browser_browser_init (GmpcMetadataBrowser* self) {
 		_tmp14 = NULL;
 		trenderer = (_tmp14 = g_object_ref_sink ((GtkCellRendererText*) gtk_cell_renderer_text_new ()), (trenderer == NULL) ? NULL : (trenderer = (g_object_unref (trenderer), NULL)), _tmp14);
 		gtk_cell_layout_pack_start ((GtkCellLayout*) column, (GtkCellRenderer*) trenderer, TRUE);
-		gtk_cell_layout_add_attribute ((GtkCellLayout*) column, (GtkCellRenderer*) trenderer, "text", 7);
+		gtk_cell_layout_add_attribute ((GtkCellLayout*) column, (GtkCellRenderer*) trenderer, "text", 6);
 		gtk_tree_view_append_column (self->priv->tree_album, column);
-		gtk_tree_view_set_search_column (self->priv->tree_album, 7);
+		gtk_tree_view_set_search_column (self->priv->tree_album, 6);
 		gtk_tree_view_column_set_title (column, _ ("Album"));
 		g_signal_connect_object (gtk_tree_view_get_selection (self->priv->tree_album), "changed", (GCallback) _gmpc_metadata_browser_browser_album_changed_gtk_tree_selection_changed, self, 0);
 		/* set fixed height mode */
@@ -2292,7 +2292,7 @@ static char* gmpc_metadata_browser_browser_get_selected_album (GmpcMetadataBrows
 		char* album;
 		char* _tmp5;
 		album = NULL;
-		gtk_tree_model_get (model, &iter, 7, &album, -1, -1);
+		gtk_tree_model_get (model, &iter, 6, &album, -1, -1);
 		_tmp5 = NULL;
 		return (_tmp5 = album, (sel == NULL) ? NULL : (sel = (g_object_unref (sel), NULL)), (model == NULL) ? NULL : (model = (g_object_unref (model), NULL)), _tmp5);
 	}
@@ -2344,12 +2344,17 @@ static void gmpc_metadata_browser_browser_artist_changed (GmpcMetadataBrowser* s
 		MpdData* _tmp2;
 		const MpdData* _tmp1;
 		MpdData* _tmp0;
-		MpdData* _tmp3;
-		MpdData* _tmp4;
-		MpdData* _tmp7;
-		const MpdData* _tmp6;
-		MpdData* _tmp5;
-		MpdData* _tmp8;
+		MpdData* list;
+		const MpdData* iter;
+		MpdData* _tmp12;
+		const MpdData* _tmp11;
+		MpdData* _tmp10;
+		MpdData* _tmp13;
+		MpdData* _tmp14;
+		MpdData* _tmp17;
+		const MpdData* _tmp16;
+		MpdData* _tmp15;
+		MpdData* _tmp18;
 		/* Fill in the first browser */
 		mpd_database_search_field_start (connection, MPD_TAG_ITEM_ALBUM);
 		mpd_database_search_add_constraint (connection, MPD_TAG_ITEM_ARTIST, artist);
@@ -2359,19 +2364,59 @@ static void gmpc_metadata_browser_browser_artist_changed (GmpcMetadataBrowser* s
 		_tmp0 = NULL;
 		data = (_tmp2 = (_tmp1 = misc_sort_mpddata_by_album_disc_track ((_tmp0 = data, data = NULL, _tmp0)), (_tmp1 == NULL) ? NULL :  (_tmp1)), (data == NULL) ? NULL : (data = (mpd_data_free (data), NULL)), _tmp2);
 		gmpc_mpddata_model_set_request_artist (self->priv->model_albums, artist);
-		_tmp3 = NULL;
-		gmpc_mpddata_model_set_mpd_data (self->priv->model_albums, (_tmp3 = data, data = NULL, _tmp3));
+		list = NULL;
+		iter = mpd_data_get_first (data);
+		if (iter != NULL) {
+			do {
+				mpd_Song* _tmp3;
+				char* _tmp5;
+				const char* _tmp4;
+				char* _tmp7;
+				const char* _tmp6;
+				MpdData* ydata;
+				list = mpd_new_data_struct_append (list);
+				list->type = MPD_DATA_TYPE_SONG;
+				_tmp3 = NULL;
+				list->song = (_tmp3 = mpd_newSong (), (list->song == NULL) ? NULL : (list->song = (mpd_freeSong (list->song), NULL)), _tmp3);
+				_tmp5 = NULL;
+				_tmp4 = NULL;
+				list->song->artist = (_tmp5 = (_tmp4 = artist, (_tmp4 == NULL) ? NULL : g_strdup (_tmp4)), list->song->artist = (g_free (list->song->artist), NULL), _tmp5);
+				_tmp7 = NULL;
+				_tmp6 = NULL;
+				list->song->album = (_tmp7 = (_tmp6 = iter->tag, (_tmp6 == NULL) ? NULL : g_strdup (_tmp6)), list->song->album = (g_free (list->song->album), NULL), _tmp7);
+				mpd_database_search_field_start (connection, MPD_TAG_ITEM_DATE);
+				mpd_database_search_add_constraint (connection, MPD_TAG_ITEM_ARTIST, artist);
+				mpd_database_search_add_constraint (connection, MPD_TAG_ITEM_ALBUM, iter->tag);
+				ydata = mpd_database_search_commit (connection);
+				if (ydata != NULL) {
+					char* _tmp9;
+					const char* _tmp8;
+					_tmp9 = NULL;
+					_tmp8 = NULL;
+					list->song->date = (_tmp9 = (_tmp8 = ydata->tag, (_tmp8 == NULL) ? NULL : g_strdup (_tmp8)), list->song->date = (g_free (list->song->date), NULL), _tmp9);
+				}
+				iter = mpd_data_get_next_real (iter, FALSE);
+				(ydata == NULL) ? NULL : (ydata = (mpd_data_free (ydata), NULL));
+			} while (iter != NULL);
+		}
+		_tmp12 = NULL;
+		_tmp11 = NULL;
+		_tmp10 = NULL;
+		list = (_tmp12 = (_tmp11 = misc_sort_mpddata_by_album_disc_track ((_tmp10 = list, list = NULL, _tmp10)), (_tmp11 == NULL) ? NULL :  (_tmp11)), (list == NULL) ? NULL : (list = (mpd_data_free (list), NULL)), _tmp12);
+		_tmp13 = NULL;
+		gmpc_mpddata_model_set_mpd_data (self->priv->model_albums, (_tmp13 = list, list = NULL, _tmp13));
 		mpd_database_search_start (connection, TRUE);
 		mpd_database_search_add_constraint (connection, MPD_TAG_ITEM_ARTIST, artist);
-		_tmp4 = NULL;
-		data = (_tmp4 = mpd_database_search_commit (connection), (data == NULL) ? NULL : (data = (mpd_data_free (data), NULL)), _tmp4);
-		_tmp7 = NULL;
-		_tmp6 = NULL;
-		_tmp5 = NULL;
-		data = (_tmp7 = (_tmp6 = misc_sort_mpddata_by_album_disc_track ((_tmp5 = data, data = NULL, _tmp5)), (_tmp6 == NULL) ? NULL :  (_tmp6)), (data == NULL) ? NULL : (data = (mpd_data_free (data), NULL)), _tmp7);
-		_tmp8 = NULL;
-		gmpc_mpddata_model_set_mpd_data (self->priv->model_songs, (_tmp8 = data, data = NULL, _tmp8));
+		_tmp14 = NULL;
+		data = (_tmp14 = mpd_database_search_commit (connection), (data == NULL) ? NULL : (data = (mpd_data_free (data), NULL)), _tmp14);
+		_tmp17 = NULL;
+		_tmp16 = NULL;
+		_tmp15 = NULL;
+		data = (_tmp17 = (_tmp16 = misc_sort_mpddata_by_album_disc_track ((_tmp15 = data, data = NULL, _tmp15)), (_tmp16 == NULL) ? NULL :  (_tmp16)), (data == NULL) ? NULL : (data = (mpd_data_free (data), NULL)), _tmp17);
+		_tmp18 = NULL;
+		gmpc_mpddata_model_set_mpd_data (self->priv->model_songs, (_tmp18 = data, data = NULL, _tmp18));
 		(data == NULL) ? NULL : (data = (mpd_data_free (data), NULL));
+		(list == NULL) ? NULL : (list = (mpd_data_free (list), NULL));
 	}
 	gmpc_metadata_browser_metadata_box_update (self);
 	artist = (g_free (artist), NULL);
@@ -3373,18 +3418,9 @@ static gboolean gmpc_metadata_browser_metadata_box_update_real (GmpcMetadataBrow
 		} else {
 			if (artist != NULL) {
 				gmpc_metadata_browser_metadata_box_show_artist (self, artist);
-			} else {
 			}
 		}
 	}
-	/*
-	            song = server.playlist_get_current_song(); 
-	            if(song != null){
-	                var view = metadata_box_show_song(song);
-	                this.metadata_box.add(view);
-	                view.show_all();
-	            }
-	            */
 	self->priv->update_timeout = (guint) 0;
 	return (_tmp2 = FALSE, artist = (g_free (artist), NULL), album = (g_free (album), NULL), (song == NULL) ? NULL : (song = (mpd_freeSong (song), NULL)), _tmp2);
 }
@@ -3478,16 +3514,6 @@ static void gmpc_metadata_browser_status_changed (GmpcMetadataBrowser* self, Gmp
 }
 
 
-/*
-        if((what&MPD.Status.Changed.SONGID) == MPD.Status.Changed.SONGID && this.selected)
-        {
-            string artist = browser_get_selected_artist();
-            if(artist == null) {
-                metadata_box_clear();
-                metadata_box_update();
-            }
-        }
-        */
 void gmpc_metadata_browser_set_artist (GmpcMetadataBrowser* self, const char* artist) {
 	GtkTreeIter iter = {0};
 	g_return_if_fail (self != NULL);
@@ -3544,7 +3570,7 @@ void gmpc_metadata_browser_set_album (GmpcMetadataBrowser* self, const char* art
 			char* lalbum;
 			gboolean _tmp0;
 			lalbum = NULL;
-			gtk_tree_model_get ((GtkTreeModel*) self->priv->model_filter_album, &iter, 7, &lalbum, -1, -1);
+			gtk_tree_model_get ((GtkTreeModel*) self->priv->model_filter_album, &iter, 6, &lalbum, -1, -1);
 			_tmp0 = FALSE;
 			if (lalbum != NULL) {
 				_tmp0 = g_utf8_collate (lalbum, album) == 0;

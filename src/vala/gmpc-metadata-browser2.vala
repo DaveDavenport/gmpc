@@ -780,7 +780,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
 
          if(text[0] == '\0') return true;
 
-         model.get (iter, 7, out str, -1);
+         model.get (iter, 6, out str, -1);
          if (str != null && str.casefold().normalize().str(text.casefold().normalize()) != null)
              visible = true;
 
@@ -922,9 +922,9 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
             column.add_attribute(prenderer, "pixbuf",27); 
             trenderer = new Gtk.CellRendererText();
             column.pack_start(trenderer, true);
-            column.add_attribute(trenderer, "text", 7);
+            column.add_attribute(trenderer, "text", 6);
             this.tree_album.append_column(column);
-            this.tree_album.set_search_column(7);
+            this.tree_album.set_search_column(6);
             column.set_title(_("Album"));
 
 
@@ -1022,7 +1022,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         if(sel.get_selected(out model, out iter))
         {
             string album = null;
-            model.get(iter, 7,out album, -1);
+            model.get(iter, 6,out album, -1);
             return album;
         }
         return null;
@@ -1055,7 +1055,29 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
             data = Gmpc.MpdData.sort_album_disc_track((owned)data);
 
             this.model_albums.set_request_artist(artist);
-            this.model_albums.set_mpd_data((owned)data);
+            MPD.Data.Item list = null;
+            weak MPD.Data.Item iter = data.first();
+            if(iter!= null)
+            {
+                do{
+                    list.append_new();
+                    list.type = MPD.Data.Type.SONG;
+                    list.song = new MPD.Song();
+                    list.song.artist = artist;
+                    list.song.album  = iter.tag;
+                    MPD.Database.search_field_start(server,MPD.Tag.Type.DATE);
+                    MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, artist);
+                    MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM, iter.tag);
+                    var ydata = MPD.Database.search_commit(server);
+                    if(ydata != null) {
+                        list.song.date = ydata.tag;
+                    }
+                    iter = iter.next(false);
+                }while(iter!= null);
+            }
+
+            list = Gmpc.MpdData.sort_album_disc_track((owned)list);
+            this.model_albums.set_mpd_data((owned)list);
 
             MPD.Database.search_start(server,true);
             MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, artist);
@@ -1669,17 +1691,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         }else if (artist != null) {
             metadata_box_show_artist(artist);
         }
-        else
-        {
-        /*
-            song = server.playlist_get_current_song(); 
-            if(song != null){
-                var view = metadata_box_show_song(song);
-                this.metadata_box.add(view);
-                view.show_all();
-            }
-            */
-        }
+
         this.update_timeout = 0;
         return false;
     }
@@ -1732,16 +1744,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
     status_changed(Gmpc.Connection conn, MPD.Server server, MPD.Status.Changed what)
     {
         if(this.paned == null) return;
-/*
-        if((what&MPD.Status.Changed.SONGID) == MPD.Status.Changed.SONGID && this.selected)
-        {
-            string artist = browser_get_selected_artist();
-            if(artist == null) {
-                metadata_box_clear();
-                metadata_box_update();
-            }
-        }
-        */
+
     }
 
     public
@@ -1791,7 +1794,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         {
             do{
                 string lalbum= null;
-                this.model_filter_album.get(iter, 7, out lalbum, -1);
+                this.model_filter_album.get(iter, 6, out lalbum, -1);
                 if( lalbum != null && lalbum.collate(album) == 0){
                     this.tree_album.get_selection().select_iter(iter);
                     this.tree_album.scroll_to_cell(this.model_filter_album.get_path(iter), null, true, 0.5f,0f);
