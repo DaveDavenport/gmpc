@@ -920,6 +920,16 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
             prenderer.set("height", this.model_albums.icon_size);
             column.pack_start(prenderer, false);
             column.add_attribute(prenderer, "pixbuf",27); 
+            this.tree_album.append_column(column);
+
+            column = new Gtk.TreeViewColumn();
+            trenderer = new Gtk.CellRendererText();
+            column.pack_start(trenderer, true);
+            column.add_attribute(trenderer, "text", 14);
+            this.tree_album.append_column(column);
+            column.set_title(_("Year"));
+
+            column = new Gtk.TreeViewColumn();
             trenderer = new Gtk.CellRendererText();
             column.pack_start(trenderer, true);
             column.add_attribute(trenderer, "text", 6);
@@ -929,10 +939,6 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
 
 
             this.tree_album.get_selection().changed += browser_album_changed;
-            /* set fixed height mode */
-            column.sizing = Gtk.TreeViewColumnSizing.FIXED;
-            this.tree_album.set_fixed_height_mode(true);
-
 
             /* Song list */
             sw = new Gtk.ScrolledWindow(null, null);
