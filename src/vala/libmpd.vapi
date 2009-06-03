@@ -119,7 +119,11 @@ namespace MPD {
                 public Data.Type type;
                 public MPD.Song  song;
                 public string tag;
-               
+              
+                [CCode (cname="mpd_data_get_next")]
+                [ReturnsModifiedPointer ()]
+                public void next_free();
+
                 [CCode (cname="mpd_data_get_next_real")] 
                 public weak Item? next(bool free);
 

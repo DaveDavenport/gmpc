@@ -755,6 +755,58 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         }
         return false;
      }
+    /**
+     * Artist tree view functions */
+
+     private void artist_add_clicked(Gtk.ImageMenuItem item )
+     {
+        string artist = browser_get_selected_artist(); 
+        if(artist != null)
+        {
+            MPD.Database.search_field_start(server, MPD.Tag.Type.FILENAME);
+            MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, artist);
+            MPD.Data.Item data = MPD.Database.search_commit(server); 
+            if(data != null)
+            {
+                do{
+                    MPD.PlayQueue.queue_add_song(server, data.tag);
+                    data.next_free();
+                }while(data != null);
+                MPD.PlayQueue.queue_commit(server);
+            }
+        }
+     }
+     private void artist_replace_clicked(Gtk.ImageMenuItem item)
+     {
+         MPD.PlayQueue.clear(server);
+         artist_add_clicked(item);
+         MPD.Player.play(server);
+     }
+     /* Handle right mouse click */
+    private bool artist_browser_button_release_event(Gtk.TreeView tree, Gdk.EventButton event)
+    {
+        if(event.button == 3) {
+            if(tree.get_selection().count_selected_rows()>0)
+            {
+                var menu = new Gtk.Menu();
+                var item = new Gtk.ImageMenuItem.from_stock("gtk-add",null);
+                item.activate += artist_add_clicked;
+                menu.append(item);
+
+                item = new Gtk.ImageMenuItem.with_mnemonic("_Replace");
+                item.set_image(new Gtk.Image.from_stock("gtk-redo", Gtk.IconSize.MENU));
+                item.activate += artist_replace_clicked;
+                menu.append(item);
+
+                menu.popup(null, null, null, event.button, event.time);
+                menu.show_all();
+                return true;
+            }
+        }
+
+        return false;
+    }
+
      private bool visible_func_artist (Gtk.TreeModel model, Gtk.TreeIter  iter)
      {
          string text = this.artist_filter_entry.get_text();
@@ -770,23 +822,6 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
 
          return visible;
      }
-
-     private bool visible_func_album (Gtk.TreeModel model, Gtk.TreeIter  iter)
-     {
-         string text = this.album_filter_entry.get_text();
-         /* Visible if row is non-empty and first column is "HI" */
-         string str = null;
-         bool visible = false;
-
-         if(text[0] == '\0') return true;
-
-         model.get (iter, 6, out str, -1);
-         if (str != null && str.casefold().normalize().str(text.casefold().normalize()) != null)
-             visible = true;
-
-         return visible;
-     }
-
      private bool browser_artist_key_press_event(Gtk.TreeView widget, Gdk.EventKey event)
      {
         unichar uc = Gdk.keyval_to_unicode(event.keyval);
@@ -803,6 +838,94 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         }
         return false;
      }
+     /** 
+      * Album tree view
+      */
+     private void album_add_clicked(Gtk.ImageMenuItem item )
+     {
+        string artist = browser_get_selected_artist(); 
+        if(artist != null)
+        {
+            string albumartist = null;
+            string album = browser_get_selected_album();
+            if(album != null)
+            {
+                MPD.Database.search_field_start(server, MPD.Tag.Type.ALBUM_ARTIST);
+                MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM, album);
+                var ydata = MPD.Database.search_commit(server);
+                if(ydata != null)
+                {
+                    if(ydata.tag.length > 0)
+                        albumartist = ydata.tag;
+                }
+            } 
+            /* Fill in the first browser */ 
+            MPD.Database.search_field_start(server,MPD.Tag.Type.FILENAME);
+            if(albumartist != null)
+                MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM_ARTIST, albumartist);
+            else
+                MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, artist);
+
+            if(album != null)
+                MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM, album);
+            var data = MPD.Database.search_commit(server);
+            if(data != null)
+            {
+                do{
+                    MPD.PlayQueue.queue_add_song(server, data.tag);
+                    data.next_free();
+                }while(data != null);
+                MPD.PlayQueue.queue_commit(server);
+            }
+        }
+     }
+     private void album_replace_clicked(Gtk.ImageMenuItem item)
+     {
+         MPD.PlayQueue.clear(server);
+         album_add_clicked(item);
+         MPD.Player.play(server);
+     }
+    /* Handle right mouse click */
+    private bool album_browser_button_release_event(Gtk.TreeView tree, Gdk.EventButton event)
+    {
+        if(event.button == 3) {
+            if(tree.get_selection().count_selected_rows()>0)
+            {
+                var menu = new Gtk.Menu();
+                var item = new Gtk.ImageMenuItem.from_stock("gtk-add",null);
+                item.activate += album_add_clicked;
+                menu.append(item);
+
+                item = new Gtk.ImageMenuItem.with_mnemonic("_Replace");
+                item.set_image(new Gtk.Image.from_stock("gtk-redo", Gtk.IconSize.MENU));
+                item.activate += album_replace_clicked;
+                menu.append(item);
+
+                menu.popup(null, null, null, event.button, event.time);
+                menu.show_all();
+                return true;
+            }
+        }
+
+        return false;
+    }
+     private bool visible_func_album (Gtk.TreeModel model, Gtk.TreeIter  iter)
+     {
+         string text = this.album_filter_entry.get_text();
+         /* Visible if row is non-empty and first column is "HI" */
+         string str = null;
+         bool visible = false;
+
+         if(text[0] == '\0') return true;
+
+         model.get (iter, 6, out str, -1);
+         if (str != null && str.casefold().normalize().str(text.casefold().normalize()) != null)
+             visible = true;
+
+         return visible;
+     }
+
+
      private bool browser_album_key_press_event(Gtk.TreeView widget, Gdk.EventKey event)
      {
         unichar uc = Gdk.keyval_to_unicode(event.keyval);
@@ -872,6 +995,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
             this.model_filter_artist.set_visible_func(visible_func_artist);
             this.tree_artist = new Gtk.TreeView.with_model(this.model_filter_artist);
             this.tree_artist.button_press_event+=browser_button_press_event;
+            this.tree_artist.button_release_event+=artist_browser_button_release_event;
             this.tree_artist.key_press_event += browser_artist_key_press_event;
             sw.add(tree_artist);
             /* setup the columns */ 
@@ -912,6 +1036,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
             this.model_filter_album.set_visible_func(visible_func_album);
             this.tree_album = new Gtk.TreeView.with_model(this.model_filter_album);
             this.tree_album.button_press_event+=browser_button_press_event;
+            this.tree_album.button_release_event+=album_browser_button_release_event;
             this.tree_album.key_press_event += browser_album_key_press_event;
             sw.add(tree_album);
             /* setup the columns */ 
