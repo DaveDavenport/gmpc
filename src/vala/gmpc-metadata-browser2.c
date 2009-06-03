@@ -217,9 +217,11 @@ static void gmpc_metadata_browser_replace_song (GmpcMetadataBrowser* self, GtkBu
 static void gmpc_metadata_browser_add_selected_song (GmpcMetadataBrowser* self, GtkButton* button);
 static void gmpc_metadata_browser_replace_selected_song (GmpcMetadataBrowser* self, GtkButton* button);
 static void gmpc_metadata_browser_metadata_box_clear (GmpcMetadataBrowser* self);
+static void _gmpc_metadata_browser_metadata_button_open_file_browser_path_gtk_button_clicked (GtkButton* _sender, gpointer self);
 static void _gmpc_metadata_browser_play_song_gtk_button_clicked (GtkButton* _sender, gpointer self);
 static void _gmpc_metadata_browser_add_song_gtk_button_clicked (GtkButton* _sender, gpointer self);
 static void _gmpc_metadata_browser_replace_song_gtk_button_clicked (GtkButton* _sender, gpointer self);
+static void gmpc_metadata_browser_metadata_button_open_file_browser_path (GmpcMetadataBrowser* self, GtkButton* button);
 static void _gmpc_metadata_browser_add_selected_song_gtk_button_clicked (GtkButton* _sender, gpointer self);
 static void _gmpc_metadata_browser_replace_selected_song_gtk_button_clicked (GtkButton* _sender, gpointer self);
 static void gmpc_metadata_browser_metadata_box_show_album (GmpcMetadataBrowser* self, const char* artist, const char* album);
@@ -2663,6 +2665,11 @@ static void gmpc_metadata_browser_metadata_box_clear (GmpcMetadataBrowser* self)
 }
 
 
+static void _gmpc_metadata_browser_metadata_button_open_file_browser_path_gtk_button_clicked (GtkButton* _sender, gpointer self) {
+	gmpc_metadata_browser_metadata_button_open_file_browser_path (self, _sender);
+}
+
+
 static void _gmpc_metadata_browser_play_song_gtk_button_clicked (GtkButton* _sender, gpointer self) {
 	gmpc_metadata_browser_play_song (self, _sender);
 }
@@ -2693,24 +2700,24 @@ GtkWidget* gmpc_metadata_browser_metadata_box_show_song (GmpcMetadataBrowser* se
 	GtkLabel* _tmp8;
 	char* _tmp9;
 	GmpcFavoritesButton* fav_button;
-	GtkLabel* _tmp28;
-	char* _tmp29;
-	GtkAlignment* _tmp30;
+	GtkLabel* _tmp29;
+	char* _tmp30;
+	GtkAlignment* _tmp31;
 	GtkButton* button;
-	GtkHBox* _tmp37;
-	GtkButton* _tmp38;
+	GtkHBox* _tmp38;
 	GtkButton* _tmp39;
-	GtkImage* _tmp40;
+	GtkButton* _tmp40;
+	GtkImage* _tmp41;
 	GmpcMetaTextView* text_view;
-	char* _tmp41;
-	GmpcWidgetMore* _tmp42;
+	char* _tmp42;
+	GmpcWidgetMore* _tmp43;
 	GmpcWidgetMore* frame;
-	GmpcMetaTextView* _tmp43;
-	GmpcWidgetMore* _tmp45;
-	char* _tmp44;
+	GmpcMetaTextView* _tmp44;
+	GmpcWidgetMore* _tmp46;
+	char* _tmp45;
 	GmpcWidgetSimilarSongs* similar_songs;
 	GmpcSongLinks* song_links;
-	GtkWidget* _tmp46;
+	GtkWidget* _tmp47;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (song != NULL, NULL);
 	vbox = g_object_ref_sink ((GtkVBox*) gtk_vbox_new (FALSE, 6));
@@ -2884,56 +2891,72 @@ GtkWidget* gmpc_metadata_browser_metadata_box_show_song (GmpcMetadataBrowser* se
 		gtk_table_attach (info_box, (GtkWidget*) pt_label, (guint) 1, (guint) 2, (guint) i, (guint) (i + 1), GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL, (guint) 0, (guint) 0);
 		i++;
 	}
-	/* Genre */
+	/* Path */
 	if (song->file != NULL) {
 		GtkLabel* _tmp25;
-		GtkLabel* _tmp26;
-		char* _tmp27;
+		char* _tmp26;
+		GtkLabel* _tmp27;
+		GtkHBox* dhbox;
+		GtkButton* dbutton;
+		GtkImage* _tmp28;
 		_tmp25 = NULL;
-		pt_label = (_tmp25 = g_object_ref_sink ((GtkLabel*) gtk_label_new (song->file)), (pt_label == NULL) ? NULL : (pt_label = (g_object_unref (pt_label), NULL)), _tmp25);
-		_tmp26 = NULL;
-		label = (_tmp26 = g_object_ref_sink ((GtkLabel*) gtk_label_new ("")), (label == NULL) ? NULL : (label = (g_object_unref (label), NULL)), _tmp26);
+		label = (_tmp25 = g_object_ref_sink ((GtkLabel*) gtk_label_new ("")), (label == NULL) ? NULL : (label = (g_object_unref (label), NULL)), _tmp25);
 		gtk_misc_set_alignment ((GtkMisc*) label, 0.0f, 0.0f);
-		_tmp27 = NULL;
-		gtk_label_set_markup (label, _tmp27 = g_markup_printf_escaped ("<b>%s:</b>", _ ("Path")));
-		_tmp27 = (g_free (_tmp27), NULL);
+		_tmp26 = NULL;
+		gtk_label_set_markup (label, _tmp26 = g_markup_printf_escaped ("<b>%s:</b>", _ ("Path")));
+		_tmp26 = (g_free (_tmp26), NULL);
 		gtk_table_attach (info_box, (GtkWidget*) label, (guint) 0, (guint) 1, (guint) i, (guint) (i + 1), GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL, (guint) 0, (guint) 0);
+		_tmp27 = NULL;
+		pt_label = (_tmp27 = g_object_ref_sink ((GtkLabel*) gtk_label_new (song->file)), (pt_label == NULL) ? NULL : (pt_label = (g_object_unref (pt_label), NULL)), _tmp27);
 		gtk_misc_set_alignment ((GtkMisc*) pt_label, 0.0f, 0.5f);
 		gtk_label_set_line_wrap (pt_label, TRUE);
-		gtk_table_attach (info_box, (GtkWidget*) pt_label, (guint) 1, (guint) 2, (guint) i, (guint) (i + 1), GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL, (guint) 0, (guint) 0);
+		dhbox = g_object_ref_sink ((GtkHBox*) gtk_hbox_new (FALSE, 6));
+		gtk_box_pack_start ((GtkBox*) dhbox, (GtkWidget*) pt_label, FALSE, FALSE, (guint) 0);
+		dbutton = g_object_ref_sink ((GtkButton*) gtk_button_new ());
+		gtk_button_set_relief (dbutton, GTK_RELIEF_NONE);
+		_tmp28 = NULL;
+		gtk_container_add ((GtkContainer*) dbutton, (GtkWidget*) (_tmp28 = g_object_ref_sink ((GtkImage*) gtk_image_new_from_stock ("gtk-open", GTK_ICON_SIZE_MENU))));
+		(_tmp28 == NULL) ? NULL : (_tmp28 = (g_object_unref (_tmp28), NULL));
+		g_object_set_data_full ((GObject*) dbutton, "path", (void*) g_path_get_dirname (song->file), g_free);
+		g_signal_connect_object (dbutton, "clicked", (GCallback) _gmpc_metadata_browser_metadata_button_open_file_browser_path_gtk_button_clicked, self, 0);
+		gtk_widget_set_tooltip_text ((GtkWidget*) dbutton, _ ("Open path to song in file browser"));
+		gtk_box_pack_start ((GtkBox*) dhbox, (GtkWidget*) dbutton, FALSE, FALSE, (guint) 0);
+		gtk_table_attach (info_box, (GtkWidget*) dhbox, (guint) 1, (guint) 2, (guint) i, (guint) (i + 1), GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL, (guint) 0, (guint) 0);
 		i++;
+		(dhbox == NULL) ? NULL : (dhbox = (g_object_unref (dhbox), NULL));
+		(dbutton == NULL) ? NULL : (dbutton = (g_object_unref (dbutton), NULL));
 	}
 	/* Favored button */
 	fav_button = g_object_ref_sink (gmpc_favorites_button_new ());
 	gmpc_favorites_button_set_song (fav_button, song);
-	_tmp28 = NULL;
-	label = (_tmp28 = g_object_ref_sink ((GtkLabel*) gtk_label_new ("")), (label == NULL) ? NULL : (label = (g_object_unref (label), NULL)), _tmp28);
-	gtk_misc_set_alignment ((GtkMisc*) label, 0.0f, 0.5f);
 	_tmp29 = NULL;
-	gtk_label_set_markup (label, _tmp29 = g_markup_printf_escaped ("<b>%s:</b>", _ ("Favored")));
-	_tmp29 = (g_free (_tmp29), NULL);
-	gtk_table_attach (info_box, (GtkWidget*) label, (guint) 0, (guint) 1, (guint) i, (guint) (i + 1), GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL, (guint) 0, (guint) 0);
+	label = (_tmp29 = g_object_ref_sink ((GtkLabel*) gtk_label_new ("")), (label == NULL) ? NULL : (label = (g_object_unref (label), NULL)), _tmp29);
+	gtk_misc_set_alignment ((GtkMisc*) label, 0.0f, 0.5f);
 	_tmp30 = NULL;
-	ali = (_tmp30 = g_object_ref_sink ((GtkAlignment*) gtk_alignment_new (0.0f, 0.5f, 0.f, 0.f)), (ali == NULL) ? NULL : (ali = (g_object_unref (ali), NULL)), _tmp30);
+	gtk_label_set_markup (label, _tmp30 = g_markup_printf_escaped ("<b>%s:</b>", _ ("Favored")));
+	_tmp30 = (g_free (_tmp30), NULL);
+	gtk_table_attach (info_box, (GtkWidget*) label, (guint) 0, (guint) 1, (guint) i, (guint) (i + 1), GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL, (guint) 0, (guint) 0);
+	_tmp31 = NULL;
+	ali = (_tmp31 = g_object_ref_sink ((GtkAlignment*) gtk_alignment_new (0.0f, 0.5f, 0.f, 0.f)), (ali == NULL) ? NULL : (ali = (g_object_unref (ali), NULL)), _tmp31);
 	gtk_container_add ((GtkContainer*) ali, (GtkWidget*) fav_button);
 	gtk_table_attach (info_box, (GtkWidget*) ali, (guint) 1, (guint) 2, (guint) i, (guint) (i + 1), GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL, (guint) 0, (guint) 0);
 	i++;
 	if (mpd_sticker_supported (connection)) {
 		GmpcRating* rating_button;
-		GtkLabel* _tmp31;
-		char* _tmp32;
-		GtkAlignment* _tmp33;
+		GtkLabel* _tmp32;
+		char* _tmp33;
+		GtkAlignment* _tmp34;
 		/* Favored button */
 		rating_button = g_object_ref_sink (gmpc_rating_new (connection, song));
-		_tmp31 = NULL;
-		label = (_tmp31 = g_object_ref_sink ((GtkLabel*) gtk_label_new ("")), (label == NULL) ? NULL : (label = (g_object_unref (label), NULL)), _tmp31);
-		gtk_misc_set_alignment ((GtkMisc*) label, 0.0f, 0.5f);
 		_tmp32 = NULL;
-		gtk_label_set_markup (label, _tmp32 = g_markup_printf_escaped ("<b>%s:</b>", _ ("Rating")));
-		_tmp32 = (g_free (_tmp32), NULL);
-		gtk_table_attach (info_box, (GtkWidget*) label, (guint) 0, (guint) 1, (guint) i, (guint) (i + 1), GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL, (guint) 0, (guint) 0);
+		label = (_tmp32 = g_object_ref_sink ((GtkLabel*) gtk_label_new ("")), (label == NULL) ? NULL : (label = (g_object_unref (label), NULL)), _tmp32);
+		gtk_misc_set_alignment ((GtkMisc*) label, 0.0f, 0.5f);
 		_tmp33 = NULL;
-		ali = (_tmp33 = g_object_ref_sink ((GtkAlignment*) gtk_alignment_new (0.0f, 0.5f, 0.f, 0.f)), (ali == NULL) ? NULL : (ali = (g_object_unref (ali), NULL)), _tmp33);
+		gtk_label_set_markup (label, _tmp33 = g_markup_printf_escaped ("<b>%s:</b>", _ ("Rating")));
+		_tmp33 = (g_free (_tmp33), NULL);
+		gtk_table_attach (info_box, (GtkWidget*) label, (guint) 0, (guint) 1, (guint) i, (guint) (i + 1), GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL, (guint) 0, (guint) 0);
+		_tmp34 = NULL;
+		ali = (_tmp34 = g_object_ref_sink ((GtkAlignment*) gtk_alignment_new (0.0f, 0.5f, 0.f, 0.f)), (ali == NULL) ? NULL : (ali = (g_object_unref (ali), NULL)), _tmp34);
 		gtk_container_add ((GtkContainer*) ali, (GtkWidget*) rating_button);
 		gtk_table_attach (info_box, (GtkWidget*) ali, (guint) 1, (guint) 2, (guint) i, (guint) (i + 1), GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL, (guint) 0, (guint) 0);
 		i++;
@@ -2941,17 +2964,17 @@ GtkWidget* gmpc_metadata_browser_metadata_box_show_song (GmpcMetadataBrowser* se
 	}
 	/* Comment */
 	if (song->comment != NULL) {
-		GtkLabel* _tmp34;
 		GtkLabel* _tmp35;
-		char* _tmp36;
-		_tmp34 = NULL;
-		pt_label = (_tmp34 = g_object_ref_sink ((GtkLabel*) gtk_label_new (song->comment)), (pt_label == NULL) ? NULL : (pt_label = (g_object_unref (pt_label), NULL)), _tmp34);
+		GtkLabel* _tmp36;
+		char* _tmp37;
 		_tmp35 = NULL;
-		label = (_tmp35 = g_object_ref_sink ((GtkLabel*) gtk_label_new ("")), (label == NULL) ? NULL : (label = (g_object_unref (label), NULL)), _tmp35);
-		gtk_misc_set_alignment ((GtkMisc*) label, 0.0f, 0.0f);
+		pt_label = (_tmp35 = g_object_ref_sink ((GtkLabel*) gtk_label_new (song->comment)), (pt_label == NULL) ? NULL : (pt_label = (g_object_unref (pt_label), NULL)), _tmp35);
 		_tmp36 = NULL;
-		gtk_label_set_markup (label, _tmp36 = g_markup_printf_escaped ("<b>%s:</b>", _ ("Comment")));
-		_tmp36 = (g_free (_tmp36), NULL);
+		label = (_tmp36 = g_object_ref_sink ((GtkLabel*) gtk_label_new ("")), (label == NULL) ? NULL : (label = (g_object_unref (label), NULL)), _tmp36);
+		gtk_misc_set_alignment ((GtkMisc*) label, 0.0f, 0.0f);
+		_tmp37 = NULL;
+		gtk_label_set_markup (label, _tmp37 = g_markup_printf_escaped ("<b>%s:</b>", _ ("Comment")));
+		_tmp37 = (g_free (_tmp37), NULL);
 		gtk_table_attach (info_box, (GtkWidget*) label, (guint) 0, (guint) 1, (guint) i, (guint) (i + 1), GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL, (guint) 0, (guint) 0);
 		gtk_misc_set_alignment ((GtkMisc*) pt_label, 0.0f, 0.5f);
 		gtk_label_set_line_wrap (pt_label, TRUE);
@@ -2964,20 +2987,20 @@ GtkWidget* gmpc_metadata_browser_metadata_box_show_song (GmpcMetadataBrowser* se
 	gtk_button_set_relief (button, GTK_RELIEF_NONE);
 	g_object_set_data_full ((GObject*) button, "song", mpd_songDup (song), mpd_freeSong);
 	g_signal_connect_object (button, "clicked", (GCallback) _gmpc_metadata_browser_play_song_gtk_button_clicked, self, 0);
-	_tmp37 = NULL;
-	hbox = (_tmp37 = g_object_ref_sink ((GtkHBox*) gtk_hbox_new (FALSE, 6)), (hbox == NULL) ? NULL : (hbox = (g_object_unref (hbox), NULL)), _tmp37);
-	gtk_box_pack_start ((GtkBox*) hbox, (GtkWidget*) button, FALSE, FALSE, (guint) 0);
 	_tmp38 = NULL;
-	button = (_tmp38 = g_object_ref_sink ((GtkButton*) gtk_button_new_from_stock ("gtk-add")), (button == NULL) ? NULL : (button = (g_object_unref (button), NULL)), _tmp38);
+	hbox = (_tmp38 = g_object_ref_sink ((GtkHBox*) gtk_hbox_new (FALSE, 6)), (hbox == NULL) ? NULL : (hbox = (g_object_unref (hbox), NULL)), _tmp38);
+	gtk_box_pack_start ((GtkBox*) hbox, (GtkWidget*) button, FALSE, FALSE, (guint) 0);
+	_tmp39 = NULL;
+	button = (_tmp39 = g_object_ref_sink ((GtkButton*) gtk_button_new_from_stock ("gtk-add")), (button == NULL) ? NULL : (button = (g_object_unref (button), NULL)), _tmp39);
 	gtk_button_set_relief (button, GTK_RELIEF_NONE);
 	g_object_set_data_full ((GObject*) button, "song", mpd_songDup (song), mpd_freeSong);
 	g_signal_connect_object (button, "clicked", (GCallback) _gmpc_metadata_browser_add_song_gtk_button_clicked, self, 0);
 	gtk_box_pack_start ((GtkBox*) hbox, (GtkWidget*) button, FALSE, FALSE, (guint) 0);
-	_tmp39 = NULL;
-	button = (_tmp39 = g_object_ref_sink ((GtkButton*) gtk_button_new_with_mnemonic ("_Replace")), (button == NULL) ? NULL : (button = (g_object_unref (button), NULL)), _tmp39);
 	_tmp40 = NULL;
-	gtk_button_set_image (button, (GtkWidget*) (_tmp40 = g_object_ref_sink ((GtkImage*) gtk_image_new_from_stock ("gtk-redo", GTK_ICON_SIZE_BUTTON))));
-	(_tmp40 == NULL) ? NULL : (_tmp40 = (g_object_unref (_tmp40), NULL));
+	button = (_tmp40 = g_object_ref_sink ((GtkButton*) gtk_button_new_with_mnemonic ("_Replace")), (button == NULL) ? NULL : (button = (g_object_unref (button), NULL)), _tmp40);
+	_tmp41 = NULL;
+	gtk_button_set_image (button, (GtkWidget*) (_tmp41 = g_object_ref_sink ((GtkImage*) gtk_image_new_from_stock ("gtk-redo", GTK_ICON_SIZE_BUTTON))));
+	(_tmp41 == NULL) ? NULL : (_tmp41 = (g_object_unref (_tmp41), NULL));
 	gtk_button_set_relief (button, GTK_RELIEF_NONE);
 	g_object_set_data_full ((GObject*) button, "song", mpd_songDup (song), mpd_freeSong);
 	g_signal_connect_object (button, "clicked", (GCallback) _gmpc_metadata_browser_replace_song_gtk_button_clicked, self, 0);
@@ -2987,19 +3010,19 @@ GtkWidget* gmpc_metadata_browser_metadata_box_show_song (GmpcMetadataBrowser* se
 	/* Lyrics */
 	text_view = g_object_ref_sink (gmpc_meta_text_view_new (META_SONG_TXT));
 	gtk_text_view_set_left_margin ((GtkTextView*) text_view, 8);
-	_tmp41 = NULL;
 	_tmp42 = NULL;
-	frame = (_tmp42 = g_object_ref_sink (gmpc_widget_more_new (_tmp41 = g_markup_printf_escaped ("<b>%s:</b>", _ ("Lyrics")), (GtkWidget*) text_view)), _tmp41 = (g_free (_tmp41), NULL), _tmp42);
+	_tmp43 = NULL;
+	frame = (_tmp43 = g_object_ref_sink (gmpc_widget_more_new (_tmp42 = g_markup_printf_escaped ("<b>%s:</b>", _ ("Lyrics")), (GtkWidget*) text_view)), _tmp42 = (g_free (_tmp42), NULL), _tmp43);
 	gmpc_meta_text_view_query_text_from_song (text_view, song);
 	gtk_box_pack_start ((GtkBox*) vbox, (GtkWidget*) frame, FALSE, FALSE, (guint) 0);
 	/* Guitar Tab */
-	_tmp43 = NULL;
-	text_view = (_tmp43 = g_object_ref_sink (gmpc_meta_text_view_new (META_SONG_GUITAR_TAB)), (text_view == NULL) ? NULL : (text_view = (g_object_unref (text_view), NULL)), _tmp43);
-	gtk_text_view_set_left_margin ((GtkTextView*) text_view, 8);
-	_tmp45 = NULL;
 	_tmp44 = NULL;
-	frame = (_tmp45 = g_object_ref_sink (gmpc_widget_more_new (_tmp44 = g_markup_printf_escaped ("<b>%s:</b>", _ ("Guitar Tabs")), (GtkWidget*) text_view)), (frame == NULL) ? NULL : (frame = (g_object_unref (frame), NULL)), _tmp45);
-	_tmp44 = (g_free (_tmp44), NULL);
+	text_view = (_tmp44 = g_object_ref_sink (gmpc_meta_text_view_new (META_SONG_GUITAR_TAB)), (text_view == NULL) ? NULL : (text_view = (g_object_unref (text_view), NULL)), _tmp44);
+	gtk_text_view_set_left_margin ((GtkTextView*) text_view, 8);
+	_tmp46 = NULL;
+	_tmp45 = NULL;
+	frame = (_tmp46 = g_object_ref_sink (gmpc_widget_more_new (_tmp45 = g_markup_printf_escaped ("<b>%s:</b>", _ ("Guitar Tabs")), (GtkWidget*) text_view)), (frame == NULL) ? NULL : (frame = (g_object_unref (frame), NULL)), _tmp46);
+	_tmp45 = (g_free (_tmp45), NULL);
 	gmpc_meta_text_view_query_text_from_song (text_view, song);
 	gtk_box_pack_start ((GtkBox*) vbox, (GtkWidget*) frame, FALSE, FALSE, (guint) 0);
 	similar_songs = g_object_ref_sink (gmpc_widget_similar_songs_new (song));
@@ -3013,8 +3036,22 @@ GtkWidget* gmpc_metadata_browser_metadata_box_show_song (GmpcMetadataBrowser* se
 	        this.metadata_box.add(vbox);
 	        this.metadata_sw.show_all();
 	        */
-	_tmp46 = NULL;
-	return (_tmp46 = (GtkWidget*) vbox, (label == NULL) ? NULL : (label = (g_object_unref (label), NULL)), (hbox == NULL) ? NULL : (hbox = (g_object_unref (hbox), NULL)), (ali == NULL) ? NULL : (ali = (g_object_unref (ali), NULL)), (artist_image == NULL) ? NULL : (artist_image = (g_object_unref (artist_image), NULL)), (info_box == NULL) ? NULL : (info_box = (g_object_unref (info_box), NULL)), (pt_label == NULL) ? NULL : (pt_label = (g_object_unref (pt_label), NULL)), (fav_button == NULL) ? NULL : (fav_button = (g_object_unref (fav_button), NULL)), (button == NULL) ? NULL : (button = (g_object_unref (button), NULL)), (text_view == NULL) ? NULL : (text_view = (g_object_unref (text_view), NULL)), (frame == NULL) ? NULL : (frame = (g_object_unref (frame), NULL)), (similar_songs == NULL) ? NULL : (similar_songs = (g_object_unref (similar_songs), NULL)), (song_links == NULL) ? NULL : (song_links = (g_object_unref (song_links), NULL)), _tmp46);
+	_tmp47 = NULL;
+	return (_tmp47 = (GtkWidget*) vbox, (label == NULL) ? NULL : (label = (g_object_unref (label), NULL)), (hbox == NULL) ? NULL : (hbox = (g_object_unref (hbox), NULL)), (ali == NULL) ? NULL : (ali = (g_object_unref (ali), NULL)), (artist_image == NULL) ? NULL : (artist_image = (g_object_unref (artist_image), NULL)), (info_box == NULL) ? NULL : (info_box = (g_object_unref (info_box), NULL)), (pt_label == NULL) ? NULL : (pt_label = (g_object_unref (pt_label), NULL)), (fav_button == NULL) ? NULL : (fav_button = (g_object_unref (fav_button), NULL)), (button == NULL) ? NULL : (button = (g_object_unref (button), NULL)), (text_view == NULL) ? NULL : (text_view = (g_object_unref (text_view), NULL)), (frame == NULL) ? NULL : (frame = (g_object_unref (frame), NULL)), (similar_songs == NULL) ? NULL : (similar_songs = (g_object_unref (similar_songs), NULL)), (song_links == NULL) ? NULL : (song_links = (g_object_unref (song_links), NULL)), _tmp47);
+}
+
+
+static void gmpc_metadata_browser_metadata_button_open_file_browser_path (GmpcMetadataBrowser* self, GtkButton* button) {
+	const char* _tmp0;
+	char* path;
+	g_return_if_fail (self != NULL);
+	g_return_if_fail (button != NULL);
+	_tmp0 = NULL;
+	path = (_tmp0 = (const char*) g_object_get_data ((GObject*) button, "path"), (_tmp0 == NULL) ? NULL : g_strdup (_tmp0));
+	if (path != NULL) {
+		pl3_file_browser_open_path (path);
+	}
+	path = (g_free (path), NULL);
 }
 
 
@@ -3207,6 +3244,8 @@ static void gmpc_metadata_browser_metadata_box_show_album (GmpcMetadataBrowser* 
 	song_tree = g_object_ref_sink (gmpc_mpddata_treeview_new ("album-songs", TRUE, (GtkTreeModel*) self->priv->model_songs));
 	gtk_container_add ((GtkContainer*) sw, (GtkWidget*) song_tree);
 	gtk_box_pack_start ((GtkBox*) vbox, (GtkWidget*) sw, FALSE, FALSE, (guint) 0);
+	/* TODO right mouse menu 
+	 Song links */
 	song_links = g_object_ref_sink (gmpc_song_links_new (GMPC_SONG_LINKS_TYPE_ALBUM, song));
 	gtk_box_pack_start ((GtkBox*) vbox, (GtkWidget*) song_links, FALSE, FALSE, (guint) 0);
 	/**

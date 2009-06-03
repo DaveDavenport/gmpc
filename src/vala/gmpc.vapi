@@ -250,11 +250,14 @@ namespace Gmpc {
     namespace Browser{
         [CCode (cname="playlist3_insert_browser")]
         public void insert(out Gtk.TreeIter iter, int position);
+        namespace File {
+            [CCode (cname="pl3_file_browser_open_path")]
+            public void open_path(string path);
+        }
     }
     namespace Playlist3 {
         [CCode (cname="playlist3_get_category_tree_view")]
         public unowned Gtk.TreeView get_category_tree_view();
-
     }
 
     /* objects */

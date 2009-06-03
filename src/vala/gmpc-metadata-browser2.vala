@@ -1353,16 +1353,27 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
             info_box.attach(pt_label, 1,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
             i++;
         }
-        /* Genre */
+        /* Path */
         if(song.file != null) {
-            pt_label = new Gtk.Label(song.file); 
             label = new Gtk.Label("");
             label.set_alignment(0.0f, 0.0f);
             label.set_markup(Markup.printf_escaped("<b>%s:</b>",_("Path")));
             info_box.attach(label, 0,1,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
+
+            pt_label = new Gtk.Label(song.file); 
             pt_label.set_alignment(0.0f, 0.5f);
             pt_label.set_line_wrap(true);
-            info_box.attach(pt_label, 1,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
+            var dhbox = new Gtk.HBox(false, 6);
+            dhbox.pack_start(pt_label, false, false, 0);
+            var dbutton = new Gtk.Button();
+            dbutton.set_relief(Gtk.ReliefStyle.NONE);
+            dbutton.add(new Gtk.Image.from_stock("gtk-open", Gtk.IconSize.MENU));
+            dbutton.set_data_full("path", (void *)GLib.Path.get_dirname(song.file), g_free);
+            dbutton.clicked += metadata_button_open_file_browser_path;
+            dbutton.set_tooltip_text(_("Open path to song in file browser"));
+
+            dhbox.pack_start(dbutton, false, false, 0);
+            info_box.attach(dhbox, 1,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
             i++;
         }
 
@@ -1463,6 +1474,14 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         this.metadata_sw.show_all();
         */
         return vbox;
+    }
+    private void metadata_button_open_file_browser_path(Gtk.Button button)
+    {
+        string path = (string?)button.get_data("path");
+        if(path != null)
+        {
+            Gmpc.Browser.File.open_path(path);
+        }
     }
     private void metadata_box_show_album(string artist, string album)
     {
@@ -1571,7 +1590,8 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         var song_tree = new Gmpc.MpdData.TreeView("album-songs", true, this.model_songs);
         sw.add(song_tree);
         vbox.pack_start(sw, false, false, 0);
-
+        /* TODO right mouse menu */ 
+        /* Song links */
         var song_links = new Gmpc.Song.Links(Gmpc.Song.Links.Type.ALBUM,song);
         vbox.pack_start(song_links,false, false, 0);
         /**
