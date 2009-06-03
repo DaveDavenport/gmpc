@@ -1,33 +1,15 @@
-/* Gnome Music Player Client (GMPC)
- * Copyright (C) 2004-2009 Qball Cow <qball@sarine.nl>
- * Project homepage: http://gmpc.wikia.com/
- 
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
-
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
-
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-*/
 
 #ifndef __GMPC_TEST_PLUGIN_H__
 #define __GMPC_TEST_PLUGIN_H__
 
 #include <glib.h>
-#include <glib-object.h>
 #include <gtk/gtk.h>
 #include <gmpc_easy_download.h>
 #include <stdlib.h>
 #include <string.h>
-#include <libmpd/libmpdclient.h>
 #include <metadata.h>
+#include <libmpd/libmpdclient.h>
+#include <libmpd/libmpd.h>
 #include <gmpc-plugin.h>
 
 G_BEGIN_DECLS
@@ -74,20 +56,19 @@ struct _GmpcTestPluginClass {
 };
 
 
-#define use_transition TRUE
+GType gmpc_meta_data_edit_window_get_type (void);
 void gmpc_meta_data_edit_window_image_downloaded (GmpcMetaDataEditWindow* self, const GEADAsyncHandler* handle, GEADStatus status);
 void gmpc_meta_data_edit_window_callback (GmpcMetaDataEditWindow* self, void* handle, const char* plugin_name, GList* list);
 void gmpc_meta_data_edit_window_store_image (GmpcMetaDataEditWindow* self, const GEADAsyncHandler* handle, GEADStatus status);
 void gmpc_meta_data_edit_window_destroy_popup (GmpcMetaDataEditWindow* self, GtkButton* button);
 void gmpc_meta_data_edit_window_refresh_query (GmpcMetaDataEditWindow* self, GtkButton* button);
-GmpcMetaDataEditWindow* gmpc_meta_data_edit_window_construct (GType object_type, const mpd_Song* song, MetaDataType type);
 GmpcMetaDataEditWindow* gmpc_meta_data_edit_window_new (const mpd_Song* song, MetaDataType type);
+GmpcMetaDataEditWindow* gmpc_meta_data_edit_window_construct (GType object_type, const mpd_Song* song, MetaDataType type);
 void gmpc_meta_data_edit_window_b_cancel (GmpcMetaDataEditWindow* self);
-GType gmpc_meta_data_edit_window_get_type (void);
-void gmpc_test_plugin_menu_activated_album (GmpcTestPlugin* self, GtkMenuItem* item);
-GmpcTestPlugin* gmpc_test_plugin_construct (GType object_type);
-GmpcTestPlugin* gmpc_test_plugin_new (void);
 GType gmpc_test_plugin_get_type (void);
+void gmpc_test_plugin_menu_activated_album (GmpcTestPlugin* self, GtkMenuItem* item);
+GmpcTestPlugin* gmpc_test_plugin_new (void);
+GmpcTestPlugin* gmpc_test_plugin_construct (GType object_type);
 
 static const gint GMPC_TEST_PLUGIN_version[] = {0, 0, 2};
 

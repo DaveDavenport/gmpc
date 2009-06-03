@@ -49,7 +49,7 @@ namespace Gmpc {
         bool drag_data_received(Gtk.TreePath dest, Gtk.SelectionData selection_data)
         {
             Gtk.TreeModel model;
-            Gtk.TreePath path;
+            Gtk.TreePath path = null;
 
             if(dest == null )
             {

@@ -1,6 +1,6 @@
 namespace Gmpc {
 
-    [CCode (cname="TRUE",cheader_filename="gtktransition.h")]
+    [CCode (cname="TRUE",cheader_filename="gtk/gtk.h,gtktransition.h")]
     static bool use_transition;
 
     [CCode (cname = "gmpcconn", cheader_filename="main.h")]
@@ -30,7 +30,7 @@ namespace Gmpc {
 
    namespace MetaData {
     
-        [CCode (cname="MetaDataContentType", cprefix = "META_DATA_CONTENT_", cheader_filename = "metadata.h")]
+        [CCode (cname="MetaDataContentType", cprefix = "META_DATA_CONTENT_", cheader_filename = "libmpd/libmpd.h,metadata.h")]
         public enum ContentType {
             EMPTY,
             URI,
@@ -104,7 +104,7 @@ namespace Gmpc {
        
 
         public delegate void Callback (void *handle,string? plugin_name, GLib.List<MetaData.Item>? list);
-        [CCode ( cname="metadata_get_list", cheader_filename="metadata.h" )]
+        [CCode ( cname="metadata_get_list", cheader_filename="libmpd/libmpd.h,metadata.h" )]
         public void* get_list(MPD.Song song, Type type, Callback callback);
 
         [CCode ( cname="metadata_get_list_cancel", cheader_filename="metadata.h" )]
@@ -114,7 +114,7 @@ namespace Gmpc {
         [CCode ( cname="meta_data_set_cache", cheader_filename="metadata_cache.h")]
         public void set_metadata(MPD.Song song, Result result, Gmpc.MetaData.Item met); 
 
-        [CCode ( cname="gmpc_get_metadata_filename", cheader_filename="metadata.h")]
+        [CCode ( cname="gmpc_get_metadata_filename", cheader_filename="libmpd/libmpd.h,metadata.h")]
         public string get_metadata_filename(Type type, MPD.Song song, string? extention);
 
         [CCode ( cname="GmpcMetaImage", cheader_filename="gmpc-metaimage.h")]
@@ -227,7 +227,7 @@ namespace Gmpc {
 
 
 
-    [CCode (cname = "config", cheader_filename="plugin.h")]
+   [CCode (cname = "config", cheader_filename="plugin.h")]
     static Settings config; 
     [CCode (cheader_filename="config1.h")]
         [Compact]

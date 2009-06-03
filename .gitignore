@@ -48,7 +48,7 @@ Makefile.in
 # 
 ##
 stamp-h1
-config.*
+config.h
 configure
 depcomp
 intltool-*

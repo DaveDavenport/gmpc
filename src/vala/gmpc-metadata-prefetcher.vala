@@ -24,10 +24,10 @@ using Gmpc;
 private const bool use_transition = Gmpc.use_transition;
 
 public class  Gmpc.Plugin.MetadataPrefetcher : Gmpc.Plugin.Base {
-    public const int[3] version = {0,0,2};
+    public const int[] version = {0,0,2};
 
     public override weak int[] get_version() {
-        return (int[3])this.version;
+        return this.version;
     }
 
     public override weak string get_name() {
@@ -53,13 +53,13 @@ public class  Gmpc.Plugin.MetadataPrefetcher : Gmpc.Plugin.Base {
                 MPD.Song song = server.playlist_get_song(next_song_id);
                 if(song != null){
                     Gmpc.MetaData.Item met = null;
-                    Gmpc.MetaData.Result result;
+                    Gmpc.MetaData.Result md_result;
 
                     GLib.log("MetadataPrefetcher", GLib.LogLevelFlags.LEVEL_DEBUG, "Pre-fetching %s", song.file);
                     /* Query artist */
-                    result = Gmpc.metawatcher.query(song, Gmpc.MetaData.Type.ARTIST_ART, out met); 
+                    md_result = Gmpc.metawatcher.query(song, Gmpc.MetaData.Type.ARTIST_ART, out met); 
                     /* Query album art */
-                    result = Gmpc.metawatcher.query(song, Gmpc.MetaData.Type.ALBUM_ART, out met); 
+                    md_result = Gmpc.metawatcher.query(song, Gmpc.MetaData.Type.ALBUM_ART, out met); 
                 }
             }
         }

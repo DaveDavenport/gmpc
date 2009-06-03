@@ -3,7 +3,6 @@
 #define __GMPC_RATING_H__
 
 #include <glib.h>
-#include <glib-object.h>
 #include <gtk/gtk.h>
 #include <gdk/gdk.h>
 #include <libmpd/libmpd.h>
@@ -52,12 +51,12 @@ struct _GmpcRatingClass {
 };
 
 
+GType gmpc_rating_get_type (void);
 gboolean gmpc_rating_button_press_event_callback (GmpcRating* self, GtkEventBox* wid, const GdkEventButton* event);
-GmpcRating* gmpc_rating_construct (GType object_type, MpdObj* server, const mpd_Song* song);
 GmpcRating* gmpc_rating_new (MpdObj* server, const mpd_Song* song);
+GmpcRating* gmpc_rating_construct (GType object_type, MpdObj* server, const mpd_Song* song);
 void gmpc_rating_set_rating (GmpcRating* self, gint rating);
 void gmpc_rating_update (GmpcRating* self);
-GType gmpc_rating_get_type (void);
 
 
 G_END_DECLS

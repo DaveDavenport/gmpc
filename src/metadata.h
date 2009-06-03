@@ -19,8 +19,7 @@
 
 #ifndef __METADATA_H__
 #define __METADATA_H__
-
-
+#include <libmpd/libmpd.h>
 
 typedef enum {
 	META_ALBUM_ART 			= 1,		/* Album Cover art 	*/

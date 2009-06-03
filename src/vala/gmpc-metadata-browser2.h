@@ -1,32 +1,14 @@
-/* Gnome Music Player Client (GMPC)
- * Copyright (C) 2004-2009 Qball Cow <qball@sarine.nl>
- * Project homepage: http://gmpc.wikia.com/
- 
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
-
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
-
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-*/
 
 #ifndef __GMPC_METADATA_BROWSER2_H__
 #define __GMPC_METADATA_BROWSER2_H__
 
 #include <glib.h>
-#include <glib-object.h>
 #include <gtk/gtk.h>
-#include <gmpc-plugin.h>
 #include <stdlib.h>
 #include <string.h>
+#include <gmpc-plugin.h>
 #include <libmpd/libmpdclient.h>
+#include <libmpd/libmpd.h>
 
 G_BEGIN_DECLS
 
@@ -134,23 +116,21 @@ struct _GmpcMetadataBrowserClass {
 };
 
 
-#define use_transition_mb TRUE
-#define some_unique_name_mb VERSION
 GType gmpc_widget_similar_songs_get_type (void);
-GtkWidget* gmpc_widget_similar_artist_new_artist_button (GmpcWidgetSimilarArtist* self, const char* artist, gboolean in_db);
 GType gmpc_widget_similar_artist_get_type (void);
+GtkWidget* gmpc_widget_similar_artist_new_artist_button (GmpcWidgetSimilarArtist* self, const char* artist, gboolean in_db);
 GType gmpc_widget_more_get_type (void);
-GmpcNowPlaying* gmpc_now_playing_construct (GType object_type);
-GmpcNowPlaying* gmpc_now_playing_new (void);
 GType gmpc_now_playing_get_type (void);
+GmpcNowPlaying* gmpc_now_playing_new (void);
+GmpcNowPlaying* gmpc_now_playing_construct (GType object_type);
+GType gmpc_metadata_browser_get_type (void);
 GtkWidget* gmpc_metadata_browser_metadata_box_show_song (GmpcMetadataBrowser* self, const mpd_Song* song);
 void gmpc_metadata_browser_set_artist (GmpcMetadataBrowser* self, const char* artist);
 void gmpc_metadata_browser_set_album (GmpcMetadataBrowser* self, const char* artist, const char* album);
 void gmpc_metadata_browser_set_song (GmpcMetadataBrowser* self, const mpd_Song* song);
 void gmpc_metadata_browser_select_browser (GmpcMetadataBrowser* self, GtkTreeView* tree);
-GmpcMetadataBrowser* gmpc_metadata_browser_construct (GType object_type);
 GmpcMetadataBrowser* gmpc_metadata_browser_new (void);
-GType gmpc_metadata_browser_get_type (void);
+GmpcMetadataBrowser* gmpc_metadata_browser_construct (GType object_type);
 
 static const gint GMPC_NOW_PLAYING_version[] = {0, 0, 0};
 static const gint GMPC_METADATA_BROWSER_version[] = {0, 0, 0};

@@ -16,7 +16,7 @@ namespace MPD {
     [CCode (cname = "mpd_Song",
     free_function = "mpd_freeSong", 
     copy_function = "mpd_songDup", 
-    cheader_filename = "libmpd/libmpdclient.h")]
+    cheader_filename = "libmpd/libmpdclient.h,libmpd/libmpd.h")]
     [Compact]
     [Immutable]
     public class Song {

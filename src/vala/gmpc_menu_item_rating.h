@@ -3,11 +3,10 @@
 #define __GMPC_MENU_ITEM_RATING_H__
 
 #include <glib.h>
-#include <glib-object.h>
 #include <gtk/gtk.h>
+#include <gmpc-rating.h>
 #include <libmpd/libmpd.h>
 #include <libmpd/libmpdclient.h>
-#include "gmpc-rating.h"
 
 G_BEGIN_DECLS
 
@@ -35,11 +34,10 @@ struct _GmpcMenuItemRatingClass {
 };
 
 
-#define use_transition TRUE
-gint gmpc_menu_item_rating_get_rating (GmpcMenuItemRating* self);
-GmpcMenuItemRating* gmpc_menu_item_rating_construct (GType object_type, MpdObj* server, const mpd_Song* song);
-GmpcMenuItemRating* gmpc_menu_item_rating_new (MpdObj* server, const mpd_Song* song);
 GType gmpc_menu_item_rating_get_type (void);
+gint gmpc_menu_item_rating_get_rating (GmpcMenuItemRating* self);
+GmpcMenuItemRating* gmpc_menu_item_rating_new (MpdObj* server, const mpd_Song* song);
+GmpcMenuItemRating* gmpc_menu_item_rating_construct (GType object_type, MpdObj* server, const mpd_Song* song);
 
 
 G_END_DECLS

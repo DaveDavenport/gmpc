@@ -1,34 +1,65 @@
 
-#include "gmpc-metadata-prefetcher.h"
+#include <glib.h>
+#include <glib-object.h>
+#include <gtk/gtk.h>
 #include <gtktransition.h>
-#include <gmpc-connection.h>
+#include <gmpc-plugin.h>
+#include <stdlib.h>
+#include <string.h>
 #include <libmpd/libmpd.h>
 #include <libmpd/libmpdclient.h>
 #include <metadata.h>
 #include <main.h>
 #include <gmpc-meta-watcher.h>
+#include <gmpc-connection.h>
+
+
+#define GMPC_PLUGIN_TYPE_METADATA_PREFETCHER (gmpc_plugin_metadata_prefetcher_get_type ())
+#define GMPC_PLUGIN_METADATA_PREFETCHER(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), GMPC_PLUGIN_TYPE_METADATA_PREFETCHER, GmpcPluginMetadataPrefetcher))
+#define GMPC_PLUGIN_METADATA_PREFETCHER_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), GMPC_PLUGIN_TYPE_METADATA_PREFETCHER, GmpcPluginMetadataPrefetcherClass))
+#define GMPC_PLUGIN_IS_METADATA_PREFETCHER(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GMPC_PLUGIN_TYPE_METADATA_PREFETCHER))
+#define GMPC_PLUGIN_IS_METADATA_PREFETCHER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GMPC_PLUGIN_TYPE_METADATA_PREFETCHER))
+#define GMPC_PLUGIN_METADATA_PREFETCHER_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), GMPC_PLUGIN_TYPE_METADATA_PREFETCHER, GmpcPluginMetadataPrefetcherClass))
+
+typedef struct _GmpcPluginMetadataPrefetcher GmpcPluginMetadataPrefetcher;
+typedef struct _GmpcPluginMetadataPrefetcherClass GmpcPluginMetadataPrefetcherClass;
+typedef struct _GmpcPluginMetadataPrefetcherPrivate GmpcPluginMetadataPrefetcherPrivate;
+
+struct _GmpcPluginMetadataPrefetcher {
+	GmpcPluginBase parent_instance;
+	GmpcPluginMetadataPrefetcherPrivate * priv;
+};
+
+struct _GmpcPluginMetadataPrefetcherClass {
+	GmpcPluginBaseClass parent_class;
+};
 
 
 
-
+#define use_transition TRUE
+GType gmpc_plugin_metadata_prefetcher_get_type (void);
 enum  {
 	GMPC_PLUGIN_METADATA_PREFETCHER_DUMMY_PROPERTY
 };
 static gint* gmpc_plugin_metadata_prefetcher_real_get_version (GmpcPluginBase* base, int* result_length1);
 static const char* gmpc_plugin_metadata_prefetcher_real_get_name (GmpcPluginBase* base);
 static void gmpc_plugin_metadata_prefetcher_status_changed (GmpcPluginMetadataPrefetcher* self, GmpcConnection* gmpcconn, MpdObj* server, ChangedStatusType what);
+GmpcPluginMetadataPrefetcher* gmpc_plugin_metadata_prefetcher_new (void);
+GmpcPluginMetadataPrefetcher* gmpc_plugin_metadata_prefetcher_construct (GType object_type);
+GmpcPluginMetadataPrefetcher* gmpc_plugin_metadata_prefetcher_new (void);
 static void _gmpc_plugin_metadata_prefetcher_status_changed_gmpc_connection_status_changed (GmpcConnection* _sender, MpdObj* server, ChangedStatusType what, gpointer self);
 static GObject * gmpc_plugin_metadata_prefetcher_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);
 static gpointer gmpc_plugin_metadata_prefetcher_parent_class = NULL;
 
+static const gint GMPC_PLUGIN_METADATA_PREFETCHER_version[] = {0, 0, 2};
 
 
 static gint* gmpc_plugin_metadata_prefetcher_real_get_version (GmpcPluginBase* base, int* result_length1) {
 	GmpcPluginMetadataPrefetcher * self;
-	gint* _tmp0;
+	gint* _tmp0_;
 	self = (GmpcPluginMetadataPrefetcher*) base;
-	_tmp0 = NULL;
-	return (_tmp0 = (gint*) GMPC_PLUGIN_METADATA_PREFETCHER_version, *result_length1 = -1, _tmp0);
+	_tmp0_ = NULL;
+	return (_tmp0_ = GMPC_PLUGIN_METADATA_PREFETCHER_version, *result_length1 = G_N_ELEMENTS (GMPC_PLUGIN_METADATA_PREFETCHER_version), _tmp0_);
 }
 
 
@@ -54,24 +85,24 @@ static void gmpc_plugin_metadata_prefetcher_status_changed (GmpcPluginMetadataPr
 			song = mpd_playlist_get_song (server, next_song_id);
 			if (song != NULL) {
 				MetaData* met;
-				MetaDataResult result;
-				MetaData* _tmp2;
-				MetaDataResult _tmp1;
-				MetaData* _tmp0;
-				MetaData* _tmp5;
-				MetaDataResult _tmp4;
-				MetaData* _tmp3;
+				MetaDataResult md_result;
+				MetaData* _tmp2_;
+				MetaDataResult _tmp1_;
+				MetaData* _tmp0_;
+				MetaData* _tmp5_;
+				MetaDataResult _tmp4_;
+				MetaData* _tmp3_;
 				met = NULL;
-				result = 0;
+				md_result = 0;
 				g_log ("MetadataPrefetcher", G_LOG_LEVEL_DEBUG, "gmpc-metadata-prefetcher.vala:58: Pre-fetching %s", song->file);
 				/* Query artist */
-				_tmp2 = NULL;
-				_tmp0 = NULL;
-				result = (_tmp1 = gmpc_meta_watcher_get_meta_path (gmw, song, META_ARTIST_ART, &_tmp0), met = (_tmp2 = _tmp0, (met == NULL) ? NULL : (met = (meta_data_free (met), NULL)), _tmp2), _tmp1);
+				_tmp2_ = NULL;
+				_tmp0_ = NULL;
+				md_result = (_tmp1_ = gmpc_meta_watcher_get_meta_path (gmw, song, META_ARTIST_ART, &_tmp0_), met = (_tmp2_ = _tmp0_, (met == NULL) ? NULL : (met = (meta_data_free (met), NULL)), _tmp2_), _tmp1_);
 				/* Query album art */
-				_tmp5 = NULL;
-				_tmp3 = NULL;
-				result = (_tmp4 = gmpc_meta_watcher_get_meta_path (gmw, song, META_ALBUM_ART, &_tmp3), met = (_tmp5 = _tmp3, (met == NULL) ? NULL : (met = (meta_data_free (met), NULL)), _tmp5), _tmp4);
+				_tmp5_ = NULL;
+				_tmp3_ = NULL;
+				md_result = (_tmp4_ = gmpc_meta_watcher_get_meta_path (gmw, song, META_ALBUM_ART, &_tmp3_), met = (_tmp5_ = _tmp3_, (met == NULL) ? NULL : (met = (meta_data_free (met), NULL)), _tmp5_), _tmp4_);
 				(met == NULL) ? NULL : (met = (meta_data_free (met), NULL));
 			}
 			(song == NULL) ? NULL : (song = (mpd_freeSong (song), NULL));
@@ -118,9 +149,9 @@ static GObject * gmpc_plugin_metadata_prefetcher_constructor (GType type, guint 
 
 static void gmpc_plugin_metadata_prefetcher_class_init (GmpcPluginMetadataPrefetcherClass * klass) {
 	gmpc_plugin_metadata_prefetcher_parent_class = g_type_class_peek_parent (klass);
-	G_OBJECT_CLASS (klass)->constructor = gmpc_plugin_metadata_prefetcher_constructor;
 	GMPC_PLUGIN_BASE_CLASS (klass)->get_version = gmpc_plugin_metadata_prefetcher_real_get_version;
 	GMPC_PLUGIN_BASE_CLASS (klass)->get_name = gmpc_plugin_metadata_prefetcher_real_get_name;
+	G_OBJECT_CLASS (klass)->constructor = gmpc_plugin_metadata_prefetcher_constructor;
 }
 
 

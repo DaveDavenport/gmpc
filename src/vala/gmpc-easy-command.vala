@@ -38,7 +38,7 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 	/***
 	 * plugin setup
 	 */
-	private int[3] version = {0,0,1};
+	private int[] version = {0,0,1};
 
 
 	/**

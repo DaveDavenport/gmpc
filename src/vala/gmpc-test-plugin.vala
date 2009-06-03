@@ -640,7 +640,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
 
 
 public class  Gmpc.TestPlugin : Gmpc.Plugin.Base,Gmpc.Plugin.ToolMenuIface, Gmpc.Plugin.SongListIface {
-    public const int[3] version = {0,0,2};
+    public const int[] version = {0,0,2};
     /*********************************************************************************
      * Plugin base functions 
      * These functions are required.
@@ -650,7 +650,7 @@ public class  Gmpc.TestPlugin : Gmpc.Plugin.Base,Gmpc.Plugin.ToolMenuIface, Gmpc
         this.plugin_type = 8+4;
     }
     public override weak int[] get_version() {
-        return (int[3])this.version;
+        return this.version;
     }
     /**
      * The name of the plugin

@@ -21,17 +21,9 @@ using GLib;
 using MPD;
 
 namespace Gmpc{
-    class Connection : GLib.Object{
-        public void call_connection_changed(MPD.Server mi, int connect)
-        {
-            this.connection_changed(mi, connect);
-        }
+    public class Connection : GLib.Object{
         public signal void connection_changed (MPD.Server mi, int connect);
 
-        public void call_status_changed (MPD.Server mi,MPD.Status.Changed what) 
-        {
-            this.status_changed (mi, (int)what);
-        }
         public signal void status_changed (MPD.Server mi,int what); 
     }
 

@@ -257,8 +257,8 @@ public class Gmpc.Widget.SimilarSongs : Gtk.Expander {
     {
         MetaData.Item item = null;
         metawatcher.data_changed += metadata_changed;
-        Gmpc.MetaData.Result result = metawatcher.query(song, Gmpc.MetaData.Type.SONG_SIMILAR,out item);
-        this.metadata_changed(metawatcher, this.song, Gmpc.MetaData.Type.SONG_SIMILAR, result, item); 
+        Gmpc.MetaData.Result gm_result = metawatcher.query(song, Gmpc.MetaData.Type.SONG_SIMILAR,out item);
+        this.metadata_changed(metawatcher, this.song, Gmpc.MetaData.Type.SONG_SIMILAR, gm_result, item); 
     }
 
     override void activate()
@@ -412,10 +412,10 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
 
         metawatcher.data_changed += metadata_changed;
 
-        Gmpc.MetaData.Result result = metawatcher.query(song, Gmpc.MetaData.Type.ARTIST_SIMILAR,out item);
-        if(result == Gmpc.MetaData.Result.AVAILABLE)
+        Gmpc.MetaData.Result gm_result = metawatcher.query(song, Gmpc.MetaData.Type.ARTIST_SIMILAR,out item);
+        if(gm_result == Gmpc.MetaData.Result.AVAILABLE)
         {
-            this.metadata_changed(metawatcher, this.song, Gmpc.MetaData.Type.ARTIST_SIMILAR, result, item); 
+            this.metadata_changed(metawatcher, this.song, Gmpc.MetaData.Type.ARTIST_SIMILAR, gm_result, item); 
         }
     }
 
@@ -505,7 +505,7 @@ public class  Gmpc.NowPlaying : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface {
         gmpcconn.status_changed += status_changed;
         this.browser = new Gmpc.MetadataBrowser();
     }
-    public const int[3] version =  {0,0,0};
+    public const int[] version =  {0,0,0};
     public override  weak int[3] get_version() {
         return version;
     }
@@ -678,7 +678,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         gmpcconn.status_changed += status_changed;
     }
 
-    public const int[3] version =  {0,0,0};
+    public const int[] version =  {0,0,0};
     public override  weak int[3] get_version() {
         return version;
     }

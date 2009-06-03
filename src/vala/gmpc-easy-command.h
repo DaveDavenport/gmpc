@@ -1,27 +1,8 @@
-/* Gnome Music Player Client (GMPC)
- * Copyright (C) 2004-2009 Qball Cow <qball@sarine.nl>
- * Project homepage: http://gmpc.wikia.com/
- 
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
-
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
-
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-*/
 
 #ifndef __GMPC_EASY_COMMAND_H__
 #define __GMPC_EASY_COMMAND_H__
 
 #include <glib.h>
-#include <glib-object.h>
 #include <gmpc-plugin.h>
 #include <gtk/gtk.h>
 #include <stdlib.h>
@@ -40,12 +21,6 @@ G_BEGIN_DECLS
 typedef struct _GmpcEasyCommand GmpcEasyCommand;
 typedef struct _GmpcEasyCommandClass GmpcEasyCommandClass;
 typedef struct _GmpcEasyCommandPrivate GmpcEasyCommandPrivate;
-/**
-     * This function is called when the user entered a line matching this entry.
-     * param data the user data passed.
-     * param param a string with the extra parameters passed to the command
-     */
-typedef void (*GmpcEasyCommandCallback) (void* data, const char* param, void* user_data);
 
 struct _GmpcEasyCommand {
 	GmpcPluginBase parent_instance;
@@ -57,14 +32,20 @@ struct _GmpcEasyCommandClass {
 	GmpcPluginBaseClass parent_class;
 };
 
+/**
+     * This function is called when the user entered a line matching this entry.
+     * param data the user data passed.
+     * param param a string with the extra parameters passed to the command
+     */
+typedef void (*GmpcEasyCommandCallback) (void* data, const char* param, void* user_data);
 
+GType gmpc_easy_command_get_type (void);
 guint gmpc_easy_command_add_entry (GmpcEasyCommand* self, const char* name, const char* pattern, const char* hint, GmpcEasyCommandCallback* callback, void* userdata);
 void gmpc_easy_command_popup (GmpcEasyCommand* self);
 void gmpc_easy_command_help_window_destroy (GtkDialog* window, gint response);
 void gmpc_easy_command_help_window (void* data, const char* param);
-GmpcEasyCommand* gmpc_easy_command_construct (GType object_type);
 GmpcEasyCommand* gmpc_easy_command_new (void);
-GType gmpc_easy_command_get_type (void);
+GmpcEasyCommand* gmpc_easy_command_construct (GType object_type);
 
 
 G_END_DECLS

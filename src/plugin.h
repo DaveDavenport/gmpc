@@ -23,7 +23,7 @@
 #include "gmpc-profiles.h"
 #include "gmpc-mpddata-model.h"
 #include "gmpc-mpddata-treeview.h"
-#include "gmpc-plugin.h"
+//#include "gmpc-plugin.h"
 #include "gmpc-connection.h"
 #ifndef __PLUGIN_H__
 #define __PLUGIN_H__

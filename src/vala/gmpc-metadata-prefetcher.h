@@ -3,10 +3,7 @@
 #define __GMPC_METADATA_PREFETCHER_H__
 
 #include <glib.h>
-#include <glib-object.h>
 #include <gmpc-plugin.h>
-#include <stdlib.h>
-#include <string.h>
 
 G_BEGIN_DECLS
 
@@ -32,10 +29,9 @@ struct _GmpcPluginMetadataPrefetcherClass {
 };
 
 
-#define use_transition TRUE
-GmpcPluginMetadataPrefetcher* gmpc_plugin_metadata_prefetcher_construct (GType object_type);
-GmpcPluginMetadataPrefetcher* gmpc_plugin_metadata_prefetcher_new (void);
 GType gmpc_plugin_metadata_prefetcher_get_type (void);
+GmpcPluginMetadataPrefetcher* gmpc_plugin_metadata_prefetcher_new (void);
+GmpcPluginMetadataPrefetcher* gmpc_plugin_metadata_prefetcher_construct (GType object_type);
 
 static const gint GMPC_PLUGIN_METADATA_PREFETCHER_version[] = {0, 0, 2};
 

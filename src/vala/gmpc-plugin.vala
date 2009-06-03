@@ -20,6 +20,7 @@
 using GLib;
 using Gtk;
 using Gmpc;
+using MPD;
 
 
 namespace Gmpc {

@@ -17,39 +17,181 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#include <gmpc-plugin.h>
+#include <glib.h>
+#include <glib-object.h>
+#include <stdlib.h>
+#include <string.h>
 #include <plugin.h>
 #include <config1.h>
+#include <gtk/gtk.h>
+#include <metadata.h>
+#include <libmpd/libmpdclient.h>
+#include <libmpd/libmpd.h>
+
+
+#define GMPC_PLUGIN_TYPE_BASE (gmpc_plugin_base_get_type ())
+#define GMPC_PLUGIN_BASE(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), GMPC_PLUGIN_TYPE_BASE, GmpcPluginBase))
+#define GMPC_PLUGIN_BASE_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), GMPC_PLUGIN_TYPE_BASE, GmpcPluginBaseClass))
+#define GMPC_PLUGIN_IS_BASE(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GMPC_PLUGIN_TYPE_BASE))
+#define GMPC_PLUGIN_IS_BASE_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GMPC_PLUGIN_TYPE_BASE))
+#define GMPC_PLUGIN_BASE_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), GMPC_PLUGIN_TYPE_BASE, GmpcPluginBaseClass))
+
+typedef struct _GmpcPluginBase GmpcPluginBase;
+typedef struct _GmpcPluginBaseClass GmpcPluginBaseClass;
+typedef struct _GmpcPluginBasePrivate GmpcPluginBasePrivate;
+
+#define GMPC_PLUGIN_TYPE_TOOL_MENU_IFACE (gmpc_plugin_tool_menu_iface_get_type ())
+#define GMPC_PLUGIN_TOOL_MENU_IFACE(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), GMPC_PLUGIN_TYPE_TOOL_MENU_IFACE, GmpcPluginToolMenuIface))
+#define GMPC_PLUGIN_IS_TOOL_MENU_IFACE(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GMPC_PLUGIN_TYPE_TOOL_MENU_IFACE))
+#define GMPC_PLUGIN_TOOL_MENU_IFACE_GET_INTERFACE(obj) (G_TYPE_INSTANCE_GET_INTERFACE ((obj), GMPC_PLUGIN_TYPE_TOOL_MENU_IFACE, GmpcPluginToolMenuIfaceIface))
+
+typedef struct _GmpcPluginToolMenuIface GmpcPluginToolMenuIface;
+typedef struct _GmpcPluginToolMenuIfaceIface GmpcPluginToolMenuIfaceIface;
+
+#define GMPC_PLUGIN_TYPE_META_DATA_IFACE (gmpc_plugin_meta_data_iface_get_type ())
+#define GMPC_PLUGIN_META_DATA_IFACE(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), GMPC_PLUGIN_TYPE_META_DATA_IFACE, GmpcPluginMetaDataIface))
+#define GMPC_PLUGIN_IS_META_DATA_IFACE(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GMPC_PLUGIN_TYPE_META_DATA_IFACE))
+#define GMPC_PLUGIN_META_DATA_IFACE_GET_INTERFACE(obj) (G_TYPE_INSTANCE_GET_INTERFACE ((obj), GMPC_PLUGIN_TYPE_META_DATA_IFACE, GmpcPluginMetaDataIfaceIface))
+
+typedef struct _GmpcPluginMetaDataIface GmpcPluginMetaDataIface;
+typedef struct _GmpcPluginMetaDataIfaceIface GmpcPluginMetaDataIfaceIface;
+
+#define GMPC_PLUGIN_TYPE_BROWSER_IFACE (gmpc_plugin_browser_iface_get_type ())
+#define GMPC_PLUGIN_BROWSER_IFACE(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), GMPC_PLUGIN_TYPE_BROWSER_IFACE, GmpcPluginBrowserIface))
+#define GMPC_PLUGIN_IS_BROWSER_IFACE(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GMPC_PLUGIN_TYPE_BROWSER_IFACE))
+#define GMPC_PLUGIN_BROWSER_IFACE_GET_INTERFACE(obj) (G_TYPE_INSTANCE_GET_INTERFACE ((obj), GMPC_PLUGIN_TYPE_BROWSER_IFACE, GmpcPluginBrowserIfaceIface))
+
+typedef struct _GmpcPluginBrowserIface GmpcPluginBrowserIface;
+typedef struct _GmpcPluginBrowserIfaceIface GmpcPluginBrowserIfaceIface;
+
+#define GMPC_PLUGIN_TYPE_PREFERENCES_IFACE (gmpc_plugin_preferences_iface_get_type ())
+#define GMPC_PLUGIN_PREFERENCES_IFACE(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), GMPC_PLUGIN_TYPE_PREFERENCES_IFACE, GmpcPluginPreferencesIface))
+#define GMPC_PLUGIN_IS_PREFERENCES_IFACE(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GMPC_PLUGIN_TYPE_PREFERENCES_IFACE))
+#define GMPC_PLUGIN_PREFERENCES_IFACE_GET_INTERFACE(obj) (G_TYPE_INSTANCE_GET_INTERFACE ((obj), GMPC_PLUGIN_TYPE_PREFERENCES_IFACE, GmpcPluginPreferencesIfaceIface))
+
+typedef struct _GmpcPluginPreferencesIface GmpcPluginPreferencesIface;
+typedef struct _GmpcPluginPreferencesIfaceIface GmpcPluginPreferencesIfaceIface;
+
+#define GMPC_PLUGIN_TYPE_SONG_LIST_IFACE (gmpc_plugin_song_list_iface_get_type ())
+#define GMPC_PLUGIN_SONG_LIST_IFACE(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), GMPC_PLUGIN_TYPE_SONG_LIST_IFACE, GmpcPluginSongListIface))
+#define GMPC_PLUGIN_IS_SONG_LIST_IFACE(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GMPC_PLUGIN_TYPE_SONG_LIST_IFACE))
+#define GMPC_PLUGIN_SONG_LIST_IFACE_GET_INTERFACE(obj) (G_TYPE_INSTANCE_GET_INTERFACE ((obj), GMPC_PLUGIN_TYPE_SONG_LIST_IFACE, GmpcPluginSongListIfaceIface))
+
+typedef struct _GmpcPluginSongListIface GmpcPluginSongListIface;
+typedef struct _GmpcPluginSongListIfaceIface GmpcPluginSongListIfaceIface;
+
+/**
+         * This is the base class that a plugin should inherit from.
+         *
+         */
+struct _GmpcPluginBase {
+	GObject parent_instance;
+	GmpcPluginBasePrivate * priv;
+	const char* translation_domain;
+	char* path;
+	gint id;
+	gint plugin_type;
+};
+
+struct _GmpcPluginBaseClass {
+	GObjectClass parent_class;
+	gint (*get_version) (GmpcPluginBase* self, int* result_length1);
+	const char* (*get_name) (GmpcPluginBase* self);
+	void (*save_yourself) (GmpcPluginBase* self);
+	gboolean (*get_enabled) (GmpcPluginBase* self);
+	void (*set_enabled) (GmpcPluginBase* self, gboolean state);
+};
+
+/**
+         * This interface allows the plugin to add one, or more, entries in the Tools menu.
+         * If need to remove or undate an entry call pl3_tool_menu_update(). This will tell gmpc
+         * To clear the menu, and call this function again on every plugin.
+         */
+struct _GmpcPluginToolMenuIfaceIface {
+	GTypeInterface parent_iface;
+	gint (*tool_menu_integration) (GmpcPluginToolMenuIface* self, GtkMenu* menu);
+};
+
+typedef void (*GmpcPluginMetaDataCallback) (GList* list, void* user_data);
+/* untested */
+struct _GmpcPluginMetaDataIfaceIface {
+	GTypeInterface parent_iface;
+	void (*get_data) (GmpcPluginMetaDataIface* self, const mpd_Song* song, MetaDataType type, GmpcPluginMetaDataCallback callback, void* callback_target);
+	gint (*get_priority) (GmpcPluginMetaDataIface* self);
+	void (*set_priority) (GmpcPluginMetaDataIface* self, gint priority);
+};
+
+struct _GmpcPluginBrowserIfaceIface {
+	GTypeInterface parent_iface;
+	void (*browser_add) (GmpcPluginBrowserIface* self, GtkWidget* category_tree);
+	void (*browser_selected) (GmpcPluginBrowserIface* self, GtkContainer* container);
+	void (*browser_unselected) (GmpcPluginBrowserIface* self, GtkContainer* container);
+	gint (*browser_option_menu) (GmpcPluginBrowserIface* self, GtkMenu* menu);
+	gint (*browser_add_go_menu) (GmpcPluginBrowserIface* self, GtkMenu* menu);
+};
+
+struct _GmpcPluginPreferencesIfaceIface {
+	GTypeInterface parent_iface;
+	void (*preferences_pane_construct) (GmpcPluginPreferencesIface* self, GtkContainer* container);
+	void (*preferences_pane_destroy) (GmpcPluginPreferencesIface* self, GtkContainer* container);
+};
+
+/* untested */
+struct _GmpcPluginSongListIfaceIface {
+	GTypeInterface parent_iface;
+	gint (*song_list) (GmpcPluginSongListIface* self, GtkWidget* tree, GtkMenu* menu);
+};
 
 
 
-
+GType gmpc_plugin_base_get_type (void);
 enum  {
 	GMPC_PLUGIN_BASE_DUMMY_PROPERTY
 };
-static gint* gmpc_plugin_base_real_get_version (GmpcPluginBase* self, int* result_length1);
+gint gmpc_plugin_base_get_version (GmpcPluginBase* self, int* result_length1);
+static gint gmpc_plugin_base_real_get_version (GmpcPluginBase* self, int* result_length1);
+const char* gmpc_plugin_base_get_name (GmpcPluginBase* self);
 static const char* gmpc_plugin_base_real_get_name (GmpcPluginBase* self);
+void gmpc_plugin_base_save_yourself (GmpcPluginBase* self);
 static void gmpc_plugin_base_real_save_yourself (GmpcPluginBase* self);
+gboolean gmpc_plugin_base_get_enabled (GmpcPluginBase* self);
 static gboolean gmpc_plugin_base_real_get_enabled (GmpcPluginBase* self);
+void gmpc_plugin_base_set_enabled (GmpcPluginBase* self, gboolean state);
 static void gmpc_plugin_base_real_set_enabled (GmpcPluginBase* self, gboolean state);
 static gpointer gmpc_plugin_base_parent_class = NULL;
 static void gmpc_plugin_base_finalize (GObject* obj);
+GType gmpc_plugin_tool_menu_iface_get_type (void);
+gint gmpc_plugin_tool_menu_iface_tool_menu_integration (GmpcPluginToolMenuIface* self, GtkMenu* menu);
+GType gmpc_plugin_meta_data_iface_get_type (void);
+void gmpc_plugin_meta_data_iface_get_data (GmpcPluginMetaDataIface* self, const mpd_Song* song, MetaDataType type, GmpcPluginMetaDataCallback callback, void* callback_target);
+gint gmpc_plugin_meta_data_iface_get_priority (GmpcPluginMetaDataIface* self);
+void gmpc_plugin_meta_data_iface_set_priority (GmpcPluginMetaDataIface* self, gint priority);
+GType gmpc_plugin_browser_iface_get_type (void);
+void gmpc_plugin_browser_iface_browser_add (GmpcPluginBrowserIface* self, GtkWidget* category_tree);
+void gmpc_plugin_browser_iface_browser_selected (GmpcPluginBrowserIface* self, GtkContainer* container);
+void gmpc_plugin_browser_iface_browser_unselected (GmpcPluginBrowserIface* self, GtkContainer* container);
+gint gmpc_plugin_browser_iface_browser_option_menu (GmpcPluginBrowserIface* self, GtkMenu* menu);
 static gint gmpc_plugin_browser_iface_real_browser_option_menu (GmpcPluginBrowserIface* self, GtkMenu* menu);
+gint gmpc_plugin_browser_iface_browser_add_go_menu (GmpcPluginBrowserIface* self, GtkMenu* menu);
 static gint gmpc_plugin_browser_iface_real_browser_add_go_menu (GmpcPluginBrowserIface* self, GtkMenu* menu);
+GType gmpc_plugin_preferences_iface_get_type (void);
+void gmpc_plugin_preferences_iface_preferences_pane_construct (GmpcPluginPreferencesIface* self, GtkContainer* container);
+void gmpc_plugin_preferences_iface_preferences_pane_destroy (GmpcPluginPreferencesIface* self, GtkContainer* container);
+GType gmpc_plugin_song_list_iface_get_type (void);
+gint gmpc_plugin_song_list_iface_song_list (GmpcPluginSongListIface* self, GtkWidget* tree, GtkMenu* menu);
 
 
 
-static gint* gmpc_plugin_base_real_get_version (GmpcPluginBase* self, int* result_length1) {
-	g_return_val_if_fail (self != NULL, NULL);
+static gint gmpc_plugin_base_real_get_version (GmpcPluginBase* self, int* result_length1) {
 	g_critical ("Type `%s' does not implement abstract method `gmpc_plugin_base_get_version'", g_type_name (G_TYPE_FROM_INSTANCE (self)));
-	return NULL;
+	return;
 }
 
 
 /**
              * Function should return the version of the plugin
              */
-gint* gmpc_plugin_base_get_version (GmpcPluginBase* self, int* result_length1) {
+gint gmpc_plugin_base_get_version (GmpcPluginBase* self, int* result_length1) {
 	return GMPC_PLUGIN_BASE_GET_CLASS (self)->get_version (self, result_length1);
 }
 
@@ -128,12 +270,12 @@ void gmpc_plugin_base_set_enabled (GmpcPluginBase* self, gboolean state) {
 
 static void gmpc_plugin_base_class_init (GmpcPluginBaseClass * klass) {
 	gmpc_plugin_base_parent_class = g_type_class_peek_parent (klass);
-	G_OBJECT_CLASS (klass)->finalize = gmpc_plugin_base_finalize;
 	GMPC_PLUGIN_BASE_CLASS (klass)->get_version = gmpc_plugin_base_real_get_version;
 	GMPC_PLUGIN_BASE_CLASS (klass)->get_name = gmpc_plugin_base_real_get_name;
 	GMPC_PLUGIN_BASE_CLASS (klass)->save_yourself = gmpc_plugin_base_real_save_yourself;
 	GMPC_PLUGIN_BASE_CLASS (klass)->get_enabled = gmpc_plugin_base_real_get_enabled;
 	GMPC_PLUGIN_BASE_CLASS (klass)->set_enabled = gmpc_plugin_base_real_set_enabled;
+	G_OBJECT_CLASS (klass)->finalize = gmpc_plugin_base_finalize;
 }
 
 
