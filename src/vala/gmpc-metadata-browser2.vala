@@ -390,7 +390,7 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
             find.set_relief(Gtk.ReliefStyle.NONE);
             hbox.pack_start(find,false,false,0);
 
-            find.set_data_full("artist",(void *)"%s".printf(artist), g_free);
+            find.set_data_full("artist",(void *)"%s".printf(artist), (GLib.DestroyNotify) g_free);
             find.clicked+= artist_button_clicked;
         }
 
@@ -787,7 +787,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
          return visible;
      }
 
-     private bool browser_artist_key_press_event(Gtk.Widget widget, Gdk.EventKey event)
+     private bool browser_artist_key_press_event(Gtk.TreeView widget, Gdk.EventKey event)
      {
         unichar uc = Gdk.keyval_to_unicode(event.keyval);
         if(uc > 0)
@@ -803,7 +803,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         }
         return false;
      }
-     private bool browser_album_key_press_event(Gtk.Widget widget, Gdk.EventKey event)
+     private bool browser_album_key_press_event(Gtk.TreeView widget, Gdk.EventKey event)
      {
         unichar uc = Gdk.keyval_to_unicode(event.keyval);
         if(uc > 0)
@@ -1147,13 +1147,6 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
             Gmpc.Misc.play_path(song.file);
         }
      }
-     private void play_selected_song(Gtk.Button button)
-     {
-        MPD.Song? song = browser_get_selected_song(); 
-        if(song != null){
-            Gmpc.Misc.play_path(song.file);
-        }
-     }
 
      private void add_song(Gtk.Button button)
      {
@@ -1256,8 +1249,34 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         hbox.pack_start(info_box, false, false, 0);
         int i=0;
 
+        Gtk.Label pt_label = null;
+
+        if(song.title != null)
+        {
+            label = new Gtk.Label("");
+            label.set_alignment(0.0f, 0.5f);
+            label.set_markup(Markup.printf_escaped("<b>%s:</b>",_("Title")));
+            info_box.attach(label, 0,1,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
+
+            var dhbox = new Gtk.HBox(false, 6);
+            pt_label = new Gtk.Label(song.title); 
+            pt_label.set_alignment(0.0f, 0.5f);
+            pt_label.set_line_wrap(true);
+            dhbox.pack_start(pt_label, false, false, 0);
+            /* Button to search for song with same title */
+            var button = new Gtk.Button();
+            button.add(new Gtk.Image.from_stock("gtk-find", Gtk.IconSize.MENU));
+            button.set_relief(Gtk.ReliefStyle.NONE);
+            button.set_data_full("query", (void *)"title=(%s)".printf(song.title), (GLib.DestroyNotify) g_free);
+            button.clicked += metadata_find_query;
+            button.set_tooltip_text(_("Search songs with similar title"));
+
+            dhbox.pack_start(button, false,false, 0);
+            info_box.attach(dhbox, 1,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
+            i++;
+        }
         /* Artist label */
-        var pt_label = new Gtk.Label(song.artist); 
+        pt_label = new Gtk.Label(song.artist); 
         label = new Gtk.Label("");
         label.set_alignment(0.0f, 0.5f);
         label.set_markup(Markup.printf_escaped("<b>%s:</b>",_("Artist")));
@@ -1368,7 +1387,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
             var dbutton = new Gtk.Button();
             dbutton.set_relief(Gtk.ReliefStyle.NONE);
             dbutton.add(new Gtk.Image.from_stock("gtk-open", Gtk.IconSize.MENU));
-            dbutton.set_data_full("path", (void *)GLib.Path.get_dirname(song.file), g_free);
+            dbutton.set_data_full("path", (void *)GLib.Path.get_dirname(song.file), (GLib.DestroyNotify) g_free);
             dbutton.clicked += metadata_button_open_file_browser_path;
             dbutton.set_tooltip_text(_("Open path to song in file browser"));
 
@@ -1421,21 +1440,21 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         /* Player controls */
         var button = new Gtk.Button.from_stock("gtk-media-play");
         button.set_relief(Gtk.ReliefStyle.NONE);
-        button.set_data_full("song", song.copy(), MPD.Song.free);
+        button.set_data_full("song", song.copy(), (GLib.DestroyNotify) MPD.Song.free);
         button.clicked += play_song;
         hbox = new Gtk.HBox (false, 6);
         hbox.pack_start(button, false, false,0);
 
         button = new Gtk.Button.from_stock("gtk-add");
         button.set_relief(Gtk.ReliefStyle.NONE);
-        button.set_data_full("song", song.copy(), MPD.Song.free);
+        button.set_data_full("song", song.copy(), (GLib.DestroyNotify) MPD.Song.free);
         button.clicked += add_song;
         hbox.pack_start(button, false, false,0);
 
         button = new Gtk.Button.with_mnemonic("_Replace");
         button.set_image(new Gtk.Image.from_stock("gtk-redo", Gtk.IconSize.BUTTON));
         button.set_relief(Gtk.ReliefStyle.NONE);
-        button.set_data_full("song", song.copy(), MPD.Song.free);
+        button.set_data_full("song", song.copy(), (GLib.DestroyNotify) MPD.Song.free);
         button.clicked += replace_song;
         hbox.pack_start(button, false, false,0);
 
@@ -1461,11 +1480,15 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
 
         vbox.pack_start(frame, false, false, 0);
 
+
         var similar_songs = new Gmpc.Widget.SimilarSongs(song);
         vbox.pack_start(similar_songs, false, false, 0);
 
+
         var song_links = new Gmpc.Song.Links(Gmpc.Song.Links.Type.SONG,song);
         vbox.pack_start(song_links,false, false, 0);
+
+
         /**
          * Add it to the view
          */
@@ -1482,6 +1505,15 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         {
             Gmpc.Browser.File.open_path(path);
         }
+    }
+    private void metadata_find_query(Gtk.Button button)
+    {
+        string path = (string?)button.get_data("query");
+        if(path != null)
+        {
+            Gmpc.Browser.Find.query_database(null, path);
+        }
+
     }
     private void metadata_box_show_album(string artist, string album)
     {

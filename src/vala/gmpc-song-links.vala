@@ -80,7 +80,7 @@ public class Gmpc.Song.Links: Gtk.Frame
         event.add(label);
         event.visible_window = false;
         this.label_widget = event;
-        label.set_markup("<b>%s:</b>".printf(_("Links")));
+        label.set_markup("<b>%s:</b>".printf(_("Web Links")));
         this.shadow = Gtk.ShadowType.NONE;
 
         event.button_press_event += button_press_event_callback;

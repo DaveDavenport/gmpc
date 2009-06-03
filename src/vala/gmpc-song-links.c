@@ -209,7 +209,7 @@ GmpcSongLinks* gmpc_song_links_construct (GType object_type, GmpcSongLinksType t
 	gtk_event_box_set_visible_window (event, FALSE);
 	gtk_frame_set_label_widget ((GtkFrame*) self, (GtkWidget*) event);
 	_tmp2 = NULL;
-	gtk_label_set_markup (label, _tmp2 = g_strdup_printf ("<b>%s:</b>", _ ("Links")));
+	gtk_label_set_markup (label, _tmp2 = g_strdup_printf ("<b>%s:</b>", _ ("Web Links")));
 	_tmp2 = (g_free (_tmp2), NULL);
 	g_object_set ((GtkFrame*) self, "shadow", GTK_SHADOW_NONE, NULL);
 	g_signal_connect_object ((GtkWidget*) event, "button-press-event", (GCallback) _gmpc_song_links_button_press_event_callback_gtk_widget_button_press_event, self, 0);

@@ -18,7 +18,7 @@ namespace Gmpc {
 
 
         [CCode ( cname="gmpc_meta_watcher_get_meta_path", cheader_filename="gmpc-meta-watcher.h" )]
-        public MetaData.Result query(MPD.Song song, Gmpc.MetaData.Type type, out MetaData.Item met);
+        public Gmpc.MetaData.Result query(MPD.Song song, Gmpc.MetaData.Type type, out MetaData.Item met);
 
     }
 
@@ -253,6 +253,10 @@ namespace Gmpc {
         namespace File {
             [CCode (cname="pl3_file_browser_open_path")]
             public void open_path(string path);
+        }
+        namespace Find {
+            [CCode (cname="pl3_find2_ec_database")]
+            public void query_database(void *user_data, string query);
         }
     }
     namespace Playlist3 {
