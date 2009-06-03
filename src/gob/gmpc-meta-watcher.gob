@@ -38,7 +38,7 @@ class Gmpc:Meta:Watcher from  G:Object {
       return GET_NEW;
     }
 
-    signal last NONE (POINTER, INT, INT, STRING)
+    signal last NONE (POINTER, INT, INT, POINTER)
     void
     data_changed(self, mpd_Song *song, MetaDataType type,MetaDataResult result, MetaData *met)
     { 
