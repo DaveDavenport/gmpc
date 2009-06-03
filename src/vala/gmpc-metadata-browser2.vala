@@ -1559,6 +1559,19 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
 
         vbox.pack_start(frame, false, false, 0);
 
+        /* Song list */
+        label = new Gtk.Label("");
+        label.set_markup("<b>%s</b>".printf(_("Songs")));
+        label.set_alignment(0.0f, 0.5f);
+        vbox.pack_start(label, false, false, 0);
+
+        var sw = new Gtk.ScrolledWindow(null, null);
+        sw.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.NEVER);
+        sw.set_shadow_type(Gtk.ShadowType.ETCHED_IN);
+        var song_tree = new Gmpc.MpdData.TreeView("album-songs", true, this.model_songs);
+        sw.add(song_tree);
+        vbox.pack_start(sw, false, false, 0);
+
         var song_links = new Gmpc.Song.Links(Gmpc.Song.Links.Type.ALBUM,song);
         vbox.pack_start(song_links,false, false, 0);
         /**
@@ -1567,7 +1580,17 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         this.metadata_box.add(vbox);
         this.metadata_sw.show_all();
     }
-
+    /**
+     * This fills the view for artist 
+     * <artist name>
+     * <image> | <array with info>
+     *           < buttonss>
+     *
+     * <artist info text>
+     *
+     * <similar artists>
+     * <links>
+     */
     private void metadata_box_show_artist(string artist)
     {
         var vbox = new Gtk.VBox (false,6);

@@ -3064,6 +3064,10 @@ static void gmpc_metadata_browser_metadata_box_show_album (GmpcMetadataBrowser* 
 	char* _tmp21;
 	GmpcWidgetMore* _tmp22;
 	GmpcWidgetMore* frame;
+	GtkLabel* _tmp23;
+	char* _tmp24;
+	GtkScrolledWindow* sw;
+	GmpcMpdDataTreeview* song_tree;
 	GmpcSongLinks* song_links;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (artist != NULL);
@@ -3189,6 +3193,20 @@ static void gmpc_metadata_browser_metadata_box_show_album (GmpcMetadataBrowser* 
 	frame = (_tmp22 = g_object_ref_sink (gmpc_widget_more_new (_tmp21 = g_markup_printf_escaped ("<b>%s:</b>", _ ("Album information")), (GtkWidget*) text_view)), _tmp21 = (g_free (_tmp21), NULL), _tmp22);
 	gmpc_meta_text_view_query_text_from_song (text_view, song);
 	gtk_box_pack_start ((GtkBox*) vbox, (GtkWidget*) frame, FALSE, FALSE, (guint) 0);
+	/* Song list */
+	_tmp23 = NULL;
+	label = (_tmp23 = g_object_ref_sink ((GtkLabel*) gtk_label_new ("")), (label == NULL) ? NULL : (label = (g_object_unref (label), NULL)), _tmp23);
+	_tmp24 = NULL;
+	gtk_label_set_markup (label, _tmp24 = g_strdup_printf ("<b>%s</b>", _ ("Songs")));
+	_tmp24 = (g_free (_tmp24), NULL);
+	gtk_misc_set_alignment ((GtkMisc*) label, 0.0f, 0.5f);
+	gtk_box_pack_start ((GtkBox*) vbox, (GtkWidget*) label, FALSE, FALSE, (guint) 0);
+	sw = g_object_ref_sink ((GtkScrolledWindow*) gtk_scrolled_window_new (NULL, NULL));
+	gtk_scrolled_window_set_policy (sw, GTK_POLICY_AUTOMATIC, GTK_POLICY_NEVER);
+	gtk_scrolled_window_set_shadow_type (sw, GTK_SHADOW_ETCHED_IN);
+	song_tree = g_object_ref_sink (gmpc_mpddata_treeview_new ("album-songs", TRUE, (GtkTreeModel*) self->priv->model_songs));
+	gtk_container_add ((GtkContainer*) sw, (GtkWidget*) song_tree);
+	gtk_box_pack_start ((GtkBox*) vbox, (GtkWidget*) sw, FALSE, FALSE, (guint) 0);
 	song_links = g_object_ref_sink (gmpc_song_links_new (GMPC_SONG_LINKS_TYPE_ALBUM, song));
 	gtk_box_pack_start ((GtkBox*) vbox, (GtkWidget*) song_links, FALSE, FALSE, (guint) 0);
 	/**
@@ -3207,10 +3225,23 @@ static void gmpc_metadata_browser_metadata_box_show_album (GmpcMetadataBrowser* 
 	(button == NULL) ? NULL : (button = (g_object_unref (button), NULL));
 	(text_view == NULL) ? NULL : (text_view = (g_object_unref (text_view), NULL));
 	(frame == NULL) ? NULL : (frame = (g_object_unref (frame), NULL));
+	(sw == NULL) ? NULL : (sw = (g_object_unref (sw), NULL));
+	(song_tree == NULL) ? NULL : (song_tree = (g_object_unref (song_tree), NULL));
 	(song_links == NULL) ? NULL : (song_links = (g_object_unref (song_links), NULL));
 }
 
 
+/**
+     * This fills the view for artist 
+     * <artist name>
+     * <image> | <array with info>
+     *           < buttonss>
+     *
+     * <artist info text>
+     *
+     * <similar artists>
+     * <links>
+     */
 static void gmpc_metadata_browser_metadata_box_show_artist (GmpcMetadataBrowser* self, const char* artist) {
 	GtkVBox* vbox;
 	GtkLabel* label;
