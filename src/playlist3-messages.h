@@ -22,7 +22,7 @@
 /**
  * Object based plugin integration
  */
-
+#include <gmpc-plugin.h>
 
 typedef struct _Playlist3MessagePlugin      Playlist3MessagePlugin;
 typedef struct _Playlist3MessagePluginClass Playlist3MessagePluginClass;
