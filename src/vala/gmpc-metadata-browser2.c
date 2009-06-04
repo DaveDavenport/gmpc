@@ -308,6 +308,7 @@ static const char* gmpc_metadata_browser_real_get_name (GmpcPluginBase* base);
 static void gmpc_metadata_browser_real_save_yourself (GmpcPluginBase* base);
 static void gmpc_metadata_browser_browser_bg_style_changed (GmpcMetadataBrowser* self, GtkScrolledWindow* bg, GtkStyle* style);
 static gboolean gmpc_metadata_browser_browser_button_press_event (GmpcMetadataBrowser* self, GtkTreeView* tree, const GdkEventButton* event);
+static void gmpc_metadata_browser_browser_artist_entry_changed (GmpcMetadataBrowser* self, GtkEntry* entry);
 static char* gmpc_metadata_browser_browser_get_selected_artist (GmpcMetadataBrowser* self);
 static void gmpc_metadata_browser_artist_add_clicked (GmpcMetadataBrowser* self, GtkImageMenuItem* item);
 static void gmpc_metadata_browser_artist_replace_clicked (GmpcMetadataBrowser* self, GtkImageMenuItem* item);
@@ -324,8 +325,13 @@ static void _gmpc_metadata_browser_album_replace_clicked_gtk_menu_item_activate 
 static gboolean gmpc_metadata_browser_album_browser_button_release_event (GmpcMetadataBrowser* self, GtkTreeView* tree, const GdkEventButton* event);
 static gboolean gmpc_metadata_browser_visible_func_album (GmpcMetadataBrowser* self, GtkTreeModel* model, GtkTreeIter* iter);
 static gboolean gmpc_metadata_browser_browser_album_key_press_event (GmpcMetadataBrowser* self, GtkTreeView* widget, const GdkEventKey* event);
-static void gmpc_metadata_browser_browser_artist_entry_changed (GmpcMetadataBrowser* self, GtkEntry* entry);
 static void gmpc_metadata_browser_browser_album_entry_changed (GmpcMetadataBrowser* self, GtkEntry* entry);
+static mpd_Song* gmpc_metadata_browser_browser_get_selected_song (GmpcMetadataBrowser* self);
+static void gmpc_metadata_browser_song_add_clicked (GmpcMetadataBrowser* self, GtkImageMenuItem* item);
+static void gmpc_metadata_browser_song_replace_clicked (GmpcMetadataBrowser* self, GtkImageMenuItem* item);
+static void _gmpc_metadata_browser_song_add_clicked_gtk_menu_item_activate (GtkImageMenuItem* _sender, gpointer self);
+static void _gmpc_metadata_browser_song_replace_clicked_gtk_menu_item_activate (GtkImageMenuItem* _sender, gpointer self);
+static gboolean gmpc_metadata_browser_song_browser_button_release_event (GmpcMetadataBrowser* self, GtkTreeView* tree, const GdkEventButton* event);
 static void _gmpc_metadata_browser_browser_artist_entry_changed_gtk_editable_changed (GtkEntry* _sender, gpointer self);
 static gboolean _gmpc_metadata_browser_visible_func_artist_gtk_tree_model_filter_visible_func (GtkTreeModel* model, GtkTreeIter* iter, gpointer self);
 static gboolean _gmpc_metadata_browser_browser_button_press_event_gtk_widget_button_press_event (GtkTreeView* _sender, const GdkEventButton* event, gpointer self);
@@ -339,12 +345,12 @@ static gboolean _gmpc_metadata_browser_album_browser_button_release_event_gtk_wi
 static gboolean _gmpc_metadata_browser_browser_album_key_press_event_gtk_widget_key_press_event (GtkTreeView* _sender, const GdkEventKey* event, gpointer self);
 static void gmpc_metadata_browser_browser_album_changed (GmpcMetadataBrowser* self, GtkTreeSelection* album_sel);
 static void _gmpc_metadata_browser_browser_album_changed_gtk_tree_selection_changed (GtkTreeSelection* _sender, gpointer self);
+static gboolean _gmpc_metadata_browser_song_browser_button_release_event_gtk_widget_button_release_event (GtkTreeView* _sender, const GdkEventButton* event, gpointer self);
 static void gmpc_metadata_browser_browser_songs_changed (GmpcMetadataBrowser* self, GtkTreeSelection* song_sel);
 static void _gmpc_metadata_browser_browser_songs_changed_gtk_tree_selection_changed (GtkTreeSelection* _sender, gpointer self);
 static void _gmpc_metadata_browser_browser_bg_style_changed_gtk_widget_style_set (GtkScrolledWindow* _sender, GtkStyle* previous_style, gpointer self);
 static void gmpc_metadata_browser_reload_browsers (GmpcMetadataBrowser* self);
 static void gmpc_metadata_browser_browser_init (GmpcMetadataBrowser* self);
-static mpd_Song* gmpc_metadata_browser_browser_get_selected_song (GmpcMetadataBrowser* self);
 static void gmpc_metadata_browser_metadata_box_clear (GmpcMetadataBrowser* self);
 static void gmpc_metadata_browser_metadata_box_update (GmpcMetadataBrowser* self);
 static void gmpc_metadata_browser_play_song (GmpcMetadataBrowser* self, GtkButton* button);
@@ -1890,7 +1896,7 @@ static gint gmpc_metadata_browser_real_get_version (GmpcPluginBase* base, int* r
 static const char* gmpc_metadata_browser_real_get_name (GmpcPluginBase* base) {
 	GmpcMetadataBrowser * self;
 	self = (GmpcMetadataBrowser*) base;
-	return N_ ("Metadata Browser 2");
+	return N_ ("Metadata Browser");
 }
 
 
@@ -1965,6 +1971,24 @@ static gboolean gmpc_metadata_browser_browser_button_press_event (GmpcMetadataBr
 
 /**
      * Artist tree view functions */
+static void gmpc_metadata_browser_browser_artist_entry_changed (GmpcMetadataBrowser* self, GtkEntry* entry) {
+	const char* _tmp0_;
+	char* text;
+	g_return_if_fail (self != NULL);
+	g_return_if_fail (entry != NULL);
+	_tmp0_ = NULL;
+	text = (_tmp0_ = gtk_entry_get_text (entry), (_tmp0_ == NULL) ? NULL : g_strdup (_tmp0_));
+	if (strlen (text) > 0) {
+		gtk_widget_show ((GtkWidget*) entry);
+	} else {
+		gtk_widget_hide ((GtkWidget*) entry);
+		gtk_widget_grab_focus ((GtkWidget*) self->priv->tree_artist);
+	}
+	gtk_tree_model_filter_refilter (self->priv->model_filter_artist);
+	text = (g_free (text), NULL);
+}
+
+
 static void gmpc_metadata_browser_artist_add_clicked (GmpcMetadataBrowser* self, GtkImageMenuItem* item) {
 	char* artist;
 	g_return_if_fail (self != NULL);
@@ -2274,24 +2298,6 @@ static gboolean gmpc_metadata_browser_browser_album_key_press_event (GmpcMetadat
 }
 
 
-static void gmpc_metadata_browser_browser_artist_entry_changed (GmpcMetadataBrowser* self, GtkEntry* entry) {
-	const char* _tmp0_;
-	char* text;
-	g_return_if_fail (self != NULL);
-	g_return_if_fail (entry != NULL);
-	_tmp0_ = NULL;
-	text = (_tmp0_ = gtk_entry_get_text (entry), (_tmp0_ == NULL) ? NULL : g_strdup (_tmp0_));
-	if (strlen (text) > 0) {
-		gtk_widget_show ((GtkWidget*) entry);
-	} else {
-		gtk_widget_hide ((GtkWidget*) entry);
-		gtk_widget_grab_focus ((GtkWidget*) self->priv->tree_artist);
-	}
-	gtk_tree_model_filter_refilter (self->priv->model_filter_artist);
-	text = (g_free (text), NULL);
-}
-
-
 static void gmpc_metadata_browser_browser_album_entry_changed (GmpcMetadataBrowser* self, GtkEntry* entry) {
 	const char* _tmp0_;
 	char* text;
@@ -2307,6 +2313,71 @@ static void gmpc_metadata_browser_browser_album_entry_changed (GmpcMetadataBrows
 	}
 	gtk_tree_model_filter_refilter (self->priv->model_filter_album);
 	text = (g_free (text), NULL);
+}
+
+
+/**
+      * Songs 
+      */
+static void gmpc_metadata_browser_song_add_clicked (GmpcMetadataBrowser* self, GtkImageMenuItem* item) {
+	mpd_Song* song;
+	g_return_if_fail (self != NULL);
+	g_return_if_fail (item != NULL);
+	song = gmpc_metadata_browser_browser_get_selected_song (self);
+	if (song != NULL) {
+		mpd_playlist_add (connection, song->file);
+	}
+	(song == NULL) ? NULL : (song = (mpd_freeSong (song), NULL));
+}
+
+
+static void gmpc_metadata_browser_song_replace_clicked (GmpcMetadataBrowser* self, GtkImageMenuItem* item) {
+	g_return_if_fail (self != NULL);
+	g_return_if_fail (item != NULL);
+	mpd_playlist_clear (connection);
+	gmpc_metadata_browser_song_add_clicked (self, item);
+	mpd_player_play (connection);
+}
+
+
+static void _gmpc_metadata_browser_song_add_clicked_gtk_menu_item_activate (GtkImageMenuItem* _sender, gpointer self) {
+	gmpc_metadata_browser_song_add_clicked (self, _sender);
+}
+
+
+static void _gmpc_metadata_browser_song_replace_clicked_gtk_menu_item_activate (GtkImageMenuItem* _sender, gpointer self) {
+	gmpc_metadata_browser_song_replace_clicked (self, _sender);
+}
+
+
+/* Handle right mouse click */
+static gboolean gmpc_metadata_browser_song_browser_button_release_event (GmpcMetadataBrowser* self, GtkTreeView* tree, const GdkEventButton* event) {
+	g_return_val_if_fail (self != NULL, FALSE);
+	g_return_val_if_fail (tree != NULL, FALSE);
+	if ((*event).button == 3) {
+		if (gtk_tree_selection_count_selected_rows (gtk_tree_view_get_selection (tree)) > 0) {
+			GtkMenu* menu;
+			GtkImageMenuItem* item;
+			GtkImageMenuItem* _tmp0_;
+			GtkImage* _tmp1_;
+			gboolean _tmp2_;
+			menu = g_object_ref_sink ((GtkMenu*) gtk_menu_new ());
+			item = g_object_ref_sink ((GtkImageMenuItem*) gtk_image_menu_item_new_from_stock ("gtk-add", NULL));
+			g_signal_connect_object ((GtkMenuItem*) item, "activate", (GCallback) _gmpc_metadata_browser_song_add_clicked_gtk_menu_item_activate, self, 0);
+			gtk_menu_shell_append ((GtkMenuShell*) menu, (GtkWidget*) ((GtkMenuItem*) item));
+			_tmp0_ = NULL;
+			item = (_tmp0_ = g_object_ref_sink ((GtkImageMenuItem*) gtk_image_menu_item_new_with_mnemonic ("_Replace")), (item == NULL) ? NULL : (item = (g_object_unref (item), NULL)), _tmp0_);
+			_tmp1_ = NULL;
+			gtk_image_menu_item_set_image (item, (GtkWidget*) (_tmp1_ = g_object_ref_sink ((GtkImage*) gtk_image_new_from_stock ("gtk-redo", GTK_ICON_SIZE_MENU))));
+			(_tmp1_ == NULL) ? NULL : (_tmp1_ = (g_object_unref (_tmp1_), NULL));
+			g_signal_connect_object ((GtkMenuItem*) item, "activate", (GCallback) _gmpc_metadata_browser_song_replace_clicked_gtk_menu_item_activate, self, 0);
+			gtk_menu_shell_append ((GtkMenuShell*) menu, (GtkWidget*) ((GtkMenuItem*) item));
+			gtk_menu_popup (menu, NULL, NULL, NULL, NULL, (*event).button, (*event).time);
+			gtk_widget_show_all ((GtkWidget*) menu);
+			return (_tmp2_ = TRUE, (menu == NULL) ? NULL : (menu = (g_object_unref (menu), NULL)), (item == NULL) ? NULL : (item = (g_object_unref (item), NULL)), _tmp2_);
+		}
+	}
+	return FALSE;
 }
 
 
@@ -2362,6 +2433,11 @@ static gboolean _gmpc_metadata_browser_browser_album_key_press_event_gtk_widget_
 
 static void _gmpc_metadata_browser_browser_album_changed_gtk_tree_selection_changed (GtkTreeSelection* _sender, gpointer self) {
 	gmpc_metadata_browser_browser_album_changed (self, _sender);
+}
+
+
+static gboolean _gmpc_metadata_browser_song_browser_button_release_event_gtk_widget_button_release_event (GtkTreeView* _sender, const GdkEventButton* event, gpointer self) {
+	return gmpc_metadata_browser_song_browser_button_release_event (self, _sender, event);
 }
 
 
@@ -2520,6 +2596,7 @@ static void gmpc_metadata_browser_browser_init (GmpcMetadataBrowser* self) {
 		_tmp20_ = NULL;
 		self->priv->tree_songs = (_tmp20_ = g_object_ref_sink ((GtkTreeView*) gtk_tree_view_new_with_model ((GtkTreeModel*) self->priv->model_songs)), (self->priv->tree_songs == NULL) ? NULL : (self->priv->tree_songs = (g_object_unref (self->priv->tree_songs), NULL)), _tmp20_);
 		g_signal_connect_object ((GtkWidget*) self->priv->tree_songs, "button-press-event", (GCallback) _gmpc_metadata_browser_browser_button_press_event_gtk_widget_button_press_event, self, 0);
+		g_signal_connect_object ((GtkWidget*) self->priv->tree_songs, "button-release-event", (GCallback) _gmpc_metadata_browser_song_browser_button_release_event_gtk_widget_button_release_event, self, 0);
 		gtk_container_add ((GtkContainer*) sw, (GtkWidget*) self->priv->tree_songs);
 		/* setup the columns */
 		_tmp21_ = NULL;
