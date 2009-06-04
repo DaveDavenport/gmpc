@@ -1640,6 +1640,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
 
         /* Guitar Tab */
         text_view = new Gmpc.MetaData.TextView(Gmpc.MetaData.Type.SONG_GUITAR_TAB);
+        text_view.use_monospace = true;
         text_view.set_left_margin(8);
         frame = new Gmpc.Widget.More(Markup.printf_escaped("<b>%s:</b>", _("Guitar Tabs")),text_view);
         text_view.query_from_song(song);

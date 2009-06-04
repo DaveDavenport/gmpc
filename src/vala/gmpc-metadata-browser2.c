@@ -3466,6 +3466,7 @@ GtkWidget* gmpc_metadata_browser_metadata_box_show_song (GmpcMetadataBrowser* se
 	/* Guitar Tab */
 	_tmp49_ = NULL;
 	text_view = (_tmp49_ = g_object_ref_sink (gmpc_meta_text_view_new (META_SONG_GUITAR_TAB)), (text_view == NULL) ? NULL : (text_view = (g_object_unref (text_view), NULL)), _tmp49_);
+	text_view->use_monospace = TRUE;
 	gtk_text_view_set_left_margin ((GtkTextView*) text_view, 8);
 	_tmp51_ = NULL;
 	_tmp50_ = NULL;

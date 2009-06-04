@@ -148,6 +148,7 @@ namespace Gmpc {
         }
         [CCode ( cname="GmpcMetaTextView", cheader_filename="gmpc-meta-text-view.h")]
         public class TextView: Gtk.TextView {
+                public bool use_monospace;
             [CCode (cname="gmpc_meta_text_view_new")]
                 public TextView(Type type);
             [CCode (cname="gmpc_meta_text_view_query_text_from_song")]
