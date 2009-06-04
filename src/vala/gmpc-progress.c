@@ -157,8 +157,9 @@ static gboolean gmpc_progress_motion_notify_event_callback (GmpcProgress* self, 
 			gint t_seconds;
 			char* a;
 			guint p;
+			guint _tmp0_;
+			char* _tmp5_;
 			char* _tmp4_;
-			char* _tmp3_;
 			e_hour = 0;
 			e_minutes = 0;
 			e_seconds = 0;
@@ -167,45 +168,53 @@ static gboolean gmpc_progress_motion_notify_event_callback (GmpcProgress* self, 
 			t_seconds = ((gint) self->priv->total) % 60;
 			a = g_strdup ("");
 			p = (guint) (self->priv->total * ((*event).x / ((double) (((GtkWidget*) scale)->allocation.width - gtk_widget_get_style ((GtkWidget*) scale)->xthickness))));
+			_tmp0_ = 0U;
+			if (p > self->priv->total) {
+				_tmp0_ = self->priv->total;
+			} else {
+				_tmp0_ = p;
+			}
+			/* Don't show beyond end time */
+			p = _tmp0_;
 			if (self->priv->do_countdown) {
-				char* _tmp0_;
+				char* _tmp1_;
 				p = (guint) (self->priv->total * ((*event).x / ((double) (((GtkWidget*) scale)->allocation.width - gtk_widget_get_style ((GtkWidget*) scale)->xthickness))));
-				_tmp0_ = NULL;
-				a = (_tmp0_ = g_strconcat (a, "-", NULL), a = (g_free (a), NULL), _tmp0_);
+				_tmp1_ = NULL;
+				a = (_tmp1_ = g_strconcat (a, "-", NULL), a = (g_free (a), NULL), _tmp1_);
 			}
 			e_hour = ((gint) p) / 3600;
 			e_minutes = ((gint) (p % 3600)) / 60;
 			e_seconds = (gint) (p % 60);
 			if (e_hour > 0) {
+				char* _tmp3_;
 				char* _tmp2_;
-				char* _tmp1_;
+				_tmp3_ = NULL;
 				_tmp2_ = NULL;
-				_tmp1_ = NULL;
-				a = (_tmp2_ = g_strconcat (a, _tmp1_ = g_strdup_printf ("%02i:", e_hour), NULL), a = (g_free (a), NULL), _tmp2_);
-				_tmp1_ = (g_free (_tmp1_), NULL);
+				a = (_tmp3_ = g_strconcat (a, _tmp2_ = g_strdup_printf ("%02i:", e_hour), NULL), a = (g_free (a), NULL), _tmp3_);
+				_tmp2_ = (g_free (_tmp2_), NULL);
 			}
+			_tmp5_ = NULL;
 			_tmp4_ = NULL;
-			_tmp3_ = NULL;
-			a = (_tmp4_ = g_strconcat (a, _tmp3_ = g_strdup_printf ("%02i:%02i", e_minutes, e_seconds), NULL), a = (g_free (a), NULL), _tmp4_);
-			_tmp3_ = (g_free (_tmp3_), NULL);
+			a = (_tmp5_ = g_strconcat (a, _tmp4_ = g_strdup_printf ("%02i:%02i", e_minutes, e_seconds), NULL), a = (g_free (a), NULL), _tmp5_);
+			_tmp4_ = (g_free (_tmp4_), NULL);
 			if (self->priv->total > 0) {
-				char* _tmp5_;
+				char* _tmp6_;
+				char* _tmp10_;
 				char* _tmp9_;
-				char* _tmp8_;
-				_tmp5_ = NULL;
-				a = (_tmp5_ = g_strconcat (a, " - ", NULL), a = (g_free (a), NULL), _tmp5_);
+				_tmp6_ = NULL;
+				a = (_tmp6_ = g_strconcat (a, " - ", NULL), a = (g_free (a), NULL), _tmp6_);
 				if (t_hour > 0) {
+					char* _tmp8_;
 					char* _tmp7_;
-					char* _tmp6_;
+					_tmp8_ = NULL;
 					_tmp7_ = NULL;
-					_tmp6_ = NULL;
-					a = (_tmp7_ = g_strconcat (a, _tmp6_ = g_strdup_printf ("%02i:", t_hour), NULL), a = (g_free (a), NULL), _tmp7_);
-					_tmp6_ = (g_free (_tmp6_), NULL);
+					a = (_tmp8_ = g_strconcat (a, _tmp7_ = g_strdup_printf ("%02i:", t_hour), NULL), a = (g_free (a), NULL), _tmp8_);
+					_tmp7_ = (g_free (_tmp7_), NULL);
 				}
+				_tmp10_ = NULL;
 				_tmp9_ = NULL;
-				_tmp8_ = NULL;
-				a = (_tmp9_ = g_strconcat (a, _tmp8_ = g_strdup_printf ("%02i:%02i", t_minutes, t_seconds), NULL), a = (g_free (a), NULL), _tmp9_);
-				_tmp8_ = (g_free (_tmp8_), NULL);
+				a = (_tmp10_ = g_strconcat (a, _tmp9_ = g_strdup_printf ("%02i:%02i", t_minutes, t_seconds), NULL), a = (g_free (a), NULL), _tmp10_);
+				_tmp9_ = (g_free (_tmp9_), NULL);
 			}
 			if (self->priv->do_countdown) {
 				gtk_label_set_width_chars (self->priv->tooltip_label, (gint) string_get_length (a));
@@ -244,7 +253,6 @@ static gboolean gmpc_progress_button_press_event_callback (GmpcProgress* self, G
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (scale != NULL, FALSE);
 	if ((*event).type == GDK_BUTTON_PRESS) {
-		gboolean _tmp0_;
 		if ((*event).button == 3) {
 			guint cur;
 			guint tot;
@@ -255,15 +263,18 @@ static gboolean gmpc_progress_button_press_event_callback (GmpcProgress* self, G
 			self->priv->total = self->priv->current = (guint) 0;
 			gmpc_progress_set_time (self, tot, cur);
 		}
-		_tmp0_ = FALSE;
 		if ((*event).button == 2) {
-			_tmp0_ = TRUE;
-		} else {
-			_tmp0_ = (*event).button == 1;
-		}
-		if (_tmp0_) {
 			guint p;
+			guint _tmp0_;
+			/* || event.button == 1*/
 			p = (guint) (self->priv->total * ((*event).x / ((double) (((GtkWidget*) scale)->allocation.width - gtk_widget_get_style ((GtkWidget*) scale)->xthickness))));
+			_tmp0_ = 0U;
+			if (p > self->priv->total) {
+				_tmp0_ = self->priv->total;
+			} else {
+				_tmp0_ = p;
+			}
+			p = _tmp0_;
 			g_signal_emit_by_name (self, "seek-event", p);
 			return TRUE;
 		}

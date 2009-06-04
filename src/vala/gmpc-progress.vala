@@ -111,6 +111,8 @@ public class Gmpc.Progress : Gtk.HBox
                 int t_seconds = (int) this.total%60;
                 string a = "";
                 uint p = (uint)(this.total * (event.x/(double)(scale.allocation.width-scale.style.xthickness)));
+				/* Don't show beyond end time */
+				p = (p > this.total)? this.total:p;
                 if(this.do_countdown){
                     p = (uint)(this.total * (event.x/(double)(scale.allocation.width-scale.style.xthickness)));
                     a += "-";
@@ -179,16 +181,16 @@ public class Gmpc.Progress : Gtk.HBox
     private void value_changed (Gtk.Scale range)
     {
         if(this.total > 0)
-        {
-            if(this.do_countdown)
-            {
-                uint seconds = (uint)(this.total*(1-range.get_value()));
-                seek_event(seconds);
-            }else{
-                uint seconds = (uint)(this.total*(range.get_value()));
-                seek_event(seconds);
-            }
-        }
+		{
+			if(this.do_countdown)
+			{
+				uint seconds = (uint)(this.total*(1-range.get_value()));
+				seek_event(seconds);
+			}else{
+				uint seconds = (uint)(this.total*(range.get_value()));
+				seek_event(seconds);
+			}
+		}
     }
 
     private bool button_press_event_callback (Gtk.Scale scale, Gdk.EventButton event)
@@ -204,9 +206,10 @@ public class Gmpc.Progress : Gtk.HBox
                 this.total=this.current = 0;
                 set_time(tot,cur);
             }
-            if(event.button == 2 || event.button == 1)
+            if(event.button == 2/* || event.button == 1*/)
             {
                 uint p = (uint)(this.total * (event.x/(double)(scale.allocation.width-scale.style.xthickness)));
+				p = (p > this.total)? this.total:p;
                 seek_event(p);
                 return true;
             }
