@@ -4304,6 +4304,7 @@ void gmpc_metadata_browser_set_album (GmpcMetadataBrowser* self, const char* art
 
 
 void gmpc_metadata_browser_set_song (GmpcMetadataBrowser* self, const mpd_Song* song) {
+	GtkTreeIter iter = {0};
 	GtkWidget* view;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (song != NULL);
@@ -4313,6 +4314,32 @@ void gmpc_metadata_browser_set_song (GmpcMetadataBrowser* self, const mpd_Song* 
 		if (song->album != NULL) {
 			gmpc_metadata_browser_set_album (self, song->artist, song->album);
 		}
+	}
+	if (gtk_tree_model_get_iter_first ((GtkTreeModel*) self->priv->model_songs, &iter)) {
+		do {
+			char* ltitle;
+			gboolean _tmp0_;
+			ltitle = NULL;
+			gtk_tree_model_get ((GtkTreeModel*) self->priv->model_songs, &iter, 7, &ltitle, -1, -1);
+			_tmp0_ = FALSE;
+			if (ltitle != NULL) {
+				_tmp0_ = g_utf8_collate (ltitle, song->title) == 0;
+			} else {
+				_tmp0_ = FALSE;
+			}
+			if (_tmp0_) {
+				GtkTreePath* _tmp1_;
+				gtk_tree_selection_select_iter (gtk_tree_view_get_selection (self->priv->tree_songs), &iter);
+				_tmp1_ = NULL;
+				gtk_tree_view_scroll_to_cell (self->priv->tree_songs, _tmp1_ = gtk_tree_model_get_path ((GtkTreeModel*) self->priv->model_songs, &iter), NULL, TRUE, 0.5f, 0.f);
+				(_tmp1_ == NULL) ? NULL : (_tmp1_ = (gtk_tree_path_free (_tmp1_), NULL));
+				self->priv->block_update--;
+				gmpc_metadata_browser_metadata_box_update (self);
+				ltitle = (g_free (ltitle), NULL);
+				return;
+			}
+			ltitle = (g_free (ltitle), NULL);
+		} while (gtk_tree_model_iter_next ((GtkTreeModel*) self->priv->model_songs, &iter));
 	}
 	self->priv->block_update--;
 	gmpc_metadata_browser_metadata_box_clear (self);

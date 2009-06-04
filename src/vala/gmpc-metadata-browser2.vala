@@ -2156,6 +2156,23 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
             }
         }
 
+        Gtk.TreeIter iter;
+        if(this.model_songs.get_iter_first(out iter))
+        {
+            do{
+                string ltitle = null;
+                this.model_songs.get(iter, 7, out ltitle, -1);
+                if( ltitle != null && ltitle.collate(song.title) == 0){
+                    this.tree_songs.get_selection().select_iter(iter);
+                    this.tree_songs.scroll_to_cell(this.model_songs.get_path(iter), null, true, 0.5f,0f);
+                    this.block_update--;
+                    this.metadata_box_update();
+                    return;
+                }
+            }while((this.model_songs).iter_next(ref iter));
+        }
+
+
         this.block_update--;
         this.metadata_box_clear();
         if(this.update_timeout > 0) {
