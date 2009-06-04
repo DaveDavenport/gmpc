@@ -1682,6 +1682,74 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         }
 
     }
+    private void album_song_tree_row_activated(Gtk.TreeView tree, Gtk.TreePath path, Gtk.TreeViewColumn column)
+    {
+        Gtk.TreeIter iter;
+        var model = tree.get_model();
+        if(model.get_iter(out iter, path))
+        {
+            weak MPD.Song song = null;
+            model.get(iter, 0, out song, -1);
+            if(song != null)
+            {
+                MPD.PlayQueue.add_song(server, song.file); 
+            }
+        }
+
+    }
+    private void album_song_browser_add_clicked(Gtk.ImageMenuItem item)
+    {
+        Gtk.TreeView tree = (Gtk.TreeView)item.get_data("tree");
+        if(tree != null)
+        {
+            Gtk.TreeIter iter;
+            var model = tree.get_model();
+            var sel = tree.get_selection();
+            GLib.List<Gtk.TreePath> list = sel.get_selected_rows(out model);
+            foreach(Gtk.TreePath path in list)
+            {
+                if(model.get_iter(out iter, path))
+                {
+                    weak MPD.Song song = null;
+                    model.get(iter, 0, out song, -1);
+                    if(song != null)
+                    {
+                        MPD.PlayQueue.queue_add_song(server, song.file); 
+                    }
+                }
+            }
+            MPD.PlayQueue.queue_commit(server);
+        }
+    }
+    private void album_song_browser_replace_clicked(Gtk.ImageMenuItem item)
+    {
+         MPD.PlayQueue.clear(server);
+         album_song_browser_add_clicked(item);
+         MPD.Player.play(server);
+    }
+
+
+    private bool album_song_tree_button_press_event(Gtk.TreeView tree, Gdk.EventButton event)
+    {
+        if(event.button == 3) {
+            var menu = new Gtk.Menu();
+            var item = new Gtk.ImageMenuItem.from_stock("gtk-add",null);
+            item.activate += album_song_browser_add_clicked;
+            item.set_data("tree", (void *)tree);
+            menu.append(item);
+
+            item = new Gtk.ImageMenuItem.with_mnemonic("_Replace");
+            item.set_image(new Gtk.Image.from_stock("gtk-redo", Gtk.IconSize.MENU));
+            item.set_data("tree", (void *)tree);
+            item.activate += album_song_browser_replace_clicked;
+            menu.append(item);
+
+            menu.popup(null, null, null, event.button, event.time);
+            menu.show_all();
+            return true;
+        }
+        return false;
+    }
     private void metadata_box_show_album(string artist, string album)
     {
         var vbox = new Gtk.VBox (false,6);
@@ -1787,6 +1855,8 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         sw.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.NEVER);
         sw.set_shadow_type(Gtk.ShadowType.ETCHED_IN);
         var song_tree = new Gmpc.MpdData.TreeView("album-songs", true, this.model_songs);
+        song_tree.button_press_event += album_song_tree_button_press_event;
+        song_tree.row_activated += album_song_tree_row_activated;
         sw.add(song_tree);
         vbox.pack_start(sw, false, false, 0);
         /* TODO right mouse menu */ 
