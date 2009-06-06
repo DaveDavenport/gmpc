@@ -284,7 +284,9 @@ static void gmpc_now_playing_browser_init (GmpcNowPlaying* self);
 static void gmpc_now_playing_real_browser_selected (GmpcPluginBrowserIface* base, GtkContainer* container);
 static void gmpc_now_playing_real_browser_unselected (GmpcPluginBrowserIface* base, GtkContainer* container);
 static void gmpc_now_playing_browser_bg_style_changed (GmpcNowPlaying* self, GtkScrolledWindow* bg, GtkStyle* style);
+static gboolean gmpc_now_playing_browser_key_release_event (GmpcNowPlaying* self, const GdkEventKey* event);
 static void _gmpc_now_playing_browser_bg_style_changed_gtk_widget_style_set (GtkScrolledWindow* _sender, GtkStyle* previous_style, gpointer self);
+static gboolean _gmpc_now_playing_browser_key_release_event_gtk_widget_key_release_event (GtkScrolledWindow* _sender, const GdkEventKey* event, gpointer self);
 GtkWidget* gmpc_metadata_browser_metadata_box_show_song (GmpcMetadataBrowser* self, const mpd_Song* song);
 static void gmpc_now_playing_select_now_playing_browser (GmpcNowPlaying* self, GtkImageMenuItem* item);
 static void _gmpc_now_playing_select_now_playing_browser_gtk_menu_item_activate (GtkImageMenuItem* _sender, gpointer self);
@@ -1582,8 +1584,38 @@ static void gmpc_now_playing_browser_bg_style_changed (GmpcNowPlaying* self, Gtk
 }
 
 
+/* Handle buttons presses, f.e. for scrolling */
+static gboolean gmpc_now_playing_browser_key_release_event (GmpcNowPlaying* self, const GdkEventKey* event) {
+	GtkAdjustment* _tmp0_;
+	GtkAdjustment* adj;
+	gboolean _tmp3_;
+	g_return_val_if_fail (self != NULL, FALSE);
+	_tmp0_ = NULL;
+	adj = (_tmp0_ = gtk_scrolled_window_get_vadjustment (self->priv->paned), (_tmp0_ == NULL) ? NULL : g_object_ref (_tmp0_));
+	if ((*event).keyval == 0xff55) {
+		gboolean _tmp1_;
+		/* GDK_Page_Up*/
+		gtk_adjustment_set_value (adj, gtk_adjustment_get_value (adj) - gtk_adjustment_get_page_increment (adj));
+		return (_tmp1_ = TRUE, (adj == NULL) ? NULL : (adj = (g_object_unref (adj), NULL)), _tmp1_);
+	} else {
+		if ((*event).keyval == 0xff56) {
+			gboolean _tmp2_;
+			/* GDK_Page_Down*/
+			gtk_adjustment_set_value (adj, gtk_adjustment_get_value (adj) + gtk_adjustment_get_page_increment (adj));
+			return (_tmp2_ = TRUE, (adj == NULL) ? NULL : (adj = (g_object_unref (adj), NULL)), _tmp2_);
+		}
+	}
+	return (_tmp3_ = FALSE, (adj == NULL) ? NULL : (adj = (g_object_unref (adj), NULL)), _tmp3_);
+}
+
+
 static void _gmpc_now_playing_browser_bg_style_changed_gtk_widget_style_set (GtkScrolledWindow* _sender, GtkStyle* previous_style, gpointer self) {
 	gmpc_now_playing_browser_bg_style_changed (self, _sender, previous_style);
+}
+
+
+static gboolean _gmpc_now_playing_browser_key_release_event_gtk_widget_key_release_event (GtkScrolledWindow* _sender, const GdkEventKey* event, gpointer self) {
+	return gmpc_now_playing_browser_key_release_event (self, event);
 }
 
 
@@ -1603,6 +1635,8 @@ static void gmpc_now_playing_browser_init (GmpcNowPlaying* self) {
 		gtk_scrolled_window_add_with_viewport (self->priv->paned, (GtkWidget*) self->priv->container);
 		g_object_set ((GObject*) gtk_scrolled_window_get_vadjustment (self->priv->paned), "step-increment", 20.0, NULL);
 		gtk_container_set_focus_vadjustment ((GtkContainer*) self->priv->container, gtk_scrolled_window_get_vadjustment (self->priv->paned));
+		/* Bind keys */
+		g_signal_connect_object ((GtkWidget*) self->priv->paned, "key-release-event", (GCallback) _gmpc_now_playing_browser_key_release_event_gtk_widget_key_release_event, self, 0);
 	}
 }
 

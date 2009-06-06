@@ -578,6 +578,22 @@ public class  Gmpc.NowPlaying : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface {
     {
         this.container.modify_bg(Gtk.StateType.NORMAL,this.paned.style.base[Gtk.StateType.NORMAL]);
     }
+    /* Handle buttons presses, f.e. for scrolling */
+    private bool browser_key_release_event(Gdk.EventKey event)
+    {
+        var adj = this.paned.get_vadjustment();
+        if(event.keyval == 0xff55 )// GDK_Page_Up
+        {
+            adj.set_value(adj.get_value()-adj.get_page_increment());
+            return true;
+        }
+        else if (event.keyval == 0xff56) // GDK_Page_Down
+        {
+            adj.set_value(adj.get_value()+adj.get_page_increment());
+            return true;
+        }
+        return false;
+    }
     private void browser_init() {
         if(this.paned == null)
         {
@@ -590,6 +606,8 @@ public class  Gmpc.NowPlaying : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface {
             this.paned.add_with_viewport(this.container);
             this.paned.get_vadjustment().set("step-increment", 20.0);
             this.container.set_focus_vadjustment(this.paned.get_vadjustment());
+            /* Bind keys */
+            this.paned.key_release_event += browser_key_release_event;
         }
     }
 
