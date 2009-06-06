@@ -586,6 +586,8 @@ public class  Gmpc.NowPlaying : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface {
             this.container.set_visible_window(true);
             this.paned.style_set += browser_bg_style_changed;
             this.paned.add_with_viewport(this.container);
+            this.paned.get_vadjustment().set("step-increment", 20.0);
+            this.container.set_focus_vadjustment(this.paned.get_vadjustment());
         }
     }
 
