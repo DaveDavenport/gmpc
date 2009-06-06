@@ -380,6 +380,7 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
         hbox.pack_start(image,false,false,0);
 
         var label = new Gtk.Label(artist);
+        label.set_selectable(true);
         label.set_alignment(0.0f, 0.5f);
         label.ellipsize = Pango.EllipsizeMode.END; 
         hbox.pack_start(label,true,true,0);
@@ -480,6 +481,7 @@ public class Gmpc.Widget.More : Gtk.Frame {
 
         var hbox = new Gtk.HBox(false, 6);
         var label= new Gtk.Label("");
+        label.set_selectable(true);
         label.set_markup(markup);
         hbox.pack_start(label, false, false,0);
         this.expand_button = new Gtk.Button.with_label(_("(more)"));
@@ -638,6 +640,7 @@ public class  Gmpc.NowPlaying : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface {
             
             var hbox = new Gtk.HBox(false, 6);
             var label = new Gtk.Label(_("Gnome Music Player Client"));
+            label.set_selectable(true);
             label.set_markup("<span size='%i' weight='bold'>%s</span>".printf(28*Pango.SCALE,_("Gnome Music Player Client")));
             hbox.pack_start(image, false, false, 0);
             hbox.pack_start(label, false, false, 0);
@@ -1394,6 +1397,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         var vbox = new Gtk.VBox (false,6);
         vbox.border_width = 8;
         var label = new Gtk.Label("");
+        label.set_selectable(true);
         if(song.title != null) {
             label.set_markup(Markup.printf_escaped("<span size='xx-large' weight='bold'>%s</span>",song.title));
         }else {
@@ -1422,12 +1426,14 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         if(song.title != null)
         {
             label = new Gtk.Label("");
+            label.set_selectable(true);
             label.set_alignment(0.0f, 0.5f);
             label.set_markup(Markup.printf_escaped("<b>%s:</b>",_("Title")));
             info_box.attach(label, 0,1,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
 
             var dhbox = new Gtk.HBox(false, 6);
             pt_label = new Gtk.Label(song.title); 
+            pt_label.set_selectable(true);
             pt_label.set_alignment(0.0f, 0.5f);
             pt_label.set_line_wrap(true);
             dhbox.pack_start(pt_label, false, false, 0);
@@ -1445,7 +1451,9 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         }
         /* Artist label */
         pt_label = new Gtk.Label(song.artist); 
+        pt_label.set_selectable(true);
         label = new Gtk.Label("");
+        label.set_selectable(true);
         label.set_alignment(0.0f, 0.5f);
         label.set_markup(Markup.printf_escaped("<b>%s:</b>",_("Artist")));
         info_box.attach(label, 0,1,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
@@ -1457,7 +1465,9 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         if(song.albumartist != null)
         {
             pt_label = new Gtk.Label(song.albumartist); 
+            pt_label.set_selectable(true);
             label = new Gtk.Label("");
+            label.set_selectable(true);
             label.set_alignment(0.0f, 0.5f);
             label.set_markup(Markup.printf_escaped("<b>%s:</b>",_("Album artist")));
             info_box.attach(label, 0,1,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
@@ -1469,7 +1479,9 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
 
         /* Album */
         pt_label = new Gtk.Label(song.album); 
+        pt_label.set_selectable(true);
         label = new Gtk.Label("");
+        label.set_selectable(true);
         label.set_alignment(0.0f, 0.5f);
         label.set_markup(Markup.printf_escaped("<b>%s:</b>",_("Album")));
         info_box.attach(label, 0,1,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
@@ -1481,7 +1493,9 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         /* track */
         if(song.track != null) {
             pt_label = new Gtk.Label(song.track); 
+            pt_label.set_selectable(true);
             label = new Gtk.Label("");
+            label.set_selectable(true);
             label.set_alignment(0.0f, 0.5f);
             label.set_markup(Markup.printf_escaped("<b>%s:</b>",_("Track")));
             info_box.attach(label, 0,1,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
@@ -1494,7 +1508,9 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         /* date */
         if(song.date != null) {
             pt_label = new Gtk.Label(song.date); 
+            pt_label.set_selectable(true);
             label = new Gtk.Label("");
+            label.set_selectable(true);
             label.set_alignment(0.0f, 0.5f);
             label.set_markup(Markup.printf_escaped("<b>%s:</b>",_("Date")));
             info_box.attach(label, 0,1,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
@@ -1506,7 +1522,9 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         /* performer */
         if(song.performer != null) {
             pt_label = new Gtk.Label(song.performer); 
+            pt_label.set_selectable(true);
             label = new Gtk.Label("");
+            label.set_selectable(true);
             label.set_alignment(0.0f, 0.5f);
             label.set_markup(Markup.printf_escaped("<b>%s:</b>",_("Performer")));
             info_box.attach(label, 0,1,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
@@ -1518,7 +1536,9 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         /* disc */
         if(song.disc != null) {
             pt_label = new Gtk.Label(song.disc); 
+            pt_label.set_selectable(true);
             label = new Gtk.Label("");
+            label.set_selectable(true);
             label.set_alignment(0.0f, 0.5f);
             label.set_markup(Markup.printf_escaped("<b>%s:</b>",_("Disc")));
             info_box.attach(label, 0,1,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
@@ -1531,7 +1551,9 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         /* Genre */
         if(song.genre != null) {
             pt_label = new Gtk.Label(song.genre); 
+            pt_label.set_selectable(true);
             label = new Gtk.Label("");
+            label.set_selectable(true);
             label.set_alignment(0.0f, 0.5f);
             label.set_markup(Markup.printf_escaped("<b>%s:</b>",_("Genre")));
             info_box.attach(label, 0,1,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
@@ -1543,11 +1565,13 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         /* Path */
         if(song.file != null) {
             label = new Gtk.Label("");
+            label.set_selectable(true);
             label.set_alignment(0.0f, 0.0f);
             label.set_markup(Markup.printf_escaped("<b>%s:</b>",_("Path")));
             info_box.attach(label, 0,1,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
 
             pt_label = new Gtk.Label(song.file); 
+            pt_label.set_selectable(true);
             pt_label.set_alignment(0.0f, 0.5f);
             pt_label.set_line_wrap(true);
             var dhbox = new Gtk.HBox(false, 6);
@@ -1568,6 +1592,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         var fav_button = new Gmpc.Favorites.Button();
         fav_button.set_song(song);
         label = new Gtk.Label("");
+        label.set_selectable(true);
         label.set_alignment(0.0f, 0.5f);
         label.set_markup(Markup.printf_escaped("<b>%s:</b>",_("Favored")));
         info_box.attach(label, 0,1,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
@@ -1581,6 +1606,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
             /* Favored button */
             var rating_button = new Gmpc.Rating(server, song);
             label = new Gtk.Label("");
+            label.set_selectable(true);
             label.set_alignment(0.0f, 0.5f);
             label.set_markup(Markup.printf_escaped("<b>%s:</b>",_("Rating")));
             info_box.attach(label, 0,1,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
@@ -1594,7 +1620,9 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         /* Comment */
         if(song.comment != null) {
             pt_label = new Gtk.Label(song.comment); 
+            pt_label.set_selectable(true);
             label = new Gtk.Label("");
+            label.set_selectable(true);
             label.set_alignment(0.0f, 0.0f);
             label.set_markup(Markup.printf_escaped("<b>%s:</b>",_("Comment")));
             info_box.attach(label, 0,1,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
@@ -1757,6 +1785,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         var vbox = new Gtk.VBox (false,6);
         vbox.border_width = 8;
         var label = new Gtk.Label("");
+        label.set_selectable(true);
         label.set_markup(Markup.printf_escaped("<span size='xx-large' weight='bold'>%s - %s</span>",(artist != null)?artist:_("Unknown"), (album!= null)?album:_("Unknown")));
         label.set_alignment(0.0f, 0.5f);
         vbox.pack_start(label, false, false, 0);
@@ -1782,6 +1811,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         /* Genres of songs */ 
         var pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ALBUM_GENRES_SONGS, song);
         label = new Gtk.Label("");
+        label.set_selectable(true);
         label.set_alignment(0.0f, 0.5f);
         label.set_markup(Markup.printf_escaped("<b>%s:</b>",_("Genres")));
         info_box.attach(label, 0,1,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
@@ -1794,6 +1824,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ALBUM_DATES_SONGS, song);
         pt_label.set_line_wrap(true);
         label = new Gtk.Label("");
+        label.set_selectable(true);
         label.set_alignment(0.0f, 0.0f);
         label.set_markup(Markup.printf_escaped("<b>%s:</b>",_("Dates")));
         info_box.attach(label, 0,1,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
@@ -1804,6 +1835,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ALBUM_NUM_SONGS, song);
         pt_label.set_line_wrap(true);
         label = new Gtk.Label("");
+        label.set_selectable(true);
         label.set_alignment(0.0f, 0.0f);
         label.set_markup(Markup.printf_escaped("<b>%s:</b>",_("Songs")));
         info_box.attach(label, 0,1,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
@@ -1814,6 +1846,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ALBUM_PLAYTIME_SONGS, song);
         pt_label.set_line_wrap(true);
         label = new Gtk.Label("");
+        label.set_selectable(true);
         label.set_alignment(0.0f, 0.0f);
         label.set_markup(Markup.printf_escaped("<b>%s:</b>",_("Playtime")));
         info_box.attach(label, 0,1,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
@@ -1849,6 +1882,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
 
         /* Song list */
         label = new Gtk.Label("");
+        label.set_selectable(true);
         label.set_markup("<b>%s</b>".printf(_("Songs")));
         label.set_alignment(0.0f, 0.5f);
         vbox.pack_start(label, false, false, 0);
@@ -1887,6 +1921,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         var vbox = new Gtk.VBox (false,6);
         vbox.border_width = 8;
         var label = new Gtk.Label("");
+        label.set_selectable(true);
         label.set_markup(Markup.printf_escaped("<span size='xx-large' weight='bold'>%s</span>",(artist != null)?artist:_("Unknown")));
         label.set_alignment(0.0f, 0.5f);
         vbox.pack_start(label, false, false, 0);
@@ -1911,6 +1946,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         /* Genres of songs */ 
         var pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ARTIST_GENRES_SONGS, song);
         label = new Gtk.Label("");
+        label.set_selectable(true);
         label.set_alignment(0.0f, 0.5f);
         label.set_markup(Markup.printf_escaped("<b>%s:</b>",_("Genres")));
         info_box.attach(label, 0,1,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
@@ -1923,6 +1959,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ARTIST_DATES_SONGS, song);
         pt_label.set_line_wrap(true);
         label = new Gtk.Label("");
+        label.set_selectable(true);
         label.set_alignment(0.0f, 0.0f);
         label.set_markup(Markup.printf_escaped("<b>%s:</b>",_("Dates")));
         info_box.attach(label, 0,1,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
@@ -1933,6 +1970,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ARTIST_NUM_SONGS, song);
         pt_label.set_line_wrap(true);
         label = new Gtk.Label("");
+            label.set_selectable(true);
         label.set_alignment(0.0f, 0.0f);
         label.set_markup(Markup.printf_escaped("<b>%s:</b>",_("Songs")));
         info_box.attach(label, 0,1,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
@@ -1943,6 +1981,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ARTIST_PLAYTIME_SONGS, song);
         pt_label.set_line_wrap(true);
         label = new Gtk.Label("");
+        label.set_selectable(true);
         label.set_alignment(0.0f, 0.0f);
         label.set_markup(Markup.printf_escaped("<b>%s:</b>",_("Playtime")));
         info_box.attach(label, 0,1,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
@@ -1979,6 +2018,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
 
 
         label = new Gtk.Label(_("Similar artist"));
+        label.set_selectable(true);
         label.set_markup("<span weight='bold'>%s</span>".printf(_("Similar artist")));
         label.set_alignment(0.0f, 0.0f);
         vbox.pack_start(label, false, false, 0);
