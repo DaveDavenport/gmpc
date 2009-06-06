@@ -256,6 +256,8 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
             g_signal_connect_swapped(self->_priv->edit, "clicked",G_CALLBACK(self_edit_button_clicked), self);
             g_signal_connect_swapped(self->_priv->cancel, "clicked",G_CALLBACK(self_cancel_button_clicked), self);
         }
+        gtk_text_buffer_get_start_iter(self->_priv->buffer, &iter);
+        gtk_text_buffer_place_cursor(self->_priv->buffer, &iter);
     }
 
 	signal last NONE (STRING)	
