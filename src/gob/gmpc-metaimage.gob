@@ -198,7 +198,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                 if(gdk_pixbuf_get_file_info(self->_priv->image_url, &width, &height))
                 {
                     GtkWidget *image = gtk_bin_get_child(GTK_BIN(win));
-                    GdkPixbuf *pb = gdk_pixbuf_new_from_file_at_scale(self->_priv->image_url, (width > 250)?250:width,(height >250)?250:height, TRUE, NULL);
+                    GdkPixbuf *pb = gdk_pixbuf_new_from_file_at_scale(self->_priv->image_url, (width > 350)?350:width,(height >350)?350:height, TRUE, NULL);
                     screenshot_add_border(&pb);
                     gtk_image_set_from_pixbuf(GTK_IMAGE(image), pb);
                     gtk_widget_show(image);
