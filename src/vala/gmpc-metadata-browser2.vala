@@ -1680,30 +1680,42 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
 
 
         /* Lyrics */
+        if(config.get_int_with_default("MetaData", "show-song-links",1) == 1)
+        {
+            var text_view = new Gmpc.MetaData.TextView(Gmpc.MetaData.Type.SONG_TXT);
+            text_view.set_left_margin(8);
+            var frame = new Gmpc.Widget.More(Markup.printf_escaped("<b>%s:</b>", _("Lyrics")),text_view);
+            text_view.query_from_song(song);
 
-        var text_view = new Gmpc.MetaData.TextView(Gmpc.MetaData.Type.SONG_TXT);
-        text_view.set_left_margin(8);
-        var frame = new Gmpc.Widget.More(Markup.printf_escaped("<b>%s:</b>", _("Lyrics")),text_view);
-        text_view.query_from_song(song);
-
-        vbox.pack_start(frame, false, false, 0);
+            vbox.pack_start(frame, false, false, 0);
+        }
 
         /* Guitar Tab */
-        text_view = new Gmpc.MetaData.TextView(Gmpc.MetaData.Type.SONG_GUITAR_TAB);
-        text_view.use_monospace = true;
-        text_view.set_left_margin(8);
-        frame = new Gmpc.Widget.More(Markup.printf_escaped("<b>%s:</b>", _("Guitar Tabs")),text_view);
-        text_view.query_from_song(song);
 
-        vbox.pack_start(frame, false, false, 0);
+        if(config.get_int_with_default("MetaData", "show-guitar-tabs",1) == 1)
+        {
+            var text_view = new Gmpc.MetaData.TextView(Gmpc.MetaData.Type.SONG_GUITAR_TAB);
+            text_view.use_monospace = true;
+            text_view.set_left_margin(8);
+            var frame = new Gmpc.Widget.More(Markup.printf_escaped("<b>%s:</b>", _("Guitar Tabs")),text_view);
+            text_view.query_from_song(song);
+
+            vbox.pack_start(frame, false, false, 0);
+        }
+
+        if(config.get_int_with_default("MetaData", "show-similar-songs",1) == 1)
+        {
+            var similar_songs = new Gmpc.Widget.SimilarSongs(song);
+            vbox.pack_start(similar_songs, false, false, 0);
+        }
 
 
-        var similar_songs = new Gmpc.Widget.SimilarSongs(song);
-        vbox.pack_start(similar_songs, false, false, 0);
-
-
-        var song_links = new Gmpc.Song.Links(Gmpc.Song.Links.Type.SONG,song);
-        vbox.pack_start(song_links,false, false, 0);
+        /* Show web links */
+        if(config.get_int_with_default("MetaData", "show-web-links",1) == 1)
+        {
+            var song_links = new Gmpc.Song.Links(Gmpc.Song.Links.Type.SONG,song);
+            vbox.pack_start(song_links,false, false, 0);
+        }
 
 
         /**
@@ -1893,14 +1905,19 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
 
         info_box.attach(hbox, 0,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
         i++;
-        var text_view = new Gmpc.MetaData.TextView(Gmpc.MetaData.Type.ALBUM_TXT);
-        text_view.set_left_margin(8);
-        var frame = new Gmpc.Widget.More(Markup.printf_escaped("<b>%s:</b>", _("Album information")),text_view);
-        text_view.query_from_song(song);
 
-        vbox.pack_start(frame, false, false, 0);
+        /* Album information */
+        if(config.get_int_with_default("MetaData", "show-album-information",1) == 1)
+        {
+            var text_view = new Gmpc.MetaData.TextView(Gmpc.MetaData.Type.ALBUM_TXT);
+            text_view.set_left_margin(8);
+            var frame = new Gmpc.Widget.More(Markup.printf_escaped("<b>%s:</b>", _("Album information")),text_view);
+            text_view.query_from_song(song);
 
-        /* Song list */
+            vbox.pack_start(frame, false, false, 0);
+        }
+
+        /* Song list. Show songs in album  */
         label = new Gtk.Label("");
         label.set_selectable(true);
         label.set_markup("<b>%s</b>".printf(_("Songs")));
@@ -1915,10 +1932,13 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         song_tree.row_activated += album_song_tree_row_activated;
         sw.add(song_tree);
         vbox.pack_start(sw, false, false, 0);
-        /* TODO right mouse menu */ 
-        /* Song links */
-        var song_links = new Gmpc.Song.Links(Gmpc.Song.Links.Type.ALBUM,song);
-        vbox.pack_start(song_links,false, false, 0);
+
+        /* Show web links */
+        if(config.get_int_with_default("MetaData", "show-web-links",1) == 1)
+        {
+            var song_links = new Gmpc.Song.Links(Gmpc.Song.Links.Type.ALBUM,song);
+            vbox.pack_start(song_links,false, false, 0);
+        }
         /**
          * Add it to the view
          */
@@ -2028,33 +2048,42 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         info_box.attach(hbox, 0,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
         i++;
 
+        /* Artist information */
+        if(config.get_int_with_default("MetaData", "show-album-information",1) == 1)
+        {
+            var text_view = new Gmpc.MetaData.TextView(Gmpc.MetaData.Type.ARTIST_TXT);
+            text_view.set_left_margin(8);
+            var frame = new Gmpc.Widget.More(Markup.printf_escaped("<b>%s:</b>", _("Artist information")),text_view);
+            text_view.query_from_song(song);
+            vbox.pack_start(frame, false, false, 0);
+        }
+        
+        /* Show similar artist */
+        if(config.get_int_with_default("MetaData", "show-similar-artist",1) == 1)
+        {
+            label = new Gtk.Label(_("Similar artist"));
+            label.set_selectable(true);
+            label.set_markup("<span weight='bold'>%s</span>".printf(_("Similar artist")));
+            label.set_alignment(0.0f, 0.0f);
+            vbox.pack_start(label, false, false, 0);
+            var similar_artist = new Gmpc.Widget.SimilarArtist(this,server, song); 
+            vbox.pack_start(similar_artist, false, false, 0);
+        }
 
-        var text_view = new Gmpc.MetaData.TextView(Gmpc.MetaData.Type.ARTIST_TXT);
-        text_view.set_left_margin(8);
-        var frame = new Gmpc.Widget.More(Markup.printf_escaped("<b>%s:</b>", _("Artist information")),text_view);
-        text_view.query_from_song(song);
-
-        vbox.pack_start(frame, false, false, 0);
-
-
-        label = new Gtk.Label(_("Similar artist"));
-        label.set_selectable(true);
-        label.set_markup("<span weight='bold'>%s</span>".printf(_("Similar artist")));
-        label.set_alignment(0.0f, 0.0f);
-        vbox.pack_start(label, false, false, 0);
-
-        var similar_artist = new Gmpc.Widget.SimilarArtist(this,server, song); 
-
-
-        vbox.pack_start(similar_artist, false, false, 0);
-        var song_links = new Gmpc.Song.Links(Gmpc.Song.Links.Type.ARTIST,song);
-        vbox.pack_start(song_links,false, false, 0);
+        /* Show web links */
+        if(config.get_int_with_default("MetaData", "show-web-links",1) == 1)
+        {
+            var song_links = new Gmpc.Song.Links(Gmpc.Song.Links.Type.ARTIST,song);
+            vbox.pack_start(song_links,false, false, 0);
+        }
         /**
          * Add it to the view
          */
         this.metadata_box.add(vbox);
         this.metadata_sw.show_all();
     }
+
+
     private uint update_timeout = 0;
     private void metadata_box_update()
     {
