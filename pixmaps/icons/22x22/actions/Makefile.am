@@ -5,5 +5,6 @@ context = actions
 iconsdir = $(themedir)/$(size)/$(context)
 
 dist_icons_DATA = \
-		media-playlist.png
+		media-playlist.png\
+        media-audiofile.png
 
