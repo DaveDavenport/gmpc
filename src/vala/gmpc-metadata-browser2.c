@@ -39,6 +39,8 @@
 #include <plugin.h>
 #include <config1.h>
 #include <gmpc-connection.h>
+#include <float.h>
+#include <math.h>
 #include <gdk-pixbuf/gdk-pixdata.h>
 #include <gmpc-favorites.h>
 #include <gmpc-rating.h>
@@ -1588,20 +1590,23 @@ static void gmpc_now_playing_browser_bg_style_changed (GmpcNowPlaying* self, Gtk
 static gboolean gmpc_now_playing_browser_key_release_event (GmpcNowPlaying* self, const GdkEventKey* event) {
 	GtkAdjustment* _tmp0_;
 	GtkAdjustment* adj;
+	double incr;
 	gboolean _tmp3_;
 	g_return_val_if_fail (self != NULL, FALSE);
 	_tmp0_ = NULL;
 	adj = (_tmp0_ = gtk_scrolled_window_get_vadjustment (self->priv->paned), (_tmp0_ == NULL) ? NULL : g_object_ref (_tmp0_));
+	incr = (double) 20;
+	g_object_get ((GObject*) adj, "step-increment", &incr, NULL);
 	if ((*event).keyval == 0xff55) {
 		gboolean _tmp1_;
 		/* GDK_Page_Up*/
-		gtk_adjustment_set_value (adj, gtk_adjustment_get_value (adj) - gtk_adjustment_get_page_increment (adj));
+		gtk_adjustment_set_value (adj, gtk_adjustment_get_value (adj) - incr);
 		return (_tmp1_ = TRUE, (adj == NULL) ? NULL : (adj = (g_object_unref (adj), NULL)), _tmp1_);
 	} else {
 		if ((*event).keyval == 0xff56) {
 			gboolean _tmp2_;
 			/* GDK_Page_Down*/
-			gtk_adjustment_set_value (adj, gtk_adjustment_get_value (adj) + gtk_adjustment_get_page_increment (adj));
+			gtk_adjustment_set_value (adj, gtk_adjustment_get_value (adj) + incr);
 			return (_tmp2_ = TRUE, (adj == NULL) ? NULL : (adj = (g_object_unref (adj), NULL)), _tmp2_);
 		}
 	}

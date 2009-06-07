@@ -582,14 +582,16 @@ public class  Gmpc.NowPlaying : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface {
     private bool browser_key_release_event(Gdk.EventKey event)
     {
         var adj = this.paned.get_vadjustment();
+        double incr = 20;
+        adj.get("step-increment", out incr);
         if(event.keyval == 0xff55 )// GDK_Page_Up
         {
-            adj.set_value(adj.get_value()-adj.get_page_increment());
+            adj.set_value(adj.get_value()-incr);
             return true;
         }
         else if (event.keyval == 0xff56) // GDK_Page_Down
         {
-            adj.set_value(adj.get_value()+adj.get_page_increment());
+            adj.set_value(adj.get_value()+incr);
             return true;
         }
         return false;
