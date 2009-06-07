@@ -16,7 +16,7 @@ namespace Gmpc {
 		}
 	}
 	[CCode (cheader_filename = "gmpc-metadata-browser2.h")]
-	public class MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface {
+	public class MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface, Gmpc.Plugin.PreferencesIface {
 		public const int[] version;
 		public override unowned string get_name ();
 		public override unowned int[] get_version ();

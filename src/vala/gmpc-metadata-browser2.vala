@@ -419,7 +419,6 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
             this.metadata_changed(metawatcher, this.song, Gmpc.MetaData.Type.ARTIST_SIMILAR, gm_result, item); 
         }
     }
-
 }
 
 public class Gmpc.Widget.More : Gtk.Frame {
@@ -502,18 +501,21 @@ public class  Gmpc.NowPlaying : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface {
     construct {
         /* Set the plugin as an internal one and of type pl_browser */
         this.plugin_type = 2|8; 
-
-    //    gmpcconn.connection_changed += con_changed;
+        /* Track changed status */
         gmpcconn.status_changed += status_changed;
+        /* Create a metadata browser plugin, we abuse for the view */
         this.browser = new Gmpc.MetadataBrowser();
     }
+    /* Version */
     public const int[] version =  {0,0,0};
     public override  weak int[3] get_version() {
         return version;
     }
+    /* Name */
     public override weak string get_name() {
         return N_("Now Playing");
     }
+    /* Save our position in the side-bar */
     public override void save_yourself() {
         if(this.paned != null) {
             this.paned.destroy();
@@ -690,7 +692,7 @@ public class  Gmpc.NowPlaying : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface {
     }
 }
 
-public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface {
+public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface, Gmpc.Plugin.PreferencesIface {
     private int block_update = 0;
     /* Stores the location in the cat_tree */
     private Gtk.TreeRowReference rref = null;
@@ -740,6 +742,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
     /* holding the 3 browsers */
     private Gtk.Box browser_box = null;
     /* The 3 browsers */
+    /* artist */
     private Gtk.TreeView tree_artist = null;
     private Gmpc.MpdData.Model model_artist = null;
     private Gtk.TreeModelFilter model_filter_artist = null; 
@@ -1680,7 +1683,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
 
 
         /* Lyrics */
-        if(config.get_int_with_default("MetaData", "show-song-links",1) == 1)
+        if(config.get_int_with_default("MetaData", "show-lyrics",1) == 1)
         {
             var text_view = new Gmpc.MetaData.TextView(Gmpc.MetaData.Type.SONG_TXT);
             text_view.set_left_margin(8);
@@ -2049,7 +2052,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         i++;
 
         /* Artist information */
-        if(config.get_int_with_default("MetaData", "show-album-information",1) == 1)
+        if(config.get_int_with_default("MetaData", "show-artist-information",1) == 1)
         {
             var text_view = new Gmpc.MetaData.TextView(Gmpc.MetaData.Type.ARTIST_TXT);
             text_view.set_left_margin(8);
@@ -2289,4 +2292,82 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface 
         }
 
     }
+    /** 
+     * Preferences
+     */
+     
+     public void
+     preferences_pane_construct(Gtk.Container container)
+     {
+        var box = new Gtk.VBox(false, 6);
+        /* Title */
+        var label = new Gtk.Label(_("Enable/disable metadata options"));
+        label.set_alignment(0.0f, 0.5f);
+        box.pack_start(label, false, false,0);
+
+        /* Artist information */
+        var chk = new Gtk.CheckButton.with_label(_("Artist information"));
+        chk.set_active((config.get_int_with_default("MetaData", "show-artist-information",1) == 1));
+        box.pack_start(chk, false, false,0);
+        chk.toggled.connect ((source)=> {
+           config.set_int("MetaData", "show-artist-information", (int)source.get_active());  
+        });
+        /* Album information */
+        chk = new Gtk.CheckButton.with_label(_("Album information"));
+        chk.set_active((config.get_int_with_default("MetaData", "show-album-information",1) == 1));
+        box.pack_start(chk, false, false,0);
+        chk.toggled.connect ((source)=> {
+           config.set_int("MetaData", "show-album-information", (int)source.get_active());  
+        });
+
+        /* Artist similar */
+        chk = new Gtk.CheckButton.with_label(_("Similar Artist"));
+        chk.set_active((config.get_int_with_default("MetaData", "show-similar-artist",1) == 1));
+        box.pack_start(chk, false, false,0);
+        chk.toggled.connect ((source)=> {
+           config.set_int("MetaData", "show-similar-artist", (int)source.get_active());  
+        });
+
+        /* Lyrics */ 
+        chk = new Gtk.CheckButton.with_label(_("Lyrics"));
+        chk.set_active((config.get_int_with_default("MetaData", "show-lyrics",1) == 1));
+        box.pack_start(chk, false, false,0);
+        chk.toggled.connect ((source)=> {
+           config.set_int("MetaData", "show-lyrics", (int)source.get_active());  
+        });
+
+        /* Lyrics */ 
+        chk = new Gtk.CheckButton.with_label(_("Guitar Tabs"));
+        chk.set_active((config.get_int_with_default("MetaData", "show-guitar-tabs",1) == 1));
+        box.pack_start(chk, false, false,0);
+        chk.toggled.connect ((source)=> {
+           config.set_int("MetaData", "show-guitar-tabs", (int)source.get_active());  
+        });
+        /* Similar songs*/ 
+        chk = new Gtk.CheckButton.with_label(_("Similar Songs"));
+        chk.set_active((config.get_int_with_default("MetaData", "show-similar-songs",1) == 1));
+        box.pack_start(chk, false, false,0);
+        chk.toggled.connect ((source)=> {
+           config.set_int("MetaData", "show-similar-songs", (int)source.get_active());  
+        });
+        /* Web links*/ 
+        chk = new Gtk.CheckButton.with_label(_("Web links"));
+        chk.set_active((config.get_int_with_default("MetaData", "show-web-links",1) == 1));
+        box.pack_start(chk, false, false,0);
+        chk.toggled.connect ((source)=> {
+           config.set_int("MetaData", "show-web-links", (int)source.get_active());  
+        });
+
+        container.add(box);
+        box.show_all();
+     }
+
+     public void
+     preferences_pane_destroy(Gtk.Container container)
+     {
+        foreach(Gtk.Widget child in container.get_children())
+        {
+            container.remove(child);
+        }
+     }
 }
