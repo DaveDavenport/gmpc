@@ -40,7 +40,6 @@ src/bug-information.c
 src/browsers/playlist3-current-playlist-browser.c
 src/browsers/playlist3-file-browser.c
 src/browsers/playlist3-find2-browser.c
-src/browsers/playlist3-metadata-browser.c
 src/browsers/playlist3-playlist-editor.c
 src/browsers/playlist3-tag2-browser.c
 src/browsers/server-information.c
