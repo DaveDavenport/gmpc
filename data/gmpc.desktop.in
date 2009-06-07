@@ -7,4 +7,3 @@ Type=Application
 Icon=gmpc.png
 Categories=GNOME;Application;AudioVideo;
 StartupNotify=true
-Encoding=UTF-8
