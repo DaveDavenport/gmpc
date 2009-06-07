@@ -1,6 +1,5 @@
 appicondir = $(datadir)/gmpc/icons/
 dist_appicon_DATA =	\
-	media-audiofile.png\
 	media-stream.png\
 	media-artist.png\
 	gmpc-no-cover.png\
