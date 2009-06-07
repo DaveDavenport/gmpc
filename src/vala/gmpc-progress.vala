@@ -153,7 +153,7 @@ public class Gmpc.Progress : Gtk.HBox
         this.scale.set_range(0.0,1.0);
         this.scale.draw_value = false;
         this.set_value_handler = GLib.Signal.connect_swapped(this.scale,"value_changed",(GLib.Callback)value_changed,this);
-        this.scale.update_policy = Gtk.UpdateType.DISCONTINUOUS;
+        this.scale.update_policy = Gtk.UpdateType.CONTINUOUS;//DELAYED;//DISCONTINUOUS;
         this.scale.sensitive = false;
 
         this.scale.add_events((int)Gdk.EventMask.SCROLL_MASK);
@@ -162,6 +162,7 @@ public class Gmpc.Progress : Gtk.HBox
         this.scale.add_events((int)Gdk.EventMask.LEAVE_NOTIFY_MASK);
         this.scale.scroll_event += scroll_event_callback;
         this.scale.button_press_event += button_press_event_callback;
+        this.scale.button_release_event += button_release_event_callback;
         this.scale.motion_notify_event += motion_notify_event_callback;
         this.scale.enter_notify_event += enter_notify_event_callback;
         this.scale.leave_notify_event += enter_notify_event_callback;
@@ -186,15 +187,22 @@ public class Gmpc.Progress : Gtk.HBox
 			{
 				uint seconds = (uint)(this.total*(1-range.get_value()));
 				seek_event(seconds);
+				
 			}else{
 				uint seconds = (uint)(this.total*(range.get_value()));
 				seek_event(seconds);
 			}
 		}
     }
-
+	private int press = 0;
+    private bool button_release_event_callback (Gtk.Scale scale, Gdk.EventButton event)
+    {
+		this.press--;
+		return false;
+	}
     private bool button_press_event_callback (Gtk.Scale scale, Gdk.EventButton event)
     {
+		this.press++;
         if(event.type == Gdk.EventType.BUTTON_PRESS)
         {
             if(event.button == 3)
@@ -232,6 +240,7 @@ public class Gmpc.Progress : Gtk.HBox
 
     public void set_time(uint total, uint current)
     {
+		if(this.press > 0) return;
         if(this.total != total)
         {
             this.scale.sensitive = (total > 0);
