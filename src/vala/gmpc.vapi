@@ -128,6 +128,9 @@ namespace Gmpc {
             public void update_from_song_delayed(MPD.Song song);
             [CCode (cname="gmpc_metaimage_set_squared")]
             public void set_squared(bool squared);
+            [CCode (cname="gmpc_metaimage_set_hide_on_na")]
+            public void set_hide_on_na(bool hide);
+
 
         }
         [CCode ( cname="GmpcStatsLabel", cheader_filename="gmpc-stats-label.h")]
@@ -287,6 +290,8 @@ namespace Gmpc {
             [CCode (cname="gmpc_mpddata_model_set_request_artist")]
             public void set_request_artist(string? list);
 
+            [CCode (cname="gmpc_mpddata_model_get_request_artist")]
+            public weak string get_request_artist();
             public int icon_size;
         }
     }

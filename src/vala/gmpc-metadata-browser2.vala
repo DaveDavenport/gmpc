@@ -19,6 +19,7 @@
 using Config;
 using Gtk;
 using Gmpc;
+using Gmpc.MpdData.Treeview.Tooltip;
 
 private const bool use_transition_mb = Gmpc.use_transition;
 private const string some_unique_name_mb = Config.VERSION;
@@ -1062,6 +1063,8 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             this.model_filter_artist = new Gtk.TreeModelFilter(this.model_artist, null);
             this.model_filter_artist.set_visible_func(visible_func_artist);
             this.tree_artist = new Gtk.TreeView.with_model(this.model_filter_artist);
+            new Gmpc.MpdData.Treeview.Tooltip(this.tree_artist, Gmpc.MetaData.Type.ARTIST_ART);
+
             this.tree_artist.button_press_event+=browser_button_press_event;
             this.tree_artist.button_release_event+=artist_browser_button_release_event;
             this.tree_artist.key_press_event += browser_artist_key_press_event;
@@ -1103,6 +1106,8 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             this.model_filter_album = new Gtk.TreeModelFilter(this.model_albums, null);
             this.model_filter_album.set_visible_func(visible_func_album);
             this.tree_album = new Gtk.TreeView.with_model(this.model_filter_album);
+            new Gmpc.MpdData.Treeview.Tooltip(this.tree_album, Gmpc.MetaData.Type.ALBUM_ART);
+
             this.tree_album.button_press_event+=browser_button_press_event;
             this.tree_album.button_release_event+=album_browser_button_release_event;
             this.tree_album.key_press_event += browser_album_key_press_event;

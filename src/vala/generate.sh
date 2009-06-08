@@ -4,7 +4,7 @@ function build_file()
 {
     echo "building: '$1'";
     if test $1 -nt $1.stamp; then 
-        valac -C --pkg gtk+-2.0 --library=${1/.vala/} --pkg cairo --pkg config --pkg gmpc --pkg libmpd --pkg gmpc-rating --pkg gmpc-favorites --pkg gmpc-plugin --pkg gmpc-song-links --vapidir=`pwd` $2 $1 -H ${1/vala/h} && touch $1.stamp
+        valac -C --pkg gtk+-2.0 --library=${1/.vala/} --pkg cairo --pkg config --pkg gmpc --pkg libmpd --pkg gmpc-rating --pkg gmpc-favorites --pkg gmpc-plugin --pkg gmpc-song-links --pkg gmpc-mpddata-treeview-tooltip --vapidir=`pwd` $2 $1 -H ${1/vala/h} && touch $1.stamp
     fi;
 
 }
@@ -16,6 +16,8 @@ valac -C gmpc-plugin.vala  --library=gmpc-plugin --pkg gtk+-2.0 --pkg cairo --pk
 valac -C --pkg gtk+-2.0 --library=gmpc-favorites --pkg cairo --pkg config --pkg gmpc --pkg libmpd --pkg gmpc-plugin --vapidir=`pwd` gmpc-favorites.vala -H gmpc-favorites.h 
 
 valac -C --pkg gtk+-2.0 --library=gmpc-song-links --pkg cairo --pkg config --pkg gmpc --pkg libmpd --pkg gmpc-plugin --vapidir=`pwd` gmpc-song-links.vala -H gmpc-song-links.h 
+
+valac -C --pkg gtk+-2.0 --library=gmpc-mpddata-treeview-tooltip --pkg cairo --pkg config --pkg gmpc --pkg libmpd --pkg gmpc-plugin --vapidir=`pwd` gmpc-mpddata-treeview-tooltip.vala -H gmpc-mpddata-treeview-tooltip.h 
 
 # build_file "gmpc-song-links.vala"
 

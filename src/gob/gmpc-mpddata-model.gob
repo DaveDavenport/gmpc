@@ -35,6 +35,7 @@ requires 2.0.0
 %}
 
 %h{
+#define GMPC_MPD_DATA_MODEL(a) GMPC_MPDDATA_MODEL(a)
 	enum
 	{
 		MPDDATA_MODEL_COL_MPDSONG = 0, 		      /* get the mpd_Song */
