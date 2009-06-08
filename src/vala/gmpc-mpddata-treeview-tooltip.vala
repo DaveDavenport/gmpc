@@ -42,7 +42,7 @@ public class Gmpc.MpdData.Treeview.Tooltip : Gtk.Window  {
         Gtk.TreePath path = null;
         Gtk.TreeIter iter ;
         var model = this.par_widget.get_model();
-
+        if(config.get_int_with_default("GmpcTreeView", "show-tooltip", 1) != 1) return false; 
         if(this.mtype != Gmpc.MetaData.Type.ARTIST_ART && this.mtype != Gmpc.MetaData.Type.ALBUM_ART) {
             this.checksum = null;
             return false;
