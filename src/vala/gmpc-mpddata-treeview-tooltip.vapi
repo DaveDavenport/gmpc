@@ -8,6 +8,8 @@ namespace Gmpc {
 		namespace Treeview {
 			[CCode (cheader_filename = "gmpc-mpddata-treeview-tooltip.h")]
 			public class Tooltip : Gtk.Window {
+				public Gmpc.MetaData.Type mtype;
+				public string? request_artist;
 				public Tooltip (Gtk.TreeView pw, Gmpc.MetaData.Type type);
 			}
 		}

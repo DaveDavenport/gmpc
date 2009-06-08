@@ -33,7 +33,6 @@ requires 2.0.0
 #include "misc.h"
 
 %}
-
 %h{
 #define GMPC_MPD_DATA_MODEL(a) GMPC_MPDDATA_MODEL(a)
 	enum

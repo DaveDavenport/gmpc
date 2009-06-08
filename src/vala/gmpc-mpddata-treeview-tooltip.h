@@ -5,6 +5,8 @@
 #include <glib.h>
 #include <gtk/gtk.h>
 #include <metadata.h>
+#include <stdlib.h>
+#include <string.h>
 
 G_BEGIN_DECLS
 
@@ -23,6 +25,8 @@ typedef struct _GmpcMpdDataTreeviewTooltipPrivate GmpcMpdDataTreeviewTooltipPriv
 struct _GmpcMpdDataTreeviewTooltip {
 	GtkWindow parent_instance;
 	GmpcMpdDataTreeviewTooltipPrivate * priv;
+	MetaDataType mtype;
+	char* request_artist;
 };
 
 struct _GmpcMpdDataTreeviewTooltipClass {

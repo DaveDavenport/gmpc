@@ -25,8 +25,9 @@ private const string some_unique_name_mtt = Config.VERSION;
 
 public class Gmpc.MpdData.Treeview.Tooltip : Gtk.Window  {
     private Gtk.TreeView par_widget = null;
-    private Gmpc.MetaData.Image image = null;
-    private Gmpc.MetaData.Type mtype = Gmpc.MetaData.Type.ARTIST_ART;
+    private Gtk.Image image = null;
+    public Gmpc.MetaData.Type mtype = Gmpc.MetaData.Type.ARTIST_ART;
+    public string? request_artist = null;
     /* Destroy function */
     ~Tooltip() {
         stdout.printf("Gmpc.MpdData.Treeview.Tooltip destroy\n");
@@ -37,28 +38,45 @@ public class Gmpc.MpdData.Treeview.Tooltip : Gtk.Window  {
     query_tooltip_callback(int x, int y, bool keyboard_tip, Gtk.Tooltip tooltip)
     {
         string tag = null;
-        var model = this.par_widget.get_model();
-
+        int row_type = 0;
         Gtk.TreePath path = null;
         Gtk.TreeIter iter ;
+        var model = this.par_widget.get_model();
+
+        if(this.mtype != Gmpc.MetaData.Type.ARTIST_ART && this.mtype != Gmpc.MetaData.Type.ALBUM_ART) {
+            this.checksum = null;
+            return false;
+        }
+
         if(!this.par_widget.get_tooltip_context(out x, out y,keyboard_tip, out model, out path, out iter)){
             this.checksum = null;
             return false;
         }
 
         MPD.Song song = new MPD.Song();
-        if(this.mtype == Gmpc.MetaData.Type.ALBUM_ART) {
-            string album = null;
-            model.get(iter, 5, out tag, 6 , out album);
-            song.artist = tag; 
-            song.album = album;
+        /* Get the row type */
+        model.get(iter, 26, out row_type);
+        if(row_type == MPD.Data.Type.SONG)
+        {
+                string album = null;
+                model.get(iter, 5, out tag, 6 , out album);
+                song.artist = tag; 
+                song.album = album;
         }
-        else{
+        else if (row_type == MPD.Data.Type.TAG)
+        {
+            if(this.mtype == Gmpc.MetaData.Type.ARTIST_ART)
+            {
+                model.get(iter, 7, out tag);
+                song.artist = tag;
+            }else if (this.mtype == Gmpc.MetaData.Type.ALBUM_ART)
+            {
+                model.get(iter, 7, out tag);
+                song.artist = this.request_artist;
+                song.album = tag;
+            }
 
-            model.get(iter, 7, out tag);
-            song.artist = tag;
         }
-
         string new_check = Gmpc.Misc.song_checksum(song);
         if(new_check != this.checksum && this.checksum != null)
         {
@@ -67,31 +85,55 @@ public class Gmpc.MpdData.Treeview.Tooltip : Gtk.Window  {
         }
         if(new_check != this.checksum)
         {
-            this.image.update_from_song(song);
-            this.checksum = new_check;
-        }
-        return true;
-/*
-        this.checksum = null;
-        return false;
-  */  }
 
-    public Tooltip(Gtk.TreeView pw, Gmpc.MetaData.Type type){
+            this.checksum = new_check;
+            Gmpc.MetaData.Item met = null;
+            var result = metawatcher.query(song, this.mtype, out met);
+            metadata_changed(metawatcher, song, this.mtype,result, met); 
+        }
+        if(this.image.get_storage_type() == Gtk.ImageType.EMPTY) return false;
+        return true;
+    }
+
+    private void metadata_changed(MetaWatcher gmw, MPD.Song song, Gmpc.MetaData.Type type, Gmpc.MetaData.Result result, Gmpc.MetaData.Item? met)
+    {
+        if(type != this.mtype) return;
+        
+        if(this.checksum !=  Gmpc.Misc.song_checksum(song)) return;
+        if(result == Gmpc.MetaData.Result.UNAVAILABLE) {
+            this.image.clear();
+        }
+        else if (result == Gmpc.MetaData.Result.FETCHING) {
+            this.image.clear();
+        }else if (result == Gmpc.MetaData.Result.AVAILABLE) {
+            if(met.content_type == Gmpc.MetaData.ContentType.URI) {
+                try {
+                    var pb = new Gdk.Pixbuf.from_file_at_scale(met.get_uri(), 150, 150, true);
+                    image.set_from_pixbuf(pb);
+                } catch (Error e) {
+                    this.image.clear();
+                }
+            } else {
+                this.image.clear();
+            }
+        }
+    }
+    public
+    Tooltip(Gtk.TreeView pw, Gmpc.MetaData.Type type){
         this.type = Gtk.WindowType.POPUP;
         this.resizable = false;
-        stdout.printf("Create tooltip widget\n");
         this.par_widget = pw;
         /*Set up all needed for tooltip */
         pw.query_tooltip.connect(query_tooltip_callback);
         this.par_widget.set_tooltip_window(this);
         /* setup image */
-        this.image = new Gmpc.MetaData.Image(type, 150);
+        this.image = new Gtk.Image(); 
+        this.image.show();
         this.mtype = type;
-        this.image.set_squared(false);
-        this.image.set_hide_on_na(true);
         this.add(image);
-        
+        this.set_border_width(2); 
+        this.modify_bg(Gtk.StateType.NORMAL, pw.style.black);
+
+        metawatcher.data_changed.connect(metadata_changed);
     }
-
-
 }

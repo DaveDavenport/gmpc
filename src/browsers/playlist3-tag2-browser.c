@@ -41,6 +41,7 @@
 #include <libmpd/libmpd-internal.h>
 #include "playlist3.h"
 #include "playlist3-playlist-editor.h"
+#include "gmpc-mpddata-treeview-tooltip.h"
 
 /**
  * dirty hack to workaround single parameter for now 
@@ -194,6 +195,7 @@ static void tag2_browser_add(GtkWidget *cat_tree)
 
 typedef struct _tag_element{
 	GtkWidget 		*tree;
+    GmpcMpdDataTreeviewTooltip *tool;
 	GtkTreeModel 	*model;
 	GtkWidget		*sw;
     GtkWidget       *vbox;
@@ -529,6 +531,11 @@ static void tag2_changed(GtkTreeSelection *sel2, tag_element *te)
             tag_element *te3 = first_te->data;
             if(te3->index != not_to_update){
                 gmpc_mpddata_model_set_request_artist(GMPC_MPDDATA_MODEL(te3->model), artist);
+                if(te3->tool->request_artist) {
+                    g_free(te3->tool->request_artist);
+                    te3->tool->request_artist = NULL;
+                }
+                te3->tool->request_artist = g_strdup(artist);
             }
         }
         q_free(artist);
@@ -706,7 +713,14 @@ static void tag2_column_header_menu_item_clicked(GtkCheckMenuItem *item, tag_ele
     GList *list;
     gpointer userdata = g_object_get_data(G_OBJECT(item), "tag-id");
     te->type = GPOINTER_TO_INT(userdata);
-	gtk_tree_view_column_set_title(te->column,
+    if(te->type == MPD_TAG_ITEM_ARTIST ||te->type == MPD_TAG_ITEM_ALBUM_ARTIST) {
+        te->tool->mtype = META_ARTIST_ART;
+    } else if(te->type == MPD_TAG_ITEM_ALBUM ) {
+        te->tool->mtype = META_ALBUM_ART;
+    }
+    else te->tool->mtype = 0;
+
+    gtk_tree_view_column_set_title(te->column,
             _(mpdTagItemKeys[te->type]));
     /* if the first is changed, refill the first.
      * if any other is changed, make the edited refill by triggering changed signal on the previous.
@@ -862,6 +876,10 @@ static void tag2_songlist_clear_selection(GtkWidget *button, tag_browser *browse
         }else 
             gmpc_mpddata_model_set_mpd_data_slow(GMPC_MPDDATA_MODEL(te->model), NULL);
         gmpc_mpddata_model_set_request_artist(GMPC_MPDDATA_MODEL(te->model), NULL);
+        if(te->tool->request_artist) {
+            g_free(te->tool->request_artist);
+            te->tool->request_artist = NULL;
+        }
     }
                                     		
     gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(gtk_tree_view_get_model(browser->tag_songlist)), NULL);     
@@ -914,7 +932,15 @@ static void tag2_songlist_add_tag(tag_browser *browser,const gchar *name, int ty
     te->sw 		= gtk_scrolled_window_new(NULL,NULL);
     te->vbox    = gtk_vbox_new(FALSE, 6);
 	te->tree 	= gtk_tree_view_new_with_model(GTK_TREE_MODEL(te->model));	
+    te->tool    = gmpc_mpd_data_treeview_tooltip_new(GTK_TREE_VIEW(te->tree), 0);
 	te->browser = browser;
+
+    if(te->type == MPD_TAG_ITEM_ARTIST ||te->type == MPD_TAG_ITEM_ALBUM_ARTIST) {
+        te->tool->mtype = META_ARTIST_ART;
+    } else if(te->type == MPD_TAG_ITEM_ALBUM ) {
+        te->tool->mtype = META_ALBUM_ART;
+    }
+    else te->tool->mtype = 0;
 
     /* entry */
     gtk_widget_set_no_show_all(te->sentry, TRUE);
@@ -1478,6 +1504,13 @@ static void tag2_pref_column_type_edited(GtkCellRendererText *text, gchar *path,
 		gtk_list_store_set(GTK_LIST_STORE(model), &iter, 0, new_data,1,tag, -1);
 		gtk_tree_model_get(model, &iter, 2, &te, -1);
         te->type = tag;
+
+        if(te->type == MPD_TAG_ITEM_ARTIST ||te->type == MPD_TAG_ITEM_ALBUM_ARTIST) {
+            te->tool->mtype = META_ARTIST_ART;
+        } else if(te->type == MPD_TAG_ITEM_ALBUM ) {
+            te->tool->mtype = META_ALBUM_ART;
+        }
+        else te->tool->mtype = 0;
 
         gtk_tree_view_column_set_title(te->column,
                 _(mpdTagItemKeys[te->type]));
