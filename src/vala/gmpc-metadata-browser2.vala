@@ -1831,13 +1831,14 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         label.set_alignment(0.0f, 0.5f);
         vbox.pack_start(label, false, false, 0);
 
+        /* Create an MPD.Song with the info for this type set */
+        MPD.Song song = new MPD.Song();
+        song.artist = artist;
         /* Artist image */
         var hbox = new Gtk.HBox(false, 6);
         var ali = new Gtk.Alignment(0f,0f,0f,0f);
         var artist_image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ARTIST_ART, 250);
         artist_image.set_squared(false);
-        MPD.Song song = new MPD.Song();
-        song.artist = artist;
         artist_image.update_from_song(song);
         ali.add(artist_image);
         hbox.pack_start(ali, false, false, 0);
@@ -2173,7 +2174,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
            config.set_int("MetaData", "show-lyrics", (int)source.get_active());  
         });
 
-        /* Lyrics */ 
+        /* Guitar Tabs*/ 
         chk = new Gtk.CheckButton.with_label(_("Guitar Tabs"));
         chk.set_active((config.get_int_with_default("MetaData", "show-guitar-tabs",1) == 1));
         box.pack_start(chk, false, false,0);

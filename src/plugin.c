@@ -65,8 +65,8 @@ static int plugin_validate(gmpcPlugin *plug, GError **error)
     {
         if(strcmp(gmpc_plugin_get_name(plugins[i]), plug->name) == 0)
         {
-            g_set_error(error, plugin_quark(), 0,"%s '%s': %s", _("Failed to load plugin"),plug->name, _("plugin with same name allready exists"));
-            g_log(PLUGIN_LOG_DOMAIN, G_LOG_LEVEL_CRITICAL, "pluging with same name allready exists: %s", plug->name);
+            g_set_error(error, plugin_quark(), 0,"%s '%s': %s", _("Failed to load plugin"),plug->name, _("plugin with same name already exists"));
+            g_log(PLUGIN_LOG_DOMAIN, G_LOG_LEVEL_CRITICAL, "pluging with same name already exists: %s", plug->name);
             return FALSE;
         }
     }
