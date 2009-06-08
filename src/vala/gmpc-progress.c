@@ -24,6 +24,7 @@
 #include <gdk/gdk.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 
 #define GMPC_TYPE_PROGRESS (gmpc_progress_get_type ())
@@ -239,14 +240,19 @@ static void gmpc_progress_value_changed (GmpcProgress* self, GtkScale* range) {
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (range != NULL);
 	if (self->priv->total > 0) {
+		fprintf (stdout, "%f\n", gtk_range_get_value ((GtkRange*) range));
 		if (self->priv->do_countdown) {
 			guint seconds;
 			seconds = (guint) (self->priv->total * (1 - gtk_range_get_value ((GtkRange*) range)));
-			g_signal_emit_by_name (self, "seek-event", seconds);
+			if (seconds != self->priv->current) {
+				g_signal_emit_by_name (self, "seek-event", seconds);
+			}
 		} else {
 			guint seconds;
 			seconds = (guint) (self->priv->total * gtk_range_get_value ((GtkRange*) range));
-			g_signal_emit_by_name (self, "seek-event", seconds);
+			if (seconds != self->priv->current) {
+				g_signal_emit_by_name (self, "seek-event", seconds);
+			}
 		}
 	}
 }
@@ -487,7 +493,7 @@ static GObject * gmpc_progress_constructor (GType type, guint n_construct_proper
 		gtk_range_set_range ((GtkRange*) self->priv->scale, 0.0, 1.0);
 		gtk_scale_set_draw_value (self->priv->scale, FALSE);
 		self->priv->set_value_handler = g_signal_connect_swapped (self->priv->scale, "value_changed", (GCallback) gmpc_progress_value_changed, self);
-		gtk_range_set_update_policy ((GtkRange*) self->priv->scale, GTK_UPDATE_CONTINUOUS);
+		gtk_range_set_update_policy ((GtkRange*) self->priv->scale, GTK_UPDATE_DISCONTINUOUS);
 		/*DELAYED;//DISCONTINUOUS;*/
 		g_object_set ((GtkWidget*) self->priv->scale, "sensitive", FALSE, NULL);
 		gtk_widget_add_events ((GtkWidget*) self->priv->scale, (gint) GDK_SCROLL_MASK);
