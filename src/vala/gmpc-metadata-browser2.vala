@@ -1415,6 +1415,38 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
              child.destroy();
          }
      }
+     /**
+      * Add a row to a gtk table
+      * <b>$label:</b> $value
+      * then increments i 
+      */
+
+     private void add_entry(Gtk.Table table, string entry_label, string? value,Gtk.Widget? extra,  out int i)
+     {
+         if(value == null && extra == null) return;
+         var label = new Gtk.Label("");
+         label.set_selectable(true);
+         label.set_alignment(0.0f, 0.5f);
+         label.set_markup(Markup.printf_escaped("<b>%s:</b>",entry_label));
+         table.attach(label, 0,1,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
+
+         var dhbox = new Gtk.HBox(false, 6);
+         if(value != null)
+         {
+             var pt_label = new Gtk.Label(value);
+             pt_label.set_selectable(true);
+             pt_label.set_alignment(0.0f, 0.5f);
+             pt_label.set_line_wrap(true);
+             dhbox.pack_start(pt_label, false, false, 0);
+         }
+         if(extra != null)
+         {
+             dhbox.pack_start(extra, false, false, 0);
+         }
+         table.attach(dhbox, 1,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
+         i++;
+     }
+
     public Gtk.Widget metadata_box_show_song(MPD.Song song)
     {
         var vbox = new Gtk.VBox (false,6);
@@ -1444,22 +1476,8 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         hbox.pack_start(info_box, false, false, 0);
         int i=0;
 
-        Gtk.Label pt_label = null;
-
         if(song.title != null)
         {
-            label = new Gtk.Label("");
-            label.set_selectable(true);
-            label.set_alignment(0.0f, 0.5f);
-            label.set_markup(Markup.printf_escaped("<b>%s:</b>",_("Title")));
-            info_box.attach(label, 0,1,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
-
-            var dhbox = new Gtk.HBox(false, 6);
-            pt_label = new Gtk.Label(song.title); 
-            pt_label.set_selectable(true);
-            pt_label.set_alignment(0.0f, 0.5f);
-            pt_label.set_line_wrap(true);
-            dhbox.pack_start(pt_label, false, false, 0);
             /* Button to search for song with same title */
             var button = new Gtk.Button();
             button.add(new Gtk.Image.from_stock("gtk-find", Gtk.IconSize.MENU));
@@ -1468,137 +1486,31 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             button.clicked += metadata_find_query;
             button.set_tooltip_text(_("Search songs with similar title"));
 
-            dhbox.pack_start(button, false,false, 0);
-            info_box.attach(dhbox, 1,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
-            i++;
+            this.add_entry(info_box, _("Title"), song.title, button, out i);
         }
         /* Artist label */
-        pt_label = new Gtk.Label(song.artist); 
-        pt_label.set_selectable(true);
-        label = new Gtk.Label("");
-        label.set_selectable(true);
-        label.set_alignment(0.0f, 0.5f);
-        label.set_markup(Markup.printf_escaped("<b>%s:</b>",_("Artist")));
-        info_box.attach(label, 0,1,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
-        pt_label.set_alignment(0.0f, 0.5f);
-        pt_label.set_line_wrap(true);
-        info_box.attach(pt_label, 1,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
-        i++;
+        this.add_entry(info_box, _("Artist"), song.artist, null, out i);
         /* AlbumArtist label */
-        if(song.albumartist != null)
-        {
-            pt_label = new Gtk.Label(song.albumartist); 
-            pt_label.set_selectable(true);
-            label = new Gtk.Label("");
-            label.set_selectable(true);
-            label.set_alignment(0.0f, 0.5f);
-            label.set_markup(Markup.printf_escaped("<b>%s:</b>",_("Album artist")));
-            info_box.attach(label, 0,1,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
-            pt_label.set_alignment(0.0f, 0.5f);
-            pt_label.set_line_wrap(true);
-            info_box.attach(pt_label, 1,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
-            i++;
-        }
+        this.add_entry(info_box, _("Album artist"), song.albumartist, null, out i);
 
         /* Album */
-        pt_label = new Gtk.Label(song.album); 
-        pt_label.set_selectable(true);
-        label = new Gtk.Label("");
-        label.set_selectable(true);
-        label.set_alignment(0.0f, 0.5f);
-        label.set_markup(Markup.printf_escaped("<b>%s:</b>",_("Album")));
-        info_box.attach(label, 0,1,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
-        pt_label.set_alignment(0.0f, 0.5f);
-        pt_label.set_line_wrap(true);
-        info_box.attach(pt_label, 1,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
-        i++;
+        this.add_entry(info_box, _("Album"), song.album, null, out i);
 
         /* track */
-        if(song.track != null) {
-            pt_label = new Gtk.Label(song.track); 
-            pt_label.set_selectable(true);
-            label = new Gtk.Label("");
-            label.set_selectable(true);
-            label.set_alignment(0.0f, 0.5f);
-            label.set_markup(Markup.printf_escaped("<b>%s:</b>",_("Track")));
-            info_box.attach(label, 0,1,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
-            pt_label.set_alignment(0.0f, 0.5f);
-            pt_label.set_line_wrap(true);
-            info_box.attach(pt_label, 1,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
-            i++;
-        }
+        this.add_entry(info_box, _("Track"), song.track, null, out i);
 
         /* date */
-        if(song.date != null) {
-            pt_label = new Gtk.Label(song.date); 
-            pt_label.set_selectable(true);
-            label = new Gtk.Label("");
-            label.set_selectable(true);
-            label.set_alignment(0.0f, 0.5f);
-            label.set_markup(Markup.printf_escaped("<b>%s:</b>",_("Date")));
-            info_box.attach(label, 0,1,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
-            pt_label.set_alignment(0.0f, 0.5f);
-            pt_label.set_line_wrap(true);
-            info_box.attach(pt_label, 1,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
-            i++;
-        }
+        this.add_entry(info_box, _("Date"), song.date, null, out i);
         /* performer */
-        if(song.performer != null) {
-            pt_label = new Gtk.Label(song.performer); 
-            pt_label.set_selectable(true);
-            label = new Gtk.Label("");
-            label.set_selectable(true);
-            label.set_alignment(0.0f, 0.5f);
-            label.set_markup(Markup.printf_escaped("<b>%s:</b>",_("Performer")));
-            info_box.attach(label, 0,1,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
-            pt_label.set_alignment(0.0f, 0.5f);
-            pt_label.set_line_wrap(true);
-            info_box.attach(pt_label, 1,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
-            i++;
-        }
+        this.add_entry(info_box, _("Performer"), song.performer, null, out i);
         /* disc */
-        if(song.disc != null) {
-            pt_label = new Gtk.Label(song.disc); 
-            pt_label.set_selectable(true);
-            label = new Gtk.Label("");
-            label.set_selectable(true);
-            label.set_alignment(0.0f, 0.5f);
-            label.set_markup(Markup.printf_escaped("<b>%s:</b>",_("Disc")));
-            info_box.attach(label, 0,1,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
-            pt_label.set_alignment(0.0f, 0.5f);
-            pt_label.set_line_wrap(true);
-            info_box.attach(pt_label, 1,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
-            i++;
-        }
+        this.add_entry(info_box, _("Disc"), song.disc, null, out i);
 
         /* Genre */
-        if(song.genre != null) {
-            pt_label = new Gtk.Label(song.genre); 
-            pt_label.set_selectable(true);
-            label = new Gtk.Label("");
-            label.set_selectable(true);
-            label.set_alignment(0.0f, 0.5f);
-            label.set_markup(Markup.printf_escaped("<b>%s:</b>",_("Genre")));
-            info_box.attach(label, 0,1,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
-            pt_label.set_alignment(0.0f, 0.5f);
-            pt_label.set_line_wrap(true);
-            info_box.attach(pt_label, 1,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
-            i++;
-        }
+        this.add_entry(info_box, _("Disc"), song.genre, null, out i);
+
         /* Path */
         if(song.file != null) {
-            label = new Gtk.Label("");
-            label.set_selectable(true);
-            label.set_alignment(0.0f, 0.0f);
-            label.set_markup(Markup.printf_escaped("<b>%s:</b>",_("Path")));
-            info_box.attach(label, 0,1,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
-
-            pt_label = new Gtk.Label(song.file); 
-            pt_label.set_selectable(true);
-            pt_label.set_alignment(0.0f, 0.5f);
-            pt_label.set_line_wrap(true);
-            var dhbox = new Gtk.HBox(false, 6);
-            dhbox.pack_start(pt_label, false, false, 0);
             var dbutton = new Gtk.Button();
             dbutton.set_relief(Gtk.ReliefStyle.NONE);
             dbutton.add(new Gtk.Image.from_stock("gtk-open", Gtk.IconSize.MENU));
@@ -1606,54 +1518,28 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             dbutton.clicked += metadata_button_open_file_browser_path;
             dbutton.set_tooltip_text(_("Open path to song in file browser"));
 
-            dhbox.pack_start(dbutton, false, false, 0);
-            info_box.attach(dhbox, 1,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
-            i++;
+            this.add_entry(info_box, _("Path"), song.file, dbutton, out i);
         }
 
         /* Favored button */
         var fav_button = new Gmpc.Favorites.Button();
         fav_button.set_song(song);
-        label = new Gtk.Label("");
-        label.set_selectable(true);
-        label.set_alignment(0.0f, 0.5f);
-        label.set_markup(Markup.printf_escaped("<b>%s:</b>",_("Favored")));
-        info_box.attach(label, 0,1,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
         ali = new Gtk.Alignment(0.0f, 0.5f,0f,0f);
         ali.add(fav_button);
-        info_box.attach(ali, 1,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
-        i++;
-        
+        this.add_entry(info_box, _("Favored"), null, ali, out i);
+
         if(MPD.Sticker.supported(server))
         {
             /* Favored button */
             var rating_button = new Gmpc.Rating(server, song);
-            label = new Gtk.Label("");
-            label.set_selectable(true);
-            label.set_alignment(0.0f, 0.5f);
-            label.set_markup(Markup.printf_escaped("<b>%s:</b>",_("Rating")));
-            info_box.attach(label, 0,1,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
             ali = new Gtk.Alignment(0.0f, 0.5f,0f,0f);
             ali.add(rating_button);
-            info_box.attach(ali, 1,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
-            i++;
+            this.add_entry(info_box, _("Rating"), null, ali, out i);
         }
 
 
         /* Comment */
-        if(song.comment != null) {
-            pt_label = new Gtk.Label(song.comment); 
-            pt_label.set_selectable(true);
-            label = new Gtk.Label("");
-            label.set_selectable(true);
-            label.set_alignment(0.0f, 0.0f);
-            label.set_markup(Markup.printf_escaped("<b>%s:</b>",_("Comment")));
-            info_box.attach(label, 0,1,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
-            pt_label.set_alignment(0.0f, 0.5f);
-            pt_label.set_line_wrap(true);
-            info_box.attach(pt_label, 1,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
-            i++;
-        }
+        this.add_entry(info_box, _("Comment"), song.comment, null, out i);
 
         vbox.pack_start(hbox , false, false, 0);
         /* Player controls */
@@ -1845,49 +1731,25 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
 
         /* Genres of songs */ 
         var pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ALBUM_GENRES_SONGS, song);
-        label = new Gtk.Label("");
-        label.set_selectable(true);
-        label.set_alignment(0.0f, 0.5f);
-        label.set_markup(Markup.printf_escaped("<b>%s:</b>",_("Genres")));
-        info_box.attach(label, 0,1,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
         pt_label.set_alignment(0.0f, 0.5f);
         pt_label.set_line_wrap(true);
-        info_box.attach(pt_label, 1,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
-        i++;
+        this.add_entry(info_box, _("Genres"), null, pt_label, out i);
 
         /* Dates of songs */ 
         pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ALBUM_DATES_SONGS, song);
         pt_label.set_line_wrap(true);
-        label = new Gtk.Label("");
-        label.set_selectable(true);
-        label.set_alignment(0.0f, 0.0f);
-        label.set_markup(Markup.printf_escaped("<b>%s:</b>",_("Dates")));
-        info_box.attach(label, 0,1,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
         pt_label.set_alignment(0.0f, 0.5f);
-        info_box.attach(pt_label, 1,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
-        i++;
+        this.add_entry(info_box, _("Dates"), null, pt_label, out i);
         /* Total number of songs */ 
         pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ALBUM_NUM_SONGS, song);
         pt_label.set_line_wrap(true);
-        label = new Gtk.Label("");
-        label.set_selectable(true);
-        label.set_alignment(0.0f, 0.0f);
-        label.set_markup(Markup.printf_escaped("<b>%s:</b>",_("Songs")));
-        info_box.attach(label, 0,1,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
         pt_label.set_alignment(0.0f, 0.5f);
-        info_box.attach(pt_label, 1,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
-        i++;
+        this.add_entry(info_box, _("Songs"), null, pt_label, out i);
         /* Total playtime */
         pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ALBUM_PLAYTIME_SONGS, song);
         pt_label.set_line_wrap(true);
-        label = new Gtk.Label("");
-        label.set_selectable(true);
-        label.set_alignment(0.0f, 0.0f);
-        label.set_markup(Markup.printf_escaped("<b>%s:</b>",_("Playtime")));
-        info_box.attach(label, 0,1,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
         pt_label.set_alignment(0.0f, 0.5f);
-        info_box.attach(pt_label, 1,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
-        i++;
+        this.add_entry(info_box, _("Playtime"), null, pt_label, out i);
 
         vbox.pack_start(hbox , false, false, 0);
 
@@ -1988,49 +1850,24 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
 
         /* Genres of songs */ 
         var pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ARTIST_GENRES_SONGS, song);
-        label = new Gtk.Label("");
-        label.set_selectable(true);
-        label.set_alignment(0.0f, 0.5f);
-        label.set_markup(Markup.printf_escaped("<b>%s:</b>",_("Genres")));
-        info_box.attach(label, 0,1,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
         pt_label.set_alignment(0.0f, 0.5f);
         pt_label.set_line_wrap(true);
-        info_box.attach(pt_label, 1,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
-        i++;
-
+        this.add_entry(info_box, _("Genres"), null, pt_label, out i);
         /* Dates of songs */ 
         pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ARTIST_DATES_SONGS, song);
         pt_label.set_line_wrap(true);
-        label = new Gtk.Label("");
-        label.set_selectable(true);
-        label.set_alignment(0.0f, 0.0f);
-        label.set_markup(Markup.printf_escaped("<b>%s:</b>",_("Dates")));
-        info_box.attach(label, 0,1,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
         pt_label.set_alignment(0.0f, 0.5f);
-        info_box.attach(pt_label, 1,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
-        i++;
+        this.add_entry(info_box, _("Dates"), null, pt_label, out i);
         /* Total number of songs */ 
         pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ARTIST_NUM_SONGS, song);
         pt_label.set_line_wrap(true);
-        label = new Gtk.Label("");
-            label.set_selectable(true);
-        label.set_alignment(0.0f, 0.0f);
-        label.set_markup(Markup.printf_escaped("<b>%s:</b>",_("Songs")));
-        info_box.attach(label, 0,1,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
         pt_label.set_alignment(0.0f, 0.5f);
-        info_box.attach(pt_label, 1,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
-        i++;
+        this.add_entry(info_box, _("Songs"), null, pt_label, out i);
         /* Total playtime */
         pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ARTIST_PLAYTIME_SONGS, song);
         pt_label.set_line_wrap(true);
-        label = new Gtk.Label("");
-        label.set_selectable(true);
-        label.set_alignment(0.0f, 0.0f);
-        label.set_markup(Markup.printf_escaped("<b>%s:</b>",_("Playtime")));
-        info_box.attach(label, 0,1,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
         pt_label.set_alignment(0.0f, 0.5f);
-        info_box.attach(pt_label, 1,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
-        i++;
+        this.add_entry(info_box, _("Playtime"), null, pt_label, out i);
 
         vbox.pack_start(hbox , false, false, 0);
         /* Player controls */
