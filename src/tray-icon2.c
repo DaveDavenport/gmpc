@@ -98,7 +98,6 @@ static void tray_icon2_activate(GtkStatusIcon *gsi, gpointer user_data)
 static void tray_icon2_seek_event(GtkWidget * pb, guint seek_time, gpointer user_data)
 {
     int	state = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "tooltip-timeout", 5);
-    printf("seek to: %i\n", (int)seek_time);
     mpd_player_seek(connection, (int)seek_time);
     if(tray_icon2_tooltip_timeout)
     {
