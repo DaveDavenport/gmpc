@@ -154,6 +154,7 @@ struct _GmpcWidgetMorePrivate {
 	gint max_height;
 	GtkEventBox* eventbox;
 	GtkWidget* pchild;
+	char* unique_id;
 };
 
 /**
@@ -267,9 +268,9 @@ static void gmpc_widget_more_bg_style_changed (GmpcWidgetMore* self, GtkWidget* 
 static void _gmpc_widget_more_bg_style_changed_gtk_widget_style_set (GmpcWidgetMore* _sender, GtkStyle* previous_style, gpointer self);
 static void _gmpc_widget_more_expand_gtk_button_clicked (GtkButton* _sender, gpointer self);
 static void _gmpc_widget_more_size_changed_gtk_widget_size_allocate (GtkWidget* _sender, const GdkRectangle* allocation, gpointer self);
-static GmpcWidgetMore* gmpc_widget_more_new (const char* markup, GtkWidget* child);
-static GmpcWidgetMore* gmpc_widget_more_construct (GType object_type, const char* markup, GtkWidget* child);
-static GmpcWidgetMore* gmpc_widget_more_new (const char* markup, GtkWidget* child);
+static GmpcWidgetMore* gmpc_widget_more_new (const char* unique_id, const char* markup, GtkWidget* child);
+static GmpcWidgetMore* gmpc_widget_more_construct (GType object_type, const char* unique_id, const char* markup, GtkWidget* child);
+static GmpcWidgetMore* gmpc_widget_more_new (const char* unique_id, const char* markup, GtkWidget* child);
 static gpointer gmpc_widget_more_parent_class = NULL;
 static void gmpc_widget_more_finalize (GObject* obj);
 GType gmpc_now_playing_get_type (void);
@@ -1377,31 +1378,43 @@ static void _gmpc_widget_more_size_changed_gtk_widget_size_allocate (GtkWidget* 
 }
 
 
-static GmpcWidgetMore* gmpc_widget_more_construct (GType object_type, const char* markup, GtkWidget* child) {
+static GmpcWidgetMore* gmpc_widget_more_construct (GType object_type, const char* unique_id, const char* markup, GtkWidget* child) {
 	GmpcWidgetMore * self;
-	GtkWidget* _tmp1_;
-	GtkWidget* _tmp0_;
-	GtkAlignment* _tmp2_;
-	GtkEventBox* _tmp3_;
+	char* _tmp1_;
+	const char* _tmp0_;
+	GtkWidget* _tmp3_;
+	GtkWidget* _tmp2_;
+	GtkAlignment* _tmp4_;
+	GtkEventBox* _tmp5_;
 	GtkHBox* hbox;
 	GtkLabel* label;
-	GtkButton* _tmp4_;
+	const char* _tmp6_;
+	GtkButton* _tmp7_;
+	g_return_val_if_fail (unique_id != NULL, NULL);
 	g_return_val_if_fail (markup != NULL, NULL);
 	g_return_val_if_fail (child != NULL, NULL);
 	self = g_object_newv (object_type, 0, NULL);
-	gtk_frame_set_shadow_type ((GtkFrame*) self, GTK_SHADOW_NONE);
 	_tmp1_ = NULL;
 	_tmp0_ = NULL;
-	self->priv->pchild = (_tmp1_ = (_tmp0_ = child, (_tmp0_ == NULL) ? NULL : g_object_ref (_tmp0_)), (self->priv->pchild == NULL) ? NULL : (self->priv->pchild = (g_object_unref (self->priv->pchild), NULL)), _tmp1_);
-	_tmp2_ = NULL;
-	self->priv->ali = (_tmp2_ = g_object_ref_sink ((GtkAlignment*) gtk_alignment_new (0.f, 0.f, 1.f, 0.f)), (self->priv->ali == NULL) ? NULL : (self->priv->ali = (g_object_unref (self->priv->ali), NULL)), _tmp2_);
-	gtk_alignment_set_padding (self->priv->ali, (guint) 1, (guint) 1, (guint) 1, (guint) 1);
+	self->priv->unique_id = (_tmp1_ = (_tmp0_ = unique_id, (_tmp0_ == NULL) ? NULL : g_strdup (_tmp0_)), self->priv->unique_id = (g_free (self->priv->unique_id), NULL), _tmp1_);
+	gtk_frame_set_shadow_type ((GtkFrame*) self, GTK_SHADOW_NONE);
 	_tmp3_ = NULL;
-	self->priv->eventbox = (_tmp3_ = g_object_ref_sink ((GtkEventBox*) gtk_event_box_new ()), (self->priv->eventbox == NULL) ? NULL : (self->priv->eventbox = (g_object_unref (self->priv->eventbox), NULL)), _tmp3_);
+	_tmp2_ = NULL;
+	self->priv->pchild = (_tmp3_ = (_tmp2_ = child, (_tmp2_ == NULL) ? NULL : g_object_ref (_tmp2_)), (self->priv->pchild == NULL) ? NULL : (self->priv->pchild = (g_object_unref (self->priv->pchild), NULL)), _tmp3_);
+	_tmp4_ = NULL;
+	self->priv->ali = (_tmp4_ = g_object_ref_sink ((GtkAlignment*) gtk_alignment_new (0.f, 0.f, 1.f, 0.f)), (self->priv->ali == NULL) ? NULL : (self->priv->ali = (g_object_unref (self->priv->ali), NULL)), _tmp4_);
+	gtk_alignment_set_padding (self->priv->ali, (guint) 1, (guint) 1, (guint) 1, (guint) 1);
+	_tmp5_ = NULL;
+	self->priv->eventbox = (_tmp5_ = g_object_ref_sink ((GtkEventBox*) gtk_event_box_new ()), (self->priv->eventbox == NULL) ? NULL : (self->priv->eventbox = (g_object_unref (self->priv->eventbox), NULL)), _tmp5_);
 	gtk_event_box_set_visible_window (self->priv->eventbox, TRUE);
 	gtk_container_add ((GtkContainer*) self, (GtkWidget*) self->priv->eventbox);
 	gtk_container_add ((GtkContainer*) self->priv->eventbox, (GtkWidget*) self->priv->ali);
-	gtk_widget_set_size_request ((GtkWidget*) self->priv->ali, -1, self->priv->max_height);
+	if (cfg_get_single_value_as_int_with_default (config, "MoreWidget", unique_id, 0) == 1) {
+		self->priv->expand_state = 1;
+		gtk_widget_set_size_request ((GtkWidget*) self->priv->ali, -1, -1);
+	} else {
+		gtk_widget_set_size_request ((GtkWidget*) self->priv->ali, -1, self->priv->max_height);
+	}
 	gtk_container_add ((GtkContainer*) self->priv->ali, child);
 	g_signal_connect_object ((GtkWidget*) self, "style-set", (GCallback) _gmpc_widget_more_bg_style_changed_gtk_widget_style_set, self, 0);
 	hbox = g_object_ref_sink ((GtkHBox*) gtk_hbox_new (FALSE, 6));
@@ -1409,8 +1422,14 @@ static GmpcWidgetMore* gmpc_widget_more_construct (GType object_type, const char
 	gtk_label_set_selectable (label, TRUE);
 	gtk_label_set_markup (label, markup);
 	gtk_box_pack_start ((GtkBox*) hbox, (GtkWidget*) label, FALSE, FALSE, (guint) 0);
-	_tmp4_ = NULL;
-	self->priv->expand_button = (_tmp4_ = g_object_ref_sink ((GtkButton*) gtk_button_new_with_label (_ ("(more)"))), (self->priv->expand_button == NULL) ? NULL : (self->priv->expand_button = (g_object_unref (self->priv->expand_button), NULL)), _tmp4_);
+	_tmp6_ = NULL;
+	if (self->priv->expand_state == 0) {
+		_tmp6_ = _ ("(more)");
+	} else {
+		_tmp6_ = _ ("(less)");
+	}
+	_tmp7_ = NULL;
+	self->priv->expand_button = (_tmp7_ = g_object_ref_sink ((GtkButton*) gtk_button_new_with_label (_tmp6_)), (self->priv->expand_button == NULL) ? NULL : (self->priv->expand_button = (g_object_unref (self->priv->expand_button), NULL)), _tmp7_);
 	gtk_button_set_relief (self->priv->expand_button, GTK_RELIEF_NONE);
 	g_signal_connect_object (self->priv->expand_button, "clicked", (GCallback) _gmpc_widget_more_expand_gtk_button_clicked, self, 0);
 	gtk_box_pack_start ((GtkBox*) hbox, (GtkWidget*) self->priv->expand_button, FALSE, FALSE, (guint) 0);
@@ -1422,8 +1441,8 @@ static GmpcWidgetMore* gmpc_widget_more_construct (GType object_type, const char
 }
 
 
-static GmpcWidgetMore* gmpc_widget_more_new (const char* markup, GtkWidget* child) {
-	return gmpc_widget_more_construct (GMPC_WIDGET_TYPE_MORE, markup, child);
+static GmpcWidgetMore* gmpc_widget_more_new (const char* unique_id, const char* markup, GtkWidget* child) {
+	return gmpc_widget_more_construct (GMPC_WIDGET_TYPE_MORE, unique_id, markup, child);
 }
 
 
@@ -1442,16 +1461,23 @@ static void gmpc_widget_more_instance_init (GmpcWidgetMore * self) {
 	self->priv->max_height = 100;
 	self->priv->eventbox = NULL;
 	self->priv->pchild = NULL;
+	self->priv->unique_id = NULL;
 }
 
 
 static void gmpc_widget_more_finalize (GObject* obj) {
 	GmpcWidgetMore * self;
 	self = GMPC_WIDGET_MORE (obj);
+	{
+		if (self->priv->unique_id != NULL) {
+			cfg_set_single_value_as_int (config, "MoreWidget", self->priv->unique_id, self->priv->expand_state);
+		}
+	}
 	(self->priv->ali == NULL) ? NULL : (self->priv->ali = (g_object_unref (self->priv->ali), NULL));
 	(self->priv->expand_button == NULL) ? NULL : (self->priv->expand_button = (g_object_unref (self->priv->expand_button), NULL));
 	(self->priv->eventbox == NULL) ? NULL : (self->priv->eventbox = (g_object_unref (self->priv->eventbox), NULL));
 	(self->priv->pchild == NULL) ? NULL : (self->priv->pchild = (g_object_unref (self->priv->pchild), NULL));
+	self->priv->unique_id = (g_free (self->priv->unique_id), NULL);
 	G_OBJECT_CLASS (gmpc_widget_more_parent_class)->finalize (obj);
 }
 
@@ -3377,7 +3403,7 @@ GtkWidget* gmpc_metadata_browser_metadata_box_show_song (GmpcMetadataBrowser* se
 		gtk_text_view_set_left_margin ((GtkTextView*) text_view, 8);
 		_tmp10_ = NULL;
 		_tmp11_ = NULL;
-		frame = (_tmp11_ = g_object_ref_sink (gmpc_widget_more_new (_tmp10_ = g_markup_printf_escaped ("<b>%s:</b>", _ ("Lyrics")), (GtkWidget*) text_view)), _tmp10_ = (g_free (_tmp10_), NULL), _tmp11_);
+		frame = (_tmp11_ = g_object_ref_sink (gmpc_widget_more_new ("lyrics-view", _tmp10_ = g_markup_printf_escaped ("<b>%s:</b>", _ ("Lyrics")), (GtkWidget*) text_view)), _tmp10_ = (g_free (_tmp10_), NULL), _tmp11_);
 		gmpc_meta_text_view_query_text_from_song (text_view, song);
 		gtk_box_pack_start ((GtkBox*) vbox, (GtkWidget*) frame, FALSE, FALSE, (guint) 0);
 		(text_view == NULL) ? NULL : (text_view = (g_object_unref (text_view), NULL));
@@ -3394,7 +3420,7 @@ GtkWidget* gmpc_metadata_browser_metadata_box_show_song (GmpcMetadataBrowser* se
 		gtk_text_view_set_left_margin ((GtkTextView*) text_view, 8);
 		_tmp12_ = NULL;
 		_tmp13_ = NULL;
-		frame = (_tmp13_ = g_object_ref_sink (gmpc_widget_more_new (_tmp12_ = g_markup_printf_escaped ("<b>%s:</b>", _ ("Guitar Tabs")), (GtkWidget*) text_view)), _tmp12_ = (g_free (_tmp12_), NULL), _tmp13_);
+		frame = (_tmp13_ = g_object_ref_sink (gmpc_widget_more_new ("guitar-tabs-view", _tmp12_ = g_markup_printf_escaped ("<b>%s:</b>", _ ("Guitar Tabs")), (GtkWidget*) text_view)), _tmp12_ = (g_free (_tmp12_), NULL), _tmp13_);
 		gmpc_meta_text_view_query_text_from_song (text_view, song);
 		gtk_box_pack_start ((GtkBox*) vbox, (GtkWidget*) frame, FALSE, FALSE, (guint) 0);
 		(text_view == NULL) ? NULL : (text_view = (g_object_unref (text_view), NULL));
@@ -3726,7 +3752,7 @@ static void gmpc_metadata_browser_metadata_box_show_album (GmpcMetadataBrowser* 
 		gtk_text_view_set_left_margin ((GtkTextView*) text_view, 8);
 		_tmp13_ = NULL;
 		_tmp14_ = NULL;
-		frame = (_tmp14_ = g_object_ref_sink (gmpc_widget_more_new (_tmp13_ = g_markup_printf_escaped ("<b>%s:</b>", _ ("Album information")), (GtkWidget*) text_view)), _tmp13_ = (g_free (_tmp13_), NULL), _tmp14_);
+		frame = (_tmp14_ = g_object_ref_sink (gmpc_widget_more_new ("album-information-view", _tmp13_ = g_markup_printf_escaped ("<b>%s:</b>", _ ("Album information")), (GtkWidget*) text_view)), _tmp13_ = (g_free (_tmp13_), NULL), _tmp14_);
 		gmpc_meta_text_view_query_text_from_song (text_view, song);
 		gtk_box_pack_start ((GtkBox*) vbox, (GtkWidget*) frame, FALSE, FALSE, (guint) 0);
 		(text_view == NULL) ? NULL : (text_view = (g_object_unref (text_view), NULL));
@@ -3894,7 +3920,7 @@ static void gmpc_metadata_browser_metadata_box_show_artist (GmpcMetadataBrowser*
 		gtk_text_view_set_left_margin ((GtkTextView*) text_view, 8);
 		_tmp10_ = NULL;
 		_tmp11_ = NULL;
-		frame = (_tmp11_ = g_object_ref_sink (gmpc_widget_more_new (_tmp10_ = g_markup_printf_escaped ("<b>%s:</b>", _ ("Artist information")), (GtkWidget*) text_view)), _tmp10_ = (g_free (_tmp10_), NULL), _tmp11_);
+		frame = (_tmp11_ = g_object_ref_sink (gmpc_widget_more_new ("artist-information-view", _tmp10_ = g_markup_printf_escaped ("<b>%s:</b>", _ ("Artist information")), (GtkWidget*) text_view)), _tmp10_ = (g_free (_tmp10_), NULL), _tmp11_);
 		gmpc_meta_text_view_query_text_from_song (text_view, song);
 		gtk_box_pack_start ((GtkBox*) vbox, (GtkWidget*) frame, FALSE, FALSE, (guint) 0);
 		(text_view == NULL) ? NULL : (text_view = (g_object_unref (text_view), NULL));

@@ -463,8 +463,17 @@ public class Gmpc.Widget.More : Gtk.Frame {
         this.eventbox.modify_bg(Gtk.StateType.NORMAL,this.parent.style.dark[Gtk.StateType.NORMAL]);
         this.eventbox.modify_base(Gtk.StateType.NORMAL,this.parent.style.dark[Gtk.StateType.NORMAL]);
     }
-    More(string markup,Gtk.Widget child)
+    private string unique_id = null;
+    ~More()
     {
+        if(this.unique_id != null)
+        {
+            config.set_int("MoreWidget", unique_id,this.expand_state);
+        }
+    }
+    More(string unique_id, string markup,Gtk.Widget child)
+    {
+        this.unique_id = unique_id;
         this.set_shadow_type(Gtk.ShadowType.NONE);
         
         this.pchild = child;
@@ -474,7 +483,14 @@ public class Gmpc.Widget.More : Gtk.Frame {
         this.eventbox.set_visible_window(true);
         this.add(eventbox);
         this.eventbox.add(ali);
-        this.ali.set_size_request(-1, this.max_height);
+
+        /* restore state */
+        if(config.get_int_with_default("MoreWidget", unique_id,0) == 1){
+            this.expand_state = 1;
+            this.ali.set_size_request(-1, -1);
+        }
+        else 
+            this.ali.set_size_request(-1, this.max_height);
         this.ali.add(child);
 
         this.style_set += bg_style_changed;
@@ -484,13 +500,15 @@ public class Gmpc.Widget.More : Gtk.Frame {
         label.set_selectable(true);
         label.set_markup(markup);
         hbox.pack_start(label, false, false,0);
-        this.expand_button = new Gtk.Button.with_label(_("(more)"));
+        this.expand_button = new Gtk.Button.with_label((this.expand_state == 0)?_("(more)"):_("(less)"));
         this.expand_button.set_relief(Gtk.ReliefStyle.NONE);
         this.expand_button.clicked+=expand;
         hbox.pack_start(this.expand_button, false, false,0);
         
         this.set_label_widget(hbox);
         child.size_allocate += size_changed;
+
+
     }
 }
 
@@ -1578,7 +1596,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         {
             var text_view = new Gmpc.MetaData.TextView(Gmpc.MetaData.Type.SONG_TXT);
             text_view.set_left_margin(8);
-            var frame = new Gmpc.Widget.More(Markup.printf_escaped("<b>%s:</b>", _("Lyrics")),text_view);
+            var frame = new Gmpc.Widget.More("lyrics-view",Markup.printf_escaped("<b>%s:</b>", _("Lyrics")),text_view);
             text_view.query_from_song(song);
 
             vbox.pack_start(frame, false, false, 0);
@@ -1591,7 +1609,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             var text_view = new Gmpc.MetaData.TextView(Gmpc.MetaData.Type.SONG_GUITAR_TAB);
             text_view.use_monospace = true;
             text_view.set_left_margin(8);
-            var frame = new Gmpc.Widget.More(Markup.printf_escaped("<b>%s:</b>", _("Guitar Tabs")),text_view);
+            var frame = new Gmpc.Widget.More("guitar-tabs-view", Markup.printf_escaped("<b>%s:</b>", _("Guitar Tabs")),text_view);
             text_view.query_from_song(song);
 
             vbox.pack_start(frame, false, false, 0);
@@ -1781,7 +1799,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         {
             var text_view = new Gmpc.MetaData.TextView(Gmpc.MetaData.Type.ALBUM_TXT);
             text_view.set_left_margin(8);
-            var frame = new Gmpc.Widget.More(Markup.printf_escaped("<b>%s:</b>", _("Album information")),text_view);
+            var frame = new Gmpc.Widget.More("album-information-view", Markup.printf_escaped("<b>%s:</b>", _("Album information")),text_view);
             text_view.query_from_song(song);
 
             vbox.pack_start(frame, false, false, 0);
@@ -1899,7 +1917,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         {
             var text_view = new Gmpc.MetaData.TextView(Gmpc.MetaData.Type.ARTIST_TXT);
             text_view.set_left_margin(8);
-            var frame = new Gmpc.Widget.More(Markup.printf_escaped("<b>%s:</b>", _("Artist information")),text_view);
+            var frame = new Gmpc.Widget.More("artist-information-view", Markup.printf_escaped("<b>%s:</b>", _("Artist information")),text_view);
             text_view.query_from_song(song);
             vbox.pack_start(frame, false, false, 0);
         }
