@@ -1686,8 +1686,8 @@ static void gmpc_now_playing_browser_init (GmpcNowPlaying* self) {
 		g_signal_connect_object ((GtkWidget*) self->priv->paned, "style-set", (GCallback) _gmpc_now_playing_browser_bg_style_changed_gtk_widget_style_set, self, 0);
 		gtk_scrolled_window_add_with_viewport (self->priv->paned, (GtkWidget*) self->priv->container);
 		g_object_set ((GObject*) gtk_scrolled_window_get_vadjustment (self->priv->paned), "step-increment", 20.0, NULL);
-		gtk_container_set_focus_vadjustment ((GtkContainer*) self->priv->container, gtk_scrolled_window_get_vadjustment (self->priv->paned));
-		/* Bind keys */
+		/*            this.container.set_focus_vadjustment(this.paned.get_vadjustment());
+		 Bind keys */
 		g_signal_connect_object ((GtkWidget*) self->priv->paned, "key-release-event", (GCallback) _gmpc_now_playing_browser_key_release_event_gtk_widget_key_release_event, self, 0);
 	}
 }
