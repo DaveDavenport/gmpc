@@ -167,7 +167,8 @@ gmpcinclude_HEADERS = \
 		vala/gmpc-easy-command.h\
 		vala/gmpc-plugin.h\
         vala/gmpc-connection.h\
-		playlist3-messages.h\
+        vala/gmpc-mpddata-treeview-tooltip.h\
+        playlist3-messages.h\
 		gmpc-version.h\
 		metadata.h
 
@@ -197,6 +198,7 @@ EXTRA_DIST=\
         vala/gmpc-favorites.h\
         vala/gmpc-liststore-sort.h\
         vala/gmpc-connection.h\
+        vala/gmpc-mpddata-treeview-tooltip.h\
         vala/gmpc-metadata-prefetcher.h\
         gtktransition.h\
         plugin-internal.h\
