@@ -35,7 +35,11 @@
  */
 gchar *format_time(unsigned long seconds)
 {
-	return format_time_real(seconds, _(" Total time: "));
+    gchar *retv = NULL;
+    gchar *string = g_strdup_printf("%s: ", _("Total time"));
+    retv = format_time_real(seconds, string);
+    g_free(string);
+	return retv; 
 }
 gchar * format_time_real(unsigned long seconds, const gchar *data)
 {
@@ -45,29 +49,20 @@ gchar * format_time_real(unsigned long seconds, const gchar *data)
 	int minutes = (seconds % 3600)/60;
     int sec = (seconds % 60);
 	char *ret;
-	if(seconds == 0)
-	{
+	if(seconds == 0) {
 		return g_strdup("");
 	}
 	str = g_string_new(data);
-	if(days != 0)
-	{
+	if(days != 0) {
 		g_string_append_printf(str, "%i %s ", days, ngettext("day", "days", days));
 	}	
-	if(hours != 0)
-	{
+	if(hours != 0) {
 		g_string_append_printf(str, "%i %s ", hours, ngettext("hour", "hours", hours));
 	}
-	if(minutes != 0)
-	{
+	if(minutes != 0) {
 		g_string_append_printf(str, "%i %s ", minutes, ngettext("minute", "minutes", minutes));
 	}
-    /*
-    if(sec != 0)
-    {
-		g_string_append_printf(str, "%i %s", sec, ngettext("second", "seconds", sec));
-    }
-    */
+
 	ret = str->str;
 	g_string_free(str, FALSE);
 	return ret;
@@ -211,18 +206,6 @@ gchar * gmpc_get_covers_path(const gchar *filename)
 char *gmpc_get_full_image_path(void)
 {
     gchar *path;
-    /*
-#ifdef WIN32
-    gchar *packagedir;
-    packagedir = g_win32_get_package_installation_directory_of_module(NULL);
-    debug_printf(DEBUG_INFO, "Got %s as package installation dir", packagedir);
-
-    path = g_build_filename(packagedir, "share","gmpc","icons",  NULL);
-
-    q_free(packagedir);
-
-#else
-*/
     const gchar * const *paths = g_get_system_data_dirs();
     int i;
 
@@ -261,17 +244,6 @@ char *gmpc_get_full_image_path(void)
 char *gmpc_get_full_glade_path(const char *filename)
 {
     gchar *path;
-    /*
-#ifdef WIN32
-    gchar *packagedir;
-    packagedir = g_win32_get_package_installation_directory_of_module(NULL);
-    debug_printf(DEBUG_INFO, "Got %s as package installation dir", packagedir);
-
-    path = g_build_filename(packagedir, "share","gmpc", filename, NULL);
-
-    q_free(packagedir);
-
-#else*/
     const gchar * const *paths = g_get_system_data_dirs();
     int i;
 
@@ -297,7 +269,6 @@ char *gmpc_get_full_glade_path(const char *filename)
         g_error("Failed to locate glade path");
         return NULL;
     }
-    //#endif
     return path;
 }
 
@@ -315,8 +286,8 @@ void open_uri(const gchar *uri)
 	gchar *browser_command = cfg_get_single_value_as_string_with_default(config, "Misc","browser", "xdg-open '%s'");
 #endif
 #endif
-    gchar *escaped_uri = g_strdup(uri);//g_uri_escape_string(uri, ":/", TRUE);
-	command	= g_strdup_printf(browser_command, escaped_uri);
+    gchar *escaped_uri = g_strdup(uri);
+    command	= g_strdup_printf(browser_command, escaped_uri);
     g_free(escaped_uri);
 	result = g_spawn_command_line_async (command, &error);
 	if(error)
@@ -713,4 +684,3 @@ colorshift_pixbuf(GdkPixbuf *dest, GdkPixbuf *src, int shift)
 		}
 	}
 }
-

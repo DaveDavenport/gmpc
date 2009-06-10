@@ -246,6 +246,7 @@ static void tag2_destroy_tag(tag_element *te)
 	if(te->timeout)
 		g_source_remove(te->timeout);
 	gtk_widget_destroy(te->vbox);
+    gtk_widget_destroy(te->tool);
 
 	if(te->model)
 		g_object_unref(te->model);

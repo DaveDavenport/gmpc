@@ -19,10 +19,25 @@
 #ifndef __ADVANCED_SEARCH_H__
 #define __ADVANCED_SEARCH_H__
 
-
+/**
+ * Initialize the advanced_search system.
+ */
 void advanced_search_init(void);
+/**
+ * Update the advanced_search regex to include only the supported tags
+ */
 void advanced_search_update_taglist(void);
+/**
+ * Destroy all the advanced_search system and clean all allocated memory.
+ */
 void advanced_search_destroy(void);
+/**
+ * Execute query.
+ * @param query the query to execute.
+ * @param playlist set to TRUE to search only songs in the playlist.
+ *
+ * @returns the search result in a #MpdData list.
+ */
 MpdData *advanced_search(const gchar *query, int playlist);
 
 #endif

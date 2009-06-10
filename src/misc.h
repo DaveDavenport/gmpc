@@ -26,8 +26,11 @@
  * format time into 
  * Total time: %i days %i hours %i minutes
  */
-
 gchar * format_time(unsigned long seconds);
+
+/**
+ * Allows you to prepend a string
+ */
 gchar * format_time_real(unsigned long seconds, const gchar *data);
 
 void mpd_song_markup_escaped(char *buffer, int size, char *markup, mpd_Song *song);
