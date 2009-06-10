@@ -86,6 +86,10 @@ struct _GmpcWidgetSimilarArtistClass {
 	GtkTableClass parent_class;
 };
 
+/**
+ * The "More" Widget. This collapses it child and adds a more/less button.
+ * Using the unique_id it stores the state for the next time.
+ */
 struct _GmpcWidgetMore {
 	GtkFrame parent_instance;
 	GmpcWidgetMorePrivate * priv;

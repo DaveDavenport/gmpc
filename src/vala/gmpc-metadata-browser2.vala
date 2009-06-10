@@ -275,17 +275,24 @@ public class Gmpc.Widget.SimilarSongs : Gtk.Expander {
             this.set_expanded(false);
         }
     }
-
 }
 
 public class Gmpc.Widget.SimilarArtist : Gtk.Table {
     private MPD.Song song = null;
     private Gmpc.MetadataBrowser browser = null;
 
-    private void metadata_changed(MetaWatcher gmw, MPD.Song song, Gmpc.MetaData.Type type, Gmpc.MetaData.Result result, Gmpc.MetaData.Item met)
+    /**
+     * Handle signals from the metadata object.
+     */
+    private void metadata_changed(MetaWatcher gmw, 
+            MPD.Song song, 
+            Gmpc.MetaData.Type type, 
+            Gmpc.MetaData.Result result, 
+            Gmpc.MetaData.Item met)
     {
-        if(this.song.artist.collate(song.artist)!=0) return;
+        /* only listen to the same artist and the same type */
         if(type != Gmpc.MetaData.Type.ARTIST_SIMILAR) return;
+        if(this.song.artist.collate(song.artist)!=0) return;
 
         /* clear widgets */
         var child_list = this.get_children();
@@ -293,17 +300,19 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
         {
             child.destroy();
         }
-
+        /* if unavailable set that in a label*/
         if(result == Gmpc.MetaData.Result.UNAVAILABLE || met.is_empty() || !met.is_text_list())
         {
             var label = new Gtk.Label(_("Unavailable"));
             this.attach(label, 0,1,0,1,Gtk.AttachOptions.SHRINK, Gtk.AttachOptions.SHRINK, 0,0);
         }
+        /* if fetching set that in a label*/
         else if(result == Gmpc.MetaData.Result.FETCHING){
             var label = new Gtk.Label(_("Fetching"));
             this.attach(label, 0,1,0,1,Gtk.AttachOptions.SHRINK, Gtk.AttachOptions.SHRINK, 0,0);
-        }else
-        {
+        }
+        /* Set result */
+        else {
             List<Gtk.Widget> in_db_list = null;
             GLib.List<weak string> list = met.get_text_list().copy();
             if(list != null)
@@ -345,7 +354,10 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
             foreach(Gtk.Widget item in in_db_list)
             {
                 if(i<50){
-                    this.attach(item, i%4,i%4+1,i/4,i/4+1,Gtk.AttachOptions.EXPAND|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK, 0,0);
+                    this.attach(item, 
+                            i%4,i%4+1,i/4,i/4+1,
+                            Gtk.AttachOptions.EXPAND|Gtk.AttachOptions.FILL,
+                            Gtk.AttachOptions.SHRINK, 0,0);
                 }else{
                     item.ref_sink();
                     item.destroy();
@@ -422,6 +434,10 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
     }
 }
 
+/**
+ * The "More" Widget. This collapses it child and adds a more/less button.
+ * Using the unique_id it stores the state for the next time.
+ */
 public class Gmpc.Widget.More : Gtk.Frame {
     private Gtk.Alignment ali = null;
     private int expand_state = 0;
@@ -430,6 +446,9 @@ public class Gmpc.Widget.More : Gtk.Frame {
     private Gtk.EventBox eventbox = null;
     private Gtk.Widget pchild = null;
 
+    /**
+     * Expand/collaps the view
+     */
     private void expand(Gtk.Button but)
     {
         if(this.expand_state == 0) {
@@ -443,6 +462,8 @@ public class Gmpc.Widget.More : Gtk.Frame {
         }
 
     }
+    /* if hte size of the child is small enough to fit in the 
+     * small mode don't show the more/less button */
     private void size_changed(Gtk.Widget child, Gdk.Rectangle alloc)
     {
         if(alloc.height < (this.max_height-12)){
@@ -463,14 +484,22 @@ public class Gmpc.Widget.More : Gtk.Frame {
         this.eventbox.modify_bg(Gtk.StateType.NORMAL,this.parent.style.dark[Gtk.StateType.NORMAL]);
         this.eventbox.modify_base(Gtk.StateType.NORMAL,this.parent.style.dark[Gtk.StateType.NORMAL]);
     }
+
     private string unique_id = null;
+    /* Store the state on destroy */
     ~More()
     {
-        if(this.unique_id != null)
-        {
+        if(this.unique_id != null)  {
             config.set_int("MoreWidget", unique_id,this.expand_state);
         }
     }
+    /** 
+     * @param unique_id  a string used to store/restore state. 
+     * @parem markup     a string using following PangoMarkup to show in the label.
+     * @param child      a Gtk.Widget that packs into it as child.
+     * 
+     * @returns a Gmpc.Widget.More object.
+     */
     More(string unique_id, string markup,Gtk.Widget child)
     {
         this.unique_id = unique_id;

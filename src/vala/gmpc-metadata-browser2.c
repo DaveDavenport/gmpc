@@ -138,6 +138,10 @@ struct _GmpcWidgetSimilarArtistPrivate {
 	GmpcMetadataBrowser* browser;
 };
 
+/**
+ * The "More" Widget. This collapses it child and adds a more/less button.
+ * Using the unique_id it stores the state for the next time.
+ */
 struct _GmpcWidgetMore {
 	GtkFrame parent_instance;
 	GmpcWidgetMorePrivate * priv;
@@ -975,6 +979,9 @@ static void _g_list_free_g_object_unref (GList* self) {
 }
 
 
+/**
+     * Handle signals from the metadata object.
+     */
 static void gmpc_widget_similar_artist_metadata_changed (GmpcWidgetSimilarArtist* self, GmpcMetaWatcher* gmw, const mpd_Song* song, MetaDataType type, MetaDataResult _result_, const MetaData* met) {
 	GError * _inner_error_;
 	GList* child_list;
@@ -985,10 +992,11 @@ static void gmpc_widget_similar_artist_metadata_changed (GmpcWidgetSimilarArtist
 	g_return_if_fail (song != NULL);
 	g_return_if_fail (met != NULL);
 	_inner_error_ = NULL;
-	if (g_utf8_collate (self->priv->song->artist, song->artist) != 0) {
+	/* only listen to the same artist and the same type */
+	if (type != META_ARTIST_SIMILAR) {
 		return;
 	}
-	if (type != META_ARTIST_SIMILAR) {
+	if (g_utf8_collate (self->priv->song->artist, song->artist) != 0) {
 		return;
 	}
 	/* clear widgets */
@@ -1020,6 +1028,7 @@ static void gmpc_widget_similar_artist_metadata_changed (GmpcWidgetSimilarArtist
 	} else {
 		_tmp1_ = !meta_data_is_text_list (met);
 	}
+	/* if unavailable set that in a label*/
 	if (_tmp1_) {
 		GtkLabel* label;
 		label = g_object_ref_sink ((GtkLabel*) gtk_label_new (_ ("Unavailable")));
@@ -1035,6 +1044,7 @@ static void gmpc_widget_similar_artist_metadata_changed (GmpcWidgetSimilarArtist
 			GList* in_db_list;
 			GList* list;
 			gint i;
+			/* Set result */
 			in_db_list = NULL;
 			list = g_list_copy (meta_data_get_text_list (met));
 			if (list != NULL) {
@@ -1319,6 +1329,9 @@ GType gmpc_widget_similar_artist_get_type (void) {
 }
 
 
+/**
+     * Expand/collaps the view
+     */
 static void gmpc_widget_more_expand (GmpcWidgetMore* self, GtkButton* but) {
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (but != NULL);
@@ -1334,6 +1347,8 @@ static void gmpc_widget_more_expand (GmpcWidgetMore* self, GtkButton* but) {
 }
 
 
+/* if hte size of the child is small enough to fit in the 
+     * small mode don't show the more/less button */
 static void gmpc_widget_more_size_changed (GmpcWidgetMore* self, GtkWidget* child, const GdkRectangle* alloc) {
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (child != NULL);
@@ -1378,6 +1393,13 @@ static void _gmpc_widget_more_size_changed_gtk_widget_size_allocate (GtkWidget* 
 }
 
 
+/** 
+     * @param unique_id  a string used to store/restore state. 
+     * @parem markup     a string using following PangoMarkup to show in the label.
+     * @param child      a Gtk.Widget that packs into it as child.
+     * 
+     * @returns a Gmpc.Widget.More object.
+     */
 static GmpcWidgetMore* gmpc_widget_more_construct (GType object_type, const char* unique_id, const char* markup, GtkWidget* child) {
 	GmpcWidgetMore * self;
 	char* _tmp1_;

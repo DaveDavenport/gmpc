@@ -76,7 +76,7 @@ static gboolean gmpc_progress_motion_notify_event_callback (GmpcProgress* self, 
 static void gmpc_progress_value_changed (GmpcProgress* self, GtkScale* range);
 static gboolean gmpc_progress_button_release_event_callback (GmpcProgress* self, GtkScale* scale, const GdkEventButton* event);
 void gmpc_progress_set_time (GmpcProgress* self, guint total, guint current);
-static gboolean gmpc_progress_button_press_event_callback (GmpcProgress* self, GtkScale* scale, const GdkEventButton* event);
+static gboolean gmpc_progress_button_press_event_callback (GmpcProgress* self, const GdkEventButton* event, GtkScale* scale);
 static gboolean gmpc_progress_scroll_event_callback (GmpcProgress* self, GtkScale* scale, const GdkEventScroll* event);
 gboolean gmpc_progress_get_hide_text (GmpcProgress* self);
 GmpcProgress* gmpc_progress_new (void);
@@ -84,7 +84,6 @@ GmpcProgress* gmpc_progress_construct (GType object_type);
 GmpcProgress* gmpc_progress_new (void);
 void gmpc_progress_set_hide_text (GmpcProgress* self, gboolean value);
 static gboolean _gmpc_progress_scroll_event_callback_gtk_widget_scroll_event (GtkScale* _sender, const GdkEventScroll* event, gpointer self);
-static gboolean _gmpc_progress_button_press_event_callback_gtk_widget_button_press_event (GtkScale* _sender, const GdkEventButton* event, gpointer self);
 static gboolean _gmpc_progress_button_release_event_callback_gtk_widget_button_release_event (GtkScale* _sender, const GdkEventButton* event, gpointer self);
 static gboolean _gmpc_progress_motion_notify_event_callback_gtk_widget_motion_notify_event (GtkScale* _sender, const GdkEventMotion* event, gpointer self);
 static gboolean _gmpc_progress_enter_notify_event_callback_gtk_widget_enter_notify_event (GtkScale* _sender, const GdkEventCrossing* event, gpointer self);
@@ -266,11 +265,13 @@ static gboolean gmpc_progress_button_release_event_callback (GmpcProgress* self,
 }
 
 
-static gboolean gmpc_progress_button_press_event_callback (GmpcProgress* self, GtkScale* scale, const GdkEventButton* event) {
+static gboolean gmpc_progress_button_press_event_callback (GmpcProgress* self, const GdkEventButton* event, GtkScale* scale) {
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (scale != NULL, FALSE);
 	self->priv->press++;
+	fprintf (stdout, "button press event: %i (int)\n", (gint) (*event).type);
 	if ((*event).type == GDK_BUTTON_PRESS) {
+		gboolean _tmp0_;
 		if ((*event).button == 3) {
 			guint cur;
 			guint tot;
@@ -281,20 +282,49 @@ static gboolean gmpc_progress_button_press_event_callback (GmpcProgress* self, G
 			self->priv->total = self->priv->current = (guint) 0;
 			gmpc_progress_set_time (self, tot, cur);
 		}
+		_tmp0_ = FALSE;
 		if ((*event).button == 2) {
+			_tmp0_ = TRUE;
+		} else {
+			_tmp0_ = (*event).button == 1;
+		}
+		if (_tmp0_) {
 			guint p;
-			guint _tmp0_;
-			/* || event.button == 1*/
+			guint _tmp1_;
 			p = (guint) (self->priv->total * ((*event).x / ((double) (((GtkWidget*) scale)->allocation.width - gtk_widget_get_style ((GtkWidget*) scale)->xthickness))));
-			_tmp0_ = 0U;
+			_tmp1_ = 0U;
 			if (p > self->priv->total) {
-				_tmp0_ = self->priv->total;
+				_tmp1_ = self->priv->total;
 			} else {
-				_tmp0_ = p;
+				_tmp1_ = p;
 			}
-			p = _tmp0_;
+			p = _tmp1_;
 			g_signal_emit_by_name (self, "seek-event", p);
 			return TRUE;
+		}
+	} else {
+		if ((*event).type == GDK_2BUTTON_PRESS) {
+			gboolean _tmp3_;
+			_tmp3_ = FALSE;
+			if ((*event).button == 2) {
+				_tmp3_ = TRUE;
+			} else {
+				_tmp3_ = (*event).button == 1;
+			}
+			if (_tmp3_) {
+				guint p;
+				guint _tmp4_;
+				p = (guint) (self->priv->total * ((*event).x / ((double) (((GtkWidget*) scale)->allocation.width - gtk_widget_get_style ((GtkWidget*) scale)->xthickness))));
+				_tmp4_ = 0U;
+				if (p > self->priv->total) {
+					_tmp4_ = self->priv->total;
+				} else {
+					_tmp4_ = p;
+				}
+				p = _tmp4_;
+				g_signal_emit_by_name (self, "seek-event", p);
+				return TRUE;
+			}
 		}
 	}
 	return FALSE;
@@ -450,11 +480,6 @@ static gboolean _gmpc_progress_scroll_event_callback_gtk_widget_scroll_event (Gt
 }
 
 
-static gboolean _gmpc_progress_button_press_event_callback_gtk_widget_button_press_event (GtkScale* _sender, const GdkEventButton* event, gpointer self) {
-	return gmpc_progress_button_press_event_callback (self, _sender, event);
-}
-
-
 static gboolean _gmpc_progress_button_release_event_callback_gtk_widget_button_release_event (GtkScale* _sender, const GdkEventButton* event, gpointer self) {
 	return gmpc_progress_button_release_event_callback (self, _sender, event);
 }
@@ -501,7 +526,7 @@ static GObject * gmpc_progress_constructor (GType type, guint n_construct_proper
 		gtk_widget_add_events ((GtkWidget*) self->priv->scale, (gint) GDK_ENTER_NOTIFY_MASK);
 		gtk_widget_add_events ((GtkWidget*) self->priv->scale, (gint) GDK_LEAVE_NOTIFY_MASK);
 		g_signal_connect_object ((GtkWidget*) self->priv->scale, "scroll-event", (GCallback) _gmpc_progress_scroll_event_callback_gtk_widget_scroll_event, self, 0);
-		g_signal_connect_object ((GtkWidget*) self->priv->scale, "button-press-event", (GCallback) _gmpc_progress_button_press_event_callback_gtk_widget_button_press_event, self, 0);
+		g_signal_connect_object (self->priv->scale, "button-press-event", (GCallback) gmpc_progress_button_press_event_callback, (GObject*) self, G_CONNECT_SWAPPED | G_CONNECT_AFTER);
 		g_signal_connect_object ((GtkWidget*) self->priv->scale, "button-release-event", (GCallback) _gmpc_progress_button_release_event_callback_gtk_widget_button_release_event, self, 0);
 		g_signal_connect_object ((GtkWidget*) self->priv->scale, "motion-notify-event", (GCallback) _gmpc_progress_motion_notify_event_callback_gtk_widget_motion_notify_event, self, 0);
 		g_signal_connect_object ((GtkWidget*) self->priv->scale, "enter-notify-event", (GCallback) _gmpc_progress_enter_notify_event_callback_gtk_widget_enter_notify_event, self, 0);

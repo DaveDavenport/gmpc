@@ -161,7 +161,8 @@ public class Gmpc.Progress : Gtk.HBox
         this.scale.add_events((int)Gdk.EventMask.ENTER_NOTIFY_MASK);
         this.scale.add_events((int)Gdk.EventMask.LEAVE_NOTIFY_MASK);
         this.scale.scroll_event += scroll_event_callback;
-        this.scale.button_press_event += button_press_event_callback;
+        GLib.Signal.connect_object(this.scale, "button-press-event",
+		(GLib.Callback)button_press_event_callback, this, GLib.ConnectFlags.SWAPPED|GLib.ConnectFlags.AFTER);
         this.scale.button_release_event += button_release_event_callback;
         this.scale.motion_notify_event += motion_notify_event_callback;
         this.scale.enter_notify_event += enter_notify_event_callback;
@@ -203,9 +204,10 @@ public class Gmpc.Progress : Gtk.HBox
 		this.press--;
 		return false;
 	}
-    private bool button_press_event_callback (Gtk.Scale scale, Gdk.EventButton event)
+    private bool button_press_event_callback (Gdk.EventButton event, Gtk.Scale scale)
     {
 		this.press++;
+		stdout.printf("button press event: %i (int)\n", (event.type));
         if(event.type == Gdk.EventType.BUTTON_PRESS)
         {
             if(event.button == 3)
@@ -217,7 +219,7 @@ public class Gmpc.Progress : Gtk.HBox
                 this.total=this.current = 0;
                 set_time(tot,cur);
             }
-            if(event.button == 2/* || event.button == 1*/)
+            if(event.button == 2 || event.button == 1)
             {
                 uint p = (uint)(this.total * (event.x/(double)(scale.allocation.width-scale.style.xthickness)));
 				p = (p > this.total)? this.total:p;
@@ -225,6 +227,16 @@ public class Gmpc.Progress : Gtk.HBox
                 return true;
             }
         }
+		else if (event.type == Gdk.EventType.2BUTTON_PRESS)
+		{
+			if(event.button == 2 || event.button == 1)
+			{
+				uint p = (uint)(this.total * (event.x/(double)(scale.allocation.width-scale.style.xthickness)));
+				p = (p > this.total)? this.total:p;
+				seek_event(p);
+				return true;
+			}
+		}
         return false;
     }
 
