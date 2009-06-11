@@ -123,7 +123,7 @@
             <child>
               <widget class="GtkMenuItem" id="menuitem_server">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">_Server</property>
+                <property name="label" translatable="yes">Se_rver</property>
                 <property name="use_underline">True</property>
               </widget>
             </child>
