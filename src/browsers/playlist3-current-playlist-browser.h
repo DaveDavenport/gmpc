@@ -35,6 +35,6 @@ struct _PlayQueuePluginClass
 };
 
 
-PlayQueuePlugin * play_queue_plugin_new(void);
+PlayQueuePlugin * play_queue_plugin_new(const gchar *uid);
 
 #endif

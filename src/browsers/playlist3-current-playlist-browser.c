@@ -39,6 +39,12 @@
 
 #include "playlist3-playlist-editor.h"
 
+
+
+enum {
+    PLAY_QUEUE_DUMMY_PROPERTY,
+    PLAY_QUEUE_UID
+};
 /**
  * Private data structure 
  */
@@ -57,7 +63,41 @@ typedef struct _PlayQueuePluginPrivate {
     GtkWidget *pl3_cp_vbox;
     /* reference to the row */
     GtkTreeRowReference *pl3_curb_tree_ref;
+    /* Gchar *uid */
+    gchar *uid;
 } _PlayQueuePluginPrivate;
+
+/**
+ * Propperty setter/getter
+ */
+static void play_queue_get_property (GObject * object, guint property_id, GValue * value, GParamSpec * pspec) {
+	PlayQueuePlugin * self;
+	self = (PlayQueuePlugin *)(object);
+	switch (property_id) {
+		case PLAY_QUEUE_UID:
+		g_value_set_string (value, self->priv->uid);
+		break;
+		default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+		break;
+	}
+
+}
+static void play_queue_set_property (GObject * object, guint property_id, const GValue * value, GParamSpec * pspec)
+{
+	PlayQueuePlugin * self;
+	self = (PlayQueuePlugin *)(object);
+	switch (property_id) {
+		case PLAY_QUEUE_UID:
+            if(self->priv->uid) g_free(self->priv->uid);
+            self->priv->uid = g_value_dup_string(value);
+            printf("set uid: %s\n", self->priv->uid);
+		break;
+		default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+		break;
+	}
+}
 
 
 static void pl3_current_playlist_browser_paste_after_songs(GtkTreeView *tree, GList *paste_list, PlayQueuePlugin *self);
@@ -87,6 +127,7 @@ static void pl3_current_playlist_browser_init(PlayQueuePlugin *self);
 
 static void pl3_cp_current_song_changed(GmpcMpdDataModelPlaylist *model2,GtkTreePath *path, GtkTreeIter *iter,PlayQueuePlugin *self)
 {
+    if(self->priv->pl3_cp_tree == NULL) return;
     GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(self->priv->pl3_cp_tree));
     if(GMPC_IS_MPDDATA_MODEL_PLAYLIST(model))
     {
@@ -161,7 +202,7 @@ static void pl3_current_playlist_browser_crop_current_song(PlayQueuePlugin *self
 static void pl3_cp_init(PlayQueuePlugin *self)
 {
 
-    pl3_current_playlist_browser_init(self);
+//    pl3_current_playlist_browser_init(self);
     g_signal_connect(G_OBJECT(playlist), "current_song_changed", G_CALLBACK(pl3_cp_current_song_changed), self);
     g_signal_connect(G_OBJECT(playlist), "total_playtime_changed", G_CALLBACK(pl3_total_playtime_changed), self);
 
@@ -329,7 +370,8 @@ static void pl3_current_playlist_browser_init(PlayQueuePlugin *self)
     GMPC_PLUGIN_BASE(self)->plugin_type = GMPC_INTERNALL|GMPC_PLUGIN_PL_BROWSER;
 
 	self->priv->pl3_cp_vbox = gtk_vbox_new(FALSE,6);
-    tree = gmpc_mpddata_treeview_new("current-pl", FALSE, GTK_TREE_MODEL(playlist));
+    printf("create treeview: %s\n", self->priv->uid);
+    tree = gmpc_mpddata_treeview_new(self->priv->uid, FALSE, GTK_TREE_MODEL(playlist));
 
     g_signal_connect(G_OBJECT(tree), "paste_before", G_CALLBACK(pl3_current_playlist_browser_paste_before_songs), self);
     g_signal_connect(G_OBJECT(tree), "paste_after", G_CALLBACK(pl3_current_playlist_browser_paste_after_songs), self);
@@ -1164,12 +1206,17 @@ static void play_queue_plugin_class_init (PlayQueuePluginClass *klass)
 	/* Connect destroy and construct */ 
 	G_OBJECT_CLASS(klass)->finalize =		play_queue_plugin_finalize;
 	G_OBJECT_CLASS(klass)->constructor =	play_queue_plugin_constructor;
-	
+	G_OBJECT_CLASS (klass)->get_property = play_queue_get_property;
+	G_OBJECT_CLASS (klass)->set_property = play_queue_set_property;
 	/* Connect plugin functions */
 	GMPC_PLUGIN_BASE_CLASS(klass)->get_version = play_queue_plugin_get_version;
 	GMPC_PLUGIN_BASE_CLASS(klass)->get_name =	 play_queue_plugin_get_name;
 
 	GMPC_PLUGIN_BASE_CLASS(klass)->save_yourself =	 pl3_current_playlist_save_myself;
+
+
+	g_object_class_install_property (G_OBJECT_CLASS (klass), PLAY_QUEUE_UID,
+            g_param_spec_string ("uid", "uid", "stores an unique id", "play-queue", G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_READABLE | G_PARAM_WRITABLE));
 
 }
 /**
@@ -1212,8 +1259,8 @@ GType play_queue_plugin_get_type(void) {
 	}
 	return play_queue_plugin_type_id;
 }
-PlayQueuePlugin * play_queue_plugin_new(void) {
-	PlayQueuePlugin *plug  =g_object_newv(play_queue_plugin_get_type(), 0, NULL);
+PlayQueuePlugin * play_queue_plugin_new(const gchar *uid) {
+	PlayQueuePlugin *plug  =g_object_new(play_queue_plugin_get_type(), "uid", uid, NULL);
 
     return plug;
 }
