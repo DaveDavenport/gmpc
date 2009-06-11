@@ -43,11 +43,26 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 
     public gboolean use_monospace       = {FALSE};
 
+    private gboolean
+    key_press_event(self, GdkEventKey *key, gpointer user_data)
+    {
+        if(key->keyval == GDK_Escape)
+        {
+            if(self->_priv->cancel){
+                gtk_widget_activate(self->_priv->cancel);
+            }
+            return FALSE;
+        }
+        return FALSE;
+    }
+
 	init (self)
 	{
 		gtk_text_view_set_buffer(GTK_TEXT_VIEW(self), self->_priv->buffer);
 		gtk_text_view_set_editable(GTK_TEXT_VIEW(self), FALSE);
 		gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(self), GTK_WRAP_WORD);
+        g_signal_connect(G_OBJECT(self), "key-press-event", G_CALLBACK(self_key_press_event), NULL);
+
 		g_signal_connect(G_OBJECT(self), "populate-popup", G_CALLBACK(self_menu_populate_callback), NULL);
 		self->_priv->meta_id= g_signal_connect(G_OBJECT(gmw), "data-changed", G_CALLBACK(self_meta_callback), self);
 	}
