@@ -66,7 +66,30 @@ then
 fi
 
 
+
+PKG_PROG_PKG_CONFIG
+# libxspf 
+libxspf=0;
 libspiff=0;
+
+AC_ARG_ENABLE([libxspf],
+              [--enable-libxspf Use libxspf.], 
+	          [case "${enableval}" in
+		            yes)    enable_libxspf=true;;
+		             no)    enable_libxspf=false;;
+		              *)    AC_MSG_ERROR([bad value ${enableval} for --enable-libxspf]);;
+               esac],
+               [enable_libxspf=detect])
+if test "x$enable_libxspf" = "xdetect"; then
+	PKG_CHECK_MODULES([libxspf], xspf, enable_libxspf=true, enable_libxspf=false)
+fi
+if test "x$enable_libxspf" = "xtrue"; then
+	PKG_CHECK_MODULES([libxspf], xspf)
+	AC_SUBST(libxspf_LIBS)
+	AC_SUBST(libxspf_CFLAGS)
+    libxspf=1;
+	AC_DEFINE([XSPF], 1, [Use xspf])
+else
 
 AC_ARG_ENABLE(libspiff,
     [   --enable-libspiff      Use libspiff to parse spiff playlists.],
@@ -90,9 +113,7 @@ if test "x${enable_libspiff}" != xno; then
         fi
     fi
 fi
-
-PKG_PROG_PKG_CONFIG
-
+fi
 
 # Checks for header files.
 AC_HEADER_STDC
@@ -511,6 +532,11 @@ if test "x$libspiff" = "x1"; then
 	echo "Use libspiff library:             enabled"
 else
 	echo "Use libspiff library:             disabled"
+fi
+if test "x$libxspf" = "x1"; then
+	echo "Use libxspf library:              enabled"
+else
+	echo "Use libxspf library:              disabled"
 fi
 echo "";
 echo "Now type make to build"

@@ -111,6 +111,7 @@ LIBS= \
 	@gthread_LIBS@\
 	@libsoup_LIBS@\
 	@SPIFF_LIBS@\
+	@libxspf_LIBS@\
     @sqlite3_LIBS@\
 	@sm_LIBS@ 
 
@@ -136,6 +137,7 @@ AM_CFLAGS = @CFLAGS@\
 	@gobject_CFLAGS@\
 	@gtk_CFLAGS@\
 	@gmodule_CFLAGS@\
+    @libxspf_CFLAGS@\
 	@libglade_CFLAGS@\
 	@gthread_CFLAGS@\
 	@sm_CFLAGS@\

@@ -27,6 +27,10 @@
 #include "playlist3.h"
 #include "gmpc_easy_download.h"
 
+ #ifdef XSPF
+#include <xspf_c.h>
+#endif
+
 #ifdef SPIFF
 #include <spiff/spiff_c.h>
 #endif
@@ -89,12 +93,73 @@ static void url_parse_extm3u_file(const char *data, int size)
 		q_free(string);
 	}
 }
+
+ #ifdef XSPF
+/***
+  * parse xspf file 
+  */
+ static void url_parse_xspf_file(const char *data, int size,const char *uri)
+ {
+     int songs= 0;
+     GError *error = NULL;
+     int has_http = FALSE, has_file = FALSE;
+     char **handlers = mpd_server_get_url_handlers(connection);
+     int i = 0;
+     for (i = 0; handlers && handlers[i]; i++) {
+         if (strcmp(handlers[i], "http://") == 0) {
+             has_http = TRUE;
+         } else if (strcmp(handlers[i], "file://") == 0) {
+             has_file = TRUE;
+         }
+     }
+     if (handlers)
+         g_strfreev(handlers);
+
+     struct xspf_track *strack;
+     struct xspf_mvalue *sloc;
+     struct xspf_list *slist = xspf_parse_memory(data,(int)size,uri);
+     if (slist != NULL)
+     {
+         XSPF_LIST_FOREACH_TRACK(slist, strack) {
+             XSPF_TRACK_FOREACH_LOCATION(strack, sloc) {
+                 char *scheme = g_uri_parse_scheme(sloc->value);
+                 if(scheme)
+                 {
+                     debug_printf(DEBUG_INFO, "Trying to add url: %s", sloc->value);
+                     if(strcmp(scheme, "http") == 0 && has_http) 
+                     {
+                         mpd_playlist_add(connection, sloc->value);
+                         songs++;
+                     }
+                     else if(strcmp(scheme, "file") == 0 && has_file)
+                     {
+                         mpd_playlist_add(connection, sloc->value);
+                         songs++;
+                     }
+                     g_free(scheme);
+                 }
+                 else{
+                     debug_printf(DEBUG_ERROR, "Failed to parse scheme: %s",sloc->value);
+                 }
+             }
+         }
+         xspf_free(slist);
+     }
+     if (songs) {
+         char *string = g_strdup_printf(_("Added %i %s"), songs, ngettext("stream", "streams", songs));
+         pl3_push_statusbar_message(string);
+         q_free(string);
+     }
+
+
+}
+#else 
+#ifdef SPIFF
 /***
  * parse spiff file 
  */
-static void url_parse_spiff_file(const char *data, int size)
+static void url_parse_spiff_file(const char *data, int size, const gchar *uri)
 {
-#ifdef SPIFF
     int songs= 0;
     const gchar *tempdir = g_get_tmp_dir();
     gchar *filename = g_build_filename(tempdir, "gmpc-temp-spiff-file",NULL);
@@ -164,11 +229,9 @@ static void url_parse_spiff_file(const char *data, int size)
     }
 
 
-#else
-    debug_printf(DEBUG_ERROR, "Spiff not supported, install libspiff");
-#endif
 }
-
+#endif
+#endif
 /**
  * Check url for correctness
  */
@@ -232,7 +295,13 @@ static void parse_data(const char *data, guint size, const char *text)
     else if (!strncasecmp(data, "<?xml", 5)) {
         debug_printf(DEBUG_INFO,  "Detected a xml file, might be xspf");
         /* This might just be a xspf file */
-        url_parse_spiff_file(data, size);
+#ifdef XSPF		
+		url_parse_xspf_file(data, size, text);
+#else
+#ifdef SPIFF
+        url_parse_spiff_file(data, size, text);
+#endif
+#endif
     }
 	/** pls file: */
 	else if (!strncasecmp(data, "[playlist]", 10)) {
