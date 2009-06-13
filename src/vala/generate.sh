@@ -33,6 +33,7 @@ build_file "gmpc-liststore-sort.vala"
 build_file "gmpc-metadata-prefetcher.vala"
 
 build_file "gmpc-metadata-browser2.vala" 
+build_file "gmpc-paned-size-group.vala"
 #"gmpc-song-links.vala gmpc-favorites.vala gmpc-rating.vala"
 
 valac -C --pkg libmpd --vapidir=`pwd` "gmpc-connection.vala" -H gmpc-connection.h

@@ -1210,6 +1210,7 @@ static void tag2_init_browser(tag_browser *browser) {
 	key = g_strdup_printf("tag2-plugin:%s", browser->key);
 	pp = cfg_get_single_value_as_int_with_default(config, key, "pane-pos",150); 
 	browser->tag2_vbox = gtk_hpaned_new(); 
+	gmpc_paned_size_group_add_paned(paned_size_group, GTK_PANED(browser->tag2_vbox));
 	/* set the previous pane position */
 	gtk_paned_set_position(GTK_PANED(browser->tag2_vbox), pp);
 

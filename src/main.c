@@ -96,7 +96,7 @@ Playlist3MessagePlugin *pl3_messages = NULL;
 /* The playlist backend */
 GtkTreeModel *playlist = NULL;
 
-
+GmpcPanedSizeGroup *paned_size_group = NULL;
 /**
  * This flag indicate the requested connection state by the user.
  * If the user presses disconnect,  you don't want to auto-connect anymore.
@@ -420,6 +420,7 @@ int main(int argc, char **argv)
 	gtk_init(&argc, &argv);
 	TEC("Initializing gtk");
 
+	paned_size_group = gmpc_paned_size_group_new();
 	gmpc_easy_command = gmpc_easy_command_new();
 	/* Add it to the plugin command */
 	plugin_add_new(GMPC_PLUGIN_BASE(gmpc_easy_command), 0, NULL);

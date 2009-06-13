@@ -40,6 +40,7 @@ gmpc_SOURCES=\
     vala/gmpc-mpddata-treeview-tooltip.c\
 	vala/gmpc-metadata-browser2.c\
 	vala/gmpc-favorites.c\
+	vala/gmpc-paned-size-group.c\
     vala/gmpc-liststore-sort.c\
     vala/gmpc-connection.c\
     vala/gmpc-metadata-prefetcher.c\
@@ -202,6 +203,7 @@ EXTRA_DIST=\
         vala/gmpc-connection.h\
         vala/gmpc-mpddata-treeview-tooltip.h\
         vala/gmpc-metadata-prefetcher.h\
+	vala/gmpc-paned-size-group.h\
         gtktransition.h\
         plugin-internal.h\
 		setup-assistant.h\
