@@ -246,7 +246,7 @@ static void tag2_destroy_tag(tag_element *te)
 	if(te->timeout)
 		g_source_remove(te->timeout);
 	gtk_widget_destroy(te->vbox);
-    gtk_widget_destroy(te->tool);
+    gtk_widget_destroy(GTK_WIDGET(te->tool));
 
 	if(te->model)
 		g_object_unref(te->model);
@@ -677,10 +677,6 @@ static void tag2_destroy_browser(tag_browser *browser, gpointer user_data)
 	{
 		return;
 	}
-
-	d = g_strdup_printf("tag2-plugin:%s", browser->key);
-	cfg_set_single_value_as_int(config, d, "pane-pos", gtk_paned_get_position(GTK_PANED(browser->tag2_vbox))); 
-	g_free(d);
 
 	/* remove it from the left hand view */
 	model = gtk_tree_row_reference_get_model(browser->ref_iter);
@@ -1208,12 +1204,8 @@ static void tag2_init_browser(tag_browser *browser) {
 
 	/* create the pane that separates the song list from the browsers */
 	key = g_strdup_printf("tag2-plugin:%s", browser->key);
-	pp = cfg_get_single_value_as_int_with_default(config, key, "pane-pos",150); 
 	browser->tag2_vbox = gtk_hpaned_new(); 
 	gmpc_paned_size_group_add_paned(paned_size_group, GTK_PANED(browser->tag2_vbox));
-	/* set the previous pane position */
-	gtk_paned_set_position(GTK_PANED(browser->tag2_vbox), pp);
-
 
 	/* box with tag treeviews (browsers) */
 	browser->tag_hbox = gtk_vbox_new(TRUE, 6);

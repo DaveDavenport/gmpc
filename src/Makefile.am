@@ -171,6 +171,7 @@ gmpcinclude_HEADERS = \
 		vala/gmpc-plugin.h\
         vala/gmpc-connection.h\
         vala/gmpc-mpddata-treeview-tooltip.h\
+        vala/gmpc-paned-size-group.h\
         playlist3-messages.h\
 		gmpc-version.h\
 		metadata.h

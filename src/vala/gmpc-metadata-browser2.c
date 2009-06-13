@@ -42,6 +42,7 @@
 #include <float.h>
 #include <math.h>
 #include <gdk-pixbuf/gdk-pixdata.h>
+#include <gmpc-paned-size-group.h>
 #include <gmpc-mpddata-treeview-tooltip.h>
 #include <gmpc-favorites.h>
 #include <gmpc-rating.h>
@@ -2613,7 +2614,7 @@ static void gmpc_metadata_browser_browser_init (GmpcMetadataBrowser* self) {
 		GtkEventBox* _tmp29_;
 		_tmp0_ = NULL;
 		self->priv->paned = (_tmp0_ = (GtkPaned*) g_object_ref_sink ((GtkHPaned*) gtk_hpaned_new ()), (self->priv->paned == NULL) ? NULL : (self->priv->paned = (g_object_unref (self->priv->paned), NULL)), _tmp0_);
-		gtk_paned_set_position (self->priv->paned, cfg_get_single_value_as_int_with_default (config, gmpc_plugin_base_get_name ((GmpcPluginBase*) self), "pane-pos", 150));
+		gmpc_paned_size_group_add_paned (paned_size_group, self->priv->paned);
 		/* Bow with browsers */
 		_tmp1_ = NULL;
 		self->priv->browser_box = (_tmp1_ = (GtkBox*) g_object_ref_sink ((GtkVBox*) gtk_vbox_new (TRUE, 6)), (self->priv->browser_box == NULL) ? NULL : (self->priv->browser_box = (g_object_unref (self->priv->browser_box), NULL)), _tmp1_);

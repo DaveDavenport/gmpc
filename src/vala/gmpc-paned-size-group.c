@@ -20,6 +20,8 @@
 #include <glib.h>
 #include <glib-object.h>
 #include <gtk/gtk.h>
+#include <plugin.h>
+#include <config1.h>
 #include <stdio.h>
 #include <gdk/gdk.h>
 
@@ -46,6 +48,7 @@ struct _GmpcPanedSizeGroupClass {
 
 struct _GmpcPanedSizeGroupPrivate {
 	GList* list;
+	gint position;
 	gboolean block_changed_callback;
 };
 
@@ -94,7 +97,6 @@ static gboolean gmpc_paned_size_group_child_destroy_event (GmpcPanedSizeGroup* s
 static void gmpc_paned_size_group_child_position_changed (GmpcPanedSizeGroup* self, GObject* paned, GParamSpec* spec) {
 	GtkPaned* _tmp0_;
 	GtkPaned* pane;
-	gint position;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (paned != NULL);
 	g_return_if_fail (spec != NULL);
@@ -104,7 +106,7 @@ static void gmpc_paned_size_group_child_position_changed (GmpcPanedSizeGroup* se
 	self->priv->block_changed_callback = TRUE;
 	_tmp0_ = NULL;
 	pane = (_tmp0_ = GTK_PANED (paned), (_tmp0_ == NULL) ? NULL : g_object_ref (_tmp0_));
-	position = gtk_paned_get_position (pane);
+	self->priv->position = gtk_paned_get_position (pane);
 	fprintf (stdout, "position: %i\n", gtk_paned_get_position (pane));
 	{
 		GList* p_collection;
@@ -115,7 +117,7 @@ static void gmpc_paned_size_group_child_position_changed (GmpcPanedSizeGroup* se
 			p = (GtkPaned*) p_it->data;
 			{
 				if (G_OBJECT (p) != paned) {
-					gtk_paned_set_position (p, position);
+					gtk_paned_set_position (p, self->priv->position);
 				}
 			}
 		}
@@ -140,6 +142,9 @@ void gmpc_paned_size_group_add_paned (GmpcPanedSizeGroup* self, GtkPaned* paned)
 	g_return_if_fail (paned != NULL);
 	g_signal_connect_object ((GObject*) paned, "notify::position", (GCallback) _gmpc_paned_size_group_child_position_changed_g_object_notify, self, 0);
 	g_signal_connect_object ((GtkWidget*) paned, "destroy-event", (GCallback) _gmpc_paned_size_group_child_destroy_event_gtk_widget_destroy_event, self, 0);
+	self->priv->block_changed_callback = TRUE;
+	gtk_paned_set_position (paned, self->priv->position);
+	self->priv->block_changed_callback = FALSE;
 	self->priv->list = g_list_append (self->priv->list, paned);
 }
 
@@ -154,6 +159,7 @@ static void gmpc_paned_size_group_class_init (GmpcPanedSizeGroupClass * klass) {
 static void gmpc_paned_size_group_instance_init (GmpcPanedSizeGroup * self) {
 	self->priv = GMPC_PANED_SIZE_GROUP_GET_PRIVATE (self);
 	self->priv->list = NULL;
+	self->priv->position = cfg_get_single_value_as_int_with_default (config, "paned-size-group", "position", 150);
 	self->priv->block_changed_callback = FALSE;
 }
 
@@ -162,6 +168,8 @@ static void gmpc_paned_size_group_finalize (GObject* obj) {
 	GmpcPanedSizeGroup * self;
 	self = GMPC_PANED_SIZE_GROUP (obj);
 	{
+		fprintf (stdout, "PanedSizeGroup destroy\n");
+		cfg_set_single_value_as_int (config, "paned-size-group", "position", self->priv->position);
 	}
 	(self->priv->list == NULL) ? NULL : (self->priv->list = (g_list_free (self->priv->list), NULL));
 	G_OBJECT_CLASS (gmpc_paned_size_group_parent_class)->finalize (obj);

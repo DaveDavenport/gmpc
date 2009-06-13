@@ -1,7 +1,11 @@
-namespace Gmpc {
+using Gmpc.PanedSizeGroup;
 
+namespace Gmpc {
     [CCode (cname="TRUE",cheader_filename="gtk/gtk.h,gtktransition.h")]
     static bool use_transition;
+
+    [CCode (cname="paned_size_group", cheader_filename="plugin.h")]
+    static PanedSizeGroup paned_size_group;
 
     [CCode (cname = "gmpcconn", cheader_filename="main.h")]
     static Connection gmpcconn; 

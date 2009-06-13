@@ -51,6 +51,7 @@
 #include "vala/gmpc-test-plugin.h"
 #include "vala/gmpc-metadata-browser2.h"
 #include "vala/gmpc-metadata-prefetcher.h"
+#include "vala/gmpc-paned-size-group.h"
 
 #include "gob/gmpc-mpddata-model-playlist.h"
 #include "metadata_cache.h"
@@ -96,7 +97,7 @@ Playlist3MessagePlugin *pl3_messages = NULL;
 /* The playlist backend */
 GtkTreeModel *playlist = NULL;
 
-GmpcPanedSizeGroup *paned_size_group = NULL;
+GObject *paned_size_group = NULL;
 /**
  * This flag indicate the requested connection state by the user.
  * If the user presses disconnect,  you don't want to auto-connect anymore.
@@ -420,7 +421,6 @@ int main(int argc, char **argv)
 	gtk_init(&argc, &argv);
 	TEC("Initializing gtk");
 
-	paned_size_group = gmpc_paned_size_group_new();
 	gmpc_easy_command = gmpc_easy_command_new();
 	/* Add it to the plugin command */
 	plugin_add_new(GMPC_PLUGIN_BASE(gmpc_easy_command), 0, NULL);
@@ -617,6 +617,9 @@ int main(int argc, char **argv)
 	smc_connect(argc, argv);
 	TEC("Session manager setup");
 #endif
+
+	/* PanedSizeGroup */
+	paned_size_group = gmpc_paned_size_group_new();
 	/** Signals */
 
 	gmpc_profiles = gmpc_profiles_new();
@@ -900,6 +903,8 @@ int main(int argc, char **argv)
 	g_object_unref(playlist);
 	g_object_unref(G_OBJECT(gmw));
 
+	/* Destroy PanedSizeGroup */
+	g_object_unref(paned_size_group);
 	/**
      * Close the config file
      */

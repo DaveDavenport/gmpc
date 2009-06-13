@@ -25,6 +25,9 @@
 #include "gmpc-mpddata-treeview.h"
 //#include "gmpc-plugin.h"
 #include "gmpc-connection.h"
+
+//#include "gmpc-paned-size-group.h"
+
 #ifndef __PLUGIN_H__
 #define __PLUGIN_H__
 
@@ -243,4 +246,6 @@ void info2_activate();
 
 void info2_fill_artist_view(const gchar *artist);
 void info2_fill_album_view(const gchar *artist,const gchar *album);
+
+extern GObject *paned_size_group;
 #endif

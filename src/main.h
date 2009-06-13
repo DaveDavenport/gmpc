@@ -36,7 +36,6 @@
 #include "plugin.h"
 #include "plugin-internal.h"
 #include "vala/gmpc-plugin.h"
-#include "vala/gmpc-paned-size-group.h"
 #include "mpdinteraction.h"
 
 #include "playlist3-messages.h" 
@@ -118,7 +117,6 @@ gboolean pl3_window_is_fullscreen(void);
 /* easy download */
 void gmpc_easy_async_quit(void);
 
-extern GmpcPanedSizeGroup *paned_size_group;
 #ifdef DEBUG_TIMING
 /* Tic Tac system */
 #define TIMER_SUB(start,stop,diff)  diff.tv_usec = stop.tv_usec - start.tv_usec;\

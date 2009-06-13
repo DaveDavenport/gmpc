@@ -20,14 +20,19 @@
 using GLib;
 using MPD;
 
+
 namespace Gmpc{
 	public class PanedSizeGroup : GLib.Object {
 		private List<weak Gtk.Paned> list = null;
+        private int position = config.get_int_with_default("paned-size-group", "position", 150);
+
 		public 
 		PanedSizeGroup () {
 
 		}
 		~PanedSizeGroup () {
+            stdout.printf("PanedSizeGroup destroy\n");
+            config.set_int("paned-size-group", "position", position);
 
 		}
 		private bool 
@@ -47,7 +52,7 @@ namespace Gmpc{
 			block_changed_callback = true;
 
 			var pane = (Gtk.Paned) paned;
-			var position = pane.get_position();
+			position = pane.get_position();
 			stdout.printf("position: %i\n", pane.get_position());
 			foreach(weak Gtk.Paned p in list)
 			{
@@ -65,6 +70,11 @@ namespace Gmpc{
 		{
 			paned.notify["position"].connect(child_position_changed);
 			paned.destroy_event.connect(child_destroy_event);
+
+			block_changed_callback = true;
+            paned.set_position(position);
+			block_changed_callback = false;
+
 			list.append(paned);
 		}
 	} 

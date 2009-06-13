@@ -146,9 +146,8 @@ static void pl3_file_browser_init(void)
     g_signal_connect(G_OBJECT(pl3_fb_store2), "playtime_changed", G_CALLBACK(playtime_changed), NULL);
 
 
-    pos = cfg_get_single_value_as_int_with_default(config, "file-browser", "pane-pos", 150);
     pl3_fb_vbox = gtk_hpaned_new();
-    gtk_paned_set_position(GTK_PANED(pl3_fb_vbox), pos);
+	gmpc_paned_size_group_add_paned(paned_size_group, GTK_PANED(pl3_fb_vbox));
 	vbox = gtk_vbox_new(FALSE, 6);
 
 
@@ -1240,11 +1239,6 @@ static void pl3_file_browser_save_myself(void)
             cfg_set_single_value_as_int(config, "file-browser","position",indices[0]);
             gtk_tree_path_free(path);
         }
-    }
-    if(pl3_fb_vbox)
-    {
-        int pos = gtk_paned_get_position(GTK_PANED(pl3_fb_vbox));
-        cfg_set_single_value_as_int(config, "file-browser", "pane-pos", pos);
     }
 }
 

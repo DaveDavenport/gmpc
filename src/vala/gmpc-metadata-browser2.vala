@@ -1086,7 +1086,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         if(this.paned == null)
         {
             this.paned = new Gtk.HPaned();
-            this.paned.set_position(config.get_int_with_default(this.get_name(), "pane-pos", 150));
+            paned_size_group.add_paned(this.paned); 
             /* Bow with browsers */
             this.browser_box = new Gtk.VBox(true, 6);
             this.paned.add1(this.browser_box);
