@@ -78,7 +78,6 @@ AM_CFLAGS=\
 	@gmodule_CFLAGS@\
 	@libglade_CFLAGS@\
 	@gthread_CFLAGS@\
-	@sm_CFLAGS@\
 	$(MAYBE_CFLAGS)
 
 

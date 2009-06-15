@@ -122,14 +122,6 @@ static void bug_information_generate_message(GtkTextBuffer *buffer)
     /** compile flags*/
     gtk_text_buffer_insert_with_tags(buffer, &iter, "\nCompile flags:\n", -1, bold_tag, larger_tag,NULL);
 
-    gtk_text_buffer_insert_with_tags(buffer, &iter, "X session management:\t", -1, bold_tag, NULL);
-#ifdef ENABLE_SM
-    gtk_text_buffer_insert(buffer, &iter,"Enabled",-1);
-#else
-    gtk_text_buffer_insert(buffer, &iter,"Disabled",-1);
-#endif
-
-
     gtk_text_buffer_insert_with_tags(buffer, &iter, "\nNLS Support:\t", -1, bold_tag, NULL);
 #ifdef ENABLE_NLS
     gtk_text_buffer_insert(buffer, &iter,"Enabled",-1);

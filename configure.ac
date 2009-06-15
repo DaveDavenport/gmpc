@@ -377,23 +377,6 @@ fi
 ##
 # Session support             
 if test x$macosx = xno && test x$win32 = xno ; then
-AC_ARG_ENABLE(sm,
-              [  --disable-sm				Disable Session Support.],
-              [ case "${enableval}" in
-                    yes)    enable_sm=yes;;
-                     no)    enable_sm=no;;
-                      *)    AC_MSG_ERROR([bad value ${enableval} for --disable-dm]);;
-                esac],
-              [enable_sm=yes])
-
-# sm
-if test x${enable_sm} = xyes; then
-	PKG_CHECK_MODULES([sm], sm)
-	AC_SUBST(sm_LIBS)
-	AC_SUBST(sm_CFLAGS)
-	AC_DEFINE(ENABLE_SM, 1, [Enable Session Support])
-
-fi
 # Multimedia keys
 AC_ARG_ENABLE([mmkeys],
               [  --disable-mmkeys			Disable multimedia keys support.],
@@ -409,7 +392,6 @@ fi
 else
 # force them off
 enable_mmkeys=no;
-enable_sm=no;
 fi
 AC_SUBST(EXTRA_CFLAGS)
 AC_SUBST(EXTRA_LDFLAGS)
@@ -512,11 +494,6 @@ if test x${enable_mmkeys} = xyes; then
 	echo "Multimedia keys support is:       enabled"
 else
 	echo "Multimedia keys support is:       disabled"
-fi
-if test x${enable_sm} = xyes; then
-	echo "Session Manager support is:       enabled"
-else
-	echo "Session Manager support is:       disabled"
 fi
 if test x${enable_configdir} = xyes; then
 	echo "Use ~/.config/ for config files:  enabled"
