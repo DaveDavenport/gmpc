@@ -348,6 +348,9 @@ case $host in
 esac
 AM_CONDITIONAL(WIN32, test x$win32 = xyes)
 AM_CONDITIONAL(OSX, test x$macosx = xyes)
+# for smclient 
+AM_CONDITIONAL(PLATFORM_WIN32, test x$win32 = xyes) 
+AM_CONDITIONAL(PLATFORM_OSX, test x$macosx = xyes) 
 
 
 AC_ARG_ENABLE(macige,
@@ -437,6 +440,7 @@ Makefile
 src/Makefile
 src/gmpc-version.h
 src/gob/Makefile
+src/smclient/Makefile
 glade/Makefile
 data/Makefile
 po/Makefile.in

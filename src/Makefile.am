@@ -6,7 +6,7 @@ endif
 CONF_VERSION=0
 -include Makefile.config
 
-SUBDIRS=gob
+SUBDIRS=gob smclient
 
 bin_PROGRAMS=gmpc
 
@@ -59,7 +59,8 @@ gmpc_SOURCES+=egg/eggtrayicon.c
 endif
 
 gmpc_LDADD=\
-			   gob/libcwidgets.la
+			   gob/libcwidgets.la\
+               smclient/libeggsmclient.la
 
 
 if WIN32 

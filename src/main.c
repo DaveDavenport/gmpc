@@ -322,6 +322,7 @@ int main(int argc, char **argv)
 		debug_set_level(0);
 	}
 
+	egg_sm_client_set_mode(EGG_SM_CLIENT_MODE_NO_RESTART);
 	/**
      * Setup NLS
      */
@@ -338,6 +339,7 @@ int main(int argc, char **argv)
     context = g_option_context_new (_("Gnome Music Player Client"));
     g_option_context_add_main_entries (context, entries, "gmpc");
     g_option_context_add_group (context, gtk_get_option_group (TRUE));
+    g_option_context_add_group (context, egg_sm_client_get_option_group()); 
     g_option_context_parse (context, &argc, &argv, &error);
     g_option_context_free(context);
 	if(error) {
@@ -419,8 +421,7 @@ int main(int argc, char **argv)
 
 	/* initialize gtk */
 	gtk_init(&argc, &argv);
-	TEC("Initializing gtk");
-
+	TEC("EggSmClient");
 	gmpc_easy_command = gmpc_easy_command_new();
 	/* Add it to the plugin command */
 	plugin_add_new(GMPC_PLUGIN_BASE(gmpc_easy_command), 0, NULL);

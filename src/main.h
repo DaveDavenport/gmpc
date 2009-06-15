@@ -47,6 +47,7 @@
 #include "gob/gmpc-profiles.h"
 #include "gmpc-connection.h"
 #include "vala/gmpc-easy-command.h"
+#include "smclient/eggsmclient.h"
 
 extern GmpcEasyCommand *gmpc_easy_command;
 extern int 				gmpc_connected;
