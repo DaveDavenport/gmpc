@@ -52,7 +52,6 @@ gmpc_SOURCES=\
 	bacon/bacon-message-connection.c\
 	advanced_search.c\
 	browsers/server-information.c\
-	edit_markup.c\
 	bug-information.c
 
 if EGGTRAYICON
