@@ -50,7 +50,7 @@ gmpc_SOURCES=\
 	egg/eggcolumnchooserdialog.c\
 	egg/eggcolumnmodel.c\
 	bacon/bacon-message-connection.c\
-	advanced_search.c\
+	advanced-search.c\
 	browsers/server-information.c\
 	bug-information.c
 
@@ -214,7 +214,7 @@ EXTRA_DIST=\
 		egg/eggcolumnmodel.h\
 		revision.h\
 		bacon/bacon-message-connection.h\
-		advanced_search.h\
+		advanced-search.h\
 		gmpc-version.h.in\
 		bug-information.h\
 		gmpc-win32.rc

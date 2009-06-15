@@ -24,7 +24,7 @@
 #include "config1.h"
 #include "playlist3.h"
 #include "mpdinteraction.h"
-#include "advanced_search.h"
+#include "advanced-search.h"
 #include "vala/gmpc_menu_item_rating.h"
 
 //G_LOCK_DEFINE (connecting_lock);

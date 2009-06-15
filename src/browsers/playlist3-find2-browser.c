@@ -27,7 +27,7 @@
 #include "playlist3-find2-browser.h"
 #include "gmpc-mpddata-model.h"
 #include "gmpc-mpddata-treeview.h"
-#include "advanced_search.h"
+#include "advanced-search.h"
 #include "playlist3-playlist-editor.h"
 #ifdef USE_SYSTEM_LIBSEXY
 #include <libsexy/sexy-icon-entry.h>

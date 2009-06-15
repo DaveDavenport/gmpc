@@ -35,7 +35,7 @@
 /** session support */
 #include "sm.h"
 #include "misc.h"
-#include "advanced_search.h"
+#include "advanced-search.h"
 #include "gmpc_easy_download.h"
 
 #include "setup-assistant.h"

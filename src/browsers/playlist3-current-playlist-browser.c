@@ -31,7 +31,7 @@
 #include "gmpc-mpddata-model-playlist.h"
 #include "gmpc-mpddata-treeview.h"
 #include "eggcolumnchooserdialog.h"
-#include "advanced_search.h"
+#include "advanced-search.h"
 #ifdef USE_SYSTEM_LIBSEXY
 #include <libsexy/sexy-icon-entry.h>
 #endif

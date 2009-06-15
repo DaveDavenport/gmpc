@@ -20,7 +20,7 @@
 #include <gtk/gtk.h>
 #include "main.h"
 #include "misc.h"
-#include "advanced_search.h"
+#include "advanced-search.h"
 
 static GRegex *search_regex = NULL;
 void advanced_search_init(void)
