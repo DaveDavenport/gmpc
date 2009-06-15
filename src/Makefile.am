@@ -46,7 +46,7 @@ gmpc_SOURCES=\
     vala/gmpc-metadata-prefetcher.c\
 	gmpc_easy_download.c\
 	setup-assistant.c\
-	url_fetcher.c\
+	url-fetcher.c\
 	egg/eggcolumnchooserdialog.c\
 	egg/eggcolumnmodel.c\
 	bacon/bacon-message-connection.c\
