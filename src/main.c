@@ -420,6 +420,13 @@ int main(int argc, char **argv)
 
 	/* initialize gtk */
 	gtk_init(&argc, &argv);
+	TEC("Gtk init");
+	/* connect signal to Session manager to quit */
+	g_signal_connect( egg_sm_client_get(),
+		"quit",
+		G_CALLBACK(main_quit),
+		NULL);
+
 	TEC("EggSmClient");
 	gmpc_easy_command = gmpc_easy_command_new();
 	/* Add it to the plugin command */
