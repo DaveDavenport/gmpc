@@ -23,7 +23,7 @@ gmpc_SOURCES=\
 	config1.c\
 	sm.c\
 	metadata.c\
-    metadata_cache.c\
+    metadata-cache.c\
 	browsers/playlist3-tag2-browser.c\
 	browsers/playlist3-file-browser.c\
 	browsers/playlist3-current-playlist-browser.c\
@@ -209,7 +209,7 @@ EXTRA_DIST=\
 		setup-assistant.h\
 		sm.h\
 		metadata.h\
-        metadata_cache.h\
+        metadata-cache.h\
 		egg/eggcolumnchooserdialog.h\
 		egg/eggcolumnmodel.h\
 		revision.h\

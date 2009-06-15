@@ -29,7 +29,7 @@ requires 2.0.0
 %}
 %ph{
 #include "vala/gmpc-test-plugin.h"
-#include "metadata_cache.h"
+#include "metadata-cache.h"
 %}
 
 class Gmpc:Meta:Text:View from Gtk:Text:View {

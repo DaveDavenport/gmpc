@@ -34,7 +34,7 @@
 #include <glib/gstdio.h>
 #include <float.h>
 #include <math.h>
-#include <metadata_cache.h>
+#include <metadata-cache.h>
 #include <main.h>
 #include <pango/pango.h>
 #include <gmpc-plugin.h>

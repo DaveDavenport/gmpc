@@ -23,7 +23,7 @@
 #include "main.h"
 
 #include "metadata.h"
-#include "metadata_cache.h"
+#include "metadata-cache.h"
 
 #include "gmpc_easy_download.h"
 

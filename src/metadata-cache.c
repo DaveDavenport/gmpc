@@ -24,7 +24,7 @@
 #include "main.h"
 #include "metadata.h"
 #include "config1.h"
-#include "metadata_cache.h"
+#include "metadata-cache.h"
 
 #define CACHE_NAME "Metadata cache"
 #define MDC_LOG_DOMAIN "MetaDataCache"
