@@ -344,6 +344,7 @@ case $host in
     win32=yes
     EXTRA_LDFLAGS="-export-all-symbols -mms-bitfields" ;;
   *-apple-darwin*)
+    EXTRA_LDFLAGS="-framework Carbon" 
     macosx=yes;;
 esac
 AM_CONDITIONAL(WIN32, test x$win32 = xyes)
