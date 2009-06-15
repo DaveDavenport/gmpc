@@ -21,7 +21,6 @@ gmpc_SOURCES=\
 	playlist3-messages.c\
 	mm-keys.c\
 	config1.c\
-	sm.c\
 	metadata.c\
     metadata-cache.c\
 	browsers/playlist3-tag2-browser.c\
@@ -113,8 +112,7 @@ LIBS= \
 	@libsoup_LIBS@\
 	@SPIFF_LIBS@\
 	@libxspf_LIBS@\
-    @sqlite3_LIBS@\
-	@sm_LIBS@ 
+    @sqlite3_LIBS@
 
 if USE_SYSTEM_LIBSEXY
 LIBS += @libsexy_LIBS@
@@ -141,7 +139,6 @@ AM_CFLAGS = @CFLAGS@\
     @libxspf_CFLAGS@\
 	@libglade_CFLAGS@\
 	@gthread_CFLAGS@\
-	@sm_CFLAGS@\
 	@libsoup_CFLAGS@\
     @sqlite3_CFLAGS@\
 	@EXTRA_CFLAGS@\
@@ -208,7 +205,6 @@ EXTRA_DIST=\
         gtktransition.h\
         plugin-internal.h\
 		setup-assistant.h\
-		sm.h\
 		metadata.h\
         metadata-cache.h\
 		egg/eggcolumnchooserdialog.h\

@@ -33,7 +33,6 @@
 #include "playlist3.h"
 
 /** session support */
-#include "sm.h"
 #include "misc.h"
 #include "advanced-search.h"
 #include "gmpc_easy_download.h"
@@ -611,14 +610,6 @@ int main(int argc, char **argv)
 		cfg_close(config);
 		return EXIT_SUCCESS;
 	}
-	/**
-     * Setup session support
-     */
-#ifdef ENABLE_SM
-	smc_connect(argc, argv);
-	TEC("Session manager setup");
-#endif
-
 	/* PanedSizeGroup */
 	paned_size_group = gmpc_paned_size_group_new();
 	/** Signals */
