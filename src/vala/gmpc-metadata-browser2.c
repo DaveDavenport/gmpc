@@ -385,7 +385,7 @@ static void _gmpc_metadata_browser_album_song_browser_replace_clicked_gtk_menu_i
 static gboolean gmpc_metadata_browser_album_song_tree_button_press_event (GmpcMetadataBrowser* self, GtkTreeView* tree, const GdkEventButton* event);
 static void _gmpc_metadata_browser_add_selected_song_gtk_button_clicked (GtkButton* _sender, gpointer self);
 static void _gmpc_metadata_browser_replace_selected_song_gtk_button_clicked (GtkButton* _sender, gpointer self);
-static gboolean _gmpc_metadata_browser_album_song_tree_button_press_event_gtk_widget_button_press_event (GmpcMpdDataTreeview* _sender, const GdkEventButton* event, gpointer self);
+static gboolean _gmpc_metadata_browser_album_song_tree_button_press_event_gtk_widget_button_release_event (GmpcMpdDataTreeview* _sender, const GdkEventButton* event, gpointer self);
 static void _gmpc_metadata_browser_album_song_tree_row_activated_gtk_tree_view_row_activated (GmpcMpdDataTreeview* _sender, const GtkTreePath* path, GtkTreeViewColumn* column, gpointer self);
 static void gmpc_metadata_browser_metadata_box_show_album (GmpcMetadataBrowser* self, const char* artist, const char* album);
 static void gmpc_metadata_browser_metadata_box_show_artist (GmpcMetadataBrowser* self, const char* artist);
@@ -3641,7 +3641,7 @@ static void _gmpc_metadata_browser_replace_selected_song_gtk_button_clicked (Gtk
 }
 
 
-static gboolean _gmpc_metadata_browser_album_song_tree_button_press_event_gtk_widget_button_press_event (GmpcMpdDataTreeview* _sender, const GdkEventButton* event, gpointer self) {
+static gboolean _gmpc_metadata_browser_album_song_tree_button_press_event_gtk_widget_button_release_event (GmpcMpdDataTreeview* _sender, const GdkEventButton* event, gpointer self) {
 	return gmpc_metadata_browser_album_song_tree_button_press_event (self, _sender, event);
 }
 
@@ -3794,7 +3794,8 @@ static void gmpc_metadata_browser_metadata_box_show_album (GmpcMetadataBrowser* 
 	gtk_scrolled_window_set_policy (sw, GTK_POLICY_AUTOMATIC, GTK_POLICY_NEVER);
 	gtk_scrolled_window_set_shadow_type (sw, GTK_SHADOW_ETCHED_IN);
 	song_tree = g_object_ref_sink (gmpc_mpddata_treeview_new ("album-songs", TRUE, (GtkTreeModel*) self->priv->model_songs));
-	g_signal_connect_object ((GtkWidget*) song_tree, "button-press-event", (GCallback) _gmpc_metadata_browser_album_song_tree_button_press_event_gtk_widget_button_press_event, self, 0);
+	gmpc_mpddata_treeview_enable_click_fix (song_tree);
+	g_signal_connect_object ((GtkWidget*) song_tree, "button-release-event", (GCallback) _gmpc_metadata_browser_album_song_tree_button_press_event_gtk_widget_button_release_event, self, 0);
 	g_signal_connect_object ((GtkTreeView*) song_tree, "row-activated", (GCallback) _gmpc_metadata_browser_album_song_tree_row_activated_gtk_tree_view_row_activated, self, 0);
 	gtk_container_add ((GtkContainer*) sw, (GtkWidget*) song_tree);
 	gtk_box_pack_start ((GtkBox*) vbox, (GtkWidget*) sw, FALSE, FALSE, (guint) 0);

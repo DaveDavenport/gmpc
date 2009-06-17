@@ -1845,7 +1845,8 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         sw.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.NEVER);
         sw.set_shadow_type(Gtk.ShadowType.ETCHED_IN);
         var song_tree = new Gmpc.MpdData.TreeView("album-songs", true, this.model_songs);
-        song_tree.button_press_event += album_song_tree_button_press_event;
+        song_tree.enable_click_fix();
+        song_tree.button_release_event += album_song_tree_button_press_event;
         song_tree.row_activated += album_song_tree_row_activated;
         sw.add(song_tree);
         vbox.pack_start(sw, false, false, 0);
