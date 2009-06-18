@@ -1695,7 +1695,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             model.get(iter, 0, out song, -1);
             if(song != null)
             {
-                MPD.PlayQueue.add_song(server, song.file); 
+                Gmpc.Misc.play_path(song.file);
             }
         }
 

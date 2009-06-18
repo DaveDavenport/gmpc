@@ -3517,7 +3517,7 @@ static void gmpc_metadata_browser_album_song_tree_row_activated (GmpcMetadataBro
 		song = NULL;
 		gtk_tree_model_get (model, &iter, 0, &song, -1, -1);
 		if (song != NULL) {
-			mpd_playlist_add (connection, song->file);
+			play_path (song->file);
 		}
 	}
 	(model == NULL) ? NULL : (model = (g_object_unref (model), NULL));
