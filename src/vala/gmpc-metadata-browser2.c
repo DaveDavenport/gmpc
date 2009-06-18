@@ -29,6 +29,7 @@
 #include <string.h>
 #include <glib/gi18n-lib.h>
 #include <main.h>
+#include <mpdinteraction.h>
 #include <gdk/gdk.h>
 #include <gmpc-mpddata-model.h>
 #include <gmpc-meta-watcher.h>

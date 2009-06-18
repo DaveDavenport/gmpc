@@ -86,7 +86,7 @@ public class Gmpc.Widget.SimilarSongs : Gtk.Expander {
                 model.get(iter, 0, out song, -1);
                 if(song != null)
                 {
-                    Gmpc.Misc.play_path(song.file);
+                    Gmpc.MpdInteraction.play_path(song.file);
                 }
             }
         }
@@ -132,7 +132,7 @@ public class Gmpc.Widget.SimilarSongs : Gtk.Expander {
             model.get(iter, 0, out song, -1);
             if(song != null)
             {
-                Gmpc.Misc.play_path(song.file);
+                Gmpc.MpdInteraction.play_path(song.file);
             }
         }
     }
@@ -1390,7 +1390,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
      {
         MPD.Song? song = (MPD.Song )button.get_data("song"); 
         if(song != null){
-            Gmpc.Misc.play_path(song.file);
+            Gmpc.MpdInteraction.play_path(song.file);
         }
      }
 
@@ -1695,7 +1695,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             model.get(iter, 0, out song, -1);
             if(song != null)
             {
-                Gmpc.Misc.play_path(song.file);
+                Gmpc.MpdInteraction.play_path(song.file);
             }
         }
 

@@ -304,12 +304,12 @@ namespace Gmpc {
 
 
     namespace Misc {
-        [CCode (cname="play_path")]
-        public void play_path(string path);
         [CCode (cname="mpd_song_checksum",cheader_filename="misc.h")]
         public string? song_checksum(MPD.Song? song);
     }
     namespace MpdInteraction {
+        [CCode (cname="play_path",cheader_filename="mpdinteraction.h")]
+        public void play_path(string path);
         [CCode (cname="submenu_for_song")]
         public void submenu_for_song(Gtk.Widget menu, MPD.Song song);
     }
