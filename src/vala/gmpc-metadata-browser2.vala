@@ -1732,7 +1732,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
     }
 
 
-    private bool album_song_tree_button_press_event(Gtk.TreeView tree, Gdk.EventButton event)
+    private bool album_song_tree_button_press_event(Gmpc.MpdData.TreeView tree, Gdk.EventButton event)
     {
         if(event.button == 3) {
             var menu = new Gtk.Menu();
@@ -1746,6 +1746,24 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             item.set_data("tree", (void *)tree);
             item.activate += album_song_browser_replace_clicked;
             menu.append(item);
+            
+            if(tree.get_selection().count_selected_rows() == 1)
+            {
+                Gtk.TreeModel model = null;
+                var list = tree.get_selection().get_selected_rows(out model);
+                if(list != null)
+                {
+                    weak Gtk.TreePath path = list.data;
+                    Gtk.TreeIter iter;
+                    weak MPD.Song song = null;
+                    if(model.get_iter(out iter, path))
+                    {
+                        model.get(iter, 0, out song);
+                        Gmpc.MpdInteraction.submenu_for_song(menu, song);
+                    }
+                }
+            }
+            tree.right_mouse_integration(menu);
 
             menu.popup(null, null, null, event.button, event.time);
             menu.show_all();

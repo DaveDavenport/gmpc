@@ -382,7 +382,7 @@ static void gmpc_metadata_browser_album_song_browser_add_clicked (GmpcMetadataBr
 static void gmpc_metadata_browser_album_song_browser_replace_clicked (GmpcMetadataBrowser* self, GtkImageMenuItem* item);
 static void _gmpc_metadata_browser_album_song_browser_add_clicked_gtk_menu_item_activate (GtkImageMenuItem* _sender, gpointer self);
 static void _gmpc_metadata_browser_album_song_browser_replace_clicked_gtk_menu_item_activate (GtkImageMenuItem* _sender, gpointer self);
-static gboolean gmpc_metadata_browser_album_song_tree_button_press_event (GmpcMetadataBrowser* self, GtkTreeView* tree, const GdkEventButton* event);
+static gboolean gmpc_metadata_browser_album_song_tree_button_press_event (GmpcMetadataBrowser* self, GmpcMpdDataTreeview* tree, const GdkEventButton* event);
 static void _gmpc_metadata_browser_add_selected_song_gtk_button_clicked (GtkButton* _sender, gpointer self);
 static void _gmpc_metadata_browser_replace_selected_song_gtk_button_clicked (GtkButton* _sender, gpointer self);
 static gboolean _gmpc_metadata_browser_album_song_tree_button_press_event_gtk_widget_button_release_event (GmpcMpdDataTreeview* _sender, const GdkEventButton* event, gpointer self);
@@ -3601,7 +3601,7 @@ static void _gmpc_metadata_browser_album_song_browser_replace_clicked_gtk_menu_i
 }
 
 
-static gboolean gmpc_metadata_browser_album_song_tree_button_press_event (GmpcMetadataBrowser* self, GtkTreeView* tree, const GdkEventButton* event) {
+static gboolean gmpc_metadata_browser_album_song_tree_button_press_event (GmpcMetadataBrowser* self, GmpcMpdDataTreeview* tree, const GdkEventButton* event) {
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (tree != NULL, FALSE);
 	if ((*event).button == 3) {
@@ -3609,7 +3609,7 @@ static gboolean gmpc_metadata_browser_album_song_tree_button_press_event (GmpcMe
 		GtkImageMenuItem* item;
 		GtkImageMenuItem* _tmp0_;
 		GtkImage* _tmp1_;
-		gboolean _tmp2_;
+		gboolean _tmp6_;
 		menu = g_object_ref_sink ((GtkMenu*) gtk_menu_new ());
 		item = g_object_ref_sink ((GtkImageMenuItem*) gtk_image_menu_item_new_from_stock ("gtk-add", NULL));
 		g_signal_connect_object ((GtkMenuItem*) item, "activate", (GCallback) _gmpc_metadata_browser_album_song_browser_add_clicked_gtk_menu_item_activate, self, 0);
@@ -3623,9 +3623,37 @@ static gboolean gmpc_metadata_browser_album_song_tree_button_press_event (GmpcMe
 		g_object_set_data ((GObject*) item, "tree", (void*) tree);
 		g_signal_connect_object ((GtkMenuItem*) item, "activate", (GCallback) _gmpc_metadata_browser_album_song_browser_replace_clicked_gtk_menu_item_activate, self, 0);
 		gtk_menu_shell_append ((GtkMenuShell*) menu, (GtkWidget*) ((GtkMenuItem*) item));
+		if (gtk_tree_selection_count_selected_rows (gtk_tree_view_get_selection ((GtkTreeView*) tree)) == 1) {
+			GtkTreeModel* model;
+			GtkTreeModel* _tmp5_;
+			GtkTreeModel* _tmp4_;
+			GList* _tmp3_;
+			GtkTreeModel* _tmp2_;
+			GList* list;
+			model = NULL;
+			_tmp5_ = NULL;
+			_tmp4_ = NULL;
+			_tmp3_ = NULL;
+			_tmp2_ = NULL;
+			list = (_tmp3_ = gtk_tree_selection_get_selected_rows (gtk_tree_view_get_selection ((GtkTreeView*) tree), &_tmp2_), model = (_tmp4_ = (_tmp5_ = _tmp2_, (_tmp5_ == NULL) ? NULL : g_object_ref (_tmp5_)), (model == NULL) ? NULL : (model = (g_object_unref (model), NULL)), _tmp4_), _tmp3_);
+			if (list != NULL) {
+				const GtkTreePath* path;
+				GtkTreeIter iter = {0};
+				const mpd_Song* song;
+				path = (const GtkTreePath*) list->data;
+				song = NULL;
+				if (gtk_tree_model_get_iter (model, &iter, path)) {
+					gtk_tree_model_get (model, &iter, 0, &song, -1);
+					submenu_for_song ((GtkWidget*) menu, song);
+				}
+			}
+			(model == NULL) ? NULL : (model = (g_object_unref (model), NULL));
+			(list == NULL) ? NULL : (list = (_g_list_free_gtk_tree_path_free (list), NULL));
+		}
+		gmpc_mpddata_treeview_right_mouse_intergration (tree, menu);
 		gtk_menu_popup (menu, NULL, NULL, NULL, NULL, (*event).button, (*event).time);
 		gtk_widget_show_all ((GtkWidget*) menu);
-		return (_tmp2_ = TRUE, (menu == NULL) ? NULL : (menu = (g_object_unref (menu), NULL)), (item == NULL) ? NULL : (item = (g_object_unref (item), NULL)), _tmp2_);
+		return (_tmp6_ = TRUE, (menu == NULL) ? NULL : (menu = (g_object_unref (menu), NULL)), (item == NULL) ? NULL : (item = (g_object_unref (item), NULL)), _tmp6_);
 	}
 	return FALSE;
 }

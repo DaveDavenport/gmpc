@@ -280,6 +280,8 @@ namespace Gmpc {
             TreeView(string name, bool sort, Gtk.TreeModel model);
             [CCode (cname="gmpc_mpddata_treeview_enable_click_fix")]
             public void enable_click_fix();
+            [CCode (cname="gmpc_mpddata_treeview_right_mouse_intergration")]
+            public int right_mouse_integration(Gtk.Menu menu);
         }
         [CCode (cheader_filename="misc.h", cname="misc_sort_mpddata_by_album_disc_track")]
         public weak MPD.Data.Item? sort_album_disc_track(owned MPD.Data.Item ?data);
@@ -306,5 +308,9 @@ namespace Gmpc {
         public void play_path(string path);
         [CCode (cname="mpd_song_checksum",cheader_filename="misc.h")]
         public string? song_checksum(MPD.Song? song);
+    }
+    namespace MpdInteraction {
+        [CCode (cname="submenu_for_song")]
+        public void submenu_for_song(Gtk.Widget menu, MPD.Song song);
     }
 }
