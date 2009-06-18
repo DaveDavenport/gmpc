@@ -4376,37 +4376,50 @@ static void gmpc_metadata_browser_history_show_list (GmpcMetadataBrowser* self) 
 	while (iter != NULL) {
 		GmpcMetadataBrowserHitem* _tmp0_;
 		GmpcMetadataBrowserHitem* i;
+		char* label;
 		GtkCheckMenuItem* item;
 		_tmp0_ = NULL;
 		i = (_tmp0_ = (GmpcMetadataBrowserHitem*) iter->data, (_tmp0_ == NULL) ? NULL : gmpc_metadata_browser_hitem_dup (_tmp0_));
-		item = g_object_ref_sink ((GtkCheckMenuItem*) gtk_check_menu_item_new ());
-		gtk_check_menu_item_set_draw_as_radio (item, TRUE);
+		label = g_strdup ("");
 		if ((*i).type == GMPC_METADATA_BROWSER_HITEM_TYPE_ARTIST) {
-			gtk_menu_item_set_label ((GtkMenuItem*) item, (*i).song->artist);
+			char* _tmp2_;
+			const char* _tmp1_;
+			_tmp2_ = NULL;
+			_tmp1_ = NULL;
+			label = (_tmp2_ = (_tmp1_ = (*i).song->artist, (_tmp1_ == NULL) ? NULL : g_strdup (_tmp1_)), label = (g_free (label), NULL), _tmp2_);
 		} else {
 			if ((*i).type == GMPC_METADATA_BROWSER_HITEM_TYPE_ALBUM) {
-				char* _tmp1_;
-				_tmp1_ = NULL;
-				gtk_menu_item_set_label ((GtkMenuItem*) item, _tmp1_ = g_strdup_printf ("%s - %s", (*i).song->artist, (*i).song->album));
-				_tmp1_ = (g_free (_tmp1_), NULL);
+				char* _tmp3_;
+				_tmp3_ = NULL;
+				label = (_tmp3_ = g_strdup_printf ("%s - %s", (*i).song->artist, (*i).song->album), label = (g_free (label), NULL), _tmp3_);
 			} else {
 				if ((*i).type == GMPC_METADATA_BROWSER_HITEM_TYPE_SONG) {
 					if ((*i).song->title != NULL) {
-						gtk_menu_item_set_label ((GtkMenuItem*) item, (*i).song->title);
+						char* _tmp5_;
+						const char* _tmp4_;
+						_tmp5_ = NULL;
+						_tmp4_ = NULL;
+						label = (_tmp5_ = (_tmp4_ = (*i).song->title, (_tmp4_ == NULL) ? NULL : g_strdup (_tmp4_)), label = (g_free (label), NULL), _tmp5_);
 					} else {
-						gtk_menu_item_set_label ((GtkMenuItem*) item, _ ("Unknown"));
+						char* _tmp7_;
+						const char* _tmp6_;
+						_tmp7_ = NULL;
+						_tmp6_ = NULL;
+						label = (_tmp7_ = (_tmp6_ = _ ("Unknown"), (_tmp6_ == NULL) ? NULL : g_strdup (_tmp6_)), label = (g_free (label), NULL), _tmp7_);
 					}
 				}
 			}
 		}
+		item = g_object_ref_sink ((GtkCheckMenuItem*) gtk_check_menu_item_new_with_label (label));
+		gtk_check_menu_item_set_draw_as_radio (item, TRUE);
 		if (self->priv->current != NULL) {
 			if ((*i).type == (*((GmpcMetadataBrowserHitem*) self->priv->current->data)).type) {
-				char* _tmp3_;
-				char* _tmp2_;
-				gboolean _tmp4_;
-				_tmp3_ = NULL;
-				_tmp2_ = NULL;
-				if ((_tmp4_ = _vala_strcmp0 (_tmp2_ = mpd_song_checksum ((*i).song), _tmp3_ = mpd_song_checksum ((*((GmpcMetadataBrowserHitem*) self->priv->current->data)).song)) == 0, _tmp3_ = (g_free (_tmp3_), NULL), _tmp2_ = (g_free (_tmp2_), NULL), _tmp4_)) {
+				char* _tmp9_;
+				char* _tmp8_;
+				gboolean _tmp10_;
+				_tmp9_ = NULL;
+				_tmp8_ = NULL;
+				if ((_tmp10_ = _vala_strcmp0 (_tmp8_ = mpd_song_checksum ((*i).song), _tmp9_ = mpd_song_checksum ((*((GmpcMetadataBrowserHitem*) self->priv->current->data)).song)) == 0, _tmp9_ = (g_free (_tmp9_), NULL), _tmp8_ = (g_free (_tmp8_), NULL), _tmp10_)) {
 					gtk_check_menu_item_set_active (item, TRUE);
 				}
 			}
@@ -4416,6 +4429,7 @@ static void gmpc_metadata_browser_history_show_list (GmpcMetadataBrowser* self) 
 		gtk_menu_shell_append ((GtkMenuShell*) menu, (GtkWidget*) ((GtkMenuItem*) item));
 		iter = iter->next;
 		(i == NULL) ? NULL : (i = (gmpc_metadata_browser_hitem_free (i), NULL));
+		label = (g_free (label), NULL);
 		(item == NULL) ? NULL : (item = (g_object_unref (item), NULL));
 	}
 	gtk_widget_show_all ((GtkWidget*) menu);

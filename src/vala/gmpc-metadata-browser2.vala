@@ -2179,19 +2179,21 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         weak List<Hitem?> iter = history.first();
         while(iter!= null){
             var i = iter.data;
-            var item = new Gtk.CheckMenuItem();
-            item.draw_as_radio = true;
+            string label = "";
             if(i.type == HitemType.ARTIST)
-                item.set_label(i.song.artist);
+                label = i.song.artist;
             else if (i.type == HitemType.ALBUM)
-                item.set_label("%s - %s".printf(i.song.artist, i.song.album));
+                label = "%s - %s".printf(i.song.artist, i.song.album);
             else if (i.type == HitemType.SONG)
             {
                 if(i.song.title != null)
-                    item.set_label(i.song.title);
+                    label = i.song.title;
                 else
-                    item.set_label(_("Unknown"));
+                    label = _("Unknown");
             }
+
+            var item = new Gtk.CheckMenuItem.with_label(label);
+            item.draw_as_radio = true;
             if(current != null){
                 if(i.type == current.data.type) {
                     if(Gmpc.Misc.song_checksum(i.song) == Gmpc.Misc.song_checksum(current.data.song)){
