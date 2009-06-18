@@ -4389,6 +4389,14 @@ static void gmpc_metadata_browser_history_show_list (GmpcMetadataBrowser* self) 
 				_tmp1_ = NULL;
 				gtk_menu_item_set_label ((GtkMenuItem*) item, _tmp1_ = g_strdup_printf ("%s - %s", (*i).song->artist, (*i).song->album));
 				_tmp1_ = (g_free (_tmp1_), NULL);
+			} else {
+				if ((*i).type == GMPC_METADATA_BROWSER_HITEM_TYPE_SONG) {
+					if ((*i).song->title != NULL) {
+						gtk_menu_item_set_label ((GtkMenuItem*) item, (*i).song->title);
+					} else {
+						gtk_menu_item_set_label ((GtkMenuItem*) item, _ ("Unknown"));
+					}
+				}
 			}
 		}
 		if (self->priv->current != NULL) {

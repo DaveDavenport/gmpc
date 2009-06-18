@@ -2185,6 +2185,13 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
                 item.set_label(i.song.artist);
             else if (i.type == HitemType.ALBUM)
                 item.set_label("%s - %s".printf(i.song.artist, i.song.album));
+            else if (i.type == HitemType.SONG)
+            {
+                if(i.song.title != null)
+                    item.set_label(i.song.title);
+                else
+                    item.set_label(_("Unknown"));
+            }
             if(current != null){
                 if(i.type == current.data.type) {
                     if(Gmpc.Misc.song_checksum(i.song) == Gmpc.Misc.song_checksum(current.data.song)){
