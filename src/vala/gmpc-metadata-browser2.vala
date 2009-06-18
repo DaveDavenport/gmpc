@@ -1503,6 +1503,8 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
     {
         var vbox = new Gtk.VBox (false,6);
         vbox.border_width = 8;
+
+        var box = history_buttons();
         var label = new Gtk.Label("");
         label.set_selectable(true);
         if(song.title != null) {
@@ -1511,7 +1513,8 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             label.set_markup(Markup.printf_escaped("<span size='xx-large' weight='bold'>%s</span>",_("Unknown")));
         }
         label.set_alignment(0.0f, 0.5f);
-        vbox.pack_start(label, false, false, 0);
+        box.pack_start(label, true, true, 0);
+        vbox.pack_start(box, false, false, 0);
 
         /* Artist image */
         var hbox = new Gtk.HBox(false, 6);
@@ -1775,11 +1778,15 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
     {
         var vbox = new Gtk.VBox (false,6);
         vbox.border_width = 8;
+
+
+        var box = history_buttons();
         var label = new Gtk.Label("");
         label.set_selectable(true);
         label.set_markup(Markup.printf_escaped("<span size='xx-large' weight='bold'>%s - %s</span>",(artist != null)?artist:_("Unknown"), (album!= null)?album:_("Unknown")));
         label.set_alignment(0.0f, 0.5f);
-        vbox.pack_start(label, false, false, 0);
+        box.pack_start(label, true, true, 0);
+        vbox.pack_start(box, false, false, 0);
 
         /* Artist image */
         var hbox = new Gtk.HBox(false, 6);
@@ -1896,12 +1903,14 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
     {
         var vbox = new Gtk.VBox (false,6);
         vbox.border_width = 8;
+
+        var box = history_buttons();
         var label = new Gtk.Label("");
         label.set_selectable(true);
         label.set_markup(Markup.printf_escaped("<span size='xx-large' weight='bold'>%s</span>",(artist != null)?artist:_("Unknown")));
         label.set_alignment(0.0f, 0.5f);
-        vbox.pack_start(label, false, false, 0);
-
+        box.pack_start(label, true, true, 0);
+        vbox.pack_start(box, false, false, 0);
         /* Create an MPD.Song with the info for this type set */
         MPD.Song song = new MPD.Song();
         song.artist = artist;
@@ -2015,12 +2024,33 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         MPD.Song? song = browser_get_selected_song();
 
         if(song != null) {
+            /** Add item to history */
+            var item = Hitem();
+            item.song = song;
+            item.type = HitemType.SONG;
+            history_add(item);
+
             var view = metadata_box_show_song(song);
             this.metadata_box.add(view);
             this.metadata_sw.show_all();
         }else if(album != null && artist != null) {
+            /** Add item to history */
+            var item = Hitem();
+            item.song = new MPD.Song();
+            item.song.artist =artist;
+            item.song.album = album;
+            item.type = HitemType.ALBUM;
+            history_add(item);
+
             metadata_box_show_album(artist,album);
         }else if (artist != null) {
+            /** Add item to history */
+            var item = Hitem();
+            item.song = new MPD.Song();
+            item.song.artist =artist;
+            item.type = HitemType.ARTIST;
+            history_add(item);
+
             metadata_box_show_artist(artist);
         }
 
@@ -2067,6 +2097,8 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
     con_changed(Gmpc.Connection conn, MPD.Server server, int connect)
     {
         if(this.paned == null) return;
+        this.history_clear();
+
         this.reload_browsers();
         metadata_box_clear();
         metadata_box_update();
@@ -2078,7 +2110,148 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         if(this.paned == null) return;
 
     }
+    /**
+     * History 
+     */
+     private enum HitemType {
+        CLEAR,
+        ARTIST,
+        ALBUM,
+        SONG
+     }
+    private struct Hitem {
+        public HitemType type;
+        public MPD.Song song;
+    }
+    private List<Hitem?> history = null;
+    private weak List<Hitem?> current = null;
+    private void show_hitem(Hitem hi)
+    {
+        switch(hi.type)
+        {
+            case HitemType.ARTIST:
+                this.set_artist(hi.song.artist);
+                break;
+            case HitemType.ALBUM:
+                this.set_album(hi.song.artist, hi.song.album);
+                break;
+            case HitemType.SONG:
+                this.set_song(hi.song);
+                break;
+            default:
+                metadata_box_clear();
+                break;
+        }
+    }
+    private void history_previous()
+    {
+        if(history == null || current == null){
+         return;
+        }
+        current = current.next;
+        if(current != null) show_hitem(current.data);
+        else metadata_box_clear();
 
+    }
+    private void history_next()
+    {
+        if(history == null || current == null){
+         return;
+        }
+        current = current.prev;
+        if(current != null) show_hitem(current.data);
+        else metadata_box_clear();
+
+    }
+    private void history_show_list_clicked(Gtk.MenuItem item)
+    {
+        weak List<Hitem?> a = (List<Hitem?>) item.get_data("current");
+        stdout.printf("activate: %p\n", a);
+        if(a != null)
+        {
+            current = a;
+            show_hitem(current.data);
+        }
+    }
+    private void history_show_list()
+    {
+        var menu = new Gtk.Menu();
+        weak List<Hitem?> iter = history.first();
+        while(iter!= null){
+            var i = iter.data;
+            var item = new Gtk.CheckMenuItem();
+            item.draw_as_radio = true;
+            if(i.type == HitemType.ARTIST)
+                item.set_label(i.song.artist);
+            else if (i.type == HitemType.ALBUM)
+                item.set_label("%s - %s".printf(i.song.artist, i.song.album));
+            if(current != null){
+                if(i.type == current.data.type) {
+                    if(Gmpc.Misc.song_checksum(i.song) == Gmpc.Misc.song_checksum(current.data.song)){
+                        item.set_active(true);
+                    }
+                }
+            }
+            item.activate.connect(history_show_list_clicked);
+            item.set_data("current", (void*)iter);
+            menu.append(item);
+            iter = iter.next;
+        }
+        menu.show_all();
+        menu.popup(null, null, null, 0, Gtk.get_current_event_time());
+        
+    }
+    private Gtk.HBox history_buttons()
+    {
+        var box = new HBox(false, 0);
+        if(history == null && current == null) return box;
+
+        var next_but = new Gtk.Button.from_stock("gtk-go-forward");
+        if(current == null || current.prev == null) next_but.sensitive = false;
+        next_but.clicked.connect(history_next);
+        box.pack_end(next_but, false, false, 0);
+        if(current != null && (current.next != null || current.prev != null))
+        {
+            var dd_but = new Gtk.Button.with_label("L");
+            dd_but.clicked.connect(history_show_list);
+            box.pack_end(dd_but, false, false, 0);
+        }
+        var back_but = new Gtk.Button.from_stock("gtk-go-back");
+        if(current == null || current.next == null) back_but.sensitive = false;
+        back_but.clicked.connect(history_previous);
+        box.pack_end(back_but, false, false, 0);
+
+
+        return box;
+    }
+    private void history_add(Hitem hi)
+    {
+        if(history != null)
+        {
+            weak Hitem a = current.data;
+            if(a.type == hi.type) {
+                if(Gmpc.Misc.song_checksum(a.song) == Gmpc.Misc.song_checksum(hi.song)){
+                    return;
+                }
+            }
+        }
+        history.prepend(hi);
+        if(history.length() > 25){
+            weak List<Hitem?> a = history.last();
+            history.remove(a.data);
+        }
+        current = history;
+    }
+    private void history_clear()
+    {
+        this.current = null;
+        this.history = null;
+
+    }
+
+    /**
+     * Public api 
+     */
     public
     void
     set_artist(string artist)
@@ -2108,6 +2281,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             }while((this.model_filter_artist).iter_next(ref iter));
         }
         this.block_update--;
+
 
         this.metadata_box_clear();
         this.metadata_box_update();
@@ -2141,6 +2315,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         this.tree_songs.get_selection().unselect_all();
 
         this.block_update--;
+
         this.metadata_box_clear();
         this.metadata_box_update();
     }
@@ -2182,6 +2357,13 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
            GLib.Source.remove(this.update_timeout);
            this.update_timeout = 0;
         }
+
+        /** Add item to history */
+        var item = Hitem();
+        item.song = song; 
+        item.type = HitemType.SONG;
+        history_add(item);
+
         var view = metadata_box_show_song(song);
         this.metadata_box.add(view);
         this.metadata_box.show_all();
