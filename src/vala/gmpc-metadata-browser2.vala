@@ -2176,7 +2176,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
     private void history_show_list()
     {
         var menu = new Gtk.Menu();
-        weak List<Hitem?> iter = history.first();
+        weak List<Hitem?> iter = history.last();
         while(iter!= null){
             var i = iter.data;
             string label = "";
@@ -2204,7 +2204,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             item.activate.connect(history_show_list_clicked);
             item.set_data("current", (void*)iter);
             menu.append(item);
-            iter = iter.next;
+            iter = iter.prev;
         }
         menu.show_all();
         menu.popup(null, null, null, 0, Gtk.get_current_event_time());

@@ -4372,7 +4372,7 @@ static void gmpc_metadata_browser_history_show_list (GmpcMetadataBrowser* self) 
 	GList* iter;
 	g_return_if_fail (self != NULL);
 	menu = g_object_ref_sink ((GtkMenu*) gtk_menu_new ());
-	iter = g_list_first (self->priv->history);
+	iter = g_list_last (self->priv->history);
 	while (iter != NULL) {
 		GmpcMetadataBrowserHitem* _tmp0_;
 		GmpcMetadataBrowserHitem* i;
@@ -4427,7 +4427,7 @@ static void gmpc_metadata_browser_history_show_list (GmpcMetadataBrowser* self) 
 		g_signal_connect_object ((GtkMenuItem*) item, "activate", (GCallback) _gmpc_metadata_browser_history_show_list_clicked_gtk_menu_item_activate, self, 0);
 		g_object_set_data ((GObject*) item, "current", (void*) iter);
 		gtk_menu_shell_append ((GtkMenuShell*) menu, (GtkWidget*) ((GtkMenuItem*) item));
-		iter = iter->next;
+		iter = iter->prev;
 		(i == NULL) ? NULL : (i = (gmpc_metadata_browser_hitem_free (i), NULL));
 		label = (g_free (label), NULL);
 		(item == NULL) ? NULL : (item = (g_object_unref (item), NULL));
