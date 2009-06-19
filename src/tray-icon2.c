@@ -218,6 +218,21 @@ static int tray_icon2_button_scroll_event(gpointer tray, GdkEventScroll *event, 
     }
     return TRUE;
 }
+static gboolean tray_icon2_tooltip_query_delayed(gpointer user_data)
+{
+    tray_icon2_create_tooltip();
+    return FALSE;
+}
+static gboolean tray_icon2_tooltip_query(GtkStatusIcon *icon, 
+        gint x, gint y, 
+        gboolean keyboard_mode, 
+        GtkTooltip *tooltip, 
+        gpointer user_data)
+{
+    if(!keyboard_mode)
+        g_idle_add((GSourceFunc)tray_icon2_tooltip_query_delayed, user_data);
+    return FALSE;
+}
 
 #ifdef EGGTRAYICON
 static int tray_icon2_button_enter_notify_event(GtkWidget *tray, GdkEventCrossing *event, gpointer data)
@@ -252,6 +267,8 @@ static void tray_icon2_init(void)
 		{
 			g_signal_connect(G_OBJECT(tray_icon2_gsi), "button-press-event", G_CALLBACK(tray_icon2_button_press_event), NULL);
 			g_signal_connect(G_OBJECT(tray_icon2_gsi), "scroll-event", G_CALLBACK(tray_icon2_button_scroll_event), NULL);
+
+            g_signal_connect(G_OBJECT(tray_icon2_gsi), "query-tooltip", G_CALLBACK(tray_icon2_tooltip_query), NULL);
 		}
 #endif
 	}
