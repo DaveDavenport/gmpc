@@ -258,6 +258,9 @@ static void tray_icon2_init(void)
         g_signal_connect(G_OBJECT(tray_icon2_gsi), "enter-notify-event", G_CALLBACK(tray_icon2_button_enter_notify_event), NULL);
 #else
 		tray_icon2_gsi = gtk_status_icon_new_from_icon_name ("gmpc-tray-disconnected");
+#if GTK_CHECK_VERSION(2,15,0)
+        gtk_status_icon_set_has_tooltip(GTK_STATUS_ICON(tray_icon2_gsi), TRUE);
+#endif        
 
 		/* connect the (sparse) signals */
 		g_signal_connect(G_OBJECT(tray_icon2_gsi), "popup-menu", G_CALLBACK(tray_icon2_populate_menu), NULL);
@@ -777,7 +780,7 @@ static void tray_icon2_status_changed(MpdObj *mi, ChangedStatusType what, void *
 #ifdef EGGTRAYICON
             gtk_widget_set_tooltip_text(tray_icon2_gsi, buffer);
 #else
-			gtk_status_icon_set_tooltip(tray_icon2_gsi,buffer);
+			//gtk_status_icon_set_tooltip(tray_icon2_gsi,buffer);
 #endif            
 		}
 	}
@@ -806,7 +809,7 @@ static void tray_icon2_status_changed(MpdObj *mi, ChangedStatusType what, void *
             gtk_widget_set_tooltip_text(tray_icon2_gsi, buffer);
 #else
             gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray-play");
-            gtk_status_icon_set_tooltip(tray_icon2_gsi,buffer);
+            //gtk_status_icon_set_tooltip(tray_icon2_gsi,buffer);
 #endif            
 			if(has_buttons)
 			{
@@ -819,7 +822,7 @@ static void tray_icon2_status_changed(MpdObj *mi, ChangedStatusType what, void *
             gtk_widget_set_tooltip_text(tray_icon2_gsi, _("Gnome Music Player Client"));
 #else
             gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray-pause");
-            gtk_status_icon_set_tooltip(tray_icon2_gsi,_("Gnome Music Player Client"));
+            //gtk_status_icon_set_tooltip(tray_icon2_gsi,_("Gnome Music Player Client"));
 #endif  
 			if(has_buttons)
 			{
@@ -832,7 +835,7 @@ static void tray_icon2_status_changed(MpdObj *mi, ChangedStatusType what, void *
             gtk_widget_set_tooltip_text(tray_icon2_gsi, _("Gnome Music Player Client"));
 #else
             gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray");
-            gtk_status_icon_set_tooltip(tray_icon2_gsi,_("Gnome Music Player Client"));
+            //gtk_status_icon_set_tooltip(tray_icon2_gsi,_("Gnome Music Player Client"));
 #endif  
 			if(has_buttons)
 			{
@@ -857,7 +860,7 @@ static void tray_icon2_connection_changed(MpdObj *mi, int connect,void *user_dat
         gtk_image_set_from_icon_name(GTK_IMAGE(gtk_bin_get_child(GTK_BIN(tray_icon2_gsi))), "gmpc-tray-disconnected", GTK_ICON_SIZE_MENU);
 #else
 		gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray-disconnected");
-        gtk_status_icon_set_tooltip(tray_icon2_gsi, _("Gnome Music Player Client"));
+        //gtk_status_icon_set_tooltip(tray_icon2_gsi, _("Gnome Music Player Client"));
 #endif        
         /* Destroy notification */
         if(tray_icon2_tooltip)
