@@ -4472,6 +4472,7 @@ static void gmpc_metadata_browser_history_show_list (GmpcMetadataBrowser* self) 
 		GmpcMetadataBrowserHitem* i;
 		char* label;
 		GtkCheckMenuItem* item;
+		gboolean _tmp8_;
 		_tmp0_ = NULL;
 		i = (_tmp0_ = (GmpcMetadataBrowserHitem*) iter->data, (_tmp0_ == NULL) ? NULL : gmpc_metadata_browser_hitem_dup (_tmp0_));
 		label = g_strdup ("");
@@ -4506,18 +4507,23 @@ static void gmpc_metadata_browser_history_show_list (GmpcMetadataBrowser* self) 
 		}
 		item = g_object_ref_sink ((GtkCheckMenuItem*) gtk_check_menu_item_new_with_label (label));
 		gtk_check_menu_item_set_draw_as_radio (item, TRUE);
+		_tmp8_ = FALSE;
 		if (self->priv->current != NULL) {
-			if ((*i).type == (*((GmpcMetadataBrowserHitem*) self->priv->current->data)).type) {
-				char* _tmp9_;
-				char* _tmp8_;
-				gboolean _tmp10_;
-				_tmp9_ = NULL;
-				_tmp8_ = NULL;
-				if ((_tmp10_ = _vala_strcmp0 (_tmp8_ = mpd_song_checksum ((*i).song), _tmp9_ = mpd_song_checksum ((*((GmpcMetadataBrowserHitem*) self->priv->current->data)).song)) == 0, _tmp9_ = (g_free (_tmp9_), NULL), _tmp8_ = (g_free (_tmp8_), NULL), _tmp10_)) {
-					gtk_check_menu_item_set_active (item, TRUE);
-				}
-			}
+			_tmp8_ = self->priv->current == iter;
+		} else {
+			_tmp8_ = FALSE;
 		}
+		/* if(current != null){
+		                if(i.type == current.data.type) {
+		                    if(Gmpc.Misc.song_checksum(i.song) == Gmpc.Misc.song_checksum(current.data.song)){
+		             */
+		if (_tmp8_) {
+			gtk_check_menu_item_set_active (item, TRUE);
+		}
+		/*      }
+		                }
+		            }
+		            */
 		g_signal_connect_object ((GtkMenuItem*) item, "activate", (GCallback) _gmpc_metadata_browser_history_show_list_clicked_gtk_menu_item_activate, self, 0);
 		g_object_set_data ((GObject*) item, "current", (void*) iter);
 		gtk_menu_shell_append ((GtkMenuShell*) menu, (GtkWidget*) ((GtkMenuItem*) item));

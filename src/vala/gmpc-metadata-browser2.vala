@@ -2236,13 +2236,17 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
 
             var item = new Gtk.CheckMenuItem.with_label(label);
             item.draw_as_radio = true;
-            if(current != null){
+           /* if(current != null){
                 if(i.type == current.data.type) {
                     if(Gmpc.Misc.song_checksum(i.song) == Gmpc.Misc.song_checksum(current.data.song)){
-                        item.set_active(true);
-                    }
+             */
+             if(current != null && current == iter){
+             item.set_active(true);
+             }
+              /*      }
                 }
             }
+            */
             item.activate.connect(history_show_list_clicked);
             item.set_data("current", (void*)iter);
             menu.append(item);
