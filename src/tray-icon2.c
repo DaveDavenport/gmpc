@@ -193,11 +193,6 @@ static int tray_icon2_button_scroll_event(gpointer tray, GdkEventScroll *event, 
     }
     return TRUE;
 }
-static gboolean tray_icon2_tooltip_query_delayed(gpointer user_data)
-{
-    tray_icon2_create_tooltip();
-    return FALSE;
-}
 static gboolean tray_icon2_tooltip_query(GtkStatusIcon *icon, 
         gint x, gint y, 
         gboolean keyboard_mode, 
@@ -205,7 +200,9 @@ static gboolean tray_icon2_tooltip_query(GtkStatusIcon *icon,
         gpointer user_data)
 {
     if(!keyboard_mode)
-        g_idle_add((GSourceFunc)tray_icon2_tooltip_query_delayed, user_data);
+    {
+        if(tray_icon2_tooltip == NULL) tray_icon2_create_tooltip();
+    }
     return FALSE;
 }
 
@@ -402,8 +399,6 @@ void tray_icon2_create_tooltip(void)
         tray_icon2_tooltip = NULL;
         //tray_icon2_tooltip_destroy();
 	}
-	if(cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "show-tooltip", 1) == 0)
-		return;
 	/* If gmpc is fullscreen, don't show the tooltip */
 	if(pl3_window_is_fullscreen())
 		return;
@@ -857,6 +852,7 @@ static void tray_icon2_preferences_construct(GtkWidget *container)
     gtk_combo_box_set_active(GTK_COMBO_BOX(gtk_builder_get_object(tray_icon2_preferences_xml, "pm-combo")),
         cfg_get_single_value_as_int_with_default(config, "Default","min-error-level", ERROR_INFO));
 }
+
 gmpcPrefPlugin tray_icon2_preferences = {
 	tray_icon2_preferences_construct,
 	tray_icon2_preferences_destroy

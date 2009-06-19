@@ -70,7 +70,7 @@
               <object class="GtkCheckButton" id="ck_popup_enable">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="label" translatable="yes">Enable</property>
+                <property name="label" translatable="yes">Show on song change</property>
                 <property name="use_underline">True</property>
                 <property name="draw_indicator">True</property>
                 <signal handler="popup_enable_toggled" name="toggled"/>
