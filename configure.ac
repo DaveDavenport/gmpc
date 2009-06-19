@@ -202,21 +202,6 @@ else
 fi
 
 
-# Egg Status Icon 
-AC_ARG_ENABLE([eggtrayicon],
-	[--enable-eggtrayicon Use eggtrayicon instead of GtkStatusIcon.],
-	[case "${enableval}" in
-		yes) eggtrayicon=true;;
-		no)  eggtrayicon=false;;
-		*) AC_MSG_ERROR([bad value ${enableval} for --enable-eggtrayicon]);;
-	 esac],
-	[eggtrayicon=false])
-
-AM_CONDITIONAL([EGGTRAYICON], [test x$eggtrayicon = xtrue])
-if test x${eggtrayicon} = xtrue; then
-AC_DEFINE(EGGTRAYICON,1,["Use or don't use eggtrayicon"])
-fi
-
 
 # Split this out, because pkgconfig macro doesn't return nicely what is missing
 
@@ -475,11 +460,6 @@ test/GmpcEasyDownload/Makefile
 echo ""
 echo ""
 echo "------------------ Status ------------------"
-if test x$eggtrayicon = xtrue; then
-	echo "Eggtrayicon mode is:              enabled"
-else
-	echo "Eggtrayicon mode is:              disabled"
-fi
 if test x$maintainer_mode = xtrue; then
 	echo "Maintainer mode is:               enabled"
 else

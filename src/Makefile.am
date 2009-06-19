@@ -53,10 +53,6 @@ gmpc_SOURCES=\
 	browsers/server-information.c\
 	bug-information.c
 
-if EGGTRAYICON
-gmpc_SOURCES+=egg/eggtrayicon.c
-endif
-
 gmpc_LDADD=\
 			   gob/libcwidgets.la\
                smclient/libeggsmclient.la
@@ -215,14 +211,6 @@ EXTRA_DIST=\
 		gmpc-version.h.in\
 		bug-information.h\
 		gmpc-win32.rc
-
-if EGGTRAYICON
-EXTRA_DIST+=egg/eggtrayicon.h
-else 
-EXTRA_DIST+=egg/eggtrayicon.h egg/eggtrayicon.c
-endif
-
-
 
 DISTCLEANFILES=\
 			   revision.h\

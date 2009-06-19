@@ -31,12 +31,7 @@
 /* name of config field */
 #define TRAY_ICON2_ID "tray-icon2"
 
-#ifdef EGGTRAYICON
-#include "egg/eggtrayicon.h"
-GtkWidget *tray_icon2_gsi = NULL;
-#else
 GtkStatusIcon 	*tray_icon2_gsi = NULL;
-#endif
 
 static gchar *current_song_checksum = NULL;
 
@@ -73,14 +68,10 @@ void tray_icon2_preferences_pm_combo_changed(GtkComboBox *cm, gpointer data);
 gboolean tray_icon2_get_available(void)
 {
 	if(tray_icon2_gsi) {
-#ifdef EGGTRAYICON
-        return GTK_WIDGET_REALIZED(tray_icon2_gsi);
-#else
 		if(gtk_status_icon_is_embedded(tray_icon2_gsi) &&
 				gtk_status_icon_get_visible(tray_icon2_gsi)) {
 			return TRUE;
 		}
-#endif        
 	}
 	return FALSE;
 }
@@ -162,13 +153,8 @@ static void tray_icon2_populate_menu(GtkStatusIcon *gsi,guint button, guint acti
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 	g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(main_quit), NULL);
 	gtk_widget_show_all(menu);
-#ifdef EGGTRAYICON    
-	gtk_menu_popup(GTK_MENU(menu), NULL, NULL, NULL, NULL, button, activate_time);
-#else
     gtk_menu_popup(GTK_MENU(menu), NULL, NULL, gtk_status_icon_position_menu, gsi, button, activate_time);
-#endif
 }
-#ifndef EGGTRAYICON
 static void tray_icon2_embedded_changed(GtkStatusIcon *icon,GParamSpec *arg1, gpointer data)
 {
     if(!gtk_status_icon_is_embedded(icon))
@@ -177,7 +163,6 @@ static void tray_icon2_embedded_changed(GtkStatusIcon *icon,GParamSpec *arg1, gp
         create_playlist3();
     }
 }
-#endif
 /**
  * Initialize the tray icon 
  */
@@ -187,16 +172,6 @@ static int tray_icon2_button_press_event(gpointer tray, GdkEventButton *event, g
     {
         play_song();
     }
-#ifdef EGGTRAYICON
-    else if(event->button == 1)
-    {
-        tray_icon2_activate(NULL, NULL);
-    }
-    else if(event->button == 3)
-    {
-        tray_icon2_populate_menu(NULL, event->button, event->time, NULL);
-    }
-#endif
     else
     {
         return FALSE;
@@ -234,33 +209,14 @@ static gboolean tray_icon2_tooltip_query(GtkStatusIcon *icon,
     return FALSE;
 }
 
-#ifdef EGGTRAYICON
-static int tray_icon2_button_enter_notify_event(GtkWidget *tray, GdkEventCrossing *event, gpointer data)
-{
-
-    tray_icon2_create_tooltip();
-    return FALSE;
-}
-#endif
 static void tray_icon2_init(void)
 {
 
 	if(cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "enable", TRUE))
 	{
-#ifdef EGGTRAYICON        
-        tray_icon2_gsi = (GtkWidget *)egg_tray_icon_new("gmpc");
-        gtk_container_add(GTK_CONTAINER(tray_icon2_gsi), gtk_image_new_from_icon_name("gmpc-tray", GTK_ICON_SIZE_MENU));
-        gtk_widget_show_all(tray_icon2_gsi);
-        gtk_widget_add_events(tray_icon2_gsi, GDK_SCROLL_MASK);
-        g_signal_connect(G_OBJECT(tray_icon2_gsi), "button-press-event", G_CALLBACK(tray_icon2_button_press_event), NULL);
-        g_signal_connect(G_OBJECT(tray_icon2_gsi), "scroll-event", G_CALLBACK(tray_icon2_button_scroll_event), NULL);
-
-        g_signal_connect(G_OBJECT(tray_icon2_gsi), "enter-notify-event", G_CALLBACK(tray_icon2_button_enter_notify_event), NULL);
-#else
 		tray_icon2_gsi = gtk_status_icon_new_from_icon_name ("gmpc-tray-disconnected");
 #if GTK_CHECK_VERSION(2,15,0)
         gtk_status_icon_set_has_tooltip(GTK_STATUS_ICON(tray_icon2_gsi), TRUE);
-#endif        
 
 		/* connect the (sparse) signals */
 		g_signal_connect(G_OBJECT(tray_icon2_gsi), "popup-menu", G_CALLBACK(tray_icon2_populate_menu), NULL);
@@ -283,11 +239,7 @@ static void tray_icon2_destroy(void)
 {
 	if(tray_icon2_gsi)
 	{
-#ifdef EGGTRAYICON
-        gtk_widget_destroy(tray_icon2_gsi);
-#else
 		g_object_unref(tray_icon2_gsi);
-#endif        
         tray_icon2_gsi = NULL;
 	}
     /* free the currnet song checksum */
@@ -314,18 +266,11 @@ static void tray_icon2_set_enabled(int enabled)
 			tray_icon2_init();
             tray_icon2_status_changed(connection, MPD_CST_SONGID, NULL);
 		} else {
-#ifndef EGGTRAYICON
 			gtk_status_icon_set_visible(GTK_STATUS_ICON(tray_icon2_gsi), TRUE);
-#endif            
 		}
 	} else {
 		if(tray_icon2_gsi) {
-#ifdef EGGTRAYICON
-            gtk_widget_destroy(tray_icon2_gsi);
-            tray_icon2_gsi = NULL;
-#else
 			gtk_status_icon_set_visible(GTK_STATUS_ICON(tray_icon2_gsi), FALSE);
-#endif            
 		}		
 	}
 }
@@ -640,25 +585,8 @@ void tray_icon2_create_tooltip(void)
 
 		GdkRectangle rect, rect2;
 		GtkOrientation orientation;
-#ifdef EGGTRAYICON
-        GdkWindow *w = NULL;
-        gtk_widget_realize(tray_icon2_gsi);
-#if GTK_CHECK_VERSION(2,14,0)        
-        w = gtk_widget_get_window(tray_icon2_gsi);
-#else
-        w = GTK_WIDGET(tray_icon2_gsi)->window;
-#endif
-        screen = gtk_widget_get_screen(tray_icon2_gsi);
-        orientation = egg_tray_icon_get_orientation((EggTrayIcon *)tray_icon2_gsi);
-        rect.width = tray_icon2_gsi->allocation.width; 
-        rect.height = tray_icon2_gsi->allocation.height; 
-        if(w)
-        {
-            gdk_window_get_origin(w, &(rect.x), &(rect.y));
-#else
 		if(gtk_status_icon_get_geometry(tray_icon2_gsi, &screen, &rect, &orientation))
         {
-#endif        
 			monitor  = gdk_screen_get_monitor_at_point(screen, rect.x, rect.y);
 			gdk_screen_get_monitor_geometry(screen, monitor, &rect2);
 			/* Get Y */
@@ -777,11 +705,7 @@ static void tray_icon2_status_changed(MpdObj *mi, ChangedStatusType what, void *
 		if(tray_icon2_gsi)
 		{
 			mpd_song_markup(buffer, 256,"[%name%: ][%title%|%shortfile%][ - %artist%]",song);
-#ifdef EGGTRAYICON
-            gtk_widget_set_tooltip_text(tray_icon2_gsi, buffer);
-#else
 			//gtk_status_icon_set_tooltip(tray_icon2_gsi,buffer);
-#endif            
 		}
 	}
 
@@ -804,39 +728,24 @@ static void tray_icon2_status_changed(MpdObj *mi, ChangedStatusType what, void *
 		int state = mpd_player_get_state(connection);
 		if(state == MPD_PLAYER_PLAY){
 			mpd_song_markup(buffer, 256,"[%name%: ][%title%|%shortfile%][ - %artist%]",song);
-#ifdef EGGTRAYICON
-            gtk_image_set_from_icon_name(GTK_IMAGE(gtk_bin_get_child(GTK_BIN(tray_icon2_gsi))), "gmpc-tray-play", GTK_ICON_SIZE_MENU);
-            gtk_widget_set_tooltip_text(tray_icon2_gsi, buffer);
-#else
             gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray-play");
             //gtk_status_icon_set_tooltip(tray_icon2_gsi,buffer);
-#endif            
 			if(has_buttons)
 			{
 				gtk_button_set_image(GTK_BUTTON(play_button), gtk_image_new_from_stock(GTK_STOCK_MEDIA_PAUSE, GTK_ICON_SIZE_BUTTON));
 			}
 		} else if(state == MPD_PLAYER_PAUSE){
 			
-#ifdef EGGTRAYICON
-            gtk_image_set_from_icon_name(GTK_IMAGE(gtk_bin_get_child(GTK_BIN(tray_icon2_gsi))), "gmpc-tray-pause", GTK_ICON_SIZE_MENU);
-            gtk_widget_set_tooltip_text(tray_icon2_gsi, _("Gnome Music Player Client"));
-#else
             gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray-pause");
             //gtk_status_icon_set_tooltip(tray_icon2_gsi,_("Gnome Music Player Client"));
-#endif  
 			if(has_buttons)
 			{
 				gtk_button_set_image(GTK_BUTTON(play_button), gtk_image_new_from_stock(GTK_STOCK_MEDIA_PLAY, GTK_ICON_SIZE_BUTTON));
 			}
 		} else {
 			
-#ifdef EGGTRAYICON
-            gtk_image_set_from_icon_name(GTK_IMAGE(gtk_bin_get_child(GTK_BIN(tray_icon2_gsi))), "gmpc-tray", GTK_ICON_SIZE_MENU);
-            gtk_widget_set_tooltip_text(tray_icon2_gsi, _("Gnome Music Player Client"));
-#else
             gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray");
             //gtk_status_icon_set_tooltip(tray_icon2_gsi,_("Gnome Music Player Client"));
-#endif  
 			if(has_buttons)
 			{
 				gtk_button_set_image(GTK_BUTTON(play_button), gtk_image_new_from_stock(GTK_STOCK_MEDIA_PLAY, GTK_ICON_SIZE_BUTTON));
@@ -856,12 +765,8 @@ static void tray_icon2_connection_changed(MpdObj *mi, int connect,void *user_dat
 		tray_icon2_status_changed(mi, MPD_CST_STATE,NULL);
 	} else {
         /* Set the disconnect image, and reset the GtkTooltip */
-#ifdef EGGTRAYICON
-        gtk_image_set_from_icon_name(GTK_IMAGE(gtk_bin_get_child(GTK_BIN(tray_icon2_gsi))), "gmpc-tray-disconnected", GTK_ICON_SIZE_MENU);
-#else
 		gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray-disconnected");
         //gtk_status_icon_set_tooltip(tray_icon2_gsi, _("Gnome Music Player Client"));
-#endif        
         /* Destroy notification */
         if(tray_icon2_tooltip)
             tray_icon2_tooltip_destroy();

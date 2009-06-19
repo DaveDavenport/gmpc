@@ -136,14 +136,6 @@ static void bug_information_generate_message(GtkTextBuffer *buffer)
     gtk_text_buffer_insert(buffer, &iter,"Disabled",-1);
 #endif
 
-    gtk_text_buffer_insert_with_tags(buffer, &iter, "\nLibegg's trayicon:\t", -1, bold_tag, NULL);
-#ifdef EGGTRAYICON
-    gtk_text_buffer_insert(buffer, &iter,"Enabled",-1);
-#else
-    gtk_text_buffer_insert(buffer, &iter,"Disabled",-1);
-#endif
-
-
     gtk_text_buffer_insert_with_tags(buffer, &iter, "\nSystem libsexy:\t", -1, bold_tag, NULL);
 #ifdef USE_SYSTEM_LIBSEXY
     gtk_text_buffer_insert(buffer, &iter,"Enabled",-1);
