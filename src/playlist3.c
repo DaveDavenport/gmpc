@@ -2088,15 +2088,18 @@ void info2_activate()
 }
 void info2_fill_song_view(mpd_Song *song)
 {
+	info2_activate();
 	gmpc_metadata_browser_set_song(metadata_browser, song);
 }
 void info2_fill_artist_view(const gchar *artist)
 {
+	info2_activate();
 	gmpc_metadata_browser_set_artist(metadata_browser,artist);
 }
 
 void info2_fill_album_view(const gchar *artist,const gchar *album)
 {
+	info2_activate();
 	gmpc_metadata_browser_set_album(metadata_browser,artist,album);
 }
 static void playlist3_header_song(void)

@@ -1498,7 +1498,18 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
          table.attach(dhbox, 1,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
          i++;
      }
-
+     /* jump buttons */
+    private void artist_button_clicked(Gtk.Button button)
+    {
+        string artist = (string)button.get_data("artist");
+        Gmpc.Browser.Metadata.show_artist(artist);
+    }
+    private void album_button_clicked(Gtk.Button button)
+    {
+        string artist = (string)button.get_data("artist");
+        string album = (string)button.get_data("album");
+        Gmpc.Browser.Metadata.show_album(artist,album);
+    }
     public Gtk.Widget metadata_box_show_song(MPD.Song song)
     {
         var vbox = new Gtk.VBox (false,6);
@@ -1544,12 +1555,33 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             this.add_entry(info_box, _("Title"), song.title, button, out i);
         }
         /* Artist label */
-        this.add_entry(info_box, _("Artist"), song.artist, null, out i);
+        if(song.artist != null) {
+            Gtk.Button button = null;
+            button = new Gtk.Button();
+            button.add(new Gtk.Image.from_icon_name("media-artist", Gtk.IconSize.MENU));
+            button.set_relief(Gtk.ReliefStyle.NONE);
+            button.set_data_full("artist", (void *)"%s".printf(song.artist), (GLib.DestroyNotify) g_free);
+            button.clicked.connect(artist_button_clicked);
+            this.add_entry(info_box, _("Artist"), song.artist, button, out i);
+        }
         /* AlbumArtist label */
         this.add_entry(info_box, _("Album artist"), song.albumartist, null, out i);
 
         /* Album */
-        this.add_entry(info_box, _("Album"), song.album, null, out i);
+
+        if(song.album != null) {
+            Gtk.Button button = null;
+            if(song.artist != null)
+            {
+                button = new Gtk.Button();
+                button.add(new Gtk.Image.from_icon_name("media-album", Gtk.IconSize.MENU));
+                button.set_relief(Gtk.ReliefStyle.NONE);
+                button.set_data_full("artist", (void *)"%s".printf(song.artist), (GLib.DestroyNotify) g_free);
+                button.set_data_full("album", (void *)"%s".printf(song.album), (GLib.DestroyNotify) g_free);
+                button.clicked.connect(album_button_clicked);
+            }
+            this.add_entry(info_box, _("Album"), song.album, button, out i);
+        }
 
         /* track */
         this.add_entry(info_box, _("Track"), song.track, null, out i);
@@ -1805,6 +1837,16 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         info_box.set_col_spacings(8);
         hbox.pack_start(info_box, false, false, 0);
         int i=0;
+        /* Artist label */
+        if(song.artist != null) {
+            Gtk.Button button = null;
+            button = new Gtk.Button();
+            button.add(new Gtk.Image.from_icon_name("media-artist", Gtk.IconSize.MENU));
+            button.set_relief(Gtk.ReliefStyle.NONE);
+            button.set_data_full("artist", (void *)"%s".printf(song.artist), (GLib.DestroyNotify) g_free);
+            button.clicked.connect(artist_button_clicked);
+            this.add_entry(info_box, _("Artist"), song.artist, button, out i);
+        }
 
         /* Genres of songs */ 
         var pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ALBUM_GENRES_SONGS, song);

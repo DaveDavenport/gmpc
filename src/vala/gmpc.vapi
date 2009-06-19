@@ -266,6 +266,13 @@ namespace Gmpc {
             [CCode (cname="pl3_find2_ec_database")]
             public void query_database(void *user_data, string query);
         }
+        namespace Metadata {
+            [CCode (cname="info2_fill_artist_view")]
+            public void show_artist(string artist);
+            
+            [CCode (cname="info2_fill_album_view")]
+            public void show_album(string artist,string album);
+        }
     }
     namespace Playlist3 {
         [CCode (cname="playlist3_get_category_tree_view")]
