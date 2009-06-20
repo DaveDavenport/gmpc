@@ -1021,7 +1021,7 @@ GmpcMetaDataEditWindow* gmpc_meta_data_edit_window_construct (GType object_type,
 	g_signal_connect_object (button, "clicked", (GCallback) _gmpc_meta_data_edit_window_destroy_popup_gtk_button_clicked, self, 0);
 	gtk_box_pack_end ((GtkBox*) hbox, (GtkWidget*) button, FALSE, FALSE, (guint) 0);
 	_tmp8_ = NULL;
-	button = (_tmp8_ = g_object_ref_sink ((GtkButton*) gtk_button_new_with_label ("Set cover")), (button == NULL) ? NULL : (button = (g_object_unref (button), NULL)), _tmp8_);
+	button = (_tmp8_ = g_object_ref_sink ((GtkButton*) gtk_button_new_with_mnemonic ("_Set")), (button == NULL) ? NULL : (button = (g_object_unref (button), NULL)), _tmp8_);
 	g_signal_connect_object (button, "clicked", (GCallback) _gmpc_meta_data_edit_window_set_metadata_gtk_button_clicked, self, 0);
 	gtk_box_pack_end ((GtkBox*) hbox, (GtkWidget*) button, FALSE, FALSE, (guint) 0);
 	gtk_box_pack_end ((GtkBox*) vbox, (GtkWidget*) hbox, FALSE, FALSE, (guint) 0);

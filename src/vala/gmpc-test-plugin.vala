@@ -500,7 +500,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
         button.clicked += destroy_popup;
         hbox.pack_end(button, false, false, 0);
 
-        button = new Gtk.Button.with_label("Set cover");
+        button = new Gtk.Button.with_mnemonic("_Set");
         button.clicked += set_metadata;
         hbox.pack_end(button, false, false, 0);
 
