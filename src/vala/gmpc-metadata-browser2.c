@@ -1092,6 +1092,7 @@ static void gmpc_widget_similar_artist_metadata_changed (GmpcWidgetSimilarArtist
 			GList* in_db_list;
 			GList* list;
 			gint i;
+			guint llength;
 			/* Set result */
 			in_db_list = NULL;
 			list = g_list_copy (meta_data_get_text_list (met));
@@ -1201,6 +1202,11 @@ static void gmpc_widget_similar_artist_metadata_changed (GmpcWidgetSimilarArtist
 			in_db_list = g_list_reverse (in_db_list);
 			i = 0;
 			gtk_widget_hide ((GtkWidget*) self);
+			llength = g_list_length (in_db_list);
+			if (llength > 50) {
+				llength = (guint) 50;
+			}
+			gtk_table_resize ((GtkTable*) self, (llength / 4) + 1, (guint) 4);
 			{
 				GList* item_collection;
 				GList* item_it;
@@ -1267,6 +1273,7 @@ GtkWidget* gmpc_widget_similar_artist_new_artist_button (GmpcWidgetSimilarArtist
 	hbox = g_object_ref_sink ((GtkHBox*) gtk_hbox_new (FALSE, 6));
 	gtk_container_set_border_width ((GtkContainer*) hbox, (guint) 6);
 	event = g_object_ref_sink ((GtkEventBox*) gtk_event_box_new ());
+	gtk_widget_set_size_request ((GtkWidget*) event, 180, 60);
 	g_object_set ((GtkWidget*) event, "app-paintable", TRUE, NULL);
 	g_signal_connect ((GtkWidget*) event, "expose-event", (GCallback) _misc_header_expose_event_gtk_widget_expose_event, NULL);
 	image = g_object_ref_sink (gmpc_metaimage_new_size (META_ARTIST_ART, 48));
@@ -1274,6 +1281,7 @@ GtkWidget* gmpc_widget_similar_artist_new_artist_button (GmpcWidgetSimilarArtist
 	_tmp1_ = NULL;
 	_tmp0_ = NULL;
 	song->artist = (_tmp1_ = (_tmp0_ = artist, (_tmp0_ == NULL) ? NULL : g_strdup (_tmp0_)), song->artist = (g_free (song->artist), NULL), _tmp1_);
+	gmpc_metaimage_set_squared (image, TRUE);
 	gmpc_metaimage_update_cover_from_song_delayed (image, song);
 	gtk_box_pack_start ((GtkBox*) hbox, (GtkWidget*) image, FALSE, FALSE, (guint) 0);
 	label = g_object_ref_sink ((GtkLabel*) gtk_label_new (artist));
@@ -1291,7 +1299,6 @@ GtkWidget* gmpc_widget_similar_artist_new_artist_button (GmpcWidgetSimilarArtist
 		(find == NULL) ? NULL : (find = (g_object_unref (find), NULL));
 	}
 	gtk_container_add ((GtkContainer*) event, (GtkWidget*) hbox);
-	gtk_widget_set_size_request ((GtkWidget*) event, 180, 60);
 	_tmp2_ = NULL;
 	return (_tmp2_ = (GtkWidget*) event, (hbox == NULL) ? NULL : (hbox = (g_object_unref (hbox), NULL)), (image == NULL) ? NULL : (image = (g_object_unref (image), NULL)), (song == NULL) ? NULL : (song = (mpd_freeSong (song), NULL)), (label == NULL) ? NULL : (label = (g_object_unref (label), NULL)), _tmp2_);
 }

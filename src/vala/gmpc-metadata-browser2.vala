@@ -351,6 +351,9 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
             in_db_list.reverse();
             int i=0;
             this.hide();
+            uint llength = in_db_list.length();
+            if(llength > 50) llength = 50;
+            this.resize(llength/4+1, 4);
             foreach(Gtk.Widget item in in_db_list)
             {
                 if(i<50){
@@ -383,12 +386,14 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
         hbox.border_width = 6;
 
         var event = new Gtk.EventBox();
+        event.set_size_request(180,60);
         event.app_paintable = true;
         event.expose_event += Gmpc.Misc.misc_header_expose_event;
 
         var image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ARTIST_ART, 48);
         var song = new MPD.Song();
         song.artist = artist;
+        image.set_squared(true);
         image.update_from_song_delayed(song);
         hbox.pack_start(image,false,false,0);
 
@@ -409,7 +414,6 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
         }
 
         event.add(hbox);
-        event.set_size_request(180,60);
         return event;
     }
 
