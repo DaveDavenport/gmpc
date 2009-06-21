@@ -35,6 +35,7 @@ struct _GmpcMenuItemRatingClass {
 };
 
 
+static gpointer gmpc_menu_item_rating_parent_class = NULL;
 
 #define use_transition TRUE
 GType gmpc_menu_item_rating_get_type (void);
@@ -48,28 +49,33 @@ static gboolean gmpc_menu_item_rating_button_release_event_callback (GmpcMenuIte
 GmpcMenuItemRating* gmpc_menu_item_rating_new (MpdObj* server, const mpd_Song* song);
 GmpcMenuItemRating* gmpc_menu_item_rating_construct (GType object_type, MpdObj* server, const mpd_Song* song);
 GmpcMenuItemRating* gmpc_menu_item_rating_new (MpdObj* server, const mpd_Song* song);
-static gpointer gmpc_menu_item_rating_parent_class = NULL;
 static void gmpc_menu_item_rating_finalize (GObject* obj);
 
 
 
 gint gmpc_menu_item_rating_get_rating (GmpcMenuItemRating* self) {
+	gint result;
 	g_return_val_if_fail (self != NULL, 0);
-	return 0;
+	result = 0;
+	return result;
 }
 
 
 static gboolean gmpc_menu_item_rating_button_press_event_callback (GmpcMenuItemRating* self, const GdkEventButton* event, void* userdata) {
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	fprintf (stdout, "Button press event\n");
 	gmpc_rating_button_press_event_callback (self->rating, self->rating->event_box, &(*event));
-	return TRUE;
+	result = TRUE;
+	return result;
 }
 
 
 static gboolean gmpc_menu_item_rating_button_release_event_callback (GmpcMenuItemRating* self, const GdkEventButton* event, void* userdata) {
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
-	return TRUE;
+	result = TRUE;
+	return result;
 }
 
 

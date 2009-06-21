@@ -61,6 +61,7 @@ struct _GmpcProgressPrivate {
 };
 
 
+static gpointer gmpc_progress_parent_class = NULL;
 
 #define use_transition TRUE
 GType gmpc_progress_get_type (void);
@@ -89,7 +90,6 @@ static gboolean _gmpc_progress_motion_notify_event_callback_gtk_widget_motion_no
 static gboolean _gmpc_progress_enter_notify_event_callback_gtk_widget_enter_notify_event (GtkScale* _sender, const GdkEventCrossing* event, gpointer self);
 static gboolean _gmpc_progress_enter_notify_event_callback_gtk_widget_leave_notify_event (GtkScale* _sender, const GdkEventCrossing* event, gpointer self);
 static GObject * gmpc_progress_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);
-static gpointer gmpc_progress_parent_class = NULL;
 static void gmpc_progress_finalize (GObject* obj);
 static void gmpc_progress_get_property (GObject * object, guint property_id, GValue * value, GParamSpec * pspec);
 static void gmpc_progress_set_property (GObject * object, guint property_id, const GValue * value, GParamSpec * pspec);
@@ -100,10 +100,12 @@ static void gmpc_progress_set_property (GObject * object, guint property_id, con
      * Paint a nice box around it
      */
 static gboolean gmpc_progress_tooltip_expose_event_callback (GmpcProgress* self, GtkWindow* tooltip, const GdkEventExpose* event) {
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (tooltip != NULL, FALSE);
 	gtk_paint_box (gtk_widget_get_style ((GtkWidget*) tooltip), (*event).window, GTK_STATE_NORMAL, GTK_SHADOW_OUT, NULL, (GtkWidget*) tooltip, "tooltip", 0, 0, ((GtkWidget*) tooltip)->allocation.width, ((GtkWidget*) tooltip)->allocation.height);
-	return FALSE;
+	result = FALSE;
+	return result;
 }
 
 
@@ -113,6 +115,7 @@ static gboolean _gmpc_progress_tooltip_expose_event_callback_gtk_widget_expose_e
 
 
 static gboolean gmpc_progress_enter_notify_event_callback (GmpcProgress* self, GtkScale* scale, const GdkEventCrossing* event) {
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (scale != NULL, FALSE);
 	/* Create tooltip if mouse enters the event window */
@@ -137,17 +140,21 @@ static gboolean gmpc_progress_enter_notify_event_callback (GmpcProgress* self, G
 			self->priv->tooltip = (_tmp2_ = NULL, (self->priv->tooltip == NULL) ? NULL : (self->priv->tooltip = (g_object_unref (self->priv->tooltip), NULL)), _tmp2_);
 		}
 	}
-	return FALSE;
+	result = FALSE;
+	return result;
 }
 
 
 static glong string_get_length (const char* self) {
+	glong result;
 	g_return_val_if_fail (self != NULL, 0L);
-	return g_utf8_strlen (self, -1);
+	result = g_utf8_strlen (self, -1);
+	return result;
 }
 
 
 static gboolean gmpc_progress_motion_notify_event_callback (GmpcProgress* self, GtkScale* scale, const GdkEventMotion* event) {
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (scale != NULL, FALSE);
 	if ((*event).type == GDK_MOTION_NOTIFY) {
@@ -231,7 +238,8 @@ static gboolean gmpc_progress_motion_notify_event_callback (GmpcProgress* self, 
 			a = (g_free (a), NULL);
 		}
 	}
-	return FALSE;
+	result = FALSE;
+	return result;
 }
 
 
@@ -258,14 +266,17 @@ static void gmpc_progress_value_changed (GmpcProgress* self, GtkScale* range) {
 
 
 static gboolean gmpc_progress_button_release_event_callback (GmpcProgress* self, GtkScale* scale, const GdkEventButton* event) {
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (scale != NULL, FALSE);
 	self->priv->press--;
-	return FALSE;
+	result = FALSE;
+	return result;
 }
 
 
 static gboolean gmpc_progress_button_press_event_callback (GmpcProgress* self, const GdkEventButton* event, GtkScale* scale) {
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (scale != NULL, FALSE);
 	self->priv->press++;
@@ -300,38 +311,42 @@ static gboolean gmpc_progress_button_press_event_callback (GmpcProgress* self, c
 			}
 			p = _tmp1_;
 			g_signal_emit_by_name (self, "seek-event", p);
-			return TRUE;
+			result = TRUE;
+			return result;
 		}
 	} else {
 		if ((*event).type == GDK_2BUTTON_PRESS) {
-			gboolean _tmp3_;
-			_tmp3_ = FALSE;
+			gboolean _tmp2_;
+			_tmp2_ = FALSE;
 			if ((*event).button == 2) {
-				_tmp3_ = TRUE;
+				_tmp2_ = TRUE;
 			} else {
-				_tmp3_ = (*event).button == 1;
+				_tmp2_ = (*event).button == 1;
 			}
-			if (_tmp3_) {
+			if (_tmp2_) {
 				guint p;
-				guint _tmp4_;
+				guint _tmp3_;
 				p = (guint) (self->priv->total * ((*event).x / ((double) (((GtkWidget*) scale)->allocation.width - gtk_widget_get_style ((GtkWidget*) scale)->xthickness))));
-				_tmp4_ = 0U;
+				_tmp3_ = 0U;
 				if (p > self->priv->total) {
-					_tmp4_ = self->priv->total;
+					_tmp3_ = self->priv->total;
 				} else {
-					_tmp4_ = p;
+					_tmp3_ = p;
 				}
-				p = _tmp4_;
+				p = _tmp3_;
 				g_signal_emit_by_name (self, "seek-event", p);
-				return TRUE;
+				result = TRUE;
+				return result;
 			}
 		}
 	}
-	return FALSE;
+	result = FALSE;
+	return result;
 }
 
 
 static gboolean gmpc_progress_scroll_event_callback (GmpcProgress* self, GtkScale* scale, const GdkEventScroll* event) {
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (scale != NULL, FALSE);
 	if ((*event).direction == GDK_SCROLL_UP) {
@@ -341,7 +356,8 @@ static gboolean gmpc_progress_scroll_event_callback (GmpcProgress* self, GtkScal
 			g_signal_emit_by_name (self, "seek-event", self->priv->current - 5);
 		}
 	}
-	return FALSE;
+	result = FALSE;
+	return result;
 }
 
 
@@ -458,8 +474,10 @@ GmpcProgress* gmpc_progress_new (void) {
 
 
 gboolean gmpc_progress_get_hide_text (GmpcProgress* self) {
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
-	return self->_hide_text;
+	result = self->_hide_text;
+	return result;
 }
 
 

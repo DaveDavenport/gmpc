@@ -69,6 +69,7 @@ struct _GmpcSongLinksPrivate {
 };
 
 
+static gpointer gmpc_song_links_parent_class = NULL;
 
 #define use_transition TRUE
 GType gmpc_song_links_get_type (void);
@@ -89,7 +90,6 @@ GmpcSongLinks* gmpc_song_links_new (GmpcSongLinksType type, const mpd_Song* song
 GmpcSongLinks* gmpc_song_links_construct (GType object_type, GmpcSongLinksType type, const mpd_Song* song);
 GmpcSongLinks* gmpc_song_links_new (GmpcSongLinksType type, const mpd_Song* song);
 static guchar* _vala_array_dup1 (guchar* self, int length);
-static gpointer gmpc_song_links_parent_class = NULL;
 static void gmpc_song_links_finalize (GObject* obj);
 static void _vala_array_destroy (gpointer array, gint array_length, GDestroyNotify destroy_func);
 static void _vala_array_free (gpointer array, gint array_length, GDestroyNotify destroy_func);
@@ -140,6 +140,7 @@ static void _gmpc_song_links_download_gtk_menu_item_activate (GtkImageMenuItem* 
 
 
 static gboolean gmpc_song_links_button_press_event_callback (GmpcSongLinks* self, GtkEventBox* label, const GdkEventButton* event) {
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (label != NULL, FALSE);
 	if ((*event).button == 3) {
@@ -158,7 +159,8 @@ static gboolean gmpc_song_links_button_press_event_callback (GmpcSongLinks* self
 		(menu == NULL) ? NULL : (menu = (g_object_unref (menu), NULL));
 		(item == NULL) ? NULL : (item = (g_object_unref (item), NULL));
 	}
-	return FALSE;
+	result = FALSE;
+	return result;
 }
 
 
@@ -208,8 +210,10 @@ static guchar* _vala_array_dup1 (guchar* self, int length) {
 
 
 static glong string_get_length (const char* self) {
+	glong result;
 	g_return_val_if_fail (self != NULL, 0L);
-	return g_utf8_strlen (self, -1);
+	result = g_utf8_strlen (self, -1);
+	return result;
 }
 
 
@@ -312,6 +316,7 @@ static void gmpc_song_links_download_file (GmpcSongLinks* self, const GEADAsyncH
 
 
 static char* string_replace (const char* self, const char* old, const char* replacement) {
+	char* result;
 	GError * _inner_error_;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (old != NULL, NULL);
@@ -322,7 +327,6 @@ static char* string_replace (const char* self, const char* old, const char* repl
 		GRegex* _tmp1_;
 		GRegex* regex;
 		char* _tmp2_;
-		char* _tmp3_;
 		_tmp0_ = NULL;
 		_tmp1_ = NULL;
 		regex = (_tmp1_ = g_regex_new (_tmp0_ = g_regex_escape_string (old, -1), 0, 0, &_inner_error_), _tmp0_ = (g_free (_tmp0_), NULL), _tmp1_);
@@ -340,8 +344,9 @@ static char* string_replace (const char* self, const char* old, const char* repl
 			}
 			goto __finally4;
 		}
-		_tmp3_ = NULL;
-		return (_tmp3_ = _tmp2_, (regex == NULL) ? NULL : (regex = (g_regex_unref (regex), NULL)), _tmp3_);
+		result = _tmp2_;
+		(regex == NULL) ? NULL : (regex = (g_regex_unref (regex), NULL));
+		return result;
 	}
 	goto __finally4;
 	__catch4_g_regex_error:
@@ -459,6 +464,8 @@ static void gmpc_song_links_parse_uris (GmpcSongLinks* self) {
 					GmpcSongLinksType type;
 					GQuark _tmp18_;
 					const char* _tmp17_;
+					static GQuark _tmp18__label0 = 0;
+					static GQuark _tmp18__label1 = 0;
 					typestr = g_key_file_get_string (file, entry, "type", &_inner_error_);
 					if (_inner_error_ != NULL) {
 						goto __catch3_g_error;
@@ -472,8 +479,6 @@ static void gmpc_song_links_parse_uris (GmpcSongLinks* self) {
 					}
 					type = 0;
 					_tmp17_ = NULL;
-					static GQuark _tmp18__label0 = 0;
-					static GQuark _tmp18__label1 = 0;
 					_tmp17_ = typestr;
 					_tmp18_ = (NULL == _tmp17_) ? 0 : g_quark_from_string (_tmp17_);
 					if (_tmp18_ == ((0 != _tmp18__label0) ? _tmp18__label0 : (_tmp18__label0 = g_quark_from_static_string ("artist"))))

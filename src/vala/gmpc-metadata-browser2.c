@@ -237,6 +237,14 @@ struct _GmpcMetadataBrowserPrivate {
 };
 
 
+static gpointer gmpc_widget_similar_songs_parent_class = NULL;
+static gpointer gmpc_widget_similar_artist_parent_class = NULL;
+static gpointer gmpc_widget_more_parent_class = NULL;
+static gpointer gmpc_now_playing_parent_class = NULL;
+static GmpcPluginBrowserIfaceIface* gmpc_now_playing_gmpc_plugin_browser_iface_parent_iface = NULL;
+static gpointer gmpc_metadata_browser_parent_class = NULL;
+static GmpcPluginBrowserIfaceIface* gmpc_metadata_browser_gmpc_plugin_browser_iface_parent_iface = NULL;
+static GmpcPluginPreferencesIfaceIface* gmpc_metadata_browser_gmpc_plugin_preferences_iface_parent_iface = NULL;
 
 #define use_transition_mb TRUE
 #define some_unique_name_mb VERSION
@@ -265,7 +273,6 @@ static void gmpc_widget_similar_songs_metadata_changed (GmpcWidgetSimilarSongs* 
 static void _gmpc_widget_similar_songs_metadata_changed_gmpc_meta_watcher_data_changed (GmpcMetaWatcher* _sender, const mpd_Song* song, MetaDataType type, MetaDataResult _result_, const MetaData* met, gpointer self);
 static void gmpc_widget_similar_songs_update (GmpcWidgetSimilarSongs* self);
 static void gmpc_widget_similar_songs_real_activate (GtkExpander* base);
-static gpointer gmpc_widget_similar_songs_parent_class = NULL;
 static void gmpc_widget_similar_songs_finalize (GObject* obj);
 GType gmpc_widget_similar_artist_get_type (void);
 GType gmpc_metadata_browser_get_type (void);
@@ -284,7 +291,6 @@ static void _gmpc_widget_similar_artist_metadata_changed_gmpc_meta_watcher_data_
 static GmpcWidgetSimilarArtist* gmpc_widget_similar_artist_new (GmpcMetadataBrowser* browser, MpdObj* server, const mpd_Song* song);
 static GmpcWidgetSimilarArtist* gmpc_widget_similar_artist_construct (GType object_type, GmpcMetadataBrowser* browser, MpdObj* server, const mpd_Song* song);
 static GmpcWidgetSimilarArtist* gmpc_widget_similar_artist_new (GmpcMetadataBrowser* browser, MpdObj* server, const mpd_Song* song);
-static gpointer gmpc_widget_similar_artist_parent_class = NULL;
 static void gmpc_widget_similar_artist_finalize (GObject* obj);
 GType gmpc_widget_more_get_type (void);
 #define GMPC_WIDGET_MORE_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GMPC_WIDGET_TYPE_MORE, GmpcWidgetMorePrivate))
@@ -300,7 +306,6 @@ static void _gmpc_widget_more_size_changed_gtk_widget_size_allocate (GtkWidget* 
 static GmpcWidgetMore* gmpc_widget_more_new (const char* unique_id, const char* markup, GtkWidget* child);
 static GmpcWidgetMore* gmpc_widget_more_construct (GType object_type, const char* unique_id, const char* markup, GtkWidget* child);
 static GmpcWidgetMore* gmpc_widget_more_new (const char* unique_id, const char* markup, GtkWidget* child);
-static gpointer gmpc_widget_more_parent_class = NULL;
 static void gmpc_widget_more_finalize (GObject* obj);
 GType gmpc_now_playing_get_type (void);
 #define GMPC_NOW_PLAYING_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GMPC_TYPE_NOW_PLAYING, GmpcNowPlayingPrivate))
@@ -331,8 +336,6 @@ static void _gmpc_now_playing_status_changed_gmpc_connection_status_changed (Gmp
 GmpcMetadataBrowser* gmpc_metadata_browser_new (void);
 GmpcMetadataBrowser* gmpc_metadata_browser_construct (GType object_type);
 static GObject * gmpc_now_playing_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);
-static gpointer gmpc_now_playing_parent_class = NULL;
-static GmpcPluginBrowserIfaceIface* gmpc_now_playing_gmpc_plugin_browser_iface_parent_iface = NULL;
 static void gmpc_now_playing_finalize (GObject* obj);
 static GType gmpc_metadata_browser_hitem_get_type (void);
 static GType gmpc_metadata_browser_hitem_type_get_type (void);
@@ -466,9 +469,6 @@ GmpcMetadataBrowser* gmpc_metadata_browser_new (void);
 static void _gmpc_metadata_browser_con_changed_gmpc_connection_connection_changed (GmpcConnection* _sender, MpdObj* server, gint connect, gpointer self);
 static void _gmpc_metadata_browser_status_changed_gmpc_connection_status_changed (GmpcConnection* _sender, MpdObj* server, ChangedStatusType what, gpointer self);
 static GObject * gmpc_metadata_browser_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);
-static gpointer gmpc_metadata_browser_parent_class = NULL;
-static GmpcPluginBrowserIfaceIface* gmpc_metadata_browser_gmpc_plugin_browser_iface_parent_iface = NULL;
-static GmpcPluginPreferencesIfaceIface* gmpc_metadata_browser_gmpc_plugin_preferences_iface_parent_iface = NULL;
 static void gmpc_metadata_browser_finalize (GObject* obj);
 static void _vala_array_destroy (gpointer array, gint array_length, GDestroyNotify destroy_func);
 static void _vala_array_free (gpointer array, gint array_length, GDestroyNotify destroy_func);
@@ -712,6 +712,7 @@ static void _gmpc_widget_similar_songs_replace_clicked_gtk_menu_item_activate (G
 
 
 static gboolean gmpc_widget_similar_songs_tree_right_menu (GmpcWidgetSimilarSongs* self, GmpcMpdDataTreeview* tree, const GdkEventButton* event) {
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (tree != NULL, FALSE);
 	if ((*event).button == 3) {
@@ -720,7 +721,6 @@ static gboolean gmpc_widget_similar_songs_tree_right_menu (GmpcWidgetSimilarSong
 		GtkImageMenuItem* _tmp0_;
 		GtkImageMenuItem* _tmp1_;
 		GtkImage* _tmp2_;
-		gboolean _tmp3_;
 		menu = g_object_ref_sink ((GtkMenu*) gtk_menu_new ());
 		item = g_object_ref_sink ((GtkImageMenuItem*) gtk_image_menu_item_new_from_stock ("gtk-media-play", NULL));
 		g_signal_connect_object ((GtkMenuItem*) item, "activate", (GCallback) _gmpc_widget_similar_songs_play_clicked_gtk_menu_item_activate, self, 0);
@@ -738,9 +738,13 @@ static gboolean gmpc_widget_similar_songs_tree_right_menu (GmpcWidgetSimilarSong
 		gtk_menu_shell_append ((GtkMenuShell*) menu, (GtkWidget*) ((GtkMenuItem*) item));
 		gtk_menu_popup (menu, NULL, NULL, NULL, NULL, (*event).button, (*event).time);
 		gtk_widget_show_all ((GtkWidget*) menu);
-		return (_tmp3_ = TRUE, (menu == NULL) ? NULL : (menu = (g_object_unref (menu), NULL)), (item == NULL) ? NULL : (item = (g_object_unref (item), NULL)), _tmp3_);
+		result = TRUE;
+		(menu == NULL) ? NULL : (menu = (g_object_unref (menu), NULL));
+		(item == NULL) ? NULL : (item = (g_object_unref (item), NULL));
+		return result;
 	}
-	return FALSE;
+	result = FALSE;
+	return result;
 }
 
 
@@ -755,7 +759,8 @@ static void _gmpc_widget_similar_songs_tree_row_activated_gtk_tree_view_row_acti
 
 
 static gboolean gmpc_widget_similar_songs_update_sim_song (GmpcWidgetSimilarSongs* self) {
-	MetaData* _tmp14_;
+	gboolean result;
+	MetaData* _tmp13_;
 	g_return_val_if_fail (self != NULL, FALSE);
 	if (self->priv->current == NULL) {
 		GtkWidget* _tmp0_;
@@ -820,48 +825,50 @@ static gboolean gmpc_widget_similar_songs_update_sim_song (GmpcWidgetSimilarSong
 		}
 		self->priv->current = self->priv->current->next;
 		if (self->priv->current != NULL) {
-			gboolean _tmp8_;
-			return (_tmp8_ = TRUE, entry = (g_free (entry), NULL), _tmp8_);
+			result = TRUE;
+			entry = (g_free (entry), NULL);
+			return result;
 		}
 		entry = (g_free (entry), NULL);
 	}
 	gtk_object_destroy ((GtkObject*) self->priv->pchild);
 	if (self->priv->item != NULL) {
 		GmpcMpdDataModel* model;
-		MpdData* _tmp9_;
+		MpdData* _tmp8_;
 		GmpcMpdDataTreeview* tree;
-		GtkWidget* _tmp11_;
 		GtkWidget* _tmp10_;
+		GtkWidget* _tmp9_;
 		model = gmpc_mpddata_model_new ();
-		_tmp9_ = NULL;
-		gmpc_mpddata_model_set_mpd_data (model, (_tmp9_ = self->priv->item, self->priv->item = NULL, _tmp9_));
+		_tmp8_ = NULL;
+		gmpc_mpddata_model_set_mpd_data (model, (_tmp8_ = self->priv->item, self->priv->item = NULL, _tmp8_));
 		tree = g_object_ref_sink (gmpc_mpddata_treeview_new ("similar-song", TRUE, (GtkTreeModel*) model));
 		gmpc_mpddata_treeview_enable_click_fix (tree);
 		g_signal_connect_object ((GtkWidget*) tree, "button-release-event", (GCallback) _gmpc_widget_similar_songs_tree_right_menu_gtk_widget_button_release_event, self, 0);
 		g_signal_connect_object ((GtkTreeView*) tree, "row-activated", (GCallback) _gmpc_widget_similar_songs_tree_row_activated_gtk_tree_view_row_activated, self, 0);
 		gtk_container_add ((GtkContainer*) self, (GtkWidget*) tree);
-		_tmp11_ = NULL;
 		_tmp10_ = NULL;
-		self->priv->pchild = (_tmp11_ = (_tmp10_ = (GtkWidget*) tree, (_tmp10_ == NULL) ? NULL : g_object_ref (_tmp10_)), (self->priv->pchild == NULL) ? NULL : (self->priv->pchild = (g_object_unref (self->priv->pchild), NULL)), _tmp11_);
+		_tmp9_ = NULL;
+		self->priv->pchild = (_tmp10_ = (_tmp9_ = (GtkWidget*) tree, (_tmp9_ == NULL) ? NULL : g_object_ref (_tmp9_)), (self->priv->pchild == NULL) ? NULL : (self->priv->pchild = (g_object_unref (self->priv->pchild), NULL)), _tmp10_);
 		(model == NULL) ? NULL : (model = (g_object_unref (model), NULL));
 		(tree == NULL) ? NULL : (tree = (g_object_unref (tree), NULL));
 	} else {
 		GtkLabel* label;
-		GtkWidget* _tmp13_;
 		GtkWidget* _tmp12_;
+		GtkWidget* _tmp11_;
 		label = g_object_ref_sink ((GtkLabel*) gtk_label_new (_ ("Unavailable")));
 		gtk_misc_set_alignment ((GtkMisc*) label, 0.0f, 0.0f);
 		gtk_container_add ((GtkContainer*) self, (GtkWidget*) label);
-		_tmp13_ = NULL;
 		_tmp12_ = NULL;
-		self->priv->pchild = (_tmp13_ = (_tmp12_ = (GtkWidget*) label, (_tmp12_ == NULL) ? NULL : g_object_ref (_tmp12_)), (self->priv->pchild == NULL) ? NULL : (self->priv->pchild = (g_object_unref (self->priv->pchild), NULL)), _tmp13_);
+		_tmp11_ = NULL;
+		self->priv->pchild = (_tmp12_ = (_tmp11_ = (GtkWidget*) label, (_tmp11_ == NULL) ? NULL : g_object_ref (_tmp11_)), (self->priv->pchild == NULL) ? NULL : (self->priv->pchild = (g_object_unref (self->priv->pchild), NULL)), _tmp12_);
 		(label == NULL) ? NULL : (label = (g_object_unref (label), NULL));
 	}
-	_tmp14_ = NULL;
-	self->priv->copy = (_tmp14_ = NULL, (self->priv->copy == NULL) ? NULL : (self->priv->copy = (meta_data_free (self->priv->copy), NULL)), _tmp14_);
+	_tmp13_ = NULL;
+	self->priv->copy = (_tmp13_ = NULL, (self->priv->copy == NULL) ? NULL : (self->priv->copy = (meta_data_free (self->priv->copy), NULL)), _tmp13_);
 	self->priv->idle_add = (guint) 0;
 	gtk_widget_show_all ((GtkWidget*) self);
-	return FALSE;
+	result = FALSE;
+	return result;
 }
 
 
@@ -1016,8 +1023,10 @@ GType gmpc_widget_similar_songs_get_type (void) {
 
 
 static glong string_get_length (const char* self) {
+	glong result;
 	g_return_val_if_fail (self != NULL, 0L);
-	return g_utf8_strlen (self, -1);
+	result = g_utf8_strlen (self, -1);
+	return result;
 }
 
 
@@ -1127,33 +1136,35 @@ static void gmpc_widget_similar_artist_metadata_changed (GmpcWidgetSimilarArtist
 						artist = g_regex_escape_string (iter->tag, -1);
 						{
 							GRegex* reg;
-							gboolean _tmp5_;
 							reg = g_regex_new (artist, G_REGEX_CASELESS, 0, &_inner_error_);
 							if (_inner_error_ != NULL) {
 								goto __catch0_g_error;
 								goto __finally0;
 							}
-							_tmp5_ = FALSE;
-							do {
-								if (_tmp5_) {
-									gboolean _tmp6_;
-									_tmp6_ = FALSE;
-									if (liter != NULL) {
-										_tmp6_ = (liter = liter->next) != NULL;
-									} else {
-										_tmp6_ = FALSE;
-									}
-									if (!_tmp6_) {
-										break;
-									}
-								}
+							{
+								gboolean _tmp5_;
 								_tmp5_ = TRUE;
-								if (g_regex_match (reg, (const char*) liter->data, 0, NULL)) {
-									in_db_list = g_list_prepend (in_db_list, gmpc_widget_similar_artist_new_artist_button (self, iter->tag, TRUE));
-									list = g_list_remove (list, (const char*) liter->data);
-									liter = NULL;
+								while (TRUE) {
+									if (!_tmp5_) {
+										gboolean _tmp6_;
+										_tmp6_ = FALSE;
+										if (liter != NULL) {
+											_tmp6_ = (liter = liter->next) != NULL;
+										} else {
+											_tmp6_ = FALSE;
+										}
+										if (!_tmp6_) {
+											break;
+										}
+									}
+									_tmp5_ = FALSE;
+									if (g_regex_match (reg, (const char*) liter->data, 0, NULL)) {
+										in_db_list = g_list_prepend (in_db_list, gmpc_widget_similar_artist_new_artist_button (self, iter->tag, TRUE));
+										list = g_list_remove (list, (const char*) liter->data);
+										liter = NULL;
+									}
 								}
-							} while (TRUE);
+							}
 							(reg == NULL) ? NULL : (reg = (g_regex_unref (reg), NULL));
 						}
 						goto __finally0;
@@ -1260,6 +1271,7 @@ static void _gmpc_widget_similar_artist_artist_button_clicked_gtk_button_clicked
 
 
 GtkWidget* gmpc_widget_similar_artist_new_artist_button (GmpcWidgetSimilarArtist* self, const char* artist, gboolean in_db) {
+	GtkWidget* result;
 	GtkHBox* hbox;
 	GtkEventBox* event;
 	GmpcMetaImage* image;
@@ -1267,7 +1279,6 @@ GtkWidget* gmpc_widget_similar_artist_new_artist_button (GmpcWidgetSimilarArtist
 	char* _tmp1_;
 	const char* _tmp0_;
 	GtkLabel* label;
-	GtkWidget* _tmp2_;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (artist != NULL, NULL);
 	hbox = g_object_ref_sink ((GtkHBox*) gtk_hbox_new (FALSE, 6));
@@ -1299,8 +1310,12 @@ GtkWidget* gmpc_widget_similar_artist_new_artist_button (GmpcWidgetSimilarArtist
 		(find == NULL) ? NULL : (find = (g_object_unref (find), NULL));
 	}
 	gtk_container_add ((GtkContainer*) event, (GtkWidget*) hbox);
-	_tmp2_ = NULL;
-	return (_tmp2_ = (GtkWidget*) event, (hbox == NULL) ? NULL : (hbox = (g_object_unref (hbox), NULL)), (image == NULL) ? NULL : (image = (g_object_unref (image), NULL)), (song == NULL) ? NULL : (song = (mpd_freeSong (song), NULL)), (label == NULL) ? NULL : (label = (g_object_unref (label), NULL)), _tmp2_);
+	result = (GtkWidget*) event;
+	(hbox == NULL) ? NULL : (hbox = (g_object_unref (hbox), NULL));
+	(image == NULL) ? NULL : (image = (g_object_unref (image), NULL));
+	(song == NULL) ? NULL : (song = (mpd_freeSong (song), NULL));
+	(label == NULL) ? NULL : (label = (g_object_unref (label), NULL));
+	return result;
 }
 
 
@@ -1571,18 +1586,22 @@ GType gmpc_widget_more_get_type (void) {
 
 static gint gmpc_now_playing_real_get_version (GmpcPluginBase* base, int* result_length1) {
 	GmpcNowPlaying * self;
+	gint result;
 	gint* _tmp0_;
 	self = (GmpcNowPlaying*) base;
 	_tmp0_ = NULL;
-	return (_tmp0_ = GMPC_NOW_PLAYING_version, *result_length1 = G_N_ELEMENTS (GMPC_NOW_PLAYING_version), _tmp0_);
+	result = (_tmp0_ = GMPC_NOW_PLAYING_version, *result_length1 = G_N_ELEMENTS (GMPC_NOW_PLAYING_version), _tmp0_);
+	return result;
 }
 
 
 /* Name */
 static const char* gmpc_now_playing_real_get_name (GmpcPluginBase* base) {
 	GmpcNowPlaying * self;
+	const char* result;
 	self = (GmpcNowPlaying*) base;
-	return N_ ("Now Playing");
+	result = N_ ("Now Playing");
+	return result;
 }
 
 
@@ -1712,29 +1731,33 @@ static void gmpc_now_playing_browser_bg_style_changed (GmpcNowPlaying* self, Gtk
 
 /* Handle buttons presses, f.e. for scrolling */
 static gboolean gmpc_now_playing_browser_key_release_event (GmpcNowPlaying* self, const GdkEventKey* event) {
+	gboolean result;
 	GtkAdjustment* _tmp0_;
 	GtkAdjustment* adj;
 	double incr;
-	gboolean _tmp3_;
 	g_return_val_if_fail (self != NULL, FALSE);
 	_tmp0_ = NULL;
 	adj = (_tmp0_ = gtk_scrolled_window_get_vadjustment (self->priv->paned), (_tmp0_ == NULL) ? NULL : g_object_ref (_tmp0_));
 	incr = (double) 20;
 	g_object_get ((GObject*) adj, "step-increment", &incr, NULL);
 	if ((*event).keyval == 0xff55) {
-		gboolean _tmp1_;
 		/* GDK_Page_Up*/
 		gtk_adjustment_set_value (adj, gtk_adjustment_get_value (adj) - incr);
-		return (_tmp1_ = TRUE, (adj == NULL) ? NULL : (adj = (g_object_unref (adj), NULL)), _tmp1_);
+		result = TRUE;
+		(adj == NULL) ? NULL : (adj = (g_object_unref (adj), NULL));
+		return result;
 	} else {
 		if ((*event).keyval == 0xff56) {
-			gboolean _tmp2_;
 			/* GDK_Page_Down*/
 			gtk_adjustment_set_value (adj, gtk_adjustment_get_value (adj) + incr);
-			return (_tmp2_ = TRUE, (adj == NULL) ? NULL : (adj = (g_object_unref (adj), NULL)), _tmp2_);
+			result = TRUE;
+			(adj == NULL) ? NULL : (adj = (g_object_unref (adj), NULL));
+			return result;
 		}
 	}
-	return (_tmp3_ = FALSE, (adj == NULL) ? NULL : (adj = (g_object_unref (adj), NULL)), _tmp3_);
+	result = FALSE;
+	(adj == NULL) ? NULL : (adj = (g_object_unref (adj), NULL));
+	return result;
 }
 
 
@@ -1948,9 +1971,9 @@ static void _gmpc_now_playing_select_now_playing_browser_gtk_menu_item_activate 
 
 static gint gmpc_now_playing_real_browser_add_go_menu (GmpcPluginBrowserIface* base, GtkMenu* menu) {
 	GmpcNowPlaying * self;
+	gint result;
 	GtkImageMenuItem* item;
 	GtkImage* _tmp0_;
-	gint _tmp1_;
 	self = (GmpcNowPlaying*) base;
 	g_return_val_if_fail (menu != NULL, 0);
 	item = g_object_ref_sink ((GtkImageMenuItem*) gtk_image_menu_item_new_with_mnemonic (_ ("Now Playing")));
@@ -1960,7 +1983,9 @@ static gint gmpc_now_playing_real_browser_add_go_menu (GmpcPluginBrowserIface* b
 	g_signal_connect_object ((GtkMenuItem*) item, "activate", (GCallback) _gmpc_now_playing_select_now_playing_browser_gtk_menu_item_activate, self, 0);
 	gtk_widget_add_accelerator ((GtkWidget*) item, "activate", gtk_menu_get_accel_group (menu), (guint) 0x069, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 	gtk_menu_shell_append ((GtkMenuShell*) menu, (GtkWidget*) ((GtkMenuItem*) item));
-	return (_tmp1_ = 1, (item == NULL) ? NULL : (item = (g_object_unref (item), NULL)), _tmp1_);
+	result = 1;
+	(item == NULL) ? NULL : (item = (g_object_unref (item), NULL));
+	return result;
 }
 
 
@@ -2080,17 +2105,21 @@ static void _g_list_free_gmpc_metadata_browser_hitem_free (GList* self) {
 
 static gint gmpc_metadata_browser_real_get_version (GmpcPluginBase* base, int* result_length1) {
 	GmpcMetadataBrowser * self;
+	gint result;
 	gint* _tmp0_;
 	self = (GmpcMetadataBrowser*) base;
 	_tmp0_ = NULL;
-	return (_tmp0_ = GMPC_METADATA_BROWSER_version, *result_length1 = G_N_ELEMENTS (GMPC_METADATA_BROWSER_version), _tmp0_);
+	result = (_tmp0_ = GMPC_METADATA_BROWSER_version, *result_length1 = G_N_ELEMENTS (GMPC_METADATA_BROWSER_version), _tmp0_);
+	return result;
 }
 
 
 static const char* gmpc_metadata_browser_real_get_name (GmpcPluginBase* base) {
 	GmpcMetadataBrowser * self;
+	const char* result;
 	self = (GmpcMetadataBrowser*) base;
-	return N_ ("Metadata Browser");
+	result = N_ ("Metadata Browser");
+	return result;
 }
 
 
@@ -2138,28 +2167,32 @@ static void gmpc_metadata_browser_browser_bg_style_changed (GmpcMetadataBrowser*
 
 /* This hack makes clicking a selected row again, unselect it */
 static gboolean gmpc_metadata_browser_browser_button_press_event (GmpcMetadataBrowser* self, GtkTreeView* tree, const GdkEventButton* event) {
+	gboolean result;
 	GtkTreePath* path;
-	GtkTreePath* _tmp3_;
-	gboolean _tmp2_;
-	GtkTreePath* _tmp1_;
-	gboolean _tmp5_;
+	GtkTreePath* _tmp2_;
+	gboolean _tmp1_;
+	GtkTreePath* _tmp0_;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (tree != NULL, FALSE);
 	path = NULL;
 	if ((*event).button != 1) {
-		gboolean _tmp0_;
-		return (_tmp0_ = FALSE, (path == NULL) ? NULL : (path = (gtk_tree_path_free (path), NULL)), _tmp0_);
+		result = FALSE;
+		(path == NULL) ? NULL : (path = (gtk_tree_path_free (path), NULL));
+		return result;
 	}
-	_tmp3_ = NULL;
-	_tmp1_ = NULL;
-	if ((_tmp2_ = gtk_tree_view_get_path_at_pos (tree, (gint) (*event).x, (gint) (*event).y, &_tmp1_, NULL, NULL, NULL), path = (_tmp3_ = _tmp1_, (path == NULL) ? NULL : (path = (gtk_tree_path_free (path), NULL)), _tmp3_), _tmp2_)) {
+	_tmp2_ = NULL;
+	_tmp0_ = NULL;
+	if ((_tmp1_ = gtk_tree_view_get_path_at_pos (tree, (gint) (*event).x, (gint) (*event).y, &_tmp0_, NULL, NULL, NULL), path = (_tmp2_ = _tmp0_, (path == NULL) ? NULL : (path = (gtk_tree_path_free (path), NULL)), _tmp2_), _tmp1_)) {
 		if (gtk_tree_selection_path_is_selected (gtk_tree_view_get_selection (tree), path)) {
-			gboolean _tmp4_;
 			gtk_tree_selection_unselect_path (gtk_tree_view_get_selection (tree), path);
-			return (_tmp4_ = TRUE, (path == NULL) ? NULL : (path = (gtk_tree_path_free (path), NULL)), _tmp4_);
+			result = TRUE;
+			(path == NULL) ? NULL : (path = (gtk_tree_path_free (path), NULL));
+			return result;
 		}
 	}
-	return (_tmp5_ = FALSE, (path == NULL) ? NULL : (path = (gtk_tree_path_free (path), NULL)), _tmp5_);
+	result = FALSE;
+	(path == NULL) ? NULL : (path = (gtk_tree_path_free (path), NULL));
+	return result;
 }
 
 
@@ -2194,10 +2227,20 @@ static void gmpc_metadata_browser_artist_add_clicked (GmpcMetadataBrowser* self,
 		mpd_database_search_add_constraint (connection, MPD_TAG_ITEM_ARTIST, artist);
 		data = mpd_database_search_commit (connection);
 		if (data != NULL) {
-			do {
-				mpd_playlist_queue_add (connection, data->tag);
-				data = mpd_data_get_next (data);
-			} while (data != NULL);
+			{
+				gboolean _tmp0_;
+				_tmp0_ = TRUE;
+				while (TRUE) {
+					if (!_tmp0_) {
+						if (!(data != NULL)) {
+							break;
+						}
+					}
+					_tmp0_ = FALSE;
+					mpd_playlist_queue_add (connection, data->tag);
+					data = mpd_data_get_next (data);
+				}
+			}
 			mpd_playlist_queue_commit (connection);
 		}
 		(data == NULL) ? NULL : (data = (mpd_data_free (data), NULL));
@@ -2227,6 +2270,7 @@ static void _gmpc_metadata_browser_artist_replace_clicked_gtk_menu_item_activate
 
 /* Handle right mouse click */
 static gboolean gmpc_metadata_browser_artist_browser_button_release_event (GmpcMetadataBrowser* self, GtkTreeView* tree, const GdkEventButton* event) {
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (tree != NULL, FALSE);
 	if ((*event).button == 3) {
@@ -2235,7 +2279,6 @@ static gboolean gmpc_metadata_browser_artist_browser_button_release_event (GmpcM
 			GtkImageMenuItem* item;
 			GtkImageMenuItem* _tmp0_;
 			GtkImage* _tmp1_;
-			gboolean _tmp2_;
 			menu = g_object_ref_sink ((GtkMenu*) gtk_menu_new ());
 			item = g_object_ref_sink ((GtkImageMenuItem*) gtk_image_menu_item_new_from_stock ("gtk-add", NULL));
 			g_signal_connect_object ((GtkMenuItem*) item, "activate", (GCallback) _gmpc_metadata_browser_artist_add_clicked_gtk_menu_item_activate, self, 0);
@@ -2249,20 +2292,24 @@ static gboolean gmpc_metadata_browser_artist_browser_button_release_event (GmpcM
 			gtk_menu_shell_append ((GtkMenuShell*) menu, (GtkWidget*) ((GtkMenuItem*) item));
 			gtk_menu_popup (menu, NULL, NULL, NULL, NULL, (*event).button, (*event).time);
 			gtk_widget_show_all ((GtkWidget*) menu);
-			return (_tmp2_ = TRUE, (menu == NULL) ? NULL : (menu = (g_object_unref (menu), NULL)), (item == NULL) ? NULL : (item = (g_object_unref (item), NULL)), _tmp2_);
+			result = TRUE;
+			(menu == NULL) ? NULL : (menu = (g_object_unref (menu), NULL));
+			(item == NULL) ? NULL : (item = (g_object_unref (item), NULL));
+			return result;
 		}
 	}
-	return FALSE;
+	result = FALSE;
+	return result;
 }
 
 
 static gboolean gmpc_metadata_browser_visible_func_artist (GmpcMetadataBrowser* self, GtkTreeModel* model, GtkTreeIter* iter) {
+	gboolean result;
 	const char* _tmp0_;
 	char* text;
 	char* str;
 	gboolean visible;
-	gboolean _tmp2_;
-	gboolean _tmp7_;
+	gboolean _tmp1_;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (model != NULL, FALSE);
 	_tmp0_ = NULL;
@@ -2271,36 +2318,42 @@ static gboolean gmpc_metadata_browser_visible_func_artist (GmpcMetadataBrowser* 
 	str = NULL;
 	visible = FALSE;
 	if (g_utf8_get_char (g_utf8_offset_to_pointer (text, 0)) == '\0') {
-		gboolean _tmp1_;
-		return (_tmp1_ = TRUE, text = (g_free (text), NULL), str = (g_free (str), NULL), _tmp1_);
+		result = TRUE;
+		text = (g_free (text), NULL);
+		str = (g_free (str), NULL);
+		return result;
 	}
 	gtk_tree_model_get (model, &(*iter), 7, &str, -1, -1);
-	_tmp2_ = FALSE;
+	_tmp1_ = FALSE;
 	if (str != NULL) {
-		char* _tmp6_;
 		char* _tmp5_;
 		char* _tmp4_;
 		char* _tmp3_;
-		_tmp6_ = NULL;
+		char* _tmp2_;
 		_tmp5_ = NULL;
 		_tmp4_ = NULL;
 		_tmp3_ = NULL;
-		_tmp2_ = strstr (_tmp4_ = g_utf8_normalize (_tmp3_ = g_utf8_casefold (str, -1), -1, G_NORMALIZE_DEFAULT), _tmp6_ = g_utf8_normalize (_tmp5_ = g_utf8_casefold (text, -1), -1, G_NORMALIZE_DEFAULT)) != NULL;
-		_tmp6_ = (g_free (_tmp6_), NULL);
+		_tmp2_ = NULL;
+		_tmp1_ = strstr (_tmp3_ = g_utf8_normalize (_tmp2_ = g_utf8_casefold (str, -1), -1, G_NORMALIZE_DEFAULT), _tmp5_ = g_utf8_normalize (_tmp4_ = g_utf8_casefold (text, -1), -1, G_NORMALIZE_DEFAULT)) != NULL;
 		_tmp5_ = (g_free (_tmp5_), NULL);
 		_tmp4_ = (g_free (_tmp4_), NULL);
 		_tmp3_ = (g_free (_tmp3_), NULL);
+		_tmp2_ = (g_free (_tmp2_), NULL);
 	} else {
-		_tmp2_ = FALSE;
+		_tmp1_ = FALSE;
 	}
-	if (_tmp2_) {
+	if (_tmp1_) {
 		visible = TRUE;
 	}
-	return (_tmp7_ = visible, text = (g_free (text), NULL), str = (g_free (str), NULL), _tmp7_);
+	result = visible;
+	text = (g_free (text), NULL);
+	str = (g_free (str), NULL);
+	return result;
 }
 
 
 static gboolean gmpc_metadata_browser_browser_artist_key_press_event (GmpcMetadataBrowser* self, GtkTreeView* widget, const GdkEventKey* event) {
+	gboolean result;
 	gunichar uc;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (widget != NULL, FALSE);
@@ -2308,16 +2361,18 @@ static gboolean gmpc_metadata_browser_browser_artist_key_press_event (GmpcMetada
 	if (uc > 0) {
 		char* outbuf;
 		gint i;
-		gboolean _tmp0_;
 		outbuf = g_strdup ("       ");
 		i = g_unichar_to_utf8 (uc, outbuf);
 		((gchar*) outbuf)[i] = '\0';
 		gtk_entry_set_text (self->priv->artist_filter_entry, outbuf);
 		gtk_widget_grab_focus ((GtkWidget*) self->priv->artist_filter_entry);
 		gtk_editable_set_position ((GtkEditable*) self->priv->artist_filter_entry, 1);
-		return (_tmp0_ = TRUE, outbuf = (g_free (outbuf), NULL), _tmp0_);
+		result = TRUE;
+		outbuf = (g_free (outbuf), NULL);
+		return result;
 	}
-	return FALSE;
+	result = FALSE;
+	return result;
 }
 
 
@@ -2363,10 +2418,20 @@ static void gmpc_metadata_browser_album_add_clicked (GmpcMetadataBrowser* self, 
 		}
 		data = mpd_database_search_commit (connection);
 		if (data != NULL) {
-			do {
-				mpd_playlist_queue_add (connection, data->tag);
-				data = mpd_data_get_next (data);
-			} while (data != NULL);
+			{
+				gboolean _tmp2_;
+				_tmp2_ = TRUE;
+				while (TRUE) {
+					if (!_tmp2_) {
+						if (!(data != NULL)) {
+							break;
+						}
+					}
+					_tmp2_ = FALSE;
+					mpd_playlist_queue_add (connection, data->tag);
+					data = mpd_data_get_next (data);
+				}
+			}
 			mpd_playlist_queue_commit (connection);
 		}
 		albumartist = (g_free (albumartist), NULL);
@@ -2398,6 +2463,7 @@ static void _gmpc_metadata_browser_album_replace_clicked_gtk_menu_item_activate 
 
 /* Handle right mouse click */
 static gboolean gmpc_metadata_browser_album_browser_button_release_event (GmpcMetadataBrowser* self, GtkTreeView* tree, const GdkEventButton* event) {
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (tree != NULL, FALSE);
 	if ((*event).button == 3) {
@@ -2406,7 +2472,6 @@ static gboolean gmpc_metadata_browser_album_browser_button_release_event (GmpcMe
 			GtkImageMenuItem* item;
 			GtkImageMenuItem* _tmp0_;
 			GtkImage* _tmp1_;
-			gboolean _tmp2_;
 			menu = g_object_ref_sink ((GtkMenu*) gtk_menu_new ());
 			item = g_object_ref_sink ((GtkImageMenuItem*) gtk_image_menu_item_new_from_stock ("gtk-add", NULL));
 			g_signal_connect_object ((GtkMenuItem*) item, "activate", (GCallback) _gmpc_metadata_browser_album_add_clicked_gtk_menu_item_activate, self, 0);
@@ -2420,20 +2485,24 @@ static gboolean gmpc_metadata_browser_album_browser_button_release_event (GmpcMe
 			gtk_menu_shell_append ((GtkMenuShell*) menu, (GtkWidget*) ((GtkMenuItem*) item));
 			gtk_menu_popup (menu, NULL, NULL, NULL, NULL, (*event).button, (*event).time);
 			gtk_widget_show_all ((GtkWidget*) menu);
-			return (_tmp2_ = TRUE, (menu == NULL) ? NULL : (menu = (g_object_unref (menu), NULL)), (item == NULL) ? NULL : (item = (g_object_unref (item), NULL)), _tmp2_);
+			result = TRUE;
+			(menu == NULL) ? NULL : (menu = (g_object_unref (menu), NULL));
+			(item == NULL) ? NULL : (item = (g_object_unref (item), NULL));
+			return result;
 		}
 	}
-	return FALSE;
+	result = FALSE;
+	return result;
 }
 
 
 static gboolean gmpc_metadata_browser_visible_func_album (GmpcMetadataBrowser* self, GtkTreeModel* model, GtkTreeIter* iter) {
+	gboolean result;
 	const char* _tmp0_;
 	char* text;
 	char* str;
 	gboolean visible;
-	gboolean _tmp2_;
-	gboolean _tmp7_;
+	gboolean _tmp1_;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (model != NULL, FALSE);
 	_tmp0_ = NULL;
@@ -2442,36 +2511,42 @@ static gboolean gmpc_metadata_browser_visible_func_album (GmpcMetadataBrowser* s
 	str = NULL;
 	visible = FALSE;
 	if (g_utf8_get_char (g_utf8_offset_to_pointer (text, 0)) == '\0') {
-		gboolean _tmp1_;
-		return (_tmp1_ = TRUE, text = (g_free (text), NULL), str = (g_free (str), NULL), _tmp1_);
+		result = TRUE;
+		text = (g_free (text), NULL);
+		str = (g_free (str), NULL);
+		return result;
 	}
 	gtk_tree_model_get (model, &(*iter), 6, &str, -1, -1);
-	_tmp2_ = FALSE;
+	_tmp1_ = FALSE;
 	if (str != NULL) {
-		char* _tmp6_;
 		char* _tmp5_;
 		char* _tmp4_;
 		char* _tmp3_;
-		_tmp6_ = NULL;
+		char* _tmp2_;
 		_tmp5_ = NULL;
 		_tmp4_ = NULL;
 		_tmp3_ = NULL;
-		_tmp2_ = strstr (_tmp4_ = g_utf8_normalize (_tmp3_ = g_utf8_casefold (str, -1), -1, G_NORMALIZE_DEFAULT), _tmp6_ = g_utf8_normalize (_tmp5_ = g_utf8_casefold (text, -1), -1, G_NORMALIZE_DEFAULT)) != NULL;
-		_tmp6_ = (g_free (_tmp6_), NULL);
+		_tmp2_ = NULL;
+		_tmp1_ = strstr (_tmp3_ = g_utf8_normalize (_tmp2_ = g_utf8_casefold (str, -1), -1, G_NORMALIZE_DEFAULT), _tmp5_ = g_utf8_normalize (_tmp4_ = g_utf8_casefold (text, -1), -1, G_NORMALIZE_DEFAULT)) != NULL;
 		_tmp5_ = (g_free (_tmp5_), NULL);
 		_tmp4_ = (g_free (_tmp4_), NULL);
 		_tmp3_ = (g_free (_tmp3_), NULL);
+		_tmp2_ = (g_free (_tmp2_), NULL);
 	} else {
-		_tmp2_ = FALSE;
+		_tmp1_ = FALSE;
 	}
-	if (_tmp2_) {
+	if (_tmp1_) {
 		visible = TRUE;
 	}
-	return (_tmp7_ = visible, text = (g_free (text), NULL), str = (g_free (str), NULL), _tmp7_);
+	result = visible;
+	text = (g_free (text), NULL);
+	str = (g_free (str), NULL);
+	return result;
 }
 
 
 static gboolean gmpc_metadata_browser_browser_album_key_press_event (GmpcMetadataBrowser* self, GtkTreeView* widget, const GdkEventKey* event) {
+	gboolean result;
 	gunichar uc;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (widget != NULL, FALSE);
@@ -2479,16 +2554,18 @@ static gboolean gmpc_metadata_browser_browser_album_key_press_event (GmpcMetadat
 	if (uc > 0) {
 		char* outbuf;
 		gint i;
-		gboolean _tmp0_;
 		outbuf = g_strdup ("       ");
 		i = g_unichar_to_utf8 (uc, outbuf);
 		((gchar*) outbuf)[i] = '\0';
 		gtk_entry_set_text (self->priv->album_filter_entry, outbuf);
 		gtk_widget_grab_focus ((GtkWidget*) self->priv->album_filter_entry);
 		gtk_editable_set_position ((GtkEditable*) self->priv->album_filter_entry, 1);
-		return (_tmp0_ = TRUE, outbuf = (g_free (outbuf), NULL), _tmp0_);
+		result = TRUE;
+		outbuf = (g_free (outbuf), NULL);
+		return result;
 	}
-	return FALSE;
+	result = FALSE;
+	return result;
 }
 
 
@@ -2546,6 +2623,7 @@ static void _gmpc_metadata_browser_song_replace_clicked_gtk_menu_item_activate (
 
 /* Handle right mouse click */
 static gboolean gmpc_metadata_browser_song_browser_button_release_event (GmpcMetadataBrowser* self, GtkTreeView* tree, const GdkEventButton* event) {
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (tree != NULL, FALSE);
 	if ((*event).button == 3) {
@@ -2554,7 +2632,6 @@ static gboolean gmpc_metadata_browser_song_browser_button_release_event (GmpcMet
 			GtkImageMenuItem* item;
 			GtkImageMenuItem* _tmp0_;
 			GtkImage* _tmp1_;
-			gboolean _tmp2_;
 			menu = g_object_ref_sink ((GtkMenu*) gtk_menu_new ());
 			item = g_object_ref_sink ((GtkImageMenuItem*) gtk_image_menu_item_new_from_stock ("gtk-add", NULL));
 			g_signal_connect_object ((GtkMenuItem*) item, "activate", (GCallback) _gmpc_metadata_browser_song_add_clicked_gtk_menu_item_activate, self, 0);
@@ -2568,10 +2645,14 @@ static gboolean gmpc_metadata_browser_song_browser_button_release_event (GmpcMet
 			gtk_menu_shell_append ((GtkMenuShell*) menu, (GtkWidget*) ((GtkMenuItem*) item));
 			gtk_menu_popup (menu, NULL, NULL, NULL, NULL, (*event).button, (*event).time);
 			gtk_widget_show_all ((GtkWidget*) menu);
-			return (_tmp2_ = TRUE, (menu == NULL) ? NULL : (menu = (g_object_unref (menu), NULL)), (item == NULL) ? NULL : (item = (g_object_unref (item), NULL)), _tmp2_);
+			result = TRUE;
+			(menu == NULL) ? NULL : (menu = (g_object_unref (menu), NULL));
+			(item == NULL) ? NULL : (item = (g_object_unref (item), NULL));
+			return result;
 		}
 	}
-	return FALSE;
+	result = FALSE;
+	return result;
 }
 
 
@@ -2873,6 +2954,7 @@ static void gmpc_metadata_browser_reload_browsers (GmpcMetadataBrowser* self) {
 
 
 static char* gmpc_metadata_browser_browser_get_selected_artist (GmpcMetadataBrowser* self) {
+	char* result;
 	GtkTreeIter iter = {0};
 	GtkTreeSelection* _tmp0_;
 	GtkTreeSelection* sel;
@@ -2881,7 +2963,6 @@ static char* gmpc_metadata_browser_browser_get_selected_artist (GmpcMetadataBrow
 	GtkTreeModel* _tmp3_;
 	gboolean _tmp2_;
 	GtkTreeModel* _tmp1_;
-	char* _tmp6_;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = NULL;
 	sel = (_tmp0_ = gtk_tree_view_get_selection (self->priv->tree_artist), (_tmp0_ == NULL) ? NULL : g_object_ref (_tmp0_));
@@ -2892,18 +2973,22 @@ static char* gmpc_metadata_browser_browser_get_selected_artist (GmpcMetadataBrow
 	_tmp1_ = NULL;
 	if ((_tmp2_ = gtk_tree_selection_get_selected (sel, &_tmp1_, &iter), model = (_tmp3_ = (_tmp4_ = _tmp1_, (_tmp4_ == NULL) ? NULL : g_object_ref (_tmp4_)), (model == NULL) ? NULL : (model = (g_object_unref (model), NULL)), _tmp3_), _tmp2_)) {
 		char* artist;
-		char* _tmp5_;
 		artist = NULL;
 		gtk_tree_model_get (model, &iter, 7, &artist, -1, -1);
-		_tmp5_ = NULL;
-		return (_tmp5_ = artist, (sel == NULL) ? NULL : (sel = (g_object_unref (sel), NULL)), (model == NULL) ? NULL : (model = (g_object_unref (model), NULL)), _tmp5_);
+		result = artist;
+		(sel == NULL) ? NULL : (sel = (g_object_unref (sel), NULL));
+		(model == NULL) ? NULL : (model = (g_object_unref (model), NULL));
+		return result;
 	}
-	_tmp6_ = NULL;
-	return (_tmp6_ = NULL, (sel == NULL) ? NULL : (sel = (g_object_unref (sel), NULL)), (model == NULL) ? NULL : (model = (g_object_unref (model), NULL)), _tmp6_);
+	result = NULL;
+	(sel == NULL) ? NULL : (sel = (g_object_unref (sel), NULL));
+	(model == NULL) ? NULL : (model = (g_object_unref (model), NULL));
+	return result;
 }
 
 
 static char* gmpc_metadata_browser_browser_get_selected_album (GmpcMetadataBrowser* self) {
+	char* result;
 	GtkTreeIter iter = {0};
 	GtkTreeSelection* _tmp0_;
 	GtkTreeSelection* sel;
@@ -2912,7 +2997,6 @@ static char* gmpc_metadata_browser_browser_get_selected_album (GmpcMetadataBrows
 	GtkTreeModel* _tmp3_;
 	gboolean _tmp2_;
 	GtkTreeModel* _tmp1_;
-	char* _tmp6_;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = NULL;
 	sel = (_tmp0_ = gtk_tree_view_get_selection (self->priv->tree_album), (_tmp0_ == NULL) ? NULL : g_object_ref (_tmp0_));
@@ -2923,44 +3007,52 @@ static char* gmpc_metadata_browser_browser_get_selected_album (GmpcMetadataBrows
 	_tmp1_ = NULL;
 	if ((_tmp2_ = gtk_tree_selection_get_selected (sel, &_tmp1_, &iter), model = (_tmp3_ = (_tmp4_ = _tmp1_, (_tmp4_ == NULL) ? NULL : g_object_ref (_tmp4_)), (model == NULL) ? NULL : (model = (g_object_unref (model), NULL)), _tmp3_), _tmp2_)) {
 		char* album;
-		char* _tmp5_;
 		album = NULL;
 		gtk_tree_model_get (model, &iter, 6, &album, -1, -1);
-		_tmp5_ = NULL;
-		return (_tmp5_ = album, (sel == NULL) ? NULL : (sel = (g_object_unref (sel), NULL)), (model == NULL) ? NULL : (model = (g_object_unref (model), NULL)), _tmp5_);
+		result = album;
+		(sel == NULL) ? NULL : (sel = (g_object_unref (sel), NULL));
+		(model == NULL) ? NULL : (model = (g_object_unref (model), NULL));
+		return result;
 	}
-	_tmp6_ = NULL;
-	return (_tmp6_ = NULL, (sel == NULL) ? NULL : (sel = (g_object_unref (sel), NULL)), (model == NULL) ? NULL : (model = (g_object_unref (model), NULL)), _tmp6_);
+	result = NULL;
+	(sel == NULL) ? NULL : (sel = (g_object_unref (sel), NULL));
+	(model == NULL) ? NULL : (model = (g_object_unref (model), NULL));
+	return result;
 }
 
 
 static mpd_Song* gmpc_metadata_browser_browser_get_selected_song (GmpcMetadataBrowser* self) {
+	mpd_Song* result;
 	GtkTreeIter iter = {0};
 	GtkTreeSelection* _tmp0_;
 	GtkTreeSelection* sel;
-	GmpcMpdDataModel* _tmp4_;
-	GmpcMpdDataModel* _tmp3_;
+	GtkTreeModel* model;
+	GtkTreeModel* _tmp4_;
+	GtkTreeModel* _tmp3_;
 	gboolean _tmp2_;
 	GtkTreeModel* _tmp1_;
-	mpd_Song* _tmp7_;
 	g_return_val_if_fail (self != NULL, NULL);
 	_tmp0_ = NULL;
 	sel = (_tmp0_ = gtk_tree_view_get_selection (self->priv->tree_songs), (_tmp0_ == NULL) ? NULL : g_object_ref (_tmp0_));
+	model = NULL;
 	_tmp4_ = NULL;
 	_tmp3_ = NULL;
 	_tmp1_ = NULL;
-	if ((_tmp2_ = gtk_tree_selection_get_selected (sel, &_tmp1_, &iter), self->priv->model_songs = (_tmp3_ = (_tmp4_ = (GmpcMpdDataModel*) _tmp1_, (_tmp4_ == NULL) ? NULL : g_object_ref (_tmp4_)), (self->priv->model_songs == NULL) ? NULL : (self->priv->model_songs = (g_object_unref (self->priv->model_songs), NULL)), _tmp3_), _tmp2_)) {
+	if ((_tmp2_ = gtk_tree_selection_get_selected (sel, &_tmp1_, &iter), model = (_tmp3_ = (_tmp4_ = _tmp1_, (_tmp4_ == NULL) ? NULL : g_object_ref (_tmp4_)), (model == NULL) ? NULL : (model = (g_object_unref (model), NULL)), _tmp3_), _tmp2_)) {
 		const mpd_Song* songs;
 		const mpd_Song* _tmp5_;
-		mpd_Song* _tmp6_;
 		songs = NULL;
 		gtk_tree_model_get ((GtkTreeModel*) self->priv->model_songs, &iter, 0, &songs, -1, -1);
 		_tmp5_ = NULL;
-		_tmp6_ = NULL;
-		return (_tmp6_ = (_tmp5_ = songs, (_tmp5_ == NULL) ? NULL : mpd_songDup (_tmp5_)), (sel == NULL) ? NULL : (sel = (g_object_unref (sel), NULL)), _tmp6_);
+		result = (_tmp5_ = songs, (_tmp5_ == NULL) ? NULL : mpd_songDup (_tmp5_));
+		(sel == NULL) ? NULL : (sel = (g_object_unref (sel), NULL));
+		(model == NULL) ? NULL : (model = (g_object_unref (model), NULL));
+		return result;
 	}
-	_tmp7_ = NULL;
-	return (_tmp7_ = NULL, (sel == NULL) ? NULL : (sel = (g_object_unref (sel), NULL)), _tmp7_);
+	result = NULL;
+	(sel == NULL) ? NULL : (sel = (g_object_unref (sel), NULL));
+	(model == NULL) ? NULL : (model = (g_object_unref (model), NULL));
+	return result;
 }
 
 
@@ -2979,15 +3071,15 @@ static void gmpc_metadata_browser_browser_artist_changed (GmpcMetadataBrowser* s
 		MpdData* _tmp0_;
 		MpdData* list;
 		const MpdData* iter;
-		MpdData* _tmp12_;
-		const MpdData* _tmp11_;
-		MpdData* _tmp10_;
 		MpdData* _tmp13_;
+		const MpdData* _tmp12_;
+		MpdData* _tmp11_;
 		MpdData* _tmp14_;
-		MpdData* _tmp17_;
-		const MpdData* _tmp16_;
 		MpdData* _tmp15_;
 		MpdData* _tmp18_;
+		const MpdData* _tmp17_;
+		MpdData* _tmp16_;
+		MpdData* _tmp19_;
 		/* Fill in the first browser */
 		mpd_database_search_field_start (connection, MPD_TAG_ITEM_ALBUM);
 		mpd_database_search_add_constraint (connection, MPD_TAG_ITEM_ARTIST, artist);
@@ -3000,54 +3092,64 @@ static void gmpc_metadata_browser_browser_artist_changed (GmpcMetadataBrowser* s
 		list = NULL;
 		iter = mpd_data_get_first (data);
 		if (iter != NULL) {
-			do {
-				mpd_Song* _tmp3_;
-				char* _tmp5_;
-				const char* _tmp4_;
-				char* _tmp7_;
-				const char* _tmp6_;
-				MpdData* ydata;
-				list = mpd_new_data_struct_append (list);
-				list->type = MPD_DATA_TYPE_SONG;
-				_tmp3_ = NULL;
-				list->song = (_tmp3_ = mpd_newSong (), (list->song == NULL) ? NULL : (list->song = (mpd_freeSong (list->song), NULL)), _tmp3_);
-				_tmp5_ = NULL;
-				_tmp4_ = NULL;
-				list->song->artist = (_tmp5_ = (_tmp4_ = artist, (_tmp4_ == NULL) ? NULL : g_strdup (_tmp4_)), list->song->artist = (g_free (list->song->artist), NULL), _tmp5_);
-				_tmp7_ = NULL;
-				_tmp6_ = NULL;
-				list->song->album = (_tmp7_ = (_tmp6_ = iter->tag, (_tmp6_ == NULL) ? NULL : g_strdup (_tmp6_)), list->song->album = (g_free (list->song->album), NULL), _tmp7_);
-				mpd_database_search_field_start (connection, MPD_TAG_ITEM_DATE);
-				mpd_database_search_add_constraint (connection, MPD_TAG_ITEM_ARTIST, artist);
-				mpd_database_search_add_constraint (connection, MPD_TAG_ITEM_ALBUM, iter->tag);
-				ydata = mpd_database_search_commit (connection);
-				if (ydata != NULL) {
-					char* _tmp9_;
-					const char* _tmp8_;
-					_tmp9_ = NULL;
+			{
+				gboolean _tmp3_;
+				_tmp3_ = TRUE;
+				while (TRUE) {
+					mpd_Song* _tmp4_;
+					char* _tmp6_;
+					const char* _tmp5_;
+					char* _tmp8_;
+					const char* _tmp7_;
+					MpdData* ydata;
+					if (!_tmp3_) {
+						if (!(iter != NULL)) {
+							break;
+						}
+					}
+					_tmp3_ = FALSE;
+					list = mpd_new_data_struct_append (list);
+					list->type = MPD_DATA_TYPE_SONG;
+					_tmp4_ = NULL;
+					list->song = (_tmp4_ = mpd_newSong (), (list->song == NULL) ? NULL : (list->song = (mpd_freeSong (list->song), NULL)), _tmp4_);
+					_tmp6_ = NULL;
+					_tmp5_ = NULL;
+					list->song->artist = (_tmp6_ = (_tmp5_ = artist, (_tmp5_ == NULL) ? NULL : g_strdup (_tmp5_)), list->song->artist = (g_free (list->song->artist), NULL), _tmp6_);
 					_tmp8_ = NULL;
-					list->song->date = (_tmp9_ = (_tmp8_ = ydata->tag, (_tmp8_ == NULL) ? NULL : g_strdup (_tmp8_)), list->song->date = (g_free (list->song->date), NULL), _tmp9_);
+					_tmp7_ = NULL;
+					list->song->album = (_tmp8_ = (_tmp7_ = iter->tag, (_tmp7_ == NULL) ? NULL : g_strdup (_tmp7_)), list->song->album = (g_free (list->song->album), NULL), _tmp8_);
+					mpd_database_search_field_start (connection, MPD_TAG_ITEM_DATE);
+					mpd_database_search_add_constraint (connection, MPD_TAG_ITEM_ARTIST, artist);
+					mpd_database_search_add_constraint (connection, MPD_TAG_ITEM_ALBUM, iter->tag);
+					ydata = mpd_database_search_commit (connection);
+					if (ydata != NULL) {
+						char* _tmp10_;
+						const char* _tmp9_;
+						_tmp10_ = NULL;
+						_tmp9_ = NULL;
+						list->song->date = (_tmp10_ = (_tmp9_ = ydata->tag, (_tmp9_ == NULL) ? NULL : g_strdup (_tmp9_)), list->song->date = (g_free (list->song->date), NULL), _tmp10_);
+					}
+					iter = mpd_data_get_next_real (iter, FALSE);
+					(ydata == NULL) ? NULL : (ydata = (mpd_data_free (ydata), NULL));
 				}
-				iter = mpd_data_get_next_real (iter, FALSE);
-				(ydata == NULL) ? NULL : (ydata = (mpd_data_free (ydata), NULL));
-			} while (iter != NULL);
+			}
 		}
+		_tmp13_ = NULL;
 		_tmp12_ = NULL;
 		_tmp11_ = NULL;
-		_tmp10_ = NULL;
-		list = (_tmp12_ = (_tmp11_ = misc_sort_mpddata_by_album_disc_track ((_tmp10_ = list, list = NULL, _tmp10_)), (_tmp11_ == NULL) ? NULL :  (_tmp11_)), (list == NULL) ? NULL : (list = (mpd_data_free (list), NULL)), _tmp12_);
-		_tmp13_ = NULL;
-		gmpc_mpddata_model_set_mpd_data (self->priv->model_albums, (_tmp13_ = list, list = NULL, _tmp13_));
+		list = (_tmp13_ = (_tmp12_ = misc_sort_mpddata_by_album_disc_track ((_tmp11_ = list, list = NULL, _tmp11_)), (_tmp12_ == NULL) ? NULL :  (_tmp12_)), (list == NULL) ? NULL : (list = (mpd_data_free (list), NULL)), _tmp13_);
+		_tmp14_ = NULL;
+		gmpc_mpddata_model_set_mpd_data (self->priv->model_albums, (_tmp14_ = list, list = NULL, _tmp14_));
 		mpd_database_search_start (connection, TRUE);
 		mpd_database_search_add_constraint (connection, MPD_TAG_ITEM_ARTIST, artist);
-		_tmp14_ = NULL;
-		data = (_tmp14_ = mpd_database_search_commit (connection), (data == NULL) ? NULL : (data = (mpd_data_free (data), NULL)), _tmp14_);
+		_tmp15_ = NULL;
+		data = (_tmp15_ = mpd_database_search_commit (connection), (data == NULL) ? NULL : (data = (mpd_data_free (data), NULL)), _tmp15_);
+		_tmp18_ = NULL;
 		_tmp17_ = NULL;
 		_tmp16_ = NULL;
-		_tmp15_ = NULL;
-		data = (_tmp17_ = (_tmp16_ = misc_sort_mpddata_by_album_disc_track ((_tmp15_ = data, data = NULL, _tmp15_)), (_tmp16_ == NULL) ? NULL :  (_tmp16_)), (data == NULL) ? NULL : (data = (mpd_data_free (data), NULL)), _tmp17_);
-		_tmp18_ = NULL;
-		gmpc_mpddata_model_set_mpd_data (self->priv->model_songs, (_tmp18_ = data, data = NULL, _tmp18_));
+		data = (_tmp18_ = (_tmp17_ = misc_sort_mpddata_by_album_disc_track ((_tmp16_ = data, data = NULL, _tmp16_)), (_tmp17_ == NULL) ? NULL :  (_tmp17_)), (data == NULL) ? NULL : (data = (mpd_data_free (data), NULL)), _tmp18_);
+		_tmp19_ = NULL;
+		gmpc_mpddata_model_set_mpd_data (self->priv->model_songs, (_tmp19_ = data, data = NULL, _tmp19_));
 		(data == NULL) ? NULL : (data = (mpd_data_free (data), NULL));
 		(list == NULL) ? NULL : (list = (mpd_data_free (list), NULL));
 	}
@@ -3226,9 +3328,19 @@ static void gmpc_metadata_browser_add_selected_song (GmpcMetadataBrowser* self, 
 			const MpdData* iter;
 			_tmp2_ = NULL;
 			iter = misc_sort_mpddata_by_album_disc_track ((_tmp2_ = data, (_tmp2_ == NULL) ? NULL :  (_tmp2_)));
-			do {
-				mpd_playlist_queue_add (connection, iter->tag);
-			} while ((iter = mpd_data_get_next_real (iter, FALSE)) != NULL);
+			{
+				gboolean _tmp3_;
+				_tmp3_ = TRUE;
+				while (TRUE) {
+					if (!_tmp3_) {
+						if (!((iter = mpd_data_get_next_real (iter, FALSE)) != NULL)) {
+							break;
+						}
+					}
+					_tmp3_ = FALSE;
+					mpd_playlist_queue_add (connection, iter->tag);
+				}
+			}
 			mpd_playlist_queue_commit (connection);
 		}
 		albumartist = (g_free (albumartist), NULL);
@@ -3387,6 +3499,7 @@ static void _gmpc_metadata_browser_replace_song_gtk_button_clicked (GtkButton* _
 
 
 GtkWidget* gmpc_metadata_browser_metadata_box_show_song (GmpcMetadataBrowser* self, const mpd_Song* song) {
+	GtkWidget* result;
 	GtkVBox* vbox;
 	GtkHBox* box;
 	GtkLabel* label;
@@ -3402,7 +3515,6 @@ GtkWidget* gmpc_metadata_browser_metadata_box_show_song (GmpcMetadataBrowser* se
 	GtkButton* _tmp11_;
 	GtkButton* _tmp12_;
 	GtkImage* _tmp13_;
-	GtkWidget* _tmp18_;
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (song != NULL, NULL);
 	vbox = g_object_ref_sink ((GtkVBox*) gtk_vbox_new (FALSE, 6));
@@ -3616,8 +3728,16 @@ GtkWidget* gmpc_metadata_browser_metadata_box_show_song (GmpcMetadataBrowser* se
 	        this.metadata_box.add(vbox);
 	        this.metadata_sw.show_all();
 	        */
-	_tmp18_ = NULL;
-	return (_tmp18_ = (GtkWidget*) vbox, (box == NULL) ? NULL : (box = (g_object_unref (box), NULL)), (label == NULL) ? NULL : (label = (g_object_unref (label), NULL)), (hbox == NULL) ? NULL : (hbox = (g_object_unref (hbox), NULL)), (ali == NULL) ? NULL : (ali = (g_object_unref (ali), NULL)), (artist_image == NULL) ? NULL : (artist_image = (g_object_unref (artist_image), NULL)), (info_box == NULL) ? NULL : (info_box = (g_object_unref (info_box), NULL)), (fav_button == NULL) ? NULL : (fav_button = (g_object_unref (fav_button), NULL)), (button == NULL) ? NULL : (button = (g_object_unref (button), NULL)), _tmp18_);
+	result = (GtkWidget*) vbox;
+	(box == NULL) ? NULL : (box = (g_object_unref (box), NULL));
+	(label == NULL) ? NULL : (label = (g_object_unref (label), NULL));
+	(hbox == NULL) ? NULL : (hbox = (g_object_unref (hbox), NULL));
+	(ali == NULL) ? NULL : (ali = (g_object_unref (ali), NULL));
+	(artist_image == NULL) ? NULL : (artist_image = (g_object_unref (artist_image), NULL));
+	(info_box == NULL) ? NULL : (info_box = (g_object_unref (info_box), NULL));
+	(fav_button == NULL) ? NULL : (fav_button = (g_object_unref (fav_button), NULL));
+	(button == NULL) ? NULL : (button = (g_object_unref (button), NULL));
+	return result;
 }
 
 
@@ -3749,6 +3869,7 @@ static void _gmpc_metadata_browser_album_song_browser_replace_clicked_gtk_menu_i
 
 
 static gboolean gmpc_metadata_browser_album_song_tree_button_press_event (GmpcMetadataBrowser* self, GmpcMpdDataTreeview* tree, const GdkEventButton* event) {
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (tree != NULL, FALSE);
 	if ((*event).button == 3) {
@@ -3756,7 +3877,6 @@ static gboolean gmpc_metadata_browser_album_song_tree_button_press_event (GmpcMe
 		GtkImageMenuItem* item;
 		GtkImageMenuItem* _tmp0_;
 		GtkImage* _tmp1_;
-		gboolean _tmp6_;
 		menu = g_object_ref_sink ((GtkMenu*) gtk_menu_new ());
 		item = g_object_ref_sink ((GtkImageMenuItem*) gtk_image_menu_item_new_from_stock ("gtk-add", NULL));
 		g_signal_connect_object ((GtkMenuItem*) item, "activate", (GCallback) _gmpc_metadata_browser_album_song_browser_add_clicked_gtk_menu_item_activate, self, 0);
@@ -3800,9 +3920,13 @@ static gboolean gmpc_metadata_browser_album_song_tree_button_press_event (GmpcMe
 		gmpc_mpddata_treeview_right_mouse_intergration (tree, menu);
 		gtk_menu_popup (menu, NULL, NULL, NULL, NULL, (*event).button, (*event).time);
 		gtk_widget_show_all ((GtkWidget*) menu);
-		return (_tmp6_ = TRUE, (menu == NULL) ? NULL : (menu = (g_object_unref (menu), NULL)), (item == NULL) ? NULL : (item = (g_object_unref (item), NULL)), _tmp6_);
+		result = TRUE;
+		(menu == NULL) ? NULL : (menu = (g_object_unref (menu), NULL));
+		(item == NULL) ? NULL : (item = (g_object_unref (item), NULL));
+		return result;
 	}
-	return FALSE;
+	result = FALSE;
+	return result;
 }
 
 
@@ -4206,29 +4330,30 @@ static void gmpc_metadata_browser_metadata_box_update (GmpcMetadataBrowser* self
 
 
 static gboolean gmpc_metadata_browser_metadata_box_update_real (GmpcMetadataBrowser* self) {
+	gboolean result;
 	char* artist;
 	char* album;
 	mpd_Song* song;
-	gboolean _tmp15_;
 	g_return_val_if_fail (self != NULL, FALSE);
 	if (self->priv->block_update > 0) {
 		self->priv->update_timeout = (guint) 0;
-		return FALSE;
+		result = FALSE;
+		return result;
 	}
 	artist = gmpc_metadata_browser_browser_get_selected_artist (self);
 	album = gmpc_metadata_browser_browser_get_selected_album (self);
 	song = gmpc_metadata_browser_browser_get_selected_song (self);
 	if (song != NULL) {
-		GmpcMetadataBrowserHitem _tmp1_ = {0};
+		GmpcMetadataBrowserHitem _tmp0_ = {0};
 		GmpcMetadataBrowserHitem item;
-		mpd_Song* _tmp3_;
-		const mpd_Song* _tmp2_;
+		mpd_Song* _tmp2_;
+		const mpd_Song* _tmp1_;
 		GtkWidget* view;
 		/** Add item to history */
-		item = (memset (&_tmp1_, 0, sizeof (GmpcMetadataBrowserHitem)), _tmp1_);
-		_tmp3_ = NULL;
+		item = (memset (&_tmp0_, 0, sizeof (GmpcMetadataBrowserHitem)), _tmp0_);
 		_tmp2_ = NULL;
-		item.song = (_tmp3_ = (_tmp2_ = song, (_tmp2_ == NULL) ? NULL : mpd_songDup (_tmp2_)), (item.song == NULL) ? NULL : (item.song = (mpd_freeSong (item.song), NULL)), _tmp3_);
+		_tmp1_ = NULL;
+		item.song = (_tmp2_ = (_tmp1_ = song, (_tmp1_ == NULL) ? NULL : mpd_songDup (_tmp1_)), (item.song == NULL) ? NULL : (item.song = (mpd_freeSong (item.song), NULL)), _tmp2_);
 		item.type = GMPC_METADATA_BROWSER_HITEM_TYPE_SONG;
 		gmpc_metadata_browser_history_add (self, &item);
 		view = gmpc_metadata_browser_metadata_box_show_song (self, song);
@@ -4237,49 +4362,49 @@ static gboolean gmpc_metadata_browser_metadata_box_update_real (GmpcMetadataBrow
 		gmpc_metadata_browser_hitem_destroy (&item);
 		(view == NULL) ? NULL : (view = (g_object_unref (view), NULL));
 	} else {
-		gboolean _tmp4_;
-		_tmp4_ = FALSE;
+		gboolean _tmp3_;
+		_tmp3_ = FALSE;
 		if (album != NULL) {
-			_tmp4_ = artist != NULL;
+			_tmp3_ = artist != NULL;
 		} else {
-			_tmp4_ = FALSE;
+			_tmp3_ = FALSE;
 		}
-		if (_tmp4_) {
-			GmpcMetadataBrowserHitem _tmp5_ = {0};
+		if (_tmp3_) {
+			GmpcMetadataBrowserHitem _tmp4_ = {0};
 			GmpcMetadataBrowserHitem item;
-			mpd_Song* _tmp6_;
-			char* _tmp8_;
-			const char* _tmp7_;
-			char* _tmp10_;
-			const char* _tmp9_;
+			mpd_Song* _tmp5_;
+			char* _tmp7_;
+			const char* _tmp6_;
+			char* _tmp9_;
+			const char* _tmp8_;
 			/** Add item to history */
-			item = (memset (&_tmp5_, 0, sizeof (GmpcMetadataBrowserHitem)), _tmp5_);
-			_tmp6_ = NULL;
-			item.song = (_tmp6_ = mpd_newSong (), (item.song == NULL) ? NULL : (item.song = (mpd_freeSong (item.song), NULL)), _tmp6_);
-			_tmp8_ = NULL;
+			item = (memset (&_tmp4_, 0, sizeof (GmpcMetadataBrowserHitem)), _tmp4_);
+			_tmp5_ = NULL;
+			item.song = (_tmp5_ = mpd_newSong (), (item.song == NULL) ? NULL : (item.song = (mpd_freeSong (item.song), NULL)), _tmp5_);
 			_tmp7_ = NULL;
-			item.song->artist = (_tmp8_ = (_tmp7_ = artist, (_tmp7_ == NULL) ? NULL : g_strdup (_tmp7_)), item.song->artist = (g_free (item.song->artist), NULL), _tmp8_);
-			_tmp10_ = NULL;
+			_tmp6_ = NULL;
+			item.song->artist = (_tmp7_ = (_tmp6_ = artist, (_tmp6_ == NULL) ? NULL : g_strdup (_tmp6_)), item.song->artist = (g_free (item.song->artist), NULL), _tmp7_);
 			_tmp9_ = NULL;
-			item.song->album = (_tmp10_ = (_tmp9_ = album, (_tmp9_ == NULL) ? NULL : g_strdup (_tmp9_)), item.song->album = (g_free (item.song->album), NULL), _tmp10_);
+			_tmp8_ = NULL;
+			item.song->album = (_tmp9_ = (_tmp8_ = album, (_tmp8_ == NULL) ? NULL : g_strdup (_tmp8_)), item.song->album = (g_free (item.song->album), NULL), _tmp9_);
 			item.type = GMPC_METADATA_BROWSER_HITEM_TYPE_ALBUM;
 			gmpc_metadata_browser_history_add (self, &item);
 			gmpc_metadata_browser_metadata_box_show_album (self, artist, album);
 			gmpc_metadata_browser_hitem_destroy (&item);
 		} else {
 			if (artist != NULL) {
-				GmpcMetadataBrowserHitem _tmp11_ = {0};
+				GmpcMetadataBrowserHitem _tmp10_ = {0};
 				GmpcMetadataBrowserHitem item;
-				mpd_Song* _tmp12_;
-				char* _tmp14_;
-				const char* _tmp13_;
+				mpd_Song* _tmp11_;
+				char* _tmp13_;
+				const char* _tmp12_;
 				/** Add item to history */
-				item = (memset (&_tmp11_, 0, sizeof (GmpcMetadataBrowserHitem)), _tmp11_);
-				_tmp12_ = NULL;
-				item.song = (_tmp12_ = mpd_newSong (), (item.song == NULL) ? NULL : (item.song = (mpd_freeSong (item.song), NULL)), _tmp12_);
-				_tmp14_ = NULL;
+				item = (memset (&_tmp10_, 0, sizeof (GmpcMetadataBrowserHitem)), _tmp10_);
+				_tmp11_ = NULL;
+				item.song = (_tmp11_ = mpd_newSong (), (item.song == NULL) ? NULL : (item.song = (mpd_freeSong (item.song), NULL)), _tmp11_);
 				_tmp13_ = NULL;
-				item.song->artist = (_tmp14_ = (_tmp13_ = artist, (_tmp13_ == NULL) ? NULL : g_strdup (_tmp13_)), item.song->artist = (g_free (item.song->artist), NULL), _tmp14_);
+				_tmp12_ = NULL;
+				item.song->artist = (_tmp13_ = (_tmp12_ = artist, (_tmp12_ == NULL) ? NULL : g_strdup (_tmp12_)), item.song->artist = (g_free (item.song->artist), NULL), _tmp13_);
 				item.type = GMPC_METADATA_BROWSER_HITEM_TYPE_ARTIST;
 				gmpc_metadata_browser_history_add (self, &item);
 				gmpc_metadata_browser_metadata_box_show_artist (self, artist);
@@ -4288,7 +4413,11 @@ static gboolean gmpc_metadata_browser_metadata_box_update_real (GmpcMetadataBrow
 		}
 	}
 	self->priv->update_timeout = (guint) 0;
-	return (_tmp15_ = FALSE, artist = (g_free (artist), NULL), album = (g_free (album), NULL), (song == NULL) ? NULL : (song = (mpd_freeSong (song), NULL)), _tmp15_);
+	result = FALSE;
+	artist = (g_free (artist), NULL);
+	album = (g_free (album), NULL);
+	(song == NULL) ? NULL : (song = (mpd_freeSong (song), NULL));
+	return result;
 }
 
 
@@ -4474,12 +4603,15 @@ static void gmpc_metadata_browser_history_show_list (GmpcMetadataBrowser* self) 
 	g_return_if_fail (self != NULL);
 	menu = g_object_ref_sink ((GtkMenu*) gtk_menu_new ());
 	iter = g_list_last (self->priv->history);
-	while (iter != NULL) {
+	while (TRUE) {
 		GmpcMetadataBrowserHitem* _tmp0_;
 		GmpcMetadataBrowserHitem* i;
 		char* label;
 		GtkCheckMenuItem* item;
 		gboolean _tmp8_;
+		if (!(iter != NULL)) {
+			break;
+		}
 		_tmp0_ = NULL;
 		i = (_tmp0_ = (GmpcMetadataBrowserHitem*) iter->data, (_tmp0_ == NULL) ? NULL : gmpc_metadata_browser_hitem_dup (_tmp0_));
 		label = g_strdup ("");
@@ -4561,14 +4693,14 @@ static void _gmpc_metadata_browser_history_previous_gtk_button_clicked (GtkButto
 
 
 static GtkHBox* gmpc_metadata_browser_history_buttons (GmpcMetadataBrowser* self) {
+	GtkHBox* result;
 	GtkHBox* box;
 	gboolean _tmp0_;
 	GtkButton* next_but;
+	gboolean _tmp1_;
 	gboolean _tmp2_;
-	gboolean _tmp3_;
 	GtkButton* back_but;
-	gboolean _tmp5_;
-	GtkHBox* _tmp6_;
+	gboolean _tmp4_;
 	g_return_val_if_fail (self != NULL, NULL);
 	box = g_object_ref_sink ((GtkHBox*) gtk_hbox_new (FALSE, 0));
 	_tmp0_ = FALSE;
@@ -4578,34 +4710,35 @@ static GtkHBox* gmpc_metadata_browser_history_buttons (GmpcMetadataBrowser* self
 		_tmp0_ = FALSE;
 	}
 	if (_tmp0_) {
-		return box;
+		result = box;
+		return result;
 	}
 	next_but = g_object_ref_sink ((GtkButton*) gtk_button_new_from_stock ("gtk-go-forward"));
-	_tmp2_ = FALSE;
+	_tmp1_ = FALSE;
 	if (self->priv->current == NULL) {
-		_tmp2_ = TRUE;
+		_tmp1_ = TRUE;
 	} else {
-		_tmp2_ = self->priv->current->prev == NULL;
+		_tmp1_ = self->priv->current->prev == NULL;
 	}
-	if (_tmp2_) {
+	if (_tmp1_) {
 		g_object_set ((GtkWidget*) next_but, "sensitive", FALSE, NULL);
 	}
 	g_signal_connect_object (next_but, "clicked", (GCallback) _gmpc_metadata_browser_history_next_gtk_button_clicked, self, 0);
 	gtk_box_pack_end ((GtkBox*) box, (GtkWidget*) next_but, FALSE, FALSE, (guint) 0);
-	_tmp3_ = FALSE;
+	_tmp2_ = FALSE;
 	if (self->priv->current != NULL) {
-		gboolean _tmp4_;
-		_tmp4_ = FALSE;
-		if (self->priv->current->next != NULL) {
-			_tmp4_ = TRUE;
-		} else {
-			_tmp4_ = self->priv->current->prev != NULL;
-		}
-		_tmp3_ = _tmp4_;
-	} else {
+		gboolean _tmp3_;
 		_tmp3_ = FALSE;
+		if (self->priv->current->next != NULL) {
+			_tmp3_ = TRUE;
+		} else {
+			_tmp3_ = self->priv->current->prev != NULL;
+		}
+		_tmp2_ = _tmp3_;
+	} else {
+		_tmp2_ = FALSE;
 	}
-	if (_tmp3_) {
+	if (_tmp2_) {
 		GtkButton* dd_but;
 		dd_but = g_object_ref_sink ((GtkButton*) gtk_button_new_with_label ("L"));
 		g_signal_connect_object (dd_but, "clicked", (GCallback) _gmpc_metadata_browser_history_show_list_gtk_button_clicked, self, 0);
@@ -4613,19 +4746,21 @@ static GtkHBox* gmpc_metadata_browser_history_buttons (GmpcMetadataBrowser* self
 		(dd_but == NULL) ? NULL : (dd_but = (g_object_unref (dd_but), NULL));
 	}
 	back_but = g_object_ref_sink ((GtkButton*) gtk_button_new_from_stock ("gtk-go-back"));
-	_tmp5_ = FALSE;
+	_tmp4_ = FALSE;
 	if (self->priv->current == NULL) {
-		_tmp5_ = TRUE;
+		_tmp4_ = TRUE;
 	} else {
-		_tmp5_ = self->priv->current->next == NULL;
+		_tmp4_ = self->priv->current->next == NULL;
 	}
-	if (_tmp5_) {
+	if (_tmp4_) {
 		g_object_set ((GtkWidget*) back_but, "sensitive", FALSE, NULL);
 	}
 	g_signal_connect_object (back_but, "clicked", (GCallback) _gmpc_metadata_browser_history_previous_gtk_button_clicked, self, 0);
 	gtk_box_pack_end ((GtkBox*) box, (GtkWidget*) back_but, FALSE, FALSE, (guint) 0);
-	_tmp6_ = NULL;
-	return (_tmp6_ = box, (next_but == NULL) ? NULL : (next_but = (g_object_unref (next_but), NULL)), (back_but == NULL) ? NULL : (back_but = (g_object_unref (back_but), NULL)), _tmp6_);
+	result = box;
+	(next_but == NULL) ? NULL : (next_but = (g_object_unref (next_but), NULL));
+	(back_but == NULL) ? NULL : (back_but = (g_object_unref (back_but), NULL));
+	return result;
 }
 
 
@@ -4679,31 +4814,41 @@ void gmpc_metadata_browser_set_artist (GmpcMetadataBrowser* self, const char* ar
 	/* clear */
 	gtk_entry_set_text (self->priv->artist_filter_entry, "");
 	if (gtk_tree_model_get_iter_first ((GtkTreeModel*) self->priv->model_filter_artist, &iter)) {
-		do {
-			char* lartist;
+		{
 			gboolean _tmp0_;
-			lartist = NULL;
-			gtk_tree_model_get ((GtkTreeModel*) self->priv->model_filter_artist, &iter, 7, &lartist, -1, -1);
-			_tmp0_ = FALSE;
-			if (lartist != NULL) {
-				_tmp0_ = g_utf8_collate (lartist, artist) == 0;
-			} else {
+			_tmp0_ = TRUE;
+			while (TRUE) {
+				char* lartist;
+				gboolean _tmp1_;
+				if (!_tmp0_) {
+					if (!gtk_tree_model_iter_next ((GtkTreeModel*) self->priv->model_filter_artist, &iter)) {
+						break;
+					}
+				}
 				_tmp0_ = FALSE;
-			}
-			if (_tmp0_) {
-				GtkTreePath* _tmp1_;
-				gtk_tree_selection_select_iter (gtk_tree_view_get_selection (self->priv->tree_artist), &iter);
-				_tmp1_ = NULL;
-				gtk_tree_view_scroll_to_cell (self->priv->tree_artist, _tmp1_ = gtk_tree_model_get_path ((GtkTreeModel*) self->priv->model_filter_artist, &iter), NULL, TRUE, 0.5f, 0.f);
-				(_tmp1_ == NULL) ? NULL : (_tmp1_ = (gtk_tree_path_free (_tmp1_), NULL));
-				self->priv->block_update--;
-				gmpc_metadata_browser_metadata_box_clear (self);
-				gmpc_metadata_browser_metadata_box_update (self);
+				lartist = NULL;
+				gtk_tree_model_get ((GtkTreeModel*) self->priv->model_filter_artist, &iter, 7, &lartist, -1, -1);
+				_tmp1_ = FALSE;
+				if (lartist != NULL) {
+					_tmp1_ = g_utf8_collate (lartist, artist) == 0;
+				} else {
+					_tmp1_ = FALSE;
+				}
+				if (_tmp1_) {
+					GtkTreePath* _tmp2_;
+					gtk_tree_selection_select_iter (gtk_tree_view_get_selection (self->priv->tree_artist), &iter);
+					_tmp2_ = NULL;
+					gtk_tree_view_scroll_to_cell (self->priv->tree_artist, _tmp2_ = gtk_tree_model_get_path ((GtkTreeModel*) self->priv->model_filter_artist, &iter), NULL, TRUE, 0.5f, 0.f);
+					(_tmp2_ == NULL) ? NULL : (_tmp2_ = (gtk_tree_path_free (_tmp2_), NULL));
+					self->priv->block_update--;
+					gmpc_metadata_browser_metadata_box_clear (self);
+					gmpc_metadata_browser_metadata_box_update (self);
+					lartist = (g_free (lartist), NULL);
+					return;
+				}
 				lartist = (g_free (lartist), NULL);
-				return;
 			}
-			lartist = (g_free (lartist), NULL);
-		} while (gtk_tree_model_iter_next ((GtkTreeModel*) self->priv->model_filter_artist, &iter));
+		}
 	}
 	self->priv->block_update--;
 	gmpc_metadata_browser_metadata_box_clear (self);
@@ -4721,31 +4866,41 @@ void gmpc_metadata_browser_set_album (GmpcMetadataBrowser* self, const char* art
 	/* clear */
 	gtk_entry_set_text (self->priv->album_filter_entry, "");
 	if (gtk_tree_model_get_iter_first ((GtkTreeModel*) self->priv->model_filter_album, &iter)) {
-		do {
-			char* lalbum;
+		{
 			gboolean _tmp0_;
-			lalbum = NULL;
-			gtk_tree_model_get ((GtkTreeModel*) self->priv->model_filter_album, &iter, 6, &lalbum, -1, -1);
-			_tmp0_ = FALSE;
-			if (lalbum != NULL) {
-				_tmp0_ = g_utf8_collate (lalbum, album) == 0;
-			} else {
+			_tmp0_ = TRUE;
+			while (TRUE) {
+				char* lalbum;
+				gboolean _tmp1_;
+				if (!_tmp0_) {
+					if (!gtk_tree_model_iter_next ((GtkTreeModel*) self->priv->model_filter_album, &iter)) {
+						break;
+					}
+				}
 				_tmp0_ = FALSE;
-			}
-			if (_tmp0_) {
-				GtkTreePath* _tmp1_;
-				gtk_tree_selection_select_iter (gtk_tree_view_get_selection (self->priv->tree_album), &iter);
-				_tmp1_ = NULL;
-				gtk_tree_view_scroll_to_cell (self->priv->tree_album, _tmp1_ = gtk_tree_model_get_path ((GtkTreeModel*) self->priv->model_filter_album, &iter), NULL, TRUE, 0.5f, 0.f);
-				(_tmp1_ == NULL) ? NULL : (_tmp1_ = (gtk_tree_path_free (_tmp1_), NULL));
-				gtk_tree_selection_unselect_all (gtk_tree_view_get_selection (self->priv->tree_songs));
-				self->priv->block_update--;
-				gmpc_metadata_browser_metadata_box_update (self);
+				lalbum = NULL;
+				gtk_tree_model_get ((GtkTreeModel*) self->priv->model_filter_album, &iter, 6, &lalbum, -1, -1);
+				_tmp1_ = FALSE;
+				if (lalbum != NULL) {
+					_tmp1_ = g_utf8_collate (lalbum, album) == 0;
+				} else {
+					_tmp1_ = FALSE;
+				}
+				if (_tmp1_) {
+					GtkTreePath* _tmp2_;
+					gtk_tree_selection_select_iter (gtk_tree_view_get_selection (self->priv->tree_album), &iter);
+					_tmp2_ = NULL;
+					gtk_tree_view_scroll_to_cell (self->priv->tree_album, _tmp2_ = gtk_tree_model_get_path ((GtkTreeModel*) self->priv->model_filter_album, &iter), NULL, TRUE, 0.5f, 0.f);
+					(_tmp2_ == NULL) ? NULL : (_tmp2_ = (gtk_tree_path_free (_tmp2_), NULL));
+					gtk_tree_selection_unselect_all (gtk_tree_view_get_selection (self->priv->tree_songs));
+					self->priv->block_update--;
+					gmpc_metadata_browser_metadata_box_update (self);
+					lalbum = (g_free (lalbum), NULL);
+					return;
+				}
 				lalbum = (g_free (lalbum), NULL);
-				return;
 			}
-			lalbum = (g_free (lalbum), NULL);
-		} while (gtk_tree_model_iter_next ((GtkTreeModel*) self->priv->model_filter_album, &iter));
+		}
 	}
 	gtk_tree_selection_unselect_all (gtk_tree_view_get_selection (self->priv->tree_songs));
 	self->priv->block_update--;
@@ -4756,10 +4911,10 @@ void gmpc_metadata_browser_set_album (GmpcMetadataBrowser* self, const char* art
 
 void gmpc_metadata_browser_set_song (GmpcMetadataBrowser* self, const mpd_Song* song) {
 	GtkTreeIter iter = {0};
-	GmpcMetadataBrowserHitem _tmp2_ = {0};
+	GmpcMetadataBrowserHitem _tmp3_ = {0};
 	GmpcMetadataBrowserHitem item;
-	mpd_Song* _tmp4_;
-	const mpd_Song* _tmp3_;
+	mpd_Song* _tmp5_;
+	const mpd_Song* _tmp4_;
 	GtkWidget* view;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (song != NULL);
@@ -4771,30 +4926,40 @@ void gmpc_metadata_browser_set_song (GmpcMetadataBrowser* self, const mpd_Song* 
 		}
 	}
 	if (gtk_tree_model_get_iter_first ((GtkTreeModel*) self->priv->model_songs, &iter)) {
-		do {
-			char* ltitle;
+		{
 			gboolean _tmp0_;
-			ltitle = NULL;
-			gtk_tree_model_get ((GtkTreeModel*) self->priv->model_songs, &iter, 7, &ltitle, -1, -1);
-			_tmp0_ = FALSE;
-			if (ltitle != NULL) {
-				_tmp0_ = g_utf8_collate (ltitle, song->title) == 0;
-			} else {
+			_tmp0_ = TRUE;
+			while (TRUE) {
+				char* ltitle;
+				gboolean _tmp1_;
+				if (!_tmp0_) {
+					if (!gtk_tree_model_iter_next ((GtkTreeModel*) self->priv->model_songs, &iter)) {
+						break;
+					}
+				}
 				_tmp0_ = FALSE;
-			}
-			if (_tmp0_) {
-				GtkTreePath* _tmp1_;
-				gtk_tree_selection_select_iter (gtk_tree_view_get_selection (self->priv->tree_songs), &iter);
-				_tmp1_ = NULL;
-				gtk_tree_view_scroll_to_cell (self->priv->tree_songs, _tmp1_ = gtk_tree_model_get_path ((GtkTreeModel*) self->priv->model_songs, &iter), NULL, TRUE, 0.5f, 0.f);
-				(_tmp1_ == NULL) ? NULL : (_tmp1_ = (gtk_tree_path_free (_tmp1_), NULL));
-				self->priv->block_update--;
-				gmpc_metadata_browser_metadata_box_update (self);
+				ltitle = NULL;
+				gtk_tree_model_get ((GtkTreeModel*) self->priv->model_songs, &iter, 7, &ltitle, -1, -1);
+				_tmp1_ = FALSE;
+				if (ltitle != NULL) {
+					_tmp1_ = g_utf8_collate (ltitle, song->title) == 0;
+				} else {
+					_tmp1_ = FALSE;
+				}
+				if (_tmp1_) {
+					GtkTreePath* _tmp2_;
+					gtk_tree_selection_select_iter (gtk_tree_view_get_selection (self->priv->tree_songs), &iter);
+					_tmp2_ = NULL;
+					gtk_tree_view_scroll_to_cell (self->priv->tree_songs, _tmp2_ = gtk_tree_model_get_path ((GtkTreeModel*) self->priv->model_songs, &iter), NULL, TRUE, 0.5f, 0.f);
+					(_tmp2_ == NULL) ? NULL : (_tmp2_ = (gtk_tree_path_free (_tmp2_), NULL));
+					self->priv->block_update--;
+					gmpc_metadata_browser_metadata_box_update (self);
+					ltitle = (g_free (ltitle), NULL);
+					return;
+				}
 				ltitle = (g_free (ltitle), NULL);
-				return;
 			}
-			ltitle = (g_free (ltitle), NULL);
-		} while (gtk_tree_model_iter_next ((GtkTreeModel*) self->priv->model_songs, &iter));
+		}
 	}
 	self->priv->block_update--;
 	gmpc_metadata_browser_metadata_box_clear (self);
@@ -4803,10 +4968,10 @@ void gmpc_metadata_browser_set_song (GmpcMetadataBrowser* self, const mpd_Song* 
 		self->priv->update_timeout = (guint) 0;
 	}
 	/** Add item to history */
-	item = (memset (&_tmp2_, 0, sizeof (GmpcMetadataBrowserHitem)), _tmp2_);
+	item = (memset (&_tmp3_, 0, sizeof (GmpcMetadataBrowserHitem)), _tmp3_);
+	_tmp5_ = NULL;
 	_tmp4_ = NULL;
-	_tmp3_ = NULL;
-	item.song = (_tmp4_ = (_tmp3_ = song, (_tmp3_ == NULL) ? NULL : mpd_songDup (_tmp3_)), (item.song == NULL) ? NULL : (item.song = (mpd_freeSong (item.song), NULL)), _tmp4_);
+	item.song = (_tmp5_ = (_tmp4_ = song, (_tmp4_ == NULL) ? NULL : mpd_songDup (_tmp4_)), (item.song == NULL) ? NULL : (item.song = (mpd_freeSong (item.song), NULL)), _tmp5_);
 	item.type = GMPC_METADATA_BROWSER_HITEM_TYPE_SONG;
 	gmpc_metadata_browser_history_add (self, &item);
 	view = gmpc_metadata_browser_metadata_box_show_song (self, song);

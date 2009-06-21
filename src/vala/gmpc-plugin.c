@@ -143,6 +143,7 @@ struct _GmpcPluginSongListIfaceIface {
 };
 
 
+static gpointer gmpc_plugin_base_parent_class = NULL;
 
 GType gmpc_plugin_base_get_type (void);
 enum  {
@@ -158,7 +159,6 @@ gboolean gmpc_plugin_base_get_enabled (GmpcPluginBase* self);
 static gboolean gmpc_plugin_base_real_get_enabled (GmpcPluginBase* self);
 void gmpc_plugin_base_set_enabled (GmpcPluginBase* self, gboolean state);
 static void gmpc_plugin_base_real_set_enabled (GmpcPluginBase* self, gboolean state);
-static gpointer gmpc_plugin_base_parent_class = NULL;
 static void gmpc_plugin_base_finalize (GObject* obj);
 GType gmpc_plugin_tool_menu_iface_get_type (void);
 gint gmpc_plugin_tool_menu_iface_tool_menu_integration (GmpcPluginToolMenuIface* self, GtkMenu* menu);
@@ -235,11 +235,14 @@ void gmpc_plugin_base_save_yourself (GmpcPluginBase* self) {
              * @return The state (true or false)
              */
 static gboolean gmpc_plugin_base_real_get_enabled (GmpcPluginBase* self) {
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	if (gmpc_plugin_base_get_name (self) == NULL) {
-		return FALSE;
+		result = FALSE;
+		return result;
 	}
-	return (gboolean) cfg_get_single_value_as_int_with_default (config, gmpc_plugin_base_get_name (self), "enabled", 1);
+	result = (gboolean) cfg_get_single_value_as_int_with_default (config, gmpc_plugin_base_get_name (self), "enabled", 1);
+	return result;
 }
 
 
@@ -383,8 +386,10 @@ void gmpc_plugin_browser_iface_browser_unselected (GmpcPluginBrowserIface* self,
 
 /* Option menu */
 static gint gmpc_plugin_browser_iface_real_browser_option_menu (GmpcPluginBrowserIface* self, GtkMenu* menu) {
+	gint result;
 	g_return_val_if_fail (menu != NULL, 0);
-	return 0;
+	result = 0;
+	return result;
 }
 
 
@@ -395,8 +400,10 @@ gint gmpc_plugin_browser_iface_browser_option_menu (GmpcPluginBrowserIface* self
 
 /* Go menu */
 static gint gmpc_plugin_browser_iface_real_browser_add_go_menu (GmpcPluginBrowserIface* self, GtkMenu* menu) {
+	gint result;
 	g_return_val_if_fail (menu != NULL, 0);
-	return 0;
+	result = 0;
+	return result;
 }
 
 

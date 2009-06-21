@@ -37,6 +37,7 @@ struct _GmpcPluginMetadataPrefetcherClass {
 };
 
 
+static gpointer gmpc_plugin_metadata_prefetcher_parent_class = NULL;
 
 #define use_transition TRUE
 GType gmpc_plugin_metadata_prefetcher_get_type (void);
@@ -51,24 +52,27 @@ GmpcPluginMetadataPrefetcher* gmpc_plugin_metadata_prefetcher_construct (GType o
 GmpcPluginMetadataPrefetcher* gmpc_plugin_metadata_prefetcher_new (void);
 static void _gmpc_plugin_metadata_prefetcher_status_changed_gmpc_connection_status_changed (GmpcConnection* _sender, MpdObj* server, ChangedStatusType what, gpointer self);
 static GObject * gmpc_plugin_metadata_prefetcher_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);
-static gpointer gmpc_plugin_metadata_prefetcher_parent_class = NULL;
 static void gmpc_plugin_metadata_prefetcher_finalize (GObject* obj);
 
 
 
 static gint* gmpc_plugin_metadata_prefetcher_real_get_version (GmpcPluginBase* base, int* result_length1) {
 	GmpcPluginMetadataPrefetcher * self;
+	gint* result;
 	gint* _tmp0_;
 	self = (GmpcPluginMetadataPrefetcher*) base;
 	_tmp0_ = NULL;
-	return (_tmp0_ = self->version, *result_length1 = self->version_length1, _tmp0_);
+	result = (_tmp0_ = self->version, *result_length1 = self->version_length1, _tmp0_);
+	return result;
 }
 
 
 static const char* gmpc_plugin_metadata_prefetcher_real_get_name (GmpcPluginBase* base) {
 	GmpcPluginMetadataPrefetcher * self;
+	const char* result;
 	self = (GmpcPluginMetadataPrefetcher*) base;
-	return "Metadata pre-fetcher";
+	result = "Metadata pre-fetcher";
+	return result;
 }
 
 

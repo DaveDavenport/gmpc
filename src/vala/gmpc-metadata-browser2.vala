@@ -1287,7 +1287,8 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
     {
         Gtk.TreeIter iter;
         var sel = this.tree_songs.get_selection();
-        if(sel.get_selected(out this.model_songs, out iter))
+        Gtk.TreeModel model;
+        if(sel.get_selected(out model, out iter))
         {
             weak MPD.Song songs = null;
             this.model_songs .get(iter, 0,out songs, -1);

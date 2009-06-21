@@ -65,6 +65,7 @@ struct _GmpcImagePrivate {
 };
 
 
+static gpointer gmpc_image_parent_class = NULL;
 
 #define use_transition TRUE
 GType gmpc_image_get_type (void);
@@ -85,7 +86,6 @@ GmpcImage* gmpc_image_new (void);
 void gmpc_image_set_text (GmpcImage* self, const char* value);
 static gboolean _gmpc_image_on_expose_gtk_widget_expose_event (GmpcImage* _sender, const GdkEventExpose* event, gpointer self);
 static GObject * gmpc_image_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);
-static gpointer gmpc_image_parent_class = NULL;
 static void gmpc_image_finalize (GObject* obj);
 static void gmpc_image_get_property (GObject * object, guint property_id, GValue * value, GParamSpec * pspec);
 static void gmpc_image_set_property (GObject * object, guint property_id, const GValue * value, GParamSpec * pspec);
@@ -93,12 +93,15 @@ static void gmpc_image_set_property (GObject * object, guint property_id, const 
 
 
 static glong string_get_length (const char* self) {
+	glong result;
 	g_return_val_if_fail (self != NULL, 0L);
-	return g_utf8_strlen (self, -1);
+	result = g_utf8_strlen (self, -1);
+	return result;
 }
 
 
 static gboolean gmpc_image_on_expose (GmpcImage* self, GmpcImage* img, const GdkEventExpose* event) {
+	gboolean result;
 	cairo_t* ctx;
 	gint width;
 	gint height;
@@ -108,10 +111,9 @@ static gboolean gmpc_image_on_expose (GmpcImage* self, GmpcImage* img, const Gdk
 	gint wh;
 	gboolean _tmp2_;
 	gboolean _tmp3_;
-	gboolean _tmp5_;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (img != NULL, FALSE);
-	ctx = gdk_cairo_create ((GdkDrawable*) gtk_widget_get_window ((GtkWidget*) img));
+	ctx = gdk_cairo_create ((GdkDrawable*) ((GtkWidget*) img)->window);
 	width = 0;
 	height = 0;
 	x = ((GtkWidget*) img)->allocation.x;
@@ -234,11 +236,14 @@ static gboolean gmpc_image_on_expose (GmpcImage* self, GmpcImage* img, const Gdk
 		cairo_fill (ctx);
 		(layout == NULL) ? NULL : (layout = (g_object_unref (layout), NULL));
 	}
-	return (_tmp5_ = FALSE, (ctx == NULL) ? NULL : (ctx = (cairo_destroy (ctx), NULL)), _tmp5_);
+	result = FALSE;
+	(ctx == NULL) ? NULL : (ctx = (cairo_destroy (ctx), NULL));
+	return result;
 }
 
 
 static gboolean gmpc_image_timeout_test (GmpcImage* self) {
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	self->priv->fade = self->priv->fade - 0.10;
 	if (self->priv->fade <= 0.0) {
@@ -254,10 +259,12 @@ static gboolean gmpc_image_timeout_test (GmpcImage* self) {
 		self->priv->temp = (_tmp2_ = NULL, (self->priv->temp == NULL) ? NULL : (self->priv->temp = (g_object_unref (self->priv->temp), NULL)), _tmp2_);
 		gtk_widget_queue_draw ((GtkWidget*) self);
 		self->priv->fade_timeout = (guint) 0;
-		return FALSE;
+		result = FALSE;
+		return result;
 	}
 	gtk_widget_queue_draw ((GtkWidget*) self);
-	return TRUE;
+	result = TRUE;
+	return result;
 }
 
 
@@ -360,18 +367,20 @@ GmpcImage* gmpc_image_new (void) {
 
 
 const char* gmpc_image_get_text (GmpcImage* self) {
+	const char* result;
 	g_return_val_if_fail (self != NULL, NULL);
-	return self->priv->_text;
+	result = self->priv->_text;
+	return result;
 }
 
 
 void gmpc_image_set_text (GmpcImage* self, const char* value) {
-	char* _tmp2_;
-	const char* _tmp1_;
+	char* _tmp1_;
+	const char* _tmp0_;
 	g_return_if_fail (self != NULL);
-	_tmp2_ = NULL;
 	_tmp1_ = NULL;
-	self->priv->_text = (_tmp2_ = (_tmp1_ = value, (_tmp1_ == NULL) ? NULL : g_strdup (_tmp1_)), self->priv->_text = (g_free (self->priv->_text), NULL), _tmp2_);
+	_tmp0_ = NULL;
+	self->priv->_text = (_tmp1_ = (_tmp0_ = value, (_tmp0_ == NULL) ? NULL : g_strdup (_tmp0_)), self->priv->_text = (g_free (self->priv->_text), NULL), _tmp1_);
 	g_object_notify ((GObject *) self, "text");
 }
 

@@ -77,11 +77,13 @@ struct _GmpcFavoritesButtonPrivate {
 };
 
 
+extern GmpcFavoritesList* favorites;
+GmpcFavoritesList* favorites = NULL;
+static gpointer gmpc_favorites_list_parent_class = NULL;
+static gpointer gmpc_favorites_button_parent_class = NULL;
 
 #define some_unique_name_fav VERSION
 #define use_transition_fav TRUE
-extern GmpcFavoritesList* favorites;
-GmpcFavoritesList* favorites = NULL;
 GType gmpc_favorites_list_get_type (void);
 #define GMPC_FAVORITES_LIST_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GMPC_FAVORITES_TYPE_LIST, GmpcFavoritesListPrivate))
 enum  {
@@ -97,7 +99,6 @@ GmpcFavoritesList* gmpc_favorites_list_new (void);
 static void _gmpc_favorites_list_con_changed_gmpc_connection_connection_changed (GmpcConnection* _sender, MpdObj* server, gint connect, gpointer self);
 static void _gmpc_favorites_list_status_changed_gmpc_connection_status_changed (GmpcConnection* _sender, MpdObj* server, ChangedStatusType what, gpointer self);
 static GObject * gmpc_favorites_list_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);
-static gpointer gmpc_favorites_list_parent_class = NULL;
 static void gmpc_favorites_list_finalize (GObject* obj);
 GType gmpc_favorites_button_get_type (void);
 #define GMPC_FAVORITES_BUTTON_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GMPC_FAVORITES_TYPE_BUTTON, GmpcFavoritesButtonPrivate))
@@ -117,7 +118,6 @@ static gboolean _gmpc_favorites_button_button_press_event_callback_gtk_widget_bu
 static gboolean _gmpc_favorites_button_enter_notify_event_callback_gtk_widget_enter_notify_event (GmpcFavoritesButton* _sender, const GdkEventCrossing* event, gpointer self);
 static gboolean _gmpc_favorites_button_leave_notify_event_callback_gtk_widget_leave_notify_event (GmpcFavoritesButton* _sender, const GdkEventCrossing* event, gpointer self);
 static GObject * gmpc_favorites_button_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);
-static gpointer gmpc_favorites_button_parent_class = NULL;
 static void gmpc_favorites_button_finalize (GObject* obj);
 static int _vala_strcmp0 (const char * str1, const char * str2);
 
@@ -164,19 +164,25 @@ static void gmpc_favorites_list_status_changed (GmpcFavoritesList* self, GmpcCon
          * Check if the song (specified by path) is favored
          */
 gboolean gmpc_favorites_list_is_favorite (GmpcFavoritesList* self, const char* path) {
+	gboolean result;
 	const MpdData* iter;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (path != NULL, FALSE);
 	iter = mpd_data_get_first (self->priv->list);
-	while (iter != NULL) {
+	while (TRUE) {
+		if (!(iter != NULL)) {
+			break;
+		}
 		if (iter->type == MPD_DATA_TYPE_SONG) {
 			if (_vala_strcmp0 (iter->song->file, path) == 0) {
-				return TRUE;
+				result = TRUE;
+				return result;
 			}
 		}
 		iter = mpd_data_get_next_real (iter, FALSE);
 	}
-	return FALSE;
+	result = FALSE;
+	return result;
 }
 
 
@@ -199,7 +205,10 @@ void gmpc_favorites_list_set_favorite (GmpcFavoritesList* self, const char* path
 			 To be able to remove it we have to first lookup the position 
 			 This needs libmpd 0.18.1 */
 			iter = mpd_data_get_first (self->priv->list);
-			while (iter != NULL) {
+			while (TRUE) {
+				if (!(iter != NULL)) {
+					break;
+				}
 				if (iter->type == MPD_DATA_TYPE_SONG) {
 					if (_vala_strcmp0 (iter->song->file, path) == 0) {
 						mpd_database_playlist_list_delete (connection, _ ("Favorites"), iter->song->pos);
@@ -291,6 +300,7 @@ GType gmpc_favorites_list_get_type (void) {
 
 
 static gboolean gmpc_favorites_button_button_press_event_callback (GmpcFavoritesButton* self, GmpcFavoritesButton* button, const GdkEventButton* event) {
+	gboolean result;
 	gboolean _tmp0_;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (button != NULL, FALSE);
@@ -304,14 +314,15 @@ static gboolean gmpc_favorites_button_button_press_event_callback (GmpcFavorites
 		gmpc_favorites_list_set_favorite (favorites, self->priv->song->file, !self->priv->fstate);
 		self->priv->fstate = !self->priv->fstate;
 	}
-	return FALSE;
+	result = FALSE;
+	return result;
 }
 
 
 /* on mouse over, do some pre-highlighting */
 static gboolean gmpc_favorites_button_enter_notify_event_callback (GmpcFavoritesButton* self, GmpcFavoritesButton* button, const GdkEventCrossing* motion) {
+	gboolean result;
 	GdkPixbuf* pb2;
-	gboolean _tmp0_;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (button != NULL, FALSE);
 	pb2 = gdk_pixbuf_copy (self->priv->pb);
@@ -321,16 +332,20 @@ static gboolean gmpc_favorites_button_enter_notify_event_callback (GmpcFavorites
 		colorshift_pixbuf (pb2, self->priv->pb, -50);
 	}
 	gtk_image_set_from_pixbuf (self->priv->image, pb2);
-	return (_tmp0_ = FALSE, (pb2 == NULL) ? NULL : (pb2 = (g_object_unref (pb2), NULL)), _tmp0_);
+	result = FALSE;
+	(pb2 == NULL) ? NULL : (pb2 = (g_object_unref (pb2), NULL));
+	return result;
 }
 
 
 /* Reset default highlighting */
 static gboolean gmpc_favorites_button_leave_notify_event_callback (GmpcFavoritesButton* self, GmpcFavoritesButton* button, const GdkEventCrossing* motion) {
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (button != NULL, FALSE);
 	gmpc_favorites_button_update (self, favorites);
-	return FALSE;
+	result = FALSE;
+	return result;
 }
 
 

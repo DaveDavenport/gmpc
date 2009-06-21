@@ -269,7 +269,8 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
         Gtk.TreeIter iter;
         var sel = this.tree.get_selection();
         string path = null;
-        if(sel.get_selected(out this.model,out iter))
+        Gtk.TreeModel model;
+        if(sel.get_selected(out model,out iter))
         {
             this.model.get(iter,1,out path);
 

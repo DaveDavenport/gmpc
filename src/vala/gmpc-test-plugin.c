@@ -103,6 +103,10 @@ struct _GmpcTestPluginClass {
 };
 
 
+static gpointer gmpc_meta_data_edit_window_parent_class = NULL;
+static gpointer gmpc_test_plugin_parent_class = NULL;
+static GmpcPluginToolMenuIfaceIface* gmpc_test_plugin_gmpc_plugin_tool_menu_iface_parent_iface = NULL;
+static GmpcPluginSongListIfaceIface* gmpc_test_plugin_gmpc_plugin_song_list_iface_parent_iface = NULL;
 
 #define use_transition TRUE
 GType gmpc_meta_data_edit_window_get_type (void);
@@ -133,7 +137,6 @@ GmpcMetaDataEditWindow* gmpc_meta_data_edit_window_new (const mpd_Song* song, Me
 GmpcMetaDataEditWindow* gmpc_meta_data_edit_window_construct (GType object_type, const mpd_Song* song, MetaDataType type);
 GmpcMetaDataEditWindow* gmpc_meta_data_edit_window_new (const mpd_Song* song, MetaDataType type);
 static GObject * gmpc_meta_data_edit_window_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);
-static gpointer gmpc_meta_data_edit_window_parent_class = NULL;
 static void gmpc_meta_data_edit_window_finalize (GObject* obj);
 GType gmpc_test_plugin_get_type (void);
 enum  {
@@ -155,9 +158,6 @@ GmpcTestPlugin* gmpc_test_plugin_new (void);
 GmpcTestPlugin* gmpc_test_plugin_construct (GType object_type);
 GmpcTestPlugin* gmpc_test_plugin_new (void);
 static GObject * gmpc_test_plugin_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);
-static gpointer gmpc_test_plugin_parent_class = NULL;
-static GmpcPluginToolMenuIfaceIface* gmpc_test_plugin_gmpc_plugin_tool_menu_iface_parent_iface = NULL;
-static GmpcPluginSongListIfaceIface* gmpc_test_plugin_gmpc_plugin_song_list_iface_parent_iface = NULL;
 
 static const gint GMPC_TEST_PLUGIN_version[] = {0, 0, 2};
 
@@ -616,8 +616,9 @@ static void gmpc_meta_data_edit_window_set_metadata (GmpcMetaDataEditWindow* sel
 	GtkTreeSelection* _tmp0_;
 	GtkTreeSelection* sel;
 	char* path;
-	GtkListStore* _tmp4_;
-	GtkListStore* _tmp3_;
+	GtkTreeModel* model;
+	GtkTreeModel* _tmp4_;
+	GtkTreeModel* _tmp3_;
 	gboolean _tmp2_;
 	GtkTreeModel* _tmp1_;
 	g_return_if_fail (self != NULL);
@@ -626,10 +627,11 @@ static void gmpc_meta_data_edit_window_set_metadata (GmpcMetaDataEditWindow* sel
 	_tmp0_ = NULL;
 	sel = (_tmp0_ = gtk_tree_view_get_selection (self->priv->tree), (_tmp0_ == NULL) ? NULL : g_object_ref (_tmp0_));
 	path = NULL;
+	model = NULL;
 	_tmp4_ = NULL;
 	_tmp3_ = NULL;
 	_tmp1_ = NULL;
-	if ((_tmp2_ = gtk_tree_selection_get_selected (sel, &_tmp1_, &iter), self->priv->model = (_tmp3_ = (_tmp4_ = (GtkListStore*) _tmp1_, (_tmp4_ == NULL) ? NULL : g_object_ref (_tmp4_)), (self->priv->model == NULL) ? NULL : (self->priv->model = (g_object_unref (self->priv->model), NULL)), _tmp3_), _tmp2_)) {
+	if ((_tmp2_ = gtk_tree_selection_get_selected (sel, &_tmp1_, &iter), model = (_tmp3_ = (_tmp4_ = _tmp1_, (_tmp4_ == NULL) ? NULL : g_object_ref (_tmp4_)), (model == NULL) ? NULL : (model = (g_object_unref (model), NULL)), _tmp3_), _tmp2_)) {
 		gboolean _tmp5_;
 		gtk_tree_model_get ((GtkTreeModel*) self->priv->model, &iter, 1, &path, -1);
 		_tmp5_ = FALSE;
@@ -711,6 +713,7 @@ static void gmpc_meta_data_edit_window_set_metadata (GmpcMetaDataEditWindow* sel
 				file = (g_free (file), NULL);
 				(sel == NULL) ? NULL : (sel = (g_object_unref (sel), NULL));
 				path = (g_free (path), NULL);
+				(model == NULL) ? NULL : (model = (g_object_unref (model), NULL));
 				g_critical ("file %s: line %d: uncaught error: %s", __FILE__, __LINE__, _inner_error_->message);
 				g_clear_error (&_inner_error_);
 				return;
@@ -721,6 +724,7 @@ static void gmpc_meta_data_edit_window_set_metadata (GmpcMetaDataEditWindow* sel
 	}
 	(sel == NULL) ? NULL : (sel = (g_object_unref (sel), NULL));
 	path = (g_free (path), NULL);
+	(model == NULL) ? NULL : (model = (g_object_unref (model), NULL));
 }
 
 
@@ -1181,8 +1185,11 @@ void gmpc_meta_data_edit_window_b_cancel (GmpcMetaDataEditWindow* self) {
 		self->priv->handle2 = NULL;
 	}
 	g_list_first (self->priv->downloads);
-	while (self->priv->downloads != NULL) {
+	while (TRUE) {
 		GEADAsyncHandler* handle;
+		if (!(self->priv->downloads != NULL)) {
+			break;
+		}
 		handle = (const GEADAsyncHandler*) self->priv->downloads->data;
 		fprintf (stdout, "cancel download: %s\n", gmpc_easy_handler_get_uri (handle));
 		gmpc_easy_async_cancel (handle);
@@ -1276,10 +1283,12 @@ GType gmpc_meta_data_edit_window_get_type (void) {
 
 static gint* gmpc_test_plugin_real_get_version (GmpcPluginBase* base, int* result_length1) {
 	GmpcTestPlugin * self;
+	gint* result;
 	gint* _tmp0_;
 	self = (GmpcTestPlugin*) base;
 	_tmp0_ = NULL;
-	return (_tmp0_ = GMPC_TEST_PLUGIN_version, *result_length1 = G_N_ELEMENTS (GMPC_TEST_PLUGIN_version), _tmp0_);
+	result = (_tmp0_ = GMPC_TEST_PLUGIN_version, *result_length1 = G_N_ELEMENTS (GMPC_TEST_PLUGIN_version), _tmp0_);
+	return result;
 }
 
 
@@ -1288,8 +1297,10 @@ static gint* gmpc_test_plugin_real_get_version (GmpcPluginBase* base, int* resul
      */
 static const char* gmpc_test_plugin_real_get_name (GmpcPluginBase* base) {
 	GmpcTestPlugin * self;
+	const char* result;
 	self = (GmpcTestPlugin*) base;
-	return "Vala test plugin";
+	result = "Vala test plugin";
+	return result;
 }
 
 
@@ -1308,8 +1319,10 @@ static void gmpc_test_plugin_real_save_yourself (GmpcPluginBase* base) {
      */
 static gboolean gmpc_test_plugin_real_get_enabled (GmpcPluginBase* base) {
 	GmpcTestPlugin * self;
+	gboolean result;
 	self = (GmpcTestPlugin*) base;
-	return (gboolean) cfg_get_single_value_as_int_with_default (config, gmpc_plugin_base_get_name ((GmpcPluginBase*) self), "enabled", 1);
+	result = (gboolean) cfg_get_single_value_as_int_with_default (config, gmpc_plugin_base_get_name ((GmpcPluginBase*) self), "enabled", 1);
+	return result;
 }
 
 
@@ -1389,11 +1402,11 @@ static void _gmpc_test_plugin_menu_activate_tree_gtk_menu_item_activate (GtkImag
 
 static gint gmpc_test_plugin_real_song_list (GmpcPluginSongListIface* base, GtkWidget* tree, GtkMenu* menu) {
 	GmpcTestPlugin * self;
+	gint result;
 	GtkTreeView* _tmp0_;
 	GtkTreeView* tv;
 	GtkTreeSelection* _tmp1_;
 	GtkTreeSelection* selection;
-	gint _tmp4_;
 	self = (GmpcTestPlugin*) base;
 	g_return_val_if_fail (tree != NULL, 0);
 	g_return_val_if_fail (menu != NULL, 0);
@@ -1404,7 +1417,6 @@ static gint gmpc_test_plugin_real_song_list (GmpcPluginSongListIface* base, GtkW
 	if (gtk_tree_selection_count_selected_rows (selection) > 0) {
 		GtkImageMenuItem* item;
 		GtkImage* _tmp2_;
-		gint _tmp3_;
 		item = g_object_ref_sink ((GtkImageMenuItem*) gtk_image_menu_item_new_with_label (_ ("Metadata selector")));
 		_tmp2_ = NULL;
 		gtk_image_menu_item_set_image (item, (GtkWidget*) (_tmp2_ = g_object_ref_sink ((GtkImage*) gtk_image_new_from_stock ("gtk-edit", GTK_ICON_SIZE_MENU))));
@@ -1412,9 +1424,16 @@ static gint gmpc_test_plugin_real_song_list (GmpcPluginSongListIface* base, GtkW
 		g_object_set_data ((GObject*) item, "treeview", tv);
 		gtk_menu_shell_append ((GtkMenuShell*) menu, (GtkWidget*) ((GtkMenuItem*) item));
 		g_signal_connect_object ((GtkMenuItem*) item, "activate", (GCallback) _gmpc_test_plugin_menu_activate_tree_gtk_menu_item_activate, self, 0);
-		return (_tmp3_ = 1, (item == NULL) ? NULL : (item = (g_object_unref (item), NULL)), (tv == NULL) ? NULL : (tv = (g_object_unref (tv), NULL)), (selection == NULL) ? NULL : (selection = (g_object_unref (selection), NULL)), _tmp3_);
+		result = 1;
+		(item == NULL) ? NULL : (item = (g_object_unref (item), NULL));
+		(tv == NULL) ? NULL : (tv = (g_object_unref (tv), NULL));
+		(selection == NULL) ? NULL : (selection = (g_object_unref (selection), NULL));
+		return result;
 	}
-	return (_tmp4_ = 0, (tv == NULL) ? NULL : (tv = (g_object_unref (tv), NULL)), (selection == NULL) ? NULL : (selection = (g_object_unref (selection), NULL)), _tmp4_);
+	result = 0;
+	(tv == NULL) ? NULL : (tv = (g_object_unref (tv), NULL));
+	(selection == NULL) ? NULL : (selection = (g_object_unref (selection), NULL));
+	return result;
 }
 
 
@@ -1437,14 +1456,16 @@ static void _gmpc_test_plugin_menu_activated_album_gtk_menu_item_activate (GtkMe
 
 static gint gmpc_test_plugin_real_tool_menu_integration (GmpcPluginToolMenuIface* base, GtkMenu* menu) {
 	GmpcTestPlugin * self;
+	gint result;
 	GtkMenuItem* item;
-	gint _tmp0_;
 	self = (GmpcTestPlugin*) base;
 	g_return_val_if_fail (menu != NULL, 0);
 	item = g_object_ref_sink ((GtkMenuItem*) gtk_menu_item_new_with_label ("Edit metadata current song"));
 	gtk_menu_shell_append ((GtkMenuShell*) menu, (GtkWidget*) item);
 	g_signal_connect_object (item, "activate", (GCallback) _gmpc_test_plugin_menu_activated_album_gtk_menu_item_activate, self, 0);
-	return (_tmp0_ = 2, (item == NULL) ? NULL : (item = (g_object_unref (item), NULL)), _tmp0_);
+	result = 2;
+	(item == NULL) ? NULL : (item = (g_object_unref (item), NULL));
+	return result;
 }
 
 

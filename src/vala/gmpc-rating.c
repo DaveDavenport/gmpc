@@ -63,14 +63,15 @@ struct _GmpcRatingPrivate {
 };
 
 
+static gint gmpc_rating_id;
+static gint gmpc_rating_id = 0;
+static gpointer gmpc_rating_parent_class = NULL;
 
 GType gmpc_rating_get_type (void);
 #define GMPC_RATING_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GMPC_TYPE_RATING, GmpcRatingPrivate))
 enum  {
 	GMPC_RATING_DUMMY_PROPERTY
 };
-static gint gmpc_rating_id;
-static gint gmpc_rating_id = 0;
 #define GMPC_RATING_use_transition TRUE
 void gmpc_rating_set_rating (GmpcRating* self, gint rating);
 gboolean gmpc_rating_button_press_event_callback (GmpcRating* self, GtkEventBox* wid, const GdkEventButton* event);
@@ -81,7 +82,6 @@ GmpcRating* gmpc_rating_construct (GType object_type, MpdObj* server, const mpd_
 GmpcRating* gmpc_rating_new (MpdObj* server, const mpd_Song* song);
 static gboolean _gmpc_rating_button_press_event_callback_gtk_widget_button_press_event (GtkEventBox* _sender, const GdkEventButton* event, gpointer self);
 static GObject * gmpc_rating_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);
-static gpointer gmpc_rating_parent_class = NULL;
 static void gmpc_rating_finalize (GObject* obj);
 static void _vala_array_destroy (gpointer array, gint array_length, GDestroyNotify destroy_func);
 static void _vala_array_free (gpointer array, gint array_length, GDestroyNotify destroy_func);
@@ -89,6 +89,7 @@ static void _vala_array_free (gpointer array, gint array_length, GDestroyNotify 
 
 
 gboolean gmpc_rating_button_press_event_callback (GmpcRating* self, GtkEventBox* wid, const GdkEventButton* event) {
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (wid != NULL, FALSE);
 	if ((*event).type == GDK_BUTTON_PRESS) {
@@ -104,7 +105,8 @@ gboolean gmpc_rating_button_press_event_callback (GmpcRating* self, GtkEventBox*
 			gmpc_rating_set_rating (self, button);
 		}
 	}
-	return FALSE;
+	result = FALSE;
+	return result;
 }
 
 
@@ -145,8 +147,20 @@ void gmpc_rating_set_rating (GmpcRating* self, gint rating) {
 	g_return_if_fail (self != NULL);
 	i = 0;
 	if (rating != self->priv->rating) {
-		for (i = 0; i < 5; i++) {
-			g_object_set ((GtkWidget*) self->priv->rat[i], "sensitive", i < rating, NULL);
+		{
+			gboolean _tmp0_;
+			i = 0;
+			_tmp0_ = TRUE;
+			while (TRUE) {
+				if (!_tmp0_) {
+					i++;
+				}
+				_tmp0_ = FALSE;
+				if (!(i < 5)) {
+					break;
+				}
+				g_object_set ((GtkWidget*) self->priv->rat[i], "sensitive", i < rating, NULL);
+			}
 		}
 		self->priv->rating = rating;
 	}
@@ -194,11 +208,23 @@ static GObject * gmpc_rating_constructor (GType type, guint n_construct_properti
 		gtk_event_box_set_visible_window (self->event_box, FALSE);
 		_tmp2_ = NULL;
 		self->priv->rat = (_tmp2_ = g_new0 (GtkImage*, 5 + 1), self->priv->rat = (_vala_array_free (self->priv->rat, self->priv->rat_length1, (GDestroyNotify) g_object_unref), NULL), self->priv->rat_length1 = 5, self->priv->rat_size = self->priv->rat_length1, _tmp2_);
-		for (i = 0; i < 5; i++) {
-			GtkImage* _tmp3_;
-			_tmp3_ = NULL;
-			self->priv->rat[i] = (_tmp3_ = g_object_ref_sink ((GtkImage*) gtk_image_new_from_icon_name ("emblem-favorite", GTK_ICON_SIZE_MENU)), (self->priv->rat[i] == NULL) ? NULL : (self->priv->rat[i] = (g_object_unref (self->priv->rat[i]), NULL)), _tmp3_);
-			gtk_box_pack_start ((GtkBox*) self->priv->box, (GtkWidget*) self->priv->rat[i], FALSE, FALSE, (guint) 0);
+		{
+			gboolean _tmp3_;
+			i = 0;
+			_tmp3_ = TRUE;
+			while (TRUE) {
+				GtkImage* _tmp4_;
+				if (!_tmp3_) {
+					i++;
+				}
+				_tmp3_ = FALSE;
+				if (!(i < 5)) {
+					break;
+				}
+				_tmp4_ = NULL;
+				self->priv->rat[i] = (_tmp4_ = g_object_ref_sink ((GtkImage*) gtk_image_new_from_icon_name ("emblem-favorite", GTK_ICON_SIZE_MENU)), (self->priv->rat[i] == NULL) ? NULL : (self->priv->rat[i] = (g_object_unref (self->priv->rat[i]), NULL)), _tmp4_);
+				gtk_box_pack_start ((GtkBox*) self->priv->box, (GtkWidget*) self->priv->rat[i], FALSE, FALSE, (guint) 0);
+			}
 		}
 		gtk_container_add ((GtkContainer*) self, (GtkWidget*) self->event_box);
 		gtk_container_add ((GtkContainer*) self->event_box, (GtkWidget*) self->priv->box);
@@ -231,14 +257,14 @@ static void gmpc_rating_finalize (GObject* obj) {
 	GmpcRating * self;
 	self = GMPC_RATING (obj);
 	{
-		gboolean _tmp4_;
-		_tmp4_ = FALSE;
+		gboolean _tmp5_;
+		_tmp5_ = FALSE;
 		if (self->priv->status_changed_id > 0) {
-			_tmp4_ = g_signal_handler_is_connected (gmpcconn, self->priv->status_changed_id);
+			_tmp5_ = g_signal_handler_is_connected (gmpcconn, self->priv->status_changed_id);
 		} else {
-			_tmp4_ = FALSE;
+			_tmp5_ = FALSE;
 		}
-		if (_tmp4_) {
+		if (_tmp5_) {
 			g_signal_handler_disconnect (gmpcconn, self->priv->status_changed_id);
 			self->priv->status_changed_id = (gulong) 0;
 		}

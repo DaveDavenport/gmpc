@@ -53,6 +53,7 @@ struct _GmpcPanedSizeGroupPrivate {
 };
 
 
+static gpointer gmpc_paned_size_group_parent_class = NULL;
 
 GType gmpc_paned_size_group_get_type (void);
 #define GMPC_PANED_SIZE_GROUP_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GMPC_TYPE_PANED_SIZE_GROUP, GmpcPanedSizeGroupPrivate))
@@ -67,7 +68,6 @@ static void gmpc_paned_size_group_child_position_changed (GmpcPanedSizeGroup* se
 static void _gmpc_paned_size_group_child_position_changed_g_object_notify (GObject* _sender, GParamSpec* pspec, gpointer self);
 static gboolean _gmpc_paned_size_group_child_destroy_event_gtk_widget_destroy_event (GtkWidget* _sender, GdkEvent* event, gpointer self);
 void gmpc_paned_size_group_add_paned (GmpcPanedSizeGroup* self, GtkPaned* paned);
-static gpointer gmpc_paned_size_group_parent_class = NULL;
 static void gmpc_paned_size_group_finalize (GObject* obj);
 
 
@@ -85,12 +85,14 @@ GmpcPanedSizeGroup* gmpc_paned_size_group_new (void) {
 
 
 static gboolean gmpc_paned_size_group_child_destroy_event (GmpcPanedSizeGroup* self, GtkWidget* paned, GdkEvent* event) {
+	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (paned != NULL, FALSE);
 	g_return_val_if_fail (event != NULL, FALSE);
 	self->priv->list = g_list_remove (self->priv->list, GTK_PANED (paned));
 	fprintf (stdout, "Remove paned\n");
-	return FALSE;
+	result = FALSE;
+	return result;
 }
 
 

@@ -44,6 +44,9 @@ struct _GmpcListstoreSortClass {
 };
 
 
+static gpointer gmpc_liststore_sort_parent_class = NULL;
+static GtkTreeDragSourceIface* gmpc_liststore_sort_gtk_tree_drag_source_parent_iface = NULL;
+static GtkTreeDragDestIface* gmpc_liststore_sort_gtk_tree_drag_dest_parent_iface = NULL;
 
 GType gmpc_liststore_sort_get_type (void);
 enum  {
@@ -57,71 +60,75 @@ static gboolean gmpc_liststore_sort_real_drag_data_received (GtkTreeDragDest* ba
 GmpcListstoreSort* gmpc_liststore_sort_new (void);
 GmpcListstoreSort* gmpc_liststore_sort_construct (GType object_type);
 GmpcListstoreSort* gmpc_liststore_sort_new (void);
-static gpointer gmpc_liststore_sort_parent_class = NULL;
-static GtkTreeDragSourceIface* gmpc_liststore_sort_gtk_tree_drag_source_parent_iface = NULL;
-static GtkTreeDragDestIface* gmpc_liststore_sort_gtk_tree_drag_dest_parent_iface = NULL;
 
 
 
 static gboolean gmpc_liststore_sort_real_row_draggable (GtkTreeDragSource* base, const GtkTreePath* path) {
 	GmpcListstoreSort * self;
+	gboolean result;
 	self = (GmpcListstoreSort*) base;
 	g_return_val_if_fail (path != NULL, FALSE);
-	return TRUE;
+	result = TRUE;
+	return result;
 }
 
 
 static gboolean gmpc_liststore_sort_real_drag_data_get (GtkTreeDragSource* base, const GtkTreePath* path, GtkSelectionData* selection_data) {
 	GmpcListstoreSort * self;
+	gboolean result;
 	self = (GmpcListstoreSort*) base;
 	g_return_val_if_fail (path != NULL, FALSE);
 	g_return_val_if_fail (selection_data != NULL, FALSE);
-	return FALSE;
+	result = FALSE;
+	return result;
 }
 
 
 static gboolean gmpc_liststore_sort_real_drag_data_delete (GtkTreeDragSource* base, const GtkTreePath* path) {
 	GmpcListstoreSort * self;
+	gboolean result;
 	self = (GmpcListstoreSort*) base;
 	g_return_val_if_fail (path != NULL, FALSE);
-	return TRUE;
+	result = TRUE;
+	return result;
 }
 
 
 static gboolean gmpc_liststore_sort_real_drag_data_received (GtkTreeDragDest* base, const GtkTreePath* dest, GtkSelectionData* selection_data) {
 	GmpcListstoreSort * self;
+	gboolean result;
 	GtkTreeModel* model;
 	GtkTreePath* path;
-	const GtkTreePath* _tmp8_;
-	GtkTreePath* _tmp7_;
-	gboolean _tmp6_;
-	const GtkTreePath* _tmp5_;
-	GtkTreeModel* _tmp4_;
+	const GtkTreePath* _tmp7_;
+	GtkTreePath* _tmp6_;
+	gboolean _tmp5_;
+	const GtkTreePath* _tmp4_;
 	GtkTreeModel* _tmp3_;
-	gboolean _tmp2_;
-	GtkTreeModel* _tmp1_;
-	gboolean _tmp10_;
+	GtkTreeModel* _tmp2_;
+	gboolean _tmp1_;
+	GtkTreeModel* _tmp0_;
 	self = (GmpcListstoreSort*) base;
 	g_return_val_if_fail (dest != NULL, FALSE);
 	g_return_val_if_fail (selection_data != NULL, FALSE);
 	model = NULL;
 	path = NULL;
 	if (dest == NULL) {
-		gboolean _tmp0_;
-		return (_tmp0_ = FALSE, (model == NULL) ? NULL : (model = (g_object_unref (model), NULL)), (path == NULL) ? NULL : (path = (gtk_tree_path_free (path), NULL)), _tmp0_);
+		result = FALSE;
+		(model == NULL) ? NULL : (model = (g_object_unref (model), NULL));
+		(path == NULL) ? NULL : (path = (gtk_tree_path_free (path), NULL));
+		return result;
 	}
-	_tmp8_ = NULL;
 	_tmp7_ = NULL;
-	_tmp5_ = NULL;
+	_tmp6_ = NULL;
 	_tmp4_ = NULL;
 	_tmp3_ = NULL;
-	_tmp1_ = NULL;
-	if ((_tmp6_ = (_tmp2_ = gtk_tree_get_row_drag_data (selection_data, &_tmp1_, &_tmp5_), model = (_tmp3_ = (_tmp4_ = _tmp1_, (_tmp4_ == NULL) ? NULL : g_object_ref (_tmp4_)), (model == NULL) ? NULL : (model = (g_object_unref (model), NULL)), _tmp3_), _tmp2_), path = (_tmp7_ = (_tmp8_ = _tmp5_, (_tmp8_ == NULL) ? NULL : gtk_tree_path_copy (_tmp8_)), (path == NULL) ? NULL : (path = (gtk_tree_path_free (path), NULL)), _tmp7_), _tmp6_)) {
+	_tmp2_ = NULL;
+	_tmp0_ = NULL;
+	if ((_tmp5_ = (_tmp1_ = gtk_tree_get_row_drag_data (selection_data, &_tmp0_, &_tmp4_), model = (_tmp2_ = (_tmp3_ = _tmp0_, (_tmp3_ == NULL) ? NULL : g_object_ref (_tmp3_)), (model == NULL) ? NULL : (model = (g_object_unref (model), NULL)), _tmp2_), _tmp1_), path = (_tmp6_ = (_tmp7_ = _tmp4_, (_tmp7_ == NULL) ? NULL : gtk_tree_path_copy (_tmp7_)), (path == NULL) ? NULL : (path = (gtk_tree_path_free (path), NULL)), _tmp6_), _tmp5_)) {
 		GtkTreeIter dest_iter = {0};
 		GtkTreeIter source_iter = {0};
 		gboolean dest_v;
 		gboolean source_v;
-		gboolean _tmp9_;
 		dest_v = gtk_tree_model_get_iter (model, &dest_iter, dest);
 		source_v = gtk_tree_model_get_iter (model, &source_iter, path);
 		if (source_v) {
@@ -131,9 +138,15 @@ static gboolean gmpc_liststore_sort_real_drag_data_received (GtkTreeDragDest* ba
 				gtk_list_store_move_before ((GtkListStore*) self, &source_iter, NULL);
 			}
 		}
-		return (_tmp9_ = TRUE, (model == NULL) ? NULL : (model = (g_object_unref (model), NULL)), (path == NULL) ? NULL : (path = (gtk_tree_path_free (path), NULL)), _tmp9_);
+		result = TRUE;
+		(model == NULL) ? NULL : (model = (g_object_unref (model), NULL));
+		(path == NULL) ? NULL : (path = (gtk_tree_path_free (path), NULL));
+		return result;
 	}
-	return (_tmp10_ = FALSE, (model == NULL) ? NULL : (model = (g_object_unref (model), NULL)), (path == NULL) ? NULL : (path = (gtk_tree_path_free (path), NULL)), _tmp10_);
+	result = FALSE;
+	(model == NULL) ? NULL : (model = (g_object_unref (model), NULL));
+	(path == NULL) ? NULL : (path = (gtk_tree_path_free (path), NULL));
+	return result;
 }
 
 
