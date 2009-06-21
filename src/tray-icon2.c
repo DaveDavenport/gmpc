@@ -214,6 +214,7 @@ static void tray_icon2_init(void)
 		tray_icon2_gsi = gtk_status_icon_new_from_icon_name ("gmpc-tray-disconnected");
 #if GTK_CHECK_VERSION(2,15,0)
         gtk_status_icon_set_has_tooltip(GTK_STATUS_ICON(tray_icon2_gsi), TRUE);
+#endif
 
 		/* connect the (sparse) signals */
 		g_signal_connect(G_OBJECT(tray_icon2_gsi), "popup-menu", G_CALLBACK(tray_icon2_populate_menu), NULL);
@@ -226,7 +227,6 @@ static void tray_icon2_init(void)
 
             g_signal_connect(G_OBJECT(tray_icon2_gsi), "query-tooltip", G_CALLBACK(tray_icon2_tooltip_query), NULL);
 		}
-#endif
 	}
 }
 /**
