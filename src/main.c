@@ -618,7 +618,7 @@ int main(int argc, char **argv)
 		return EXIT_SUCCESS;
 	}
 	/* PanedSizeGroup */
-	paned_size_group = gmpc_paned_size_group_new();
+	paned_size_group = (GObject *)gmpc_paned_size_group_new();
 	/** Signals */
 
 	gmpc_profiles = gmpc_profiles_new();
