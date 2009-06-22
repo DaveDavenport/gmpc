@@ -50,7 +50,6 @@
 #include <gmpc-meta-text-view.h>
 #include <gmpc-song-links.h>
 #include <gmpc-stats-label.h>
-#include <stdio.h>
 
 
 #define GMPC_WIDGET_TYPE_SIMILAR_SONGS (gmpc_widget_similar_songs_get_type ())
@@ -3415,16 +3414,13 @@ static void gmpc_metadata_browser_add_entry (GmpcMetadataBrowser* self, GtkTable
 	_tmp1_ = (g_free (_tmp1_), NULL);
 	gtk_table_attach (table, (GtkWidget*) label, (guint) j, (guint) (j + 1), (guint) (*i), (guint) ((*i) + 1), GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL, (guint) 0, (guint) 0);
 	j++;
-	/*         var dhbox = new Gtk.HBox(false, 6);*/
 	if (value != NULL) {
 		GtkLabel* pt_label;
 		pt_label = g_object_ref_sink ((GtkLabel*) gtk_label_new (value));
 		gtk_label_set_selectable (pt_label, TRUE);
 		gtk_misc_set_alignment ((GtkMisc*) pt_label, 0.0f, 0.0f);
 		gtk_label_set_line_wrap (pt_label, TRUE);
-		/*dhbox.pack_start(pt_label, false, false, 0);*/
 		gtk_table_attach (table, (GtkWidget*) pt_label, (guint) j, (guint) (j + 1), (guint) (*i), (guint) ((*i) + 1), GTK_EXPAND | GTK_FILL, GTK_SHRINK | GTK_FILL, (guint) 0, (guint) 0);
-		/*dhbox*/
 		j++;
 		(pt_label == NULL) ? NULL : (pt_label = (g_object_unref (pt_label), NULL));
 	}
@@ -3432,7 +3428,6 @@ static void gmpc_metadata_browser_add_entry (GmpcMetadataBrowser* self, GtkTable
 		gtk_table_attach (table, extra, (guint) j, (guint) (j + 1), (guint) (*i), (guint) ((*i) + 1), GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL, (guint) 0, (guint) 0);
 		j++;
 	}
-	/*dhbox.pack_start(extra, false, false, 0);*/
 	(*i)++;
 	(label == NULL) ? NULL : (label = (g_object_unref (label), NULL));
 }
@@ -3726,13 +3721,6 @@ GtkWidget* gmpc_metadata_browser_metadata_box_show_song (GmpcMetadataBrowser* se
 		gtk_box_pack_start ((GtkBox*) vbox, (GtkWidget*) song_links, FALSE, FALSE, (guint) 0);
 		(song_links == NULL) ? NULL : (song_links = (g_object_unref (song_links), NULL));
 	}
-	/**
-	         * Add it to the view
-	         
-	
-	        this.metadata_box.add(vbox);
-	        this.metadata_sw.show_all();
-	        */
 	result = (GtkWidget*) vbox;
 	(box == NULL) ? NULL : (box = (g_object_unref (box), NULL));
 	(label == NULL) ? NULL : (label = (g_object_unref (label), NULL));
@@ -4589,7 +4577,6 @@ static void gmpc_metadata_browser_history_show_list_clicked (GmpcMetadataBrowser
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (item != NULL);
 	a = (GList*) g_object_get_data ((GObject*) item, "current");
-	fprintf (stdout, "activate: %p\n", a);
 	if (a != NULL) {
 		self->priv->current = a;
 		gmpc_metadata_browser_show_hitem (self, (GmpcMetadataBrowserHitem*) self->priv->current->data);
@@ -4657,17 +4644,9 @@ static void gmpc_metadata_browser_history_show_list (GmpcMetadataBrowser* self) 
 		} else {
 			_tmp8_ = FALSE;
 		}
-		/* if(current != null){
-		                if(i.type == current.data.type) {
-		                    if(Gmpc.Misc.song_checksum(i.song) == Gmpc.Misc.song_checksum(current.data.song)){
-		             */
 		if (_tmp8_) {
 			gtk_check_menu_item_set_active (item, TRUE);
 		}
-		/*      }
-		                }
-		            }
-		            */
 		g_signal_connect_object ((GtkMenuItem*) item, "activate", (GCallback) _gmpc_metadata_browser_history_show_list_clicked_gtk_menu_item_activate, self, 0);
 		g_object_set_data ((GObject*) item, "current", (void*) iter);
 		gtk_menu_shell_append ((GtkMenuShell*) menu, (GtkWidget*) ((GtkMenuItem*) item));

@@ -1489,24 +1489,19 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
          table.attach(label, j,(j+1),i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
          j++;
 
-//         var dhbox = new Gtk.HBox(false, 6);
          if(value != null)
          {
              var pt_label = new Gtk.Label(value);
              pt_label.set_selectable(true);
              pt_label.set_alignment(0.0f, 0.0f);
              pt_label.set_line_wrap(true);
-             //dhbox.pack_start(pt_label, false, false, 0);
-
-             table.attach(pt_label /*dhbox*/, j,(j+1),i,i+1,Gtk.AttachOptions.EXPAND|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
+             table.attach(pt_label, j,(j+1),i,i+1,Gtk.AttachOptions.EXPAND|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
              j++;
          }
          if(extra != null)
          {
-
              table.attach(extra, j,(j+1),i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
              j++;
-             //dhbox.pack_start(extra, false, false, 0);
          }
          i++;
      }
@@ -1704,15 +1699,6 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             var song_links = new Gmpc.Song.Links(Gmpc.Song.Links.Type.SONG,song);
             vbox.pack_start(song_links,false, false, 0);
         }
-
-
-        /**
-         * Add it to the view
-         */
-         /*
-        this.metadata_box.add(vbox);
-        this.metadata_sw.show_all();
-        */
         return vbox;
     }
     private void metadata_button_open_file_browser_path(Gtk.Button button)
@@ -2220,7 +2206,6 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
     private void history_show_list_clicked(Gtk.MenuItem item)
     {
         weak List<Hitem?> a = (List<Hitem?>) item.get_data("current");
-        stdout.printf("activate: %p\n", a);
         if(a != null)
         {
             current = a;
@@ -2248,17 +2233,9 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
 
             var item = new Gtk.CheckMenuItem.with_label(label);
             item.draw_as_radio = true;
-           /* if(current != null){
-                if(i.type == current.data.type) {
-                    if(Gmpc.Misc.song_checksum(i.song) == Gmpc.Misc.song_checksum(current.data.song)){
-             */
-             if(current != null && current == iter){
-             item.set_active(true);
-             }
-              /*      }
-                }
+            if(current != null && current == iter){
+                item.set_active(true);
             }
-            */
             item.activate.connect(history_show_list_clicked);
             item.set_data("current", (void*)iter);
             menu.append(item);
