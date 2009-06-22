@@ -1480,27 +1480,34 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
 
      private void add_entry(Gtk.Table table, string entry_label, string? value,Gtk.Widget? extra,  out int i)
      {
+         int j=0;
          if(value == null && extra == null) return;
          var label = new Gtk.Label("");
          label.set_selectable(true);
-         label.set_alignment(0.0f, 0.5f);
+         label.set_alignment(0.0f, 0.0f);
          label.set_markup(Markup.printf_escaped("<b>%s:</b>",entry_label));
-         table.attach(label, 0,1,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
+         table.attach(label, j,(j+1),i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
+         j++;
 
-         var dhbox = new Gtk.HBox(false, 6);
+//         var dhbox = new Gtk.HBox(false, 6);
          if(value != null)
          {
              var pt_label = new Gtk.Label(value);
              pt_label.set_selectable(true);
-             pt_label.set_alignment(0.0f, 0.5f);
+             pt_label.set_alignment(0.0f, 0.0f);
              pt_label.set_line_wrap(true);
-             dhbox.pack_start(pt_label, false, false, 0);
+             //dhbox.pack_start(pt_label, false, false, 0);
+
+             table.attach(pt_label /*dhbox*/, j,(j+1),i,i+1,Gtk.AttachOptions.EXPAND|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
+             j++;
          }
          if(extra != null)
          {
-             dhbox.pack_start(extra, false, false, 0);
+
+             table.attach(extra, j,(j+1),i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
+             j++;
+             //dhbox.pack_start(extra, false, false, 0);
          }
-         table.attach(dhbox, 1,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
          i++;
      }
      /* jump buttons */

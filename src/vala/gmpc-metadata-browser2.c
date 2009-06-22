@@ -3390,13 +3390,14 @@ static void gmpc_metadata_browser_metadata_box_clear (GmpcMetadataBrowser* self)
       * then increments i 
       */
 static void gmpc_metadata_browser_add_entry (GmpcMetadataBrowser* self, GtkTable* table, const char* entry_label, const char* value, GtkWidget* extra, gint* i) {
+	gint j;
 	gboolean _tmp0_;
 	GtkLabel* label;
 	char* _tmp1_;
-	GtkHBox* dhbox;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (table != NULL);
 	g_return_if_fail (entry_label != NULL);
+	j = 0;
 	_tmp0_ = FALSE;
 	if (value == NULL) {
 		_tmp0_ = extra == NULL;
@@ -3408,28 +3409,32 @@ static void gmpc_metadata_browser_add_entry (GmpcMetadataBrowser* self, GtkTable
 	}
 	label = g_object_ref_sink ((GtkLabel*) gtk_label_new (""));
 	gtk_label_set_selectable (label, TRUE);
-	gtk_misc_set_alignment ((GtkMisc*) label, 0.0f, 0.5f);
+	gtk_misc_set_alignment ((GtkMisc*) label, 0.0f, 0.0f);
 	_tmp1_ = NULL;
 	gtk_label_set_markup (label, _tmp1_ = g_markup_printf_escaped ("<b>%s:</b>", entry_label));
 	_tmp1_ = (g_free (_tmp1_), NULL);
-	gtk_table_attach (table, (GtkWidget*) label, (guint) 0, (guint) 1, (guint) (*i), (guint) ((*i) + 1), GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL, (guint) 0, (guint) 0);
-	dhbox = g_object_ref_sink ((GtkHBox*) gtk_hbox_new (FALSE, 6));
+	gtk_table_attach (table, (GtkWidget*) label, (guint) j, (guint) (j + 1), (guint) (*i), (guint) ((*i) + 1), GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL, (guint) 0, (guint) 0);
+	j++;
+	/*         var dhbox = new Gtk.HBox(false, 6);*/
 	if (value != NULL) {
 		GtkLabel* pt_label;
 		pt_label = g_object_ref_sink ((GtkLabel*) gtk_label_new (value));
 		gtk_label_set_selectable (pt_label, TRUE);
-		gtk_misc_set_alignment ((GtkMisc*) pt_label, 0.0f, 0.5f);
+		gtk_misc_set_alignment ((GtkMisc*) pt_label, 0.0f, 0.0f);
 		gtk_label_set_line_wrap (pt_label, TRUE);
-		gtk_box_pack_start ((GtkBox*) dhbox, (GtkWidget*) pt_label, FALSE, FALSE, (guint) 0);
+		/*dhbox.pack_start(pt_label, false, false, 0);*/
+		gtk_table_attach (table, (GtkWidget*) pt_label, (guint) j, (guint) (j + 1), (guint) (*i), (guint) ((*i) + 1), GTK_EXPAND | GTK_FILL, GTK_SHRINK | GTK_FILL, (guint) 0, (guint) 0);
+		/*dhbox*/
+		j++;
 		(pt_label == NULL) ? NULL : (pt_label = (g_object_unref (pt_label), NULL));
 	}
 	if (extra != NULL) {
-		gtk_box_pack_start ((GtkBox*) dhbox, extra, FALSE, FALSE, (guint) 0);
+		gtk_table_attach (table, extra, (guint) j, (guint) (j + 1), (guint) (*i), (guint) ((*i) + 1), GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL, (guint) 0, (guint) 0);
+		j++;
 	}
-	gtk_table_attach (table, (GtkWidget*) dhbox, (guint) 1, (guint) 2, (guint) (*i), (guint) ((*i) + 1), GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL, (guint) 0, (guint) 0);
+	/*dhbox.pack_start(extra, false, false, 0);*/
 	(*i)++;
 	(label == NULL) ? NULL : (label = (g_object_unref (label), NULL));
-	(dhbox == NULL) ? NULL : (dhbox = (g_object_unref (dhbox), NULL));
 }
 
 
