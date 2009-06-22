@@ -954,6 +954,7 @@ void playlist_editor_right_mouse(GtkWidget *menu, void (*add_to_playlist)(GtkWid
 
     {
         MpdData *data = mpd_database_playlist_list(connection);
+        data = misc_sort_mpddata(data, (GCompareDataFunc) __sort_func, NULL);
         for(;data;data =mpd_data_get_next(data))
         {
             if(data->type ==  MPD_DATA_TYPE_PLAYLIST)
