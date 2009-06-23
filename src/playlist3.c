@@ -2274,7 +2274,7 @@ static gboolean playlist3_error_expose(GtkWidget * wid, GdkEventExpose * event, 
 	gtk_paint_flat_box(wid->style,
 					   wid->window,
 					   GTK_STATE_NORMAL,
-					   GTK_SHADOW_OUT, NULL, wid, "tooltip", 0, 0, wid->allocation.width, wid->allocation.height);
+					   GTK_SHADOW_OUT, NULL, wid, "tooltip", 0, 0, wid->allocation.width-12, wid->allocation.height-12);
 
 	return FALSE;
 }

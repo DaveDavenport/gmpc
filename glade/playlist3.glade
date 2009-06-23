@@ -603,7 +603,8 @@
             </child>
             <child>
               <widget class="GtkEventBox" id="error_event">
-                <child>
+              <property name="border_width">6</property>
+              <child>
                   <widget class="GtkHBox" id="hbox14">
                     <property name="visible">True</property>
                     <property name="border_width">3</property>
@@ -651,6 +652,12 @@
               </packing>
             </child>
             <child>
+
+              <widget class="GtkAlignment" id="alignment_bread_crumb">
+              <property name="left_padding">6</property>
+              <property name="right_padding">6</property>
+              <property name="visible">True</property>
+              <child>
               <widget class="GtkHBox" id="bread_crumb">
                 <property name="spacing">6</property>
                 <child>
@@ -659,17 +666,27 @@
                   </widget>
                 </child>
               </widget>
+              </child>
+              </widget>
               <packing>
                 <property name="expand">False</property>
               </packing>
             </child>
             <child>
+
+              <widget class="GtkAlignment" id="alignment_bread_crumb">
+              <property name="left_padding">6</property>
+              <property name="right_padding">6</property>
+              <property name="visible">True</property>
+              <child>
               <widget class="GtkHBox" id="box_tab_bar">
                 <property name="visible">True</property>
                 <property name="homogeneous">True</property>
                 <child>
                   <placeholder/>
                 </child>
+              </widget>
+              </child>
               </widget>
               <packing>
                 <property name="expand">False</property>
