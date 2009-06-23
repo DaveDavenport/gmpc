@@ -1602,7 +1602,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         this.add_entry(info_box, _("Disc"), song.disc, null, out i);
 
         /* Genre */
-        this.add_entry(info_box, _("Disc"), song.genre, null, out i);
+        this.add_entry(info_box, _("Genre"), song.genre, null, out i);
 
         /* Path */
         if(song.file != null) {
