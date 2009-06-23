@@ -149,7 +149,7 @@ public class Gmpc.Widget.SimilarSongs : Gtk.Expander {
             item.activate += add_clicked;
             menu.append(item);
 
-            item = new Gtk.ImageMenuItem.with_mnemonic("_Replace");
+            item = new Gtk.ImageMenuItem.with_mnemonic(_("_Replace"));
             item.set_image(new Gtk.Image.from_stock("gtk-redo", Gtk.IconSize.MENU));
             item.activate += replace_clicked;
             menu.append(item);
@@ -884,7 +884,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
                 item.activate += artist_add_clicked;
                 menu.append(item);
 
-                item = new Gtk.ImageMenuItem.with_mnemonic("_Replace");
+                item = new Gtk.ImageMenuItem.with_mnemonic(_("_Replace"));
                 item.set_image(new Gtk.Image.from_stock("gtk-redo", Gtk.IconSize.MENU));
                 item.activate += artist_replace_clicked;
                 menu.append(item);
@@ -987,7 +987,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
                 item.activate += album_add_clicked;
                 menu.append(item);
 
-                item = new Gtk.ImageMenuItem.with_mnemonic("_Replace");
+                item = new Gtk.ImageMenuItem.with_mnemonic(_("_Replace"));
                 item.set_image(new Gtk.Image.from_stock("gtk-redo", Gtk.IconSize.MENU));
                 item.activate += album_replace_clicked;
                 menu.append(item);
@@ -1073,7 +1073,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
                 item.activate += song_add_clicked;
                 menu.append(item);
 
-                item = new Gtk.ImageMenuItem.with_mnemonic("_Replace");
+                item = new Gtk.ImageMenuItem.with_mnemonic(_("_Replace"));
                 item.set_image(new Gtk.Image.from_stock("gtk-redo", Gtk.IconSize.MENU));
                 item.activate += song_replace_clicked;
                 menu.append(item);
@@ -1651,7 +1651,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         button.clicked += add_song;
         hbox.pack_start(button, false, false,0);
 
-        button = new Gtk.Button.with_mnemonic("_Replace");
+        button = new Gtk.Button.with_mnemonic(_("_Replace"));
         button.set_image(new Gtk.Image.from_stock("gtk-redo", Gtk.IconSize.BUTTON));
         button.set_relief(Gtk.ReliefStyle.NONE);
         button.set_data_full("song", song.copy(), (GLib.DestroyNotify) MPD.Song.free);
@@ -1775,7 +1775,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             item.set_data("tree", (void *)tree);
             menu.append(item);
 
-            item = new Gtk.ImageMenuItem.with_mnemonic("_Replace");
+            item = new Gtk.ImageMenuItem.with_mnemonic(_("_Replace"));
             item.set_image(new Gtk.Image.from_stock("gtk-redo", Gtk.IconSize.MENU));
             item.set_data("tree", (void *)tree);
             item.activate += album_song_browser_replace_clicked;
@@ -1879,7 +1879,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         button.clicked += add_selected_song;
         hbox.pack_start(button, false, false,0);
 
-        button = new Gtk.Button.with_mnemonic("_Replace");
+        button = new Gtk.Button.with_mnemonic(_("_Replace"));
         button.set_image(new Gtk.Image.from_stock("gtk-redo", Gtk.IconSize.BUTTON));
         button.set_relief(Gtk.ReliefStyle.NONE);
         button.clicked += replace_selected_song;
@@ -2000,7 +2000,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         button.clicked += add_selected_song;
         hbox.pack_start(button, false, false,0);
 
-        button = new Gtk.Button.with_mnemonic("_Replace");
+        button = new Gtk.Button.with_mnemonic(_("_Replace"));
         button.set_image(new Gtk.Image.from_stock("gtk-redo", Gtk.IconSize.BUTTON));
         button.set_relief(Gtk.ReliefStyle.NONE);
         button.clicked += replace_selected_song;
