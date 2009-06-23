@@ -398,6 +398,7 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
         hbox.pack_start(image,false,false,0);
 
         var label = new Gtk.Label(artist);
+        label.set_tooltip_text(artist);
         label.set_selectable(true);
         label.set_alignment(0.0f, 0.5f);
         label.ellipsize = Pango.EllipsizeMode.END; 
