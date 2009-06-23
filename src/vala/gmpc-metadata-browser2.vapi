@@ -20,7 +20,7 @@ namespace Gmpc {
 		public const int[] version;
 		public override unowned string get_name ();
 		public override unowned int[] get_version ();
-		public Gtk.Widget metadata_box_show_song (MPD.Song song);
+		public Gtk.Widget metadata_box_show_song (MPD.Song song, bool show_controls);
 		public MetadataBrowser ();
 		public override void save_yourself ();
 		public void select_browser (Gtk.TreeView tree);

@@ -128,7 +128,7 @@ GType gmpc_now_playing_get_type (void);
 GmpcNowPlaying* gmpc_now_playing_new (void);
 GmpcNowPlaying* gmpc_now_playing_construct (GType object_type);
 GType gmpc_metadata_browser_get_type (void);
-GtkWidget* gmpc_metadata_browser_metadata_box_show_song (GmpcMetadataBrowser* self, const mpd_Song* song);
+GtkWidget* gmpc_metadata_browser_metadata_box_show_song (GmpcMetadataBrowser* self, const mpd_Song* song, gboolean show_controls);
 void gmpc_metadata_browser_set_artist (GmpcMetadataBrowser* self, const char* artist);
 void gmpc_metadata_browser_set_album (GmpcMetadataBrowser* self, const char* artist, const char* album);
 void gmpc_metadata_browser_set_song (GmpcMetadataBrowser* self, const mpd_Song* song);

@@ -684,7 +684,7 @@ public class  Gmpc.NowPlaying : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface {
                 foreach(Gtk.Widget child in list){
                     child.destroy();
                 }
-                var view = this.browser.metadata_box_show_song(song);
+                var view = this.browser.metadata_box_show_song(song, false);
                 this.container.add(view);
                 this.song_checksum = checksum;
             }
@@ -1518,7 +1518,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         string album = (string)button.get_data("album");
         Gmpc.Browser.Metadata.show_album(artist,album);
     }
-    public Gtk.Widget metadata_box_show_song(MPD.Song song)
+    public Gtk.Widget metadata_box_show_song(MPD.Song song, bool show_controls)
     {
         var vbox = new Gtk.VBox (false,6);
         vbox.border_width = 8;
@@ -1638,29 +1638,31 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
 
         vbox.pack_start(hbox , false, false, 0);
         /* Player controls */
-        var button = new Gtk.Button.from_stock("gtk-media-play");
-        button.set_relief(Gtk.ReliefStyle.NONE);
-        button.set_data_full("song", song.copy(), (GLib.DestroyNotify) MPD.Song.free);
-        button.clicked += play_song;
-        hbox = new Gtk.HBox (false, 6);
-        hbox.pack_start(button, false, false,0);
+        if(show_controls)
+        {
+            var button = new Gtk.Button.from_stock("gtk-media-play");
+            button.set_relief(Gtk.ReliefStyle.NONE);
+            button.set_data_full("song", song.copy(), (GLib.DestroyNotify) MPD.Song.free);
+            button.clicked += play_song;
+            hbox = new Gtk.HBox (false, 6);
+            hbox.pack_start(button, false, false,0);
 
-        button = new Gtk.Button.from_stock("gtk-add");
-        button.set_relief(Gtk.ReliefStyle.NONE);
-        button.set_data_full("song", song.copy(), (GLib.DestroyNotify) MPD.Song.free);
-        button.clicked += add_song;
-        hbox.pack_start(button, false, false,0);
+            button = new Gtk.Button.from_stock("gtk-add");
+            button.set_relief(Gtk.ReliefStyle.NONE);
+            button.set_data_full("song", song.copy(), (GLib.DestroyNotify) MPD.Song.free);
+            button.clicked += add_song;
+            hbox.pack_start(button, false, false,0);
 
-        button = new Gtk.Button.with_mnemonic(_("_Replace"));
-        button.set_image(new Gtk.Image.from_stock("gtk-redo", Gtk.IconSize.BUTTON));
-        button.set_relief(Gtk.ReliefStyle.NONE);
-        button.set_data_full("song", song.copy(), (GLib.DestroyNotify) MPD.Song.free);
-        button.clicked += replace_song;
-        hbox.pack_start(button, false, false,0);
+            button = new Gtk.Button.with_mnemonic(_("_Replace"));
+            button.set_image(new Gtk.Image.from_stock("gtk-redo", Gtk.IconSize.BUTTON));
+            button.set_relief(Gtk.ReliefStyle.NONE);
+            button.set_data_full("song", song.copy(), (GLib.DestroyNotify) MPD.Song.free);
+            button.clicked += replace_song;
+            hbox.pack_start(button, false, false,0);
 
-        info_box.attach(hbox, 0,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
-        i++;
-
+            info_box.attach(hbox, 0,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
+            i++;
+        }
 
 
         /* Lyrics */
@@ -2071,7 +2073,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             item.type = HitemType.SONG;
             history_add(item);
 
-            var view = metadata_box_show_song(song);
+            var view = metadata_box_show_song(song,true);
             this.metadata_box.add(view);
             this.metadata_sw.show_all();
         }else if(album != null && artist != null) {
@@ -2409,7 +2411,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         item.type = HitemType.SONG;
         history_add(item);
 
-        var view = metadata_box_show_song(song);
+        var view = metadata_box_show_song(song,true);
         this.metadata_box.add(view);
         this.metadata_box.show_all();
     }
