@@ -729,7 +729,7 @@ static gboolean gmpc_widget_similar_songs_tree_right_menu (GmpcWidgetSimilarSong
 		g_signal_connect_object ((GtkMenuItem*) item, "activate", (GCallback) _gmpc_widget_similar_songs_add_clicked_gtk_menu_item_activate, self, 0);
 		gtk_menu_shell_append ((GtkMenuShell*) menu, (GtkWidget*) ((GtkMenuItem*) item));
 		_tmp1_ = NULL;
-		item = (_tmp1_ = g_object_ref_sink ((GtkImageMenuItem*) gtk_image_menu_item_new_with_mnemonic ("_Replace")), (item == NULL) ? NULL : (item = (g_object_unref (item), NULL)), _tmp1_);
+		item = (_tmp1_ = g_object_ref_sink ((GtkImageMenuItem*) gtk_image_menu_item_new_with_mnemonic (_ ("_Replace"))), (item == NULL) ? NULL : (item = (g_object_unref (item), NULL)), _tmp1_);
 		_tmp2_ = NULL;
 		gtk_image_menu_item_set_image (item, (GtkWidget*) (_tmp2_ = g_object_ref_sink ((GtkImage*) gtk_image_new_from_stock ("gtk-redo", GTK_ICON_SIZE_MENU))));
 		(_tmp2_ == NULL) ? NULL : (_tmp2_ = (g_object_unref (_tmp2_), NULL));
@@ -1295,6 +1295,7 @@ GtkWidget* gmpc_widget_similar_artist_new_artist_button (GmpcWidgetSimilarArtist
 	gmpc_metaimage_update_cover_from_song_delayed (image, song);
 	gtk_box_pack_start ((GtkBox*) hbox, (GtkWidget*) image, FALSE, FALSE, (guint) 0);
 	label = g_object_ref_sink ((GtkLabel*) gtk_label_new (artist));
+	gtk_widget_set_tooltip_text ((GtkWidget*) label, artist);
 	gtk_label_set_selectable (label, TRUE);
 	gtk_misc_set_alignment ((GtkMisc*) label, 0.0f, 0.5f);
 	gtk_label_set_ellipsize (label, PANGO_ELLIPSIZE_END);
@@ -2283,7 +2284,7 @@ static gboolean gmpc_metadata_browser_artist_browser_button_release_event (GmpcM
 			g_signal_connect_object ((GtkMenuItem*) item, "activate", (GCallback) _gmpc_metadata_browser_artist_add_clicked_gtk_menu_item_activate, self, 0);
 			gtk_menu_shell_append ((GtkMenuShell*) menu, (GtkWidget*) ((GtkMenuItem*) item));
 			_tmp0_ = NULL;
-			item = (_tmp0_ = g_object_ref_sink ((GtkImageMenuItem*) gtk_image_menu_item_new_with_mnemonic ("_Replace")), (item == NULL) ? NULL : (item = (g_object_unref (item), NULL)), _tmp0_);
+			item = (_tmp0_ = g_object_ref_sink ((GtkImageMenuItem*) gtk_image_menu_item_new_with_mnemonic (_ ("_Replace"))), (item == NULL) ? NULL : (item = (g_object_unref (item), NULL)), _tmp0_);
 			_tmp1_ = NULL;
 			gtk_image_menu_item_set_image (item, (GtkWidget*) (_tmp1_ = g_object_ref_sink ((GtkImage*) gtk_image_new_from_stock ("gtk-redo", GTK_ICON_SIZE_MENU))));
 			(_tmp1_ == NULL) ? NULL : (_tmp1_ = (g_object_unref (_tmp1_), NULL));
@@ -2476,7 +2477,7 @@ static gboolean gmpc_metadata_browser_album_browser_button_release_event (GmpcMe
 			g_signal_connect_object ((GtkMenuItem*) item, "activate", (GCallback) _gmpc_metadata_browser_album_add_clicked_gtk_menu_item_activate, self, 0);
 			gtk_menu_shell_append ((GtkMenuShell*) menu, (GtkWidget*) ((GtkMenuItem*) item));
 			_tmp0_ = NULL;
-			item = (_tmp0_ = g_object_ref_sink ((GtkImageMenuItem*) gtk_image_menu_item_new_with_mnemonic ("_Replace")), (item == NULL) ? NULL : (item = (g_object_unref (item), NULL)), _tmp0_);
+			item = (_tmp0_ = g_object_ref_sink ((GtkImageMenuItem*) gtk_image_menu_item_new_with_mnemonic (_ ("_Replace"))), (item == NULL) ? NULL : (item = (g_object_unref (item), NULL)), _tmp0_);
 			_tmp1_ = NULL;
 			gtk_image_menu_item_set_image (item, (GtkWidget*) (_tmp1_ = g_object_ref_sink ((GtkImage*) gtk_image_new_from_stock ("gtk-redo", GTK_ICON_SIZE_MENU))));
 			(_tmp1_ == NULL) ? NULL : (_tmp1_ = (g_object_unref (_tmp1_), NULL));
@@ -2636,7 +2637,7 @@ static gboolean gmpc_metadata_browser_song_browser_button_release_event (GmpcMet
 			g_signal_connect_object ((GtkMenuItem*) item, "activate", (GCallback) _gmpc_metadata_browser_song_add_clicked_gtk_menu_item_activate, self, 0);
 			gtk_menu_shell_append ((GtkMenuShell*) menu, (GtkWidget*) ((GtkMenuItem*) item));
 			_tmp0_ = NULL;
-			item = (_tmp0_ = g_object_ref_sink ((GtkImageMenuItem*) gtk_image_menu_item_new_with_mnemonic ("_Replace")), (item == NULL) ? NULL : (item = (g_object_unref (item), NULL)), _tmp0_);
+			item = (_tmp0_ = g_object_ref_sink ((GtkImageMenuItem*) gtk_image_menu_item_new_with_mnemonic (_ ("_Replace"))), (item == NULL) ? NULL : (item = (g_object_unref (item), NULL)), _tmp0_);
 			_tmp1_ = NULL;
 			gtk_image_menu_item_set_image (item, (GtkWidget*) (_tmp1_ = g_object_ref_sink ((GtkImage*) gtk_image_new_from_stock ("gtk-redo", GTK_ICON_SIZE_MENU))));
 			(_tmp1_ == NULL) ? NULL : (_tmp1_ = (g_object_unref (_tmp1_), NULL));
@@ -3613,7 +3614,7 @@ GtkWidget* gmpc_metadata_browser_metadata_box_show_song (GmpcMetadataBrowser* se
 	/* disc */
 	gmpc_metadata_browser_add_entry (self, info_box, _ ("Disc"), song->disc, NULL, &i);
 	/* Genre */
-	gmpc_metadata_browser_add_entry (self, info_box, _ ("Disc"), song->genre, NULL, &i);
+	gmpc_metadata_browser_add_entry (self, info_box, _ ("Genre"), song->genre, NULL, &i);
 	/* Path */
 	if (song->file != NULL) {
 		GtkButton* dbutton;
@@ -3665,7 +3666,7 @@ GtkWidget* gmpc_metadata_browser_metadata_box_show_song (GmpcMetadataBrowser* se
 	g_signal_connect_object (button, "clicked", (GCallback) _gmpc_metadata_browser_add_song_gtk_button_clicked, self, 0);
 	gtk_box_pack_start ((GtkBox*) hbox, (GtkWidget*) button, FALSE, FALSE, (guint) 0);
 	_tmp12_ = NULL;
-	button = (_tmp12_ = g_object_ref_sink ((GtkButton*) gtk_button_new_with_mnemonic ("_Replace")), (button == NULL) ? NULL : (button = (g_object_unref (button), NULL)), _tmp12_);
+	button = (_tmp12_ = g_object_ref_sink ((GtkButton*) gtk_button_new_with_mnemonic (_ ("_Replace"))), (button == NULL) ? NULL : (button = (g_object_unref (button), NULL)), _tmp12_);
 	_tmp13_ = NULL;
 	gtk_button_set_image (button, (GtkWidget*) (_tmp13_ = g_object_ref_sink ((GtkImage*) gtk_image_new_from_stock ("gtk-redo", GTK_ICON_SIZE_BUTTON))));
 	(_tmp13_ == NULL) ? NULL : (_tmp13_ = (g_object_unref (_tmp13_), NULL));
@@ -3876,7 +3877,7 @@ static gboolean gmpc_metadata_browser_album_song_tree_button_press_event (GmpcMe
 		g_object_set_data ((GObject*) item, "tree", (void*) tree);
 		gtk_menu_shell_append ((GtkMenuShell*) menu, (GtkWidget*) ((GtkMenuItem*) item));
 		_tmp0_ = NULL;
-		item = (_tmp0_ = g_object_ref_sink ((GtkImageMenuItem*) gtk_image_menu_item_new_with_mnemonic ("_Replace")), (item == NULL) ? NULL : (item = (g_object_unref (item), NULL)), _tmp0_);
+		item = (_tmp0_ = g_object_ref_sink ((GtkImageMenuItem*) gtk_image_menu_item_new_with_mnemonic (_ ("_Replace"))), (item == NULL) ? NULL : (item = (g_object_unref (item), NULL)), _tmp0_);
 		_tmp1_ = NULL;
 		gtk_image_menu_item_set_image (item, (GtkWidget*) (_tmp1_ = g_object_ref_sink ((GtkImage*) gtk_image_new_from_stock ("gtk-redo", GTK_ICON_SIZE_MENU))));
 		(_tmp1_ == NULL) ? NULL : (_tmp1_ = (g_object_unref (_tmp1_), NULL));
@@ -4068,7 +4069,7 @@ static void gmpc_metadata_browser_metadata_box_show_album (GmpcMetadataBrowser* 
 	g_signal_connect_object (button, "clicked", (GCallback) _gmpc_metadata_browser_add_selected_song_gtk_button_clicked, self, 0);
 	gtk_box_pack_start ((GtkBox*) hbox, (GtkWidget*) button, FALSE, FALSE, (guint) 0);
 	_tmp13_ = NULL;
-	button = (_tmp13_ = g_object_ref_sink ((GtkButton*) gtk_button_new_with_mnemonic ("_Replace")), (button == NULL) ? NULL : (button = (g_object_unref (button), NULL)), _tmp13_);
+	button = (_tmp13_ = g_object_ref_sink ((GtkButton*) gtk_button_new_with_mnemonic (_ ("_Replace"))), (button == NULL) ? NULL : (button = (g_object_unref (button), NULL)), _tmp13_);
 	_tmp14_ = NULL;
 	gtk_button_set_image (button, (GtkWidget*) (_tmp14_ = g_object_ref_sink ((GtkImage*) gtk_image_new_from_stock ("gtk-redo", GTK_ICON_SIZE_BUTTON))));
 	(_tmp14_ == NULL) ? NULL : (_tmp14_ = (g_object_unref (_tmp14_), NULL));
@@ -4241,7 +4242,7 @@ static void gmpc_metadata_browser_metadata_box_show_artist (GmpcMetadataBrowser*
 	g_signal_connect_object (button, "clicked", (GCallback) _gmpc_metadata_browser_add_selected_song_gtk_button_clicked, self, 0);
 	gtk_box_pack_start ((GtkBox*) hbox, (GtkWidget*) button, FALSE, FALSE, (guint) 0);
 	_tmp8_ = NULL;
-	button = (_tmp8_ = g_object_ref_sink ((GtkButton*) gtk_button_new_with_mnemonic ("_Replace")), (button == NULL) ? NULL : (button = (g_object_unref (button), NULL)), _tmp8_);
+	button = (_tmp8_ = g_object_ref_sink ((GtkButton*) gtk_button_new_with_mnemonic (_ ("_Replace"))), (button == NULL) ? NULL : (button = (g_object_unref (button), NULL)), _tmp8_);
 	_tmp9_ = NULL;
 	gtk_button_set_image (button, (GtkWidget*) (_tmp9_ = g_object_ref_sink ((GtkImage*) gtk_image_new_from_stock ("gtk-redo", GTK_ICON_SIZE_BUTTON))));
 	(_tmp9_ == NULL) ? NULL : (_tmp9_ = (g_object_unref (_tmp9_), NULL));
