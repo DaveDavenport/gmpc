@@ -654,6 +654,7 @@
             <child>
 
               <widget class="GtkAlignment" id="alignment_bread_crumb">
+              <property name="top_padding">4</property>
               <property name="left_padding">6</property>
               <property name="right_padding">6</property>
               <property name="visible">True</property>
@@ -674,7 +675,8 @@
             </child>
             <child>
 
-              <widget class="GtkAlignment" id="alignment_bread_crumb">
+              <widget class="GtkAlignment" id="alignment_tab_bar">
+              <property name="top_padding">4</property>
               <property name="left_padding">6</property>
               <property name="right_padding">6</property>
               <property name="visible">True</property>
