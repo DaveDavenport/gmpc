@@ -1530,6 +1530,8 @@ static void playlist_zoom_level_changed(void)
 		}
 		gtk_window_set_resizable(GTK_WINDOW(pl3_win), FALSE);
 
+		gtk_widget_hide(glade_xml_get_widget(pl3_xml, "vbox5"));
+		break;
 	case PLAYLIST_SMALL:
 		gtk_widget_hide(glade_xml_get_widget(pl3_xml, "vbox5"));
 		if (!cfg_get_single_value_as_int_with_default(config, "playlist", "button-heading", FALSE))
