@@ -479,7 +479,16 @@ static gint __sort_filename(gpointer aa, gpointer bb, gpointer data)
 
     if(a->type == MPD_DATA_TYPE_SONG && b->type == MPD_DATA_TYPE_SONG)
     {
-        return strcmp(a->song->file, b->song->file);
+	    if(a->song->file && b->song->file)
+		    return strcmp(a->song->file, b->song->file);
+	    else{
+		gchar *chk_a = mpd_song_checksum(a->song);
+		gchar *chk_b =  mpd_song_checksum(b->song);
+		int retv = strcmp(chk_a, chk_b);	
+		g_free(chk_a);
+		g_free(chk_b);
+		return retv;
+		}
     }
     else if(a->type == MPD_DATA_TYPE_TAG && b->type == MPD_DATA_TYPE_TAG)
     {
@@ -501,7 +510,7 @@ MpdData *misc_mpddata_remove_duplicate_songs(MpdData *data)
     {
         if(node->type == MPD_DATA_TYPE_SONG && node->next->type == MPD_DATA_TYPE_SONG)
         {
-            if(strcmp(node->song->file, node->next->song->file) == 0)
+            if(__sort_filename(&node, &(node->next),NULL) == 0)//strcmp(node->song->file, node->next->song->file) == 0)
             {
                 node = (MpdData_real *) mpd_data_delete_item((MpdData *)node);
                 continue;
@@ -509,7 +518,7 @@ MpdData *misc_mpddata_remove_duplicate_songs(MpdData *data)
         }
         else if(node->type == MPD_DATA_TYPE_TAG && node->next->type == MPD_DATA_TYPE_TAG)
         {
-            if(strcmp(node->tag, node->next->tag) == 0)
+            if(__sort_filename(&(node), &(node->next),NULL) == 0)//strcmp(node->tag, node->next->tag) == 0)
             {
                 node = (MpdData_real *) mpd_data_delete_item((MpdData *)node);
                 continue;
