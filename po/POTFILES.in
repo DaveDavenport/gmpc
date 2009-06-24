@@ -15,10 +15,10 @@ src/playlist3-messages.c
 src/plugin.c
 src/preferences.c
 src/sm.c
-src/TreeSearchWidget.c
 src/url_fetcher.c
 src/tray-icon2.c
 src/setup-assistant.c
+src/bug-information.c
 
 # Ui files
 [type: gettext/glade]glade/aboutdialog.ui
@@ -30,6 +30,7 @@ src/setup-assistant.c
 [type: gettext/glade]glade/preferences-server.ui
 [type: gettext/glade]glade/preferences-trayicon.ui
 [type: gettext/glade]glade/preferences-proxy.ui
+[type: gettext/glade]glade/preferences-mmkeys.ui
 [type: gettext/glade]glade/preferences.ui
 [type: gettext/glade]glade/playlist-message-window.ui
 [type: gettext/glade]glade/playlist-save-dialog.ui
@@ -39,10 +40,10 @@ src/setup-assistant.c
 src/browsers/playlist3-current-playlist-browser.c
 src/browsers/playlist3-file-browser.c
 src/browsers/playlist3-find2-browser.c
-src/browsers/playlist3-metadata-browser.c
 src/browsers/playlist3-playlist-editor.c
 src/browsers/playlist3-tag2-browser.c
 src/browsers/server-information.c
+
 
 # Egg files
 src/egg/eggcolumnmodel.c
@@ -58,14 +59,14 @@ src/gob/gmpc-profiles.gob
 src/gob/gmpc-meta-text-view.gob
 src/gob/gmpc-metaimage.gob
 src/gob/gmpc-clicklabel.gob
-src/gob/gmpc-connection.gob
 src/gob/gmpc-clicklabel.gob
 src/gob/gmpc-meta-watcher.gob
 src/gob/gmpc-stats-label.gob
 
-#?
-src/qlib/qasyncqueue.c
-
 # Vala
 src/vala/gmpc_menu_item_rating.c
 src/vala/gmpc-song-links.c
+src/vala/gmpc-easy-command.c
+src/vala/gmpc-test-plugin.c
+src/vala/gmpc-favorites.c
+src/vala/gmpc-metadata-browser2.c

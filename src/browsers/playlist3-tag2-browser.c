@@ -41,6 +41,7 @@
 #include <libmpd/libmpd-internal.h>
 #include "playlist3.h"
 #include "playlist3-playlist-editor.h"
+#include "gmpc-mpddata-treeview-tooltip.h"
 
 /**
  * dirty hack to workaround single parameter for now 
@@ -159,8 +160,7 @@ static void tag2_browser_add_browser(GtkWidget *cat_tree, char *key)
 			PL3_CAT_TITLE, name,
 			PL3_CAT_INT_ID,key,
 			PL3_CAT_ICON_ID, "tag-browser",
-			PL3_CAT_PROC, TRUE,
-			PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);
+			-1);
 	path = gtk_tree_model_get_path(GTK_TREE_MODEL(tree), &iter);
 		
 	tb = g_malloc0(sizeof(*tb));
@@ -195,9 +195,9 @@ static void tag2_browser_add(GtkWidget *cat_tree)
 
 typedef struct _tag_element{
 	GtkWidget 		*tree;
+    GmpcMpdDataTreeviewTooltip *tool;
 	GtkTreeModel 	*model;
 	GtkWidget		*sw;
-    GtkWidget       *combo;
     GtkWidget       *vbox;
     GtkCellRenderer *image_renderer;
     GtkTreeViewColumn   *column;
@@ -246,6 +246,7 @@ static void tag2_destroy_tag(tag_element *te)
 	if(te->timeout)
 		g_source_remove(te->timeout);
 	gtk_widget_destroy(te->vbox);
+    gtk_widget_destroy(GTK_WIDGET(te->tool));
 
 	if(te->model)
 		g_object_unref(te->model);
@@ -333,6 +334,9 @@ static void tag2_browser_add_selected(GtkWidget *item, tag_element *te)
 /**
  * Redirect to metadata browser 
  */
+
+#include "vala/gmpc-metadata-browser2.h"
+extern GmpcMetadataBrowser *metadata_browser;
 static void tag2_browser_header_information(GtkWidget *item, tag_element *te)
 {
 	GtkTreeIter iter;
@@ -346,13 +350,18 @@ static void tag2_browser_header_information(GtkWidget *item, tag_element *te)
             if(te->type == MPD_TAG_ITEM_ARTIST || te->type == MPD_TAG_ITEM_ALBUM_ARTIST)
             {
                 info2_activate();
-                info2_fill_artist_view(value);
+                gmpc_metadata_browser_set_artist(metadata_browser, value);
 
             }else if (te->type == MPD_TAG_ITEM_ALBUM){
                 const gchar *artist =  gmpc_mpddata_model_get_request_artist(GMPC_MPDDATA_MODEL(te->model));
                 if(artist) {
                     info2_activate();
+                    gmpc_metadata_browser_set_album(metadata_browser, artist,value);
+                /*
+                    info2_activate();
                     info2_fill_album_view(artist,value);
+                    */
+
                 }
             }
 
@@ -395,7 +404,7 @@ static gboolean tag2_browser_button_release_event(GtkTreeView *tree, GdkEventBut
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(tag2_browser_add_selected), te);
 		/* add the replace widget */
-		item = gtk_image_menu_item_new_with_label("Replace");
+		item = gtk_image_menu_item_new_with_label(_("Replace"));
 		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
 				gtk_image_new_from_stock(GTK_STOCK_REDO, GTK_ICON_SIZE_MENU));
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
@@ -484,7 +493,6 @@ static void tag2_changed(GtkTreeSelection *sel2, tag_element *te)
 	MpdData *data = NULL;
 	tag_browser *browser = te->browser;
     int not_to_update = te->index;
-    int artist_set = FALSE;
     GList *tel = g_list_first(browser->tag_lists);
     static int working = 0;
     if(working){
@@ -492,40 +500,66 @@ static void tag2_changed(GtkTreeSelection *sel2, tag_element *te)
 	    return;
     }
     working = 1;
-
 	/* Clear songs list */
-    /* clear the depending browsers */
-	while(tel)
-	{
-		tag_element *te2 =tel->data;
-		if(te2)
-        {
-            gmpc_mpddata_model_set_request_artist(GMPC_MPDDATA_MODEL(te2->model), NULL);
-        }
-        tel = tel->next;
-	}
     tel = g_list_first(browser->tag_lists);
     /* check if the user selected a row, if not do nothing */
-	while(tel)
+
+    /* Set on all tags the request artist, if available. */
     {
-        te = tel->data;
-        if(te->index != not_to_update && mpd_server_tag_supported(connection,te->type))
+        gchar *artist = NULL;
+        GList *first_te = NULL;        
+        for(first_te = tel;first_te && !artist;first_te = first_te->next) 
         {
-            GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(te->tree));
+            tag_element *te3 = first_te->data;
             GtkTreeIter iter;
-            gchar *artist = NULL;
+            GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(te3->tree));	
+            if(gtk_tree_selection_get_selected(sel, &(te3->model), &iter))
+            {	
+                if(mpd_server_tag_supported(connection,te3->type))
+                {
+                    gchar *value;
+                    gtk_tree_model_get(te3->model, &iter, MPDDATA_MODEL_COL_SONG_TITLE, &value, -1);
+                    if(te3->type == MPD_TAG_ITEM_ARTIST || te3->type == MPD_TAG_ITEM_ALBUM_ARTIST)
+                    {
+                        artist = g_strdup(value);
+                    }
+                    g_free(value);
+                }
+            }
+        }
+
+        for(first_te = tel;first_te;first_te = first_te->next) {
+            tag_element *te3 = first_te->data;
+            if(te3->index != not_to_update){
+                gmpc_mpddata_model_set_request_artist(GMPC_MPDDATA_MODEL(te3->model), artist);
+                if(te3->tool->request_artist) {
+                    g_free(te3->tool->request_artist);
+                    te3->tool->request_artist = NULL;
+                }
+                te3->tool->request_artist = g_strdup(artist);
+            }
+        }
+        q_free(artist);
+    }
+
+    while(tel)
+    {
+        tag_element *te_i = tel->data;
+        if(te_i->index != not_to_update && mpd_server_tag_supported(connection,te_i->type))
+        {
+            GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(te_i->tree));
+            GtkTreeIter iter;
             GList *first = g_list_first(browser->tag_lists);
             /* only do the following query if it isn't the last one */
 
-            int artist_seen = 0;
             /* Search for the fields of the next tag, this needs the value/type of all the previous,
              * Parsed from left to right 
              */
-            mpd_database_search_field_start(connection, te->type);
+            mpd_database_search_field_start(connection, te_i->type);
             /* fil in the next */
             while(first){
                 tag_element *te3  = first->data;
-                if(te3->index != te->index)
+                if(te3->index != te_i->index)
                 {
                     sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(te3->tree));	
                     if(gtk_tree_selection_get_selected(sel, &(te3->model), &iter))
@@ -534,45 +568,21 @@ static void tag2_changed(GtkTreeSelection *sel2, tag_element *te)
                         {
                             gchar *value;
                             gtk_tree_model_get(te3->model, &iter, MPDDATA_MODEL_COL_SONG_TITLE, &value, -1);
-                            if(!nfilter || te3->index < te->index)
+                            if(!nfilter || te3->index < te_i->index)
                                 mpd_database_search_add_constraint(connection, te3->type, (value)?value:"");
-                            if(te3->index < (te->index) && !artist_seen)
-                            {           
-                                if(te3->type == MPD_TAG_ITEM_ARTIST || te3->type == MPD_TAG_ITEM_ALBUM_ARTIST)
-                                {
-                                    artist = g_strdup(value);
-                                    artist_seen = 1;
-                                }
-                            }
-
                             g_free(value);
                         }
                     }
                 }
                 first =first->next;
             }
-           
-            /* Set on all tags the request artist, if available. */
-            /* TODO: This sets it many, uneeded times, fix that.. */
-            if(artist){
-                if(!artist_set) {
-                    GList *first_te = g_list_first(browser->tag_lists);
-                    for(;first_te;first_te = first_te->next) {
-                        tag_element *te3 = first_te->data;
-                        gmpc_mpddata_model_set_request_artist(GMPC_MPDDATA_MODEL(te3->model), artist);
-                    }
-                    artist_set = TRUE;
-                }
-                q_free(artist);
-            }
-
             data = mpd_database_search_commit(connection);
             /* Delete items that match */
-            if(strlen(gtk_entry_get_text(GTK_ENTRY(te->sentry))) > 0)
+            if(strlen(gtk_entry_get_text(GTK_ENTRY(te_i->sentry))) > 0)
             {
                 MpdData_real *d = (MpdData_real *)data;
                 /* Get the entry from the text view */
-                const char *str = gtk_entry_get_text(GTK_ENTRY(te->sentry));
+                const char *str = gtk_entry_get_text(GTK_ENTRY(te_i->sentry));
                 /* Lowercase it. */
                 gchar *sb1 = g_utf8_casefold(str, -1);
                 /* Normalize it, this to ensure they use the same way of representing the character */
@@ -610,25 +620,25 @@ static void tag2_changed(GtkTreeSelection *sel2, tag_element *te)
              * Update the TreeModel using the special incremental replace function.
              * This will make sure, selected rows that are matched, don't get de-selected 
              */
-            sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(te->tree));
-            gmpc_mpddata_model_set_mpd_data_slow(GMPC_MPDDATA_MODEL(te->model), data);
+            sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(te_i->tree));
+            gmpc_mpddata_model_set_mpd_data_slow(GMPC_MPDDATA_MODEL(te_i->model), data);
             /* this make sure the selected row is centered in the middle of the treeview.
              * Otherwise the user could have the tedious job of finding it again
              */
             /* get the selected row, if any */
-            if(gtk_tree_selection_get_selected(sel, &(te->model), &iter))
+            if(gtk_tree_selection_get_selected(sel, &(te_i->model), &iter))
             {
                 /* get the path to the selected row */
-                GtkTreePath *path = gtk_tree_model_get_path(te->model, &iter);
+                GtkTreePath *path = gtk_tree_model_get_path(te_i->model, &iter);
                 /* scroll to the path, and center it in the middle of the treeview, at the left of the column */
-                gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(te->tree), path, NULL, TRUE, 0.5,0);
+                gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(te_i->tree), path, NULL, TRUE, 0.5,0);
                 /* free the path */
                 gtk_tree_path_free(path);
             }
         }
         tel = tel->next;
     }
-
+    
     tel = g_list_first(browser->tag_lists);
     data = NULL;
     while(tel)
@@ -668,10 +678,6 @@ static void tag2_destroy_browser(tag_browser *browser, gpointer user_data)
 		return;
 	}
 
-	d = g_strdup_printf("tag2-plugin:%s", browser->key);
-	cfg_set_single_value_as_int(config, d, "pane-pos", gtk_paned_get_position(GTK_PANED(browser->tag2_vbox))); 
-	g_free(d);
-
 	/* remove it from the left hand view */
 	model = gtk_tree_row_reference_get_model(browser->ref_iter);
 	path = gtk_tree_row_reference_get_path(browser->ref_iter);
@@ -698,10 +704,21 @@ static void tag2_destroy_browser(tag_browser *browser, gpointer user_data)
 	/* clear structure */
 	g_free(browser);
 }
-static void tag2_songlist_combo_box_changed(GtkComboBox *box, tag_element *te)
+
+static void tag2_column_header_menu_item_clicked(GtkCheckMenuItem *item, tag_element *te)
 {
     GList *list;
-    te->type = gtk_combo_box_get_active(box);
+    gpointer userdata = g_object_get_data(G_OBJECT(item), "tag-id");
+    te->type = GPOINTER_TO_INT(userdata);
+    if(te->type == MPD_TAG_ITEM_ARTIST ||te->type == MPD_TAG_ITEM_ALBUM_ARTIST) {
+        te->tool->mtype = META_ARTIST_ART;
+    } else if(te->type == MPD_TAG_ITEM_ALBUM ) {
+        te->tool->mtype = META_ALBUM_ART;
+    }
+    else te->tool->mtype = 0;
+
+    gtk_tree_view_column_set_title(te->column,
+            _(mpdTagItemKeys[te->type]));
     /* if the first is changed, refill the first.
      * if any other is changed, make the edited refill by triggering changed signal on the previous.
      */
@@ -771,6 +788,31 @@ static void tag2_songlist_combo_box_changed(GtkComboBox *box, tag_element *te)
         }
     }
 }
+static void tag2_column_header_clicked(GtkTreeViewColumn *column, tag_element *te)
+{
+    int i=0;
+    GtkWidget *menu = gtk_menu_new();
+    for(i=0; i< MPD_TAG_ITEM_ANY;i++)
+    {
+        if(mpd_server_tag_supported(connection,i))
+        {
+            GtkWidget *item = gtk_check_menu_item_new_with_label(_(mpdTagItemKeys[i]));
+            g_object_set_data(G_OBJECT(item), "tag-id",GINT_TO_POINTER(i));
+            if(te->type == i){
+                gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item), TRUE);
+            }
+            else
+                g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(tag2_column_header_menu_item_clicked), te);
+            gtk_menu_shell_append(GTK_MENU_SHELL(menu), GTK_WIDGET(item));
+        }
+    }   
+    gtk_widget_show_all(GTK_WIDGET(menu));
+    gtk_menu_popup(GTK_MENU(menu),
+            NULL, NULL,
+            NULL, NULL, 
+            0,gtk_get_current_event_time()); 
+
+}
 
 static gboolean tag2_sentry_changed_real(tag_element *te)
 {
@@ -831,6 +873,10 @@ static void tag2_songlist_clear_selection(GtkWidget *button, tag_browser *browse
         }else 
             gmpc_mpddata_model_set_mpd_data_slow(GMPC_MPDDATA_MODEL(te->model), NULL);
         gmpc_mpddata_model_set_request_artist(GMPC_MPDDATA_MODEL(te->model), NULL);
+        if(te->tool->request_artist) {
+            g_free(te->tool->request_artist);
+            te->tool->request_artist = NULL;
+        }
     }
                                     		
     gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(gtk_tree_view_get_model(browser->tag_songlist)), NULL);     
@@ -843,6 +889,18 @@ static void tag2_songlist_clear_selection(GtkWidget *button, tag_browser *browse
         g_signal_handlers_unblock_by_func(G_OBJECT(te->sentry), tag2_sentry_changed, te);
     }
 }
+#ifndef USE_SYSTEM_LIBSEXY
+#if GTK_CHECK_VERSION(2,16,0)
+static void tag_browser_clear_search_entry(GtkEntry *entry, GtkEntryIconPosition icon_pos, GdkEvent *event, gpointer user_data)
+{
+    if(icon_pos == GTK_ENTRY_ICON_SECONDARY){
+        gtk_entry_set_text(GTK_ENTRY(entry), "");
+    }
+
+}
+#endif
+#endif
+
 static void tag2_songlist_add_tag(tag_browser *browser,const gchar *name, int type)
 {
 	GtkCellRenderer *renderer;
@@ -854,27 +912,32 @@ static void tag2_songlist_add_tag(tag_browser *browser,const gchar *name, int ty
 	te->type 	= type;
 	te->index 	= g_list_length(browser->tag_lists);
 	te->model 	= (GtkTreeModel *) gmpc_mpddata_model_new();
-	te->combo   = gtk_combo_box_new_with_model(tags_store);
 
 #ifdef USE_SYSTEM_LIBSEXY
     te->sentry  = sexy_icon_entry_new(); 
 #else
     te->sentry  = gtk_entry_new();
+#if GTK_CHECK_VERSION(2,16,0)
+    gtk_entry_set_icon_from_stock(GTK_ENTRY(te->sentry), GTK_ENTRY_ICON_SECONDARY, GTK_STOCK_CLEAR);
+    g_signal_connect(GTK_ENTRY(te->sentry), "icon-press", G_CALLBACK(tag_browser_clear_search_entry), NULL);
+
+    gtk_entry_set_icon_from_stock(GTK_ENTRY(te->sentry), GTK_ENTRY_ICON_PRIMARY, GTK_STOCK_FIND);
+    gtk_entry_set_icon_activatable(GTK_ENTRY(te->sentry), GTK_ENTRY_ICON_PRIMARY, FALSE);
+#endif
 #endif
     g_signal_connect_swapped(G_OBJECT(te->sentry), "activate", G_CALLBACK(tag2_sentry_changed_real), te);
     te->sw 		= gtk_scrolled_window_new(NULL,NULL);
     te->vbox    = gtk_vbox_new(FALSE, 6);
 	te->tree 	= gtk_tree_view_new_with_model(GTK_TREE_MODEL(te->model));	
+    te->tool    = gmpc_mpd_data_treeview_tooltip_new(GTK_TREE_VIEW(te->tree), 0);
 	te->browser = browser;
 
-    gtk_box_pack_start(GTK_BOX(te->vbox), te->combo, FALSE, TRUE, 0);
-
-    /* setup combo box */
-	renderer = gtk_cell_renderer_text_new();
-	gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(te->combo), renderer, TRUE);
-	gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(te->combo), renderer, "text", 2,NULL);
-    gtk_combo_box_set_active(GTK_COMBO_BOX(te->combo), te->type);
-    g_signal_connect(G_OBJECT(te->combo), "changed", G_CALLBACK(tag2_songlist_combo_box_changed), te);
+    if(te->type == MPD_TAG_ITEM_ARTIST ||te->type == MPD_TAG_ITEM_ALBUM_ARTIST) {
+        te->tool->mtype = META_ARTIST_ART;
+    } else if(te->type == MPD_TAG_ITEM_ALBUM ) {
+        te->tool->mtype = META_ALBUM_ART;
+    }
+    else te->tool->mtype = 0;
 
     /* entry */
     gtk_widget_set_no_show_all(te->sentry, TRUE);
@@ -896,15 +959,15 @@ static void tag2_songlist_add_tag(tag_browser *browser,const gchar *name, int ty
     /* add tree */
 	gtk_container_add(GTK_CONTAINER(te->sw), te->tree);
     gtk_box_pack_start(GTK_BOX(te->vbox), te->sw, TRUE, TRUE, 0);
-    gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(te->tree), FALSE);
     gtk_tree_view_set_enable_search(GTK_TREE_VIEW(te->tree), FALSE);
 
 
 
 	/* Add the column, and set it up */
 	te->column = column = gtk_tree_view_column_new();
-	
+    g_signal_connect(G_OBJECT(te->column), "clicked", G_CALLBACK(tag2_column_header_clicked), te);	
 	gtk_tree_view_column_set_title(column, name);
+    gtk_tree_view_column_set_clickable(te->column, TRUE);
     te->image_renderer = NULL;
     if(cfg_get_single_value_as_int_with_default(config, "tag2-plugin","show-image-column", 1))
     {
@@ -943,7 +1006,8 @@ static void tag2_songlist_add_tag(tag_browser *browser,const gchar *name, int ty
 
 	
 	/* Signal */
-	g_signal_connect(G_OBJECT(gtk_tree_view_get_selection(GTK_TREE_VIEW(te->tree))), "changed", G_CALLBACK(tag2_changed), te);
+	g_signal_connect(G_OBJECT(gtk_tree_view_get_selection(GTK_TREE_VIEW(te->tree))), 
+            "changed", G_CALLBACK(tag2_changed), te);
 
 }
 
@@ -1043,7 +1107,7 @@ static gboolean tag2_song_list_button_release_event(GtkTreeView *tree,
 			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 			g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(tag2_songlist_add_selected_songs), browser);
 			/* add the replace widget */
-			item = gtk_image_menu_item_new_with_label("Replace");
+			item = gtk_image_menu_item_new_with_label(_("Replace"));
 			gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
 					gtk_image_new_from_stock(GTK_STOCK_REDO, GTK_ICON_SIZE_MENU));
 			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
@@ -1070,10 +1134,6 @@ static gboolean tag2_song_list_button_release_event(GtkTreeView *tree,
                 }
 
             }
-
-			/* Separator */	
-			item = gtk_separator_menu_item_new();
-			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 		}
 
         gmpc_mpddata_treeview_right_mouse_intergration(GMPC_MPDDATA_TREEVIEW(tree), GTK_MENU(menu));
@@ -1144,14 +1204,11 @@ static void tag2_init_browser(tag_browser *browser) {
 
 	/* create the pane that separates the song list from the browsers */
 	key = g_strdup_printf("tag2-plugin:%s", browser->key);
-	pp = cfg_get_single_value_as_int_with_default(config, key, "pane-pos",150); 
-	browser->tag2_vbox = gtk_vpaned_new(); 
-	/* set the previous pane position */
-	gtk_paned_set_position(GTK_PANED(browser->tag2_vbox), pp);
-
+	browser->tag2_vbox = gtk_hpaned_new(); 
+	gmpc_paned_size_group_add_paned(paned_size_group, GTK_PANED(browser->tag2_vbox));
 
 	/* box with tag treeviews (browsers) */
-	browser->tag_hbox = gtk_hbox_new(TRUE, 6);
+	browser->tag_hbox = gtk_vbox_new(TRUE, 6);
 
 	/* Add this to the 1st pane*/
 	gtk_paned_add1(GTK_PANED(browser->tag2_vbox), browser->tag_hbox);
@@ -1440,8 +1497,19 @@ static void tag2_pref_column_type_edited(GtkCellRendererText *text, gchar *path,
 		tag_element *te;
 		gtk_list_store_set(GTK_LIST_STORE(model), &iter, 0, new_data,1,tag, -1);
 		gtk_tree_model_get(model, &iter, 2, &te, -1);
-        gtk_combo_box_set_active(GTK_COMBO_BOX(te->combo), tag);
-	}
+        te->type = tag;
+
+        if(te->type == MPD_TAG_ITEM_ARTIST ||te->type == MPD_TAG_ITEM_ALBUM_ARTIST) {
+            te->tool->mtype = META_ARTIST_ART;
+        } else if(te->type == MPD_TAG_ITEM_ALBUM ) {
+            te->tool->mtype = META_ALBUM_ART;
+        }
+        else te->tool->mtype = 0;
+
+        gtk_tree_view_column_set_title(te->column,
+                _(mpdTagItemKeys[te->type]));
+        tag2_songlist_clear_selection(NULL, te->browser); 
+    }
 }
 /**
  * Add's a column to the selected tag browser
@@ -1502,15 +1570,17 @@ static void tag2_pref_column_add(GtkWidget *but, GtkComboBox *box)
 		gtk_widget_show_all(tb->tag_hbox);
 		tag2_save_browser(tb);
 		/* if it's the first, update */
-		if(g_list_length(tb->tag_lists) == 1)
+		/*if(g_list_length(tb->tag_lists) == 1)
 		{
-			GList *giter = g_list_first(tb->tag_lists);
+			GList *giter;
+            
+            giter = g_list_first(tb->tag_lists);
 			if(giter)
 			{
 				MpdData *data;
 				tag_element *te2 = giter->data;
-				/* update the content */	
-                if(mpd_server_tag_supported(connection,te2->type))
+		*/		/* update the content */	
+          /*      if(mpd_server_tag_supported(connection,te2->type))
                 {
                     mpd_database_search_field_start(connection, te2->type);
                     data = mpd_database_search_commit(connection);                        			
@@ -1520,6 +1590,9 @@ static void tag2_pref_column_add(GtkWidget *but, GtkComboBox *box)
                 }
 			}
 		}
+        */
+        /* just reset the whole thing */
+        tag2_songlist_clear_selection(NULL, tb);
 	}
 }
 /**

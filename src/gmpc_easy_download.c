@@ -21,15 +21,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
-#include <curl/curl.h>
 #include <libmpd/debug_printf.h>
 #include <libsoup/soup.h>
 #include <zlib.h>
 #include "gmpc_easy_download.h"
 #include "main.h"
-#define CURL_TIMEOUT 10
 
-static int quit = FALSE;
 /****
  * ZIP MISC
  * **********/
@@ -106,8 +103,8 @@ static void gmpc_easy_download_set_proxy(SoupSession * session)
 		char *password = NULL;
 		gint port = cfg_get_single_value_as_int_with_default(config, "Network Settings", "Proxy Port", 8080);
 		if (cfg_get_single_value_as_int_with_default(config, "Network Settings", "Use authentication", FALSE)) {
-			password = cfg_get_single_value_as_string(config, "Network Settings", "Password");
-			username = cfg_get_single_value_as_string(config, "Network Settings", "Username");
+			password = cfg_get_single_value_as_string(config, "Network Settings", "Proxy authentication password");
+			username = cfg_get_single_value_as_string(config, "Network Settings", "Proxy authentication username");
 		}
 		if (value) {
 			SoupURI *uri = NULL;
@@ -136,119 +133,6 @@ static void gmpc_easy_download_set_proxy(SoupSession * session)
 	} else {
 		g_object_set(G_OBJECT(session), SOUP_SESSION_PROXY_URI, NULL, NULL);
 	}
-}
-
-int gmpc_easy_download_with_headers(const char *url, gmpc_easy_download_struct * dld, ...)
-{
-
-	SoupSession *session = NULL;
-	SoupMessage *msg = NULL;
-	int status;
-	int success = FALSE;
-	va_list ap;
-	char *va_entry;
-	/*int res; */
-	if (!dld)
-		return 0;
-	if (url == NULL)
-		return 0;
-	if (url[0] == '\0')
-		return 0;
-	/**
-     * Make sure it's clean
-     */
-	gmpc_easy_download_clean(dld);
-
-	/** Check for local url */
-	if (strncmp(url, "http://", 7) && g_file_test(url, G_FILE_TEST_EXISTS)) {
-		gsize size;
-		if (g_file_get_contents(url, &(dld->data), &(size), NULL)) {
-			dld->size = (int)size;
-			return 1;
-		}
-		return 0;
-	}
-
-	session = soup_session_sync_new();
-	gmpc_easy_download_set_proxy(session);
-
-	msg = soup_message_new("GET", url);
-
-	soup_message_headers_append(msg->request_headers, "Accept-Encoding", "gzip,deflate");
-
-	va_start(ap, dld);
-	va_entry = va_arg(ap, typeof(va_entry));
-	while (va_entry) {
-		char *value = va_arg(ap, typeof(value));
-		soup_message_headers_append(msg->request_headers, va_entry, value);
-		va_entry = va_arg(ap, typeof(va_entry));
-	}
-	va_end(ap);
-
-	status = soup_session_send_message(session, msg);
-	if (SOUP_STATUS_IS_SUCCESSFUL(status)) {
-		const gchar *encoding = soup_message_headers_get(msg->response_headers, "Content-Encoding");
-		soup_message_body_flatten(msg->response_body);
-
-		if (encoding && (strcmp(encoding, "gzip") == 0 || strcmp(encoding, "deflate") == 0)) {
-			/* 12k buffer */
-			char *new_buffer = NULL;
-			z_stream *zs = g_malloc0(sizeof(*zs));
-			long data_start =
-				(strcmp(encoding, "gzip") == 0) ? skip_gzip_header(msg->response_body->data,
-																   msg->response_body->length) : 0;
-			if (data_start != -1) {
-				zs->next_in = (void *)((msg->response_body->data) + data_start);
-				zs->avail_in = msg->response_body->length - data_start;
-				if (inflateInit2(zs, -MAX_WBITS) == Z_OK) {
-					long total_size = 0;
-					int res;
-					do {
-						new_buffer = g_realloc(new_buffer, (total_size + (12 * 1024)) * sizeof(char));
-						res = read_cb(zs, &new_buffer[total_size], 12 * 1024);
-						if (res > 0)
-							total_size += res;
-					} while (res > 0);
-					if (res == 0) {
-						dld->data = new_buffer;
-						dld->size = (int)total_size;
-						success = 1;
-					} else {
-						g_free(new_buffer);
-					}
-				}
-			}
-			close_cb(zs);
-		} else {
-			/* copy libsoup's buffer */
-			dld->size = msg->response_body->length;
-			dld->data = (char *)g_memdup(msg->response_body->data, (guint) msg->response_body->length);
-			success = 1;
-		}
-	} else {
-		success = 0;
-	}
-	g_object_unref(msg);
-	g_object_unref(session);
-	if (success)
-		return 1;
-	if (dld->data)
-		q_free(dld->data);
-	dld->data = NULL;
-	return 0;
-}
-
-int gmpc_easy_download(const char *url, gmpc_easy_download_struct * dld)
-{
-	return gmpc_easy_download_with_headers(url, dld, NULL);
-}
-
-void gmpc_easy_download_clean(gmpc_easy_download_struct * dld)
-{
-	if (dld->data)
-		q_free(dld->data);
-	dld->data = NULL;
-	dld->size = 0;
 }
 
 /***
@@ -380,11 +264,6 @@ static void proxy_pref_construct(GtkWidget * container)
     gtk_widget_show_all(container);
 }
 
-void quit_easy_download(void)
-{
-	debug_printf(DEBUG_INFO, "quitting easy download\n");
-	quit = TRUE;
-}
 
 gmpcPrefPlugin proxyplug_pref = {
 	.construct = proxy_pref_construct,
@@ -413,26 +292,59 @@ typedef struct {
 	int is_gzip;
 	int is_deflate;
 	z_stream *z;
+	gpointer extra_data;
+	guint uid;
+	int old_status_code;
 } _GEADAsyncHandler;
+
+static guint uid = 0;
 static void gmpc_easy_async_headers_update(SoupMessage * msg, gpointer data)
 {
-	const gchar *encoding = soup_message_headers_get(msg->response_headers, "Content-Encoding");
 	_GEADAsyncHandler *d = data;
+	const gchar *encoding = soup_message_headers_get(msg->response_headers, "Content-Encoding");
 	if (encoding) {
 		if (strcmp(encoding, "gzip") == 0) {
 			d->is_gzip = 1;
             debug_printf(DEBUG_WARNING, "Url is gzipped");
 		} else if (strcmp(encoding, "deflate") == 0) {
 			d->is_deflate = 1;
-
             debug_printf(DEBUG_WARNING, "Url is enflated");
 		}
 	}
+	/* If a second set comes in, close that */
+	else{
+		d->is_gzip = 0;
+		d->is_deflate = 0;
+	}
+
+	/**
+	 * Don't record data from redirection, in a while it _will_ be redirected,
+	 * We care about that
+	 */
+	if(d->old_status_code !=  0 &&  d->old_status_code != msg->status_code)
+	{
+		g_log("EasyDownloader", G_LOG_LEVEL_DEBUG,
+		"Cleaning out the previous block of data: status_code:  %i(old) ->%i(new)",
+		d->old_status_code,
+		msg->status_code);
+		/* Clear buffer */
+		g_free(d->data);
+		d->data = NULL;
+		d->length = 0;
+		if (d->z)
+			close_cb(d->z);
+		d->z = NULL;
+	}
+	d->old_status_code = msg->status_code;
 }
 
 static void gmpc_easy_async_status_update(SoupMessage * msg, SoupBuffer * buffer, gpointer data)
 {
 	_GEADAsyncHandler *d = data;
+	/* don't store error data, not used anyway */
+	if(!SOUP_STATUS_IS_SUCCESSFUL(msg->status_code)){
+		return;
+	}
 	if (d->is_gzip || d->is_deflate) {
 		if (d->z == NULL) {
 			long data_start;
@@ -534,6 +446,25 @@ const char *gmpc_easy_handler_get_data(const GEADAsyncHandler * handle, goffset 
 	return d->data;
 }
 
+
+guchar *gmpc_easy_handler_get_data_vala_wrap(const GEADAsyncHandler * handle, gint * length)
+{
+	_GEADAsyncHandler *d = (_GEADAsyncHandler *) handle;
+	if (length)
+		*length = (gint)d->length;
+	return (guchar *)d->data;
+}
+void gmpc_easy_handler_set_user_data(const GEADAsyncHandler *handle, gpointer user_data)
+{
+	_GEADAsyncHandler *d = (_GEADAsyncHandler *) handle;
+	d->extra_data = user_data;
+}
+gpointer gmpc_easy_handler_get_user_data(const GEADAsyncHandler *handle)
+{
+	_GEADAsyncHandler *d = (_GEADAsyncHandler *) handle;
+	return d->extra_data;
+}
+
 void gmpc_easy_async_cancel(const GEADAsyncHandler * handle)
 {
 	_GEADAsyncHandler *d = (_GEADAsyncHandler *) handle;
@@ -542,6 +473,10 @@ void gmpc_easy_async_cancel(const GEADAsyncHandler * handle)
 
 GEADAsyncHandler *gmpc_easy_async_downloader(const gchar * uri, GEADAsyncCallback callback, gpointer user_data)
 {
+	if(uri == NULL) {
+		printf("Error\n");
+		return NULL;
+	}
 	return gmpc_easy_async_downloader_with_headers(uri, callback, user_data, NULL);
 }
 
@@ -572,6 +507,7 @@ GEADAsyncHandler *gmpc_easy_async_downloader_with_headers(const gchar * uri, GEA
 	va_end(ap);
 
 	d = g_malloc0(sizeof(*d));
+	d->uid = ++uid;
 	d->is_gzip = 0;
 	d->is_deflate = 0;
 	d->z = NULL;
@@ -580,9 +516,12 @@ GEADAsyncHandler *gmpc_easy_async_downloader_with_headers(const gchar * uri, GEA
 	d->uri = g_strdup(uri);
 	d->callback = callback;
 	d->userdata = user_data;
+	d->extra_data = NULL;
+	d->old_status_code = 0;
 	soup_message_body_set_accumulate(msg->response_body, FALSE);
 	g_signal_connect_after(msg, "got-chunk", G_CALLBACK(gmpc_easy_async_status_update), d);
 	g_signal_connect_after(msg, "got-headers", G_CALLBACK(gmpc_easy_async_headers_update), d);
+	printf("uri: %s\n", uri);
 	soup_session_queue_message(soup_session, msg, gmpc_easy_async_callback, d);
 
 	return (GEADAsyncHandler *) d;

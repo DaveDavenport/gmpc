@@ -287,6 +287,7 @@ static void serverstats_init(void)
     event = gtk_event_box_new();
 	gtk_widget_set_app_paintable(event, TRUE);
     gtk_event_box_set_visible_window(GTK_EVENT_BOX(event), TRUE);
+    gtk_widget_set_state(GTK_WIDGET(event), GTK_STATE_SELECTED);
     g_signal_connect(G_OBJECT(event), "expose-event", G_CALLBACK(misc_header_expose_event), NULL);
 
     gtk_widget_modify_bg(serverstats_event, GTK_STATE_NORMAL, &(colw->style->base[GTK_STATE_NORMAL]));

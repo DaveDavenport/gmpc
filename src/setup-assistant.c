@@ -65,14 +65,11 @@ static void destroy_assistant(GtkAssistant *assistant)
 static void close_assistant(GtkAssistant *assistant)
 {
     /* Read out the configuration */
-
-
     destroy_assistant(assistant);
 }
 
 static void cancel_assistant(GtkAssistant *assistant)
 {
-
     destroy_assistant(assistant);
 }
 

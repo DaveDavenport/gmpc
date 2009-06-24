@@ -17,21 +17,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-typedef void (*ProgressCallback) (int downloaded, int total, gpointer data);
-
-typedef struct _gmpc_easy_download_struct {
-	char *data;
-	int size;
-	int max_size;
-	ProgressCallback callback;
-	gpointer callback_data;
-} gmpc_easy_download_struct;
-
-int gmpc_easy_download(const char *url, gmpc_easy_download_struct * dld);
-int gmpc_easy_download_with_headers(const char *url, gmpc_easy_download_struct * dld, ...);
-void gmpc_easy_download_clean(gmpc_easy_download_struct * dld);
-void quit_easy_download(void);
-
+#ifndef __GMPC_EASY_DOWNLOAD_H__
+#define __GMPC_EASY_DOWNLOAD_H__
 /**
  * Async easy download api 
  * This is based on libsoup
@@ -70,6 +57,12 @@ const char *gmpc_easy_handler_get_uri(const GEADAsyncHandler * handle);
 
 const char *gmpc_easy_handler_get_data(const GEADAsyncHandler * handle, goffset * length);
 
-char *gmpc_easy_download_uri_escape(const char *part);
+guchar *gmpc_easy_handler_get_data_vala_wrap(const GEADAsyncHandler * handle, gint * length);
 
+void gmpc_easy_handler_set_user_data(const GEADAsyncHandler *handle, gpointer user_data);
+gpointer gmpc_easy_handler_get_user_data(const GEADAsyncHandler *handle);
+
+
+char *gmpc_easy_download_uri_escape(const char *part);
+#endif
 /* vim: set noexpandtab ts=4 sw=4 sts=4 tw=120: */

@@ -202,7 +202,7 @@
               <object class="GtkTable" id="table16">
                 <property name="visible">True</property>
                 <property name="border_width">6</property>
-                <property name="n_rows">6</property>
+                <property name="n_rows">7</property>
                 <property name="n_columns">2</property>
                 <property name="column_spacing">6</property>
                 <property name="row_spacing">6</property>
@@ -344,6 +344,35 @@
                   </packing>
                 </child>
                 <child>
+                   <object class="GtkLabel" id="label168">
+                    <property name="visible">True</property>
+                    <property name="xalign">1</property>
+                    <property name="label" translatable="yes">Music Directory:</property>
+                  </object>
+                  <packing>
+                    <property name="top_attach">5</property>
+                    <property name="bottom_attach">6</property>
+                    <property name="x_options">GTK_FILL</property>
+                    <property name="y_options"/>
+                  </packing>
+                </child>
+
+                <child>
+                  <object class="GtkEntry" id="music_directory">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="max_length">255</property>
+                    <signal handler="entry_music_directory_changed" name="changed"/>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">5</property>
+                    <property name="bottom_attach">6</property>
+                    <property name="y_options"/>
+                  </packing>
+                </child>
+                <child>
                   <object class="GtkHBox" id="hbox57">
                     <property name="visible">True</property>
                     <child>
@@ -387,8 +416,8 @@
                   <packing>
                     <property name="left_attach">1</property>
                     <property name="right_attach">2</property>
-                    <property name="top_attach">5</property>
-                    <property name="bottom_attach">6</property>
+                    <property name="top_attach">6</property>
+                    <property name="bottom_attach">7</property>
                     <property name="x_options">GTK_FILL</property>
                   </packing>
                 </child>

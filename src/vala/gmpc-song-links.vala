@@ -25,6 +25,8 @@ using Cairo;
 using MPD;
 using Gmpc;
 
+private const bool use_transition = Gmpc.use_transition;
+
 public class Gmpc.Song.Links: Gtk.Frame 
 {
     private const string some_unique_name = Config.VERSION;
@@ -54,7 +56,7 @@ public class Gmpc.Song.Links: Gtk.Frame
         this.handle = Gmpc.AsyncDownload.download("http://gmpc.wikia.com/index.php?title=GMPC_METADATA_WEBLINKLIST&action=raw",download_file);
 
     }
-    private bool button_press_event(Gtk.Widget label, Gdk.EventButton event)
+    private bool button_press_event_callback(Gtk.EventBox label, Gdk.EventButton event)
     {
         if(event.button == 3)
         {
@@ -78,18 +80,13 @@ public class Gmpc.Song.Links: Gtk.Frame
         event.add(label);
         event.visible_window = false;
         this.label_widget = event;
-        label.set_markup("<b>%s:</b>".printf(_("Links")));
+        label.set_markup("<b>%s:</b>".printf(_("Web Links")));
         this.shadow = Gtk.ShadowType.NONE;
 
-        event.button_press_event += button_press_event;
+        event.button_press_event += button_press_event_callback;
         parse_uris();
     }
-    private void open_uri(Gtk.LinkButton button)
-    {
-        Gtk.LinkButton lb = button;
-        stdout.printf("open uri: %s\n", lb.get_uri());
-        Gmpc.open_uri(lb.get_uri());
-    }
+
     private void download_file(Gmpc.AsyncDownload.Handle handle, Gmpc.AsyncDownload.Status status)
     {
         if(status == AsyncDownload.Status.PROGRESS) {
@@ -100,11 +97,10 @@ public class Gmpc.Song.Links: Gtk.Frame
             return;
         }
         if(status == AsyncDownload.Status.DONE) {
-            int64 length=0;
-            var a = handle.get_data(out length); 
+            var a = handle.get_data(); 
             var path = Gmpc.user_path("weblinks.list");
             try{
-                GLib.FileUtils.set_contents(path, a, (long)length);
+                GLib.FileUtils.set_contents(path, (string)a, (long)a.length);
                 this.parse_uris();
                 this.show_all();
             }
@@ -145,7 +141,7 @@ public class Gmpc.Song.Links: Gtk.Frame
                 /* now try to download */
                 this.add(new Gtk.ProgressBar());
                 this.show_all();
-                this.handle = Gmpc.AsyncDownload.download("http://download.sarine.nl/weblinks.list",download_file);
+                this.handle = Gmpc.AsyncDownload.download("http://gmpc.wikia.com/index.php?title=GMPC_METADATA_WEBLINKLIST&action=raw",download_file);
                 return;
             }
         }
@@ -168,45 +164,62 @@ public class Gmpc.Song.Links: Gtk.Frame
         foreach(string entry in groups)
         {
             try{
-                string  typestr = file.get_string(entry,"type");
-                string  uri = file.get_string(entry, "url");
+                string typestr = file.get_string(entry,"type");
+                string uri = file.get_string(entry, "url");
+                
                 Type type;
                 switch(typestr) {
-                    case _("artist"):
+                    case "artist":
                         type = Type.ARTIST;
                         if(this.song.artist != null)
-                            uri = uri.replace("%ARTIST%", this.song.artist);
+                            uri = uri.replace("%ARTIST%", Gmpc.AsyncDownload.escape_uri(this.song.artist));
                         break;
-                    case _("album"):
+                    case "album":
                         type = Type.ALBUM;
 
                         if(this.song.album != null)
-                            uri = uri.replace("%ALBUM%", this.song.album);
+                            uri = uri.replace("%ALBUM%", Gmpc.AsyncDownload.escape_uri(this.song.album));
 
                         if(this.song.artist != null)
-                            uri = uri.replace("%ARTIST%", this.song.artist);
+                            uri = uri.replace("%ARTIST%", Gmpc.AsyncDownload.escape_uri(this.song.artist));
                         break;
-                    case _("song"):
+                    case "song":
                     default:
                         type = Type.SONG;
 
                         if(this.song.title != null)
-                            uri = uri.replace("%TITLE%", this.song.title);
+                            uri = uri.replace("%TITLE%", Gmpc.AsyncDownload.escape_uri(this.song.title));
 
                         if(this.song.album != null)
-                            uri = uri.replace("%ALBUM%", this.song.album);
+                            uri = uri.replace("%ALBUM%", Gmpc.AsyncDownload.escape_uri(this.song.album));
 
                         if(this.song.artist != null)
-                            uri = uri.replace("%ARTIST%", this.song.artist);
+                            uri = uri.replace("%ARTIST%", Gmpc.AsyncDownload.escape_uri(this.song.artist));
                         break;
                 }
+                try{
+                string sar = file.get_string(entry, "search-and-replace");
+                if(sar != null) {
+                    string[] s = sar.split("::");
+                    if(s.length == 2){
+                        try{
+                        var regex =  new GLib.Regex (s[0]);
+                        uri = regex.replace_literal(uri,-1,0, s[1]);
+                        } catch (GLib.RegexError e) {
+                            stdout.printf("Failed to compile regex: '%s'\n", e.message);
+                        }
+                    }
+                }
+                }catch(Error e) {
+
+                }
+
                 if((int)type <= (int)this.type)
                 {
                     var label = new Gtk.LinkButton(uri);
                     label.set_label(_("Lookup %s on %s").printf(_(typestr),entry));
                     label.set_alignment(0.0f, 0.5f);
                     vbox.pack_start(label, false, true, 0);
-                    label.clicked += open_uri;
                 }
             }catch(Error e){
                 stdout.printf("Failed to get entry from %s: '%s'\n", path, e.message);

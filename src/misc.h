@@ -21,12 +21,16 @@
 #define __MISC_H__
 
 #define RANGE(l,u,v) (((v)<(l))?(l):(((v)<(u))?(v):(u)))
+#include <libmpd/libmpd.h>
 /**
  * format time into 
  * Total time: %i days %i hours %i minutes
  */
-
 gchar * format_time(unsigned long seconds);
+
+/**
+ * Allows you to prepend a string
+ */
 gchar * format_time_real(unsigned long seconds, const gchar *data);
 
 void mpd_song_markup_escaped(char *buffer, int size, char *markup, mpd_Song *song);
@@ -48,7 +52,11 @@ MpdData *misc_mpddata_remove_duplicate_songs(MpdData *data);
 gchar ** tokenize_string(const gchar *string);
 
 
-gboolean misc_header_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data);
+gboolean misc_header_expose_event(GtkWidget *widget, GdkEventExpose *event);
+void misc_header_style_set_process_containers(GtkWidget *container, GtkStyle *old_style, gpointer data);
 
 gchar * mpd_song_checksum(const mpd_Song *song);
+
+void
+colorshift_pixbuf(GdkPixbuf *dest, GdkPixbuf *src, int shift);
 #endif

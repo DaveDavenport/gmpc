@@ -7,137 +7,158 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-02-13 14:43+0100\n"
-"PO-Revision-Date: 2009-02-23 08:25+0000\n"
-"Last-Translator: Daniel Nylander <yeager@ubuntu.com>\n"
+"POT-Creation-Date: 2009-05-13 17:09+0200\n"
+"PO-Revision-Date: 2009-04-04 19:01+0000\n"
+"Last-Translator: Anders Landin <Unknown>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-03-05 15:36+0000\n"
+"X-Launchpad-Export-Date: 2009-05-12 17:36+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
 msgid "A gnome frontend for the mpd daemon"
 msgstr ""
 
-#: ../data/gmpc.desktop.in.h:2 ../src/main.c:1352 ../src/tray-icon2.c:550
-#: ../src/tray-icon2.c:732 ../src/tray-icon2.c:735 ../src/tray-icon2.c:745
-#: ../src/tray-icon2.c:748
+#: ../data/gmpc.desktop.in.h:2 ../src/main.c:336 ../src/tray-icon2.c:608
+#: ../src/tray-icon2.c:803 ../src/tray-icon2.c:806 ../src/tray-icon2.c:816
+#: ../src/tray-icon2.c:819 ../src/tray-icon2.c:844
 msgid "Gnome Music Player Client"
 msgstr "Gnome Music Player Klient"
 
-#: ../glade/playlist3.glade.h:1 ../src/main.c:1375
+#. Basic dialog with a close button
+#: ../glade/playlist3.glade.h:1 ../src/bug-information.c:255
+msgid "Bug information"
+msgstr "Bug information"
+
+#: ../glade/playlist3.glade.h:2
+msgid "Consume"
+msgstr ""
+
+#: ../glade/playlist3.glade.h:3
+msgid "Easy Command Help"
+msgstr ""
+
+#: ../glade/playlist3.glade.h:4
 msgid "Getting help"
 msgstr "Få hjälp"
 
-#: ../glade/playlist3.glade.h:2
+#: ../glade/playlist3.glade.h:5
 msgid "MPD database is updating."
 msgstr "MPD databasen uppdateras"
 
-#: ../glade/playlist3.glade.h:3 ../src/mpdinteraction.c:172
+#: ../glade/playlist3.glade.h:6 ../src/mpdinteraction.c:279
 msgid "Mute"
 msgstr "Tyst"
 
 #. * MM_PLAYPAUSE
-#: ../glade/playlist3.glade.h:4 ../src/mm-keys.c:74
+#: ../glade/playlist3.glade.h:7 ../src/mm-keys.c:74 ../src/tray-icon2.c:596
 msgid "Next"
 msgstr "Nästa"
 
-#: ../glade/playlist3.glade.h:5
+#: ../glade/playlist3.glade.h:8
 msgid "Play/Pause"
 msgstr "Spela/Pausa"
 
 #. * MM_NEXT
-#: ../glade/playlist3.glade.h:6 ../src/mm-keys.c:75
+#: ../glade/playlist3.glade.h:9 ../src/mm-keys.c:75
 msgid "Previous"
 msgstr "Föregående"
 
-#: ../glade/playlist3.glade.h:7
+#: ../glade/playlist3.glade.h:10
 msgid "Profiles"
 msgstr "Profiler"
 
 #. * MM_REPEAT
-#: ../glade/playlist3.glade.h:8 ../src/mm-keys.c:80
+#: ../glade/playlist3.glade.h:11 ../src/mm-keys.c:80
 msgid "Random"
 msgstr "Slumpvis"
 
 #. * MM_FASTBACKWARD
-#: ../glade/playlist3.glade.h:9 ../src/mm-keys.c:79
+#: ../glade/playlist3.glade.h:12 ../src/mm-keys.c:79
 msgid "Repeat"
 msgstr "Upprepa"
 
-#: ../glade/playlist3.glade.h:10
+#: ../glade/playlist3.glade.h:13
 msgid "Show Messages"
 msgstr "Visa meddelanden"
 
+#: ../glade/playlist3.glade.h:14
+msgid "Single mode"
+msgstr ""
+
 #. * MM_PREV
-#: ../glade/playlist3.glade.h:11 ../src/mm-keys.c:76
+#: ../glade/playlist3.glade.h:15 ../src/mm-keys.c:76
 msgid "Stop"
 msgstr "Stopp"
 
-#: ../glade/playlist3.glade.h:12
+#: ../glade/playlist3.glade.h:16
 msgid "Visit website"
 msgstr "Besök webbsida"
 
-#: ../glade/playlist3.glade.h:13
+#: ../glade/playlist3.glade.h:17
 msgid "_Collapse Interface"
 msgstr "_Fäll in gränssnitt"
 
-#: ../glade/playlist3.glade.h:14
+#: ../glade/playlist3.glade.h:18
 msgid "_Connect"
 msgstr "_Anslut"
 
-#: ../glade/playlist3.glade.h:15
+#: ../glade/playlist3.glade.h:19
 msgid "_Control"
 msgstr "_Kontroll"
 
-#: ../glade/playlist3.glade.h:16 ../glade/preferences-connection.ui.h:9
+#: ../glade/playlist3.glade.h:20 ../glade/preferences-connection.ui.h:10
 msgid "_Disconnect"
 msgstr "_Koppla från"
 
-#: ../glade/playlist3.glade.h:17
+#: ../glade/playlist3.glade.h:21
 msgid "_Expand Interface"
 msgstr "_Utöka gränssnittet"
 
-#: ../glade/playlist3.glade.h:18
+#: ../glade/playlist3.glade.h:22
 msgid "_Fullscreen"
 msgstr "_Helskärm"
 
-#: ../glade/playlist3.glade.h:19
+#: ../glade/playlist3.glade.h:23
 msgid "_Go"
 msgstr "_Kör"
 
-#: ../glade/playlist3.glade.h:20
+#: ../glade/playlist3.glade.h:24
 msgid "_Help"
 msgstr "_Hjälp"
 
-#: ../glade/playlist3.glade.h:21
+#: ../glade/playlist3.glade.h:25
 msgid "_Music"
 msgstr "_Musik"
 
-#: ../glade/playlist3.glade.h:22
+#: ../glade/playlist3.glade.h:26
 msgid "_Option"
 msgstr "_Val"
 
-#: ../glade/playlist3.glade.h:23
+#: ../glade/playlist3.glade.h:27
 msgid "_Send Password"
 msgstr "_Skicka lösenord"
 
-#: ../glade/playlist3.glade.h:24
+#: ../glade/playlist3.glade.h:28
 msgid "_Server"
 msgstr "_Server"
 
-#: ../glade/playlist3.glade.h:25
+#: ../glade/playlist3.glade.h:29
 msgid "_Show Artist Image"
 msgstr "_Visa artistbilden"
 
-#: ../glade/playlist3.glade.h:26
+#: ../glade/playlist3.glade.h:30
+msgid "_Tools"
+msgstr ""
+
+#: ../glade/playlist3.glade.h:31
 msgid "_View"
 msgstr "_Visa"
 
-#: ../glade/playlist3.glade.h:27
+#: ../glade/playlist3.glade.h:32
 msgid "gmpc - Playlist Manager"
 msgstr "gmpc - Spellisthanteraren"
 
@@ -159,170 +180,114 @@ msgstr ""
 
 #: ../src/edit_markup.c:43
 msgid "01/24"
-msgstr ""
+msgstr "01/24"
 
 #: ../src/edit_markup.c:44
 msgid "2 Feb 2006"
-msgstr ""
+msgstr "2 Feb 2008"
 
 #: ../src/edit_markup.c:46
 msgid "MPD's Streaming server"
 msgstr ""
 
-#: ../src/gmpc_easy_download.c:385
+#: ../src/gmpc_easy_download.c:274
 msgid "Proxy"
 msgstr "Proxyserver"
 
-#. *
-#. * Set debug level, options are
-#. * 0 = No debug
-#. * 1 = Error messages
-#. * 2 = Error + Warning messages
-#. * 3 = All messages
-#. 
-#: ../src/main.c:287 ../src/main.c:288
-msgid "--debug-level="
+#: ../src/main.c:277
+msgid "Show program version and revision"
 msgstr ""
 
-#. *
-#. * Print out version + svn revision
-#. 
-#: ../src/main.c:294
-msgid "--version"
-msgstr "--version"
-
-#: ../src/main.c:302 ../src/main.c:303
-msgid "--config="
+#: ../src/main.c:279
+msgid "Quits the running gmpc"
 msgstr ""
 
-#. *
-#. * Starts gmpc hidden. Either tray or task-bar
-#. 
-#: ../src/main.c:308
-msgid "--start-hidden"
+#: ../src/main.c:281
+msgid "Replace the running gmpc"
 msgstr ""
 
-#. *
-#. * Cleans all failed hits from the cover database.
-#. * then exits.
-#. 
-#: ../src/main.c:315
-msgid "--clean-cover-db"
+#: ../src/main.c:283
+msgid "Don't load the plugins"
 msgstr ""
 
-#. *
-#. * Start gmpc withouth loading any external plugins
-#. 
-#: ../src/main.c:321
-msgid "--disable-plugins"
+#: ../src/main.c:285
+msgid "Load alternative config file"
 msgstr ""
 
-#. *
-#. * Tries to replace the running gmpc session with a new (this) one.
-#. 
-#: ../src/main.c:327
-msgid "--replace"
-msgstr "-ersätt"
-
-#. *
-#. * Quit any running gmpc session
-#. 
-#: ../src/main.c:333
-msgid "--quit"
-msgstr "-avsluta"
-
-#. *
-#. * Imports the cover db in the old format.
-#. 
-#: ../src/main.c:339
-msgid "--import-old-db"
-msgstr "importera-gamla-db"
-
-#. *
-#. * Puts gtk in a non-buffered modes. allows you to visually see the number of gui updates.
-#. 
-#: ../src/main.c:345
-msgid "--debug-updates"
+#: ../src/main.c:287
+msgid "Set the debug level"
 msgstr ""
 
-#. *
-#. * Print out help message
-#. 
-#: ../src/main.c:352
-msgid "--help"
-msgstr "--hjälp"
-
-#: ../src/main.c:353
-#, c-format
-msgid ""
-"Gnome Music Player Client\n"
-"Options:\n"
-"\t--start-hidden\t\tStart hidden\n"
-"\t--help\t\t\tThis help message.\n"
-"\t--debug-level=<level>\tMake gmpc print out debug information.\n"
-"\t\t\t\tLevel:\n"
-"\t\t\t\t\t0 No Output\n"
-"\t\t\t\t\t1 Error Messages\n"
-"\t\t\t\t\t2 Error + Warning Messages\n"
-"\t\t\t\t\t3 All messages\n"
-"\t--version\t\tPrint version and git revision\n"
-"\t--config=<file>\t\tSet config file path, default  ~/.gmpc/gmpc.cfg\n"
-"\t--clean-cover-db\tCleanup the cover file.\n"
-"\t--disable-plugins\tDon't load any plugins.\n"
-"\t--replace\t\tReplace the running session with the current\n"
-"\t--quit\t\t\tQuit the running gmpc session. Only works if multiple-"
-"instances is disabled.\n"
+#: ../src/main.c:289
+msgid "Start gmpc hidden to tray"
 msgstr ""
 
-#: ../src/main.c:444
+#: ../src/main.c:291
+msgid "Remove all failed hits from metadata cache"
+msgstr ""
+
+#: ../src/main.c:293
+msgid "Show redraw events in GTK+"
+msgstr ""
+
+#: ../src/main.c:295
+#, fuzzy
+msgid "Show bug information dialog"
+msgstr "Bug information"
+
+#: ../src/main.c:297
+msgid "Shows all output from a certain log domain"
+msgstr ""
+
+#: ../src/main.c:426
 msgid "quit"
 msgstr ""
 
-#: ../src/main.c:445
+#: ../src/main.c:427
 msgid "Quit gmpc"
-msgstr ""
+msgstr "Stäng gmpc"
 
-#: ../src/main.c:446
+#: ../src/main.c:428
 msgid "hide"
 msgstr ""
 
-#: ../src/main.c:447
+#: ../src/main.c:429
 msgid "Hide gmpc"
-msgstr ""
+msgstr "Dölj gmpc"
 
-#: ../src/main.c:448
+#: ../src/main.c:430
 msgid "show"
-msgstr ""
+msgstr "visa"
 
-#: ../src/main.c:448
+#: ../src/main.c:431
 msgid "Show gmpc"
-msgstr ""
+msgstr "Visa gmpc"
 
-#: ../src/main.c:450
+#: ../src/main.c:432
 msgid "show notification"
-msgstr ""
+msgstr "Visa underrättelse"
 
-#: ../src/main.c:451
+#: ../src/main.c:433
 msgid "Show trayicon notification"
-msgstr ""
+msgstr "Visa meddelandefälts underrättelse"
+
+#: ../src/main.c:487
+msgid "Failed to load the configuration system."
+msgstr "Kunde inte ladda konfigurationssystemet"
 
 #: ../src/main.c:506
-msgid "Failed to load the configuration system."
-msgstr ""
-
-#: ../src/main.c:525
 msgid "Failed to load debug-log file."
-msgstr ""
+msgstr "Kunde inte ladda debug logg filen"
 
-#: ../src/main.c:674
+#: ../src/main.c:645
 msgid "Failed to setup libmpd"
 msgstr "Misslyckades med att ställa in libmpd"
 
-#: ../src/main.c:1059
+#: ../src/main.c:1056
 msgid "GMPC has insufficient permissions on the mpd server."
 msgstr "GMPC har otillräcklig behörighet på mpd-servern."
 
-#: ../src/main.c:1085
+#: ../src/main.c:1082
 #, c-format
 msgid ""
 "Failed to set password on: '%s'\n"
@@ -331,152 +296,56 @@ msgstr ""
 "Misslyckades med att ställa in lösenordet: '%s'\n"
 "Var god försök igen"
 
-#: ../src/main.c:1087
+#: ../src/main.c:1084
 #, c-format
 msgid "Please enter your password for: '%s'"
 msgstr "Var god mata in ditt lösenord för: '%s'"
 
-#: ../src/main.c:1116 ../src/main.c:1137
+#: ../src/main.c:1113 ../src/main.c:1134
 msgid "error code"
 msgstr "felkod"
 
-#: ../src/main.c:1126
+#: ../src/main.c:1123
 msgid "Insufficient permission to connect to mpd. Check password"
 msgstr ""
 "Otillräcklig tillåtelse för att koppla till mpd. Kontrollera lösenordet"
 
-#: ../src/main.c:1161
+#: ../src/main.c:1158
 msgid "MPD versions before 0.13.0 are not supported"
 msgstr "MPD versioner innan 0.13.0 stöds inte"
 
-#: ../src/main.c:1224
+#: ../src/main.c:1225
 msgid "Connected to mpd"
 msgstr "Kopplad till mpd"
 
-#: ../src/main.c:1226
+#: ../src/main.c:1227
 msgid "Disconnected from mpd"
 msgstr "Frånkopplad från mpd"
 
-#: ../src/main.c:1260
-msgid "Error occured during operation"
-msgstr "Fel inträffade under körning"
+#: ../src/main.c:1261
+msgid "Error occurred during operation"
+msgstr "Ett fel uppstod under körningen."
 
 #. Create label
-#: ../src/main.c:1284
-msgid "The following error(s) occured:"
-msgstr "Följande fel inträffade"
+#: ../src/main.c:1285
+msgid "The following error(s) occurred:"
+msgstr "Följande fel inträffade:"
 
-#: ../src/main.c:1301
+#: ../src/main.c:1302
 msgid "Error Message"
 msgstr "Felmeddelande"
 
-#: ../src/main.c:1355
-msgid "Tagline"
-msgstr ""
-
-#. * Mpd version
-#: ../src/main.c:1356 ../src/preferences.c:314
-#: ../src/browsers/server-information.c:331
-msgid "Version"
-msgstr "Version"
-
-#: ../src/main.c:1358
-msgid "Revision"
-msgstr "Revision"
-
-#: ../src/main.c:1360
-msgid "Libmpd version"
-msgstr ""
-
-#: ../src/main.c:1361
-msgid "GTK+ version"
-msgstr ""
-
-#: ../src/main.c:1362
-msgid "Libcurl version"
-msgstr ""
-
-#: ../src/main.c:1363
-msgid "Platform"
-msgstr ""
-
-#: ../src/main.c:1365
-msgid "Windows"
-msgstr ""
-
-#: ../src/main.c:1368
-msgid "Mac OsX"
-msgstr ""
-
-#: ../src/main.c:1370
-msgid "*nix"
-msgstr ""
-
-#: ../src/main.c:1374
-msgid "Website"
-msgstr "Hemsida"
-
-#: ../src/main.c:1376
-msgid "Options enabled"
-msgstr ""
-
-#: ../src/main.c:1377
-msgid "X session management"
-msgstr ""
-
-#: ../src/main.c:1379 ../src/main.c:1386 ../src/main.c:1394 ../src/main.c:1402
-#: ../src/main.c:1410 ../src/main.c:1418 ../src/main.c:1426 ../src/main.c:1434
-#: ../src/main.c:1442 ../src/preferences.c:307
-msgid "Enabled"
-msgstr "Aktiverad"
-
-#: ../src/main.c:1381 ../src/main.c:1388 ../src/main.c:1396 ../src/main.c:1404
-#: ../src/main.c:1412 ../src/main.c:1420 ../src/main.c:1428 ../src/main.c:1436
-#: ../src/main.c:1444
-msgid "Disabled"
-msgstr "Inaktiverad"
-
-#: ../src/main.c:1384
-msgid "NLS Support"
-msgstr ""
-
-#: ../src/main.c:1392 ../src/mm-keys.c:566
-msgid "Multimedia Keys"
-msgstr "Multimedia knappar"
-
-#: ../src/main.c:1400
-msgid "Libegg's trayicon"
-msgstr ""
-
-#: ../src/main.c:1408
-msgid "System libsexy"
-msgstr ""
-
-#: ../src/main.c:1416
-msgid "Mac integration library"
-msgstr ""
-
-#: ../src/main.c:1424
-msgid "Use ~/.config/ dir"
-msgstr ""
-
-#: ../src/main.c:1432
-msgid "Debug timing"
-msgstr ""
-
-#: ../src/main.c:1440
-msgid "Maintainer mode"
-msgstr ""
-
-#: ../src/metadata.c:748
+#: ../src/metadata.c:293
 msgid ""
 "A new metadata plugin was added, gmpc has purged all failed hits from the "
 "cache"
 msgstr ""
+"En ny metadata plugin lades till, gmpc har rensas alla felaktiga träffar "
+"från cachen."
 
-#: ../src/metadata.c:1211
+#: ../src/metadata.c:1384
 msgid "Metadata Handler"
-msgstr ""
+msgstr "Metadata hanterare."
 
 #: ../src/misc.c:38
 msgid " Total time: "
@@ -506,7 +375,7 @@ msgid_plural "seconds"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/misc.c:269
+#: ../src/misc.c:323
 msgid "Failed to execute"
 msgstr "Kunde inte utföra"
 
@@ -564,13 +433,13 @@ msgstr ""
 msgid "Show easy command entry"
 msgstr ""
 
-#: ../src/mm-keys.c:366
+#: ../src/mm-keys.c:367
 msgid ""
 "Could not grab the following multimedia keys:\n"
 "\n"
 msgstr ""
 
-#: ../src/mm-keys.c:381
+#: ../src/mm-keys.c:382
 msgid ""
 "\n"
 "Ensure that your window manager (or other applications) have not already "
@@ -580,7 +449,7 @@ msgstr ""
 "Var säker på att din fönsterhanterare ( eller andra program) inte redan har "
 "bundit denna nyckel till en annan funktion, starta sen om gmpc"
 
-#: ../src/mm-keys.c:388
+#: ../src/mm-keys.c:391
 msgid ""
 "Duplicate mapping(s) detected\n"
 "\n"
@@ -588,7 +457,11 @@ msgid ""
 "revisit the preferences and ensure your settings are now correct."
 msgstr ""
 
-#: ../src/mm-keys.c:628
+#: ../src/mm-keys.c:570
+msgid "Multimedia Keys"
+msgstr "Multimedia knappar"
+
+#: ../src/mm-keys.c:632
 #, c-format
 msgid ""
 "Duplicate mapping detected\n"
@@ -596,7 +469,7 @@ msgid ""
 "%s is already mapped to %s"
 msgstr ""
 
-#: ../src/mm-keys.c:657
+#: ../src/mm-keys.c:661
 #, c-format
 msgid ""
 "Could not grab multimedia key:\n"
@@ -613,192 +486,284 @@ msgstr ""
 "Försäkra dig om att din fönsterhanterare (eller andra program) inte redan "
 "har bunidt denna tangent för någon annan funktion och starta sedan om gmpc."
 
-#: ../src/mm-keys.c:704
+#: ../src/mm-keys.c:716
 msgid "Action"
 msgstr "Åtgärd"
 
-#: ../src/mm-keys.c:726
+#: ../src/mm-keys.c:738
 msgid "Shortcut"
 msgstr "Genväg"
 
+#: ../src/mpdinteraction.c:91
+msgid "enable"
+msgstr ""
+
+#: ../src/mpdinteraction.c:94
+msgid "disable"
+msgstr ""
+
+#: ../src/mpdinteraction.c:107 ../src/playlist3.c:1667 ../src/playlist3.c:1680
+#: ../src/playlist3.c:1692 ../src/playlist3.c:1705
+msgid "Off"
+msgstr "Av"
+
+#: ../src/mpdinteraction.c:229
+msgid ""
+"Stop after current song: The used MPD server is to old and does not support "
+"this."
+msgstr ""
+
+#: ../src/mpdinteraction.c:231
+msgid "Stop after current song: You have insufficient permission."
+msgstr ""
+
+#: ../src/mpdinteraction.c:233
+msgid "Playback will be stopped after the current playing song."
+msgstr ""
+
+#: ../src/mpdinteraction.c:243
+msgid ""
+"Repeat current song: The used MPD server is to old and does not support this."
+msgstr ""
+
+#: ../src/mpdinteraction.c:245
+msgid "Repeat current song: You have insufficient permission."
+msgstr ""
+
+#: ../src/mpdinteraction.c:247
+msgid "The current song will be forever repeated."
+msgstr ""
+
+#: ../src/mpdinteraction.c:257
+msgid ""
+"Update database: The used MPD server is to old and does not support this."
+msgstr ""
+
+#: ../src/mpdinteraction.c:259
+msgid "Update database: You have insufficient permission."
+msgstr ""
+
 #. Player control
 #. basic playlist commands
-#: ../src/mpdinteraction.c:159 ../src/mpdinteraction.c:175
+#: ../src/mpdinteraction.c:268 ../src/mpdinteraction.c:286
 msgid "play"
 msgstr ""
 
-#: ../src/mpdinteraction.c:159
+#: ../src/mpdinteraction.c:268
 msgid "start playback"
 msgstr ""
 
-#: ../src/mpdinteraction.c:160
+#: ../src/mpdinteraction.c:269
 msgid "pause"
 msgstr ""
 
-#: ../src/mpdinteraction.c:160
+#: ../src/mpdinteraction.c:269
 msgid "pause playback"
-msgstr ""
+msgstr "Pausa uppspelning"
 
-#: ../src/mpdinteraction.c:161
+#: ../src/mpdinteraction.c:270
 msgid "next"
 msgstr ""
 
-#: ../src/mpdinteraction.c:161
+#: ../src/mpdinteraction.c:270
 msgid "next song"
-msgstr ""
+msgstr "Nästa låt"
 
-#: ../src/mpdinteraction.c:162
+#: ../src/mpdinteraction.c:271
 msgid "prev"
 msgstr ""
 
-#: ../src/mpdinteraction.c:162
+#: ../src/mpdinteraction.c:271
 msgid "previous song"
-msgstr ""
+msgstr "Föregående låt"
 
-#: ../src/mpdinteraction.c:163
+#: ../src/mpdinteraction.c:272
 msgid "stop"
 msgstr ""
 
-#: ../src/mpdinteraction.c:163
+#: ../src/mpdinteraction.c:272
 msgid "stop playback"
-msgstr ""
+msgstr "Stoppa uppspelning"
 
-#: ../src/mpdinteraction.c:165
+#: ../src/mpdinteraction.c:274
 msgid "random"
-msgstr ""
+msgstr "slumpmässig"
 
-#: ../src/mpdinteraction.c:165
+#: ../src/mpdinteraction.c:274
 msgid "Random (on|off)"
-msgstr ""
+msgstr "Slumpmässig på|av"
 
-#: ../src/mpdinteraction.c:166
+#: ../src/mpdinteraction.c:275
 msgid "repeat"
-msgstr ""
+msgstr "Repetera"
 
-#: ../src/mpdinteraction.c:166
+#: ../src/mpdinteraction.c:275
 msgid "Repeat (on|off)"
-msgstr ""
+msgstr "Upprepa (on | off)"
 
 #. volume commands
-#: ../src/mpdinteraction.c:169
+#: ../src/mpdinteraction.c:278
 msgid "volume"
 msgstr ""
 
-#: ../src/mpdinteraction.c:169
-msgid "Volume <level>"
+#: ../src/mpdinteraction.c:278
+msgid "Volume (+-)<level>"
 msgstr ""
 
-#: ../src/mpdinteraction.c:170
-msgid "volume \\+"
-msgstr ""
-
-#: ../src/mpdinteraction.c:170
-msgid "Increase volume"
-msgstr ""
-
-#: ../src/mpdinteraction.c:171
-msgid "volume -"
-msgstr ""
-
-#: ../src/mpdinteraction.c:171
-msgid "Decrease volume"
-msgstr ""
-
-#: ../src/mpdinteraction.c:172
+#: ../src/mpdinteraction.c:279
 msgid "mute"
+msgstr "Dämpa"
+
+#: ../src/mpdinteraction.c:281
+msgid "crossfade"
 msgstr ""
 
-#: ../src/mpdinteraction.c:175
+#: ../src/mpdinteraction.c:281
+msgctxt "Regex for matching crossfade, translate off"
+msgid "([0-9]+|Off)"
+msgstr ""
+
+#: ../src/mpdinteraction.c:281
+msgid "Set Crossfade <seconds>"
+msgstr ""
+
+#: ../src/mpdinteraction.c:283
+msgid "output"
+msgstr ""
+
+#: ../src/mpdinteraction.c:283
+msgctxt "Regex for matching output"
+msgid "[0-9]+ (Enable|Disable)"
+msgstr ""
+
+#: ../src/mpdinteraction.c:284
+msgid "output X enable or disable"
+msgstr ""
+
+#: ../src/mpdinteraction.c:286
 msgid "Play <query>"
-msgstr ""
+msgstr "Spela <förfrågan>"
 
-#: ../src/mpdinteraction.c:176
+#: ../src/mpdinteraction.c:287
 msgid "add"
 msgstr ""
 
-#: ../src/mpdinteraction.c:176
+#: ../src/mpdinteraction.c:287
 msgid "Add <query>"
-msgstr ""
+msgstr "Lägg till >förfrågan>"
 
-#: ../src/mpdinteraction.c:177
+#: ../src/mpdinteraction.c:288
 msgid "replace"
-msgstr ""
+msgstr "Ersätt"
 
-#: ../src/mpdinteraction.c:177
+#: ../src/mpdinteraction.c:288
 msgid "Replace <query>"
+msgstr "Ersätt >förfrågan>"
+
+#. Basic seek commands
+#: ../src/mpdinteraction.c:291
+msgid "seek"
+msgstr "Sök"
+
+#: ../src/mpdinteraction.c:291
+msgid "Seek within the current song"
+msgstr "Sök i den aktuella låten"
+
+#: ../src/mpdinteraction.c:294
+msgid "stop after current song"
 msgstr ""
 
-#: ../src/mpdinteraction.c:181
+#: ../src/mpdinteraction.c:296
+msgid "Stop playback after the current song"
+msgstr ""
+
+#: ../src/mpdinteraction.c:300
+msgid "repeat current song"
+msgstr ""
+
+#: ../src/mpdinteraction.c:302
+msgid "Repeat the current song"
+msgstr ""
+
+#: ../src/mpdinteraction.c:306
+msgid "update database"
+msgstr ""
+
+#: ../src/mpdinteraction.c:308
+msgid "Update the database"
+msgstr ""
+
+#: ../src/mpdinteraction.c:313
 msgid "Server Settings"
 msgstr "Serverinställningar"
 
-#: ../src/mpdinteraction.c:211
+#: ../src/mpdinteraction.c:343
 msgid "Connection"
 msgstr "Anslutning"
 
-#: ../src/mpdinteraction.c:312
+#: ../src/mpdinteraction.c:436
 msgid "Connecting"
 msgstr "Ansluter"
 
 #. Add all from album
-#: ../src/mpdinteraction.c:1291
+#: ../src/mpdinteraction.c:1443
 msgid "All from album"
-msgstr ""
+msgstr "Lägg till från album"
 
 #. Add all from artist
-#: ../src/mpdinteraction.c:1303
+#: ../src/mpdinteraction.c:1455
 msgid "All from artist"
-msgstr ""
+msgstr "Allt från artisten"
 
 #. Add all from genre
-#: ../src/mpdinteraction.c:1313
+#: ../src/mpdinteraction.c:1465
 msgid "All from genre"
-msgstr ""
+msgstr "Allt från genren"
 
 #. Add all from file
-#: ../src/mpdinteraction.c:1321
+#: ../src/mpdinteraction.c:1473
 msgid "All from same directory"
-msgstr ""
+msgstr "Alla från samma katalog"
 
 #. Create sub menu
 #. Add
-#: ../src/mpdinteraction.c:1329
+#: ../src/mpdinteraction.c:1481
 msgid "Add more"
 msgstr "Lägg till mer"
 
-#: ../src/mpdinteraction.c:1339
+#: ../src/mpdinteraction.c:1491
 msgid "Set Rating"
 msgstr ""
 
-#: ../src/playlist3.c:604
+#: ../src/playlist3.c:616
 msgid "MPD database is updating"
 msgstr "MPD-databasen uppdateras"
 
-#: ../src/playlist3.c:614
+#: ../src/playlist3.c:626
 msgid "MPD is updating its database"
 msgstr "MPD uppdaterar sin databas"
 
-#: ../src/playlist3.c:616
+#: ../src/playlist3.c:628
 msgid "MPD finished updating its database"
 msgstr "MPD har uppdaterat klart sin databas"
 
-#: ../src/playlist3.c:780
+#: ../src/playlist3.c:777
 msgid "Connected"
 msgstr "Ansluten"
 
-#: ../src/playlist3.c:789 ../src/playlist3.c:2128
+#: ../src/playlist3.c:786 ../src/playlist3.c:2198
 msgid "Not Connected"
 msgstr "Inte ansluten"
 
-#: ../src/playlist3.c:802 ../src/playlist3.c:807 ../src/playlist3.c:1617
+#: ../src/playlist3.c:799 ../src/playlist3.c:804 ../src/playlist3.c:1633
 msgid "GMPC"
-msgstr ""
+msgstr "GMPC"
 
-#: ../src/playlist3.c:802
+#: ../src/playlist3.c:799
 msgid "Connected to"
 msgstr "Ansluten till"
 
-#: ../src/playlist3.c:807
+#: ../src/playlist3.c:804
 msgid "Disconnected"
 msgstr "Frånkopplad"
 
@@ -807,194 +772,277 @@ msgid ""
 "Failed to open the interface description file!\n"
 "Please reinstall gmpc\n"
 msgstr ""
+"Det gick inte att öppna gränssnittsbeskrivningen\n"
+"Ominstallera gmpc\n"
 
-#: ../src/playlist3.c:1647
+#: ../src/playlist3.c:1666
 #, c-format
 msgid "Repeat: %s"
 msgstr "upprepa: %s"
 
-#: ../src/playlist3.c:1648 ../src/playlist3.c:1661
+#: ../src/playlist3.c:1667 ../src/playlist3.c:1680 ../src/playlist3.c:1692
+#: ../src/playlist3.c:1705
 msgid "On"
 msgstr "På"
 
-#: ../src/playlist3.c:1648 ../src/playlist3.c:1661
-msgid "Off"
-msgstr "Av"
-
-#: ../src/playlist3.c:1660
+#: ../src/playlist3.c:1679
 #, c-format
 msgid "Random: %s"
 msgstr "slumpmässig: %s"
 
-#: ../src/playlist3.c:1708
+#: ../src/playlist3.c:1691
 #, c-format
-msgid "MPD Database refreshed at: %c"
+msgid "Single mode: %s"
 msgstr ""
 
-#: ../src/playlist3.c:1716
+#: ../src/playlist3.c:1704
+#, c-format
+msgid "Consume: %s"
+msgstr ""
+
+#: ../src/playlist3.c:1769
+#, c-format
+msgid "MPD Database refreshed at: %c"
+msgstr "MPD Databasen uppdateras på:%c"
+
+#: ../src/playlist3.c:1777
 msgid "MPD Reported the following error"
 msgstr "MPD rapporterade följande fel"
 
-#: ../src/playlist3.c:1838 ../src/playlist3.c:1844
+#: ../src/playlist3.c:1910 ../src/playlist3.c:1916
 msgid "Profile"
 msgstr "Profil"
 
-#: ../src/playlist3.c:1839
+#: ../src/playlist3.c:1911
 msgid "added"
 msgstr "tillagd"
 
-#: ../src/playlist3.c:1846
+#: ../src/playlist3.c:1918
 msgid "changed hostname to:"
 msgstr "Värdnamnet byttes till:"
 
 #. Update DB
-#: ../src/playlist3.c:1953
+#: ../src/playlist3.c:2026
 msgid "Update Database"
 msgstr "Uppdatera databasen"
 
 #. Server Information
-#: ../src/playlist3.c:1962
+#: ../src/playlist3.c:2035 ../src/vala/gmpc-test-plugin.c:935
 msgid "Information"
 msgstr ""
 
-#: ../src/playlist3.c:2042
+#: ../src/playlist3.c:2114
 msgid "By"
 msgstr "Av"
 
-#: ../src/playlist3.c:2049
+#: ../src/playlist3.c:2120
 msgid "From"
 msgstr "Från"
 
-#: ../src/playlist3.c:2121
+#: ../src/playlist3.c:2191
 msgid "Not Playing"
 msgstr "Ingen uppspelning"
 
-#: ../src/playlist3.c:2246
+#: ../src/playlist3.c:2305
 msgid "Interface"
 msgstr "Gränssnitt"
 
-#: ../src/playlist3-messages.c:35
+#: ../src/playlist3-messages.c:26
 msgid "Info"
 msgstr "Information"
 
-#: ../src/playlist3-messages.c:36
+#: ../src/playlist3-messages.c:27
 msgid "Warning"
 msgstr "Varning"
 
-#: ../src/playlist3-messages.c:37
+#: ../src/playlist3-messages.c:28
 msgid "Critical"
 msgstr "Kritisk"
 
-#: ../src/playlist3-messages.c:228
+#: ../src/playlist3-messages.c:251
 msgid "Time"
 msgstr "Tid"
 
-#: ../src/playlist3-messages.c:230
+#: ../src/playlist3-messages.c:253
 msgid "Message"
 msgstr "Meddelande"
 
+#: ../src/plugin.c:60 ../src/plugin.c:68 ../src/plugin.c:75 ../src/plugin.c:83
+#: ../src/plugin.c:89 ../src/plugin.c:97 ../src/plugin.c:103
+#: ../src/plugin.c:110 ../src/plugin.c:117 ../src/plugin.c:124
+#: ../src/plugin.c:131 ../src/plugin.c:142 ../src/plugin.c:153
 #: ../src/plugin.c:216
+msgid "Failed to load plugin"
+msgstr ""
+
+#: ../src/plugin.c:60
+msgid "plugin has no name"
+msgstr ""
+
+#: ../src/plugin.c:68
+msgid "plugin with same name allready exists"
+msgstr ""
+
+#: ../src/plugin.c:75
+msgid "plugin is missing set/get enable function"
+msgstr ""
+
+#: ../src/plugin.c:83 ../src/plugin.c:89 ../src/plugin.c:142
+msgid "plugin browser structure is incorrect"
+msgstr ""
+
+#: ../src/plugin.c:97 ../src/plugin.c:103 ../src/plugin.c:110
+#: ../src/plugin.c:131
+msgid "plugin metadata structure is incorrect"
+msgstr ""
+
+#: ../src/plugin.c:117
+msgid "plugin get_image api is deprecated "
+msgstr ""
+
+#: ../src/plugin.c:124
+msgid "plugin get_uris api is deprecated "
+msgstr ""
+
+#: ../src/plugin.c:153
+msgid "plugin preferences structure is incorrect"
+msgstr ""
+
+#: ../src/plugin.c:227
+msgid "Failed to create plugin instance"
+msgstr ""
+
+#: ../src/plugin.c:239
+msgid "Failed to bind symbol in plugin"
+msgstr ""
+
+#: ../src/plugin.c:251
+#, c-format
+msgid "Plugin %s has wrong api version: %i"
+msgstr ""
+
+#: ../src/plugin.c:261 ../src/plugin.c:268
+#, c-format
+msgid "Plugin %s has wrong no plugin structure: %s"
+msgstr ""
+
+#: ../src/plugin.c:287
 msgid ""
 "One or more plugins failed to load, see help->messages for more information"
 msgstr ""
 "En eller fler insticksmoduler kunde inte startas, se hjälp->meddelanden för "
 "mer information"
 
-#: ../src/preferences.c:93 ../src/preferences.c:194
+#: ../src/preferences.c:98 ../src/preferences.c:205
 msgid "Plugins"
 msgstr "Insticksmoduler"
 
-#: ../src/preferences.c:155
+#: ../src/preferences.c:160
 msgid "Plugins:"
 msgstr "insticksmoduler:"
 
-#: ../src/preferences.c:310 ../src/gob/gmpc-mpddata-treeview.gob:75
+#: ../src/preferences.c:331
+msgid "Enabled"
+msgstr "Aktiverad"
+
+#: ../src/preferences.c:334 ../src/gob/gmpc-mpddata-treeview.gob:76
 msgid "Name"
 msgstr "Namn"
 
-#: ../src/preferences.c:312
+#: ../src/preferences.c:336
 msgid "Function"
 msgstr "Funktion"
 
-#: ../src/preferences.c:333
+#. * Mpd version
+#: ../src/preferences.c:338 ../src/browsers/server-information.c:333
+msgid "Version"
+msgstr "Version"
+
+#: ../src/preferences.c:367
 msgid "Dummy"
 msgstr ""
 
-#: ../src/preferences.c:336
+#: ../src/preferences.c:370
 msgid "Browser Extension"
 msgstr "Webbläsartillägg"
 
-#: ../src/preferences.c:339
+#: ../src/preferences.c:373
 msgid "Metadata Provider"
 msgstr ""
 
-#: ../src/preferences.c:342
+#: ../src/preferences.c:376
 msgid "Metadata Provider and Browser Extension"
 msgstr ""
 
-#: ../src/preferences.c:345
+#: ../src/preferences.c:379
 msgid "Misc."
 msgstr "Diverse"
 
-#: ../src/preferences.c:350
+#: ../src/preferences.c:384
 msgid "Unknown"
 msgstr "Okänd"
 
-#: ../src/TreeSearchWidget.c:271
-msgid "Find:"
-msgstr "Sök:"
-
-#: ../src/url_fetcher.c:57 ../src/url_fetcher.c:83
+#: ../src/url_fetcher.c:61 ../src/url_fetcher.c:87 ../src/url_fetcher.c:161
 #, c-format
 msgid "Added %i %s"
 msgstr ""
 
-#: ../src/url_fetcher.c:57 ../src/url_fetcher.c:83
+#: ../src/url_fetcher.c:61 ../src/url_fetcher.c:87 ../src/url_fetcher.c:161
 msgid "stream"
 msgid_plural "streams"
 msgstr[0] "ström"
 msgstr[1] "strömmar"
 
-#: ../src/url_fetcher.c:136 ../src/url_fetcher.c:157
+#: ../src/url_fetcher.c:230 ../src/url_fetcher.c:256
 msgid "Added 1 stream"
+msgstr ""
+
+#: ../src/url_fetcher.c:337
+msgid "Failed to open local file"
+msgstr ""
+
+#: ../src/url_fetcher.c:352
+msgid "Uri scheme not supported"
 msgstr ""
 
 #. *
 #. * Setup the label
-#. 
-#: ../src/url_fetcher.c:240
+#.
+#: ../src/url_fetcher.c:394
 msgid "Enter an url"
 msgstr "Mata in en url"
 
-#: ../src/tray-icon2.c:136
+#: ../src/tray-icon2.c:152
 msgid "Pla_ylist"
 msgstr "Spe_llista"
 
-#: ../src/tray-icon2.c:865
+#: ../src/tray-icon2.c:942
 msgid "Notification"
 msgstr "Rapport"
 
 #. *
 #. * Append an introduction page
-#. 
-#: ../src/setup-assistant.c:114
+#.
+#: ../src/setup-assistant.c:111
 msgid ""
 "It is the first time you have launched gmpc.\n"
 "This assistant will help you connect gmpc to your mpd daemon."
 msgstr ""
+"Detta är första gången du startar gmpc.\n"
+"Denna assistent kommer att hjälpa dig att ansluta gmpc till din MPD daemon."
 
-#: ../src/setup-assistant.c:116
+#: ../src/setup-assistant.c:113
 msgid "Welcome to GMPC"
 msgstr "Välkommen till GMPC"
 
-#: ../src/setup-assistant.c:135
+#: ../src/setup-assistant.c:132
 msgid "Setup connection"
 msgstr "inrättar förbindelse"
 
 #. *
 #. * End
-#. 
-#: ../src/setup-assistant.c:144
+#.
+#: ../src/setup-assistant.c:141
 msgid ""
 "Gmpc is now ready for use.\n"
 "Enjoy using gmpc."
@@ -1002,7 +1050,7 @@ msgstr ""
 "Gmpc är nu färdig för användning.\n"
 "Hoppas du blir nöjd med gmpc."
 
-#: ../src/setup-assistant.c:146
+#: ../src/setup-assistant.c:143
 msgid "Finish"
 msgstr "Slutför"
 
@@ -1051,6 +1099,7 @@ msgstr ""
 "  Dostojevskji https://launchpad.net/~darkangel-nr1\n"
 "\n"
 "Launchpad Contributions:\n"
+"  Anders Landin https://launchpad.net/~127594-gmail\n"
 "  Björn_Nilsson https://launchpad.net/~bjorn-bjornbjorn\n"
 "  Daniel Nylander https://launchpad.net/~yeager\n"
 "  Dostojevskji https://launchpad.net/~darkangel-nr1"
@@ -1080,32 +1129,36 @@ msgid "Host:"
 msgstr "Värd:"
 
 #: ../glade/preferences-connection.ui.h:4
-#: ../src/browsers/playlist3-playlist-editor.c:472
-#: ../src/browsers/playlist3-playlist-editor.c:511
+msgid "Music Directory:"
+msgstr ""
+
+#: ../glade/preferences-connection.ui.h:5
+#: ../src/browsers/playlist3-playlist-editor.c:455
+#: ../src/browsers/playlist3-playlist-editor.c:495
 msgid "Name:"
 msgstr "Namn:"
 
-#: ../glade/preferences-connection.ui.h:5 ../glade/preferences-proxy.ui.h:3
+#: ../glade/preferences-connection.ui.h:6 ../glade/preferences-proxy.ui.h:3
 msgid "Password:"
 msgstr "Lösenord:"
 
-#: ../glade/preferences-connection.ui.h:6 ../glade/preferences-proxy.ui.h:4
+#: ../glade/preferences-connection.ui.h:7 ../glade/preferences-proxy.ui.h:4
 msgid "Port:"
 msgstr "Port:"
 
-#: ../glade/preferences-connection.ui.h:7
+#: ../glade/preferences-connection.ui.h:8
 msgid "Timeout (s):"
 msgstr "Timeout (s):"
 
-#: ../glade/preferences-connection.ui.h:8
+#: ../glade/preferences-connection.ui.h:9
 msgid "_Autoconnect"
 msgstr "_Anslut automatiskt"
 
-#: ../glade/preferences-connection.ui.h:10
+#: ../glade/preferences-connection.ui.h:11
 msgid "_Use Authentication"
 msgstr "_Använd Authentifiering"
 
-#: ../glade/preferences-connection.ui.h:11
+#: ../glade/preferences-connection.ui.h:12
 msgid "localhost"
 msgstr "lokal värd"
 
@@ -1162,38 +1215,30 @@ msgid "<b>Playlist:</b>"
 msgstr "<b>Spelningslista</b>"
 
 #: ../glade/preferences-playlist.ui.h:3
-msgid "<b>Song Markup</b>"
-msgstr "<b>Sångmarginal</b>"
-
-#: ../glade/preferences-playlist.ui.h:4
 msgid "Center playing song"
 msgstr "Centrera spelad låt"
 
-#: ../glade/preferences-playlist.ui.h:5
-msgid "Edit _Browser Markup"
-msgstr ""
-
-#: ../glade/preferences-playlist.ui.h:6
+#: ../glade/preferences-playlist.ui.h:4
 msgid "Hide on close"
 msgstr "Göm vid stängning"
 
-#: ../glade/preferences-playlist.ui.h:7
+#: ../glade/preferences-playlist.ui.h:5
 msgid "Save position and size between sessions"
 msgstr "Spara position och storlek mellan sessioner"
 
-#: ../glade/preferences-playlist.ui.h:8
+#: ../glade/preferences-playlist.ui.h:6
 msgid "Show buttons instead of dropdown in collapsed view"
 msgstr ""
 
-#: ../glade/preferences-playlist.ui.h:9
+#: ../glade/preferences-playlist.ui.h:7
 msgid "Show songlist tooltip"
 msgstr ""
 
-#: ../glade/preferences-playlist.ui.h:10
+#: ../glade/preferences-playlist.ui.h:8
 msgid "Stop playing on exit"
 msgstr "Stanna uppspelning vid avslut"
 
-#: ../glade/preferences-playlist.ui.h:11
+#: ../glade/preferences-playlist.ui.h:9
 msgid "Stylize album covers"
 msgstr ""
 
@@ -1273,6 +1318,10 @@ msgstr ""
 msgid "Username:"
 msgstr ""
 
+#: ../glade/preferences-mmkeys.ui.h:1
+msgid "To disable a keybinding edit it and press 'backspace'"
+msgstr ""
+
 #: ../glade/preferences.ui.h:1
 msgid ""
 "<span size=\"x-large\"><b>Plugins</b></span>\n"
@@ -1295,7 +1344,7 @@ msgstr "<ange spelningslistans namn>"
 
 #: ../glade/playlist-save-dialog.ui.h:2
 msgid "<span size=\"x-small\"><i>Playlist already exists.</i></span>"
-msgstr ""
+msgstr "<span size=\"x-small\"><i>Spellista existerar redan.</i></span>"
 
 #: ../glade/playlist-save-dialog.ui.h:3
 msgid "Save Playlist"
@@ -1305,61 +1354,63 @@ msgstr "Spara Spellista"
 msgid "name:"
 msgstr "namn:"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:106
+#: ../src/browsers/playlist3-current-playlist-browser.c:113
 msgid "item"
 msgid_plural "items"
 msgstr[0] "objekt"
 msgstr[1] "objekt"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:107
+#: ../src/browsers/playlist3-current-playlist-browser.c:114
 msgid "(Estimation)"
 msgstr "(Uppskattning)"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:140
+#: ../src/browsers/playlist3-current-playlist-browser.c:162
 msgid "switch play queue"
 msgstr ""
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:141
+#: ../src/browsers/playlist3-current-playlist-browser.c:163
 msgid "Switch to play queue"
-msgstr ""
+msgstr "Skifta till uppspelningskö"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:144
-#: ../src/browsers/playlist3-current-playlist-browser.c:145
+#: ../src/browsers/playlist3-current-playlist-browser.c:166
+#: ../src/browsers/playlist3-current-playlist-browser.c:167
 msgid "Clear play queue"
+msgstr "Rensa uppspelningskö"
+
+#: ../src/browsers/playlist3-current-playlist-browser.c:171
+msgid "Crop current song"
 msgstr ""
 
-#. PL3_CURRENT_PLAYLIST,
-#: ../src/browsers/playlist3-current-playlist-browser.c:426
-#: ../src/browsers/playlist3-current-playlist-browser.c:1095
-msgid "Play Queue"
-msgstr "Spela upp kö"
+#: ../src/browsers/playlist3-current-playlist-browser.c:172
+msgid "Crop the playlist so it only contains the current song"
+msgstr ""
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:500
+#: ../src/browsers/playlist3-current-playlist-browser.c:479
 msgid "Are you sure you want to clear the playlist?"
 msgstr "Är du säker på att du vill rensa spellistan?"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:651
-#: ../src/browsers/playlist3-current-playlist-browser.c:672
-#: ../src/browsers/playlist3-current-playlist-browser.c:714
-#: ../src/browsers/playlist3-current-playlist-browser.c:736
+#: ../src/browsers/playlist3-current-playlist-browser.c:596
+#: ../src/browsers/playlist3-current-playlist-browser.c:616
+#: ../src/browsers/playlist3-current-playlist-browser.c:658
+#: ../src/browsers/playlist3-current-playlist-browser.c:680
 msgid "Your mpd has a broken 'addid', pasting will fail."
-msgstr ""
+msgstr "Din mpd har en bryten 'addid'.inklistring kommer misslyckas"
 
 #. add the delete widget
-#: ../src/browsers/playlist3-current-playlist-browser.c:762
+#: ../src/browsers/playlist3-current-playlist-browser.c:706
 msgid "Crop"
 msgstr "Kapa"
 
 #. add the shuffle widget
-#: ../src/browsers/playlist3-current-playlist-browser.c:776
+#: ../src/browsers/playlist3-current-playlist-browser.c:720
 msgid "Shuffle"
 msgstr "Blanda"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:905
+#: ../src/browsers/playlist3-current-playlist-browser.c:854
 msgid "Add URL"
 msgstr "Lägg till URL"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:994
+#: ../src/browsers/playlist3-current-playlist-browser.c:943
 #, c-format
 msgid ""
 "<i>Playlist <b>\"%s\"</b> already exists\n"
@@ -1368,29 +1419,38 @@ msgstr ""
 "<i>Spellistan <b>\"%s\"</b> existerar redan\n"
 "Ersätt?</i>"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:1018
+#: ../src/browsers/playlist3-current-playlist-browser.c:967
 msgid "Failed to save the playlist file."
 msgstr "Kunde inte spara spellistan."
 
-#: ../src/browsers/playlist3-file-browser.c:98
-#: ../src/browsers/playlist3-file-browser.c:351
-#: ../src/browsers/playlist3-file-browser.c:1197
+#: ../src/browsers/playlist3-current-playlist-browser.c:1044
+#: ../src/browsers/playlist3-current-playlist-browser.c:1092
+msgid "Play Queue"
+msgstr "Spela upp kö"
+
+#: ../src/browsers/playlist3-file-browser.c:97
+#: ../src/browsers/playlist3-file-browser.c:336
+#: ../src/browsers/playlist3-file-browser.c:1173
 msgid "File Browser"
 msgstr "Filbläddrare"
 
-#: ../src/browsers/playlist3-file-browser.c:179
+#: ../src/browsers/playlist3-file-browser.c:165
 msgid "Directories"
 msgstr "Kataloger"
 
-#: ../src/browsers/playlist3-file-browser.c:229
+#: ../src/browsers/playlist3-file-browser.c:214
 msgid ""
 "It seems you have no music in your database.\n"
 "To add music, copy the music to your <i>music_directory</i> as specified in "
 "your mpd config file.\n"
 "Then update the database. (Server->Update Database)"
 msgstr ""
+"Det verkar som att du inte har någon musik i din databas.\n"
+"För att lägga till musik, kopiera musiken till din <i>Musik_katalog</i> som "
+"är specifierad i din mpd konfigurations fil\n"
+"Uppdatera sedan databasen. (server->uppdatera Databas"
 
-#: ../src/browsers/playlist3-file-browser.c:262
+#: ../src/browsers/playlist3-file-browser.c:247
 #, c-format
 msgid "Added folder '%s' recursively"
 msgstr ""
@@ -1399,259 +1459,267 @@ msgstr ""
 #. replace the replace widget
 #. add the replace widget
 #. Play button
+#. add the replace widget
 #. replace
-#: ../src/browsers/playlist3-file-browser.c:613
-#: ../src/browsers/playlist3-file-browser.c:915
-#: ../src/browsers/playlist3-file-browser.c:947
-#: ../src/browsers/playlist3-find2-browser.c:719
-#: ../src/browsers/playlist3-metadata-browser.c:664
-#: ../src/browsers/playlist3-metadata-browser.c:1027
-#: ../src/browsers/playlist3-metadata-browser.c:1526
-#: ../src/browsers/playlist3-metadata-browser.c:1911
-#: ../src/browsers/playlist3-metadata-browser.c:2391
-#: ../src/browsers/playlist3-playlist-editor.c:556
-#: ../src/browsers/playlist3-playlist-editor.c:620
+#. add the replace widget
+#: ../src/browsers/playlist3-file-browser.c:599
+#: ../src/browsers/playlist3-file-browser.c:891
+#: ../src/browsers/playlist3-file-browser.c:923
+#: ../src/browsers/playlist3-find2-browser.c:729
+#: ../src/browsers/playlist3-metadata-browser.c:705
+#: ../src/browsers/playlist3-metadata-browser.c:1093
+#: ../src/browsers/playlist3-metadata-browser.c:1597
+#: ../src/browsers/playlist3-metadata-browser.c:1847
+#: ../src/browsers/playlist3-metadata-browser.c:1990
+#: ../src/browsers/playlist3-metadata-browser.c:2474
+#: ../src/browsers/playlist3-playlist-editor.c:540
+#: ../src/browsers/playlist3-playlist-editor.c:605
+#: ../src/browsers/playlist3-tag2-browser.c:396
+#: ../src/browsers/playlist3-tag2-browser.c:1079
 msgid "Replace"
 msgstr "Ersätt"
 
 #. add the update widget
-#: ../src/browsers/playlist3-file-browser.c:638
-#: ../src/browsers/playlist3-file-browser.c:904
+#: ../src/browsers/playlist3-file-browser.c:624
+#: ../src/browsers/playlist3-file-browser.c:880
 msgid "Update"
 msgstr "Uppdatera"
 
-#: ../src/browsers/playlist3-file-browser.c:758
+#: ../src/browsers/playlist3-file-browser.c:734
 msgid "Loaded playlist"
-msgstr ""
+msgstr "Laddad spellista"
 
-#: ../src/browsers/playlist3-file-browser.c:1029
-#: ../src/browsers/playlist3-playlist-editor.c:411
+#: ../src/browsers/playlist3-file-browser.c:1005
+#: ../src/browsers/playlist3-playlist-editor.c:387
 msgid "Added"
 msgstr "Tillagd"
 
-#: ../src/browsers/playlist3-file-browser.c:1031
-#: ../src/browsers/playlist3-playlist-editor.c:411
+#: ../src/browsers/playlist3-file-browser.c:1007
+#: ../src/browsers/playlist3-playlist-editor.c:387
 msgid "song"
 msgid_plural "songs"
 msgstr[0] "låt"
 msgstr[1] "Låtar"
 
-#: ../src/browsers/playlist3-file-browser.c:1033
+#: ../src/browsers/playlist3-file-browser.c:1009
 msgid "directory"
 msgid_plural "directories"
 msgstr[0] "katalog"
 msgstr[1] "Kataloger"
 
-#: ../src/browsers/playlist3-file-browser.c:1035
+#: ../src/browsers/playlist3-file-browser.c:1011
 msgid "playlist"
 msgid_plural "playlists"
 msgstr[0] "spellista"
 msgstr[1] "spellistor"
 
-#: ../src/browsers/playlist3-file-browser.c:1058
-#: ../src/browsers/playlist3-file-browser.c:1108
+#: ../src/browsers/playlist3-file-browser.c:1034
+#: ../src/browsers/playlist3-file-browser.c:1084
 msgid "Are you sure you want to clear the selected playlist?"
 msgstr "Är du säker på att du vill tömma den valda spellistan??"
 
 #: ../src/browsers/playlist3-find2-browser.c:102
+#: ../src/vala/gmpc-test-plugin.c:1022
 msgid "Query"
 msgstr "Fråga"
 
-#: ../src/browsers/playlist3-find2-browser.c:230
-#: ../src/browsers/server-information.c:340
+#: ../src/browsers/playlist3-find2-browser.c:240
+#: ../src/browsers/server-information.c:342
 msgid "Database"
 msgstr ""
 
-#: ../src/browsers/playlist3-find2-browser.c:231
+#: ../src/browsers/playlist3-find2-browser.c:241
 msgid "Playlist"
-msgstr ""
+msgstr "Spellista"
 
-#: ../src/browsers/playlist3-find2-browser.c:331
-#: ../src/browsers/playlist3-find2-browser.c:784
+#: ../src/browsers/playlist3-find2-browser.c:345
+#: ../src/browsers/playlist3-find2-browser.c:794
 msgid "Search"
 msgstr "Sök"
 
-#: ../src/browsers/playlist3-find2-browser.c:423
+#: ../src/browsers/playlist3-find2-browser.c:435
 msgid "Search failed"
 msgstr ""
 
-#: ../src/browsers/playlist3-find2-browser.c:711
+#: ../src/browsers/playlist3-find2-browser.c:721
 msgid "Add all"
 msgstr ""
 
-#: ../src/browsers/playlist3-find2-browser.c:935
+#: ../src/browsers/playlist3-find2-browser.c:965
 msgid "switch search"
-msgstr ""
+msgstr "Byta sökning"
 
-#: ../src/browsers/playlist3-find2-browser.c:936
+#: ../src/browsers/playlist3-find2-browser.c:966
 msgid "Switch to the search browser"
-msgstr ""
+msgstr "Växla till sökningen webbläsare"
 
-#: ../src/browsers/playlist3-find2-browser.c:940
+#: ../src/browsers/playlist3-find2-browser.c:970
 msgid "search database"
-msgstr ""
+msgstr "Sök i databas"
 
-#: ../src/browsers/playlist3-find2-browser.c:941
+#: ../src/browsers/playlist3-find2-browser.c:971
 msgid "Search database <query>"
-msgstr ""
+msgstr "Sök i databas <förfrågan>"
 
-#: ../src/browsers/playlist3-find2-browser.c:944
+#: ../src/browsers/playlist3-find2-browser.c:974
 msgid "search playlist"
-msgstr ""
+msgstr "Sök spellista"
 
-#: ../src/browsers/playlist3-find2-browser.c:945
+#: ../src/browsers/playlist3-find2-browser.c:975
 msgid "Search playlist <query>"
 msgstr ""
 
-#: ../src/browsers/playlist3-find2-browser.c:961
+#: ../src/browsers/playlist3-find2-browser.c:991
 msgid "Search Browser"
-msgstr ""
-
-#: ../src/browsers/playlist3-metadata-browser.c:244
-#: ../src/browsers/playlist3-metadata-browser.c:280
-msgid "Unavailable"
-msgstr "Otillgänglig"
-
-#: ../src/browsers/playlist3-metadata-browser.c:274
-msgid "Fetching..."
 msgstr ""
 
 #. View
 #. *
 #. * View Button
-#. 
-#: ../src/browsers/playlist3-metadata-browser.c:382
-#: ../src/browsers/playlist3-metadata-browser.c:681
-#: ../src/browsers/playlist3-metadata-browser.c:2416
+#.
+#: ../src/browsers/playlist3-metadata-browser.c:221
+#: ../src/browsers/playlist3-metadata-browser.c:722
+#: ../src/browsers/playlist3-metadata-browser.c:2499
 msgid "View"
 msgstr "Visa"
 
-#: ../src/browsers/playlist3-metadata-browser.c:628
-#: ../src/browsers/playlist3-metadata-browser.c:913
-#: ../src/gob/gmpc-mpddata-treeview.gob:69
-#: ../src/gob/gmpc-mpddata-treeview.gob:623
+#: ../src/browsers/playlist3-metadata-browser.c:324
+#: ../src/browsers/playlist3-metadata-browser.c:360
+msgid "Unavailable"
+msgstr "Otillgänglig"
+
+#: ../src/browsers/playlist3-metadata-browser.c:354
+msgid "Fetching..."
+msgstr ""
+
+#: ../src/browsers/playlist3-metadata-browser.c:669
+#: ../src/browsers/playlist3-metadata-browser.c:956
+#: ../src/gob/gmpc-mpddata-treeview.gob:70
+#: ../src/gob/gmpc-mpddata-treeview.gob:631 ../src/vala/gmpc-test-plugin.c:972
 msgid "Artist"
 msgstr "Artist"
 
-#: ../src/browsers/playlist3-metadata-browser.c:635
-#: ../src/browsers/playlist3-metadata-browser.c:1505
-#: ../src/browsers/playlist3-metadata-browser.c:1951
+#: ../src/browsers/playlist3-metadata-browser.c:676
+#: ../src/browsers/playlist3-metadata-browser.c:1576
+#: ../src/browsers/playlist3-metadata-browser.c:2030
 msgid "Songs"
 msgstr "Låtar"
 
-#: ../src/browsers/playlist3-metadata-browser.c:643
-#: ../src/browsers/playlist3-metadata-browser.c:1512
-#: ../src/browsers/playlist3-metadata-browser.c:2036
-#: ../src/browsers/playlist3-metadata-browser.c:2372
+#: ../src/browsers/playlist3-metadata-browser.c:684
+#: ../src/browsers/playlist3-metadata-browser.c:1583
+#: ../src/browsers/playlist3-metadata-browser.c:2115
+#: ../src/browsers/playlist3-metadata-browser.c:2451
 msgid "Playtime"
 msgstr "Speltid"
 
-#: ../src/browsers/playlist3-metadata-browser.c:648
-#: ../src/browsers/playlist3-metadata-browser.c:931
-#: ../src/browsers/playlist3-metadata-browser.c:1992
-#: ../src/browsers/playlist3-metadata-browser.c:2350
-#: ../src/gob/gmpc-mpddata-treeview.gob:73
-#: ../src/gob/gmpc-mpddata-treeview.gob:649
+#: ../src/browsers/playlist3-metadata-browser.c:689
+#: ../src/browsers/playlist3-metadata-browser.c:974
+#: ../src/browsers/playlist3-metadata-browser.c:2071
+#: ../src/browsers/playlist3-metadata-browser.c:2429
+#: ../src/gob/gmpc-mpddata-treeview.gob:74
+#: ../src/gob/gmpc-mpddata-treeview.gob:657
 msgid "Genre"
 msgstr "Genre"
 
-#: ../src/browsers/playlist3-metadata-browser.c:652
-#: ../src/browsers/playlist3-metadata-browser.c:937
-#: ../src/browsers/playlist3-metadata-browser.c:2021
-#: ../src/browsers/playlist3-metadata-browser.c:2356
-#: ../src/gob/gmpc-mpddata-treeview.gob:78
-#: ../src/gob/gmpc-mpddata-treeview.gob:661
+#: ../src/browsers/playlist3-metadata-browser.c:693
+#: ../src/browsers/playlist3-metadata-browser.c:980
+#: ../src/browsers/playlist3-metadata-browser.c:2100
+#: ../src/browsers/playlist3-metadata-browser.c:2435
+#: ../src/gob/gmpc-mpddata-treeview.gob:79
+#: ../src/gob/gmpc-mpddata-treeview.gob:669
 msgid "Date"
 msgstr "Datum"
 
-#: ../src/browsers/playlist3-metadata-browser.c:785
-#: ../src/browsers/playlist3-metadata-browser.c:1297
-#: ../src/browsers/playlist3-metadata-browser.c:1402
-#: ../src/browsers/playlist3-metadata-browser.c:1811
+#: ../src/browsers/playlist3-metadata-browser.c:826
+#: ../src/browsers/playlist3-metadata-browser.c:1363
+#: ../src/browsers/playlist3-metadata-browser.c:1471
+#: ../src/browsers/playlist3-metadata-browser.c:1888
 msgid "Collection"
 msgstr "Samling"
 
-#: ../src/browsers/playlist3-metadata-browser.c:897
-#: ../src/gob/gmpc-mpddata-treeview.gob:71
-#: ../src/gob/gmpc-mpddata-treeview.gob:610
+#: ../src/browsers/playlist3-metadata-browser.c:940
+#: ../src/gob/gmpc-mpddata-treeview.gob:72
+#: ../src/gob/gmpc-mpddata-treeview.gob:618
+#: ../src/vala/gmpc-test-plugin.c:1005
 msgid "Title"
 msgstr "Titel"
 
-#: ../src/browsers/playlist3-metadata-browser.c:906
-#: ../src/gob/gmpc-mpddata-treeview.gob:79
-#: ../src/gob/gmpc-mpddata-treeview.gob:673
+#: ../src/browsers/playlist3-metadata-browser.c:949
+#: ../src/gob/gmpc-mpddata-treeview.gob:80
+#: ../src/gob/gmpc-mpddata-treeview.gob:681
 msgid "Duration"
 msgstr "Varaktighet"
 
-#: ../src/browsers/playlist3-metadata-browser.c:919
-#: ../src/browsers/playlist3-metadata-browser.c:1974
-#: ../src/browsers/playlist3-metadata-browser.c:2344
-#: ../src/gob/gmpc-mpddata-treeview.gob:70
-#: ../src/gob/gmpc-mpddata-treeview.gob:637
+#: ../src/browsers/playlist3-metadata-browser.c:962
+#: ../src/browsers/playlist3-metadata-browser.c:2053
+#: ../src/browsers/playlist3-metadata-browser.c:2423
+#: ../src/gob/gmpc-mpddata-treeview.gob:71
+#: ../src/gob/gmpc-mpddata-treeview.gob:645 ../src/vala/gmpc-test-plugin.c:987
 msgid "Album"
 msgstr "Album"
 
-#: ../src/browsers/playlist3-metadata-browser.c:925
-#: ../src/gob/gmpc-mpddata-treeview.gob:74
+#: ../src/browsers/playlist3-metadata-browser.c:968
+#: ../src/gob/gmpc-mpddata-treeview.gob:75
 msgid "Track"
 msgstr "Spår"
 
-#: ../src/browsers/playlist3-metadata-browser.c:943
-#: ../src/gob/gmpc-mpddata-treeview.gob:76
+#: ../src/browsers/playlist3-metadata-browser.c:986
+#: ../src/gob/gmpc-mpddata-treeview.gob:77
 msgid "Composer"
 msgstr "Tonsättare"
 
-#: ../src/browsers/playlist3-metadata-browser.c:949
-#: ../src/gob/gmpc-mpddata-treeview.gob:77
+#: ../src/browsers/playlist3-metadata-browser.c:992
+#: ../src/gob/gmpc-mpddata-treeview.gob:78
 msgid "Performer"
 msgstr "Artist"
 
-#: ../src/browsers/playlist3-metadata-browser.c:958
-#: ../src/browsers/playlist3-metadata-browser.c:2044
-#: ../src/browsers/playlist3-metadata-browser.c:2380
-#: ../src/gob/gmpc-mpddata-treeview.gob:86
-msgid "Directory"
-msgstr "Katalog"
+#: ../src/browsers/playlist3-metadata-browser.c:1001
+msgid "Path"
+msgstr ""
 
-#: ../src/browsers/playlist3-metadata-browser.c:968
-#: ../src/gob/gmpc-mpddata-treeview.gob:85
+#: ../src/browsers/playlist3-metadata-browser.c:1018
+#: ../src/gob/gmpc-mpddata-treeview.gob:86
 msgid "Extension"
 msgstr "Tillägg"
 
-#: ../src/browsers/playlist3-metadata-browser.c:982
+#: ../src/browsers/playlist3-metadata-browser.c:1035
 msgid "Rating"
 msgstr ""
 
-#: ../src/browsers/playlist3-metadata-browser.c:998
+#: ../src/browsers/playlist3-metadata-browser.c:1048
+msgid "Favored"
+msgstr ""
+
+#: ../src/browsers/playlist3-metadata-browser.c:1064
 msgid "Bitrate"
 msgstr "Bitfrekvens"
 
-#: ../src/browsers/playlist3-metadata-browser.c:1003
-#: ../src/browsers/playlist3-metadata-browser.c:1016
+#: ../src/browsers/playlist3-metadata-browser.c:1069
+#: ../src/browsers/playlist3-metadata-browser.c:1082
 msgid "n/a"
 msgstr ""
 
-#: ../src/browsers/playlist3-metadata-browser.c:1011
+#: ../src/browsers/playlist3-metadata-browser.c:1077
 msgid "Audio format"
-msgstr ""
+msgstr "Ljudformat"
 
-#: ../src/browsers/playlist3-metadata-browser.c:1063
+#: ../src/browsers/playlist3-metadata-browser.c:1129
 msgid "Lyrics"
 msgstr "Låttexter"
 
-#: ../src/browsers/playlist3-metadata-browser.c:1106
+#: ../src/browsers/playlist3-metadata-browser.c:1172
 msgid "Songs with same title"
 msgstr "Låtar med samma titel"
 
-#: ../src/browsers/playlist3-metadata-browser.c:1138
+#: ../src/browsers/playlist3-metadata-browser.c:1204
 msgid "Similar songs"
 msgstr "Liknande låtar"
 
-#: ../src/browsers/playlist3-metadata-browser.c:1205
+#: ../src/browsers/playlist3-metadata-browser.c:1271
 msgid "Invalid search"
-msgstr ""
+msgstr "Ogiltig sökning"
 
-#: ../src/browsers/playlist3-metadata-browser.c:1257
+#: ../src/browsers/playlist3-metadata-browser.c:1323
 #, c-format
 msgid "Only the first %i result displayed, please refine your search query"
 msgstr ""
@@ -1659,17 +1727,17 @@ msgstr ""
 "resultat"
 
 #. The label
-#: ../src/browsers/playlist3-metadata-browser.c:1313
+#: ../src/browsers/playlist3-metadata-browser.c:1379
 msgid "Find Artist:"
 msgstr "Hitta Artist"
 
-#: ../src/browsers/playlist3-metadata-browser.c:1474
+#: ../src/browsers/playlist3-metadata-browser.c:1545
 msgid "<b>Genre: </b>"
 msgid_plural "<b>Genres: </b>"
 msgstr[0] "<b>Genre: </b>"
 msgstr[1] "<b>Genrer: </b>"
 
-#: ../src/browsers/playlist3-metadata-browser.c:1489
+#: ../src/browsers/playlist3-metadata-browser.c:1560
 msgid "<b>Date: </b>"
 msgid_plural "<b>Dates: </b>"
 msgstr[0] "<b>Datum: </b>"
@@ -1684,206 +1752,220 @@ msgstr[1] "<b>Datum: </b>"
 #. * +-------------------------------------+
 #. * | artist info text (expander)		 | <---
 #. * +-------------------------------------+
-#. 
-#: ../src/browsers/playlist3-metadata-browser.c:1557
+#.
+#: ../src/browsers/playlist3-metadata-browser.c:1636
 msgid "Artist info:"
 msgstr "Artist info:"
 
-#: ../src/browsers/playlist3-metadata-browser.c:1562
+#: ../src/browsers/playlist3-metadata-browser.c:1641
 msgid "Artist information"
 msgstr "Artist information"
 
-#: ../src/browsers/playlist3-metadata-browser.c:1587
+#: ../src/browsers/playlist3-metadata-browser.c:1666
 msgid "Albums"
 msgstr "Album"
 
-#: ../src/browsers/playlist3-metadata-browser.c:1634
+#: ../src/browsers/playlist3-metadata-browser.c:1713
 msgid "Similar Artists"
 msgstr "Liknande Artister"
 
 #. *
 #. * Album Information
-#. 
-#: ../src/browsers/playlist3-metadata-browser.c:1890
+#.
+#: ../src/browsers/playlist3-metadata-browser.c:1969
 msgid "Album info:"
 msgstr "Album info:"
 
-#: ../src/browsers/playlist3-metadata-browser.c:1895
+#: ../src/browsers/playlist3-metadata-browser.c:1974
 msgid "Album information"
 msgstr "Album information"
 
-#: ../src/browsers/playlist3-metadata-browser.c:1967
+#: ../src/browsers/playlist3-metadata-browser.c:2046
 msgid "Album artist"
 msgstr ""
 
-#: ../src/browsers/playlist3-metadata-browser.c:2028
-#: ../src/browsers/playlist3-metadata-browser.c:2364
+#: ../src/browsers/playlist3-metadata-browser.c:2107
+#: ../src/browsers/playlist3-metadata-browser.c:2443
 msgid "Tracks"
 msgstr "Spår:"
 
+#: ../src/browsers/playlist3-metadata-browser.c:2124
+#: ../src/browsers/playlist3-metadata-browser.c:2460
+#: ../src/gob/gmpc-mpddata-treeview.gob:87
+msgid "Directory"
+msgstr "Katalog"
+
 #. *
 #. * Metadata browser link
-#. 
-#: ../src/browsers/playlist3-metadata-browser.c:2231
-#: ../src/browsers/playlist3-metadata-browser.c:2625
+#.
+#: ../src/browsers/playlist3-metadata-browser.c:2311
+#: ../src/browsers/playlist3-metadata-browser.c:2708
 msgid "Metadata Browser"
 msgstr ""
 
 #. *
 #. * Show current song entry
-#. 
-#: ../src/browsers/playlist3-metadata-browser.c:2247
+#.
+#: ../src/browsers/playlist3-metadata-browser.c:2327
 msgid "Show Current Song"
 msgstr "Visa nuvarande låten"
 
-#: ../src/browsers/playlist3-metadata-browser.c:2465
+#: ../src/browsers/playlist3-metadata-browser.c:2548
 msgid "kbit/sec"
 msgstr "kbit/sec"
 
-#: ../src/browsers/playlist3-metadata-browser.c:2471
+#: ../src/browsers/playlist3-metadata-browser.c:2554
 msgid "kHz"
 msgstr ""
 
-#: ../src/browsers/playlist3-metadata-browser.c:2472
+#: ../src/browsers/playlist3-metadata-browser.c:2555
 msgid "bits"
 msgstr ""
 
-#: ../src/browsers/playlist3-metadata-browser.c:2473
+#: ../src/browsers/playlist3-metadata-browser.c:2556
 msgid "channels"
 msgstr ""
 
-#: ../src/browsers/playlist3-metadata-browser.c:2576
+#: ../src/browsers/playlist3-metadata-browser.c:2659
 msgid "switch metadata browser"
 msgstr ""
 
-#: ../src/browsers/playlist3-metadata-browser.c:2577
+#: ../src/browsers/playlist3-metadata-browser.c:2660
 msgid "Switch to the metadata browser"
 msgstr ""
 
-#: ../src/browsers/playlist3-metadata-browser.c:2581
+#: ../src/browsers/playlist3-metadata-browser.c:2664
 msgid "show current song"
-msgstr ""
+msgstr "visar aktuell låt"
 
-#: ../src/browsers/playlist3-metadata-browser.c:2582
+#: ../src/browsers/playlist3-metadata-browser.c:2665
 msgid "Show the current songs information"
-msgstr ""
+msgstr "Visa den aktuella låtar information"
 
-#: ../src/browsers/playlist3-metadata-browser.c:2585
+#: ../src/browsers/playlist3-metadata-browser.c:2668
 msgid "show current artist"
-msgstr ""
+msgstr "Visa aktuell artist"
 
-#: ../src/browsers/playlist3-metadata-browser.c:2586
+#: ../src/browsers/playlist3-metadata-browser.c:2669
 msgid "Show the current artist information"
-msgstr ""
+msgstr "Visa aktuell artist informatonen"
 
-#: ../src/browsers/playlist3-metadata-browser.c:2589
+#: ../src/browsers/playlist3-metadata-browser.c:2672
 msgid "show current album"
-msgstr ""
+msgstr "Visa aktuellt album"
 
-#: ../src/browsers/playlist3-metadata-browser.c:2590
+#: ../src/browsers/playlist3-metadata-browser.c:2673
 msgid "Show the current album information"
-msgstr ""
+msgstr "Visa den aktuella album informationen"
 
-#: ../src/browsers/playlist3-playlist-editor.c:131
-#: ../src/browsers/playlist3-playlist-editor.c:1023
+#: ../src/browsers/playlist3-playlist-editor.c:132
+#: ../src/browsers/playlist3-playlist-editor.c:1026
 msgid "Playlist Editor"
 msgstr "Redigerare för spellistan"
 
-#: ../src/browsers/playlist3-playlist-editor.c:257
-#: ../src/browsers/playlist3-playlist-editor.c:279
-#: ../src/browsers/playlist3-playlist-editor.c:957
-#: ../src/browsers/playlist3-playlist-editor.c:1012
+#. Add it
+#: ../src/browsers/playlist3-playlist-editor.c:255
+#: ../src/browsers/playlist3-playlist-editor.c:277
+#: ../src/browsers/playlist3-playlist-editor.c:964
+#: ../src/browsers/playlist3-playlist-editor.c:1018
+#: ../src/vala/gmpc-favorites.c:70 ../src/vala/gmpc-favorites.c:90
+#: ../src/vala/gmpc-favorites.c:128 ../src/vala/gmpc-favorites.c:138
 msgid "Favorites"
 msgstr ""
 
-#: ../src/browsers/playlist3-playlist-editor.c:467
+#: ../src/browsers/playlist3-playlist-editor.c:450
 msgid "New playlist"
 msgstr "Ny spellista"
 
-#: ../src/browsers/playlist3-playlist-editor.c:506
+#: ../src/browsers/playlist3-playlist-editor.c:490
 msgid "Rename Playlist"
 msgstr "Byt namn på spellista"
 
 #. delete
-#: ../src/browsers/playlist3-playlist-editor.c:513
-#: ../src/browsers/playlist3-playlist-editor.c:640
+#: ../src/browsers/playlist3-playlist-editor.c:497
+#: ../src/browsers/playlist3-playlist-editor.c:625
 msgid "Rename"
 msgstr "Döp om"
 
+#: ../src/browsers/playlist3-playlist-editor.c:841
+#, fuzzy
+msgid "Playlists"
+msgstr "Spellista"
+
 #. Add
-#: ../src/browsers/playlist3-playlist-editor.c:974
+#: ../src/browsers/playlist3-playlist-editor.c:981
 msgid "Add to playlist"
 msgstr "Lägg till i spellista"
 
-#: ../src/browsers/playlist3-playlist-editor.c:1013
+#: ../src/browsers/playlist3-playlist-editor.c:1019
 msgid "Added playing song to favorites list."
 msgstr ""
 
 #. *
-#: ../src/browsers/playlist3-playlist-editor.c:1036
+#: ../src/browsers/playlist3-playlist-editor.c:1039
 msgid "Add Current Song to favorites"
-msgstr ""
+msgstr "Lägg till aktuell låt till favoriter"
 
 #: ../src/browsers/playlist3-tag2-browser.c:102
 msgid "Tag based browser"
 msgstr ""
 
-#: ../src/browsers/playlist3-tag2-browser.c:1762
+#: ../src/browsers/playlist3-tag2-browser.c:1831
 msgid "Reset browser"
 msgstr "Ställ om bläddraren"
 
 #. name
-#: ../src/browsers/server-information.c:300
-#: ../src/browsers/server-information.c:516
-#: ../src/browsers/server-information.c:542
+#: ../src/browsers/server-information.c:302
+#: ../src/browsers/server-information.c:517
+#: ../src/browsers/server-information.c:543
 msgid "Server Information"
 msgstr ""
 
-#: ../src/browsers/server-information.c:324
+#: ../src/browsers/server-information.c:326
 msgid "Server"
 msgstr ""
 
-#: ../src/browsers/server-information.c:333
+#: ../src/browsers/server-information.c:335
 msgid "Uptime"
 msgstr ""
 
-#: ../src/browsers/server-information.c:334
+#: ../src/browsers/server-information.c:336
 msgid "Time Playing"
 msgstr ""
 
 #. * Mpd Playtime
-#: ../src/browsers/server-information.c:347
+#: ../src/browsers/server-information.c:349
 msgid "Total Playtime"
-msgstr ""
+msgstr "Total speltid"
 
 #. * Mpd Artists
-#: ../src/browsers/server-information.c:349
+#: ../src/browsers/server-information.c:351
 msgid "Number of artists"
-msgstr ""
+msgstr "Antal artister"
 
 #. * Mpd Albums
-#: ../src/browsers/server-information.c:351
-msgid "Number of albums"
-msgstr ""
-
-#. * Mpd Songs
 #: ../src/browsers/server-information.c:353
-msgid "Number of songs"
-msgstr ""
+msgid "Number of albums"
+msgstr "Antal album"
 
 #. * Mpd Songs
 #: ../src/browsers/server-information.c:355
+msgid "Number of songs"
+msgstr "Antal låtar"
+
+#. * Mpd Songs
+#: ../src/browsers/server-information.c:357
 msgid "URL Handlers"
 msgstr ""
 
 #. * Mpd Songs
-#: ../src/browsers/server-information.c:357
+#: ../src/browsers/server-information.c:359
 msgid "Tag Types"
-msgstr ""
+msgstr "Tag Typer"
 
-#: ../src/browsers/server-information.c:362
+#: ../src/browsers/server-information.c:364
 msgid "Tag statistics"
-msgstr ""
+msgstr "Tag statistik"
 
 #: ../src/egg/eggtrayicon.c:133
 msgid "Orientation"
@@ -1893,206 +1975,238 @@ msgstr ""
 msgid "The orientation of the tray."
 msgstr ""
 
-#: ../src/gob/gmpc-mpddata-treeview.gob:68
+#: ../src/gob/gmpc-mpddata-treeview.gob:69
 msgid "Markup"
 msgstr "Märkning"
 
-#: ../src/gob/gmpc-mpddata-treeview.gob:72
+#: ../src/gob/gmpc-mpddata-treeview.gob:73
 msgid "File"
 msgstr "Fil"
 
-#: ../src/gob/gmpc-mpddata-treeview.gob:80
+#: ../src/gob/gmpc-mpddata-treeview.gob:81
 msgid "Disc"
 msgstr "Skiva"
 
-#: ../src/gob/gmpc-mpddata-treeview.gob:81
+#: ../src/gob/gmpc-mpddata-treeview.gob:82
 msgid "Comment"
 msgstr "Kommentar"
 
-#: ../src/gob/gmpc-mpddata-treeview.gob:82
+#: ../src/gob/gmpc-mpddata-treeview.gob:83
 msgid "Icon Id"
 msgstr "Ikon-id"
 
-#: ../src/gob/gmpc-mpddata-treeview.gob:83
+#: ../src/gob/gmpc-mpddata-treeview.gob:84
 msgid "Position"
 msgstr "Position"
 
-#: ../src/gob/gmpc-mpddata-treeview.gob:84
+#: ../src/gob/gmpc-mpddata-treeview.gob:85
 msgid "AlbumArtist"
 msgstr ""
 
-#. Add
-#: ../src/gob/gmpc-mpddata-treeview.gob:891
+#. Add a tools menu item with the previously generated menu as submenu
+#: ../src/gob/gmpc-mpddata-treeview.gob:933
 msgid "Tools"
 msgstr "Verktyg"
 
-#: ../src/gob/gmpc-mpddata-treeview.gob:912
+#: ../src/gob/gmpc-mpddata-treeview.gob:962
 msgid "Paste before"
 msgstr "Klistra in innan"
 
-#: ../src/gob/gmpc-mpddata-treeview.gob:921
+#: ../src/gob/gmpc-mpddata-treeview.gob:971
 msgid "Paste after"
 msgstr "Klistra in efter"
 
 #. * Edit column
-#: ../src/gob/gmpc-mpddata-treeview.gob:947
+#: ../src/gob/gmpc-mpddata-treeview.gob:1003
 msgid "Edit Columns"
 msgstr "redigera kolumner"
 
-#: ../src/gob/gmpc-profiles.gob:72
+#: ../src/gob/gmpc-profiles.gob:90
 msgid "Added profile"
 msgstr "Tillagd profil"
 
-#: ../src/gob/gmpc-profiles.gob:80
+#. Generate removal message before the actual profile is destroyed
+#: ../src/gob/gmpc-profiles.gob:403
 msgid "Removed profile"
 msgstr "Borttagen profil"
 
-#: ../src/gob/gmpc-meta-text-view.gob:62 ../src/gob/gmpc-metaimage.gob:780
+#: ../src/gob/gmpc-meta-text-view.gob:73 ../src/gob/gmpc-metaimage.gob:835
 msgid "Refetch"
 msgstr ""
 
-#: ../src/gob/gmpc-meta-text-view.gob:67 ../src/gob/gmpc-metaimage.gob:785
+#: ../src/gob/gmpc-meta-text-view.gob:78 ../src/gob/gmpc-metaimage.gob:840
 msgid "Select file"
 msgstr "Välj fil"
 
-#: ../src/gob/gmpc-meta-text-view.gob:157
+#: ../src/gob/gmpc-meta-text-view.gob:87 ../src/gob/gmpc-metaimage.gob:849
+#: ../src/vala/gmpc-test-plugin.c:1310
+msgid "Metadata selector"
+msgstr ""
+
+#: ../src/gob/gmpc-meta-text-view.gob:271
 msgid "Failed to open file:"
 msgstr "Kunde inte öppna filen:"
 
-#: ../src/gob/gmpc-meta-text-view.gob:157
+#: ../src/gob/gmpc-meta-text-view.gob:271
 msgid "because of encoding issues"
+msgstr "Pågrund av kodningsfrågor"
+
+#: ../src/gob/gmpc-meta-text-view.gob:326
+msgid "Fetching Lyrics"
 msgstr ""
 
-#: ../src/gob/gmpc-meta-text-view.gob:172
-msgid "Fetching Lyric"
-msgstr ""
-
-#: ../src/gob/gmpc-meta-text-view.gob:176
+#: ../src/gob/gmpc-meta-text-view.gob:332
 msgid "Fetching Artist Info"
 msgstr ""
 
-#: ../src/gob/gmpc-meta-text-view.gob:180
+#: ../src/gob/gmpc-meta-text-view.gob:338
 msgid "Fetching Album Info"
-msgstr ""
+msgstr "Hämtar album info"
 
-#: ../src/gob/gmpc-meta-text-view.gob:188
+#: ../src/gob/gmpc-meta-text-view.gob:349
 msgid "Not Available"
 msgstr "Ej tillgänglig"
 
-#: ../src/gob/gmpc-meta-text-view.gob:248 ../src/gob/gmpc-metaimage.gob:816
+#: ../src/gob/gmpc-meta-text-view.gob:414 ../src/gob/gmpc-metaimage.gob:886
 msgid "Select File"
 msgstr "Välj fil"
 
-#: ../src/gob/gmpc-meta-text-view.gob:253
+#: ../src/gob/gmpc-meta-text-view.gob:419
 msgid "Text Document"
 msgstr "Textdokument"
 
-#: ../src/gob/gmpc-meta-text-view.gob:257 ../src/gob/gmpc-metaimage.gob:826
+#: ../src/gob/gmpc-meta-text-view.gob:423 ../src/gob/gmpc-metaimage.gob:896
 msgid "All"
 msgstr "Alla"
 
-#: ../src/gob/gmpc-metaimage.gob:821
+#: ../src/gob/gmpc-metaimage.gob:891
 msgid "Images"
 msgstr "Bilder"
 
-#: ../src/gob/gmpc-stats-label.gob:135
+#: ../src/gob/gmpc-stats-label.gob:123
 msgid "Loading"
 msgstr "Läser in"
 
-#: ../src/vala/gmpc_menu_item_rating.c:59
+#: ../src/vala/gmpc_menu_item_rating.c:60
 msgid "Rating:"
 msgstr ""
 
 #: ../src/vala/gmpc-song-links.c:173
 msgid "Update list from internet"
-msgstr ""
+msgstr "Uppdatera lista från internet"
 
 #: ../src/vala/gmpc-song-links.c:212
 msgid "Links"
 msgstr "Länkar"
 
-#: ../src/vala/gmpc-song-links.c:450
-msgid "artist"
-msgstr ""
-
-#: ../src/vala/gmpc-song-links.c:459
-msgid "album"
-msgstr ""
-
-#: ../src/vala/gmpc-song-links.c:498
+#: ../src/vala/gmpc-song-links.c:587
 #, c-format
 msgid "Lookup %s on %s"
 msgstr ""
 
-#~ msgid "/"
-#~ msgstr "/"
+#: ../src/vala/gmpc-easy-command.c:109
+msgid "Gmpc Easy Command"
+msgstr ""
 
-#~ msgid "<b>Sort by:</b>"
-#~ msgstr "<b>Sortera efter:</b>"
+#. Create window
+#: ../src/vala/gmpc-easy-command.c:569
+msgid "Easy Command help"
+msgstr ""
 
-#~ msgid "Error Dialog"
-#~ msgstr "Feldialogruta"
+#: ../src/vala/gmpc-easy-command.c:597
+msgid "Command"
+msgstr ""
 
-#~ msgid "Error msg"
-#~ msgstr "Felmeddelande"
+#: ../src/vala/gmpc-easy-command.c:608
+msgid "Usage"
+msgstr ""
 
-#~ msgid ""
-#~ "None\n"
-#~ "Artist\n"
-#~ "Album\n"
-#~ "Title\n"
-#~ "Track\n"
-#~ "Name\n"
-#~ "Genre\n"
-#~ "Date\n"
-#~ "Composer\n"
-#~ "Performer\n"
-#~ "Comment\n"
-#~ "Disc"
-#~ msgstr ""
-#~ "Ingen\n"
-#~ "Artist\n"
-#~ "Album\n"
-#~ "Titel\n"
-#~ "Spår\n"
-#~ "Namn\n"
-#~ "Genre\n"
-#~ "Datum\n"
-#~ "Kompositör\n"
-#~ "Framförare\n"
-#~ "Kommentar\n"
-#~ "Skiva"
+#: ../src/vala/gmpc-easy-command.c:613
+msgid ""
+"The following commands can be used in the easy command window.\n"
+"The easy command window can be opened by pressing ctrl-space"
+msgstr ""
 
-#~ msgid "_Reconnect"
-#~ msgstr "_Återanslut"
+#: ../src/vala/gmpc-easy-command.c:680
+msgid "Help"
+msgstr ""
 
-#~ msgid ""
-#~ "information and up\n"
-#~ "warning and up\n"
-#~ "error\n"
-#~ "none"
-#~ msgstr ""
-#~ "information och upp\n"
-#~ "varning och upp\n"
-#~ "felmeddelande\n"
-#~ "ingen"
+#: ../src/vala/gmpc-easy-command.c:680
+msgid "Get a list of available commands"
+msgstr ""
 
-#, c-format
-#~ msgid "Gnome Music Player Client\n"
-#~ msgstr "Gnome Music Player Klient\n"
+#: ../src/vala/gmpc-test-plugin.c:113 ../src/vala/gmpc-test-plugin.c:164
+msgid "Uri"
+msgstr ""
 
-#, c-format
-#~ msgid "Failed to contact url: '%s'"
-#~ msgstr "Kunde inte kontakta url: '%s'"
+#: ../src/vala/gmpc-test-plugin.c:119 ../src/vala/gmpc-test-plugin.c:170
+msgid "Provider"
+msgstr ""
 
-#~ msgid "And"
-#~ msgstr "Och"
+#: ../src/vala/gmpc-test-plugin.c:127
+msgid "Filetype"
+msgstr ""
 
-#~ msgid "Or"
-#~ msgstr "Eller"
+#: ../src/vala/gmpc-test-plugin.c:135
+msgid "Size"
+msgstr ""
 
-#~ msgid "New accelerator..."
-#~ msgstr "Ny snabbtangent..."
+#: ../src/vala/gmpc-test-plugin.c:135
+msgid "wxh"
+msgstr ""
 
-#~ msgid "Accelerator key"
-#~ msgstr "Snabbtangent"
+#: ../src/vala/gmpc-test-plugin.c:817
+msgid "Cover"
+msgstr ""
+
+#: ../src/vala/gmpc-test-plugin.c:831
+msgid "Lyric"
+msgstr ""
+
+#: ../src/vala/gmpc-test-plugin.c:949
+msgid "Insufficient information to store/fetch this metadata"
+msgstr ""
+
+#: ../src/vala/gmpc-test-plugin.c:962
+msgid "Artist art"
+msgstr ""
+
+#: ../src/vala/gmpc-test-plugin.c:963
+msgid "Album art"
+msgstr ""
+
+#: ../src/vala/gmpc-test-plugin.c:964
+msgid "Song Lyrics"
+msgstr ""
+
+#: ../src/vala/gmpc-test-plugin.c:965
+msgid "Album Info"
+msgstr ""
+
+#: ../src/vala/gmpc-test-plugin.c:966
+msgid "Artist Biography"
+msgstr ""
+
+#~ msgid "--version"
+#~ msgstr "--version"
+
+#~ msgid "--clean-cover-db"
+#~ msgstr "--rensa-cover-db"
+
+#~ msgid "--disable-plugins"
+#~ msgstr "--Stäng-av-plugins"
+
+#~ msgid "--replace"
+#~ msgstr "-ersätt"
+
+#~ msgid "--quit"
+#~ msgstr "-avsluta"
+
+#~ msgid "--import-old-db"
+#~ msgstr "importera-gamla-db"
+
+#~ msgid "--help"
+#~ msgstr "--hjälp"
+
+#~ msgid "<b>Song Markup</b>"
+#~ msgstr "<b>Sångmarginal</b>"

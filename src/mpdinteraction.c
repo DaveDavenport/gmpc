@@ -24,7 +24,7 @@
 #include "config1.h"
 #include "playlist3.h"
 #include "mpdinteraction.h"
-#include "advanced_search.h"
+#include "advanced-search.h"
 #include "vala/gmpc_menu_item_rating.h"
 
 //G_LOCK_DEFINE (connecting_lock);
@@ -55,6 +55,8 @@ gmpcPrefPlugin server_gpp = {
 void xfade_enable_toggled(GtkToggleButton *but);
 void xfade_time_changed(GtkSpinButton *but);
 void entry_auth_changed(GtkEntry *entry);
+
+void entry_music_directory_changed(GtkEntry *entry);
 void auth_enable_toggled(GtkToggleButton *but);
 
 void preferences_window_autoconnect(GtkToggleButton *tog);
@@ -73,11 +75,61 @@ void submenu_genre_clicked(GtkWidget *item);
 void submenu_dir_clicked(GtkWidget *item);
 
 
+/**
+ * Easy command interface
+ */
+static void output_set (gpointer data, const char *param)
+{
+	gchar *str_param = g_strstrip(g_strdup(param));
+	gchar **split = g_strsplit(str_param, " ", 2);
+	if(split){
+		int output=-1;
+		if(split[0]) {
+			output = (int) strtol(split[0], NULL, 10);
+		}
+		if(output >=0 && split[1]){
+			if(g_utf8_collate(split[1], _("enable"))==0){
+				printf("enable output %i\n", output);
+				mpd_server_set_output_device(connection, output, 1);
+			}else if (g_utf8_collate(split[1],  _("disable"))==0) {
+				mpd_server_set_output_device(connection, output, 0);
+				printf("disable output %i\n", output);
+			}
+		}
+		g_free(split);
+	}
+	g_free(str_param);
+}
+
+static void crossfade_set(gpointer data, const char *param)
+{
+	gchar *param_c = g_utf8_casefold(param, -1);
+	gchar *key_c = g_utf8_casefold(_("Off"), -1);
+	if(g_utf8_collate(param_c, key_c)==0)
+	{
+		mpd_status_set_crossfade(connection, 0);	
+	}
+	else{
+		int i = (int) strtol(param, NULL, 10); 
+		if(i >= 0 && i < 60)
+		{
+			mpd_status_set_crossfade(connection, i);
+		}
+	}
+	g_free(key_c); 
+	g_free(param_c); 
+}
 static void volume_set(gpointer data, const char *param)
 {
-	if(strlen(param) > 0)
+	int cur_volume = mpd_status_get_volume(connection);
+	/* if volume is disabled (current_volume < 0) ignore this command */
+	if(strlen(param) > 0 && current_volume >= 0)
 	{
-		int volume = atoi(param);
+		int volume = 0;
+		if(param[0] == '-' || param[0] == '+') {
+			volume = cur_volume;
+		}
+		volume += atoi(param);
 		mpd_status_set_volume(connection,volume); 
 	}
 }
@@ -148,6 +200,68 @@ static void play_command(gpointer user_data, const char *param)
 	}
 }
 
+static void seek_command(gpointer user_data, const char *param)
+{
+	int i = 0, j = 0;
+	gchar **fields;
+	if(!param) return;
+	if(!mpd_check_connected(connection)) return;
+	printf("seek: '%s'\n",param);
+	fields = g_strsplit(param, ":", -1);
+	/* Calculate time */
+	for(j=0;fields && fields[j];j++){
+		i = atoi(fields[j])+i*60;
+	}
+	if(param[0] == '+' || param[0] == '-') {
+		/* seek relative */	
+		mpd_player_seek(connection, mpd_status_get_elapsed_song_time(connection)+i);
+	}else{
+		/* seek absolute */
+		mpd_player_seek(connection, i);
+	}
+	g_strfreev(fields);
+}
+
+static void stop_after_current_song_command(gpointer user_data, const char *param)
+{
+	int val = mpd_server_check_command_allowed(connection, "single");	
+	if(val == MPD_SERVER_COMMAND_NOT_SUPPORTED) {
+		playlist3_message_show(pl3_messages, _("Stop after current song: The used MPD server is to old and does not support this."), ERROR_CRITICAL);
+	}else if (val ==  MPD_SERVER_COMMAND_NOT_ALLOWED) {
+		playlist3_message_show(pl3_messages, _("Stop after current song: You have insufficient permission."), ERROR_WARNING);
+	}else if (val == MPD_SERVER_COMMAND_ALLOWED) {
+		playlist3_message_show(pl3_messages, _("Playback will be stopped after the current playing song."), ERROR_INFO);
+		mpd_player_set_repeat(connection, FALSE);
+		mpd_player_set_single(connection, TRUE);
+	}
+}
+
+static void repeat_current_song_command(gpointer user_data, const char *param)
+{
+	int val = mpd_server_check_command_allowed(connection, "single");	
+	if(val == MPD_SERVER_COMMAND_NOT_SUPPORTED) {
+		playlist3_message_show(pl3_messages, _("Repeat current song: The used MPD server is to old and does not support this."), ERROR_CRITICAL);
+	}else if (val ==  MPD_SERVER_COMMAND_NOT_ALLOWED) {
+		playlist3_message_show(pl3_messages, _("Repeat current song: You have insufficient permission."), ERROR_WARNING);
+	}else if (val == MPD_SERVER_COMMAND_ALLOWED) {
+		playlist3_message_show(pl3_messages, _("The current song will be forever repeated."), ERROR_INFO);
+		mpd_player_set_repeat(connection, TRUE);
+		mpd_player_set_single(connection, TRUE);
+	}
+}
+
+static void update_database_command(gpointer user_data, const char *param)
+{
+	int val = mpd_server_check_command_allowed(connection, "update");	
+	if(val == MPD_SERVER_COMMAND_NOT_SUPPORTED) {
+		playlist3_message_show(pl3_messages, _("Update database: The used MPD server is to old and does not support this."), ERROR_CRITICAL);
+	}else if (val ==  MPD_SERVER_COMMAND_NOT_ALLOWED) {
+		playlist3_message_show(pl3_messages, _("Update database: You have insufficient permission."), ERROR_WARNING);
+	}else if (val == MPD_SERVER_COMMAND_ALLOWED) {
+		mpd_database_update_dir(connection, "/");
+	}
+}
+
 static void mpd_interaction_init(void)
 {
 	/* Player control */
@@ -161,15 +275,38 @@ static void mpd_interaction_init(void)
 	gmpc_easy_command_add_entry(gmpc_easy_command,_("repeat"),"(on|off|)",_("Repeat (on|off)"),(GmpcEasyCommandCallback *)set_repeat, NULL); 
 
 	/* volume commands */
-	gmpc_easy_command_add_entry(gmpc_easy_command,_("volume"),"[0-9]+",_("Volume <level>"),(GmpcEasyCommandCallback *)volume_set, NULL); 
-	gmpc_easy_command_add_entry(gmpc_easy_command,_("volume \\+"),"", _("Increase volume"),(GmpcEasyCommandCallback *)volume_up, NULL); 
-	gmpc_easy_command_add_entry(gmpc_easy_command,_("volume -"),"", _("Decrease volume"),(GmpcEasyCommandCallback *)volume_down, NULL); 
+	gmpc_easy_command_add_entry(gmpc_easy_command,_("volume"),"[+-]?[0-9]+",_("Volume (+-)<level>"),(GmpcEasyCommandCallback *)volume_set, NULL); 
 	gmpc_easy_command_add_entry(gmpc_easy_command,_("mute"),  "",   _("Mute"),(GmpcEasyCommandCallback *)volume_mute, NULL); 
 
+	gmpc_easy_command_add_entry(gmpc_easy_command,_("crossfade"),C_("Regex for matching crossfade, translate off","([0-9]+|Off)"), _("Set Crossfade <seconds>"),(GmpcEasyCommandCallback *)crossfade_set, NULL); 
+
+	gmpc_easy_command_add_entry(gmpc_easy_command,_("output"),C_("Regex for matching output","[0-9]+ (Enable|Disable)"),
+			_("output X enable or disable"),(GmpcEasyCommandCallback *)output_set, NULL); 
 	/* basic playlist commands */
 	gmpc_easy_command_add_entry(gmpc_easy_command,_("play"),".*",_("Play <query>"),(GmpcEasyCommandCallback *)play_command, NULL); 
 	gmpc_easy_command_add_entry(gmpc_easy_command,_("add"),".*",_("Add <query>"),(GmpcEasyCommandCallback *)add_command, NULL); 
 	gmpc_easy_command_add_entry(gmpc_easy_command,_("replace"),".*",_("Replace <query>"),(GmpcEasyCommandCallback *)replace_command, NULL); 
+
+	/* Basic seek commands */
+	gmpc_easy_command_add_entry(gmpc_easy_command,_("seek"), "[+-]?[0-9:]+",_("Seek within the current song"), (GmpcEasyCommandCallback *)seek_command, NULL);
+	/* Advanced commands */
+	gmpc_easy_command_add_entry(gmpc_easy_command,
+						_("stop after current song"),
+						"",
+						_("Stop playback after the current song"),
+						(GmpcEasyCommandCallback *)stop_after_current_song_command, NULL);
+
+	gmpc_easy_command_add_entry(gmpc_easy_command,
+						_("repeat current song"),
+						"",
+						_("Repeat the current song"),
+						(GmpcEasyCommandCallback *)repeat_current_song_command, NULL);
+
+	gmpc_easy_command_add_entry(gmpc_easy_command,
+						_("update database"),
+						"",
+						_("Update the database"),
+						(GmpcEasyCommandCallback *)update_database_command, NULL);
 }
 
 gmpcPlugin server_plug = {
@@ -269,7 +406,6 @@ int connect_to_mpd(void)
 	}
 	if(!/*G_TRYLOCK*/g_mutex_trylock(connecting_lock))
 	{
-		debug_printf(DEBUG_ERROR, "Allready busy connecting to mpd.. not doing anything");
 		return FALSE;
 	}
 	/**
@@ -295,13 +431,6 @@ int connect_to_mpd(void)
 	{
 		mpd_set_password(connection,"");
 	}
-	/*
-	   if(mpd_connect(connection) < 0)
-	   {
-	   debug_printf(DEBUG_INFO,"Connection failed\n");
-	   return TRUE;
-	   }
-	 */
 	g_thread_create((GThreadFunc)connection_thread, NULL, FALSE,NULL);
 	connecting_pulse = g_timeout_add(200,(GSourceFunc)(connecting_pulse_callback),NULL);
 	gtk_progress_bar_set_text(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pl3_progressbar")), _("Connecting"));
@@ -785,7 +914,6 @@ static void gmpc_profiles_changed_pref_win(GmpcProfiles *prof,const int changed,
 
 static void gmpc_connection_changed_pref_win(GmpcConnection *object, MpdObj *mi, int connected, GtkBuilder *xml)
 { 
-	debug_printf(DEBUG_INFO, "set buttons %i", connected);
 	if(connected != mpd_check_connected(mi)) return;
 	if(!connected)
 	{
@@ -864,6 +992,28 @@ void update_preferences_name(GtkWidget *entry)
 	}
 }
 
+void entry_music_directory_changed(GtkEntry *entry)
+{
+	GtkComboBox *combo = (GtkComboBox *) gtk_builder_get_object(connection_pref_xml, "cb_profiles");
+	GtkWidget *vbox = (GtkWidget *) gtk_builder_get_object(connection_pref_xml, "connection-vbox");
+	gulong *a = g_object_get_data(G_OBJECT(vbox),"profile-signal-handler"); 
+	GtkTreeIter iter;
+	GtkTreeModel *store = gtk_combo_box_get_model(combo);
+
+	if(gtk_combo_box_get_active_iter(combo,&iter))
+	{
+		char *value= NULL, *uid = NULL;
+		gtk_tree_model_get(GTK_TREE_MODEL(store), &iter, 0, &uid, 1,&value, -1);
+		g_signal_handler_block(G_OBJECT(gmpc_profiles), *a);
+
+		gmpc_profiles_set_music_directory(gmpc_profiles, uid,
+				(char *)gtk_entry_get_text(GTK_ENTRY(entry)));
+		g_signal_handler_unblock(G_OBJECT(gmpc_profiles), *a);
+
+		q_free(uid);
+		q_free(value);
+	}
+}
 void update_preferences_hostname(GtkWidget *entry)
 {
 	GtkComboBox *combo = (GtkComboBox *) gtk_builder_get_object(connection_pref_xml, "cb_profiles");
@@ -957,7 +1107,6 @@ void preferences_window_disconnect(GtkWidget *but)
 {
 	/* set that user doesn't want to connect */
 	gmpc_connected = FALSE;
-	debug_printf(DEBUG_INFO,"**DEBUG** disconnect\n");    
 	mpd_disconnect(connection);
 }
 
@@ -972,10 +1121,6 @@ static void connection_pref_destroy(GtkWidget *container)
 			g_object_unref(connection_pref_xml);
 			connection_pref_xml = NULL;
 		}
-	}
-	else
-	{
-		debug_printf(DEBUG_ERROR, "No child widget to destroy\n");
 	}
 }
 void connection_profiles_changed(GtkComboBox *combo, gpointer data)
@@ -1020,6 +1165,12 @@ void connection_profiles_changed(GtkComboBox *combo, gpointer data)
 			string);
 		g_free(string);
 
+		/**
+		 * Set music directory 
+		 */
+		string = gmpc_profiles_get_music_directory(gmpc_profiles, uid);
+		gtk_entry_set_text(GTK_ENTRY((GtkWidget *) gtk_builder_get_object(xml, "music_directory")), 
+				string?string:"");
 		/**
 		 * Only enable the rmeove button when there is more then 1 profile
 		 */
@@ -1231,6 +1382,13 @@ char *connection_get_password(void)
 {
 	gchar *profile = gmpc_profiles_get_current(gmpc_profiles);
 	gchar *retv  = gmpc_profiles_get_password(gmpc_profiles, profile);
+	g_free(profile);
+	return retv;
+}
+char *connection_get_music_directory(void)
+{
+	gchar *profile = gmpc_profiles_get_current(gmpc_profiles);
+	gchar *retv  = gmpc_profiles_get_music_directory(gmpc_profiles, profile);
 	g_free(profile);
 	return retv;
 }

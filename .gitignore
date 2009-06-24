@@ -1,0 +1,93 @@
+##
+# Object files
+##
+*.o
+
+##
+# Revision code
+##
+/src/revision.h
+/src/Makefile.config
+
+##
+#GMPC
+##
+/src/gmpc
+/src/gmpc-version.h
+/src/.deps/
+
+##
+# Gob files
+##
+/src/gob/*.c
+/src/gob/*.h
+/src/gob/*.lo
+/src/gob/.deps/
+/src/gob/.libs/
+/src/gob/libcwidgets.la
+
+##
+# Translation
+##
+/po/*.gmo
+/po/POTFILES
+/po/Makefile.in
+/po/stamp-it
+/po/notexist
+/po/Makefile.in.in
+/po/.intltool-merge-cache
+/po/gmpc.pot
+
+##
+# Makefiles
+##
+Makefile
+Makefile.in
+
+##
+# 
+##
+stamp-h1
+config.h
+configure
+depcomp
+intltool-*
+libtool
+missing
+ltmain.sh
+aclocal.m4
+autom4te.cache
+install-sh
+mkinstalldirs
+
+
+##
+#Desktop file
+##
+data/gmpc.desktop
+
+##
+#pkg-config file
+##
+data/gmpc.pc
+
+##
+#Remote
+##
+remote/.deps/
+remote/gmpc-remote
+
+##
+#Shave
+##
+shave*
+
+##
+# M4
+##
+m4/intltool.m4
+m4/libtool.m4
+m4/ltoptions.m4
+m4/ltsugar.m4
+m4/ltversion.m4
+m4/lt~obsolete.m4

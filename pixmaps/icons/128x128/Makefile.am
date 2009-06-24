@@ -1,1 +1,1 @@
-SUBDIRS = status categories
+SUBDIRS = status categories apps

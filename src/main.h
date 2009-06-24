@@ -23,7 +23,9 @@
 #include <config.h>
 #include <gmpc-version.h>
 #ifdef ENABLE_NLS
+#ifndef __G_I18N_LIB_H__
 #include <glib/gi18n.h>
+#endif
 #endif
 
 #include "config-defaults.h"
@@ -32,6 +34,8 @@
 #include <libmpd/debug_printf.h>
 #include "config1.h"
 #include "plugin.h"
+#include "plugin-internal.h"
+#include "vala/gmpc-plugin.h"
 #include "mpdinteraction.h"
 
 #include "playlist3-messages.h" 
@@ -41,19 +45,16 @@
  * Some gobjects
  */
 #include "gob/gmpc-profiles.h"
-#include "gob/gmpc-connection.h"
-#include "gob/gmpc-signals.h"
-
+#include "gmpc-connection.h"
 #include "vala/gmpc-easy-command.h"
+#include "smclient/eggsmclient.h"
 
 extern GmpcEasyCommand *gmpc_easy_command;
-extern GmpcConnection 	*gmpcconn;
-extern GmpcSignals 		*gmpc_signals;
 extern int 				gmpc_connected;
 extern GtkTreeModel 	*playlist;
 
 /* the plugin list */
-extern gmpcPlugin **plugins;
+extern gmpcPluginParent **plugins;
 /* num of plugins */
 extern int num_plugins;
 
@@ -62,8 +63,9 @@ char * edit_song_markup(char *format);
 void main_quit(void);
 
 /* plugin */
-void plugin_load_dir(gchar *path);
-void plugin_add(gmpcPlugin *plug, int plugin);
+void plugin_load_dir(const gchar *path);
+void plugin_add(gmpcPlugin *plug, int plugin, GError **error);
+void plugin_add_new(GmpcPluginBase *plug, int plugin, GError **error);
 int plugin_get_pos(int id);
 
 void show_error_message(const gchar *string,const int block);
@@ -75,7 +77,7 @@ void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userd
  * Metadata 
  */
 
-void meta_data_add_plugin(gmpcPlugin *plug);
+void meta_data_add_plugin(gmpcPluginParent *plug);
 /**
  * TODO move this 
  */
@@ -87,7 +89,7 @@ void url_start(void);
  * This is needed to make the windows port work.
  * (misc.c)
  */
-char *gmpc_get_full_image_path(const char *filename);
+char *gmpc_get_full_image_path(void);
 
 /**
  * Help functions

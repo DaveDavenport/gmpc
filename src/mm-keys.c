@@ -363,6 +363,7 @@ static void mmkeys_init (MmKeys *object)
 
 	if (anyKeybindsFailed)
 	{
+        gchar *temp;
 		GString *message = g_string_new (_("Could not grab the following multimedia keys:\n\n"));
 		for (i=0;i<LAST_SIGNAL;i++)
 		{
@@ -379,14 +380,17 @@ static void mmkeys_init (MmKeys *object)
 		}
 		g_string_append( message,
 			_("\nEnsure that your window manager (or other applications) have not already bound this key for some other function, then restart gmpc." ));
-		show_error_message (message->str, TRUE);
+        temp = g_markup_escape_text(message->str, message->len);
+        playlist3_show_error_message(temp, ERROR_WARNING);
+        g_free(temp);
 		g_string_free (message, TRUE);
 	}
 
 	if (anyDuplicatesFound)
 	{
-		show_error_message(_("Duplicate mapping(s) detected\n\n"
-				"Some duplicate multimedia key mappings were detected, and disabled.  Please revisit the preferences and ensure your settings are now correct."), TRUE );
+        playlist3_show_error_message(_("Duplicate mapping(s) detected\n\n"
+				"Some duplicate multimedia key mappings were detected, and disabled.  Please revisit the preferences and ensure your settings are now correct."),     
+            ERROR_WARNING);
 	}
 }
 
@@ -678,8 +682,16 @@ void mmkeys_pref_destroy(GtkWidget *container)
 void mmkeys_pref_construct(GtkWidget *container)
 {
 	gchar *path = gmpc_get_full_glade_path("preferences-mmkeys.ui");
+    GError *error = NULL;
 	mmkeys_pref_xml = gtk_builder_new();
-    gtk_builder_add_from_file(mmkeys_pref_xml, path, NULL);
+    gtk_builder_add_from_file(mmkeys_pref_xml, path, &error);
+    if(error)
+    {
+        debug_printf(DEBUG_ERROR, "Problems loading ui: %s\n", error->message);
+        g_error_free(error);
+        g_object_unref(mmkeys_pref_xml);
+        return;
+    }
 	q_free(path);
 	if(mmkeys_pref_xml)
 	{

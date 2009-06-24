@@ -72,9 +72,14 @@ static void pref_plugin_changed(void)
             if(!gmpc_plugin_is_internal(plugins[id]))
             {
                 const int *version = gmpc_plugin_get_version(plugins[id]);
-                buf = g_strdup_printf("<span size=\"xx-large\"><b>%s</b></span>\n<i>Plugin version: %i.%i.%i</i>", 
-                        N_(gmpc_plugin_get_name(plugins[id])),
-                        version[0],version[1], version[2]);
+                if(version != NULL) {
+                    buf = g_strdup_printf("<span size=\"xx-large\"><b>%s</b></span>\n<i>Plugin version: %i.%i.%i</i>", 
+                            N_(gmpc_plugin_get_name(plugins[id])),
+                            version[0],version[1], version[2]);
+                }else 
+                buf  = g_strdup_printf("<span size=\"xx-large\"><b>%s</b></span>",
+                        gmpc_plugin_get_name(plugins[id]));
+
             }
             else
             {
@@ -171,12 +176,18 @@ void create_preferences_window(void)
 			if(gmpc_plugin_is_internal(plugins[i]))
 			{
 				GtkTreeIter iter;
+                const gchar *translation_domain = gmpc_plugin_get_translation_domain(plugins[i]);
 				gtk_list_store_append(GTK_LIST_STORE(plugin_store), &iter);
 				gtk_list_store_set(GTK_LIST_STORE(plugin_store), &iter,
 						0, i,
-						1, _(gmpc_plugin_get_name(plugins[i])), -1);
-				if(gtk_tree_selection_count_selected_rows(gtk_tree_view_get_selection(
-								GTK_TREE_VIEW(gtk_builder_get_object(xml_preferences_window, "plugin_tree")))) == 0)
+#if defined(ENABLE_NLS) &&  GLIB_CHECK_VERSION(2,18,0)
+						1, g_dgettext(translation_domain, gmpc_plugin_get_name(plugins[i])), 
+#else
+						1, gmpc_plugin_get_name(plugins[i]),
+#endif
+                            -1);
+                if(gtk_tree_selection_count_selected_rows(gtk_tree_view_get_selection(
+                                GTK_TREE_VIEW(gtk_builder_get_object(xml_preferences_window, "plugin_tree")))) == 0)
 				{
 					gtk_tree_selection_select_iter(gtk_tree_view_get_selection(
 								GTK_TREE_VIEW(gtk_builder_get_object(xml_preferences_window, "plugin_tree"))),&iter);
@@ -192,6 +203,7 @@ void create_preferences_window(void)
 	{
 		GtkTreeIter iter;
 		gchar *value = g_markup_printf_escaped("<b>%s:</b>", _("Plugins"));
+
 		gtk_list_store_append(GTK_LIST_STORE(plugin_store), &iter);
 		gtk_list_store_set(GTK_LIST_STORE(plugin_store), &iter, 
 				0,PLUGIN_STATS, 
@@ -201,10 +213,17 @@ void create_preferences_window(void)
 		{
 			if(gmpc_plugin_has_preferences(plugins[i]) && ! gmpc_plugin_is_internal(plugins[i]) && gmpc_plugin_get_enabled(plugins[i]))
 			{
+                const gchar *translation_domain = gmpc_plugin_get_translation_domain(plugins[i]);
 				gtk_list_store_append(GTK_LIST_STORE(plugin_store), &iter);
 				gtk_list_store_set(GTK_LIST_STORE(plugin_store), &iter,
 						0, i,
+
+#if defined(ENABLE_NLS) &&  GLIB_CHECK_VERSION(2,18,0)
+						1, g_dgettext(translation_domain,gmpc_plugin_get_name(plugins[i])),
+
+#else
 						1, gmpc_plugin_get_name(plugins[i]),
+#endif
 						-1);
 			}
 		}
@@ -213,10 +232,8 @@ void create_preferences_window(void)
 	label = (GtkWidget *)gtk_builder_get_object(xml_preferences_window, "plugin_label_box");
     gtk_widget_set_app_paintable(label, TRUE);
     g_signal_connect(G_OBJECT(label), "expose-event", G_CALLBACK(misc_header_expose_event), NULL);
-//	gtk_widget_modify_bg(label, GTK_STATE_NORMAL, &dialog->style->light[GTK_STATE_SELECTED]);
-/*	label = gtk_builder_get_object(xml_preferences_window, "plugin_label");
-	gtk_widget_modify_fg(label, GTK_STATE_NORMAL, &dialog->style->fg[GTK_STATE_SELECTED]);
-*/	
+    gtk_widget_set_state(GTK_WIDGET(label), GTK_STATE_SELECTED);
+
     gtk_widget_show(dialog);
     gtk_builder_connect_signals(xml_preferences_window, NULL);
 }
@@ -249,7 +266,7 @@ static void pref_plugin_enabled(GtkCellRendererToggle *rend, gchar *path, GtkLis
 	if(gtk_tree_model_get_iter_from_string(GTK_TREE_MODEL(store), &iter, path))
 	{
 		int toggled;
-		gmpcPlugin *plug = NULL;
+		gmpcPluginParent *plug = NULL;
 		gtk_tree_model_get(GTK_TREE_MODEL(store), &iter, 0, &toggled, 3, &plug, -1);
 		{
             gmpc_plugin_set_enabled(plug,!toggled);
@@ -257,10 +274,17 @@ static void pref_plugin_enabled(GtkCellRendererToggle *rend, gchar *path, GtkLis
             if(gmpc_plugin_has_preferences(plug))
             {
                 if(!toggled) {
+                    const gchar *translation_domain = gmpc_plugin_get_translation_domain(plug);
                     gtk_list_store_append(GTK_LIST_STORE(plugin_store), &iter);
                     gtk_list_store_set(GTK_LIST_STORE(plugin_store), &iter,
                             0, plugin_get_pos(gmpc_plugin_get_id(plug)),
+
+#if defined(ENABLE_NLS) &&  GLIB_CHECK_VERSION(2,18,0)
+                            1, g_dgettext(translation_domain, gmpc_plugin_get_name(plug)),
+#else
                             1, gmpc_plugin_get_name(plug),
+#endif
+
                             -1);
                 }else{
                     GtkTreeIter piter;
@@ -316,10 +340,20 @@ static void plugin_stats_construct(GtkWidget *container)
 		{
 			if(!gmpc_plugin_is_internal(plugins[i]))
 			{
+                const gchar *translation_domain = gmpc_plugin_get_translation_domain(plugins[i]);
                 const int *ver = gmpc_plugin_get_version(plugins[i]);
-                gchar *version = g_strdup_printf("%i.%i.%i",ver[0], ver[1],ver[2]);
+                gchar *version = (ver)?g_strdup_printf("%i.%i.%i",ver[0], ver[1],ver[2]):g_strdup("n/a");
 				gtk_list_store_append(store, &iter);
-				gtk_list_store_set(store, &iter, 0,TRUE,1, gmpc_plugin_get_name(plugins[i]),3,(plugins[i]),4,version, -1);
+				gtk_list_store_set(store, &iter, 
+                                0,TRUE,
+
+#if defined(ENABLE_NLS) &&  GLIB_CHECK_VERSION(2,18,0)
+                                1, g_dgettext(translation_domain, gmpc_plugin_get_name(plugins[i])),
+#else
+                        1, gmpc_plugin_get_name(plugins[i]),
+#endif
+                        3,(plugins[i]),
+                        4,version, -1);
                 g_free(version);
 				if(gmpc_plugin_get_enabled(plugins[i])) 
 				{

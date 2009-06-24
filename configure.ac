@@ -15,6 +15,7 @@ m4_define([package_bugtracker],    "http://gmpc.wikia.com/wiki/GMPC_HELP")
 
 
 AM_CONFIG_HEADER([config.h])
+AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE
 
 
@@ -50,6 +51,7 @@ AM_CONDITIONAL([INTLTOOL_HIGHER_04000], [test ${INTLTOOL_APPLIED_VERSION_AS_INT}
 
 
 AC_PROG_CC
+AM_PROG_CC_C_O
 LT_AC_PROG_RC
 AC_LIBTOOL_WIN32_DLL
 AC_LIBTOOL_RC
@@ -64,7 +66,30 @@ then
 fi
 
 
+
+PKG_PROG_PKG_CONFIG
+# libxspf 
+libxspf=0;
 libspiff=0;
+
+AC_ARG_ENABLE([libxspf],
+              [--enable-libxspf Use libxspf.], 
+	          [case "${enableval}" in
+		            yes)    enable_libxspf=true;;
+		             no)    enable_libxspf=false;;
+		              *)    AC_MSG_ERROR([bad value ${enableval} for --enable-libxspf]);;
+               esac],
+               [enable_libxspf=detect])
+if test "x$enable_libxspf" = "xdetect"; then
+	PKG_CHECK_MODULES([libxspf], xspf, enable_libxspf=true, enable_libxspf=false)
+fi
+if test "x$enable_libxspf" = "xtrue"; then
+	PKG_CHECK_MODULES([libxspf], xspf)
+	AC_SUBST(libxspf_LIBS)
+	AC_SUBST(libxspf_CFLAGS)
+    libxspf=1;
+	AC_DEFINE([XSPF], 1, [Use xspf])
+else
 
 AC_ARG_ENABLE(libspiff,
     [   --enable-libspiff      Use libspiff to parse spiff playlists.],
@@ -77,20 +102,18 @@ AC_ARG_ENABLE(libspiff,
 
 if test "x${enable_libspiff}" != xno; then 
     AC_CHECK_HEADER(spiff/spiff_c.h, AC_CHECK_LIB(spiff, spiff_parse,libspiff=1,libspiff=0),libspiff=0)
-    if test "x${libspiff}" == "x1";
+    if test "x${libspiff}" = "x1";
     then
         AC_DEFINE(SPIFF,1,["Use or don't use libspiff"])
         SPIFF_LIBS=-lspiff
         AC_SUBST(SPIFF_LIBS)
     else 
-        if test "x${enable_libspiff}" == "xyes"; then
+        if test "x${enable_libspiff}" = "xyes"; then
             AC_MSG_ERROR([libspiff not found])
         fi
     fi
 fi
-
-PKG_PROG_PKG_CONFIG
-
+fi
 
 # Checks for header files.
 AC_HEADER_STDC
@@ -154,26 +177,36 @@ if test x$maintainer_mode = xtrue; then
 fi
 
 
-# Egg Status Icon 
-AC_ARG_ENABLE([eggtrayicon],
-	[--enable-eggtrayicon Use eggtrayicon instead of GtkStatusIcon.],
+# Maintainer mode
+AC_ARG_ENABLE([test],
+	[--enable-test Enable tests],
 	[case "${enableval}" in
-		yes) eggtrayicon=true;;
-		no)  eggtrayicon=false;;
-		*) AC_MSG_ERROR([bad value ${enableval} for --enable-eggtrayicon]);;
+		yes) test_mode=true;;
+		no)  test_mode=false;;
+		*) AC_MSG_ERROR([bad value ${enableval} for --enable-test]);;
 	 esac],
-	[eggtrayicon=false])
+	[test_mode=false])
 
-AM_CONDITIONAL([EGGTRAYICON], [test x$eggtrayicon = xtrue])
-if test x${eggtrayicon} = xtrue; then
-AC_DEFINE(EGGTRAYICON,1,["Use or don't use eggtrayicon"])
+AM_CONDITIONAL([ENABLE_TEST], [test x$test_mode = xtrue])
+
+# EXTRA VERSION
+AC_ARG_WITH([extra-version],
+        [--with-extra-version=revision Specify extra version.],
+        with_extra_version=${withval})
+if test x"${with_extra_version}" != x; then
+    AM_CONDITIONAL([EXTRA_VERSION], [true])
+    EXTRA_VERSION="${with_extra_version}";
+    AC_SUBST(EXTRA_VERSION)
+else
+    AM_CONDITIONAL([EXTRA_VERSION], [false])
 fi
+
 
 
 # Split this out, because pkgconfig macro doesn't return nicely what is missing
 
 # glib
-PKG_CHECK_MODULES([glib], glib-2.0 >= 2.10)
+PKG_CHECK_MODULES([glib], glib-2.0 >= 2.16)
 AC_SUBST(glib_LIBS)
 AC_SUBST(glib_CFLAGS)
 
@@ -193,7 +226,7 @@ AC_SUBST(gmodule_LIBS)
 AC_SUBST(gmodule_CFLAGS)
 
 # libmpd
-PKG_CHECK_MODULES([libmpd], libmpd >= 0.17.1)
+PKG_CHECK_MODULES([libmpd], libmpd >= 0.18.1)
 AC_SUBST(libmpd_LIBS)
 AC_SUBST(libmpd_CFLAGS)
 
@@ -211,6 +244,12 @@ AC_SUBST(gthread_CFLAGS)
 PKG_CHECK_MODULES([libsoup], libsoup-2.4)
 AC_SUBST(libsoup_LIBS)
 AC_SUBST(libsoup_CFLAGS)
+
+
+#sqlite3
+PKG_CHECK_MODULES([sqlite3], sqlite3)
+AC_SUBST(sqlite3_LIBS)
+AC_SUBST(sqlite3_CFLAGS)
 
 # libsexy 
 AC_ARG_ENABLE([system-libsexy],
@@ -245,13 +284,19 @@ AC_MSG_RESULT($PACKAGE_PREFIX)
 
 # i18n support
 dnl please keep them in alphabetical order
-ALL_LINGUAS="bg bn bs cs de es fi fr gl he hi hu id it jv lv ms nb ne nl pl pt pt_BR ro ru sq sv tr zh_CN zh_TW"
+ALL_LINGUAS="bg bn bs cs da de es fi fr gl he hi hu hy id it jv lv ml ms nb ne nl pl pt pt_BR ro ru sq sv tr zh_CN zh_TW"
 
+
+AM_GLIB_GNU_GETTEXT
 GETTEXT_PACKAGE=gmpc
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE",[GMPC gettext package])
-AM_GLIB_GNU_GETTEXT
 
+if test x$gt_cv_have_gettext != "xyes"; then
+
+	echo "Translations support is required."
+	exit 1;
+fi
 
 #AM_GNU_GETTEXT([external])
 # setting correct paths
@@ -261,7 +306,6 @@ AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR,"$PACKAGE_LOCALE_DIR",[The package's local
 
 AC_SUBST(PACKAGE_LOCALE_DIR)
 AC_SUBST(PACKAGE_LIBS)
-
 
 #Win32 compile support
 
@@ -285,10 +329,14 @@ case $host in
     win32=yes
     EXTRA_LDFLAGS="-export-all-symbols -mms-bitfields" ;;
   *-apple-darwin*)
+    EXTRA_LDFLAGS="-framework Carbon" 
     macosx=yes;;
 esac
 AM_CONDITIONAL(WIN32, test x$win32 = xyes)
 AM_CONDITIONAL(OSX, test x$macosx = xyes)
+# for smclient 
+AM_CONDITIONAL(PLATFORM_WIN32, test x$win32 = xyes) 
+AM_CONDITIONAL(PLATFORM_OSX, test x$macosx = xyes) 
 
 
 AC_ARG_ENABLE(macige,
@@ -314,23 +362,6 @@ fi
 ##
 # Session support             
 if test x$macosx = xno && test x$win32 = xno ; then
-AC_ARG_ENABLE(sm,
-              [  --disable-sm				Disable Session Support.],
-              [ case "${enableval}" in
-                    yes)    enable_sm=yes;;
-                     no)    enable_sm=no;;
-                      *)    AC_MSG_ERROR([bad value ${enableval} for --disable-dm]);;
-                esac],
-              [enable_sm=yes])
-
-# sm
-if test x${enable_sm} = xyes; then
-	PKG_CHECK_MODULES([sm], sm)
-	AC_SUBST(sm_LIBS)
-	AC_SUBST(sm_CFLAGS)
-	AC_DEFINE(ENABLE_SM, 1, [Enable Session Support])
-
-fi
 # Multimedia keys
 AC_ARG_ENABLE([mmkeys],
               [  --disable-mmkeys			Disable multimedia keys support.],
@@ -346,7 +377,6 @@ fi
 else
 # force them off
 enable_mmkeys=no;
-enable_sm=no;
 fi
 AC_SUBST(EXTRA_CFLAGS)
 AC_SUBST(EXTRA_LDFLAGS)
@@ -358,20 +388,6 @@ if test x${GOB2} = x""; then
 	exit 0;
 fi
 
-
-# libcurl settings
-AC_PATH_PROG(CURL_CONFIG,curl-config)
-AC_ARG_WITH(curl,
-            AC_HELP_STRING([--with-curl=PATH], [where libcurl is installed]),
-            [CURL_CONFIG="${with_curl}/bin/curl-config"])
-if test -f "${CURL_CONFIG}"; then
-    LDFLAGS="`${CURL_CONFIG} --libs` $LDFLAGS"
-    CPPFLAGS="`${CURL_CONFIG} --cflags` $CPPFLAGS"
-else
-    AC_MSG_WARN([curl-config not found, guessing at libcurl build settings])
-fi
-AC_CHECK_HEADER([curl/curl.h],,AC_MSG_ERROR([unable to find libcurl header files]))
-AC_CHECK_LIB([curl],[curl_global_init],,AC_MSG_ERROR([unable to link with libcurl]))
 
 AC_ARG_ENABLE([shave],
             [  --disable-shave			Use shave output cleaner when building.],
@@ -392,6 +408,7 @@ Makefile
 src/Makefile
 src/gmpc-version.h
 src/gob/Makefile
+src/smclient/Makefile
 glade/Makefile
 data/Makefile
 po/Makefile.in
@@ -418,12 +435,16 @@ pixmaps/icons/48x48/actions/Makefile
 pixmaps/icons/48x48/apps/Makefile
 pixmaps/icons/48x48/status/Makefile
 pixmaps/icons/64x64/Makefile
+pixmaps/icons/64x64/apps/Makefile
 pixmaps/icons/64x64/status/Makefile
 pixmaps/icons/72x72/Makefile
+pixmaps/icons/72x72/apps/Makefile
 pixmaps/icons/72x72/status/Makefile
 pixmaps/icons/96x96/Makefile
+pixmaps/icons/96x96/apps/Makefile
 pixmaps/icons/96x96/status/Makefile
 pixmaps/icons/128x128/Makefile
+pixmaps/icons/128x128/apps/Makefile
 pixmaps/icons/128x128/status/Makefile
 pixmaps/icons/128x128/categories/Makefile
 pixmaps/icons/scalable/Makefile
@@ -431,15 +452,14 @@ pixmaps/icons/scalable/actions/Makefile
 pixmaps/icons/scalable/status/Makefile
 pixmaps/icons/scalable/apps/Makefile
 pixmaps/icons/scalable/categories/Makefile
+test/Makefile
+test/config/Makefile
+test/MpdDataModel/Makefile
+test/GmpcEasyDownload/Makefile
 ])
 echo ""
 echo ""
 echo "------------------ Status ------------------"
-if test x$eggtrayicon = xtrue; then
-	echo "Eggtrayicon mode is:              enabled"
-else
-	echo "Eggtrayicon mode is:              disabled"
-fi
 if test x$maintainer_mode = xtrue; then
 	echo "Maintainer mode is:               enabled"
 else
@@ -454,11 +474,6 @@ if test x${enable_mmkeys} = xyes; then
 	echo "Multimedia keys support is:       enabled"
 else
 	echo "Multimedia keys support is:       disabled"
-fi
-if test x${enable_sm} = xyes; then
-	echo "Session Manager support is:       enabled"
-else
-	echo "Session Manager support is:       disabled"
 fi
 if test x${enable_configdir} = xyes; then
 	echo "Use ~/.config/ for config files:  enabled"
@@ -479,6 +494,11 @@ if test "x$libspiff" = "x1"; then
 	echo "Use libspiff library:             enabled"
 else
 	echo "Use libspiff library:             disabled"
+fi
+if test "x$libxspf" = "x1"; then
+	echo "Use libxspf library:              enabled"
+else
+	echo "Use libxspf library:              disabled"
 fi
 echo "";
 echo "Now type make to build"

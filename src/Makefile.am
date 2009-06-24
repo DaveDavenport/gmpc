@@ -1,8 +1,12 @@
+if EXTRA_VERSION
+REVISION=@EXTRA_VERSION@
+else
 REVISION=`git rev-parse --short master`
+endif
 CONF_VERSION=0
 -include Makefile.config
 
-SUBDIRS=gob
+SUBDIRS=gob smclient
 
 bin_PROGRAMS=gmpc
 
@@ -17,38 +21,41 @@ gmpc_SOURCES=\
 	playlist3-messages.c\
 	mm-keys.c\
 	config1.c\
-	sm.c\
 	metadata.c\
+    metadata-cache.c\
 	browsers/playlist3-tag2-browser.c\
 	browsers/playlist3-file-browser.c\
 	browsers/playlist3-current-playlist-browser.c\
 	browsers/playlist3-find2-browser.c\
-	browsers/playlist3-metadata-browser.c\
 	browsers/playlist3-playlist-editor.c\
-	vala/gmpc_image.c\
+	vala/gmpc-image.c\
 	vala/gmpc-progress.c\
-	vala/gmpc_rating.c\
+	vala/gmpc-rating.c\
 	vala/gmpc_menu_item_rating.c\
 	vala/gmpc-easy-command.c\
 	vala/gmpc-song-links.c\
+	vala/gmpc-plugin.c\
+	vala/gmpc-test-plugin.c\
+    vala/gmpc-mpddata-treeview-tooltip.c\
+	vala/gmpc-metadata-browser2.c\
+	vala/gmpc-favorites.c\
+	vala/gmpc-paned-size-group.c\
+    vala/gmpc-liststore-sort.c\
+    vala/gmpc-connection.c\
+    vala/gmpc-metadata-prefetcher.c\
 	gmpc_easy_download.c\
 	setup-assistant.c\
-	url_fetcher.c\
+	url-fetcher.c\
 	egg/eggcolumnchooserdialog.c\
 	egg/eggcolumnmodel.c\
-	TreeSearchWidget.c\
-	qlib/qasyncqueue.c\
 	bacon/bacon-message-connection.c\
-	advanced_search.c\
+	advanced-search.c\
 	browsers/server-information.c\
-	edit_markup.c 
-
-if EGGTRAYICON
-gmpc_SOURCES+=egg/eggtrayicon.c
-endif
+	bug-information.c
 
 gmpc_LDADD=\
-			   gob/libcwidgets.la
+			   gob/libcwidgets.la\
+               smclient/libeggsmclient.la
 
 
 if WIN32 
@@ -56,21 +63,21 @@ gmpc_LDADD += gmpc-win32.o
 endif
 
 BUILT_SOURCES=\
-		revisiont.h\
-		revision.h
+		revisiont.h
 
 gmpc-win32.o: gmpc-win32.rc
 	$(LIBTOOL) --mode=compile --tag=RC $(RC) -i $^ -o $@
 
 .PHONY: revisiont.h
 revisiont.h:
-	@if test '$(REVISION)' != '$(CONF_VERSION)'; then\
+	@if test "$(REVISION)" != "$(CONF_VERSION)"; then\
 		echo "Writing new Makefile.config file";\
 		echo "CONF_VERSION=$(REVISION)" > Makefile.config;\
+		echo "static const char *revision = \"$(REVISION)""\"; " > revision.h;\
 	fi;
 
-revision.h:
-	echo "static const char *revision = \"$(REVISION)""\"; " > revision.h
+revision.h:	
+	echo "static const char *revision = \"$(REVISION)""\"; " > revision.h;
 
 INCLUDES=\
 	-DPIXMAP_PATH=\""$(pkgdatadir)/icons/"\" \
@@ -84,7 +91,9 @@ INCLUDES=\
 	-I$(top_srcdir)/src/egg\
 	-I$(top_builddir)/src/egg\
 	-I$(top_srcdir)/src/gob\
-	-I$(top_builddir)/src/gob
+	-I$(top_builddir)/src/gob\
+	-I$(top_srcdir)/src/vala\
+	-I$(top_builddir)/src/vala
 
 
 
@@ -98,7 +107,8 @@ LIBS= \
 	@gthread_LIBS@\
 	@libsoup_LIBS@\
 	@SPIFF_LIBS@\
-	@sm_LIBS@ 
+	@libxspf_LIBS@\
+    @sqlite3_LIBS@
 
 if USE_SYSTEM_LIBSEXY
 LIBS += @libsexy_LIBS@
@@ -122,10 +132,11 @@ AM_CFLAGS = @CFLAGS@\
 	@gobject_CFLAGS@\
 	@gtk_CFLAGS@\
 	@gmodule_CFLAGS@\
+    @libxspf_CFLAGS@\
 	@libglade_CFLAGS@\
 	@gthread_CFLAGS@\
-	@sm_CFLAGS@\
 	@libsoup_CFLAGS@\
+    @sqlite3_CFLAGS@\
 	@EXTRA_CFLAGS@\
 	-DPACKAGE_LIB_DIR=\""$(pkglibdir)"\"\
 	-DPACKAGE_DATA_DIR=\""$(datarootdir)"\"
@@ -150,8 +161,11 @@ gmpcinclude_HEADERS = \
 		misc.h\
 		gmpc_easy_download.h\
 		vala/gmpc-easy-command.h\
-		TreeSearchWidget.h \
-		playlist3-messages.h\
+		vala/gmpc-plugin.h\
+        vala/gmpc-connection.h\
+        vala/gmpc-mpddata-treeview-tooltip.h\
+        vala/gmpc-paned-size-group.h\
+        playlist3-messages.h\
 		gmpc-version.h\
 		metadata.h
 
@@ -170,31 +184,33 @@ EXTRA_DIST=\
 		browsers/playlist3-current-playlist-browser.h\
 		browsers/playlist3-find2-browser.h\
 		browsers/playlist3-playlist-editor.h\
-		vala/gmpc_image.h\
-		vala/gmpc_rating.h\
+		vala/gmpc-image.h\
+		vala/gmpc-rating.h\
 		vala/gmpc-progress.h\
 		vala/gmpc_menu_item_rating.h\
 		vala/gmpc-easy-command.h\
 		vala/gmpc-song-links.h\
+		vala/gmpc-test-plugin.h\
+        vala/gmpc-metadata-browser2.h\
+        vala/gmpc-favorites.h\
+        vala/gmpc-liststore-sort.h\
+        vala/gmpc-connection.h\
+        vala/gmpc-mpddata-treeview-tooltip.h\
+        vala/gmpc-metadata-prefetcher.h\
+	vala/gmpc-paned-size-group.h\
+        gtktransition.h\
+        plugin-internal.h\
 		setup-assistant.h\
-		sm.h\
 		metadata.h\
+        metadata-cache.h\
 		egg/eggcolumnchooserdialog.h\
 		egg/eggcolumnmodel.h\
 		revision.h\
-		qlib/qasyncqueue.h\
 		bacon/bacon-message-connection.h\
-		advanced_search.h\
+		advanced-search.h\
 		gmpc-version.h.in\
+		bug-information.h\
 		gmpc-win32.rc
-
-if EGGTRAYICON
-EXTRA_DIST+=egg/eggtrayicon.h
-else 
-EXTRA_DIST+=egg/eggtrayicon.h egg/eggtrayicon.c
-endif
-
-
 
 DISTCLEANFILES=\
 			   revision.h\

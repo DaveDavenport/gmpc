@@ -16,7 +16,7 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
-
+using Config;
 using GLib;
 using Gtk;
 using Gdk;
@@ -24,12 +24,59 @@ using Cairo;
 using MPD;
 using Gmpc;
 
-public class Gmpc.Easy.Command:GLib.Object {
+
+public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
+	private const bool use_transition = Gmpc.use_transition;
+	/* hack to make gettext happy */
+    private const string some_unique_name = Config.VERSION;
+
 	private Gtk.EntryCompletion completion = null;
-	private Gtk.ListStore store = null;
+	public Gtk.ListStore store = null;
 	private uint signals = 0;
 	private Gtk.Window window = null;
 
+	/***
+	 * plugin setup
+	 */
+	private int[] version = {0,0,1};
+
+
+	/**
+	 * Required plugin implementation
+	 */
+	 public override weak string get_name() 
+	 {
+		return _("Gmpc Easy Command");
+	 }
+	 public override weak int[] get_version()
+	 {
+		return this.version;
+	 }
+    /**
+     * Tells the plugin to save itself
+     */
+    public override void save_yourself()
+    {
+        /* nothing to save */
+    }
+    /**
+     * Get set enabled
+     */
+    public override bool get_enabled() {
+        return (bool)config.get_int_with_default(this.get_name(), "enabled", 1);
+    }
+    public override void set_enabled(bool state) {
+		/* if disabling and popup is open, close it */
+		if(!state && this.window != null) {
+			this.window.destroy();
+			this.window = null;
+		}
+       config.set_int(this.get_name(), "enabled", (int)state); 
+    }
+
+	/************************************************
+	 * private
+	 */
 	private bool completion_function(Gtk.EntryCompletion comp, string key, Gtk.TreeIter iter) {
 		string value;
 		var model = comp.model;
@@ -43,6 +90,9 @@ public class Gmpc.Easy.Command:GLib.Object {
 		return false;
 	}
 	construct {
+        /* Mark the plugin as an internal dummy */
+        this.plugin_type = 8+4;
+
 		this.store =
 			new Gtk.ListStore(6, typeof(uint), typeof(string), typeof(string), typeof(void *), typeof(void *),
 							  typeof(string));
@@ -53,12 +103,14 @@ public class Gmpc.Easy.Command:GLib.Object {
 		this.completion.inline_selection = true;
 		this.completion.popup_completion = true;
 
-		this.completion.set_match_func(completion_function, null);
+		this.completion.set_match_func(completion_function);
 
 		var renderer = new Gtk.CellRendererText();
 		this.completion.pack_end(renderer, false);
 		this.completion.add_attribute(renderer, "text", 5);
 		renderer.set("foreground", "grey", null);
+
+		this.add_entry(_("Help"), "", _("Get a list of available commands"), (Callback *)help_window,this);
 	}
 
 	/**
@@ -212,6 +264,9 @@ public class Gmpc.Easy.Command:GLib.Object {
      */
 	public void
 	 popup() {
+		/* if not enabled, don't popup */
+		if(!this.get_enabled()) return;
+
 		if (this.window == null) {
 			this.window = new Gtk.Window(Gtk.WindowType.TOPLEVEL);
 			var entry = new Gtk.Entry();
@@ -247,6 +302,8 @@ public class Gmpc.Easy.Command:GLib.Object {
 			entry.activate += this.activate;
 			entry.key_press_event += this.key_press_event;
 
+			entry.focus_out_event += this.focus_out_event;
+
 			window.show_all();
 			window.present();
 			entry.grab_focus();
@@ -254,6 +311,85 @@ public class Gmpc.Easy.Command:GLib.Object {
 			this.window.present();
 		}
 	}
+	private bool
+	focus_out_event(Gtk.Entry entry, Gdk.EventFocus event)
+	{
+		stdout.printf("focus out event\n");
+		this.window.destroy();
+		this.window = null;
+		return false;
+	}
+	public static void 
+	help_window_destroy(Gtk.Dialog window,int response)
+	{
+		window.destroy();
+	}
+	public static void
+	help_window(void *data, string? param) 
+	{
+		Gmpc.Easy.Command ec = (Gmpc.Easy.Command *)data;
+		/*  Create window */
+		var window = new Gtk.Dialog.with_buttons(_("Easy Command help"), null, 0, "gtk-close", Gtk.ResponseType.OK,null);
+
+		/* set window size */
+		window.set_default_size(600,400);
+
+		/* Treeview with commands */
+		var tree = new Gtk.TreeView();
+
+		/**
+		 * Don't sort the original model, but added a Sortable "wrapper" model
+		 * Set this wrapper as tree backend
+		 */
+		tree.model = new Gtk.TreeModelSort.with_model(ec.store);
+		/* Setting up tree view, rules-hint for alternating row-color, search_column for search as you type */
+		tree.rules_hint = true;
+		tree.search_column = 1;
+		/* scrolled window to add it in */
+		var sw = new Gtk.ScrolledWindow(null, null);
+
+		/* setup scrolled window */
+		sw.border_width = 8;
+		sw.shadow_type = Gtk.ShadowType.ETCHED_IN;
+		sw.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC);
+
+		/* add sw */
+		sw.add(tree);
+		/* Add columns */
+		/* Command column */
+		var renderer = new Gtk.CellRendererText();
+		var column = new Gtk.TreeViewColumn ();
+		tree.append_column(column);
+		column.set_title(_("Command"));
+		column.pack_start(renderer, false);
+		column.add_attribute(renderer, "text", 1);
+		column.set_sort_column_id(1);
+		/* Usage column */
+		renderer = new Gtk.CellRendererText();
+		column = new Gtk.TreeViewColumn ();
+		tree.append_column(column);
+		column.pack_start(renderer, false);
+		column.set_title(_("Usage"));
+		column.add_attribute(renderer, "text", 5);
+		column.set_sort_column_id(5);
+
+		/* Label with explenation */
+		var label = new Gtk.Label("");
+		label.set_markup(_("The following commands can be used in the easy command window.\nThe easy command window can be opened by pressing ctrl-space"));
+		label.set_alignment(0.0f, 0.5f);
+		label.set_padding(8,6);
+		/* Add scrolled windows (containing tree) to dialog */
+		window.vbox.pack_start(label, false, false, 0);
+							
+		/* Add scrolled windows (containing tree) to dialog */
+		window.vbox.pack_start(sw, true, true, 0);
+
+		/* show all */
+		window.show_all();
+
+		/* delete event */
+		window.response += help_window_destroy;
+	}
 }
 
-/* vim: noexpandtab ts=4 sw=4 sts=4 tw=120: */
+/* vim: set noexpandtab ts=4 sw=4 sts=4 tw=120: */

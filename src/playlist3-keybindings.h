@@ -41,7 +41,11 @@ typedef enum _KeybindAction{
     KB_ACTION_FULLSCREEN,
     KB_ACTION_REPEAT,
     KB_ACTION_RANDOM,
-    KB_ACTION_TOGGLE_MUTE
+    KB_ACTION_TOGGLE_MUTE,
+    KB_ACTION_SINGLE_MODE,
+    KB_ACTION_CONSUME,
+    KB_ACTION_FF,
+    KB_ACTION_REW
 }KeybindAction;
 /** Some default keybindings */
 typedef enum _Keybind{
@@ -55,12 +59,16 @@ typedef enum _Keybind{
     KB_INTERFACE_EXPAND_KP,
     KB_INTERFACE_COLLAPSE,
     KB_INTERFACE_EXPAND,
-    KB_QUIT,
     KB_CLOSE,
+    KB_QUIT,
     KB_FULLSCREEN,
     KB_REPEAT,
     KB_RANDOM,
     KB_TOGGLE_MUTE,
+    KB_SINGLE_MODE,
+    KB_CONSUME,
+    KB_FF,
+    KB_REW,
     KB_NUM
 }Keybind;
 
@@ -81,24 +89,32 @@ const char *Keybindname[KB_NUM] = {
         "Fullscreen",
         "Repeat",
         "Random",
-        "Mute"
+        "Mute",
+        "SingleMode",
+        "Consume",
+        "Fast Forward",
+        "Rewind"
         };
 int KeybindingDefault[KB_NUM][3] = {
-        {GDK_Up,            GDK_CONTROL_MASK,                   KB_ACTION_PLAY},
-        {GDK_Right,         GDK_CONTROL_MASK,                   KB_ACTION_NEXT},
-        {GDK_Left,          GDK_CONTROL_MASK,                   KB_ACTION_PREV},
-        {GDK_Down,          GDK_CONTROL_MASK,                   KB_ACTION_STOP},
-        {GDK_Delete,        GDK_CONTROL_MASK|GDK_SHIFT_MASK,    KB_ACTION_CLEAR_PLAYLIST},
-        {GDK_Insert,        GDK_CONTROL_MASK|GDK_SHIFT_MASK,    KB_ACTION_FULL_ADD_PLAYLIST},
-        {GDK_KP_Subtract,   0,                                  KB_ACTION_INTERFACE_COLLAPSE},
-        {GDK_KP_Add,        0 ,                                 KB_ACTION_INTERFACE_EXPAND},
-        {GDK_minus,         GDK_CONTROL_MASK,                   KB_ACTION_INTERFACE_COLLAPSE},
-        {GDK_plus,          GDK_CONTROL_MASK|GDK_SHIFT_MASK,    KB_ACTION_INTERFACE_EXPAND},
-        {GDK_w,             GDK_CONTROL_MASK,                   KB_ACTION_CLOSE},
-        {GDK_q,             GDK_CONTROL_MASK,                   KB_ACTION_QUIT},
-        {GDK_F12,           0,                                  KB_ACTION_FULLSCREEN},
-        {GDK_r,             GDK_CONTROL_MASK,                   KB_ACTION_REPEAT},
-        {GDK_s,             GDK_CONTROL_MASK,                   KB_ACTION_RANDOM},
-        {GDK_m,             GDK_CONTROL_MASK,                   KB_ACTION_TOGGLE_MUTE}
+        {GDK_Up,            GDK_CONTROL_MASK,                   KB_ACTION_PLAY},                    // KB_PLAY
+        {GDK_Right,         GDK_CONTROL_MASK,                   KB_ACTION_NEXT},                    // KB_NEXT
+        {GDK_Left,          GDK_CONTROL_MASK,                   KB_ACTION_PREV},                    // KB_PREV
+        {GDK_Down,          GDK_CONTROL_MASK,                   KB_ACTION_STOP},                    // KB_STOP
+        {GDK_Delete,        GDK_CONTROL_MASK|GDK_SHIFT_MASK,    KB_ACTION_CLEAR_PLAYLIST},          // KB_CLEAR_PLAYLIST
+        {GDK_Insert,        GDK_CONTROL_MASK|GDK_SHIFT_MASK,    KB_ACTION_FULL_ADD_PLAYLIST},       // KB_ADD PLAYLIST
+        {GDK_KP_Subtract,   0,                                  KB_ACTION_INTERFACE_COLLAPSE},      // KB_INTERFACE_COLLAPSE_KP
+        {GDK_KP_Add,        0 ,                                 KB_ACTION_INTERFACE_EXPAND},        // KB_INTERFACE_EXPAND_KP
+        {GDK_minus,         GDK_CONTROL_MASK,                   KB_ACTION_INTERFACE_COLLAPSE},      // KB_INTERFACE_COLLAPSE
+        {GDK_plus,          GDK_CONTROL_MASK|GDK_SHIFT_MASK,    KB_ACTION_INTERFACE_EXPAND},        // KB_INTERFACE_EXPAND
+        {GDK_w,             GDK_CONTROL_MASK,                   KB_ACTION_CLOSE},                   // KB_CLOSE
+        {GDK_q,             GDK_CONTROL_MASK,                   KB_ACTION_QUIT},                    // KB_QUIT
+        {GDK_F12,           0,                                  KB_ACTION_FULLSCREEN},              // KB_FULLSCREEN
+        {GDK_r,             GDK_CONTROL_MASK,                   KB_ACTION_REPEAT},                  // KB_REPEAT
+        {GDK_s,             GDK_CONTROL_MASK,                   KB_ACTION_RANDOM},                  // KB_RANDOM
+        {GDK_m,             GDK_CONTROL_MASK,                   KB_ACTION_TOGGLE_MUTE},             // KB_TOGGLE_MUTE
+        {GDK_k,             GDK_CONTROL_MASK,                   KB_ACTION_SINGLE_MODE},             // KB_SINGLE_MODE
+        {GDK_l,             GDK_CONTROL_MASK,                   KB_ACTION_CONSUME},                 // KB_CONSUME
+        {GDK_Right,         GDK_CONTROL_MASK|GDK_SHIFT_MASK,    KB_ACTION_FF},                      // KB_FF
+        {GDK_Left,          GDK_CONTROL_MASK|GDK_SHIFT_MASK,    KB_ACTION_REW}                      // KB_REW
 };
 #endif

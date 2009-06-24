@@ -29,9 +29,11 @@
 /* every part split out over multiple files */
 #include "revision.h"
 #include "gmpc-clicklabel.h"
-#include "gmpc-liststore-sort.h"
+#include "vala/gmpc-liststore-sort.h"
 #include "gmpc-metaimage.h"
 #include "vala/gmpc-progress.h"
+#include "vala/gmpc-favorites.h"
+#include "vala/gmpc-metadata-browser2.h"
 #ifdef ENABLE_IGE
 #include "ige-mac-menu.h"
 #include "ige-mac-dock.h"
@@ -57,6 +59,7 @@ static GtkTargetEntry target_table[] = {
 
 GtkWidget *metaimage_album_art = NULL;
 GtkWidget *metaimage_artist_art = NULL;
+GmpcFavoritesButton *favorites_button = NULL;
 /**
  * Widgets used in the header.
  * and the new progresbar
@@ -86,7 +89,7 @@ void set_browser_format(void);
 void set_playlist_format(void);
 
 static void playlist_player_volume_changed(GtkWidget * vol_but);
-void pl3_option_menu_activate(void);
+
 
 /* Glade declarations, otherwise these would be static */
 void about_window(void);
@@ -97,9 +100,11 @@ void cur_song_center_enable_tb(GtkToggleButton *);
 void show_cover_case_tb(GtkToggleButton * but);
 void save_possize_enable_tb(GtkToggleButton *);
 void playlist_menu_repeat_changed(GtkCheckMenuItem *);
+void playlist_menu_single_mode_changed(GtkCheckMenuItem * menu);
+void playlist_menu_consume_changed(GtkCheckMenuItem * menu);
+
 void playlist_menu_random_changed(GtkCheckMenuItem *);
 void playlist_menu_cover_image_changed(GtkCheckMenuItem *);
-void playlist_player_cover_art_pressed(GtkEventBox *, GdkEventButton *);
 void hide_on_close_enable_tb(GtkToggleButton * but);
 void pl3_window_fullscreen(void);
 gboolean pl3_close(void);
@@ -111,6 +116,8 @@ static void pl3_profiles_changed(GmpcProfiles * prof, const int changed, const i
 static void playlist3_server_output_changed(GtkWidget * item, gpointer data);
 static void playlist3_fill_server_menu(void);
 static void playlist3_server_update_db(void);
+
+void easy_command_help_window(void);
 
 /* Old category browser style */
 static int old_type = -1;
@@ -402,92 +409,105 @@ int pl3_window_key_press_event(GtkWidget * mw, GdkEventKey * event)
 			gmpc_plugin_browser_key_press_event(plugins[i], mw, event, type);
 		}
 	}
-
-	list = cfg_get_key_list(config, KB_GLOBAL);
-	/* If no keybindings are found, add the default ones */
-	if (list == NULL) {
-		for (i = 0; i < KB_NUM; i++) {
-			cfg_set_single_value_as_int(config, KB_GLOBAL, Keybindname[i], KeybindingDefault[i][0]);
-			cfg_set_single_value_as_int(config, MK_GLOBAL, Keybindname[i], KeybindingDefault[i][1]);
-			cfg_set_single_value_as_int(config, AC_GLOBAL, Keybindname[i], KeybindingDefault[i][2]);
-		}
+	if(event->keyval > 0)
+	{
 		list = cfg_get_key_list(config, KB_GLOBAL);
-	}
-	/* Walk through the keybinding list */
-	if (list) {
-		int edited = 0;
-		conf_mult_obj *iter = NULL;
-		/* Sort list on name. so chains can be defined */
-		do {
-			edited = 0;
-			iter = list;
+		/* If no keybindings are found, add the default ones */
+		if (list == NULL) {
+			for (i = 0; i < KB_NUM; i++) {
+				cfg_set_single_value_as_int(config, KB_GLOBAL, Keybindname[i], KeybindingDefault[i][0]);
+				cfg_set_single_value_as_int(config, MK_GLOBAL, Keybindname[i], KeybindingDefault[i][1]);
+				cfg_set_single_value_as_int(config, AC_GLOBAL, Keybindname[i], KeybindingDefault[i][2]);
+			}
+			list = cfg_get_key_list(config, KB_GLOBAL);
+		}
+		/* Walk through the keybinding list */
+		if (list) {
+			int edited = 0;
+			conf_mult_obj *iter = NULL;
+			/* Sort list on name. so chains can be defined */
 			do {
-				if (iter->next) {
-					if (strcmp(iter->key, iter->next->key) > 0) {
-						char *temp = iter->key;
-						iter->key = iter->next->key;
-						iter->next->key = temp;
-						edited = 1;
+				edited = 0;
+				iter = list;
+				do {
+					if (iter->next) {
+						if (strcmp(iter->key, iter->next->key) > 0) {
+							char *temp = iter->key;
+							iter->key = iter->next->key;
+							iter->next->key = temp;
+							edited = 1;
+						}
+					}
+					iter = iter->next;
+				} while (iter);
+			} while (edited);
+
+			for (iter = list; iter; iter = iter->next) {
+				guint keycode = (guint)cfg_get_single_value_as_int_with_default(config, KB_GLOBAL,
+						iter->key, -1);
+				guint keymask = (guint)cfg_get_single_value_as_int_with_default(config, MK_GLOBAL,
+						iter->key, 0);
+
+				/* ignore numpad and caps lock */
+				if (keycode >= 0 && ((event->state&(GDK_SHIFT_MASK|GDK_CONTROL_MASK|GDK_MOD1_MASK)) == (keymask))
+						&& (keycode == event->keyval)) {
+					int action = cfg_get_single_value_as_int_with_default(config, AC_GLOBAL,
+							iter->key, -1);
+					found = 1;
+					/* Play control */
+					if (action == KB_ACTION_PLAY)
+						play_song();
+					else if (action == KB_ACTION_NEXT)
+						next_song();
+					else if (action == KB_ACTION_PREV)
+						prev_song();
+					else if (action == KB_ACTION_STOP)
+						stop_song();
+					else if (action == KB_ACTION_FF)
+						seek_ps(5);	
+					else if (action == KB_ACTION_REW)
+						seek_ps(-5);	
+					/* Other actions */
+					else if (action == KB_ACTION_CLEAR_PLAYLIST)
+						mpd_playlist_clear(connection);
+					else if (action == KB_ACTION_FULL_ADD_PLAYLIST)
+						mpd_playlist_add(connection, "/");
+					/* View control */
+					else if (action == KB_ACTION_INTERFACE_COLLAPSE)
+						playlist_zoom_out();
+					else if (action == KB_ACTION_INTERFACE_EXPAND)
+						playlist_zoom_in();
+					else if (action == KB_ACTION_FULLSCREEN)
+						pl3_window_fullscreen();
+					/* Program control */
+					else if (action == KB_ACTION_QUIT)
+						main_quit();
+					else if (action == KB_ACTION_CLOSE)
+						pl3_close();
+					else if (action == KB_ACTION_SINGLE_MODE){
+						mpd_player_set_single(connection, !mpd_player_get_single(connection));
+					}
+					else if (action == KB_ACTION_CONSUME){
+						mpd_player_set_consume(connection, !mpd_player_get_consume(connection));
+					}
+					else if (action == KB_ACTION_REPEAT)
+						mpd_player_set_repeat(connection, !mpd_player_get_repeat(connection));
+					else if (action == KB_ACTION_RANDOM)
+						mpd_player_set_random(connection, !mpd_player_get_random(connection));
+					else if (action == KB_ACTION_TOGGLE_MUTE)
+						volume_toggle_mute();
+					else {
+						debug_printf(DEBUG_ERROR,
+								"Keybinding action (%i) for: %i %i is invalid\n", action, event->state, event->keyval);
+						found = 0;
 					}
 				}
-				iter = iter->next;
-			} while (iter);
-		} while (edited);
-
-		for (iter = list; iter; iter = iter->next) {
-			int keycode = cfg_get_single_value_as_int_with_default(config, KB_GLOBAL,
-																   iter->key, -1);
-			int keymask = cfg_get_single_value_as_int_with_default(config, MK_GLOBAL,
-																   iter->key, 0);
-
-			if (keycode >= 0 && (event->state == (unsigned)keymask)
-				&& ((unsigned)keycode == event->keyval)) {
-				int action = cfg_get_single_value_as_int_with_default(config, AC_GLOBAL,
-																	  iter->key, -1);
-				found = 1;
-				/* Play control */
-				if (action == KB_ACTION_PLAY)
-					play_song();
-				else if (action == KB_ACTION_NEXT)
-					next_song();
-				else if (action == KB_ACTION_PREV)
-					prev_song();
-				else if (action == KB_ACTION_STOP)
-					stop_song();
-				/* Other actions */
-				else if (action == KB_ACTION_CLEAR_PLAYLIST)
-					mpd_playlist_clear(connection);
-				else if (action == KB_ACTION_FULL_ADD_PLAYLIST)
-					mpd_playlist_add(connection, "/");
-				/* View control */
-				else if (action == KB_ACTION_INTERFACE_COLLAPSE)
-					playlist_zoom_out();
-				else if (action == KB_ACTION_INTERFACE_EXPAND)
-					playlist_zoom_in();
-				else if (action == KB_ACTION_FULLSCREEN)
-					pl3_window_fullscreen();
-				/* Program control */
-				else if (action == KB_ACTION_QUIT)
-					main_quit();
-				else if (action == KB_ACTION_CLOSE)
-					pl3_close();
-				else if (action == KB_ACTION_REPEAT)
-					mpd_player_set_repeat(connection, !mpd_player_get_repeat(connection));
-				else if (action == KB_ACTION_RANDOM)
-					mpd_player_set_random(connection, !mpd_player_get_random(connection));
-				else if (action == KB_ACTION_TOGGLE_MUTE)
-					volume_toggle_mute();
-				else {
-					debug_printf(DEBUG_ERROR,
-								 "Keybinding action (%i) for: %i %i is invalid\n", action, event->state, event->keyval);
-					found = 0;
-				}
 			}
+			cfg_free_multiple(list);
 		}
-		cfg_free_multiple(list);
-	}
-	if (!found) {
-		return FALSE;
+		if (!found) {
+			return FALSE;
+		}
 	}
 
 	/* don't propagate */
@@ -662,31 +682,17 @@ static void playlist3_source_drag_data_recieved(GtkWidget * widget,
 	if (info != 99) {
 		int found = 0;
 		const gchar *url_data = (gchar *) data->data;
-		/* Hack, move this too libmpd? */
-		char **handlers = mpd_server_get_url_handlers(connection);
-		int has_http = FALSE, has_file = FALSE;
-		int i = 0;
-		for (i = 0; handlers && handlers[i]; i++) {
-			if (strcmp(handlers[i], "http://") == 0) {
-				has_http = TRUE;
-			} else if (strcmp(handlers[i], "file://") == 0) {
-				has_file = TRUE;
-			}
-		}
-		if (handlers)
-			g_strfreev(handlers);
+		int i;
 		if (url_data) {
 
 			gchar **url = g_uri_list_extract_uris(url_data);
 			for (i = 0; url && url[i]; i++) {
-				if (has_file && strncmp(url[i], "file://", 7) == 0) {
-					char *uri = g_uri_unescape_string(url[i], "");
-					mpd_playlist_add(connection, uri);
-					g_free(uri);
-					found = 1;
-				} else if (has_http && strncmp(url[i], "http://", 7) == 0) {
+				gchar *scheme = g_uri_parse_scheme(url[i]);
+				/* Don't add lines withouth an actual scheme. */
+				if(scheme)
+				{
 					url_start_real(url[i]);
-					found = 1;
+					g_free(scheme);
 				}
 			}
 			if (url)
@@ -729,7 +735,6 @@ static void playlist3_source_drag_data_recieved(GtkWidget * widget,
  */
 void pl3_pb_seek_event(GtkWidget * pb, guint seek_time, gpointer user_data)
 {
-	printf("seek to: %i\n", (int)seek_time);
 	mpd_player_seek(connection, (int)seek_time);
 }
 
@@ -813,14 +818,17 @@ static void playlist_connection_changed(MpdObj * mi, int connect, gpointer data)
 	 * make the playlist update itself
 	 */
 	playlist_status_changed(connection,
-							MPD_CST_STATE | MPD_CST_SONGID |
+							MPD_CST_STATE | MPD_CST_SONGID | MPD_CST_NEXTSONG | 
 							MPD_CST_ELAPSED_TIME | MPD_CST_VOLUME |
-							MPD_CST_REPEAT | MPD_CST_RANDOM | MPD_CST_PERMISSION, NULL);
+							MPD_CST_REPEAT | MPD_CST_RANDOM | MPD_CST_PERMISSION
+							| MPD_CST_SINGLE_MODE | MPD_CST_CONSUME_MODE
+							, NULL);
 
 	/**
 	 * Also need updating
 	 */
 	pl3_option_menu_activate();
+	pl3_tool_menu_update();
 
 	playlist3_fill_server_menu();
 
@@ -916,17 +924,23 @@ void create_playlist3(void)
 #endif
 	/* create tree store for the "category" view */
 	if (pl3_tree == NULL) {
+		GType types[] = {
+				G_TYPE_INT,	/* row type, see free_type struct */
+				G_TYPE_STRING,	/* display name */
+				G_TYPE_STRING,	/* full path and stuff for backend */
+				G_TYPE_STRING,	/* icon id */
+				G_TYPE_BOOLEAN,	/* cat proc */
+				G_TYPE_UINT,	/* icon size */
+				G_TYPE_STRING,	/* browser markup */
+				G_TYPE_INT,	/* ordering */
+				G_TYPE_STRING	/* Num items */
+				};
 		/* song id, song title */
-		pl3_tree = (GtkTreeModel *) gmpc_liststore_sort_new(PL3_CAT_NROWS, G_TYPE_INT,	/* row type, see free_type struct */
-															G_TYPE_STRING,	/* display name */
-															G_TYPE_STRING,	/* full path and stuff for backend */
-															G_TYPE_STRING,	/* icon id */
-															G_TYPE_BOOLEAN,	/* cat proc */
-															G_TYPE_UINT,	/* icon size */
-															G_TYPE_STRING,	/* browser markup */
-															G_TYPE_INT,	/* ordering */
-															G_TYPE_STRING	/* Num items */
-			);
+		pl3_tree = (GtkTreeModel *) gmpc_liststore_sort_new();
+		gtk_list_store_set_column_types(GTK_LIST_STORE(pl3_tree),
+				PL3_CAT_NROWS, 
+				types	
+				);
 	}
 	g_signal_connect(G_OBJECT(pl3_tree), "row_inserted", G_CALLBACK(thv_row_inserted_signal), NULL);
 	g_signal_connect(G_OBJECT(pl3_tree), "row_changed", G_CALLBACK(thv_row_changed_signal), NULL);
@@ -943,15 +957,16 @@ void create_playlist3(void)
 	renderer = gtk_cell_renderer_pixbuf_new();
 	column = gtk_tree_view_column_new();
 	gtk_tree_view_column_pack_start(column, renderer, FALSE);
-	gtk_tree_view_column_set_attributes(column, renderer, "icon-name", 3, "stock-size", 5, NULL);
+	g_object_set(G_OBJECT(renderer),  "stock-size", GTK_ICON_SIZE_DND, NULL);
+	gtk_tree_view_column_set_attributes(column, renderer, "icon-name", PL3_CAT_ICON_ID, NULL);
 
 	renderer = gtk_cell_renderer_text_new();
 	/* insert the column in the tree */
 	gtk_tree_view_column_pack_start(column, renderer, TRUE);
-	gtk_tree_view_column_set_attributes(column, renderer, "text", 1, NULL);
+	gtk_tree_view_column_set_attributes(column, renderer, "text", PL3_CAT_TITLE, NULL);
 	g_object_set(renderer, "ellipsize", PANGO_ELLIPSIZE_END, NULL);
 	gtk_tree_view_append_column(GTK_TREE_VIEW(tree), column);
-	gtk_tree_view_set_search_column(GTK_TREE_VIEW(tree), 1);
+	gtk_tree_view_set_search_column(GTK_TREE_VIEW(tree), PL3_CAT_TITLE);
 
 	g_signal_connect_after(G_OBJECT(sel), "changed", G_CALLBACK(pl3_cat_sel_changed), NULL);
 
@@ -1004,15 +1019,26 @@ void create_playlist3(void)
 	new_pb = pb;
 
 	/* Add volume slider. */
+
 	volume_button = gtk_volume_button_new();
 	gtk_button_set_relief(GTK_BUTTON(volume_button), GTK_RELIEF_NORMAL);
 	gtk_box_pack_end(GTK_BOX(glade_xml_get_widget(pl3_xml, "hbox12" /*playlist_player" */ )),
 					 volume_button, FALSE, FALSE, 0);
 	gtk_widget_show_all(volume_button);
+	/* Make sure change is applied */
+
+	playlist3_new_header();
+	favorites_button = gmpc_favorites_button_new();
+	gtk_box_pack_start(GTK_BOX(glade_xml_get_widget(pl3_xml, "hbox10")),
+					 GTK_WIDGET(favorites_button), FALSE, FALSE, 0);
+	gtk_widget_show(GTK_WIDGET(favorites_button));
+
 	playlist_status_changed(connection,
-							MPD_CST_STATE | MPD_CST_SONGID |
+							MPD_CST_STATE | MPD_CST_SONGID | MPD_CST_NEXTSONG | 
 							MPD_CST_ELAPSED_TIME | MPD_CST_VOLUME |
-							MPD_CST_REPEAT | MPD_CST_RANDOM | MPD_CST_PERMISSION, NULL);
+							MPD_CST_REPEAT | MPD_CST_RANDOM | MPD_CST_PERMISSION
+							| MPD_CST_SINGLE_MODE | MPD_CST_CONSUME_MODE
+							, NULL);
 	g_signal_connect(G_OBJECT(volume_button), "value_changed", G_CALLBACK(playlist_player_volume_changed), NULL);
 
 	/* Restore values from config */
@@ -1022,9 +1048,8 @@ void create_playlist3(void)
 								   cfg_get_single_value_as_int_with_default
 								   (config, "playlist", "cover-image-enable", 0));
 
-	/* Make sure change is applied */
 
-	playlist3_new_header();
+
 	/* connect signals that are defined in the gui description */
 	glade_xml_signal_autoconnect(pl3_xml);
 
@@ -1145,7 +1170,8 @@ void create_playlist3(void)
 			cfg_set_single_value_as_int(config, AC_GLOBAL, Keybindname[i], KeybindingDefault[i][2]);
 		}
 		list = cfg_get_key_list(config, KB_GLOBAL);
-	} else {
+	} 
+	if(list){
 		GtkAccelGroup *ac = gtk_accel_group_new();
 		GtkWidget *pl3_win = playlist3_get_window();
 		int action_seen = 0;
@@ -1183,6 +1209,10 @@ void create_playlist3(void)
 					item = glade_xml_get_widget(pl3_xml, "menu_random");
 				} else if (action == KB_ACTION_TOGGLE_MUTE) {
 					item = glade_xml_get_widget(pl3_xml, "menu_mute_toggle");
+				} else if (action == KB_ACTION_SINGLE_MODE) {
+					item = glade_xml_get_widget(pl3_xml, "menu_single_mode_toggle");
+				} else if (action == KB_ACTION_CONSUME) {
+					item = glade_xml_get_widget(pl3_xml, "menu_consume_toggle");
 				}
 
 				if (item) {
@@ -1340,23 +1370,6 @@ void playlist_pref_construct(GtkWidget * container)
 	q_free(path);
 }
 
-/* Playlist player */
-static void playlist_player_set_song(MpdObj * mi)
-{
-	char buffer[1024];
-	mpd_Song *song = mpd_playlist_get_current_song(mi);
-	if (song) {
-		char *mark = cfg_get_single_value_as_string_with_default(config,
-																 "playlist",
-																 "player_markup",
-																 DEFAULT_PLAYLIST_PLAYER_MARKUP);
-		/**
-		 * Render song markup
-		 */
-		mpd_song_markup_escaped(buffer, 1024, mark, song);
-		cfg_free_string(mark);
-	}
-}
 
 /**
  * Menu Callback functions
@@ -1377,6 +1390,23 @@ void playlist_menu_random_changed(GtkCheckMenuItem * menu)
 		mpd_player_set_random(connection, active);
 	}
 }
+
+void playlist_menu_single_mode_changed(GtkCheckMenuItem * menu)
+{
+	int active = gtk_check_menu_item_get_active(menu);
+	if (active != mpd_player_get_single(connection)) {
+		mpd_player_set_single(connection, active);
+	}
+}
+
+void playlist_menu_consume_changed(GtkCheckMenuItem * menu)
+{
+	int active = gtk_check_menu_item_get_active(menu);
+	if (active != mpd_player_get_consume(connection)) {
+		mpd_player_set_consume(connection, active);
+	}
+}
+
 
 /**
  * This is artist image
@@ -1500,6 +1530,8 @@ static void playlist_zoom_level_changed(void)
 		}
 		gtk_window_set_resizable(GTK_WINDOW(pl3_win), FALSE);
 
+		gtk_widget_hide(glade_xml_get_widget(pl3_xml, "vbox5"));
+		break;
 	case PLAYLIST_SMALL:
 		gtk_widget_hide(glade_xml_get_widget(pl3_xml, "vbox5"));
 		if (!cfg_get_single_value_as_int_with_default(config, "playlist", "button-heading", FALSE))
@@ -1515,6 +1547,8 @@ static void playlist_zoom_level_changed(void)
 	*/
 	cfg_set_single_value_as_int(config, "playlist", "zoomlevel", pl3_zoom);
 }
+
+
 
 /**
  * Update the window to status changes in mpd
@@ -1534,6 +1568,7 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
 	 * Player state changed
 	 */
 	if (what & MPD_CST_STATE) {
+		mpd_Song *song = mpd_playlist_get_current_song(connection);
 #ifdef ENABLE_IGE
 		IgeMacDock *dock = ige_mac_dock_get_default();
 		GdkPixbuf *pb;
@@ -1555,11 +1590,6 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
 				gtk_image_set_from_stock(GTK_IMAGE
 										 (glade_xml_get_widget
 										  (pl3_xml, "pp_but_play_img")), "gtk-media-pause", GTK_ICON_SIZE_BUTTON);
-
-					/**
-                     * Update song indicator in window
-                     */
-				playlist_player_set_song(mi);
 
 					/**
                      * Update window title
@@ -1626,6 +1656,12 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
 
 		}
 		playlist3_update_header();
+
+		if ( state == MPD_PLAYER_PLAY|| state == MPD_PLAYER_PAUSE) {
+			gmpc_favorites_button_set_song(favorites_button, song);
+		}else{
+			gmpc_favorites_button_set_song(favorites_button, NULL);
+		}
 	}
 	/**
 	 * Handle song change or Playlist change
@@ -1633,9 +1669,6 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
 	 */
 	if (what & MPD_CST_SONGID || what & MPD_CST_SONGPOS || what & MPD_CST_PLAYLIST) {
 		playlist3_update_header();
-		if (mpd_player_get_state(mi) == MPD_PLAYER_PLAY) {
-			playlist_player_set_song(mi);
-		}
 		/* make is update markups and stuff */
 		playlist_status_changed(mi, MPD_CST_STATE, NULL);
 	}
@@ -1667,6 +1700,31 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
 											(pl3_xml, "menu_random")), mpd_player_get_random(connection));
 		}
 	}
+	if (what & MPD_CST_SINGLE_MODE) {
+		if (mpd_check_connected(connection)) {
+			char *string = g_strdup_printf(_("Single mode: %s"),
+										   (mpd_player_get_single(connection)) ? _("On") : _("Off"));
+			pl3_push_statusbar_message(string);
+			q_free(string);
+
+			gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM
+										   (glade_xml_get_widget
+											(pl3_xml, "menu_single_mode_toggle")), mpd_player_get_single(connection));
+		}
+	}
+
+	if (what & MPD_CST_CONSUME_MODE ) {
+		if (mpd_check_connected(connection)) {
+			char *string = g_strdup_printf(_("Consume: %s"),
+										   (mpd_player_get_consume(connection)) ? _("On") : _("Off"));
+			pl3_push_statusbar_message(string);
+			q_free(string);
+
+			gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM
+										   (glade_xml_get_widget
+											(pl3_xml, "menu_consume_toggle")), mpd_player_get_consume(connection));
+		}
+	}
 	if (what & MPD_CST_ELAPSED_TIME) {
 		if (mpd_check_connected(connection)) {
 			int totalTime = mpd_status_get_total_song_time(connection);
@@ -1679,14 +1737,31 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
 	}
 	if (what & MPD_CST_VOLUME) {
 		int volume = gtk_scale_button_get_value(GTK_SCALE_BUTTON(volume_button)) * 100;
+		int new_volume = mpd_status_get_volume(connection);
 		/* don't do anything if nothing is changed */
-		if (mpd_status_get_volume(connection) != volume) {
-			gtk_scale_button_set_value(GTK_SCALE_BUTTON(volume_button), mpd_status_get_volume(connection) / 100.0);
+		if(new_volume < 0){
+			gtk_widget_set_sensitive(volume_button, FALSE);
+		}else
+		{
+			gtk_widget_set_sensitive(volume_button, TRUE);
+			if (new_volume != volume) {
+				gtk_scale_button_set_value(GTK_SCALE_BUTTON(volume_button), new_volume / 100.0);
+			}
 		}
 
 	}
 	if (what & MPD_CST_PERMISSION) {
 		/* Check for control */
+		if (mpd_server_check_command_allowed(connection, "single") == MPD_SERVER_COMMAND_ALLOWED && mpd_check_connected(connection)) {
+			gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_single_mode_toggle"), TRUE);
+		} else {
+			gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_single_mode_toggle"), FALSE);
+		}
+		if (mpd_server_check_command_allowed(connection, "consume") == MPD_SERVER_COMMAND_ALLOWED && mpd_check_connected(connection)) {
+			gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_consume_toggle"), TRUE);
+		} else {
+			gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "menu_consume_toggle"), FALSE);
+		}
 		if (mpd_server_check_command_allowed(connection, "play") ==
 			MPD_SERVER_COMMAND_ALLOWED && mpd_check_connected(connection)) {
 			gtk_widget_set_sensitive(glade_xml_get_widget(pl3_xml, "pl3_button_control_box"), TRUE);
@@ -1723,27 +1798,38 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
 	if (what & MPD_CST_OUTPUT) {
 		playlist3_fill_server_menu();
 	}
-}
+	if (what & MPD_CST_NEXTSONG) {
 
-void playlist_player_cover_art_pressed(GtkEventBox * event_widget, GdkEventButton * event)
-{
-	mpd_Song *song = NULL;
-	int state = mpd_player_get_state(connection);
-	if (state == MPD_PLAYER_STOP || state == MPD_PLAYER_UNKNOWN)
-		return;
-	if (!mpd_check_connected(connection))
-		return;
-	song = mpd_playlist_get_current_song(connection);
-	if (song) {
-		info2_activate();
-		info2_fill_song_view(song);
+		GtkWidget *next_button = glade_xml_get_widget(pl3_xml, "button9");
+		if(next_button)
+		{
+			int i = mpd_player_get_next_song_id(mi);
+			if(i >= 0 )
+			{
+				mpd_Song *song = mpd_playlist_get_song(mi, i);
+				if(song)
+				{
+					mpd_song_markup(buffer, 1024,
+							"[%title% - &[%artist%]]|%shortfile%",
+							song);
+					gtk_widget_set_tooltip_text(next_button, buffer);
+				}
+				else 
+					gtk_widget_set_tooltip_text(next_button, "");
+				mpd_freeSong(song);
+			}
+			else 
+					gtk_widget_set_tooltip_text(next_button, "");
+		}
 	}
 }
+
 
 static void playlist_player_volume_changed(GtkWidget * vol_but)
 {
 	int volume = gtk_scale_button_get_value(GTK_SCALE_BUTTON(vol_but)) * 100;
-	if (mpd_status_get_volume(connection) != volume) {
+	int new_volume = mpd_status_get_volume(connection);
+	if (new_volume >= 0 && new_volume != volume) {
 		mpd_status_set_volume(connection, volume);
 	}
 }
@@ -1993,13 +2079,39 @@ static void playlist3_fill_server_menu(void)
 /**
  * new header
  */
+/* glue code */
 
+extern GmpcMetadataBrowser *metadata_browser;
+
+void info2_activate()
+{
+	GtkTreeView *tree = (GtkTreeView *) glade_xml_get_widget(pl3_xml, "cat_tree");
+	gmpc_metadata_browser_select_browser(metadata_browser, tree);
+}
+void info2_fill_song_view(mpd_Song *song)
+{
+	info2_activate();
+	gmpc_metadata_browser_set_song(metadata_browser, song);
+}
+void info2_fill_artist_view(const gchar *artist)
+{
+	info2_activate();
+	gmpc_metadata_browser_set_artist(metadata_browser,artist);
+}
+
+void info2_fill_album_view(const gchar *artist,const gchar *album)
+{
+	info2_activate();
+	gmpc_metadata_browser_set_album(metadata_browser,artist,album);
+}
 static void playlist3_header_song(void)
 {
 	mpd_Song *song = mpd_playlist_get_current_song(connection);
 	if (song) {
-		info2_activate();
-		info2_fill_song_view(song);
+		GtkTreeView *tree = (GtkTreeView *) glade_xml_get_widget(pl3_xml, "cat_tree");
+		gmpc_metadata_browser_select_browser(metadata_browser, tree);
+		gmpc_metadata_browser_set_song(metadata_browser, song);
+		//info2_fill_song_view(song);
 	}
 }
 
@@ -2007,8 +2119,11 @@ static void playlist3_header_artist(void)
 {
 	mpd_Song *song = mpd_playlist_get_current_song(connection);
 	if (song && song->artist) {
-		info2_activate();
-		info2_fill_artist_view(song->artist);
+		GtkTreeView *tree = (GtkTreeView *) glade_xml_get_widget(pl3_xml, "cat_tree");
+		gmpc_metadata_browser_select_browser(metadata_browser, tree);
+		gmpc_metadata_browser_set_artist(metadata_browser, song->artist);
+//		info2_activate();
+//		info2_fill_artist_view(song->artist);
 	}
 }
 
@@ -2022,8 +2137,9 @@ static void playlist3_header_album(void)
 {
 	mpd_Song *song = mpd_playlist_get_current_song(connection);
 	if (song && song->artist && song->album) {
-		info2_activate();
-		info2_fill_album_view(song->artist, song->album);
+		GtkTreeView *tree = (GtkTreeView *) glade_xml_get_widget(pl3_xml, "cat_tree");
+		gmpc_metadata_browser_select_browser(metadata_browser, tree);
+		gmpc_metadata_browser_set_album(metadata_browser, song->artist, song->album);
 	}
 }
 
@@ -2038,19 +2154,16 @@ void playlist3_new_header(void)
 		/** Title */
 		header_labels[0] = gmpc_clicklabel_new("");
 		gmpc_clicklabel_font_size(GMPC_CLICKLABEL(header_labels[0]), 4);
-		gmpc_clicklabel_set_do_bold(GMPC_CLICKLABEL(header_labels[0]), FALSE);
 
 		header_labels[1] = gtk_label_new(_("By"));
 		/** Artist */
 		header_labels[2] = gmpc_clicklabel_new("");
 		gmpc_clicklabel_set_ellipsize(GMPC_CLICKLABEL(header_labels[2]), PANGO_ELLIPSIZE_NONE);
-		gmpc_clicklabel_set_do_bold(GMPC_CLICKLABEL(header_labels[2]), FALSE);
 		gmpc_clicklabel_set_do_italic(GMPC_CLICKLABEL(header_labels[2]), TRUE);
 
 		header_labels[3] = gtk_label_new(_("From"));
 		/** Albumr */
 		header_labels[4] = gmpc_clicklabel_new("");
-		gmpc_clicklabel_set_do_bold(GMPC_CLICKLABEL(header_labels[4]), FALSE);
 		gmpc_clicklabel_set_do_italic(GMPC_CLICKLABEL(header_labels[4]), TRUE);
 
 		gtk_box_pack_start(GTK_BOX(vbox), header_labels[0], FALSE, TRUE, 0);
@@ -2061,9 +2174,9 @@ void playlist3_new_header(void)
 		gtk_box_pack_start(GTK_BOX(hbox), header_labels[3], FALSE, TRUE, 0);
 		gtk_box_pack_start(GTK_BOX(hbox), header_labels[4], TRUE, TRUE, 0);
 
-		g_signal_connect(G_OBJECT(header_labels[0]), "button-press-event", G_CALLBACK(playlist3_header_song), NULL);
-		g_signal_connect(G_OBJECT(header_labels[2]), "button-press-event", G_CALLBACK(playlist3_header_artist), NULL);
-		g_signal_connect(G_OBJECT(header_labels[4]), "button-press-event", G_CALLBACK(playlist3_header_album), NULL);
+		g_signal_connect(G_OBJECT(header_labels[0]), "clicked", G_CALLBACK(playlist3_header_song), NULL);
+		g_signal_connect(G_OBJECT(header_labels[2]), "clicked", G_CALLBACK(playlist3_header_artist), NULL);
+		g_signal_connect(G_OBJECT(header_labels[4]), "clicked", G_CALLBACK(playlist3_header_album), NULL);
 		/* Create tooltip */
 		{
 			GtkWidget *win, *item = (GtkWidget *) gmpc_metaimage_new_size(META_ARTIST_ART, 200);
@@ -2161,7 +2274,7 @@ static gboolean playlist3_error_expose(GtkWidget * wid, GdkEventExpose * event, 
 	gtk_paint_flat_box(wid->style,
 					   wid->window,
 					   GTK_STATE_NORMAL,
-					   GTK_SHADOW_OUT, NULL, wid, "tooltip", 0, 0, wid->allocation.width, wid->allocation.height);
+					   GTK_SHADOW_OUT, NULL, wid, "tooltip", 0, 0, wid->allocation.width-12, wid->allocation.height-12);
 
 	return FALSE;
 }
@@ -2185,17 +2298,6 @@ void playlist3_insert_browser(GtkTreeIter * iter, gint position)
 /**
  * Category editing
  */
-
-void set_browser_format(void)
-{
-	char *string = gmpc_signals_get_browser_markup(gmpc_signals);
-	char *format = edit_song_markup(string);
-	cfg_free_string(string);
-	if (format != NULL) {
-		gmpc_signals_browser_markup_changed(gmpc_signals, format);
-	}
-	q_free(format);
-}
 
 void playlist3_destroy(void)
 {
@@ -2390,9 +2492,10 @@ void thv_row_inserted_signal(GtkTreeModel * model, GtkTreePath * path, GtkTreeIt
 	GtkHBox *box = (GtkHBox *) gtk_hbox_new(FALSE, 6);
 	gchar *title, *image;
 	GtkImage *imagew = (GtkImage *) gtk_image_new();
-	GtkLabel *label = (GtkLabel *) gtk_label_new(title ? "" : title);
-
+	GtkLabel *label = NULL;
 	gtk_tree_model_get(model, iter, 3, &image, 1, &title, -1);
+
+	label = (GtkLabel *) gtk_label_new(title ? "" : title);
 
 	/* Create new tabbed-button object */
 	tb = g_malloc0(sizeof(*tb));
@@ -2460,6 +2563,45 @@ void thv_row_inserted_signal(GtkTreeModel * model, GtkTreePath * path, GtkTreeIt
 		g_free(title);
 	if (image)
 		g_free(image);
+}
+
+/**
+ * Tool menu 
+ */
+
+void pl3_tool_menu_update(void)
+{
+	int i;
+	int menu_items = 0;
+	GtkWidget *menu = NULL;
+	GtkAccelGroup *group = gtk_accel_group_new();
+
+	gtk_menu_item_set_submenu(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_tool")), NULL);
+	gtk_widget_set_sensitive(GTK_WIDGET(glade_xml_get_widget(pl3_xml, "menu_tool")), FALSE);
+	if (!mpd_check_connected(connection))
+		return;
+
+	menu = gtk_menu_new();
+	gtk_menu_set_accel_group(GTK_MENU(menu), group);
+	gtk_window_add_accel_group(GTK_WINDOW(playlist3_get_window()), group);
+	for (i = 0; i < num_plugins; i++) {
+			menu_items += gmpc_plugin_tool_menu_integration(plugins[i], GTK_MENU(menu));
+	}
+	if (menu_items) {
+		gtk_widget_show_all(menu);
+		gtk_menu_item_set_submenu(GTK_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_tool")), menu);
+		gtk_widget_set_sensitive(GTK_WIDGET(glade_xml_get_widget(pl3_xml, "menu_tool")), TRUE);
+	} else {
+		g_object_ref_sink(menu);
+		g_object_unref(menu);
+	}
+
+}
+
+void easy_command_help_window(void)
+{
+	if(gmpc_easy_command)
+		gmpc_easy_command_help_window(gmpc_easy_command,NULL);
 }
 
 /* vim: set noexpandtab ts=4 sw=4 sts=4 tw=120: */

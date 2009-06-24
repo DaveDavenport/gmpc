@@ -23,9 +23,13 @@
 #include "gmpc-profiles.h"
 #include "gmpc-mpddata-model.h"
 #include "gmpc-mpddata-treeview.h"
+//#include "gmpc-plugin.h"
+#include "gmpc-connection.h"
 
-#ifndef __GMPC_PLUGIN_H__
-#define __GMPC_PLUGIN_H__
+//#include "gmpc-paned-size-group.h"
+
+#ifndef __PLUGIN_H__
+#define __PLUGIN_H__
 
 #define PLUGIN_ID_MARK 1024
 #define PLUGIN_ID_INTERNALL 2048
@@ -33,7 +37,10 @@
 extern MpdObj *connection;
 extern config_obj *config;
 extern GmpcProfiles *gmpc_profiles;
+extern GmpcConnection 	*gmpcconn;
 
+
+typedef struct _gmpcPluginParent gmpcPluginParent;
 /* Plugin Type's */
 /* This is a bitmask.*/
 typedef enum {
@@ -54,9 +61,9 @@ typedef enum
 	PL3_CAT_TITLE, /** title that is showed */
 	PL3_CAT_INT_ID, /* id */
 	PL3_CAT_ICON_ID, /* icon id */
-	PL3_CAT_PROC, /* for the lazy tree, if the dir is allready processed */
-	PL3_CAT_ICON_SIZE, /** icon size */
-	PL3_CAT_BROWSE_FORMAT, /** string, added for tag browser */
+	PL3_CAT_PROC_DEPRECATED, /* for the lazy tree, if the dir is allready processed */
+	PL3_CAT_ICON_SIZE_DEPRECATED, /** icon size */
+	PL3_CAT_BROWSE_FORMAT_DEPRECATED, /** string, added for tag browser */
 	PL3_CAT_ORDER, /* int for sorting the list */
     PL3_CAT_NUM_ITEMS,
 	PL3_CAT_NROWS
@@ -109,14 +116,17 @@ typedef struct {
  * Metadata fetching plugin.
  * All fields required
  */
+
 typedef struct {
     /* Set and get priority */
 	int (*get_priority)				(void);
     void (*set_priority)            (int priority);
-	int (*get_image)				(mpd_Song *song, MetaDataType type, char **path);
+	int (*get_image)				(mpd_Song *song, MetaDataType type, char **path) G_GNUC_DEPRECATED;
+
     /* Padding */
-    void (*padding1)                (void);
-    void (*padding2)                (void);
+    void (*get_uris)                (mpd_Song *song, MetaDataType type, void (*callback)(GList *uris, gpointer data), gpointer data) G_GNUC_DEPRECATED;
+    /*  New api, return linked list of MetaData Objects (see metadata.h) */
+    void (*get_metadata)            (mpd_Song *song, MetaDataType, void (*callback)(GList *metadata, gpointer data), gpointer data);
     void (*padding3)                (void);
 } gmpcMetaDataPlugin;
 
@@ -170,8 +180,8 @@ typedef struct {
 	void							(*save_yourself)(void);
 
     /* Padding */
-    void (*padding1)                (void);
-    void (*padding2)                (void);
+    gint    (*tool_menu_integration)    (GtkMenu *menu); 
+    const gchar*  (*get_translation_domain)   (void);
     void (*padding3)                (void);
 } gmpcPlugin;
 
@@ -199,7 +209,7 @@ GtkWidget * playlist3_get_window(void);
 gboolean    playlist3_window_is_hidden(void);
 
 /** plugin functions */
-gmpcPlugin * 	plugin_get_from_id(int id);
+gmpcPluginParent * 	plugin_get_from_id(int id);
 
 
 /**
@@ -210,50 +220,32 @@ char  *         gmpc_get_full_glade_path(const char *filename);
 gchar * 		gmpc_get_covers_path(const gchar *filename);
 gchar * 		gmpc_get_user_path(const gchar *filename);
 void 			playlist3_insert_browser(GtkTreeIter *iter, gint position);
+
+
+void pl3_option_menu_activate(void);
 /* Tell mpd to reload the go menu */
 void            pl3_update_go_menu(void);
 
 
-/**
- * Plugin functions
- */
-
-int             gmpc_plugin_get_id                          (gmpcPlugin *plug);
-void            gmpc_plugin_init                            (gmpcPlugin *plug);
-void            gmpc_plugin_destroy                         (gmpcPlugin *plug);
-void            gmpc_plugin_save_yourself                   (gmpcPlugin *plug);
-
-gboolean        gmpc_plugin_get_enabled                     (gmpcPlugin *plug);           
-void            gmpc_plugin_set_enabled                     (gmpcPlugin *plug, gboolean enabled);
-
-const char *    gmpc_plugin_get_name                        (gmpcPlugin *plug);
-void            gmpc_plugin_status_changed                  (gmpcPlugin *plug, MpdObj *mi, ChangedStatusType what);
+/* Used by plugins themself */
 gchar *         gmpc_plugin_get_data_path                   (gmpcPlugin *plug);
-void            gmpc_plugin_mpd_connection_changed          (gmpcPlugin *plug, MpdObj *mi, int connected, gpointer data);
 
-gboolean        gmpc_plugin_is_browser                      (gmpcPlugin *plug);
-void            gmpc_plugin_browser_unselected              (gmpcPlugin *plug, GtkWidget *container);
-void            gmpc_plugin_browser_selected                (gmpcPlugin *plug, GtkWidget *container);
-void            gmpc_plugin_browser_add                     (gmpcPlugin *plug, GtkWidget *cat_tree);
-int             gmpc_plugin_browser_cat_right_mouse_menu    (gmpcPlugin *plug, GtkWidget *menu, int type, GtkWidget *tree, GdkEventButton *event);
-int             gmpc_plugin_browser_key_press_event         (gmpcPlugin *plug, GtkWidget *mw, GdkEventKey *event, int type);
-int             gmpc_plugin_browser_add_go_menu             (gmpcPlugin *plug, GtkWidget *menu);
-int             gmpc_plugin_browser_song_list_option_menu   (gmpcPlugin *plug, GmpcMpdDataTreeview *tree, GtkMenu *menu);
-gboolean        gmpc_plugin_browser_has_integrate_search    (gmpcPlugin *plug);
-MpdData *       gmpc_plugin_browser_integrate_search        (gmpcPlugin *plug, const int search_field, const gchar * query, GError **error);
-gboolean        gmpc_plugin_browser_integrate_search_field_supported        (gmpcPlugin *plug, const int search_field);
+/**
+ * Update parts of the gui
+ */
+void pl3_tool_menu_update(void);
 
-gboolean        gmpc_plugin_has_preferences                 (gmpcPlugin *plug);
-void            gmpc_plugin_preferences_construct           (gmpcPlugin *plug,GtkWidget *wid);
-void            gmpc_plugin_preferences_destroy             (gmpcPlugin *plug,GtkWidget *wid);
 
-int             gmpc_plugin_get_type(gmpcPlugin *plug);
-const int *     gmpc_plugin_get_version                     (gmpcPlugin *plug);
-gboolean        gmpc_plugin_is_internal                     (gmpcPlugin *plug);
+/***/
 
-/* metadata */
-gboolean        gmpc_plugin_is_metadata                     (gmpcPlugin *plug);
-int             gmpc_plugin_metadata_get_priority           (gmpcPlugin *plug);
-void            gmpc_plugin_metadata_set_priority           (gmpcPlugin *plug, int priority);
-int             gmpc_plugin_metadata_get_image              (gmpcPlugin *plug, mpd_Song *song, MetaDataType type, char **path);
+char *connection_get_music_directory(void);
+/* glue */
+
+void info2_fill_song_view(mpd_Song *song);
+void info2_activate();
+
+void info2_fill_artist_view(const gchar *artist);
+void info2_fill_album_view(const gchar *artist,const gchar *album);
+
+extern GObject *paned_size_group;
 #endif

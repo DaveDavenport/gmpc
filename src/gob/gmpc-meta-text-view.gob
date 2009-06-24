@@ -21,9 +21,15 @@ requires 2.0.0
 
 %headertop{
 #include <gtk/gtk.h>
+#include <glib/gstdio.h>
 #include <libmpd/libmpd.h>
+#include <unistd.h>
 #include "main.h"
 #include "misc.h"
+%}
+%ph{
+#include "vala/gmpc-test-plugin.h"
+#include "metadata-cache.h"
 %}
 
 class Gmpc:Meta:Text:View from Gtk:Text:View {
@@ -31,12 +37,32 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 	private mpd_Song *song 			= {NULL} destroywith mpd_freeSong;
 	private int type 				= {META_ARTIST_TXT};
 	private gulong meta_id 			= {0};
+    private GtkWidget *edit         = {NULL};
+    private GtkWidget *cancel       = {NULL};
+    private MetaData *met = {NULL} destroywith meta_data_free;
+
+    public gboolean use_monospace       = {FALSE};
+
+    private gboolean
+    key_press_event(self, GdkEventKey *key, gpointer user_data)
+    {
+        if(key->keyval == GDK_Escape)
+        {
+            if(self->_priv->cancel){
+                gtk_widget_activate(self->_priv->cancel);
+            }
+            return FALSE;
+        }
+        return FALSE;
+    }
 
 	init (self)
 	{
 		gtk_text_view_set_buffer(GTK_TEXT_VIEW(self), self->_priv->buffer);
 		gtk_text_view_set_editable(GTK_TEXT_VIEW(self), FALSE);
 		gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(self), GTK_WRAP_WORD);
+        g_signal_connect(G_OBJECT(self), "key-press-event", G_CALLBACK(self_key_press_event), NULL);
+
 		g_signal_connect(G_OBJECT(self), "populate-popup", G_CALLBACK(self_menu_populate_callback), NULL);
 		self->_priv->meta_id= g_signal_connect(G_OBJECT(gmw), "data-changed", G_CALLBACK(self_meta_callback), self);
 	}
@@ -46,6 +72,14 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 	{
 		Self *gmi =  GET_NEW;
 		gmi->_priv->type = type;
+        gtk_text_buffer_create_tag (gmi->_priv->buffer, "not_editable",
+                "editable", FALSE, 
+                NULL);
+
+        gtk_text_buffer_create_tag (gmi->_priv->buffer, "monospace",
+                "family", "Monospace",
+                "family-set", TRUE,
+                NULL);
 		return (GtkWidget *)gmi;
 	}
 
@@ -73,9 +107,20 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 			g_signal_connect_swapped(G_OBJECT(item), "activate", G_CALLBACK(self_clear_entry),self);
 			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
+			item = gtk_image_menu_item_new_with_label(_("Metadata selector"));
+			gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), gtk_image_new_from_stock(GTK_STOCK_EDIT, GTK_ICON_SIZE_MENU));
+			g_signal_connect_swapped(G_OBJECT(item), "activate", G_CALLBACK(self_select_metadata_editor),self);
+			gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+
 			gtk_widget_show_all(GTK_WIDGET(menu));
 		}
 	}
+
+    private void
+    select_metadata_editor(self)
+    {
+		gmpc_meta_data_edit_window_new(self->_priv->song,self->_priv->type);
+    }
 
 	public 
 	void
@@ -83,20 +128,19 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 	{
 		if(self->_priv->song)
 		{
-			gchar *path = NULL;
+			MetaData *met= NULL;
 			MetaDataResult ret;
-			ret = gmpc_meta_watcher_get_meta_path(gmw,self->_priv->song, self->_priv->type|META_QUERY_NO_CACHE, &path);
-			if(ret == META_DATA_FETCHING)
-			{
+			ret = gmpc_meta_watcher_get_meta_path(gmw,self->_priv->song, self->_priv->type|META_QUERY_NO_CACHE, &met);
+			if(ret == META_DATA_FETCHING) {
 				self_set_text_fetching(self);
 			}else if (ret == META_DATA_AVAILABLE) {
-				self_set_text_from_path(self,path); 
-			} else {
+                self_set_text_from_metadata(self, met);
+            } else {
 				self_set_text_na(self);
 			}
-			if(path)
+			if(met)
 			{
-				q_free(path);
+				meta_data_free(met);
 			}
 		}
 	}
@@ -104,35 +148,136 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 	public 
 	void
 	query_text_from_song(self, mpd_Song *song)
-	{
-		gchar *path = NULL;
-		MetaDataResult ret;
+    {
+        MetaData *met = NULL;
+        MetaDataResult ret;
 
-		if(self->_priv->song)
-		{
-			mpd_freeSong(self->_priv->song);
-		}
-		self->_priv->song = mpd_songDup(song);
-		
-		
-			ret = gmpc_meta_watcher_get_meta_path(gmw,self->_priv->song, self->_priv->type, &path);
-			if(ret == META_DATA_FETCHING)
-			{
-				self_set_text_fetching(self);
-			}else if (ret == META_DATA_AVAILABLE) {
-				self_set_text_from_path(self,path); 
-			} else {
-				self_set_text_na(self);
-			}
-			if(path)
-			{
-				q_free(path);
-			}
-	}
+        if(self->_priv->song)
+        {
+            mpd_freeSong(self->_priv->song);
+        }
+        self->_priv->song = mpd_songDup(song);
+
+
+        ret = gmpc_meta_watcher_get_meta_path(gmw,self->_priv->song, self->_priv->type, &met);
+        if(ret == META_DATA_FETCHING)
+        {
+            self_set_text_fetching(self);
+        }else if (ret == META_DATA_AVAILABLE) {
+            self_set_text_from_metadata(self,met); 
+        } else {
+            self_set_text_na(self);
+        }
+        if(met)
+        {
+            meta_data_free(met);
+        }
+    }
+
+    private void
+    cancel_button_clicked(self, GtkWidget *button)
+    {
+        gtk_text_view_set_editable(GTK_TEXT_VIEW(self), FALSE);
+        if(self->_priv->met)
+        {
+            MetaData *met = self->_priv->met;
+            self->_priv->met = NULL;
+            /* Create a copy as self_set_from_path modifies self->_priv->path */
+            self_set_text_from_metadata(self, met);
+            meta_data_free(met);
+        }else self_set_text_na(self);
+    }
+
+    private void
+    edit_button_clicked(self, GtkWidget *button)
+    {
+        if(gtk_text_view_get_editable(GTK_TEXT_VIEW(self)))
+        {
+            MetaData *met;
+            gchar *content = NULL;
+            GtkTextIter iter_start, iter_end;
+
+            /* Get start and end of text, and store it */
+            gtk_text_buffer_get_start_iter(self->_priv->buffer, &iter_start);
+            gtk_text_buffer_get_end_iter(self->_priv->buffer, &iter_end);
+            content = gtk_text_buffer_get_text(self->_priv->buffer, &iter_start, &iter_end, FALSE);
+            gtk_text_view_set_editable(GTK_TEXT_VIEW(self), FALSE);
+
+            /* Copy path, because signal callback my destroy path first */
+            met = meta_data_new();
+            met->plugin_name = "User set";
+            met->type = self->_priv->type;
+            if(content){
+                met->content_type = META_DATA_CONTENT_TEXT;
+                met->content = g_strstrip(content);met->size = -1;
+            }else {
+                met->content_type = META_DATA_CONTENT_EMPTY;
+            }
+            meta_data_set_cache(self->_priv->song, META_DATA_AVAILABLE, met); 
+            gmpc_meta_watcher_data_changed(gmw, self->_priv->song, self->_priv->type, META_DATA_AVAILABLE, met);
+            meta_data_free(met);
+
+        }else{
+            gtk_widget_show(self->_priv->cancel);
+            gtk_text_view_set_editable(GTK_TEXT_VIEW(self), TRUE);
+            gtk_button_set_label(GTK_BUTTON(button), GTK_STOCK_SAVE);
+        }
+
+    }
+    private 
+    void
+    set_text(self,const gchar *text, gsize length, int ro)
+    {
+        GtkTextIter iter;
+        GtkTextIter end_iter;
+        gtk_text_buffer_set_text(self->_priv->buffer, text, length);
+
+        gtk_text_buffer_get_start_iter(self->_priv->buffer, &iter);
+        gtk_text_buffer_get_end_iter(self->_priv->buffer, &end_iter);
+        if(self->use_monospace) {
+            gtk_text_buffer_apply_tag_by_name(self->_priv->buffer, "monospace",&iter, &end_iter);
+        }
+        if(!ro)
+        {
+            GtkTextChildAnchor *anch;
+            self->_priv->edit = gtk_button_new_from_stock(GTK_STOCK_EDIT); 
+            self->_priv->cancel = gtk_button_new_from_stock(GTK_STOCK_CANCEL); 
+
+            gtk_text_view_set_editable(GTK_TEXT_VIEW(self), FALSE);
+            gtk_widget_set_no_show_all(self->_priv->cancel, TRUE);
+            /* Add 2 empty lines at the end, and make it non-editable */
+            gtk_text_buffer_get_end_iter(self->_priv->buffer, &end_iter);
+            gtk_text_buffer_insert_with_tags_by_name(self->_priv->buffer, &end_iter, "\n\n", -1,"not_editable", NULL);
+
+            /* Add edit widget */
+            anch = gtk_text_buffer_create_child_anchor(self->_priv->buffer, &end_iter);
+            gtk_text_buffer_get_iter_at_child_anchor(self->_priv->buffer, &iter,anch);
+            /* Make widget non-editable */
+            gtk_text_buffer_apply_tag_by_name(self->_priv->buffer, "not_editable",&iter, &end_iter);
+            /* attach widget to anchor */
+            gtk_text_view_add_child_at_anchor(GTK_TEXT_VIEW(self), self->_priv->edit, anch);
+
+            /* Add edit widget */
+            gtk_text_buffer_get_end_iter(self->_priv->buffer, &end_iter);
+            anch = gtk_text_buffer_create_child_anchor(self->_priv->buffer, &end_iter);
+            gtk_text_buffer_get_iter_at_child_anchor(self->_priv->buffer, &iter,anch);
+            /* Make widget non-editable */
+            gtk_text_buffer_apply_tag_by_name(self->_priv->buffer, "not_editable",&iter, &end_iter);
+            /* attach widget to anchor */
+            gtk_text_view_add_child_at_anchor(GTK_TEXT_VIEW(self), self->_priv->cancel, anch);
+
+            /* show button */
+            gtk_widget_show(self->_priv->edit);
+            g_signal_connect_swapped(self->_priv->edit, "clicked",G_CALLBACK(self_edit_button_clicked), self);
+            g_signal_connect_swapped(self->_priv->cancel, "clicked",G_CALLBACK(self_cancel_button_clicked), self);
+        }
+        gtk_text_buffer_get_start_iter(self->_priv->buffer, &iter);
+        gtk_text_buffer_place_cursor(self->_priv->buffer, &iter);
+    }
 
 	signal last NONE (STRING)	
 	void
-	set_text_from_path(self, gchar *path)
+	set_text_from_path(self,const gchar *path)
 	{
 		gchar *content=NULL;
 		gsize size = 0;
@@ -142,42 +287,86 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 			gsize new_size = 0;
 			if(g_utf8_validate(content, size, NULL))
 			{
-				gtk_text_buffer_set_text(self->_priv->buffer, content, size);
+                self_set_text(self, content, size, FALSE);
 			}
 			else
 			{
 				new_data = g_locale_to_utf8(content, size, NULL, &new_size, NULL);
 				if(new_data)
 				{
-					gtk_text_buffer_set_text(self->_priv->buffer, new_data, new_size);
+                    self_set_text(self, new_data, new_size,FALSE);
 					g_free(new_data);
 				}
 				else
 				{
 					new_data = g_strdup_printf("%s: '%s' %s", _("Failed to open file:"), path,_("because of encoding issues"));
-					gtk_text_buffer_set_text(self->_priv->buffer,new_data,-1);
+                    self_set_text(self, new_data, -1,TRUE);
 					g_free(new_data);
 				}
 			}
 			g_free(content);
 		}
 	}
+
+    private
+    void
+    set_text_from_metadata(self, MetaData *met)
+    {
+        if(met->content_type == META_DATA_CONTENT_URI) {
+            const gchar *path = meta_data_get_uri(met);
+            self_set_text_from_path(self, path);
+        }else if(met->content_type == META_DATA_CONTENT_TEXT) {
+            const gchar *text = meta_data_get_text(met);
+            self_set_text(self,text, -1, FALSE); 
+        }else if (met->content_type == META_DATA_CONTENT_HTML) {
+            /* TODO: make utf-8 compatible */
+            const gchar *text = meta_data_get_html(met);
+            if(text)
+            {
+                /* Get byte length */
+                gsize length = strlen(text);
+                gchar *data = g_malloc0(length+1);
+                int i=0, depth=0,j=0;
+                for(i=0; i<length;i++){
+                    if(text[i] == '<') depth++;
+                    else if(text[i] == '>') depth--;
+                    else if(!depth){
+                        data[j] = text[i];
+                        j++;
+                    }
+                }
+                data[j] =  '\0';
+                self_set_text(self,data, -1, FALSE); 
+                g_free(data);
+            }else{
+                self_set_text_na(self);
+            }
+        }
+        if(self->_priv->met) meta_data_free(self->_priv->met);
+        self->_priv->met = meta_data_dup(met);
+    }
 	
 	signal last NONE (NONE)	
 	void
 	set_text_fetching(self)
 	{
+        if(self->_priv->met) meta_data_free(self->_priv->met);
+        self->_priv->met = NULL;
 		if(self->_priv->type == META_SONG_TXT)
 		{
-			gtk_text_buffer_set_text(GTK_TEXT_BUFFER(self->_priv->buffer), _("Fetching Lyric"),-1);
+            self_set_text(self, _("Fetching Lyrics"), -1,TRUE);
 		}
 		else if (self->_priv->type == META_ARTIST_TXT)
 		{
-			gtk_text_buffer_set_text(GTK_TEXT_BUFFER(self->_priv->buffer), _("Fetching Artist Info"),-1);
+            self_set_text(self, _("Fetching Artist Info"), -1,TRUE);
 		}
+        else if (self->_priv->type == META_SONG_GUITAR_TAB)
+        {
+            self_set_text(self, _("Fetching Guitar tab"), -1,TRUE);
+        }
 		else
 		{
-			gtk_text_buffer_set_text(GTK_TEXT_BUFFER(self->_priv->buffer), _("Fetching Album Info"),-1);
+            self_set_text(self, _("Fetching Album Info"), -1,TRUE);
 		}
 	}
 
@@ -185,12 +374,15 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 	void
 	set_text_na(self)
 	{
-		gtk_text_buffer_set_text(GTK_TEXT_BUFFER(self->_priv->buffer), _("Not Available"),-1);
+        if(self->_priv->met) meta_data_free(self->_priv->met);
+        self->_priv->met = NULL;
+
+        self_set_text(self, _("Not Available"), -1,FALSE);
 	}
 
 	private
 	void
-	meta_callback(GmpcMetaWatcher *mw , mpd_Song *song,  MetaDataType type, MetaDataResult ret, char *path,gpointer data)
+	meta_callback(GmpcMetaWatcher *mw , mpd_Song *song,  MetaDataType type, MetaDataResult ret, MetaData *met,gpointer data)
 	{
 		Self *self = data;
 		/**
@@ -204,8 +396,8 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 			return;
 		}
 		if(ret == META_DATA_AVAILABLE) {
-			self_set_text_from_path(self,path); 
-		} else if (ret == META_DATA_FETCHING) {
+            self_set_text_from_metadata(self,met); 
+        } else if (ret == META_DATA_FETCHING) {
 			self_set_text_fetching(self);
 		} else {
 			self_set_text_na(self);
@@ -235,8 +427,13 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 	void
 	clear_entry(self)
 	{
-		meta_data_set_cache(self->_priv->song,self->_priv->type, META_DATA_UNAVAILABLE, NULL); 
+        MetaData *met = meta_data_new();
+        met->type = self->_priv->type;
+        met->plugin_name = "User set";
+        met->content_type = META_DATA_CONTENT_EMPTY;
+		meta_data_set_cache(self->_priv->song, META_DATA_UNAVAILABLE, met); 
 		gmpc_meta_watcher_data_changed(gmw, self->_priv->song, self->_priv->type, META_DATA_UNAVAILABLE, NULL);
+        meta_data_free(met);
 	}
 	public
 	void
@@ -264,12 +461,17 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 			case GTK_RESPONSE_ACCEPT:
 				{	
 					gchar *filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(fcd));
-					meta_data_set_cache(song,type, META_DATA_AVAILABLE, filename); 
-					gmpc_meta_watcher_data_changed(gmw, song, type, META_DATA_AVAILABLE, filename);
+                    MetaData *met = meta_data_new();
+                    met->type = type;
+                    met->plugin_name = "User set";
+                    met->content_type = META_DATA_CONTENT_URI;
+                    met->content = filename; met->size =-1;
+					meta_data_set_cache(song, META_DATA_AVAILABLE, met); 
+					gmpc_meta_watcher_data_changed(gmw, song, type, META_DATA_AVAILABLE, met);
 
-					g_free(filename);
-				}
-			default:
+                    meta_data_free(met);
+                }
+            default:
 				break;
 		} 
 		gtk_widget_destroy(fcd);

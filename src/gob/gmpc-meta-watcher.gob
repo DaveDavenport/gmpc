@@ -28,22 +28,8 @@ requires 2.0.0
 
 
 class Gmpc:Meta:Watcher from  G:Object {
-    public  int total_requested= 0;
-    public int queued_requests = 0;
     init(self)
     {
-    }
-    public
-    int
-    get_total_requested(self)
-    {
-        return self->total_requested;
-    }
-    public
-    int
-    get_queued_requests(self)
-    {
-        return self->queued_requests;
     }
 
     public
@@ -52,11 +38,10 @@ class Gmpc:Meta:Watcher from  G:Object {
       return GET_NEW;
     }
 
-    signal last NONE (POINTER, INT, INT, STRING)
+    signal last NONE (POINTER, INT, INT, POINTER)
     void
-    data_changed(self, mpd_Song *song, MetaDataType type,MetaDataResult result, gchar *path)
+    data_changed(self, mpd_Song *song, MetaDataType type,MetaDataResult result, MetaData *met)
     { 
-
     }
 
     /**
@@ -80,9 +65,15 @@ class Gmpc:Meta:Watcher from  G:Object {
 			return FALSE;
 		switch(type)
 		{
-			case META_SONG_TXT:
-				if(song1->file && song2->file && !strcmp(song1->file, song2->file))
+            case META_GENRE_SIMILAR:
+				if(song1->genre && song2->genre && !strcmp(song1->genre, song2->genre))
 					return TRUE;
+                return FALSE;
+			case META_SONG_TXT:
+            case META_SONG_GUITAR_TAB:
+				if(song1->artist && song2->artist && !strcmp(song1->artist, song2->artist))
+                    if(song1->title && song2->title && !strcmp(song1->title, song2->title))
+                        return TRUE;
 				return FALSE;
 
 			case META_ALBUM_TXT:
@@ -100,11 +91,10 @@ class Gmpc:Meta:Watcher from  G:Object {
                 }
 				if(song1->artist && song2->artist  && !strcmp(song1->artist, song2->artist))
 				{
-
 					return TRUE;
 				}
                 /* if we rewrite the artist, to be various (collection) also "see that" */
-                if((song1->artist && !strcmp(song1->artist, "Various Artists")) ||
+                if((song1->artist && !strcmp(song1->artist, "Various Artists")) &&
                         (song2->artist && !strcmp(song2->artist, "Various Artists")))
                 {
                     return TRUE;
@@ -126,6 +116,7 @@ class Gmpc:Meta:Watcher from  G:Object {
                 {
                     return TRUE;
                 }
+
             default:
 				break;
 		}
@@ -136,29 +127,31 @@ class Gmpc:Meta:Watcher from  G:Object {
 	void	
 	get_meta_path_callback(self, mpd_Song *song, MetaDataType type,  MetaDataCallback callback, gpointer data)
 	{
-		gchar *path = NULL;
+        MetaData *met = NULL;
 		MetaDataResult ret;
 
 		if(!self_match_data(type&META_QUERY_DATA_TYPES, song,song))
 		{
 			callback(song, META_DATA_UNAVAILABLE, NULL, data);			
+            g_warning("Query is invalid");
+            return;
 		}
-		ret = meta_data_get_path(song, type, &path,callback,data);
-		callback(song,ret,path,data);
-		if(path) g_free(path);
+		ret = meta_data_get_path(song, type, &met,callback,data);
+		callback(song,ret,met,data);
+		if(met) meta_data_free(met);
 	}
 
 	public 
 	MetaDataResult
-	get_meta_path(self, mpd_Song *song, MetaDataType type, gchar **path)
+	get_meta_path(self, mpd_Song *song, MetaDataType type, MetaData **met)
 	{
-		g_assert(path != NULL);
+		g_assert(met != NULL);
 			
 		if(!self_match_data(type&META_QUERY_DATA_TYPES, song,song))
 		{
 			return META_DATA_UNAVAILABLE;
 		}
 
-		return meta_data_get_path(song, type, path,NULL,NULL);
+		return meta_data_get_path(song, type, met,NULL,NULL);
 	}
 }

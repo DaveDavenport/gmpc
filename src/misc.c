@@ -35,7 +35,11 @@
  */
 gchar *format_time(unsigned long seconds)
 {
-	return format_time_real(seconds, _(" Total time: "));
+    gchar *retv = NULL;
+    gchar *string = g_strdup_printf("%s: ", _("Total time"));
+    retv = format_time_real(seconds, string);
+    g_free(string);
+	return retv; 
 }
 gchar * format_time_real(unsigned long seconds, const gchar *data)
 {
@@ -45,27 +49,20 @@ gchar * format_time_real(unsigned long seconds, const gchar *data)
 	int minutes = (seconds % 3600)/60;
     int sec = (seconds % 60);
 	char *ret;
-	if(seconds == 0)
-	{
+	if(seconds == 0) {
 		return g_strdup("");
 	}
 	str = g_string_new(data);
-	if(days != 0)
-	{
+	if(days != 0) {
 		g_string_append_printf(str, "%i %s ", days, ngettext("day", "days", days));
 	}	
-	if(hours != 0)
-	{
+	if(hours != 0) {
 		g_string_append_printf(str, "%i %s ", hours, ngettext("hour", "hours", hours));
 	}
-	if(minutes != 0)
-	{
+	if(minutes != 0) {
 		g_string_append_printf(str, "%i %s ", minutes, ngettext("minute", "minutes", minutes));
 	}
-    if(sec != 0)
-    {
-		g_string_append_printf(str, "%i %s", sec, ngettext("second", "seconds", sec));
-    }
+
 	ret = str->str;
 	g_string_free(str, FALSE);
 	return ret;
@@ -206,21 +203,36 @@ gchar * gmpc_get_covers_path(const gchar *filename)
  * While this is compile time on linux, windows
  * needs to determine it run-time.
  */
-char *gmpc_get_full_image_path(const char *filename)
+char *gmpc_get_full_image_path(void)
 {
     gchar *path;
-#ifdef WIN32
-    gchar *packagedir;
-    packagedir = g_win32_get_package_installation_directory_of_module(NULL);
-    debug_printf(DEBUG_INFO, "Got %s as package installation dir", packagedir);
+    const gchar * const *paths = g_get_system_data_dirs();
+    int i;
 
-    path = g_build_filename(packagedir, "share","gmpc","icons", filename, NULL);
+    /* First try the compile time path */
+    path = g_build_filename(PIXMAP_PATH, NULL);
+    if(path){
+        if(g_file_test(path, G_FILE_TEST_EXISTS|G_FILE_TEST_IS_DIR))
+        {
+            return path;
+        }
+        g_free(path);
+        path = NULL;
+    }
 
-    q_free(packagedir);
-
-#else
-    path = g_build_filename(G_DIR_SEPARATOR_S, PIXMAP_PATH, filename,NULL);
-#endif
+    for(i=0; paths && paths[i]; i++) {
+        path = g_build_filename(paths[i], "gmpc", "icons", NULL);
+        if(g_file_test(path, G_FILE_TEST_EXISTS|G_FILE_TEST_IS_DIR))
+        {
+            return path;
+        }
+        g_free(path);
+        path = NULL;
+    }
+    if(path == NULL){
+        g_error("Failed to find images");
+        return NULL;
+    }
     return path;
 }
 
@@ -232,18 +244,31 @@ char *gmpc_get_full_image_path(const char *filename)
 char *gmpc_get_full_glade_path(const char *filename)
 {
     gchar *path;
-#ifdef WIN32
-    gchar *packagedir;
-    packagedir = g_win32_get_package_installation_directory_of_module(NULL);
-    debug_printf(DEBUG_INFO, "Got %s as package installation dir", packagedir);
+    const gchar * const *paths = g_get_system_data_dirs();
+    int i;
 
-    path = g_build_filename(packagedir, "share","gmpc", filename, NULL);
-
-    q_free(packagedir);
-
-#else
-    path = g_build_filename(G_DIR_SEPARATOR_S, GLADE_PATH, filename,NULL);
-#endif
+    path = g_build_filename(GLADE_PATH, filename,NULL);
+    if(path)
+    {
+        if(g_file_test(path, G_FILE_TEST_EXISTS))
+        {
+            return path;
+        }
+        g_free(path);
+    }
+    for(i=0; paths && paths[i]; i++) {
+        path = g_build_filename(paths[i], "gmpc", filename, NULL);
+        if(g_file_test(path, G_FILE_TEST_EXISTS))
+        {
+            return path;
+        }
+        g_free(path);
+        path = NULL;
+    }
+    if(path == NULL){
+        g_error("Failed to locate glade path");
+        return NULL;
+    }
     return path;
 }
 
@@ -261,7 +286,9 @@ void open_uri(const gchar *uri)
 	gchar *browser_command = cfg_get_single_value_as_string_with_default(config, "Misc","browser", "xdg-open '%s'");
 #endif
 #endif
-	command	= g_strdup_printf(browser_command, uri);
+    gchar *escaped_uri = g_strdup(uri);
+    command	= g_strdup_printf(browser_command, escaped_uri);
+    g_free(escaped_uri);
 	result = g_spawn_command_line_async (command, &error);
 	if(error)
 	{
@@ -543,13 +570,32 @@ gchar ** tokenize_string(const gchar *string)
 	return result;
 }
 
-
-gboolean misc_header_expose_event(GtkWidget *widget, GdkEventExpose *event, gpointer data)
+void misc_header_style_set_process_containers(GtkWidget *container, GtkStyle *old_style, gpointer data)
 {
+    GtkStyle *style = container->style;
+	GList *list = NULL;
+	list = gtk_container_get_children(GTK_CONTAINER(container));
+	if(list)
+	{
+		GList *node;
+		for(node = g_list_first(list);node;node = g_list_next(node))
+		{
+			gtk_widget_modify_fg((GtkWidget *)node->data, GTK_STATE_NORMAL, &(style->fg[GTK_STATE_SELECTED]));
+			gtk_widget_modify_text((GtkWidget *)node->data, GTK_STATE_NORMAL, &(style->fg[GTK_STATE_SELECTED]));
+			if(GTK_IS_CONTAINER(node->data))
+			{
+				misc_header_style_set_process_containers((GtkWidget *)node->data, NULL, NULL);
+			}
+		}
+		g_list_free(list);
+	}	
 
+}
+gboolean misc_header_expose_event(GtkWidget *widget, GdkEventExpose *event)
+{
 	int width = widget->allocation.width;
 	int height = widget->allocation.height;
-	
+
 	gtk_paint_flat_box(widget->style, 
 					widget->window, 
 					GTK_STATE_SELECTED,
@@ -573,21 +619,68 @@ gchar * mpd_song_checksum(const mpd_Song *song)
     if(song)
     {
         GChecksum *cs=g_checksum_new(G_CHECKSUM_SHA256);
-        if(song->file) g_checksum_update(cs, song->file, -1);
-        if(song->artist) g_checksum_update(cs, song->artist, -1);
-        if(song->title) g_checksum_update(cs, song->title, -1);
-        if(song->album) g_checksum_update(cs, song->album, -1);
-        if(song->track) g_checksum_update(cs, song->track, -1);
-        if(song->name) g_checksum_update(cs, song->name, -1);
-        if(song->date) g_checksum_update(cs, song->date, -1);
-        if(song->genre) g_checksum_update(cs, song->genre, -1);
-        if(song->composer) g_checksum_update(cs, song->composer, -1);
-        if(song->performer) g_checksum_update(cs, song->performer, -1);
-        if(song->disc) g_checksum_update(cs, song->disc, -1);
-        if(song->albumartist) g_checksum_update(cs, song->albumartist, -1);
+        if(song->file) g_checksum_update(cs, (guchar *)song->file, -1);
+        if(song->artist) g_checksum_update(cs,(guchar *) song->artist, -1);
+        if(song->title) g_checksum_update(cs,(guchar *) song->title, -1);
+        if(song->album) g_checksum_update(cs,(guchar *) song->album, -1);
+        if(song->track) g_checksum_update(cs,(guchar *) song->track, -1);
+        if(song->name) g_checksum_update(cs,(guchar *) song->name, -1);
+        if(song->date) g_checksum_update(cs,(guchar *) song->date, -1);
+        if(song->genre) g_checksum_update(cs,(guchar *) song->genre, -1);
+        if(song->composer) g_checksum_update(cs,(guchar *) song->composer, -1);
+        if(song->performer) g_checksum_update(cs,(guchar *) song->performer, -1);
+        if(song->disc) g_checksum_update(cs,(guchar *) song->disc, -1);
+        if(song->albumartist) g_checksum_update(cs,(guchar *) song->albumartist, -1);
 
         retv = g_strdup(g_checksum_get_string(cs));
         g_checksum_free(cs);
     }
     return retv;
+}
+
+/* Kudos to the gnome-panel guys. */
+void
+colorshift_pixbuf(GdkPixbuf *dest, GdkPixbuf *src, int shift)
+{
+	gint i, j;
+	gint width, height, has_alpha, src_rowstride, dest_rowstride;
+	guchar *target_pixels;
+	guchar *original_pixels;
+	guchar *pix_src;
+	guchar *pix_dest;
+	int val;
+	guchar r, g, b;
+
+	has_alpha       = gdk_pixbuf_get_has_alpha(src);
+	width           = gdk_pixbuf_get_width(src);
+	height          = gdk_pixbuf_get_height(src);
+	src_rowstride   = gdk_pixbuf_get_rowstride(src);
+	dest_rowstride  = gdk_pixbuf_get_rowstride(dest);
+	original_pixels = gdk_pixbuf_get_pixels(src);
+	target_pixels   = gdk_pixbuf_get_pixels(dest);
+
+	for (i = 0; i < height; i++)
+	{
+		pix_dest = target_pixels   + i * dest_rowstride;
+		pix_src  = original_pixels + i * src_rowstride;
+
+		for (j = 0; j < width; j++)
+		{
+			r = *(pix_src++);
+			g = *(pix_src++);
+			b = *(pix_src++);
+
+			val = r + shift;
+			*(pix_dest++) = CLAMP(val, 0, 255);
+
+			val = g + shift;
+			*(pix_dest++) = CLAMP(val, 0, 255);
+
+			val = b + shift;
+			*(pix_dest++) = CLAMP(val, 0, 255);
+
+			if (has_alpha)
+				*(pix_dest++) = *(pix_src++);
+		}
+	}
 }

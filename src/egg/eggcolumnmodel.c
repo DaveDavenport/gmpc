@@ -47,9 +47,9 @@ egg_column_model_get_n_columns (GtkTreeModel *tree_model)
 
 static GType
 egg_column_model_get_column_type (GtkTreeModel *tree_model,
-				  gint          index)
+				  gint          temp_index)
 {
-  switch (index)
+  switch (temp_index)
     {
     case COLUMN_VISIBLE:
       return G_TYPE_BOOLEAN;

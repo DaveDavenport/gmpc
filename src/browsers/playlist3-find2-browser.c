@@ -27,7 +27,7 @@
 #include "playlist3-find2-browser.h"
 #include "gmpc-mpddata-model.h"
 #include "gmpc-mpddata-treeview.h"
-#include "advanced_search.h"
+#include "advanced-search.h"
 #include "playlist3-playlist-editor.h"
 #ifdef USE_SYSTEM_LIBSEXY
 #include <libsexy/sexy-icon-entry.h>
@@ -68,7 +68,7 @@ static GtkWidget            *search_combo           = NULL;
 static GtkWidget            *search_entry           = NULL;
 
 #define QUERY_ENTRY MPD_TAG_NUM_OF_ITEM_TYPES
-static void pl3_find2_fill_combo(gmpcPlugin *plug)
+static void pl3_find2_fill_combo(gmpcPluginParent *plug)
 {
 	GtkTreeIter iter;
 	int i=0, max = MPD_TAG_NUM_OF_ITEM_TYPES;
@@ -140,7 +140,7 @@ static void pl3_find2_browser_type_plugin_changed(GtkComboBox *box, gpointer use
 {
 	GtkTreeIter iter;
 	GtkTreeModel *model = gtk_combo_box_get_model(box);
-	gmpcPlugin *plug = NULL;
+	gmpcPluginParent *plug = NULL;
     gchar *cfield =NULL;
     gchar *type = NULL;
     gint selected_type;
@@ -172,6 +172,16 @@ static void pl3_find2_browser_type_plugin_changed(GtkComboBox *box, gpointer use
     /* default, if nothing is found. */
     gtk_combo_box_set_active(GTK_COMBO_BOX(search_combo), 0);
 }
+
+#if GTK_CHECK_VERSION(2,16,0)
+static void pl3_find2_browser_clear_search_entry(GtkEntry *entry, GtkEntryIconPosition icon_pos, GdkEvent *event, gpointer user_data)
+{
+    if(icon_pos == GTK_ENTRY_ICON_SECONDARY){
+        gtk_entry_set_text(GTK_ENTRY(entry), "");
+    }
+
+}
+#endif
 /**
  * Construct the browser 
  */
@@ -270,6 +280,10 @@ static void pl3_find2_browser_init(void)
     sexy_icon_entry_add_clear_button(SEXY_ICON_ENTRY(search_entry));
 #else
     search_entry = gtk_entry_new();
+#if GTK_CHECK_VERSION(2,16,0)
+    gtk_entry_set_icon_from_stock(GTK_ENTRY(search_entry), GTK_ENTRY_ICON_SECONDARY, GTK_STOCK_CLEAR);
+    g_signal_connect(GTK_ENTRY(search_entry), "icon-press", G_CALLBACK(pl3_find2_browser_clear_search_entry), NULL);
+#endif
 #endif
 	entrcomp = gtk_entry_completion_new();
 	gtk_entry_completion_set_text_column(entrcomp, 0);
@@ -329,10 +343,8 @@ static void pl3_find2_browser_add(GtkWidget *cat_tree)
     gtk_list_store_set(GTK_LIST_STORE(pl3_tree), &iter, 
             PL3_CAT_TYPE, find2_browser_plug.id,
             PL3_CAT_TITLE, _("Search"),
-            PL3_CAT_INT_ID, "",
             PL3_CAT_ICON_ID, "gtk-find",
-            PL3_CAT_PROC, TRUE,
-            PL3_CAT_ICON_SIZE,GTK_ICON_SIZE_DND,-1);
+            -1);
 
     if (pl3_find2_ref) {
         gtk_tree_row_reference_free(pl3_find2_ref);
@@ -402,7 +414,7 @@ static void pl3_find2_browser_search(void)
     if(gtk_combo_box_get_active_iter(GTK_COMBO_BOX(pl3_find2_curpl), &iter)){
         int type;
         int num_field;
-        gmpcPlugin *plug = NULL;
+        gmpcPluginParent *plug = NULL;
         gtk_tree_model_get(GTK_TREE_MODEL(pl3_find2_curpl_model), &iter, 1, &type, 2, &plug,-1);
 
         if(gtk_combo_box_get_active_iter(GTK_COMBO_BOX(search_combo), &cc_iter))
@@ -630,7 +642,7 @@ static void pl3_find2_browser_add_all(void)
         q_free(message);
     }
 }
-static void pl3_find2_playlist_editor_add_to_playlist(GtkWidget *menu)
+static void pl3_find2_playlist_editor_add_to_playlist(GtkWidget *menu, gpointer cb_data)
 {
     GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(pl3_find2_tree));
     GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_find2_tree));
@@ -752,7 +764,7 @@ static gboolean pl3_find2_browser_button_release_event(GtkWidget *but, GdkEventB
       }
 
 
-      playlist_editor_right_mouse(menu,pl3_find2_playlist_editor_add_to_playlist);
+      playlist_editor_right_mouse(menu,pl3_find2_playlist_editor_add_to_playlist, NULL);
       gmpc_mpddata_treeview_right_mouse_intergration(GMPC_MPDDATA_TREEVIEW(pl3_find2_tree), GTK_MENU(menu));
 
       gtk_widget_show_all(menu);
@@ -879,6 +891,11 @@ static void pl3_find2_browser_status_changed(MpdObj *mi,ChangedStatusType what, 
 	{
 		pl3_find2_browser_search(); 
 	}
+    if(what&MPD_CST_PERMISSION)
+    {
+        if(pl3_find2_curpl)
+            pl3_find2_browser_type_plugin_changed(GTK_COMBO_BOX(pl3_find2_curpl),NULL);
+    }
 }	
 static void pl3_find2_save_myself(void)
 {
@@ -896,7 +913,7 @@ static void pl3_find2_save_myself(void)
 }
 /* Easy command integration */
 
-static void pl3_find2_ec_database(gpointer user_data, const char *param)
+void pl3_find2_ec_database(gpointer user_data, const char *param)
 {
     GtkTreeIter iter;
     GtkTreeModel *model;
