@@ -1505,10 +1505,30 @@ static void tag2_pref_column_type_edited(GtkCellRendererText *text, gchar *path,
             te->tool->mtype = META_ALBUM_ART;
         }
         else te->tool->mtype = 0;
+        /* clear all settings */
+        if(te->image_renderer)
+        {
+            gtk_cell_layout_clear_attributes(GTK_CELL_LAYOUT(te->column), te->image_renderer);
+            if(te->type == MPD_TAG_ITEM_ARTIST || te->type == MPD_TAG_ITEM_ALBUM_ARTIST ||te->type == MPD_TAG_ITEM_ALBUM)
+            {
+                int size = cfg_get_single_value_as_int_with_default(config, "gmpc-mpddata-model", "icon-size", 32);
+                gtk_tree_view_column_add_attribute(te->column,te->image_renderer, "pixbuf", MPDDATA_MODEL_META_DATA);
+                gtk_cell_renderer_set_fixed_size(te->image_renderer, size,size);
+            }
+            else
+            {
+                int width, height;
+                gtk_icon_size_lookup(GTK_ICON_SIZE_MENU, &width, &height);
+                gtk_cell_renderer_set_fixed_size(te->image_renderer, width,height);
+                gtk_tree_view_column_add_attribute(te->column,te->image_renderer, "icon-name", MPDDATA_MODEL_COL_ICON_ID);
+            }
+        }
+
 
         gtk_tree_view_column_set_title(te->column,
                 _(mpdTagItemKeys[te->type]));
         tag2_songlist_clear_selection(NULL, te->browser); 
+        tag2_save_browser(te->browser);
     }
 }
 /**
