@@ -183,9 +183,11 @@ static int tray_icon2_button_press_event(gpointer tray, GdkEventButton *event, g
 static int tray_icon2_button_scroll_event(gpointer tray, GdkEventScroll *event, gpointer data)
 {
     if(event->direction == GDK_SCROLL_UP) {
-        volume_up(); 
+	    if(mpd_server_check_command_allowed(connection, "volume") && mpd_status_get_volume(connection) >=0)
+		    volume_up(); 
     }else if (event->direction == GDK_SCROLL_DOWN) {
-        volume_down();
+	    if(mpd_server_check_command_allowed(connection, "volume") && mpd_status_get_volume(connection) >=0)
+		    volume_down();
     }else if (event->direction == GDK_SCROLL_LEFT) {
         prev_song();
     }else if (event->direction == GDK_SCROLL_RIGHT) {
