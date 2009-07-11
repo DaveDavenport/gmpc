@@ -456,7 +456,7 @@ void tray_icon2_create_tooltip(void)
         gmpc_metaimage_set_cover_na(GMPC_METAIMAGE(coverimg));
     }
 
-    if(mpd_player_get_consume(connection) && mpd_playlist_get_playlist_length(connection) < 100)
+    if(mpd_check_connected(connection) && mpd_player_get_consume(connection) && mpd_playlist_get_playlist_length(connection) < 100 )
     {
         gchar *temp = g_strdup_printf("%i", mpd_playlist_get_playlist_length(connection)); 
         gmpc_metaimage_set_image_text(GMPC_METAIMAGE(coverimg), temp);
