@@ -2151,6 +2151,13 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
     status_changed(Gmpc.Connection conn, MPD.Server server, MPD.Status.Changed what)
     {
         if(this.paned == null) return;
+        if((what&MPD.Status.Changed.DATABASE) != 0)
+        {
+            this.reload_browsers();
+            if(this.current != null) {
+                this.show_hitem(this.current.data);
+            }
+        }
 
     }
     /**

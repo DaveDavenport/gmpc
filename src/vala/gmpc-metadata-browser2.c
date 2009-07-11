@@ -435,10 +435,10 @@ static void gmpc_metadata_browser_real_browser_selected (GmpcPluginBrowserIface*
 static void gmpc_metadata_browser_real_browser_unselected (GmpcPluginBrowserIface* base, GtkContainer* container);
 static void gmpc_metadata_browser_history_clear (GmpcMetadataBrowser* self);
 static void gmpc_metadata_browser_con_changed (GmpcMetadataBrowser* self, GmpcConnection* conn, MpdObj* server, gint connect);
+static void gmpc_metadata_browser_show_hitem (GmpcMetadataBrowser* self, const GmpcMetadataBrowserHitem* hi);
 static void gmpc_metadata_browser_status_changed (GmpcMetadataBrowser* self, GmpcConnection* conn, MpdObj* server, ChangedStatusType what);
 void gmpc_metadata_browser_set_album (GmpcMetadataBrowser* self, const char* artist, const char* album);
 void gmpc_metadata_browser_set_song (GmpcMetadataBrowser* self, const mpd_Song* song);
-static void gmpc_metadata_browser_show_hitem (GmpcMetadataBrowser* self, const GmpcMetadataBrowserHitem* hi);
 static void gmpc_metadata_browser_history_previous (GmpcMetadataBrowser* self);
 static void gmpc_metadata_browser_history_next (GmpcMetadataBrowser* self);
 static void gmpc_metadata_browser_history_show_list_clicked (GmpcMetadataBrowser* self, GtkMenuItem* item);
@@ -4502,6 +4502,12 @@ static void gmpc_metadata_browser_status_changed (GmpcMetadataBrowser* self, Gmp
 	g_return_if_fail (server != NULL);
 	if (self->priv->paned == NULL) {
 		return;
+	}
+	if ((what & MPD_CST_DATABASE) != 0) {
+		gmpc_metadata_browser_reload_browsers (self);
+		if (self->priv->current != NULL) {
+			gmpc_metadata_browser_show_hitem (self, (GmpcMetadataBrowserHitem*) self->priv->current->data);
+		}
 	}
 }
 
