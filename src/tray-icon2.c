@@ -36,7 +36,7 @@ GtkStatusIcon 	*tray_icon2_gsi = NULL;
 static gchar *current_song_checksum = NULL;
 
 static void tray_icon2_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata);
-
+static void tray_icon2_create_tooltip_real(int position);
 static gboolean tray_icon2_tooltip_destroy(void);
 /**
  * Tooltip 
@@ -203,7 +203,7 @@ static gboolean tray_icon2_tooltip_query(GtkStatusIcon *icon,
 {
     if(!keyboard_mode)
     {
-        if(tray_icon2_tooltip == NULL) tray_icon2_create_tooltip();
+        if(tray_icon2_tooltip == NULL) tray_icon2_create_tooltip_real(TI2_AT_TOOLTIP);
     }
     return FALSE;
 }
@@ -354,7 +354,7 @@ static gboolean tray_icon2_tooltip_button_press_event(GtkWidget *box, GdkEventBu
 }
 
 
-void tray_icon2_create_tooltip(void)
+static void tray_icon2_create_tooltip_real(int position)
 {
 	int x=0,y=0,monitor;
 	GdkScreen *screen;
@@ -576,8 +576,7 @@ void tray_icon2_create_tooltip(void)
 	/**
 	 * 	Position the popup
 	 */
-	state = cfg_get_single_value_as_int_with_default(config,TRAY_ICON2_ID, "tooltip-position", TI2_AT_TOOLTIP);
-	if(state == TI2_AT_TOOLTIP && tray_icon2_get_available()) 
+	if(position == TI2_AT_TOOLTIP && tray_icon2_get_available()) 
 	{
 
 		GdkRectangle rect, rect2;
@@ -613,7 +612,7 @@ void tray_icon2_create_tooltip(void)
 		}
 		gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), rect2.x+x,rect2.y+y);
 	} else 
-		if (state == TI2_AT_UPPER_LEFT) 
+		if (position == TI2_AT_UPPER_LEFT) 
 		{
 			GdkRectangle rect2;
 			screen =gtk_widget_get_screen(pl3_win);
@@ -621,7 +620,7 @@ void tray_icon2_create_tooltip(void)
 			monitor  = gdk_screen_get_monitor_at_window(screen, pl3_win->window);
 			gdk_screen_get_monitor_geometry(screen, monitor, &rect2);
 			gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), rect2.x+5+x_offset,rect2.y+5+y_offset);
-		} else if (state == TI2_AT_UPPER_RIGHT)  {
+		} else if (position == TI2_AT_UPPER_RIGHT)  {
 			GdkRectangle rect2;
 			screen =gtk_widget_get_screen(pl3_win);
 			
@@ -632,7 +631,7 @@ void tray_icon2_create_tooltip(void)
 			/** X is upper right - width */
 			x = rect2.x+rect2.width-5-300;
 			gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), x+x_offset,y+y_offset);
-		} else if (state == TI2_AT_LOWER_LEFT) 
+		} else if (position == TI2_AT_LOWER_LEFT) 
 		{
 			GdkRectangle rect2;
 			screen =gtk_widget_get_screen(pl3_win);
@@ -669,6 +668,12 @@ void tray_icon2_create_tooltip(void)
 		 * Destroy it after 5 seconds
 		 */
 		tray_icon2_tooltip_timeout = g_timeout_add_seconds(tooltip_timeout, (GSourceFunc)tray_icon2_tooltip_destroy, NULL);
+}
+
+void tray_icon2_create_tooltip(void)
+{
+	int state = cfg_get_single_value_as_int_with_default(config,TRAY_ICON2_ID, "tooltip-position", TI2_AT_TOOLTIP);
+    tray_icon2_create_tooltip_real(state);
 }
 
 static void tray_icon2_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata)
