@@ -776,6 +776,18 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 		int
 		paste_key_release_event(self, GdkEventKey *event,gpointer data)
 		{
+			if(event->keyval == GDK_Menu) {
+				GdkEventButton bevent;
+				gboolean value = FALSE;
+				bevent.button = 3;
+				bevent.time = event->time;
+
+				g_signal_emit_by_name(self, "button-press-event", &bevent, &value,NULL);
+				if(!value) 
+					g_signal_emit_by_name(self, "button-release-event", &bevent, &value,NULL);
+
+				return TRUE;
+			}
 			if (event->keyval == GDK_c && event->state&GDK_CONTROL_MASK)
 			{
 				self_paste_copy_songs(self, NULL);
