@@ -3,7 +3,6 @@
 data/gmpc.desktop.in
 glade/playlist3.glade
 src/config1.c
-src/edit_markup.c
 src/gmpc_easy_download.c
 src/main.c
 src/metadata.c
@@ -14,11 +13,12 @@ src/playlist3.c
 src/playlist3-messages.c
 src/plugin.c
 src/preferences.c
-src/sm.c
-src/url_fetcher.c
+src/url-fetcher.c
 src/tray-icon2.c
 src/setup-assistant.c
 src/bug-information.c
+src/smclient/eggdesktopfile.c
+src/smclient/eggsmclient.c
 
 # Ui files
 [type: gettext/glade]glade/aboutdialog.ui
@@ -48,7 +48,6 @@ src/browsers/server-information.c
 # Egg files
 src/egg/eggcolumnmodel.c
 src/egg/eggcolumnchooserdialog.c
-src/egg/eggtrayicon.c
 
 
 # Gob files
