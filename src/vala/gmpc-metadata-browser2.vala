@@ -857,6 +857,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             MPD.Database.search_field_start(server, MPD.Tag.Type.FILENAME);
             MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, artist);
             MPD.Data.Item data = MPD.Database.search_commit(server); 
+            data = Gmpc.MpdData.sort_album_disc_track((owned)data);
             if(data != null)
             {
                 do{
@@ -960,6 +961,8 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             if(album != null)
                 MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM, album);
             var data = MPD.Database.search_commit(server);
+
+            data = Gmpc.MpdData.sort_album_disc_track((owned)data);
             if(data != null)
             {
                 do{

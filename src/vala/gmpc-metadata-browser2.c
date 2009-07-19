@@ -2223,20 +2223,27 @@ static void gmpc_metadata_browser_artist_add_clicked (GmpcMetadataBrowser* self,
 	artist = gmpc_metadata_browser_browser_get_selected_artist (self);
 	if (artist != NULL) {
 		MpdData* data;
+		MpdData* _tmp2_;
+		const MpdData* _tmp1_;
+		MpdData* _tmp0_;
 		mpd_database_search_field_start (connection, MPD_TAG_ITEM_FILENAME);
 		mpd_database_search_add_constraint (connection, MPD_TAG_ITEM_ARTIST, artist);
 		data = mpd_database_search_commit (connection);
+		_tmp2_ = NULL;
+		_tmp1_ = NULL;
+		_tmp0_ = NULL;
+		data = (_tmp2_ = (_tmp1_ = misc_sort_mpddata_by_album_disc_track ((_tmp0_ = data, data = NULL, _tmp0_)), (_tmp1_ == NULL) ? NULL :  (_tmp1_)), (data == NULL) ? NULL : (data = (mpd_data_free (data), NULL)), _tmp2_);
 		if (data != NULL) {
 			{
-				gboolean _tmp0_;
-				_tmp0_ = TRUE;
+				gboolean _tmp3_;
+				_tmp3_ = TRUE;
 				while (TRUE) {
-					if (!_tmp0_) {
+					if (!_tmp3_) {
 						if (!(data != NULL)) {
 							break;
 						}
 					}
-					_tmp0_ = FALSE;
+					_tmp3_ = FALSE;
 					mpd_playlist_queue_add (connection, data->tag);
 					data = mpd_data_get_next (data);
 				}
@@ -2388,6 +2395,9 @@ static void gmpc_metadata_browser_album_add_clicked (GmpcMetadataBrowser* self, 
 		char* albumartist;
 		char* album;
 		MpdData* data;
+		MpdData* _tmp4_;
+		const MpdData* _tmp3_;
+		MpdData* _tmp2_;
 		albumartist = NULL;
 		album = gmpc_metadata_browser_browser_get_selected_album (self);
 		if (album != NULL) {
@@ -2417,17 +2427,21 @@ static void gmpc_metadata_browser_album_add_clicked (GmpcMetadataBrowser* self, 
 			mpd_database_search_add_constraint (connection, MPD_TAG_ITEM_ALBUM, album);
 		}
 		data = mpd_database_search_commit (connection);
+		_tmp4_ = NULL;
+		_tmp3_ = NULL;
+		_tmp2_ = NULL;
+		data = (_tmp4_ = (_tmp3_ = misc_sort_mpddata_by_album_disc_track ((_tmp2_ = data, data = NULL, _tmp2_)), (_tmp3_ == NULL) ? NULL :  (_tmp3_)), (data == NULL) ? NULL : (data = (mpd_data_free (data), NULL)), _tmp4_);
 		if (data != NULL) {
 			{
-				gboolean _tmp2_;
-				_tmp2_ = TRUE;
+				gboolean _tmp5_;
+				_tmp5_ = TRUE;
 				while (TRUE) {
-					if (!_tmp2_) {
+					if (!_tmp5_) {
 						if (!(data != NULL)) {
 							break;
 						}
 					}
-					_tmp2_ = FALSE;
+					_tmp5_ = FALSE;
 					mpd_playlist_queue_add (connection, data->tag);
 					data = mpd_data_get_next (data);
 				}
