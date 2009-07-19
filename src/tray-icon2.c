@@ -195,6 +195,8 @@ static int tray_icon2_button_scroll_event(gpointer tray, GdkEventScroll *event, 
     }
     return TRUE;
 }
+/* hack to delay tooltip showup on tray-icon*/
+GTimeVal current = {0,0};
 static gboolean tray_icon2_tooltip_query(GtkStatusIcon *icon, 
         gint x, gint y, 
         gboolean keyboard_mode, 
@@ -203,7 +205,21 @@ static gboolean tray_icon2_tooltip_query(GtkStatusIcon *icon,
 {
     if(!keyboard_mode)
     {
-        if(tray_icon2_tooltip == NULL) tray_icon2_create_tooltip_real(TI2_AT_TOOLTIP);
+        if(tray_icon2_tooltip == NULL){
+            GTimeVal now;
+            if(current.tv_sec == 0) {
+                g_get_current_time(&current);
+                return FALSE;
+            }
+
+            g_get_current_time(&now);
+            if(current.tv_sec < now.tv_sec)
+            {
+                current.tv_sec = 0; 
+                tray_icon2_create_tooltip_real(TI2_AT_TOOLTIP);
+                return TRUE;
+            }
+        }
     }
     return FALSE;
 }
@@ -768,11 +784,9 @@ static void tray_icon2_connection_changed(MpdObj *mi, int connect,void *user_dat
 	} else {
         /* Set the disconnect image, and reset the GtkTooltip */
 		gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray-disconnected");
-        //gtk_status_icon_set_tooltip(tray_icon2_gsi, _("Gnome Music Player Client"));
         /* Destroy notification */
         if(tray_icon2_tooltip)
             tray_icon2_tooltip_destroy();
-
 	}
 }
 
