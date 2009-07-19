@@ -213,6 +213,10 @@ static gboolean tray_icon2_tooltip_query(GtkStatusIcon *icon,
             }
 
             g_get_current_time(&now);
+            if((now.tv_sec - current.tv_sec ) > 5) {
+                current.tv_sec = 0;
+                return FALSE;
+            }
             if(current.tv_sec < now.tv_sec)
             {
                 current.tv_sec = 0; 
