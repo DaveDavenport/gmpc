@@ -118,7 +118,7 @@ static gboolean sqlite_check_integrity(void)
 	if (ret != SQLITE_DONE) {
 		g_log(MDC_LOG_DOMAIN, G_LOG_LEVEL_WARNING,"%s: sqlite3_step() failed: %s",__FUNCTION__,
 				sqlite3_errmsg(metadata_db));
-		return;
+		return FALSE;
 	}
 	sqlite3_reset(stmt);
 	return database_check;

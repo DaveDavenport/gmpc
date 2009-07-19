@@ -96,12 +96,6 @@ char *gmpc_get_full_image_path(void);
  */
 #define q_free(a) {g_free(a);a=NULL;}
 
-/* help */
-void info2_activate(void);
-void info2_fill_artist_view(const char *);
-void info2_fill_album_view(const char *,const char *);
-void info2_fill_song_view(mpd_Song *);
-
 /* tray stuff */
 gboolean tray_icon2_get_available(void);
 void tray_icon2_create_tooltip(void);

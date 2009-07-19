@@ -28,6 +28,7 @@
 #include "gmpc-mpddata-model.h"
 #include "gmpc-mpddata-treeview.h"
 #include "playlist3-playlist-editor.h"
+#include "gmpc-paned-size-group.h"
 
 static void pl3_file_browser_destroy(void);
 static void pl3_file_browser_add(GtkWidget *cat_tree);
@@ -139,7 +140,6 @@ static void pl3_file_browser_init(void)
     GtkTreeViewColumn *column;
 	GtkWidget *pl3_fb_sw = NULL;
     GtkWidget *vbox,*sw,*tree;
-    int pos;
 
 	pl3_fb_store2 = gmpc_mpddata_model_new();
     gmpc_mpddata_model_disable_image(GMPC_MPDDATA_MODEL(pl3_fb_store2));
@@ -147,7 +147,7 @@ static void pl3_file_browser_init(void)
 
 
     pl3_fb_vbox = gtk_hpaned_new();
-	gmpc_paned_size_group_add_paned(paned_size_group, GTK_PANED(pl3_fb_vbox));
+	gmpc_paned_size_group_add_paned(GMPC_PANED_SIZE_GROUP(paned_size_group), GTK_PANED(pl3_fb_vbox));
 	vbox = gtk_vbox_new(FALSE, 6);
 
 

@@ -24,6 +24,7 @@
 #include <glade/glade.h>
 #include <config.h>
 #include "main.h"
+#include "plugin.h"
 #include "misc.h"
 #include "playlist3.h"
 /* every part split out over multiple files */
@@ -449,7 +450,7 @@ int pl3_window_key_press_event(GtkWidget * mw, GdkEventKey * event)
 						iter->key, 0);
 
 				/* ignore numpad and caps lock */
-				if (keycode >= 0 && ((event->state&(GDK_SHIFT_MASK|GDK_CONTROL_MASK|GDK_MOD1_MASK)) == (keymask))
+				if (keycode > 0 && ((event->state&(GDK_SHIFT_MASK|GDK_CONTROL_MASK|GDK_MOD1_MASK)) == (keymask))
 						&& (keycode == event->keyval)) {
 					int action = cfg_get_single_value_as_int_with_default(config, AC_GLOBAL,
 							iter->key, -1);
@@ -2083,7 +2084,7 @@ static void playlist3_fill_server_menu(void)
 
 extern GmpcMetadataBrowser *metadata_browser;
 
-void info2_activate()
+void info2_activate(void)
 {
 	GtkTreeView *tree = (GtkTreeView *) glade_xml_get_widget(pl3_xml, "cat_tree");
 	gmpc_metadata_browser_select_browser(metadata_browser, tree);

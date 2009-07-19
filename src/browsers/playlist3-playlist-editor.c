@@ -27,6 +27,7 @@
 #include "gmpc-mpddata-model.h"
 #include "gmpc-mpddata-treeview.h"
 #include "gmpc-mpddata-model-sort.h"
+#include "gmpc-paned-size-group.h"
 #include "browsers/playlist3-playlist-editor.h"
 
 #define DEFAULT_MARKUP_BROWSER 	"[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|"
@@ -819,10 +820,9 @@ static void playlist_editor_browser_init(void)
     GtkTreeViewColumn *column = NULL;
     GtkWidget *tree = NULL;
     GtkWidget *sw = NULL;
-    int pos = 0;
     /* */
     playlist_editor_browser = gtk_hpaned_new();
-	gmpc_paned_size_group_add_paned(paned_size_group, GTK_PANED(playlist_editor_browser));
+	gmpc_paned_size_group_add_paned(GMPC_PANED_SIZE_GROUP(paned_size_group), GTK_PANED(playlist_editor_browser));
     /** browser */
     sw = gtk_scrolled_window_new(NULL, NULL);
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw), GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC);

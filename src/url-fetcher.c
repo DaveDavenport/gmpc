@@ -101,9 +101,11 @@ static void url_parse_extm3u_file(const char *data, int size)
  static void url_parse_xspf_file(const char *data, int size,const char *uri)
  {
      int songs= 0;
-     GError *error = NULL;
      int has_http = FALSE, has_file = FALSE;
-     char **handlers = mpd_server_get_url_handlers(connection);
+     struct xspf_track *strack;
+     struct xspf_mvalue *sloc;
+	 struct xspf_list *slist;
+	 char **handlers = mpd_server_get_url_handlers(connection);
      int i = 0;
      for (i = 0; handlers && handlers[i]; i++) {
          if (strcmp(handlers[i], "http://") == 0) {
@@ -115,9 +117,7 @@ static void url_parse_extm3u_file(const char *data, int size)
      if (handlers)
          g_strfreev(handlers);
 
-     struct xspf_track *strack;
-     struct xspf_mvalue *sloc;
-     struct xspf_list *slist = xspf_parse_memory(data,(int)size,uri);
+     slist = xspf_parse_memory(data,(int)size,uri);
      if (slist != NULL)
      {
          XSPF_LIST_FOREACH_TRACK(slist, strack) {

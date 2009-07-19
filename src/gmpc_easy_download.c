@@ -294,7 +294,7 @@ typedef struct {
 	z_stream *z;
 	gpointer extra_data;
 	guint uid;
-	int old_status_code;
+	guint old_status_code;
 } _GEADAsyncHandler;
 
 static guint uid = 0;

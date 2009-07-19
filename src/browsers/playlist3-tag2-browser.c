@@ -41,6 +41,7 @@
 #include <libmpd/libmpd-internal.h>
 #include "playlist3.h"
 #include "playlist3-playlist-editor.h"
+#include "gmpc-paned-size-group.h"
 #include "gmpc-mpddata-treeview-tooltip.h"
 
 /**
@@ -672,7 +673,6 @@ static void tag2_destroy_browser(tag_browser *browser, gpointer user_data)
 	GtkTreeIter iter;
 	GtkTreeModel *model;
 	GtkTreePath *path;
-	gchar *d;
 	if(!browser)
 	{
 		return;
@@ -1200,12 +1200,10 @@ static void tag2_init_browser(tag_browser *browser) {
 	gchar *key;
 	GtkWidget *sw;
 	GmpcMpdDataModel *model = NULL;
-	int pp;
-
 	/* create the pane that separates the song list from the browsers */
 	key = g_strdup_printf("tag2-plugin:%s", browser->key);
 	browser->tag2_vbox = gtk_hpaned_new(); 
-	gmpc_paned_size_group_add_paned(paned_size_group, GTK_PANED(browser->tag2_vbox));
+	gmpc_paned_size_group_add_paned(GMPC_PANED_SIZE_GROUP(paned_size_group), GTK_PANED(browser->tag2_vbox));
 
 	/* box with tag treeviews (browsers) */
 	browser->tag_hbox = gtk_vbox_new(TRUE, 6);

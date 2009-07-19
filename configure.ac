@@ -18,6 +18,8 @@ AM_CONFIG_HEADER([config.h])
 AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE
 
+AM_MAINTAINER_MODE
+
 
 #Make version and variables available in config.h
 #AC_DEFINE(GMPC_MAJOR_VERSION,   package_major_version,	["Major version of gmpc"])
@@ -160,22 +162,6 @@ if test x${enable_timing} = xtrue; then
 # Add DEBUG_ENABLE define to config.h
     AC_DEFINE(DEBUG_TIMING, 1, [Enable timing output])
 fi
-
-# Maintainer mode
-AC_ARG_ENABLE([maintainermode],
-	[--enable-maintainermode Enable maintainer mode.],
-	[case "${enableval}" in
-		yes) maintainer_mode=true;;
-		no)  maintainer_mode=false;;
-		*) AC_MSG_ERROR([bad value ${enableval} for --enable-maintainermode]);;
-	 esac],
-	[maintainer_mode=false])
-
-AM_CONDITIONAL([MAINTAINER_MODE], [test x$maintainer_mode = xtrue])
-if test x$maintainer_mode = xtrue; then
-    AC_DEFINE(MAINTAINER_MODE, 1, [Enable maintainer mode])
-fi
-
 
 # Maintainer mode
 AC_ARG_ENABLE([test],
@@ -460,11 +446,6 @@ test/GmpcEasyDownload/Makefile
 echo ""
 echo ""
 echo "------------------ Status ------------------"
-if test x$maintainer_mode = xtrue; then
-	echo "Maintainer mode is:               enabled"
-else
-	echo "Maintainer mode is:               disabled"
-fi
 if test x$enable_timing = xtrue; then
 	echo "Debug timing output is:           enabled"
 else

@@ -173,14 +173,15 @@ static void pl3_find2_browser_type_plugin_changed(GtkComboBox *box, gpointer use
     gtk_combo_box_set_active(GTK_COMBO_BOX(search_combo), 0);
 }
 
+#ifndef USE_SYSTEM_LIBSEXY
 #if GTK_CHECK_VERSION(2,16,0)
 static void pl3_find2_browser_clear_search_entry(GtkEntry *entry, GtkEntryIconPosition icon_pos, GdkEvent *event, gpointer user_data)
 {
     if(icon_pos == GTK_ENTRY_ICON_SECONDARY){
         gtk_entry_set_text(GTK_ENTRY(entry), "");
     }
-
 }
+#endif
 #endif
 /**
  * Construct the browser 

@@ -127,8 +127,9 @@ static void pl3_current_playlist_browser_init(PlayQueuePlugin *self);
 
 static void pl3_cp_current_song_changed(GmpcMpdDataModelPlaylist *model2,GtkTreePath *path, GtkTreeIter *iter,PlayQueuePlugin *self)
 {
+    GtkTreeModel *model; 
     if(self->priv->pl3_cp_tree == NULL) return;
-    GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(self->priv->pl3_cp_tree));
+    model = gtk_tree_view_get_model(GTK_TREE_VIEW(self->priv->pl3_cp_tree));
     if(GMPC_IS_MPDDATA_MODEL_PLAYLIST(model))
     {
         if(cfg_get_single_value_as_int_with_default(config, "playlist", "st_cur_song", 0))
@@ -148,7 +149,6 @@ static void __real_pl3_total_playtime_changed(GmpcMpdDataModelPlaylist *model, u
          unsigned long total_songs = GMPC_MPDDATA_MODEL(model)->num_rows;
          guint playtime = total_playtime*((gdouble)(total_songs/(gdouble)loaded_songs));
          gchar *string = format_time(playtime);
-         gchar *mesg = NULL;
          GString *tstring = g_string_new("");
 
          g_string_append_printf(tstring, "%lu %s",
@@ -352,17 +352,16 @@ static void mod_fill_entry_activate(GtkWidget *entry, PlayQueuePlugin *self)
 	mod_fill_do_entry_changed(self);
     gtk_widget_grab_focus(self->priv->pl3_cp_tree);
 }
-
+#ifndef USE_SYSTEM_LIBSEXY
 #if GTK_CHECK_VERSION(2,16,0)
 static void mod_fill_clear_search_entry(GtkEntry *entry, GtkEntryIconPosition icon_pos, GdkEvent *event, gpointer user_data)
 {
     if(icon_pos == GTK_ENTRY_ICON_SECONDARY){
         gtk_entry_set_text(GTK_ENTRY(entry), "");
     }
-
 }
 #endif
-
+#endif
 static void pl3_current_playlist_browser_init(PlayQueuePlugin *self)
 {
 	GtkWidget *entry = NULL,*tree = NULL,*sw = NULL, *pl3_cp_sw;
