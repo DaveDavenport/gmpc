@@ -26,7 +26,8 @@ char *artists[] = {
     "10cc",
     "2Pac",
     "Pantera",
-    "Pärt, Arvo"
+    "Pärt, Arvo",
+    "XERSDRXER"
 };
 int main(int argc, char **argv)
 {
@@ -44,7 +45,7 @@ int main(int argc, char **argv)
     current = now;
     for(;j>0;j--)
     {
-        for(i=0;i<10;i++)
+        for(i=0;i<11;i++)
         {
             MetaData *met = NULL;
             mpd_Song *song = mpd_newSong();
