@@ -34,7 +34,6 @@
 #include <gmpc-mpddata-model.h>
 #include <gmpc-meta-watcher.h>
 #include <gmpc-plugin.h>
-#include <misc.h>
 #include <gmpc-metaimage.h>
 #include <pango/pango.h>
 #include <plugin.h>
@@ -42,6 +41,7 @@
 #include <gmpc-connection.h>
 #include <float.h>
 #include <math.h>
+#include <misc.h>
 #include <gdk-pixbuf/gdk-pixdata.h>
 #include <gmpc-paned-size-group.h>
 #include <gmpc-mpddata-treeview-tooltip.h>
@@ -284,7 +284,6 @@ static void _g_list_free_g_object_unref (GList* self);
 static void gmpc_widget_similar_artist_metadata_changed (GmpcWidgetSimilarArtist* self, GmpcMetaWatcher* gmw, const mpd_Song* song, MetaDataType type, MetaDataResult _result_, const MetaData* met);
 void gmpc_metadata_browser_set_artist (GmpcMetadataBrowser* self, const char* artist);
 static void gmpc_widget_similar_artist_artist_button_clicked (GmpcWidgetSimilarArtist* self, GtkButton* button);
-static gboolean _misc_header_expose_event_gtk_widget_expose_event (GtkEventBox* _sender, const GdkEventExpose* event, gpointer self);
 static void _gmpc_widget_similar_artist_artist_button_clicked_gtk_button_clicked (GtkButton* _sender, gpointer self);
 static void _gmpc_widget_similar_artist_metadata_changed_gmpc_meta_watcher_data_changed (GmpcMetaWatcher* _sender, const mpd_Song* song, MetaDataType type, MetaDataResult _result_, const MetaData* met, gpointer self);
 static GmpcWidgetSimilarArtist* gmpc_widget_similar_artist_new (GmpcMetadataBrowser* browser, MpdObj* server, const mpd_Song* song);
@@ -1106,6 +1105,7 @@ static void gmpc_widget_similar_artist_metadata_changed (GmpcWidgetSimilarArtist
 			GList* list;
 			gint i;
 			guint llength;
+			gint columns;
 			/* Set result */
 			in_db_list = NULL;
 			list = g_list_copy (meta_data_get_text_list (met));
@@ -1218,10 +1218,11 @@ static void gmpc_widget_similar_artist_metadata_changed (GmpcWidgetSimilarArtist
 			i = 0;
 			gtk_widget_hide ((GtkWidget*) self);
 			llength = g_list_length (in_db_list);
+			columns = 3;
 			if (llength > 50) {
 				llength = (guint) 50;
 			}
-			gtk_table_resize ((GtkTable*) self, (llength / 4) + 1, (guint) 4);
+			gtk_table_resize ((GtkTable*) self, (llength / columns) + 1, (guint) columns);
 			{
 				GList* item_collection;
 				GList* item_it;
@@ -1233,7 +1234,7 @@ static void gmpc_widget_similar_artist_metadata_changed (GmpcWidgetSimilarArtist
 					item = (_tmp9_ = (GtkWidget*) item_it->data, (_tmp9_ == NULL) ? NULL : g_object_ref (_tmp9_));
 					{
 						if (i < 50) {
-							gtk_table_attach ((GtkTable*) self, item, (guint) (i % 4), (guint) ((i % 4) + 1), (guint) (i / 4), (guint) ((i / 4) + 1), GTK_EXPAND | GTK_FILL, GTK_SHRINK, (guint) 0, (guint) 0);
+							gtk_table_attach ((GtkTable*) self, item, (guint) (i % columns), (guint) ((i % columns) + 1), (guint) (i / columns), (guint) ((i / columns) + 1), GTK_EXPAND | GTK_FILL, GTK_SHRINK, (guint) 0, (guint) 0);
 						} else {
 							GObject* _tmp8_;
 							_tmp8_ = NULL;
@@ -1264,11 +1265,6 @@ static void gmpc_widget_similar_artist_artist_button_clicked (GmpcWidgetSimilarA
 }
 
 
-static gboolean _misc_header_expose_event_gtk_widget_expose_event (GtkEventBox* _sender, const GdkEventExpose* event, gpointer self) {
-	return misc_header_expose_event (_sender, event);
-}
-
-
 static void _gmpc_widget_similar_artist_artist_button_clicked_gtk_button_clicked (GtkButton* _sender, gpointer self) {
 	gmpc_widget_similar_artist_artist_button_clicked (self, _sender);
 }
@@ -1277,7 +1273,7 @@ static void _gmpc_widget_similar_artist_artist_button_clicked_gtk_button_clicked
 GtkWidget* gmpc_widget_similar_artist_new_artist_button (GmpcWidgetSimilarArtist* self, const char* artist, gboolean in_db) {
 	GtkWidget* result;
 	GtkHBox* hbox;
-	GtkEventBox* event;
+	GtkFrame* event;
 	GmpcMetaImage* image;
 	mpd_Song* song;
 	char* _tmp1_;
@@ -1286,11 +1282,9 @@ GtkWidget* gmpc_widget_similar_artist_new_artist_button (GmpcWidgetSimilarArtist
 	g_return_val_if_fail (self != NULL, NULL);
 	g_return_val_if_fail (artist != NULL, NULL);
 	hbox = g_object_ref_sink ((GtkHBox*) gtk_hbox_new (FALSE, 6));
-	gtk_container_set_border_width ((GtkContainer*) hbox, (guint) 6);
-	event = g_object_ref_sink ((GtkEventBox*) gtk_event_box_new ());
-	gtk_widget_set_size_request ((GtkWidget*) event, 180, 60);
-	g_object_set ((GtkWidget*) event, "app-paintable", TRUE, NULL);
-	g_signal_connect ((GtkWidget*) event, "expose-event", (GCallback) _misc_header_expose_event_gtk_widget_expose_event, NULL);
+	gtk_container_set_border_width ((GtkContainer*) hbox, (guint) 3);
+	event = g_object_ref_sink ((GtkFrame*) gtk_frame_new (NULL));
+	gtk_widget_set_size_request ((GtkWidget*) event, 200, 58);
 	image = g_object_ref_sink (gmpc_metaimage_new_size (META_ARTIST_ART, 48));
 	song = mpd_newSong ();
 	_tmp1_ = NULL;
@@ -1307,7 +1301,11 @@ GtkWidget* gmpc_widget_similar_artist_new_artist_button (GmpcWidgetSimilarArtist
 	gtk_box_pack_start ((GtkBox*) hbox, (GtkWidget*) label, TRUE, TRUE, (guint) 0);
 	if (in_db) {
 		GtkButton* find;
-		find = g_object_ref_sink ((GtkButton*) gtk_button_new_from_stock ("gtk-find"));
+		GtkImage* _tmp2_;
+		find = g_object_ref_sink ((GtkButton*) gtk_button_new ());
+		_tmp2_ = NULL;
+		gtk_container_add ((GtkContainer*) find, (GtkWidget*) (_tmp2_ = g_object_ref_sink ((GtkImage*) gtk_image_new_from_stock ("gtk-find", GTK_ICON_SIZE_MENU))));
+		(_tmp2_ == NULL) ? NULL : (_tmp2_ = (g_object_unref (_tmp2_), NULL));
 		gtk_button_set_relief (find, GTK_RELIEF_NONE);
 		gtk_box_pack_start ((GtkBox*) hbox, (GtkWidget*) find, FALSE, FALSE, (guint) 0);
 		g_object_set_data_full ((GObject*) find, "artist", (void*) g_strdup_printf ("%s", artist), (GDestroyNotify) g_free);
@@ -4421,6 +4419,7 @@ static void gmpc_metadata_browser_metadata_box_show_artist (GmpcMetadataBrowser*
 	if (cfg_get_single_value_as_int_with_default (config, "MetaData", "show-similar-artist", 1) == 1) {
 		GtkLabel* _tmp12_;
 		char* _tmp13_;
+		GtkAlignment* _tmp14_;
 		GmpcWidgetSimilarArtist* similar_artist;
 		_tmp12_ = NULL;
 		label = (_tmp12_ = g_object_ref_sink ((GtkLabel*) gtk_label_new (_ ("Similar artist"))), (label == NULL) ? NULL : (label = (g_object_unref (label), NULL)), _tmp12_);
@@ -4430,8 +4429,11 @@ static void gmpc_metadata_browser_metadata_box_show_artist (GmpcMetadataBrowser*
 		_tmp13_ = (g_free (_tmp13_), NULL);
 		gtk_misc_set_alignment ((GtkMisc*) label, 0.0f, 0.0f);
 		gtk_box_pack_start ((GtkBox*) vbox, (GtkWidget*) label, FALSE, FALSE, (guint) 0);
+		_tmp14_ = NULL;
+		ali = (_tmp14_ = g_object_ref_sink ((GtkAlignment*) gtk_alignment_new (0.0f, 0.0f, 0.0f, 0.0f)), (ali == NULL) ? NULL : (ali = (g_object_unref (ali), NULL)), _tmp14_);
 		similar_artist = g_object_ref_sink (gmpc_widget_similar_artist_new (self, connection, song));
-		gtk_box_pack_start ((GtkBox*) vbox, (GtkWidget*) similar_artist, FALSE, FALSE, (guint) 0);
+		gtk_container_add ((GtkContainer*) ali, (GtkWidget*) similar_artist);
+		gtk_box_pack_start ((GtkBox*) vbox, (GtkWidget*) ali, FALSE, FALSE, (guint) 0);
 		(similar_artist == NULL) ? NULL : (similar_artist = (g_object_unref (similar_artist), NULL));
 	}
 	/* Show web links */

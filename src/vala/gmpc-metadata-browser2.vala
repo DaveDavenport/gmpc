@@ -363,13 +363,14 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
             int i=0;
             this.hide();
             uint llength = in_db_list.length();
+            int columns = 3;
             if(llength > 50) llength = 50;
-            this.resize(llength/4+1, 4);
+            this.resize(llength/columns+1, columns);
             foreach(Gtk.Widget item in in_db_list)
             {
                 if(i<50){
                     this.attach(item, 
-                            i%4,i%4+1,i/4,i/4+1,
+                            i%columns,i%columns+1,i/columns,i/columns+1,
                             Gtk.AttachOptions.EXPAND|Gtk.AttachOptions.FILL,
                             Gtk.AttachOptions.SHRINK, 0,0);
                 }else{
@@ -394,12 +395,10 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
     new_artist_button(string artist, bool in_db)
     {
         var hbox = new Gtk.HBox(false, 6);
-        hbox.border_width = 6;
+        hbox.border_width = 3;
 
-        var event = new Gtk.EventBox();
-        event.set_size_request(180,60);
-        event.app_paintable = true;
-        event.expose_event += Gmpc.Misc.misc_header_expose_event;
+        var event = new Gtk.Frame(null);
+        event.set_size_request(200,58);
 
         var image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ARTIST_ART, 48);
         var song = new MPD.Song();
@@ -417,7 +416,8 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
 
         if(in_db)
         {
-            var find = new Gtk.Button.from_stock("gtk-find");
+            var find = new Gtk.Button();
+            find.add(new Gtk.Image.from_stock("gtk-find", Gtk.IconSize.MENU));
             find.set_relief(Gtk.ReliefStyle.NONE);
             hbox.pack_start(find,false,false,0);
 
@@ -2115,8 +2115,10 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             label.set_markup("<span weight='bold'>%s</span>".printf(_("Similar artist")));
             label.set_alignment(0.0f, 0.0f);
             vbox.pack_start(label, false, false, 0);
+            ali = new Gtk.Alignment(0.0f, 0.0f, 0.0f, 0.0f);
             var similar_artist = new Gmpc.Widget.SimilarArtist(this,server, song); 
-            vbox.pack_start(similar_artist, false, false, 0);
+            ali.add(similar_artist);
+            vbox.pack_start(ali, false, false, 0);
         }
 
         /* Show web links */
