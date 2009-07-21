@@ -211,33 +211,35 @@ requires 2.0.0
                 Gtk:Tree:Iter *iter (check null),
                 Gtk:Tree:Path *path (check null))
         {
-            MpdData *data = NULL;
             Self *self = GMPC_MPDDATA_MODEL(model);
-            gint *indices, n,depth,i;
-            indices = gtk_tree_path_get_indices(path);
-            depth = gtk_tree_path_get_depth(path);
+            MpdData_real *data = NULL;
+            gint i=0;
+            const gint *indices = gtk_tree_path_get_indices(path);
+            gint depth = gtk_tree_path_get_depth(path);
+            gint n = indices[0];	/* the n-th top level row */
 
             /* No Children */
             g_assert(depth == 1); 
 
-            n = indices[0];		/* the n-th top level row */
             if (n >= self->num_rows || n < 0)
                 return FALSE; 
 
-            data = (MpdData*)self->_priv->data;
-            i=0;
-            if(self->has_up)
-            {
-                i=1;
+            g_assert(n<self->num_rows);
+            /* If it is the first item in a has_up list, do nothing */
+            if(self->has_up && n == 0){
+                data = NULL;
+                goto end;
             }
+            data = (MpdData_real *)self->_priv->data;
+
+            if(self->has_up)
+                i=1;
+
             for(; i < (n);i++)
             {
-                data = mpd_data_get_next_real(data,FALSE);
+                data = data->next; 
             }
-            g_assert(n<self->num_rows);
-            if(self->has_up && n == 0)
-                data = NULL;
-
+end:
             iter->stamp = self->_priv->stamp;
             iter->user_data = data; 
             iter->user_data2 = GINT_TO_POINTER(n);

@@ -34,6 +34,7 @@
 #include <gmpc-mpddata-model.h>
 #include <gmpc-meta-watcher.h>
 #include <gmpc-plugin.h>
+#include <stdio.h>
 #include <gmpc-metaimage.h>
 #include <pango/pango.h>
 #include <plugin.h>
@@ -1044,14 +1045,21 @@ static void _g_list_free_g_object_unref (GList* self) {
      */
 static void gmpc_widget_similar_artist_metadata_changed (GmpcWidgetSimilarArtist* self, GmpcMetaWatcher* gmw, const mpd_Song* song, MetaDataType type, MetaDataResult _result_, const MetaData* met) {
 	GError * _inner_error_;
+	GTimeVal _tmp0_ = {0};
+	GTimeVal start;
 	GList* child_list;
-	gboolean _tmp1_;
 	gboolean _tmp2_;
+	gboolean _tmp3_;
+	GTimeVal _tmp12_ = {0};
+	GTimeVal now;
+	glong cur;
+	glong _tmp13_;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (gmw != NULL);
 	g_return_if_fail (song != NULL);
 	g_return_if_fail (met != NULL);
 	_inner_error_ = NULL;
+	start = (g_get_current_time (&_tmp0_), _tmp0_);
 	/* only listen to the same artist and the same type */
 	if (type != META_ARTIST_SIMILAR) {
 		return;
@@ -1066,30 +1074,30 @@ static void gmpc_widget_similar_artist_metadata_changed (GmpcWidgetSimilarArtist
 		GList* child_it;
 		child_collection = child_list;
 		for (child_it = child_collection; child_it != NULL; child_it = child_it->next) {
-			GtkWidget* _tmp0_;
+			GtkWidget* _tmp1_;
 			GtkWidget* child;
-			_tmp0_ = NULL;
-			child = (_tmp0_ = (GtkWidget*) child_it->data, (_tmp0_ == NULL) ? NULL : g_object_ref (_tmp0_));
+			_tmp1_ = NULL;
+			child = (_tmp1_ = (GtkWidget*) child_it->data, (_tmp1_ == NULL) ? NULL : g_object_ref (_tmp1_));
 			{
 				gtk_object_destroy ((GtkObject*) child);
 				(child == NULL) ? NULL : (child = (g_object_unref (child), NULL));
 			}
 		}
 	}
-	_tmp1_ = FALSE;
 	_tmp2_ = FALSE;
+	_tmp3_ = FALSE;
 	if (_result_ == META_DATA_UNAVAILABLE) {
+		_tmp3_ = TRUE;
+	} else {
+		_tmp3_ = meta_data_is_empty (met);
+	}
+	if (_tmp3_) {
 		_tmp2_ = TRUE;
 	} else {
-		_tmp2_ = meta_data_is_empty (met);
-	}
-	if (_tmp2_) {
-		_tmp1_ = TRUE;
-	} else {
-		_tmp1_ = !meta_data_is_text_list (met);
+		_tmp2_ = !meta_data_is_text_list (met);
 	}
 	/* if unavailable set that in a label*/
-	if (_tmp1_) {
+	if (_tmp2_) {
 		GtkLabel* label;
 		label = g_object_ref_sink ((GtkLabel*) gtk_label_new (_ ("Unavailable")));
 		gtk_table_attach ((GtkTable*) self, (GtkWidget*) label, (guint) 0, (guint) 1, (guint) 0, (guint) 1, GTK_SHRINK, GTK_SHRINK, (guint) 0, (guint) 0);
@@ -1103,38 +1111,49 @@ static void gmpc_widget_similar_artist_metadata_changed (GmpcWidgetSimilarArtist
 		} else {
 			GList* in_db_list;
 			GList* list;
+			gint items;
 			gint i;
 			guint llength;
 			gint columns;
 			/* Set result */
 			in_db_list = NULL;
 			list = g_list_copy (meta_data_get_text_list (met));
+			items = 30;
+			i = 0;
 			if (list != NULL) {
+				GList* liter;
 				MpdData* data;
 				const MpdData* iter;
+				liter = NULL;
 				mpd_database_search_field_start (connection, MPD_TAG_ITEM_ARTIST);
 				data = mpd_database_search_commit (connection);
 				iter = mpd_data_get_first (data);
 				while (TRUE) {
-					gboolean _tmp3_;
 					gboolean _tmp4_;
-					_tmp3_ = FALSE;
-					if (iter != NULL) {
-						_tmp3_ = list != NULL;
-					} else {
-						_tmp3_ = FALSE;
-					}
-					if (!_tmp3_) {
-						break;
-					}
+					gboolean _tmp5_;
+					gboolean _tmp6_;
 					_tmp4_ = FALSE;
-					if (iter->tag != NULL) {
-						_tmp4_ = string_get_length (iter->tag) > 0;
+					_tmp5_ = FALSE;
+					if (iter != NULL) {
+						_tmp5_ = list != NULL;
+					} else {
+						_tmp5_ = FALSE;
+					}
+					if (_tmp5_) {
+						_tmp4_ = i < items;
 					} else {
 						_tmp4_ = FALSE;
 					}
-					if (_tmp4_) {
-						GList* liter;
+					if (!_tmp4_) {
+						break;
+					}
+					_tmp6_ = FALSE;
+					if (iter->tag != NULL) {
+						_tmp6_ = string_get_length (iter->tag) > 0;
+					} else {
+						_tmp6_ = FALSE;
+					}
+					if (_tmp6_) {
 						char* artist;
 						liter = g_list_first (list);
 						artist = g_regex_escape_string (iter->tag, -1);
@@ -1146,24 +1165,25 @@ static void gmpc_widget_similar_artist_metadata_changed (GmpcWidgetSimilarArtist
 								goto __finally0;
 							}
 							{
-								gboolean _tmp5_;
-								_tmp5_ = TRUE;
+								gboolean _tmp7_;
+								_tmp7_ = TRUE;
 								while (TRUE) {
-									if (!_tmp5_) {
-										gboolean _tmp6_;
-										_tmp6_ = FALSE;
+									if (!_tmp7_) {
+										gboolean _tmp8_;
+										_tmp8_ = FALSE;
 										if (liter != NULL) {
-											_tmp6_ = (liter = liter->next) != NULL;
+											_tmp8_ = (liter = liter->next) != NULL;
 										} else {
-											_tmp6_ = FALSE;
+											_tmp8_ = FALSE;
 										}
-										if (!_tmp6_) {
+										if (!_tmp8_) {
 											break;
 										}
 									}
-									_tmp5_ = FALSE;
+									_tmp7_ = FALSE;
 									if (g_regex_match (reg, (const char*) liter->data, 0, NULL)) {
 										in_db_list = g_list_prepend (in_db_list, gmpc_widget_similar_artist_new_artist_button (self, iter->tag, TRUE));
+										i++;
 										list = g_list_remove (list, (const char*) liter->data);
 										liter = NULL;
 									}
@@ -1197,51 +1217,46 @@ static void gmpc_widget_similar_artist_metadata_changed (GmpcWidgetSimilarArtist
 					}
 					iter = mpd_data_get_next_real (iter, FALSE);
 				}
-				(data == NULL) ? NULL : (data = (mpd_data_free (data), NULL));
-			}
-			{
-				GList* artist_collection;
-				GList* artist_it;
-				artist_collection = list;
-				for (artist_it = artist_collection; artist_it != NULL; artist_it = artist_it->next) {
-					const char* _tmp7_;
+				liter = g_list_first (list);
+				while (TRUE) {
+					gboolean _tmp9_;
+					const char* _tmp10_;
 					char* artist;
-					_tmp7_ = NULL;
-					artist = (_tmp7_ = (const char*) artist_it->data, (_tmp7_ == NULL) ? NULL : g_strdup (_tmp7_));
-					{
-						in_db_list = g_list_prepend (in_db_list, gmpc_widget_similar_artist_new_artist_button (self, artist, FALSE));
-						artist = (g_free (artist), NULL);
+					_tmp9_ = FALSE;
+					if (liter != NULL) {
+						_tmp9_ = i < items;
+					} else {
+						_tmp9_ = FALSE;
 					}
+					if (!_tmp9_) {
+						break;
+					}
+					_tmp10_ = NULL;
+					artist = (_tmp10_ = (const char*) liter->data, (_tmp10_ == NULL) ? NULL : g_strdup (_tmp10_));
+					in_db_list = g_list_prepend (in_db_list, gmpc_widget_similar_artist_new_artist_button (self, artist, FALSE));
+					i++;
+					liter = liter->next;
+					artist = (g_free (artist), NULL);
 				}
+				(data == NULL) ? NULL : (data = (mpd_data_free (data), NULL));
 			}
 			in_db_list = g_list_reverse (in_db_list);
 			i = 0;
 			gtk_widget_hide ((GtkWidget*) self);
 			llength = g_list_length (in_db_list);
 			columns = 3;
-			if (llength > 50) {
-				llength = (guint) 50;
-			}
 			gtk_table_resize ((GtkTable*) self, (llength / columns) + 1, (guint) columns);
 			{
 				GList* item_collection;
 				GList* item_it;
 				item_collection = in_db_list;
 				for (item_it = item_collection; item_it != NULL; item_it = item_it->next) {
-					GtkWidget* _tmp9_;
+					GtkWidget* _tmp11_;
 					GtkWidget* item;
-					_tmp9_ = NULL;
-					item = (_tmp9_ = (GtkWidget*) item_it->data, (_tmp9_ == NULL) ? NULL : g_object_ref (_tmp9_));
+					_tmp11_ = NULL;
+					item = (_tmp11_ = (GtkWidget*) item_it->data, (_tmp11_ == NULL) ? NULL : g_object_ref (_tmp11_));
 					{
-						if (i < 50) {
-							gtk_table_attach ((GtkTable*) self, item, (guint) (i % columns), (guint) ((i % columns) + 1), (guint) (i / columns), (guint) ((i / columns) + 1), GTK_EXPAND | GTK_FILL, GTK_SHRINK, (guint) 0, (guint) 0);
-						} else {
-							GObject* _tmp8_;
-							_tmp8_ = NULL;
-							_tmp8_ = g_object_ref_sink ((GObject*) item);
-							(_tmp8_ == NULL) ? NULL : (_tmp8_ = (g_object_unref (_tmp8_), NULL));
-							gtk_object_destroy ((GtkObject*) item);
-						}
+						gtk_table_attach ((GtkTable*) self, item, (guint) (i % columns), (guint) ((i % columns) + 1), (guint) (i / columns), (guint) ((i / columns) + 1), GTK_EXPAND | GTK_FILL, GTK_SHRINK, (guint) 0, (guint) 0);
 						i++;
 						(item == NULL) ? NULL : (item = (g_object_unref (item), NULL));
 					}
@@ -1251,6 +1266,15 @@ static void gmpc_widget_similar_artist_metadata_changed (GmpcWidgetSimilarArtist
 			(list == NULL) ? NULL : (list = (g_list_free (list), NULL));
 		}
 	}
+	now = (g_get_current_time (&_tmp12_), _tmp12_);
+	cur = now.tv_usec - start.tv_usec;
+	_tmp13_ = 0L;
+	if (cur < 0) {
+		_tmp13_ = 1 - cur;
+	} else {
+		_tmp13_ = cur;
+	}
+	fprintf (stdout, "time elapsed: %li\n", _tmp13_);
 	gtk_widget_show_all ((GtkWidget*) self);
 	(child_list == NULL) ? NULL : (child_list = (g_list_free (child_list), NULL));
 }

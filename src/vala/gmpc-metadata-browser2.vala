@@ -301,6 +301,8 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
             Gmpc.MetaData.Result result, 
             Gmpc.MetaData.Item met)
     {
+        TimeVal start = TimeVal();
+
         /* only listen to the same artist and the same type */
         if(type != Gmpc.MetaData.Type.ARTIST_SIMILAR) return;
         if(this.song.artist.collate(song.artist)!=0) return;
@@ -326,16 +328,18 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
         else {
             List<Gtk.Widget> in_db_list = null;
             GLib.List<weak string> list = met.get_text_list().copy();
+            int items = 30;
+            int i = 0;
             if(list != null)
             {
-                MPD.Database.search_field_start(server, MPD.Tag.Type.ARTIST);
+                weak List<weak string> liter= null;                 MPD.Database.search_field_start(server, MPD.Tag.Type.ARTIST);
                 var data = MPD.Database.search_commit(server);
                 weak MPD.Data.Item iter = data.first();
-                while(iter != null && list != null)
+                while(iter != null && list != null && i < items)
                 {
                     if(iter.tag != null && iter.tag.length > 0)
                     {
-                        weak List<weak string> liter= list.first();
+                        liter = list.first();
                         var artist = GLib.Regex.escape_string(iter.tag);
                         try{
                             var reg = new GLib.Regex(artist, GLib.RegexCompileFlags.CASELESS);
@@ -343,6 +347,7 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
                                 if(reg.match(liter.data))
                                 {
                                     in_db_list.prepend(new_artist_button(iter.tag, true));
+                                    i++;
                                     list.remove(liter.data);
                                     liter = null;
                                 }
@@ -354,32 +359,34 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
                     }
                     iter = iter.next(false);
                 }
-            }
-            foreach(string artist in list)
-            {
-                in_db_list.prepend(new_artist_button(artist, false));
+
+                liter= list.first();
+                while(liter != null && i < items) 
+                {
+                    var artist = liter.data;
+                    in_db_list.prepend(new_artist_button(artist, false));
+                    i++;
+                    liter = liter.next; 
+                }
             }
             in_db_list.reverse();
-            int i=0;
+            i=0;
             this.hide();
             uint llength = in_db_list.length();
             int columns = 3;
-            if(llength > 50) llength = 50;
             this.resize(llength/columns+1, columns);
             foreach(Gtk.Widget item in in_db_list)
             {
-                if(i<50){
-                    this.attach(item, 
-                            i%columns,i%columns+1,i/columns,i/columns+1,
-                            Gtk.AttachOptions.EXPAND|Gtk.AttachOptions.FILL,
-                            Gtk.AttachOptions.SHRINK, 0,0);
-                }else{
-                    item.ref_sink();
-                    item.destroy();
-                }
+                this.attach(item, 
+                        i%columns,i%columns+1,i/columns,i/columns+1,
+                        Gtk.AttachOptions.EXPAND|Gtk.AttachOptions.FILL,
+                        Gtk.AttachOptions.SHRINK, 0,0);
                 i++;
             }
         }
+        var now = TimeVal();
+        var cur = now.tv_usec-start.tv_usec;
+        stdout.printf("time elapsed: %li\n", (cur < 0)?1-cur:cur);
 
         this.show_all();
     }
