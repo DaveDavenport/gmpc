@@ -13,4 +13,6 @@ dist_icons_DATA = \
 		gmpc-tray-disconnected.png\
 		gmpc-tray-pause.png\
 		gmpc-tray-play.png\
+		stock_repeat.png\
+		stock_shuffle.png\
 		gmpc-tray.png

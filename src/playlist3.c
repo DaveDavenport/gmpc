@@ -2682,7 +2682,6 @@ static void main_window_update_status_icons(void)
 		}
 		gtk_widget_show_all(si_random);
 	}
-
 }
 
 void main_window_add_status_icon(GtkWidget *icon)
