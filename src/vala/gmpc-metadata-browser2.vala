@@ -662,7 +662,6 @@ public class  Gmpc.NowPlaying : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface {
             this.paned.style_set += browser_bg_style_changed;
             this.paned.add_with_viewport(this.container);
             this.paned.get_vadjustment().set("step-increment", 20.0);
-//            this.container.set_focus_vadjustment(this.paned.get_vadjustment());
             /* Bind keys */
             this.paned.key_release_event += browser_key_release_event;
         }
@@ -736,7 +735,7 @@ public class  Gmpc.NowPlaying : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface {
     private int browser_add_go_menu(Gtk.Menu menu)
     {
         var item = new Gtk.ImageMenuItem.with_mnemonic(_("Now Playing"));
-        item.set_image(new Gtk.Image.from_stock("gtk-info", Gtk.IconSize.MENU));
+        item.set_image(new Gtk.Image.from_icon_name("media-audiofile", Gtk.IconSize.MENU));
         item.activate += select_now_playing_browser;
         item.add_accelerator("activate", menu.get_accel_group(),0x069, Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
         menu.append(item);
@@ -814,6 +813,25 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
     /* The right hand "browser" box */
     private Gtk.ScrolledWindow metadata_sw = null;
     private Gtk.EventBox metadata_box = null;
+
+
+    private void select_metadata_browser(Gtk.ImageMenuItem item)
+    {
+        weak Gtk.TreeView tree = Gmpc.Playlist3.get_category_tree_view();
+        var sel = tree.get_selection();
+        var path = rref.get_path();
+        sel.select_path(path);
+    }
+    private int browser_add_go_menu(Gtk.Menu menu)
+    {
+        var item = new Gtk.ImageMenuItem.with_mnemonic(_(this.get_name()));
+        item.set_image(new Gtk.Image.from_stock("gtk-info", Gtk.IconSize.MENU));
+        item.activate += select_metadata_browser;
+        item.add_accelerator("activate", menu.get_accel_group(),0xffc1,0, Gtk.AccelFlags.VISIBLE);
+        menu.append(item);
+
+        return 1;
+    }
 
     /**
      * This builds the browser

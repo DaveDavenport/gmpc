@@ -350,6 +350,9 @@ static void _g_list_free_gmpc_metadata_browser_hitem_free (GList* self);
 static gint gmpc_metadata_browser_real_get_version (GmpcPluginBase* base, int* result_length1);
 static const char* gmpc_metadata_browser_real_get_name (GmpcPluginBase* base);
 static void gmpc_metadata_browser_real_save_yourself (GmpcPluginBase* base);
+static void gmpc_metadata_browser_select_metadata_browser (GmpcMetadataBrowser* self, GtkImageMenuItem* item);
+static void _gmpc_metadata_browser_select_metadata_browser_gtk_menu_item_activate (GtkImageMenuItem* _sender, gpointer self);
+static gint gmpc_metadata_browser_real_browser_add_go_menu (GmpcPluginBrowserIface* base, GtkMenu* menu);
 static void gmpc_metadata_browser_browser_bg_style_changed (GmpcMetadataBrowser* self, GtkScrolledWindow* bg, GtkStyle* style);
 static gboolean gmpc_metadata_browser_browser_button_press_event (GmpcMetadataBrowser* self, GtkTreeView* tree, const GdkEventButton* event);
 static void gmpc_metadata_browser_browser_artist_entry_changed (GmpcMetadataBrowser* self, GtkEntry* entry);
@@ -1786,8 +1789,7 @@ static void gmpc_now_playing_browser_init (GmpcNowPlaying* self) {
 		g_signal_connect_object ((GtkWidget*) self->priv->paned, "style-set", (GCallback) _gmpc_now_playing_browser_bg_style_changed_gtk_widget_style_set, self, 0);
 		gtk_scrolled_window_add_with_viewport (self->priv->paned, (GtkWidget*) self->priv->container);
 		g_object_set ((GObject*) gtk_scrolled_window_get_vadjustment (self->priv->paned), "step-increment", 20.0, NULL);
-		/*            this.container.set_focus_vadjustment(this.paned.get_vadjustment());
-		 Bind keys */
+		/* Bind keys */
 		g_signal_connect_object ((GtkWidget*) self->priv->paned, "key-release-event", (GCallback) _gmpc_now_playing_browser_key_release_event_gtk_widget_key_release_event, self, 0);
 	}
 }
@@ -1978,7 +1980,7 @@ static gint gmpc_now_playing_real_browser_add_go_menu (GmpcPluginBrowserIface* b
 	g_return_val_if_fail (menu != NULL, 0);
 	item = g_object_ref_sink ((GtkImageMenuItem*) gtk_image_menu_item_new_with_mnemonic (_ ("Now Playing")));
 	_tmp0_ = NULL;
-	gtk_image_menu_item_set_image (item, (GtkWidget*) (_tmp0_ = g_object_ref_sink ((GtkImage*) gtk_image_new_from_stock ("gtk-info", GTK_ICON_SIZE_MENU))));
+	gtk_image_menu_item_set_image (item, (GtkWidget*) (_tmp0_ = g_object_ref_sink ((GtkImage*) gtk_image_new_from_icon_name ("media-audiofile", GTK_ICON_SIZE_MENU))));
 	(_tmp0_ == NULL) ? NULL : (_tmp0_ = (g_object_unref (_tmp0_), NULL));
 	g_signal_connect_object ((GtkMenuItem*) item, "activate", (GCallback) _gmpc_now_playing_select_now_playing_browser_gtk_menu_item_activate, self, 0);
 	gtk_widget_add_accelerator ((GtkWidget*) item, "activate", gtk_menu_get_accel_group (menu), (guint) 0x069, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
@@ -2151,6 +2153,48 @@ static void gmpc_metadata_browser_real_save_yourself (GmpcPluginBase* base) {
 		}
 		(path == NULL) ? NULL : (path = (gtk_tree_path_free (path), NULL));
 	}
+}
+
+
+static void gmpc_metadata_browser_select_metadata_browser (GmpcMetadataBrowser* self, GtkImageMenuItem* item) {
+	GtkTreeView* tree;
+	GtkTreeSelection* _tmp0_;
+	GtkTreeSelection* sel;
+	GtkTreePath* path;
+	g_return_if_fail (self != NULL);
+	g_return_if_fail (item != NULL);
+	tree = playlist3_get_category_tree_view ();
+	_tmp0_ = NULL;
+	sel = (_tmp0_ = gtk_tree_view_get_selection (tree), (_tmp0_ == NULL) ? NULL : g_object_ref (_tmp0_));
+	path = gtk_tree_row_reference_get_path (self->priv->rref);
+	gtk_tree_selection_select_path (sel, path);
+	(sel == NULL) ? NULL : (sel = (g_object_unref (sel), NULL));
+	(path == NULL) ? NULL : (path = (gtk_tree_path_free (path), NULL));
+}
+
+
+static void _gmpc_metadata_browser_select_metadata_browser_gtk_menu_item_activate (GtkImageMenuItem* _sender, gpointer self) {
+	gmpc_metadata_browser_select_metadata_browser (self, _sender);
+}
+
+
+static gint gmpc_metadata_browser_real_browser_add_go_menu (GmpcPluginBrowserIface* base, GtkMenu* menu) {
+	GmpcMetadataBrowser * self;
+	gint result;
+	GtkImageMenuItem* item;
+	GtkImage* _tmp0_;
+	self = (GmpcMetadataBrowser*) base;
+	g_return_val_if_fail (menu != NULL, 0);
+	item = g_object_ref_sink ((GtkImageMenuItem*) gtk_image_menu_item_new_with_mnemonic (_ (gmpc_plugin_base_get_name ((GmpcPluginBase*) self))));
+	_tmp0_ = NULL;
+	gtk_image_menu_item_set_image (item, (GtkWidget*) (_tmp0_ = g_object_ref_sink ((GtkImage*) gtk_image_new_from_stock ("gtk-info", GTK_ICON_SIZE_MENU))));
+	(_tmp0_ == NULL) ? NULL : (_tmp0_ = (g_object_unref (_tmp0_), NULL));
+	g_signal_connect_object ((GtkMenuItem*) item, "activate", (GCallback) _gmpc_metadata_browser_select_metadata_browser_gtk_menu_item_activate, self, 0);
+	gtk_widget_add_accelerator ((GtkWidget*) item, "activate", gtk_menu_get_accel_group (menu), (guint) 0xffc1, 0, GTK_ACCEL_VISIBLE);
+	gtk_menu_shell_append ((GtkMenuShell*) menu, (GtkWidget*) ((GtkMenuItem*) item));
+	result = 1;
+	(item == NULL) ? NULL : (item = (g_object_unref (item), NULL));
+	return result;
 }
 
 
@@ -5269,6 +5313,7 @@ static void gmpc_metadata_browser_class_init (GmpcMetadataBrowserClass * klass) 
 
 static void gmpc_metadata_browser_gmpc_plugin_browser_iface_interface_init (GmpcPluginBrowserIfaceIface * iface) {
 	gmpc_metadata_browser_gmpc_plugin_browser_iface_parent_iface = g_type_interface_peek_parent (iface);
+	iface->browser_add_go_menu = gmpc_metadata_browser_real_browser_add_go_menu;
 	iface->browser_add = gmpc_metadata_browser_real_browser_add;
 	iface->browser_selected = gmpc_metadata_browser_real_browser_selected;
 	iface->browser_unselected = gmpc_metadata_browser_real_browser_unselected;
