@@ -17,7 +17,6 @@ namespace Gmpc {
 			public static void help_window_destroy (Gtk.Dialog window, int response);
 			public Command ();
 			public void popup ();
-			public override void save_yourself ();
 			public override void set_enabled (bool state);
 		}
 	}

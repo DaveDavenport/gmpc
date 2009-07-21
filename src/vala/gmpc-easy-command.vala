@@ -53,13 +53,6 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 		return this.version;
 	 }
     /**
-     * Tells the plugin to save itself
-     */
-    public override void save_yourself()
-    {
-        /* nothing to save */
-    }
-    /**
      * Get set enabled
      */
     public override bool get_enabled() {
@@ -89,6 +82,7 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 
 		return false;
 	}
+	/* Construction of the plugin */
 	construct {
         /* Mark the plugin as an internal dummy */
         this.plugin_type = 8+4;
@@ -160,7 +154,6 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 					test = "%s[ ]*%s$".printf(name, pattern);
 					if (GLib.Regex.match_simple(test, value.strip(), GLib.RegexCompileFlags.CASELESS, 0)) {
 						string param;
-						stdout.printf("matched: %s to %s\n", test, value.strip());
 						if (value.length > name.length)
 							param = value.substring(name.length, -1);
 						else
@@ -186,7 +179,6 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
                         test = "^%s.*".printf(value.strip());
                         if (GLib.Regex.match_simple(test, name,GLib.RegexCompileFlags.CASELESS, 0)) {
                             string param;
-                            stdout.printf("matched: %s to %s\n", test, name);
                             if (value.length > name.length)
                                 param = value.substring(name.length, -1);
                             else
@@ -195,8 +187,6 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
                             callback(data, param_str);
                             found = true;
                         }
-                        else
-                            stdout.printf("!matched: %s to %s\n", test, name);
                     } while (model.iter_next(ref iter) && !found);
                 }
             }
@@ -216,7 +206,7 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 			return true;
 		}
 		/* Tab key */
-		else if (event.keyval == 0xff09) {
+		if (event.keyval == 0xff09) {
 			((Gtk.Editable) widget).set_position(-1);
 			return true;
 		}
@@ -314,7 +304,6 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 	private bool
 	focus_out_event(Gtk.Entry entry, Gdk.EventFocus event)
 	{
-		stdout.printf("focus out event\n");
 		this.window.destroy();
 		this.window = null;
 		return false;

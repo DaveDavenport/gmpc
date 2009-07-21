@@ -84,7 +84,6 @@ enum  {
 #define GMPC_EASY_COMMAND_some_unique_name VERSION
 static const char* gmpc_easy_command_real_get_name (GmpcPluginBase* base);
 static gint* gmpc_easy_command_real_get_version (GmpcPluginBase* base, int* result_length1);
-static void gmpc_easy_command_real_save_yourself (GmpcPluginBase* base);
 static gboolean gmpc_easy_command_real_get_enabled (GmpcPluginBase* base);
 static void gmpc_easy_command_real_set_enabled (GmpcPluginBase* base, gboolean state);
 static gboolean gmpc_easy_command_completion_function (GmpcEasyCommand* self, GtkEntryCompletion* comp, const char* key, GtkTreeIter* iter);
@@ -137,16 +136,6 @@ static gint* gmpc_easy_command_real_get_version (GmpcPluginBase* base, int* resu
 
 
 /**
-     * Tells the plugin to save itself
-     */
-static void gmpc_easy_command_real_save_yourself (GmpcPluginBase* base) {
-	GmpcEasyCommand * self;
-	self = (GmpcEasyCommand*) base;
-}
-
-
-/* nothing to save 
-*
      * Get set enabled
      */
 static gboolean gmpc_easy_command_real_get_enabled (GmpcPluginBase* base) {
@@ -466,12 +455,12 @@ static gboolean gmpc_easy_command_key_press_event (GmpcEasyCommand* self, GtkEnt
 		self->priv->window = (_tmp0_ = NULL, (self->priv->window == NULL) ? NULL : (self->priv->window = (g_object_unref (self->priv->window), NULL)), _tmp0_);
 		result = TRUE;
 		return result;
-	} else {
-		if ((*event).keyval == 0xff09) {
-			gtk_editable_set_position (GTK_EDITABLE (widget), -1);
-			result = TRUE;
-			return result;
-		}
+	}
+	/* Tab key */
+	if ((*event).keyval == 0xff09) {
+		gtk_editable_set_position (GTK_EDITABLE (widget), -1);
+		result = TRUE;
+		return result;
 	}
 	result = FALSE;
 	return result;
@@ -720,6 +709,7 @@ static gboolean _gmpc_easy_command_completion_function_gtk_entry_completion_matc
 }
 
 
+/* Construction of the plugin */
 static GObject * gmpc_easy_command_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties) {
 	GObject * obj;
 	GmpcEasyCommandClass * klass;
@@ -761,7 +751,6 @@ static void gmpc_easy_command_class_init (GmpcEasyCommandClass * klass) {
 	g_type_class_add_private (klass, sizeof (GmpcEasyCommandPrivate));
 	GMPC_PLUGIN_BASE_CLASS (klass)->get_name = gmpc_easy_command_real_get_name;
 	GMPC_PLUGIN_BASE_CLASS (klass)->get_version = gmpc_easy_command_real_get_version;
-	GMPC_PLUGIN_BASE_CLASS (klass)->save_yourself = gmpc_easy_command_real_save_yourself;
 	GMPC_PLUGIN_BASE_CLASS (klass)->get_enabled = gmpc_easy_command_real_get_enabled;
 	GMPC_PLUGIN_BASE_CLASS (klass)->set_enabled = gmpc_easy_command_real_set_enabled;
 	G_OBJECT_CLASS (klass)->constructor = gmpc_easy_command_constructor;
