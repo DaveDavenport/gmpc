@@ -442,6 +442,7 @@ test/Makefile
 test/config/Makefile
 test/MpdDataModel/Makefile
 test/GmpcEasyDownload/Makefile
+test/MetaDataCache/Makefile
 ])
 echo ""
 echo ""
