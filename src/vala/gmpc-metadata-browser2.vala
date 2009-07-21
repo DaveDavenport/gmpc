@@ -332,7 +332,8 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
             int i = 0;
             if(list != null)
             {
-                weak List<weak string> liter= null;                 MPD.Database.search_field_start(server, MPD.Tag.Type.ARTIST);
+                weak List<weak string> liter= null;                 
+                MPD.Database.search_field_start(server, MPD.Tag.Type.ARTIST);
                 var data = MPD.Database.search_commit(server);
                 weak MPD.Data.Item iter = data.first();
                 while(iter != null && list != null && i < items)
@@ -340,22 +341,16 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
                     if(iter.tag != null && iter.tag.length > 0)
                     {
                         liter = list.first();
-                        var artist = GLib.Regex.escape_string(iter.tag);
-                        try{
-                            var reg = new GLib.Regex(artist, GLib.RegexCompileFlags.CASELESS);
-                            do{
-                                if(reg.match(liter.data))
-                                {
-                                    in_db_list.prepend(new_artist_button(iter.tag, true));
-                                    i++;
-                                    list.remove(liter.data);
-                                    liter = null;
-                                }
-                            }while(liter != null && (liter = liter.next) != null);
-                        }catch (Error E)
-                        {
-                            GLib.assert_not_reached ();
-                        }
+                        var artist = iter.tag.casefold(); 
+                        do{
+                            if(liter.data.casefold().collate(artist) == 0)
+                            {
+                                in_db_list.prepend(new_artist_button(iter.tag, true));
+                                i++;
+                                list.remove(liter.data);
+                                liter = null;
+                            }
+                        }while(liter != null && (liter = liter.next) != null);
                     }
                     iter = iter.next(false);
                 }
@@ -411,7 +406,7 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
         var song = new MPD.Song();
         song.artist = artist;
         image.set_squared(true);
-        image.update_from_song_delayed(song);
+     //   image.update_from_song_delayed(song);
         hbox.pack_start(image,false,false,0);
 
         var label = new Gtk.Label(artist);
