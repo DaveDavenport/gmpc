@@ -420,8 +420,10 @@ static void _gmpc_metadata_browser_play_song_gtk_button_clicked (GtkButton* _sen
 static void _gmpc_metadata_browser_add_song_gtk_button_clicked (GtkButton* _sender, gpointer self);
 static void _gmpc_metadata_browser_replace_song_gtk_button_clicked (GtkButton* _sender, gpointer self);
 static void gmpc_metadata_browser_album_song_tree_row_activated (GmpcMetadataBrowser* self, GtkTreeView* tree, const GtkTreePath* path, GtkTreeViewColumn* column);
+static void gmpc_metadata_browser_album_song_browser_play_clicked (GmpcMetadataBrowser* self, GtkImageMenuItem* item);
 static void gmpc_metadata_browser_album_song_browser_add_clicked (GmpcMetadataBrowser* self, GtkImageMenuItem* item);
 static void gmpc_metadata_browser_album_song_browser_replace_clicked (GmpcMetadataBrowser* self, GtkImageMenuItem* item);
+static void _gmpc_metadata_browser_album_song_browser_play_clicked_gtk_menu_item_activate (GtkImageMenuItem* _sender, gpointer self);
 static void _gmpc_metadata_browser_album_song_browser_add_clicked_gtk_menu_item_activate (GtkImageMenuItem* _sender, gpointer self);
 static void _gmpc_metadata_browser_album_song_browser_replace_clicked_gtk_menu_item_activate (GtkImageMenuItem* _sender, gpointer self);
 static gboolean gmpc_metadata_browser_album_song_tree_button_press_event (GmpcMetadataBrowser* self, GmpcMpdDataTreeview* tree, const GdkEventButton* event);
@@ -3857,6 +3859,69 @@ static void gmpc_metadata_browser_album_song_tree_row_activated (GmpcMetadataBro
 }
 
 
+static void gmpc_metadata_browser_album_song_browser_play_clicked (GmpcMetadataBrowser* self, GtkImageMenuItem* item) {
+	GtkTreeView* _tmp0_;
+	GtkTreeView* tree;
+	g_return_if_fail (self != NULL);
+	g_return_if_fail (item != NULL);
+	_tmp0_ = NULL;
+	tree = (_tmp0_ = GTK_TREE_VIEW (g_object_get_data ((GObject*) item, "tree")), (_tmp0_ == NULL) ? NULL : g_object_ref (_tmp0_));
+	if (tree != NULL) {
+		GtkTreeIter iter = {0};
+		GtkTreeModel* _tmp1_;
+		GtkTreeModel* model;
+		GtkTreeSelection* _tmp2_;
+		GtkTreeSelection* sel;
+		GtkTreeModel* _tmp6_;
+		GtkTreeModel* _tmp5_;
+		GList* _tmp4_;
+		GtkTreeModel* _tmp3_;
+		GList* list;
+		_tmp1_ = NULL;
+		model = (_tmp1_ = gtk_tree_view_get_model (tree), (_tmp1_ == NULL) ? NULL : g_object_ref (_tmp1_));
+		_tmp2_ = NULL;
+		sel = (_tmp2_ = gtk_tree_view_get_selection (tree), (_tmp2_ == NULL) ? NULL : g_object_ref (_tmp2_));
+		_tmp6_ = NULL;
+		_tmp5_ = NULL;
+		_tmp4_ = NULL;
+		_tmp3_ = NULL;
+		list = (_tmp4_ = gtk_tree_selection_get_selected_rows (sel, &_tmp3_), model = (_tmp5_ = (_tmp6_ = _tmp3_, (_tmp6_ == NULL) ? NULL : g_object_ref (_tmp6_)), (model == NULL) ? NULL : (model = (g_object_unref (model), NULL)), _tmp5_), _tmp4_);
+		{
+			GList* path_collection;
+			GList* path_it;
+			path_collection = list;
+			for (path_it = path_collection; path_it != NULL; path_it = path_it->next) {
+				const GtkTreePath* _tmp7_;
+				GtkTreePath* path;
+				_tmp7_ = NULL;
+				path = (_tmp7_ = (const GtkTreePath*) path_it->data, (_tmp7_ == NULL) ? NULL : gtk_tree_path_copy (_tmp7_));
+				{
+					if (gtk_tree_model_get_iter (model, &iter, path)) {
+						const mpd_Song* song;
+						song = NULL;
+						gtk_tree_model_get (model, &iter, 0, &song, -1, -1);
+						if (song != NULL) {
+							play_path (song->file);
+							(path == NULL) ? NULL : (path = (gtk_tree_path_free (path), NULL));
+							(model == NULL) ? NULL : (model = (g_object_unref (model), NULL));
+							(sel == NULL) ? NULL : (sel = (g_object_unref (sel), NULL));
+							(list == NULL) ? NULL : (list = (_g_list_free_gtk_tree_path_free (list), NULL));
+							(tree == NULL) ? NULL : (tree = (g_object_unref (tree), NULL));
+							return;
+						}
+					}
+					(path == NULL) ? NULL : (path = (gtk_tree_path_free (path), NULL));
+				}
+			}
+		}
+		(model == NULL) ? NULL : (model = (g_object_unref (model), NULL));
+		(sel == NULL) ? NULL : (sel = (g_object_unref (sel), NULL));
+		(list == NULL) ? NULL : (list = (_g_list_free_gtk_tree_path_free (list), NULL));
+	}
+	(tree == NULL) ? NULL : (tree = (g_object_unref (tree), NULL));
+}
+
+
 static void gmpc_metadata_browser_album_song_browser_add_clicked (GmpcMetadataBrowser* self, GtkImageMenuItem* item) {
 	GtkTreeView* _tmp0_;
 	GtkTreeView* tree;
@@ -3924,6 +3989,11 @@ static void gmpc_metadata_browser_album_song_browser_replace_clicked (GmpcMetada
 }
 
 
+static void _gmpc_metadata_browser_album_song_browser_play_clicked_gtk_menu_item_activate (GtkImageMenuItem* _sender, gpointer self) {
+	gmpc_metadata_browser_album_song_browser_play_clicked (self, _sender);
+}
+
+
 static void _gmpc_metadata_browser_album_song_browser_add_clicked_gtk_menu_item_activate (GtkImageMenuItem* _sender, gpointer self) {
 	gmpc_metadata_browser_album_song_browser_add_clicked (self, _sender);
 }
@@ -3944,6 +4014,14 @@ static gboolean gmpc_metadata_browser_album_song_tree_button_press_event (GmpcMe
 		GtkImageMenuItem* _tmp0_;
 		GtkImage* _tmp1_;
 		menu = g_object_ref_sink ((GtkMenu*) gtk_menu_new ());
+		if (gtk_tree_selection_count_selected_rows (gtk_tree_view_get_selection ((GtkTreeView*) tree)) == 1) {
+			GtkImageMenuItem* item;
+			item = g_object_ref_sink ((GtkImageMenuItem*) gtk_image_menu_item_new_from_stock ("gtk-media-play", NULL));
+			g_signal_connect_object ((GtkMenuItem*) item, "activate", (GCallback) _gmpc_metadata_browser_album_song_browser_play_clicked_gtk_menu_item_activate, self, 0);
+			g_object_set_data ((GObject*) item, "tree", (void*) tree);
+			gtk_menu_shell_append ((GtkMenuShell*) menu, (GtkWidget*) ((GtkMenuItem*) item));
+			(item == NULL) ? NULL : (item = (g_object_unref (item), NULL));
+		}
 		item = g_object_ref_sink ((GtkImageMenuItem*) gtk_image_menu_item_new_from_stock ("gtk-add", NULL));
 		g_signal_connect_object ((GtkMenuItem*) item, "activate", (GCallback) _gmpc_metadata_browser_album_song_browser_add_clicked_gtk_menu_item_activate, self, 0);
 		g_object_set_data ((GObject*) item, "tree", (void*) tree);
