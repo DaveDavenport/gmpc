@@ -16,6 +16,17 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
+
+/**
+ * This plugin consists of 3 parts
+ * Metadata2 plugin: Implements metadata 2 browser.
+ * Now Playing plugin: Reusing the metadata 2 browser it implements a now playing browser.
+ * Custom widget, there are some custom widgets used by the metadata 2 browser
+ *  * Similar songs.
+ *  * Similar artist.
+ *  * More. (expands, collapses a sub widget
+ * 
+ */
 using Config;
 using Gtk;
 using Gmpc;
