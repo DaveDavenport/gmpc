@@ -23,7 +23,7 @@ namespace Gmpc {
 		public Gtk.Widget metadata_box_show_song (MPD.Song song, bool show_controls);
 		public MetadataBrowser ();
 		public override void save_yourself ();
-		public void select_browser (Gtk.TreeView tree);
+		public void select_browser (Gtk.TreeView? tree);
 		public void set_album (string artist, string album);
 		public void set_artist (string artist);
 		public void set_song (MPD.Song song);

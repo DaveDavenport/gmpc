@@ -350,6 +350,7 @@ static void _g_list_free_gmpc_metadata_browser_hitem_free (GList* self);
 static gint gmpc_metadata_browser_real_get_version (GmpcPluginBase* base, int* result_length1);
 static const char* gmpc_metadata_browser_real_get_name (GmpcPluginBase* base);
 static void gmpc_metadata_browser_real_save_yourself (GmpcPluginBase* base);
+void gmpc_metadata_browser_select_browser (GmpcMetadataBrowser* self, GtkTreeView* tree);
 static void gmpc_metadata_browser_select_metadata_browser (GmpcMetadataBrowser* self, GtkImageMenuItem* item);
 static void _gmpc_metadata_browser_select_metadata_browser_gtk_menu_item_activate (GtkImageMenuItem* _sender, gpointer self);
 static gint gmpc_metadata_browser_real_browser_add_go_menu (GmpcPluginBrowserIface* base, GtkMenu* menu);
@@ -450,7 +451,6 @@ static void gmpc_metadata_browser_history_show_list (GmpcMetadataBrowser* self);
 static void _gmpc_metadata_browser_history_next_gtk_button_clicked (GtkButton* _sender, gpointer self);
 static void _gmpc_metadata_browser_history_show_list_gtk_button_clicked (GtkButton* _sender, gpointer self);
 static void _gmpc_metadata_browser_history_previous_gtk_button_clicked (GtkButton* _sender, gpointer self);
-void gmpc_metadata_browser_select_browser (GmpcMetadataBrowser* self, GtkTreeView* tree);
 static void _lambda0_ (GtkToggleButton* source, GmpcMetadataBrowser* self);
 static void __lambda0__gtk_toggle_button_toggled (GtkToggleButton* _sender, gpointer self);
 static void _lambda1_ (GtkToggleButton* source, GmpcMetadataBrowser* self);
@@ -1949,6 +1949,9 @@ static void gmpc_now_playing_update (GmpcNowPlaying* self) {
 }
 
 
+/**
+     * Makes gmpc jump to the now playing browser 
+     */
 static void gmpc_now_playing_select_now_playing_browser (GmpcNowPlaying* self, GtkImageMenuItem* item) {
 	GtkTreeView* tree;
 	GtkTreeSelection* _tmp0_;
@@ -1960,7 +1963,9 @@ static void gmpc_now_playing_select_now_playing_browser (GmpcNowPlaying* self, G
 	_tmp0_ = NULL;
 	sel = (_tmp0_ = gtk_tree_view_get_selection (tree), (_tmp0_ == NULL) ? NULL : g_object_ref (_tmp0_));
 	path = gtk_tree_row_reference_get_path (self->priv->np_ref);
-	gtk_tree_selection_select_path (sel, path);
+	if (path != NULL) {
+		gtk_tree_selection_select_path (sel, path);
+	}
 	(sel == NULL) ? NULL : (sel = (g_object_unref (sel), NULL));
 	(path == NULL) ? NULL : (path = (gtk_tree_path_free (path), NULL));
 }
@@ -1971,22 +1976,29 @@ static void _gmpc_now_playing_select_now_playing_browser_gtk_menu_item_activate 
 }
 
 
+/**
+     * Gmpc.Plugin.BrowserIface.add_go_menu 
+     */
 static gint gmpc_now_playing_real_browser_add_go_menu (GmpcPluginBrowserIface* base, GtkMenu* menu) {
 	GmpcNowPlaying * self;
 	gint result;
-	GtkImageMenuItem* item;
-	GtkImage* _tmp0_;
 	self = (GmpcNowPlaying*) base;
 	g_return_val_if_fail (menu != NULL, 0);
-	item = g_object_ref_sink ((GtkImageMenuItem*) gtk_image_menu_item_new_with_mnemonic (_ ("Now Playing")));
-	_tmp0_ = NULL;
-	gtk_image_menu_item_set_image (item, (GtkWidget*) (_tmp0_ = g_object_ref_sink ((GtkImage*) gtk_image_new_from_icon_name ("media-audiofile", GTK_ICON_SIZE_MENU))));
-	(_tmp0_ == NULL) ? NULL : (_tmp0_ = (g_object_unref (_tmp0_), NULL));
-	g_signal_connect_object ((GtkMenuItem*) item, "activate", (GCallback) _gmpc_now_playing_select_now_playing_browser_gtk_menu_item_activate, self, 0);
-	gtk_widget_add_accelerator ((GtkWidget*) item, "activate", gtk_menu_get_accel_group (menu), (guint) 0x069, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
-	gtk_menu_shell_append ((GtkMenuShell*) menu, (GtkWidget*) ((GtkMenuItem*) item));
-	result = 1;
-	(item == NULL) ? NULL : (item = (g_object_unref (item), NULL));
+	if (gmpc_plugin_base_get_enabled ((GmpcPluginBase*) self)) {
+		GtkImageMenuItem* item;
+		GtkImage* _tmp0_;
+		item = g_object_ref_sink ((GtkImageMenuItem*) gtk_image_menu_item_new_with_mnemonic (_ ("Now Playing")));
+		_tmp0_ = NULL;
+		gtk_image_menu_item_set_image (item, (GtkWidget*) (_tmp0_ = g_object_ref_sink ((GtkImage*) gtk_image_new_from_icon_name ("media-audiofile", GTK_ICON_SIZE_MENU))));
+		(_tmp0_ == NULL) ? NULL : (_tmp0_ = (g_object_unref (_tmp0_), NULL));
+		g_signal_connect_object ((GtkMenuItem*) item, "activate", (GCallback) _gmpc_now_playing_select_now_playing_browser_gtk_menu_item_activate, self, 0);
+		gtk_widget_add_accelerator ((GtkWidget*) item, "activate", gtk_menu_get_accel_group (menu), (guint) 0x069, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+		gtk_menu_shell_append ((GtkMenuShell*) menu, (GtkWidget*) ((GtkMenuItem*) item));
+		result = 1;
+		(item == NULL) ? NULL : (item = (g_object_unref (item), NULL));
+		return result;
+	}
+	result = 0;
 	return result;
 }
 
@@ -2156,20 +2168,13 @@ static void gmpc_metadata_browser_real_save_yourself (GmpcPluginBase* base) {
 }
 
 
+/**
+     * Makes gmpc jump to the metadata browser 
+     */
 static void gmpc_metadata_browser_select_metadata_browser (GmpcMetadataBrowser* self, GtkImageMenuItem* item) {
-	GtkTreeView* tree;
-	GtkTreeSelection* _tmp0_;
-	GtkTreeSelection* sel;
-	GtkTreePath* path;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (item != NULL);
-	tree = playlist3_get_category_tree_view ();
-	_tmp0_ = NULL;
-	sel = (_tmp0_ = gtk_tree_view_get_selection (tree), (_tmp0_ == NULL) ? NULL : g_object_ref (_tmp0_));
-	path = gtk_tree_row_reference_get_path (self->priv->rref);
-	gtk_tree_selection_select_path (sel, path);
-	(sel == NULL) ? NULL : (sel = (g_object_unref (sel), NULL));
-	(path == NULL) ? NULL : (path = (gtk_tree_path_free (path), NULL));
+	gmpc_metadata_browser_select_browser (self, NULL);
 }
 
 
@@ -2178,22 +2183,29 @@ static void _gmpc_metadata_browser_select_metadata_browser_gtk_menu_item_activat
 }
 
 
+/**
+     * Gmpc.Plugin.BrowserIface.add_go_menu 
+     */
 static gint gmpc_metadata_browser_real_browser_add_go_menu (GmpcPluginBrowserIface* base, GtkMenu* menu) {
 	GmpcMetadataBrowser * self;
 	gint result;
-	GtkImageMenuItem* item;
-	GtkImage* _tmp0_;
 	self = (GmpcMetadataBrowser*) base;
 	g_return_val_if_fail (menu != NULL, 0);
-	item = g_object_ref_sink ((GtkImageMenuItem*) gtk_image_menu_item_new_with_mnemonic (_ (gmpc_plugin_base_get_name ((GmpcPluginBase*) self))));
-	_tmp0_ = NULL;
-	gtk_image_menu_item_set_image (item, (GtkWidget*) (_tmp0_ = g_object_ref_sink ((GtkImage*) gtk_image_new_from_stock ("gtk-info", GTK_ICON_SIZE_MENU))));
-	(_tmp0_ == NULL) ? NULL : (_tmp0_ = (g_object_unref (_tmp0_), NULL));
-	g_signal_connect_object ((GtkMenuItem*) item, "activate", (GCallback) _gmpc_metadata_browser_select_metadata_browser_gtk_menu_item_activate, self, 0);
-	gtk_widget_add_accelerator ((GtkWidget*) item, "activate", gtk_menu_get_accel_group (menu), (guint) 0xffc1, 0, GTK_ACCEL_VISIBLE);
-	gtk_menu_shell_append ((GtkMenuShell*) menu, (GtkWidget*) ((GtkMenuItem*) item));
-	result = 1;
-	(item == NULL) ? NULL : (item = (g_object_unref (item), NULL));
+	if (gmpc_plugin_base_get_enabled ((GmpcPluginBase*) self)) {
+		GtkImageMenuItem* item;
+		GtkImage* _tmp0_;
+		item = g_object_ref_sink ((GtkImageMenuItem*) gtk_image_menu_item_new_with_mnemonic (_ (gmpc_plugin_base_get_name ((GmpcPluginBase*) self))));
+		_tmp0_ = NULL;
+		gtk_image_menu_item_set_image (item, (GtkWidget*) (_tmp0_ = g_object_ref_sink ((GtkImage*) gtk_image_new_from_stock ("gtk-info", GTK_ICON_SIZE_MENU))));
+		(_tmp0_ == NULL) ? NULL : (_tmp0_ = (g_object_unref (_tmp0_), NULL));
+		g_signal_connect_object ((GtkMenuItem*) item, "activate", (GCallback) _gmpc_metadata_browser_select_metadata_browser_gtk_menu_item_activate, self, 0);
+		gtk_widget_add_accelerator ((GtkWidget*) item, "activate", gtk_menu_get_accel_group (menu), (guint) 0xffc1, 0, GTK_ACCEL_VISIBLE);
+		gtk_menu_shell_append ((GtkMenuShell*) menu, (GtkWidget*) ((GtkMenuItem*) item));
+		result = 1;
+		(item == NULL) ? NULL : (item = (g_object_unref (item), NULL));
+		return result;
+	}
+	result = 0;
 	return result;
 }
 
@@ -4859,6 +4871,9 @@ void gmpc_metadata_browser_set_artist (GmpcMetadataBrowser* self, const char* ar
 	GtkTreeIter iter = {0};
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (artist != NULL);
+	if (!gmpc_plugin_base_get_enabled ((GmpcPluginBase*) self)) {
+		return;
+	}
 	self->priv->block_update++;
 	gtk_tree_selection_unselect_all (gtk_tree_view_get_selection (self->priv->tree_artist));
 	gtk_tree_selection_unselect_all (gtk_tree_view_get_selection (self->priv->tree_album));
@@ -4912,6 +4927,9 @@ void gmpc_metadata_browser_set_album (GmpcMetadataBrowser* self, const char* art
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (artist != NULL);
 	g_return_if_fail (album != NULL);
+	if (!gmpc_plugin_base_get_enabled ((GmpcPluginBase*) self)) {
+		return;
+	}
 	self->priv->block_update++;
 	gmpc_metadata_browser_set_artist (self, artist);
 	/* clear */
@@ -4969,6 +4987,9 @@ void gmpc_metadata_browser_set_song (GmpcMetadataBrowser* self, const mpd_Song* 
 	GtkWidget* view;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (song != NULL);
+	if (!gmpc_plugin_base_get_enabled ((GmpcPluginBase*) self)) {
+		return;
+	}
 	self->priv->block_update++;
 	if (song->artist != NULL) {
 		gmpc_metadata_browser_set_artist (self, song->artist);
@@ -5034,22 +5055,22 @@ void gmpc_metadata_browser_set_song (GmpcMetadataBrowser* self, const mpd_Song* 
 
 
 void gmpc_metadata_browser_select_browser (GmpcMetadataBrowser* self, GtkTreeView* tree) {
-	GtkTreePath* path;
-	GtkTreeModel* _tmp0_;
-	GtkTreeModel* model;
 	g_return_if_fail (self != NULL);
-	g_return_if_fail (tree != NULL);
-	path = gtk_tree_row_reference_get_path (self->priv->rref);
-	_tmp0_ = NULL;
-	model = (_tmp0_ = gtk_tree_row_reference_get_model (self->priv->rref), (_tmp0_ == NULL) ? NULL : g_object_ref (_tmp0_));
-	if (path != NULL) {
-		GtkTreeIter iter = {0};
-		if (gtk_tree_model_get_iter (model, &iter, path)) {
-			gtk_tree_selection_select_iter (gtk_tree_view_get_selection (tree), &iter);
+	if (self->priv->rref != NULL) {
+		GtkTreeView* category_tree;
+		GtkTreeSelection* _tmp0_;
+		GtkTreeSelection* sel;
+		GtkTreePath* path;
+		category_tree = playlist3_get_category_tree_view ();
+		_tmp0_ = NULL;
+		sel = (_tmp0_ = gtk_tree_view_get_selection (category_tree), (_tmp0_ == NULL) ? NULL : g_object_ref (_tmp0_));
+		path = gtk_tree_row_reference_get_path (self->priv->rref);
+		if (path != NULL) {
+			gtk_tree_selection_select_path (sel, path);
 		}
+		(sel == NULL) ? NULL : (sel = (g_object_unref (sel), NULL));
+		(path == NULL) ? NULL : (path = (gtk_tree_path_free (path), NULL));
 	}
-	(path == NULL) ? NULL : (path = (gtk_tree_path_free (path), NULL));
-	(model == NULL) ? NULL : (model = (g_object_unref (model), NULL));
 }
 
 

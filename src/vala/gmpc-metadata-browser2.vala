@@ -725,22 +725,36 @@ public class  Gmpc.NowPlaying : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface {
         }
         this.paned.show_all();
     }
+
+    /**
+     * Makes gmpc jump to the now playing browser 
+     */
     private void select_now_playing_browser(Gtk.ImageMenuItem item)
     {
         weak Gtk.TreeView tree = Gmpc.Playlist3.get_category_tree_view();
         var sel = tree.get_selection();
         var path = np_ref.get_path();
-        sel.select_path(path);
+        if(path != null)
+        {
+            sel.select_path(path);
+        }
     }
+
+    /**
+     * Gmpc.Plugin.BrowserIface.add_go_menu 
+     */
     private int browser_add_go_menu(Gtk.Menu menu)
     {
-        var item = new Gtk.ImageMenuItem.with_mnemonic(_("Now Playing"));
-        item.set_image(new Gtk.Image.from_icon_name("media-audiofile", Gtk.IconSize.MENU));
-        item.activate += select_now_playing_browser;
-        item.add_accelerator("activate", menu.get_accel_group(),0x069, Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
-        menu.append(item);
-
-        return 1;
+        if(this.get_enabled())
+        {
+            var item = new Gtk.ImageMenuItem.with_mnemonic(_("Now Playing"));
+            item.set_image(new Gtk.Image.from_icon_name("media-audiofile", Gtk.IconSize.MENU));
+            item.activate += select_now_playing_browser;
+            item.add_accelerator("activate", menu.get_accel_group(),0x069, Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
+            menu.append(item);
+            return 1;
+        }
+        return 0;
     }
 }
 
@@ -814,23 +828,29 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
     private Gtk.ScrolledWindow metadata_sw = null;
     private Gtk.EventBox metadata_box = null;
 
-
+    /**
+     * Makes gmpc jump to the metadata browser 
+     */
     private void select_metadata_browser(Gtk.ImageMenuItem item)
     {
-        weak Gtk.TreeView tree = Gmpc.Playlist3.get_category_tree_view();
-        var sel = tree.get_selection();
-        var path = rref.get_path();
-        sel.select_path(path);
+        this.select_browser(null);
     }
+    /**
+     * Gmpc.Plugin.BrowserIface.add_go_menu 
+     */
     private int browser_add_go_menu(Gtk.Menu menu)
     {
-        var item = new Gtk.ImageMenuItem.with_mnemonic(_(this.get_name()));
-        item.set_image(new Gtk.Image.from_stock("gtk-info", Gtk.IconSize.MENU));
-        item.activate += select_metadata_browser;
-        item.add_accelerator("activate", menu.get_accel_group(),0xffc1,0, Gtk.AccelFlags.VISIBLE);
-        menu.append(item);
+        if(this.get_enabled())
+        {
+            var item = new Gtk.ImageMenuItem.with_mnemonic(_(this.get_name()));
+            item.set_image(new Gtk.Image.from_stock("gtk-info", Gtk.IconSize.MENU));
+            item.activate += select_metadata_browser;
+            item.add_accelerator("activate", menu.get_accel_group(),0xffc1,0, Gtk.AccelFlags.VISIBLE);
+            menu.append(item);
 
-        return 1;
+            return 1;
+        }
+        return 0;
     }
 
     /**
@@ -2331,6 +2351,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
     void
     set_artist(string artist)
     {
+        if(!this.get_enabled()) return;
         this.block_update++;
 
 
@@ -2366,6 +2387,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
     void
     set_album(string artist, string album)
     {
+        if(!this.get_enabled()) return;
         this.block_update++;
         this.set_artist(artist); 
         /* clear */
@@ -2399,6 +2421,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
     void
     set_song(MPD.Song song)
     {
+        if(!this.get_enabled()) return;
         this.block_update++;
         if(song.artist != null)
         {
@@ -2445,18 +2468,17 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
     }
     public 
     void
-    select_browser(Gtk.TreeView tree)
+    select_browser(Gtk.TreeView? tree)
     {
-        var path = rref.get_path();
-        var model = rref.get_model();
-        if(path != null){
-            Gtk.TreeIter iter;
-            if(model.get_iter(out iter, path))
-            {
-                tree.get_selection().select_iter(iter);
+        if(rref != null)
+        {
+            weak Gtk.TreeView category_tree = Gmpc.Playlist3.get_category_tree_view();
+            var sel = category_tree.get_selection();
+            var path = rref.get_path();
+            if(path != null){
+                sel.select_path(path);
             }
         }
-
     }
     /** 
      * Preferences
