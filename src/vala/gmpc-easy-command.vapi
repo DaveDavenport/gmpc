@@ -8,7 +8,6 @@ namespace Gmpc {
 		public class Command : Gmpc.Plugin.Base {
 			[CCode (cheader_filename = "gmpc-easy-command.h")]
 			public delegate void Callback (void* data, string param);
-			public Gtk.ListStore store;
 			public uint add_entry (string name, string pattern, string hint, Gmpc.Easy.Command.Callback* callback, void* userdata);
 			public override bool get_enabled ();
 			public override unowned string get_name ();

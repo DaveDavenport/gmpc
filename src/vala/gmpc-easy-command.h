@@ -4,9 +4,9 @@
 
 #include <glib.h>
 #include <gmpc-plugin.h>
-#include <gtk/gtk.h>
 #include <stdlib.h>
 #include <string.h>
+#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 
@@ -22,10 +22,16 @@ typedef struct _GmpcEasyCommand GmpcEasyCommand;
 typedef struct _GmpcEasyCommandClass GmpcEasyCommandClass;
 typedef struct _GmpcEasyCommandPrivate GmpcEasyCommandPrivate;
 
+/**
+ * This plugin implements the Easy Command system.
+ * Easy command gives you a small command box, allowing you to quickly execute commands without having to use the mouse. 
+ * It is inspired by f.e. gnome-do. 
+ *
+ * Entries can be dynamicly added using by calling the add_entry command.
+ */
 struct _GmpcEasyCommand {
 	GmpcPluginBase parent_instance;
 	GmpcEasyCommandPrivate * priv;
-	GtkListStore* store;
 };
 
 struct _GmpcEasyCommandClass {

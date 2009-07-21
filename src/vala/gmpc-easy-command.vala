@@ -24,14 +24,19 @@ using Cairo;
 using MPD;
 using Gmpc;
 
-
+/**
+ * This plugin implements the Easy Command system.
+ * Easy command gives you a small command box, allowing you to quickly execute commands without having to use the mouse. 
+ * It is inspired by f.e. gnome-do. 
+ *
+ * Entries can be dynamicly added using by calling the add_entry command.
+ */
 public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 	private const bool use_transition = Gmpc.use_transition;
 	/* hack to make gettext happy */
     private const string some_unique_name = Config.VERSION;
-
 	private Gtk.EntryCompletion completion = null;
-	public Gtk.ListStore store = null;
+	private Gtk.ListStore store = null;
 	private uint signals = 0;
 	private Gtk.Window window = null;
 

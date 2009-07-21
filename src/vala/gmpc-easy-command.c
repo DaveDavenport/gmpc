@@ -28,7 +28,6 @@
 #include <string.h>
 #include <plugin.h>
 #include <config1.h>
-#include <stdio.h>
 #include <playlist3-messages.h>
 #include <gdk/gdk.h>
 #include <cairo.h>
@@ -47,10 +46,16 @@ typedef struct _GmpcEasyCommand GmpcEasyCommand;
 typedef struct _GmpcEasyCommandClass GmpcEasyCommandClass;
 typedef struct _GmpcEasyCommandPrivate GmpcEasyCommandPrivate;
 
+/**
+ * This plugin implements the Easy Command system.
+ * Easy command gives you a small command box, allowing you to quickly execute commands without having to use the mouse. 
+ * It is inspired by f.e. gnome-do. 
+ *
+ * Entries can be dynamicly added using by calling the add_entry command.
+ */
 struct _GmpcEasyCommand {
 	GmpcPluginBase parent_instance;
 	GmpcEasyCommandPrivate * priv;
-	GtkListStore* store;
 };
 
 struct _GmpcEasyCommandClass {
@@ -59,6 +64,7 @@ struct _GmpcEasyCommandClass {
 
 struct _GmpcEasyCommandPrivate {
 	GtkEntryCompletion* completion;
+	GtkListStore* store;
 	guint signals;
 	GtkWindow* window;
 	gint* version;
@@ -217,8 +223,8 @@ guint gmpc_easy_command_add_entry (GmpcEasyCommand* self, const char* name, cons
 	g_return_val_if_fail (pattern != NULL, 0U);
 	g_return_val_if_fail (hint != NULL, 0U);
 	self->priv->signals++;
-	gtk_list_store_append (self->store, &iter);
-	gtk_list_store_set (self->store, &iter, 0, self->priv->signals, 1, name, 2, pattern, 3, callback, 4, userdata, 5, hint, -1, -1);
+	gtk_list_store_append (self->priv->store, &iter);
+	gtk_list_store_set (self->priv->store, &iter, 0, self->priv->signals, 1, name, 2, pattern, 3, callback, 4, userdata, 5, hint, -1, -1);
 	result = self->priv->signals;
 	return result;
 }
@@ -262,7 +268,7 @@ static void gmpc_easy_command_activate (GmpcEasyCommand* self, GtkEntry* entry) 
 	GtkWindow* _tmp19_;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (entry != NULL);
-	model = (GtkTreeModel*) self->store;
+	model = (GtkTreeModel*) self->priv->store;
 	_tmp0_ = NULL;
 	value_unsplit = (_tmp0_ = gtk_entry_get_text (entry), (_tmp0_ == NULL) ? NULL : g_strdup (_tmp0_));
 	if (string_get_length (value_unsplit) == 0) {
@@ -330,7 +336,6 @@ static void gmpc_easy_command_activate (GmpcEasyCommand* self, GtkEntry* entry) 
 								const char* _tmp9_;
 								char* param_str;
 								param = NULL;
-								fprintf (stdout, "matched: %s to %s\n", test, g_strstrip (value));
 								if (string_get_length (value) > string_get_length (name)) {
 									char* _tmp7_;
 									_tmp7_ = NULL;
@@ -398,7 +403,6 @@ static void gmpc_easy_command_activate (GmpcEasyCommand* self, GtkEntry* entry) 
 									const char* _tmp16_;
 									char* param_str;
 									param = NULL;
-									fprintf (stdout, "matched: %s to %s\n", test, name);
 									if (string_get_length (value) > string_get_length (name)) {
 										char* _tmp14_;
 										_tmp14_ = NULL;
@@ -414,8 +418,6 @@ static void gmpc_easy_command_activate (GmpcEasyCommand* self, GtkEntry* entry) 
 									found = TRUE;
 									param = (g_free (param), NULL);
 									param_str = (g_free (param_str), NULL);
-								} else {
-									fprintf (stdout, "!matched: %s to %s\n", test, name);
 								}
 								name = (g_free (name), NULL);
 								pattern = (g_free (pattern), NULL);
@@ -592,7 +594,6 @@ static gboolean gmpc_easy_command_focus_out_event (GmpcEasyCommand* self, GtkEnt
 	GtkWindow* _tmp0_;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (entry != NULL, FALSE);
-	fprintf (stdout, "focus out event\n");
 	gtk_object_destroy ((GtkObject*) self->priv->window);
 	_tmp0_ = NULL;
 	self->priv->window = (_tmp0_ = NULL, (self->priv->window == NULL) ? NULL : (self->priv->window = (g_object_unref (self->priv->window), NULL)), _tmp0_);
@@ -637,7 +638,7 @@ void gmpc_easy_command_help_window (void* data, const char* param) {
 	 * Set this wrapper as tree backend
 	 */
 	_tmp1_ = NULL;
-	gtk_tree_view_set_model (tree, (GtkTreeModel*) (_tmp1_ = (GtkTreeModelSort*) gtk_tree_model_sort_new_with_model ((GtkTreeModel*) ec->store)));
+	gtk_tree_view_set_model (tree, (GtkTreeModel*) (_tmp1_ = (GtkTreeModelSort*) gtk_tree_model_sort_new_with_model ((GtkTreeModel*) ec->priv->store)));
 	(_tmp1_ == NULL) ? NULL : (_tmp1_ = (g_object_unref (_tmp1_), NULL));
 	/* Setting up tree view, rules-hint for alternating row-color, search_column for search as you type */
 	gtk_tree_view_set_rules_hint (tree, TRUE);
@@ -692,6 +693,13 @@ void gmpc_easy_command_help_window (void* data, const char* param) {
 }
 
 
+/**
+ * This plugin implements the Easy Command system.
+ * Easy command gives you a small command box, allowing you to quickly execute commands without having to use the mouse. 
+ * It is inspired by f.e. gnome-do. 
+ *
+ * Entries can be dynamicly added using by calling the add_entry command.
+ */
 GmpcEasyCommand* gmpc_easy_command_construct (GType object_type) {
 	GmpcEasyCommand * self;
 	self = g_object_newv (object_type, 0, NULL);
@@ -726,10 +734,10 @@ static GObject * gmpc_easy_command_constructor (GType type, guint n_construct_pr
 		/* Mark the plugin as an internal dummy */
 		((GmpcPluginBase*) self)->plugin_type = 8 + 4;
 		_tmp1_ = NULL;
-		self->store = (_tmp1_ = gtk_list_store_new (6, G_TYPE_UINT, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_POINTER, G_TYPE_POINTER, G_TYPE_STRING, NULL), (self->store == NULL) ? NULL : (self->store = (g_object_unref (self->store), NULL)), _tmp1_);
+		self->priv->store = (_tmp1_ = gtk_list_store_new (6, G_TYPE_UINT, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_POINTER, G_TYPE_POINTER, G_TYPE_STRING, NULL), (self->priv->store == NULL) ? NULL : (self->priv->store = (g_object_unref (self->priv->store), NULL)), _tmp1_);
 		_tmp2_ = NULL;
 		self->priv->completion = (_tmp2_ = gtk_entry_completion_new (), (self->priv->completion == NULL) ? NULL : (self->priv->completion = (g_object_unref (self->priv->completion), NULL)), _tmp2_);
-		gtk_entry_completion_set_model (self->priv->completion, (GtkTreeModel*) self->store);
+		gtk_entry_completion_set_model (self->priv->completion, (GtkTreeModel*) self->priv->store);
 		gtk_entry_completion_set_text_column (self->priv->completion, 1);
 		gtk_entry_completion_set_inline_completion (self->priv->completion, TRUE);
 		gtk_entry_completion_set_inline_selection (self->priv->completion, TRUE);
@@ -762,7 +770,7 @@ static void gmpc_easy_command_instance_init (GmpcEasyCommand * self) {
 	gint* _tmp0_;
 	self->priv = GMPC_EASY_COMMAND_GET_PRIVATE (self);
 	self->priv->completion = NULL;
-	self->store = NULL;
+	self->priv->store = NULL;
 	self->priv->signals = (guint) 0;
 	self->priv->window = NULL;
 	self->priv->version = (_tmp0_ = g_new0 (gint, 3), _tmp0_[0] = 0, _tmp0_[1] = 0, _tmp0_[2] = 1, _tmp0_);
@@ -775,7 +783,7 @@ static void gmpc_easy_command_finalize (GObject* obj) {
 	GmpcEasyCommand * self;
 	self = GMPC_EASY_COMMAND (obj);
 	(self->priv->completion == NULL) ? NULL : (self->priv->completion = (g_object_unref (self->priv->completion), NULL));
-	(self->store == NULL) ? NULL : (self->store = (g_object_unref (self->store), NULL));
+	(self->priv->store == NULL) ? NULL : (self->priv->store = (g_object_unref (self->priv->store), NULL));
 	(self->priv->window == NULL) ? NULL : (self->priv->window = (g_object_unref (self->priv->window), NULL));
 	self->priv->version = (g_free (self->priv->version), NULL);
 	G_OBJECT_CLASS (gmpc_easy_command_parent_class)->finalize (obj);
