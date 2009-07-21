@@ -248,4 +248,13 @@ void info2_fill_artist_view(const gchar *artist);
 void info2_fill_album_view(const gchar *artist,const gchar *album);
 
 extern GObject *paned_size_group;
+
+/** Main window */
+/**
+ * @param icon  The #GtkWidget to add
+ *
+ * Add an icon to the status bar.
+ */
+
+void main_window_add_status_icon(GtkWidget *icon);
 #endif

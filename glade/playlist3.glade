@@ -818,16 +818,19 @@
             </child>
             <child>
                 <widget class="GtkHBox"  id="status-icon-hbox">
+                <property name="visible">True</property>
                 <property name="spacing">6</property>
                 </widget>
               <packing>
+                <property name="fill">True</property>
+                <property name="expand">False</property>
                 <property name="position">5</property>
               </packing>
             </child>
             <child>
               <widget class="GtkStatusbar" id="resize-grip">
                 <property name="visible">True</property>
-                <property name="width_request">64</property>
+                <property name="width_request">24</property>
               </widget>
               <packing>
                 <property name="position">6</property>
