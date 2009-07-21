@@ -1247,6 +1247,11 @@ void create_playlist3(void)
 	gtk_container_add(GTK_CONTAINER(si_random), gtk_image_new());
 	gtk_widget_show_all(si_random);
 	main_window_add_status_icon(si_random);
+
+	/* Listen for icon changed 
+	g_object_connect(gtk_icon_theme_get_default(), "changed",
+			G_CALLBACK(main_window_update_status_icons), NULL);
+			*/
 	main_window_update_status_icons();
 }
 
@@ -2639,50 +2644,54 @@ static void main_window_update_status_icons(void)
 	if(si_repeat)
 	{
 		GtkWidget *image = gtk_bin_get_child(GTK_BIN(si_repeat));
-		GtkIconInfo *ii = gtk_icon_theme_lookup_icon(gtk_icon_theme_get_default(), "stock_repeat", 16,
-				0);
+		GtkIconInfo *ii = gtk_icon_theme_lookup_icon(
+				gtk_icon_theme_get_default(), "stock_repeat", 16, 0);
 		if(ii)
 		{
+			temp = gtk_icon_info_load_icon(ii,NULL);
+			if(gdk_pixbuf_get_height(temp) > 16) {
+				GdkPixbuf *t = temp;
+				temp = gdk_pixbuf_scale_simple(temp, 16,16, GDK_INTERP_BILINEAR); g_object_unref(t);
+			}
 			if(mpd_check_connected(connection) && mpd_player_get_repeat(connection)){
-				temp = gtk_icon_info_load_icon(ii,NULL);
 				gtk_image_set_from_pixbuf(GTK_IMAGE(image), temp);
 				gtk_widget_set_tooltip_text(si_repeat, _("Repeat enabled"));
-				g_object_unref(temp);
 			}else{
-				temp = gtk_icon_info_load_icon(ii,NULL);
 				temp2 = gdk_pixbuf_copy(temp);
 				colorshift_pixbuf(temp2, temp, -80);
 				gtk_image_set_from_pixbuf(GTK_IMAGE(image), temp2);
-				g_object_unref(temp); g_object_unref(temp2);
+				g_object_unref(temp2);
 				gtk_widget_set_tooltip_text(si_repeat, _("Repeat disabled"));
 			}
+			g_object_unref(temp);
 			gtk_icon_info_free(ii);
 		}
-		gtk_widget_show_all(si_repeat);
 	}
 	if(si_random)
 	{
 		GtkWidget *image = gtk_bin_get_child(GTK_BIN(si_random));
-		GtkIconInfo *ii = gtk_icon_theme_lookup_icon(gtk_icon_theme_get_default(), "stock_shuffle", 16,
-				0);
+		GtkIconInfo *ii = gtk_icon_theme_lookup_icon(
+				gtk_icon_theme_get_default(), "stock_shuffle", 16, 0);
 		if(ii)
 		{
+			temp = gtk_icon_info_load_icon(ii,NULL);
+			if(gdk_pixbuf_get_height(temp) > 16) {
+				GdkPixbuf *t = temp;
+				temp = gdk_pixbuf_scale_simple(temp, 16,16, GDK_INTERP_BILINEAR); g_object_unref(t);
+			}
 			if(mpd_check_connected(connection) && mpd_player_get_random(connection)){
-				temp = gtk_icon_info_load_icon(ii,NULL);
 				gtk_image_set_from_pixbuf(GTK_IMAGE(image), temp);
 				gtk_widget_set_tooltip_text(si_random, _("Random enabled"));
-				g_object_unref(temp);
 			}else{
-				temp = gtk_icon_info_load_icon(ii,NULL);
 				temp2 = gdk_pixbuf_copy(temp);
 				colorshift_pixbuf(temp2, temp, -80);
 				gtk_image_set_from_pixbuf(GTK_IMAGE(image), temp2);
-				g_object_unref(temp); g_object_unref(temp2);
+				g_object_unref(temp2);
 				gtk_widget_set_tooltip_text(si_random, _("Random disabled"));
 			}
+			g_object_unref(temp);
 			gtk_icon_info_free(ii);
 		}
-		gtk_widget_show_all(si_random);
 	}
 }
 
