@@ -2647,10 +2647,11 @@ static void main_window_update_status_icons(void)
 				temp = gtk_icon_info_load_icon(ii,NULL);
 				gtk_image_set_from_pixbuf(GTK_IMAGE(image), temp);
 				gtk_widget_set_tooltip_text(si_repeat, _("Repeat enabled"));
+				g_object_unref(temp);
 			}else{
 				temp = gtk_icon_info_load_icon(ii,NULL);
 				temp2 = gdk_pixbuf_copy(temp);
-				colorshift_pixbuf(temp2, temp, -50);
+				colorshift_pixbuf(temp2, temp, -80);
 				gtk_image_set_from_pixbuf(GTK_IMAGE(image), temp2);
 				g_object_unref(temp); g_object_unref(temp2);
 				gtk_widget_set_tooltip_text(si_repeat, _("Repeat disabled"));
@@ -2670,10 +2671,11 @@ static void main_window_update_status_icons(void)
 				temp = gtk_icon_info_load_icon(ii,NULL);
 				gtk_image_set_from_pixbuf(GTK_IMAGE(image), temp);
 				gtk_widget_set_tooltip_text(si_random, _("Random enabled"));
+				g_object_unref(temp);
 			}else{
 				temp = gtk_icon_info_load_icon(ii,NULL);
 				temp2 = gdk_pixbuf_copy(temp);
-				colorshift_pixbuf(temp2, temp, -50);
+				colorshift_pixbuf(temp2, temp, -80);
 				gtk_image_set_from_pixbuf(GTK_IMAGE(image), temp2);
 				g_object_unref(temp); g_object_unref(temp2);
 				gtk_widget_set_tooltip_text(si_random, _("Random disabled"));
