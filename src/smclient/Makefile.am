@@ -72,9 +72,6 @@ egg_launch_LDADD =                       \
 	libeggdesktopfile.la
 
 EXTRA_DIST =                             \
-	README                           \
-	gedit.diff                       \
-	eggsmclient-dbus.c               \
 	eggsmclient-osx.c                \
 	eggsmclient-win32.c              \
 	eggsmclient-xsmp.c
