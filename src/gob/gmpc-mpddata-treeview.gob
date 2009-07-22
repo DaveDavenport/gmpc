@@ -722,7 +722,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 		{
 			GtkTreePath *path = NULL;
 			self->_priv->pressed = TRUE;
-			if(event->button == 3 && gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(self), event->x, event->y,&path,NULL,NULL,NULL))
+			if(event->button == 3 && event->window != NULL && gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(self), event->x, event->y,&path,NULL,NULL,NULL))
 			{	
 				GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(self));
 				if(gtk_tree_selection_path_is_selected(sel, path))
@@ -776,15 +776,19 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 		int
 		paste_key_release_event(self, GdkEventKey *event,gpointer data)
 		{
+			printf("key release event\n");
 			if(event->keyval == GDK_Menu) {
 				GdkEventButton bevent;
 				gboolean value = FALSE;
+				bevent.window = NULL;
 				bevent.button = 3;
 				bevent.time = event->time;
-
+				printf("Fake right mouse menu\n");
 				g_signal_emit_by_name(self, "button-press-event", &bevent, &value,NULL);
-				if(!value) 
+				if(!value){ 
+					printf("Fake release\n");
 					g_signal_emit_by_name(self, "button-release-event", &bevent, &value,NULL);
+					}
 
 				return TRUE;
 			}
