@@ -299,7 +299,7 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
             MPD.Song song, 
             Gmpc.MetaData.Type type, 
             Gmpc.MetaData.Result result, 
-            Gmpc.MetaData.Item met)
+            Gmpc.MetaData.Item? met)
     {
         TimeVal start = TimeVal();
 
@@ -313,6 +313,11 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
         {
             child.destroy();
         }
+
+        var now = TimeVal();
+        var cur = now.tv_usec-start.tv_usec;
+        stdout.printf("child destroy: %li\n", (cur < 0)?1-cur:cur);
+        start = now;
         /* if unavailable set that in a label*/
         if(result == Gmpc.MetaData.Result.UNAVAILABLE || met.is_empty() || !met.is_text_list())
         {
@@ -328,6 +333,13 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
         else {
             List<Gtk.Widget> in_db_list = null;
             GLib.List<weak string> list = met.get_text_list().copy();
+            list.sort((GLib.CompareFunc)string.collate);
+
+            now = TimeVal();
+            cur = now.tv_usec-start.tv_usec;
+            stdout.printf("sort query: %li\n", (cur < 0)?1-cur:cur);
+            start = now;
+
             int items = 30;
             int i = 0;
             if(list != null)
@@ -335,34 +347,69 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
                 weak List<weak string> liter= null;                 
                 MPD.Database.search_field_start(server, MPD.Tag.Type.ARTIST);
                 var data = MPD.Database.search_commit(server);
+
+                now = TimeVal();
+                cur = now.tv_usec-start.tv_usec;
+                stdout.printf("mpd query: %li\n", (cur < 0)?1-cur:cur);
+                start = now;
+                int q =0;
+
+                data = Gmpc.MpdData.sort_album_disc_track((owned)data);
                 weak MPD.Data.Item iter = data.first();
-                while(iter != null && list != null && i < items)
-                {
-                    if(iter.tag != null && iter.tag.length > 0)
+
+                now = TimeVal();
+                cur = now.tv_usec-start.tv_usec;
+                stdout.printf("mpd sort query: %li\n", (cur < 0)?1-cur:cur);
+                start = now;
+
+                liter = list.first();
+                var artist = iter.tag.down(); 
+                do{
+                    var res = liter.data.down().collate(artist);
+                    q++;
+                    if(res == 0)
                     {
-                        liter = list.first();
-                        var artist = iter.tag.casefold(); 
-                        do{
-                            if(liter.data.casefold().collate(artist) == 0)
-                            {
-                                in_db_list.prepend(new_artist_button(iter.tag, true));
-                                i++;
-                                list.remove(liter.data);
-                                liter = null;
-                            }
-                        }while(liter != null && (liter = liter.next) != null);
+                        in_db_list.prepend(new_artist_button(iter.tag, true));
+                        i++;
+                        var d = liter.data;
+                        liter = liter.next;
+                        list.remove(d);
+                        //liter = null;
+                        iter = iter.next(false);
+                        artist = iter.tag.casefold(); 
                     }
-                    iter = iter.next(false);
-                }
+                    else if (res > 0) {
+                        //list.remove(liter.data);
+
+                        iter = iter.next(false);
+                        if(iter != null)
+                            artist = iter.tag.casefold(); 
+                    }
+                    else {
+                        liter = liter.next;
+                    }
+                }while(iter != null && liter != null && i < items);
+           
+                stdout.printf("queries: %i :: %u\n",q, list.length());
+
+                now = TimeVal();
+                cur = now.tv_usec-start.tv_usec;
+                stdout.printf("mpd list: %li\n", (cur < 0)?1-cur:cur);
+                start = now;
 
                 liter= list.first();
                 while(liter != null && i < items) 
                 {
-                    var artist = liter.data;
+                    artist = liter.data;
                     in_db_list.prepend(new_artist_button(artist, false));
                     i++;
                     liter = liter.next; 
                 }
+
+                now = TimeVal();
+                cur = now.tv_usec-start.tv_usec;
+                stdout.printf("empty list: %li\n", (cur < 0)?1-cur:cur);
+                start = now;
             }
             in_db_list.reverse();
             i=0;
@@ -379,9 +426,10 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
                 i++;
             }
         }
-        var now = TimeVal();
-        var cur = now.tv_usec-start.tv_usec;
+        now = TimeVal();
+        cur = now.tv_usec-start.tv_usec;
         stdout.printf("time elapsed: %li\n", (cur < 0)?1-cur:cur);
+        start = now;
 
         this.show_all();
     }
@@ -397,16 +445,22 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
     new_artist_button(string artist, bool in_db)
     {
         var hbox = new Gtk.HBox(false, 6);
-        hbox.border_width = 3;
-
+        hbox.border_width = 4;
+/*
         var event = new Gtk.Frame(null);
-        event.set_size_request(200,58);
+        */
+
+        var event = new Gtk.EventBox();
+        event.app_paintable = true;
+        event.set_visible_window(true);
+        event.expose_event.connect(Gmpc.Misc.misc_header_expose_event);
+        event.set_size_request(200,60);
 
         var image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ARTIST_ART, 48);
         var song = new MPD.Song();
         song.artist = artist;
         image.set_squared(true);
-     //   image.update_from_song_delayed(song);
+        image.update_from_song_delayed(song);
         hbox.pack_start(image,false,false,0);
 
         var label = new Gtk.Label(artist);

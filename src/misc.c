@@ -608,13 +608,13 @@ gboolean misc_header_expose_event(GtkWidget *widget, GdkEventExpose *event)
 					widget->window, 
 					GTK_STATE_SELECTED,
 					GTK_SHADOW_NONE,
-					NULL, 
+					&(event->area), 
 					widget,
 					"cell_odd",
 					0,0,width,height);
 	gtk_paint_focus(widget->style, widget->window, 
 				GTK_STATE_NORMAL, 
-				NULL, 
+				&(event->area),
 				widget,
 				"button",
 				0,0,width,height);
