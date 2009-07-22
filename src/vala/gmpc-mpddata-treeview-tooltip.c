@@ -33,7 +33,6 @@
 #include <main.h>
 #include <gmpc-meta-watcher.h>
 #include <gdk-pixbuf/gdk-pixdata.h>
-#include <stdio.h>
 
 
 #define GMPC_MPD_DATA_TREEVIEW_TYPE_TOOLTIP (gmpc_mpd_data_treeview_tooltip_get_type ())
@@ -384,9 +383,6 @@ static void gmpc_mpd_data_treeview_tooltip_instance_init (GmpcMpdDataTreeviewToo
 static void gmpc_mpd_data_treeview_tooltip_finalize (GObject* obj) {
 	GmpcMpdDataTreeviewTooltip * self;
 	self = GMPC_MPD_DATA_TREEVIEW_TOOLTIP (obj);
-	{
-		fprintf (stdout, "Gmpc.MpdData.Treeview.Tooltip destroy\n");
-	}
 	(self->priv->par_widget == NULL) ? NULL : (self->priv->par_widget = (g_object_unref (self->priv->par_widget), NULL));
 	(self->priv->image == NULL) ? NULL : (self->priv->image = (g_object_unref (self->priv->image), NULL));
 	self->request_artist = (g_free (self->request_artist), NULL);

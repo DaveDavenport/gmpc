@@ -31,7 +31,6 @@ namespace Gmpc{
 
 		}
 		~PanedSizeGroup () {
-            stdout.printf("PanedSizeGroup destroy\n");
             config.set_int("paned-size-group", "position", position);
 
 		}
@@ -40,7 +39,6 @@ namespace Gmpc{
 		{
 			list.remove((Gtk.Paned)paned);
 
-			stdout.printf("Remove paned\n");
 			return false;
 		}
 		private bool block_changed_callback = false;
@@ -53,7 +51,6 @@ namespace Gmpc{
 
 			var pane = (Gtk.Paned) paned;
 			position = pane.get_position();
-			stdout.printf("position: %i\n", pane.get_position());
 			foreach(weak Gtk.Paned p in list)
 			{
 				if(p != paned)

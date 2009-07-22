@@ -22,7 +22,6 @@
 #include <gtk/gtk.h>
 #include <plugin.h>
 #include <config1.h>
-#include <stdio.h>
 #include <gdk/gdk.h>
 
 
@@ -90,7 +89,6 @@ static gboolean gmpc_paned_size_group_child_destroy_event (GmpcPanedSizeGroup* s
 	g_return_val_if_fail (paned != NULL, FALSE);
 	g_return_val_if_fail (event != NULL, FALSE);
 	self->priv->list = g_list_remove (self->priv->list, GTK_PANED (paned));
-	fprintf (stdout, "Remove paned\n");
 	result = FALSE;
 	return result;
 }
@@ -109,7 +107,6 @@ static void gmpc_paned_size_group_child_position_changed (GmpcPanedSizeGroup* se
 	_tmp0_ = NULL;
 	pane = (_tmp0_ = GTK_PANED (paned), (_tmp0_ == NULL) ? NULL : g_object_ref (_tmp0_));
 	self->priv->position = gtk_paned_get_position (pane);
-	fprintf (stdout, "position: %i\n", gtk_paned_get_position (pane));
 	{
 		GList* p_collection;
 		GList* p_it;
@@ -170,7 +167,6 @@ static void gmpc_paned_size_group_finalize (GObject* obj) {
 	GmpcPanedSizeGroup * self;
 	self = GMPC_PANED_SIZE_GROUP (obj);
 	{
-		fprintf (stdout, "PanedSizeGroup destroy\n");
 		cfg_set_single_value_as_int (config, "paned-size-group", "position", self->priv->position);
 	}
 	(self->priv->list == NULL) ? NULL : (self->priv->list = (g_list_free (self->priv->list), NULL));

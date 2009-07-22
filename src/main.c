@@ -549,12 +549,6 @@ int main(int argc, char **argv)
 				cfg_free_multiple(cmo);
 
 			}
-			/* old version older then 0.16.2 */
-			if ((old_version[0] <= 0 && old_version[1] <= 16 && old_version[2] <= 2)) {
-				/* update old key */
-				//printf("** Update of db set, because of new version\n");
-				//import_old_db = TRUE;
-			}
 			/* old version older then 0.17.0-beta1 */
 			if ((old_version[0] <= 0 && old_version[1] <= 16 && old_version[2] <= 95)) {
 				printf("** Correct icon-size\n");
@@ -738,7 +732,6 @@ int main(int argc, char **argv)
 
 		if(g_getenv("PLUGIN_DIR") != NULL) {
 			gchar *path = g_build_filename(g_getenv("PLUGIN_DIR"),NULL);
-			printf("Loading plugin dir: %s\n", path);
 			if (path && g_file_test(path, G_FILE_TEST_IS_DIR)) {
 				plugin_load_dir(path);
 			}
@@ -988,7 +981,6 @@ static int autoconnect_callback(void)
 	}
 	if(autoconnect_backoff < 60) autoconnect_backoff += 1;
 	/* keep the timeout running */
-	printf("timeout: %i\n", 5+autoconnect_backoff);
 	if(autoconnect_timeout) 
 		g_source_remove(autoconnect_timeout);
 	autoconnect_timeout = g_timeout_add_seconds(5+autoconnect_backoff, (GSourceFunc) autoconnect_callback, NULL);

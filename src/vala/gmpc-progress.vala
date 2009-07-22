@@ -184,7 +184,6 @@ public class Gmpc.Progress : Gtk.HBox
     {
         if(this.total > 0)
 		{
-			stdout.printf("%f\n", range.get_value());
 			if(this.do_countdown)
 			{
 				uint seconds = (uint)(this.total*(1-range.get_value()));
@@ -207,7 +206,6 @@ public class Gmpc.Progress : Gtk.HBox
     private bool button_press_event_callback (Gdk.EventButton event, Gtk.Scale scale)
     {
 		this.press++;
-		stdout.printf("button press event: %i (int)\n", (event.type));
         if(event.type == Gdk.EventType.BUTTON_PRESS)
         {
             if(event.button == 3)

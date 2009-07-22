@@ -158,7 +158,6 @@ override (G:Object)
             else if(old_length == 0)
             {
                 int  i;
-                printf("new set: %i\n", new_length);
                 for(i = new_length; i > 0; i--)
                 {
                     data= mpd_new_data_struct_append(data);
@@ -166,7 +165,6 @@ override (G:Object)
                     data->song = NULL;
                 }
                 gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(self), mpd_data_get_first(data));
-                printf("new set done\n");
             }
             else
             {

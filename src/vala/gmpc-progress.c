@@ -24,7 +24,6 @@
 #include <gdk/gdk.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdio.h>
 
 
 #define GMPC_TYPE_PROGRESS (gmpc_progress_get_type ())
@@ -247,7 +246,6 @@ static void gmpc_progress_value_changed (GmpcProgress* self, GtkScale* range) {
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (range != NULL);
 	if (self->priv->total > 0) {
-		fprintf (stdout, "%f\n", gtk_range_get_value ((GtkRange*) range));
 		if (self->priv->do_countdown) {
 			guint seconds;
 			seconds = (guint) (self->priv->total * (1 - gtk_range_get_value ((GtkRange*) range)));
@@ -280,7 +278,6 @@ static gboolean gmpc_progress_button_press_event_callback (GmpcProgress* self, c
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (scale != NULL, FALSE);
 	self->priv->press++;
-	fprintf (stdout, "button press event: %i (int)\n", (gint) (*event).type);
 	if ((*event).type == GDK_BUTTON_PRESS) {
 		gboolean _tmp0_;
 		if ((*event).button == 3) {

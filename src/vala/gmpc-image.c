@@ -212,13 +212,11 @@ static gboolean gmpc_image_on_expose (GmpcImage* self, GmpcImage* img, const Gdk
 	}
 	/*ctx.reset_clip();*/
 	if (_tmp2_) {
-		PangoLayout* _tmp4_;
 		PangoLayout* layout;
 		gint tw;
 		gint th;
 		gint size;
-		_tmp4_ = NULL;
-		layout = (_tmp4_ = pango_cairo_create_layout (ctx), (_tmp4_ == NULL) ? NULL : g_object_ref (_tmp4_));
+		layout = pango_cairo_create_layout (ctx);
 		tw = 0;
 		th = 0;
 		cairo_set_antialias (ctx, CAIRO_ANTIALIAS_DEFAULT);

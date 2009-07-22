@@ -91,7 +91,6 @@ static void play_queue_set_property (GObject * object, guint property_id, const 
 		case PLAY_QUEUE_UID:
             if(self->priv->uid) g_free(self->priv->uid);
             self->priv->uid = g_value_dup_string(value);
-            printf("set uid: %s\n", self->priv->uid);
 		break;
 		default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
@@ -369,7 +368,6 @@ static void pl3_current_playlist_browser_init(PlayQueuePlugin *self)
     GMPC_PLUGIN_BASE(self)->plugin_type = GMPC_INTERNALL|GMPC_PLUGIN_PL_BROWSER;
 
 	self->priv->pl3_cp_vbox = gtk_vbox_new(FALSE,6);
-    printf("create treeview: %s\n", self->priv->uid);
     tree = gmpc_mpddata_treeview_new(self->priv->uid, FALSE, GTK_TREE_MODEL(playlist));
 
     g_signal_connect(G_OBJECT(tree), "paste_before", G_CALLBACK(pl3_current_playlist_browser_paste_before_songs), self);

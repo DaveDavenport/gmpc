@@ -53,7 +53,6 @@ static void url_parse_pls_file(const char *data, int size)
 				for (del = 3; tokens[i][del] != '\0' && tokens[i][del] != '='; del++) ;
 				/** if delimiter is found, and the url behind it starts with http:// add it*/
 				if (tokens[i][del] == '=' && strncmp(&tokens[i][del + 1], "http://", 7) == 0) {
-					printf("Adding '%s'\n", &tokens[i][del + 1]);
 					mpd_playlist_add(connection, &tokens[i][del + 1]);
 					songs++;
 				}
@@ -80,7 +79,6 @@ static void url_parse_extm3u_file(const char *data, int size)
 		for (i = 0; tokens[i]; i++) {
 			/* Check for File */
 			if (!strncmp(tokens[i], "http://", 7)) {
-				printf("Adding '%s'\n", tokens[i]);
 				mpd_playlist_add(connection, tokens[i]);
 				songs++;
 			}

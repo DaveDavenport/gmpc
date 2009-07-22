@@ -28,11 +28,6 @@ public class Gmpc.MpdData.Treeview.Tooltip : Gtk.Window  {
     private Gtk.Image image = null;
     public Gmpc.MetaData.Type mtype = Gmpc.MetaData.Type.ARTIST_ART;
     public string? request_artist = null;
-    /* Destroy function */
-    ~Tooltip() {
-        stdout.printf("Gmpc.MpdData.Treeview.Tooltip destroy\n");
-    }
-
     private string checksum = null;
     private bool
     query_tooltip_callback(int x, int y, bool keyboard_tip, Gtk.Tooltip tooltip)

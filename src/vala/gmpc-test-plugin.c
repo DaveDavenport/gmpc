@@ -453,8 +453,6 @@ void gmpc_meta_data_edit_window_callback (GmpcMetaDataEditWindow* self, void* ha
 							if (h != NULL) {
 								gmpc_easy_handler_set_user_data (h, md->plugin_name);
 								self->priv->downloads = g_list_append (self->priv->downloads, h);
-							} else {
-								fprintf (stdout, "async download returned NULL\n");
 							}
 						}
 					}
@@ -663,8 +661,6 @@ static void gmpc_meta_data_edit_window_set_metadata (GmpcMetaDataEditWindow* sel
 				h = gmpc_easy_async_downloader (path, _gmpc_meta_data_edit_window_store_image_gmpc_async_download_callback, self);
 				if (h != NULL) {
 					self->priv->downloads = g_list_append (self->priv->downloads, h);
-				} else {
-					fprintf (stdout, "async download returned NULL");
 				}
 			}
 		} else {
@@ -676,7 +672,6 @@ static void gmpc_meta_data_edit_window_set_metadata (GmpcMetaDataEditWindow* sel
 			{
 				MetaData* met;
 				MetaData* met_false;
-				fprintf (stdout, "Storing into: %s\n", file);
 				g_file_set_contents (file, lyric, (glong) (-1), &_inner_error_);
 				if (_inner_error_ != NULL) {
 					goto __catch5_g_error;
@@ -1159,28 +1154,13 @@ GmpcMetaDataEditWindow* gmpc_meta_data_edit_window_new (const mpd_Song* song, Me
 }
 
 
-/*
-        this.refresh.sensitive = false;
-        this.combo.sensitive = false;
-        
-        this.handle = Gmpc.MetaData.get_list(song, this.query_type, callback);
-        stdout.printf("Query 1\n");
-        if(this.song.albumartist != null){
-            MPD.Song song2  = song;
-            song2.artist = song2.albumartist;
-            stdout.printf("query 2\n");
-            this.handle2 = Gmpc.MetaData.get_list(song2, this.query_type, callback);
-        }
-        */
 void gmpc_meta_data_edit_window_b_cancel (GmpcMetaDataEditWindow* self) {
 	g_return_if_fail (self != NULL);
 	if (self->priv->handle != NULL) {
-		fprintf (stdout, "cancel 1\n");
 		metadata_get_list_cancel (self->priv->handle);
 		self->priv->handle = NULL;
 	}
 	if (self->priv->handle2 != NULL) {
-		fprintf (stdout, "cancel 2\n");
 		metadata_get_list_cancel (self->priv->handle2);
 		self->priv->handle2 = NULL;
 	}
@@ -1191,7 +1171,6 @@ void gmpc_meta_data_edit_window_b_cancel (GmpcMetaDataEditWindow* self) {
 			break;
 		}
 		handle = (const GEADAsyncHandler*) self->priv->downloads->data;
-		fprintf (stdout, "cancel download: %s\n", gmpc_easy_handler_get_uri (handle));
 		gmpc_easy_async_cancel (handle);
 		g_list_first (self->priv->downloads);
 	}
@@ -1251,7 +1230,6 @@ static void gmpc_meta_data_edit_window_finalize (GObject* obj) {
 	self = GMPC_META_DATA_EDIT_WINDOW (obj);
 	{
 		gmpc_meta_data_edit_window_b_cancel (self);
-		fprintf (stdout, "song window destroy\n");
 	}
 	(self->priv->model == NULL) ? NULL : (self->priv->model = (g_object_unref (self->priv->model), NULL));
 	(self->priv->tree == NULL) ? NULL : (self->priv->tree = (g_object_unref (self->priv->tree), NULL));

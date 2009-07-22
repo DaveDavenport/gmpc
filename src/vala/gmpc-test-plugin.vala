@@ -189,7 +189,6 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
                             h.set_user_data(md.plugin_name);
                             this.downloads.append(h);
                         } 
-                        else stdout.printf("async download returned NULL\n");
                     }
                 }
             }else{
@@ -295,14 +294,12 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
                     var h = Gmpc.AsyncDownload.download(path, store_image); 
                     if(h!=null)
                         this.downloads.append(h);
-                    else stdout.printf("async download returned NULL");
                 }
             }else{
                 string lyric;
                 this.model.get(iter,3,out lyric);
                 var file = Gmpc.MetaData.get_metadata_filename(this.query_type, this.song,null); 
                 try {
-                    stdout.printf("Storing into: %s\n", file);
                     GLib.FileUtils.set_contents(file,lyric, -1); 
                     var met = new MetaData.Item();
                     met.type = this.query_type;
@@ -594,28 +591,13 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
         else if(type == Gmpc.MetaData.Type.ALBUM_TXT)  this.combo.set_active(3);
         else if(type == Gmpc.MetaData.Type.ARTIST_TXT)this.combo.set_active(4);
         else if(type == Gmpc.MetaData.Type.SONG_GUITAR_TAB)this.combo.set_active(5);
-/*
-        this.refresh.sensitive = false;
-        this.combo.sensitive = false;
-        
-        this.handle = Gmpc.MetaData.get_list(song, this.query_type, callback);
-        stdout.printf("Query 1\n");
-        if(this.song.albumartist != null){
-            MPD.Song song2  = song;
-            song2.artist = song2.albumartist;
-            stdout.printf("query 2\n");
-            this.handle2 = Gmpc.MetaData.get_list(song2, this.query_type, callback);
-        }
-        */
     }
     public void b_cancel(){
         if(this.handle != null){
-            stdout.printf("cancel 1\n");
             Gmpc.MetaData.get_list_cancel(this.handle);
             this.handle = null;
         }
         if(this.handle2 != null){
-            stdout.printf("cancel 2\n");
             Gmpc.MetaData.get_list_cancel(this.handle2);
             this.handle2 = null;
         }
@@ -623,7 +605,6 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
         while(this.downloads != null){
             Gmpc.AsyncDownload.Handle handle = this.downloads.data;
             
-            stdout.printf("cancel download: %s\n", handle.get_uri());
             handle.cancel(); 
             this.downloads.first();
         }
@@ -634,7 +615,6 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
     }
     ~EditWindow() {
         this.b_cancel();
-        stdout.printf("song window destroy\n");
     }
 }
 

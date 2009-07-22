@@ -301,8 +301,6 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
             Gmpc.MetaData.Result result, 
             Gmpc.MetaData.Item? met)
     {
-        TimeVal start = TimeVal();
-
         /* only listen to the same artist and the same type */
         if(type != Gmpc.MetaData.Type.ARTIST_SIMILAR) return;
         if(this.song.artist.collate(song.artist)!=0) return;
@@ -314,10 +312,6 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
             child.destroy();
         }
 
-        var now = TimeVal();
-        var cur = now.tv_usec-start.tv_usec;
-        stdout.printf("child destroy: %li\n", (cur < 0)?1-cur:cur);
-        start = now;
         /* if unavailable set that in a label*/
         if(result == Gmpc.MetaData.Result.UNAVAILABLE || met.is_empty() || !met.is_text_list())
         {
@@ -335,10 +329,6 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
             GLib.List<weak string> list = met.get_text_list().copy();
             list.sort((GLib.CompareFunc)string.collate);
 
-            now = TimeVal();
-            cur = now.tv_usec-start.tv_usec;
-            stdout.printf("sort query: %li\n", (cur < 0)?1-cur:cur);
-            start = now;
 
             int items = 30;
             int i = 0;
@@ -348,19 +338,10 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
                 MPD.Database.search_field_start(server, MPD.Tag.Type.ARTIST);
                 var data = MPD.Database.search_commit(server);
 
-                now = TimeVal();
-                cur = now.tv_usec-start.tv_usec;
-                stdout.printf("mpd query: %li\n", (cur < 0)?1-cur:cur);
-                start = now;
                 int q =0;
 
                 data = Gmpc.MpdData.sort_album_disc_track((owned)data);
                 weak MPD.Data.Item iter = data.first();
-
-                now = TimeVal();
-                cur = now.tv_usec-start.tv_usec;
-                stdout.printf("mpd sort query: %li\n", (cur < 0)?1-cur:cur);
-                start = now;
 
                 liter = list.first();
                 var artist = iter.tag.down(); 
@@ -390,12 +371,6 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
                     }
                 }while(iter != null && liter != null && i < items);
            
-                stdout.printf("queries: %i :: %u\n",q, list.length());
-
-                now = TimeVal();
-                cur = now.tv_usec-start.tv_usec;
-                stdout.printf("mpd list: %li\n", (cur < 0)?1-cur:cur);
-                start = now;
 
                 liter= list.first();
                 while(liter != null && i < items) 
@@ -406,10 +381,6 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
                     liter = liter.next; 
                 }
 
-                now = TimeVal();
-                cur = now.tv_usec-start.tv_usec;
-                stdout.printf("empty list: %li\n", (cur < 0)?1-cur:cur);
-                start = now;
             }
             in_db_list.reverse();
             i=0;
@@ -426,10 +397,6 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
                 i++;
             }
         }
-        now = TimeVal();
-        cur = now.tv_usec-start.tv_usec;
-        stdout.printf("time elapsed: %li\n", (cur < 0)?1-cur:cur);
-        start = now;
 
         this.show_all();
     }
