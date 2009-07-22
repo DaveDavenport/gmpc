@@ -4539,7 +4539,7 @@ static void gmpc_metadata_browser_metadata_box_show_artist (GmpcMetadataBrowser*
 	         * Add it to the view
 	         */
 	gtk_container_add ((GtkContainer*) self->priv->metadata_box, (GtkWidget*) vbox);
-	gtk_widget_show_all ((GtkWidget*) self->priv->metadata_sw);
+	gtk_widget_show_all ((GtkWidget*) self->priv->metadata_box);
 	(vbox == NULL) ? NULL : (vbox = (g_object_unref (vbox), NULL));
 	(box == NULL) ? NULL : (box = (g_object_unref (box), NULL));
 	(label == NULL) ? NULL : (label = (g_object_unref (label), NULL));
@@ -4596,7 +4596,7 @@ static gboolean gmpc_metadata_browser_metadata_box_update_real (GmpcMetadataBrow
 		gmpc_metadata_browser_history_add (self, &item);
 		view = gmpc_metadata_browser_metadata_box_show_song (self, song, TRUE);
 		gtk_container_add ((GtkContainer*) self->priv->metadata_box, view);
-		gtk_widget_show_all ((GtkWidget*) self->priv->metadata_sw);
+		gtk_widget_show_all ((GtkWidget*) self->priv->metadata_box);
 		gmpc_metadata_browser_hitem_destroy (&item);
 		(view == NULL) ? NULL : (view = (g_object_unref (view), NULL));
 	} else {

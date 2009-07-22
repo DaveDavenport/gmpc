@@ -2187,7 +2187,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
          * Add it to the view
          */
         this.metadata_box.add(vbox);
-        this.metadata_sw.show_all();
+        this.metadata_box.show_all();
     }
 
 
@@ -2218,7 +2218,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
 
             var view = metadata_box_show_song(song,true);
             this.metadata_box.add(view);
-            this.metadata_sw.show_all();
+            this.metadata_box.show_all();
         }else if(album != null && artist != null) {
             /** Add item to history */
             var item = Hitem();
