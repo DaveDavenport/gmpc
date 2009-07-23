@@ -107,7 +107,6 @@ void playlist_menu_consume_changed(GtkCheckMenuItem * menu);
 void playlist_menu_random_changed(GtkCheckMenuItem *);
 void playlist_menu_cover_image_changed(GtkCheckMenuItem *);
 void hide_on_close_enable_tb(GtkToggleButton * but);
-void pl3_window_fullscreen(void);
 gboolean pl3_close(void);
 static void pl3_update_profiles_menu(GmpcProfiles * prof, const int changed, const int col, const gchar * id);
 gboolean playlist3_enter_notify_event(GtkWidget * wid, GdkEventCrossing * event, gpointer data);

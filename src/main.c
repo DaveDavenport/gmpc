@@ -269,11 +269,14 @@ int main(int argc, char **argv)
 	gboolean		replace					= FALSE;
 	gboolean		do_debug_updates		= FALSE;
 	gboolean		show_bug_information	= FALSE;
+	gboolean		fullscreen				= FALSE;
 	gchar			*config_path			= NULL;
 	gint			debug_level				= -1;
 	
 	GOptionEntry entries[] = 
 	{
+		{ "fullscreen",		 0,  0,G_OPTION_ARG_NONE,
+			&fullscreen,		N_("Start the program in full screen"),			NULL},
 		{ "version",		'v', 0,G_OPTION_ARG_NONE,
 			&show_version,		N_("Show program version and revision"),			NULL},
 		{ "quit",			'q', 0,G_OPTION_ARG_NONE,
@@ -812,6 +815,8 @@ int main(int argc, char **argv)
      * Call this when entering the main loop, so you are connected on startup, not 5 seconds later
      */
 	gtk_init_add((GSourceFunc) autoconnect_callback, NULL);
+	if(fullscreen)
+		gtk_init_add((GSourceFunc) pl3_window_fullscreen, NULL);
 
     /**
      * If the user wants gmpc to be started hidden, call pl3_hide after the mainloop started running

@@ -58,4 +58,6 @@ extern GladeXML *pl3_xml;
  */
 
 void serverinformation_show_popup(void);
+
+void pl3_window_fullscreen(void);
 #endif
