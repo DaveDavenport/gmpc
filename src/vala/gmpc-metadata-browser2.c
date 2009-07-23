@@ -1905,6 +1905,7 @@ static void gmpc_now_playing_update (GmpcNowPlaying* self) {
 			if (_inner_error_ != NULL) {
 				(list == NULL) ? NULL : (list = (g_list_free (list), NULL));
 				(it == NULL) ? NULL : (it = (g_object_unref (it), NULL));
+				(info == NULL) ? NULL : (info = (gtk_icon_info_free (info), NULL));
 				path = (g_free (path), NULL);
 				(image == NULL) ? NULL : (image = (g_object_unref (image), NULL));
 				(song == NULL) ? NULL : (song = (mpd_freeSong (song), NULL));
@@ -1931,6 +1932,7 @@ static void gmpc_now_playing_update (GmpcNowPlaying* self) {
 		gtk_container_add ((GtkContainer*) self->priv->container, (GtkWidget*) ali);
 		(list == NULL) ? NULL : (list = (g_list_free (list), NULL));
 		(it == NULL) ? NULL : (it = (g_object_unref (it), NULL));
+		(info == NULL) ? NULL : (info = (gtk_icon_info_free (info), NULL));
 		path = (g_free (path), NULL);
 		(image == NULL) ? NULL : (image = (g_object_unref (image), NULL));
 		(hbox == NULL) ? NULL : (hbox = (g_object_unref (hbox), NULL));

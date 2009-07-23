@@ -729,7 +729,7 @@ public class  Gmpc.NowPlaying : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface {
                 child.destroy();
             }
             var it = Gtk.IconTheme.get_default();
-            weak Gtk.IconInfo info = it.lookup_icon("gmpc", 150, 0);
+            Gtk.IconInfo info = it.lookup_icon("gmpc", 150, 0);
             var path = info.get_filename();
             Gtk.Image image = null;
             if(path != null)
