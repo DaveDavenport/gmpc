@@ -1153,6 +1153,10 @@ static void play_queue_plugin_finalize(GObject *obj) {
 	pl3_current_playlist_destroy((PlayQueuePlugin *)obj);
 
 	if(self->priv){
+        if(self->priv->uid) {
+            g_free(self->priv->uid);
+            self->priv->uid = NULL;
+        }
         if(self->priv->mod_fill){
             g_object_unref(self->priv->mod_fill);
             self->priv->mod_fill = NULL;

@@ -2615,6 +2615,7 @@ void pl3_tool_menu_update(void)
 
 	menu = gtk_menu_new();
 	gtk_menu_set_accel_group(GTK_MENU(menu), group);
+	g_object_unref(group);
 	gtk_window_add_accel_group(GTK_WINDOW(playlist3_get_window()), group);
 	for (i = 0; i < num_plugins; i++) {
 			menu_items += gmpc_plugin_tool_menu_integration(plugins[i], GTK_MENU(menu));
