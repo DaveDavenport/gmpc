@@ -290,8 +290,7 @@ namespace Gmpc {
             [CCode (cname="gmpc_mpddata_treeview_right_mouse_intergration")]
             public int right_mouse_integration(Gtk.Menu menu);
         }
-        [CCode (cheader_filename="misc.h", cname="misc_sort_mpddata_by_album_disc_track")]
-        public weak MPD.Data.Item? sort_album_disc_track(owned MPD.Data.Item ?data);
+
         [CCode (cheader_filename="gmpc-mpddata-model.h")]
         public class Model : GLib.Object, Gtk.TreeModel{
             [CCode (has_construct_function = true,cname="gmpc_mpddata_model_new")]

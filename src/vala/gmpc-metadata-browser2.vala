@@ -340,7 +340,7 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
 
                 int q =0;
 
-                data = Gmpc.MpdData.sort_album_disc_track((owned)data);
+                data.sort_album_disc_track();
                 weak MPD.Data.Item iter = data.first();
 
                 liter = list.first();
@@ -926,14 +926,15 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         string artist = browser_get_selected_artist(); 
         if(artist != null)
         {
-            MPD.Database.search_field_start(server, MPD.Tag.Type.FILENAME);
+            MPD.Database.search_start(server,true);
             MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, artist);
             MPD.Data.Item data = MPD.Database.search_commit(server); 
-            data = Gmpc.MpdData.sort_album_disc_track((owned)data);
+            data.sort_album_disc_track();
             if(data != null)
             {
+                data = data.first();
                 do{
-                    MPD.PlayQueue.queue_add_song(server, data.tag);
+                    MPD.PlayQueue.queue_add_song(server, data.song.file);
                     data.next_free();
                 }while(data != null);
                 MPD.PlayQueue.queue_commit(server);
@@ -1024,7 +1025,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
                 }
             } 
             /* Fill in the first browser */ 
-            MPD.Database.search_field_start(server,MPD.Tag.Type.FILENAME);
+            MPD.Database.search_start(server,true);
             if(albumartist != null)
                 MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM_ARTIST, albumartist);
             else
@@ -1034,11 +1035,11 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
                 MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM, album);
             var data = MPD.Database.search_commit(server);
 
-            data = Gmpc.MpdData.sort_album_disc_track((owned)data);
+            data.sort_album_disc_track();
             if(data != null)
             {
                 do{
-                    MPD.PlayQueue.queue_add_song(server, data.tag);
+                    MPD.PlayQueue.queue_add_song(server, data.song.file);
                     data.next_free();
                 }while(data != null);
                 MPD.PlayQueue.queue_commit(server);
@@ -1328,7 +1329,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         /* Fill in the first browser */
         MPD.Database.search_field_start(server,MPD.Tag.Type.ARTIST);
         var data = MPD.Database.search_commit(server);
-        data = Gmpc.MpdData.sort_album_disc_track((owned)data);
+        data.sort_album_disc_track();
         this.model_artist.set_mpd_data((owned)data);
     }
 
@@ -1385,7 +1386,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             MPD.Database.search_field_start(server,MPD.Tag.Type.ALBUM);
             MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, artist);
             var data = MPD.Database.search_commit(server);
-            data = Gmpc.MpdData.sort_album_disc_track((owned)data);
+            data.sort_album_disc_track();
 
             this.model_albums.set_request_artist(artist);
             MPD.Data.Item list = null;
@@ -1409,13 +1410,13 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
                 }while(iter!= null);
             }
 
-            list = Gmpc.MpdData.sort_album_disc_track((owned)list);
+            list.sort_album_disc_track();
             this.model_albums.set_mpd_data((owned)list);
 
             MPD.Database.search_start(server,true);
             MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, artist);
             data = MPD.Database.search_commit(server);
-            data = Gmpc.MpdData.sort_album_disc_track((owned)data);
+            data.sort_album_disc_track();
             this.model_songs.set_mpd_data((owned)data);
 
         }
@@ -1453,7 +1454,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             if(album != null)
                 MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM, album);
             var data = MPD.Database.search_commit(server);
-            data = Gmpc.MpdData.sort_album_disc_track((owned)data);
+            data.sort_album_disc_track();
             this.model_songs.set_mpd_data((owned)data);
         }
         this.metadata_box_update();
@@ -1517,7 +1518,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
                 }
             }
 
-            MPD.Database.search_field_start(server,MPD.Tag.Type.FILENAME);
+            MPD.Database.search_start(server,true);//server,MPD.Tag.Type.FILENAME);
             if(albumartist != null)
                 MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM_ARTIST, albumartist);
             else
@@ -1526,10 +1527,11 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
                 MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM, album);
             var data = MPD.Database.search_commit(server);
             if(data != null) {
-                weak MPD.Data.Item iter = Gmpc.MpdData.sort_album_disc_track(data);
-                do{
-                    MPD.PlayQueue.queue_add_song(server, iter.tag);
-                }while((iter = iter.next(false)) != null);
+                data.sort_album_disc_track();
+                while(data != null){ 
+                    MPD.PlayQueue.queue_add_song(server, data.song.file);
+                    data.next_free();
+                }
                 MPD.PlayQueue.queue_commit(server);
             }   
         }

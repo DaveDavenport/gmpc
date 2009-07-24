@@ -124,6 +124,11 @@ namespace MPD {
                 [ReturnsModifiedPointer ()]
                 public void next_free();
 
+
+                [CCode (cheader_filename="misc.h", cname="misc_sort_mpddata_by_album_disc_track")]
+                [ReturnsModifiedPointer ()]
+                public void sort_album_disc_track();
+
                 [CCode (cname="mpd_data_get_next_real")] 
                 public weak Item? next(bool free);
 
