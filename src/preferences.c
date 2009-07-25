@@ -69,12 +69,14 @@ static void pref_plugin_changed(void)
 		if(id >= 0 && gmpc_plugin_has_preferences(plugins[id])) 
         {
             char *buf = NULL;
+            const gchar *translation_domain = gmpc_plugin_get_translation_domain(plugins[id]);
             if(!gmpc_plugin_is_internal(plugins[id]))
             {
                 const int *version = gmpc_plugin_get_version(plugins[id]);
                 if(version != NULL) {
-                    buf = g_strdup_printf("<span size=\"xx-large\"><b>%s</b></span>\n<i>Plugin version: %i.%i.%i</i>", 
-                            N_(gmpc_plugin_get_name(plugins[id])),
+                    buf = g_strdup_printf("<span size=\"xx-large\"><b>%s</b></span>\n<i>%s: %i.%i.%i</i>", 
+                            g_dgettext(translation_domain, gmpc_plugin_get_name(plugins[id])), 
+                            _("Plugin version"),
                             version[0],version[1], version[2]);
                 }else 
                 buf  = g_strdup_printf("<span size=\"xx-large\"><b>%s</b></span>",
@@ -84,7 +86,7 @@ static void pref_plugin_changed(void)
             else
             {
                 buf = g_strdup_printf("<span size=\"xx-large\"><b>%s</b></span>",
-                        N_(gmpc_plugin_get_name(plugins[id])));
+                            N_(gmpc_plugin_get_name(plugins[id])));
             }
 
             gmpc_plugin_preferences_construct(plugins[id],(GtkWidget *)gtk_builder_get_object(xml_preferences_window, "plugin_container"));
