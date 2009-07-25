@@ -75,7 +75,12 @@ static void pref_plugin_changed(void)
                 const int *version = gmpc_plugin_get_version(plugins[id]);
                 if(version != NULL) {
                     buf = g_strdup_printf("<span size=\"xx-large\"><b>%s</b></span>\n<i>%s: %i.%i.%i</i>", 
+
+#if defined(ENABLE_NLS) &&  GLIB_CHECK_VERSION(2,18,0)
                             g_dgettext(translation_domain, gmpc_plugin_get_name(plugins[id])), 
+#else
+                            gmpc_plugin_get_name(plugins[id]),
+#endif
                             _("Plugin version"),
                             version[0],version[1], version[2]);
                 }else 
