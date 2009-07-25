@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-07-13 12:15+0200\n"
+"POT-Creation-Date: 2009-07-25 16:10+0200\n"
 "PO-Revision-Date: 2009-05-16 00:37+0000\n"
 "Last-Translator: Licaon <Unknown>\n"
 "Language-Team: Romanian <ro@li.org>\n"
@@ -16,31 +16,18 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n == 1 ? 0: (((n % 100 > 19) || ((n % 100 "
 "== 0) && (n != 0))) ? 2: 1));\n"
-"X-Launchpad-Export-Date: 2009-07-13 10:08+0000\n"
+"X-Launchpad-Export-Date: 2009-07-25 15:28+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
 msgid "A gnome frontend for the mpd daemon"
 msgstr "O interfață pentru demonul mpd"
 
-#: ../data/gmpc.desktop.in.h:2 ../src/main.c:338 ../src/tray-icon2.c:569
-#: ../src/vala/gmpc-metadata-browser2.c:1927
-#: ../src/vala/gmpc-metadata-browser2.c:1930
+#: ../data/gmpc.desktop.in.h:2 ../src/main.c:341 ../src/tray-icon2.c:589
+#: ../src/vala/gmpc-metadata-browser2.c:1917
+#: ../src/vala/gmpc-metadata-browser2.c:1920
 msgid "Gnome Music Player Client"
 msgstr "Clientul Gnome pentru ascultat muzică"
-
-#. Basic dialog with a close button
-#: ../glade/playlist3.glade.h:1 ../src/bug-information.c:239
-msgid "Bug information"
-msgstr "Informaţii erori"
-
-#: ../glade/playlist3.glade.h:2
-msgid "Consume"
-msgstr "Consumă"
-
-#: ../glade/playlist3.glade.h:3
-msgid "Easy Command Help"
-msgstr "Ajutor comenzi facile"
 
 #: ../glade/playlist3.glade.h:4
 msgid "Getting help"
@@ -50,12 +37,8 @@ msgstr "Cum puteţi obţine ajutor"
 msgid "MPD database is updating."
 msgstr "Se actualizează baza de date MPD."
 
-#: ../glade/playlist3.glade.h:6 ../src/mpdinteraction.c:279
-msgid "Mute"
-msgstr "Mut"
-
 #. * MM_PLAYPAUSE
-#: ../glade/playlist3.glade.h:7 ../src/mm-keys.c:74 ../src/tray-icon2.c:557
+#: ../glade/playlist3.glade.h:7 ../src/mm-keys.c:74 ../src/tray-icon2.c:577
 msgid "Next"
 msgstr "Următoarea"
 
@@ -82,18 +65,9 @@ msgstr "Aleator"
 msgid "Repeat"
 msgstr "Repetare"
 
-#: ../glade/playlist3.glade.h:13
-#, fuzzy
-msgid "Se_rver"
-msgstr "Server"
-
 #: ../glade/playlist3.glade.h:14
 msgid "Show Messages"
 msgstr "Arată mesaje"
-
-#: ../glade/playlist3.glade.h:15
-msgid "Single mode"
-msgstr "Mod singular"
 
 #. * MM_PREV
 #: ../glade/playlist3.glade.h:16 ../src/mm-keys.c:76
@@ -152,10 +126,6 @@ msgstr "Trimite _parola"
 msgid "_Show Artist Image"
 msgstr "Arată imaginea arti_stului"
 
-#: ../glade/playlist3.glade.h:30
-msgid "_Tools"
-msgstr "Unel_te"
-
 #: ../glade/playlist3.glade.h:31
 msgid "_View"
 msgstr "_Vizualizare"
@@ -168,182 +138,60 @@ msgstr "gmpc - Gestionarul listei de redare"
 msgid "Proxy"
 msgstr "Proxy"
 
-#: ../src/main.c:278
-msgid "Show program version and revision"
-msgstr "Arată versiunea şi revizia programului"
-
-#: ../src/main.c:280
-msgid "Quits the running gmpc"
-msgstr "Opreşte gmpc dacă rulează"
-
-#: ../src/main.c:282
-msgid "Replace the running gmpc"
-msgstr "Înlocuieşte gmpc-ul care rulează"
-
-#: ../src/main.c:284
-msgid "Don't load the plugins"
-msgstr "Nu încărca modulele"
-
-#: ../src/main.c:286
-msgid "Load alternative config file"
-msgstr "Încarcă un fişier de configurare alternativ"
-
-#: ../src/main.c:288
-msgid "Set the debug level"
-msgstr "Setează nivelul de depanare"
-
-#: ../src/main.c:290
-msgid "Start gmpc hidden to tray"
-msgstr "Porneşte gmpc ascuns"
-
-#: ../src/main.c:292
-msgid "Remove all failed hits from metadata cache"
-msgstr "Şterge toate informaţiile invalide din memoria de metadate"
-
-#: ../src/main.c:294
-msgid "Show redraw events in GTK+"
-msgstr "Arată evenimentele de redesenare în GTK+"
-
-#: ../src/main.c:296
-msgid "Show bug information dialog"
-msgstr "Arată dialogul de informaţii de depanare"
-
-#: ../src/main.c:298
-msgid "Shows all output from a certain log domain"
-msgstr "Arată toate ieşirile notate in jurnal dintr-un anume domeniu"
-
-#: ../src/main.c:435
-msgid "quit"
-msgstr "ieşire"
-
-#: ../src/main.c:436
-msgid "Quit gmpc"
-msgstr "Ieşire din gmpc"
-
-#: ../src/main.c:437
-msgid "hide"
-msgstr "ascunde"
-
-#: ../src/main.c:438
-msgid "Hide gmpc"
-msgstr "Ascundere gmpc"
-
-#: ../src/main.c:439
-msgid "show"
-msgstr "arată"
-
-#: ../src/main.c:440
-msgid "Show gmpc"
-msgstr "Arată gmpc"
-
-#: ../src/main.c:441
-msgid "show notification"
-msgstr "arată notificare"
-
-#: ../src/main.c:442
-msgid "Show trayicon notification"
-msgstr "Arată notificarea la iconiţa din tava de sistem"
-
-#: ../src/main.c:496
-msgid "Failed to load the configuration system."
-msgstr "Eroare la încărcarea sistemului de configurare."
-
-#: ../src/main.c:515
+#: ../src/main.c:518
 msgid "Failed to load debug-log file."
 msgstr "Eșec la încărcarea fișierului de înregistrare a depanării."
 
-#: ../src/main.c:649
+#: ../src/main.c:646
 msgid "Failed to setup libmpd"
 msgstr "Eșec la setarea libmpd"
 
-#: ../src/main.c:1069
+#: ../src/main.c:1066
 msgid "GMPC has insufficient permissions on the mpd server."
 msgstr "GMPC are permisiuni insuficiente pentru serverul mpd."
 
-#: ../src/main.c:1095
+#: ../src/main.c:1092
 #, c-format
 msgid ""
 "Failed to set password on: '%s'\n"
 "Please try again"
 msgstr "Eșec la setarea parolei pentru: „%s”"
 
-#: ../src/main.c:1097
+#: ../src/main.c:1094
 #, c-format
 msgid "Please enter your password for: '%s'"
 msgstr "Introduceți parola pentru: „%s”"
 
-#: ../src/main.c:1126 ../src/main.c:1147
+#: ../src/main.c:1123 ../src/main.c:1144
 msgid "error code"
 msgstr "cod de eroare"
 
-#: ../src/main.c:1136
-msgid "Insufficient permission to connect to mpd. Check password"
-msgstr "Permisiuni insuficiente pentru conectarea la mpd. Verificați parola."
-
-#: ../src/main.c:1171
-msgid "MPD versions before 0.13.0 are not supported"
-msgstr "Versiunile de MPD mai vechi de 0.13.0 nu sunt suportate"
-
-#: ../src/main.c:1239
-msgid "Connected to mpd"
-msgstr "Conectat la mpd"
-
-#: ../src/main.c:1241
-msgid "Disconnected from mpd"
-msgstr "Deconectat de la mpd"
-
-#: ../src/main.c:1275
-msgid "Error occurred during operation"
-msgstr "O eroare a survenit în timpul operaţiunii"
-
-#. Create label
-#: ../src/main.c:1299
-msgid "The following error(s) occurred:"
-msgstr "Următoarele erori au survenit"
-
-#: ../src/main.c:1316
+#: ../src/main.c:1313
 msgid "Error Message"
 msgstr "Mesaj de eroare"
 
-#: ../src/metadata.c:293
-msgid ""
-"A new metadata plugin was added, gmpc has purged all failed hits from the "
-"cache"
-msgstr ""
-"Un nou modul de metadate a fost adăugat, gmpc a curățat toate intrările "
-"eronate din memorie."
-
-#: ../src/metadata.c:1390
-msgid "Metadata Handler"
-msgstr "Modul pentru metadate"
-
-#: ../src/misc.c:39
-#, fuzzy
-msgid "Total time"
-msgstr " Timp total: "
-
-#: ../src/misc.c:57
+#: ../src/misc.c:56
 msgid "day"
 msgid_plural "days"
 msgstr[0] "zi"
 msgstr[1] "zile"
 msgstr[2] "de zile"
 
-#: ../src/misc.c:60
+#: ../src/misc.c:59
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] "oră"
 msgstr[1] "ore"
 msgstr[2] "de ore"
 
-#: ../src/misc.c:63
+#: ../src/misc.c:62
 msgid "minute"
 msgid_plural "minutes"
 msgstr[0] "minut"
 msgstr[1] "minute"
 msgstr[2] "de minute"
 
-#: ../src/misc.c:296
+#: ../src/misc.c:295
 msgid "Failed to execute"
 msgstr "Eșec la execuție"
 
@@ -396,11 +244,6 @@ msgstr "Arată melodia"
 msgid "Toggle Mute"
 msgstr "Opreşte sau porneşte sunetul"
 
-#. * MM_TOGGLE_MUTE
-#: ../src/mm-keys.c:88
-msgid "Show easy command entry"
-msgstr "Arată comenzile facile"
-
 #: ../src/mm-keys.c:367
 msgid ""
 "Could not grab the following multimedia keys:\n"
@@ -436,17 +279,6 @@ msgstr ""
 msgid "Multimedia Keys"
 msgstr "Taste Multimedia"
 
-#: ../src/mm-keys.c:632
-#, c-format
-msgid ""
-"Duplicate mapping detected\n"
-"\n"
-"%s is already mapped to %s"
-msgstr ""
-"A fost detectată o setare duplicat\n"
-"\n"
-"%s este deja setat ca %s"
-
 #: ../src/mm-keys.c:661
 #, c-format
 msgid ""
@@ -472,362 +304,122 @@ msgstr "Acțiune"
 msgid "Shortcut"
 msgstr "Scurtătură"
 
-#: ../src/mpdinteraction.c:91
-msgid "enable"
-msgstr "activează"
-
-#: ../src/mpdinteraction.c:94
-msgid "disable"
-msgstr "dezactivează"
-
-#: ../src/mpdinteraction.c:107 ../src/playlist3.c:1681 ../src/playlist3.c:1694
-#: ../src/playlist3.c:1706 ../src/playlist3.c:1719
+#: ../src/mpdinteraction.c:107 ../src/playlist3.c:1710 ../src/playlist3.c:1723
+#: ../src/playlist3.c:1738 ../src/playlist3.c:1751
 msgid "Off"
 msgstr "Dezactivat"
 
-#: ../src/mpdinteraction.c:229
-msgid ""
-"Stop after current song: The used MPD server is to old and does not support "
-"this."
-msgstr ""
-"Opreşte după melodia curentă: Versiunea de server MPD folosită este prea "
-"veche şi nu suportă această funcţie."
-
-#: ../src/mpdinteraction.c:231
-msgid "Stop after current song: You have insufficient permission."
-msgstr "Opreşte după melodia curentă: Nu posedaţi permisiunile de rigoare."
-
-#: ../src/mpdinteraction.c:233
-msgid "Playback will be stopped after the current playing song."
-msgstr "Redarea se va oprii după melodia curentă."
-
-#: ../src/mpdinteraction.c:243
-msgid ""
-"Repeat current song: The used MPD server is to old and does not support this."
-msgstr ""
-"Repetă melodia curentă: Versiunea de server MPD folosită este prea veche şi "
-"nu suportă această funcţie."
-
-#: ../src/mpdinteraction.c:245
-msgid "Repeat current song: You have insufficient permission."
-msgstr "Repetă melodia curentă: Nu dispuneţi de permisiunile necesare."
-
-#: ../src/mpdinteraction.c:247
-msgid "The current song will be forever repeated."
-msgstr "Această melodie va fi repetată mereu."
-
-#: ../src/mpdinteraction.c:257
-msgid ""
-"Update database: The used MPD server is to old and does not support this."
-msgstr ""
-"Actualizare baza de date: Versiunea de server MPD folosită este prea veche "
-"şi nu suportă această funcţie."
-
-#: ../src/mpdinteraction.c:259
-msgid "Update database: You have insufficient permission."
-msgstr "Actualizare bază de date: Nu dispuneţi de permisiunile necesare."
-
-#. Player control
-#. basic playlist commands
-#: ../src/mpdinteraction.c:268 ../src/mpdinteraction.c:286
-msgid "play"
-msgstr "redă"
-
-#: ../src/mpdinteraction.c:268
-msgid "start playback"
-msgstr "porneşte redarea"
-
-#: ../src/mpdinteraction.c:269
-msgid "pause"
-msgstr "pauză"
-
-#: ../src/mpdinteraction.c:269
-msgid "pause playback"
-msgstr "pauză redare"
-
-#: ../src/mpdinteraction.c:270
-msgid "next"
-msgstr "următoarea"
-
-#: ../src/mpdinteraction.c:270
-msgid "next song"
-msgstr "următoarea melodie"
-
-#: ../src/mpdinteraction.c:271
-msgid "prev"
-msgstr "precedenta"
-
-#: ../src/mpdinteraction.c:271
-msgid "previous song"
-msgstr "precedenta melodie"
-
-#: ../src/mpdinteraction.c:272
-msgid "stop"
-msgstr "oprire"
-
-#: ../src/mpdinteraction.c:272
-msgid "stop playback"
-msgstr "oprire redare"
-
-#: ../src/mpdinteraction.c:274
-msgid "random"
-msgstr "aleator"
-
-#: ../src/mpdinteraction.c:274
-msgid "Random (on|off)"
-msgstr "Aleator (da|nu)"
-
-#: ../src/mpdinteraction.c:275
-msgid "repeat"
-msgstr "repetare"
-
-#: ../src/mpdinteraction.c:275
-msgid "Repeat (on|off)"
-msgstr "Repetare (da|nu)"
-
-#. volume commands
-#: ../src/mpdinteraction.c:278
-msgid "volume"
-msgstr "volum"
-
-#: ../src/mpdinteraction.c:278
-msgid "Volume (+-)<level>"
-msgstr "Volum (+-)<nivel>"
-
-#: ../src/mpdinteraction.c:279
-msgid "mute"
-msgstr "oprire sunet"
-
-#: ../src/mpdinteraction.c:281
-msgid "crossfade"
-msgstr "crossfade"
-
-#: ../src/mpdinteraction.c:281
-msgctxt "Regex for matching crossfade, translate off"
-msgid "([0-9]+|Off)"
-msgstr "([0-9]+|Oprit)"
-
-#: ../src/mpdinteraction.c:281
-msgid "Set Crossfade <seconds>"
-msgstr "Setare crossfade <secunde>"
-
-#: ../src/mpdinteraction.c:283
-msgid "output"
-msgstr "ieşire"
-
-#: ../src/mpdinteraction.c:283
-msgctxt "Regex for matching output"
-msgid "[0-9]+ (Enable|Disable)"
-msgstr "[0-9]+ (Activează|Dezactivează)"
-
-#: ../src/mpdinteraction.c:284
-msgid "output X enable or disable"
-msgstr "ieşirea X activare sau dezactivare"
-
-#: ../src/mpdinteraction.c:286
-msgid "Play <query>"
-msgstr "Redare <query>"
-
-#: ../src/mpdinteraction.c:287
-msgid "add"
-msgstr "adaugă"
-
-#: ../src/mpdinteraction.c:287
-msgid "Add <query>"
-msgstr "Adaugă <query>"
-
-#: ../src/mpdinteraction.c:288
-msgid "replace"
-msgstr "înlocuieşte"
-
-#: ../src/mpdinteraction.c:288
-msgid "Replace <query>"
-msgstr "înlocuieşte <query>"
-
-#. Basic seek commands
-#: ../src/mpdinteraction.c:291
-msgid "seek"
-msgstr "derulare"
-
-#: ../src/mpdinteraction.c:291
-msgid "Seek within the current song"
-msgstr "Derulare în melodia curentă"
-
-#: ../src/mpdinteraction.c:294
-msgid "stop after current song"
-msgstr "opreşte după melodia curentă"
-
-#: ../src/mpdinteraction.c:296
-msgid "Stop playback after the current song"
-msgstr "Opreşte redarea după melodia curentă"
-
-#: ../src/mpdinteraction.c:300
-msgid "repeat current song"
-msgstr "repetă melodia curentă"
-
-#: ../src/mpdinteraction.c:302
-msgid "Repeat the current song"
-msgstr "Repetă melodia curentă"
-
-#: ../src/mpdinteraction.c:306
-msgid "update database"
-msgstr "actualizare baza de date"
-
-#: ../src/mpdinteraction.c:308
-msgid "Update the database"
-msgstr "Actualizare baza de date"
-
-#: ../src/mpdinteraction.c:313
+#: ../src/mpdinteraction.c:355
 msgid "Server Settings"
 msgstr "Setările serverului"
 
-#: ../src/mpdinteraction.c:343
+#: ../src/mpdinteraction.c:385
 msgid "Connection"
 msgstr "Conexiune"
 
-#: ../src/mpdinteraction.c:436
+#: ../src/mpdinteraction.c:478
 msgid "Connecting"
 msgstr "Conectare"
 
 #. Add all from album
-#: ../src/mpdinteraction.c:1443
+#: ../src/mpdinteraction.c:1485
 msgid "All from album"
 msgstr "Toate de pe album"
 
 #. Add all from artist
-#: ../src/mpdinteraction.c:1455
+#: ../src/mpdinteraction.c:1497
 msgid "All from artist"
 msgstr "Toate ale artistului"
 
 #. Add all from genre
-#: ../src/mpdinteraction.c:1465
+#: ../src/mpdinteraction.c:1507
 msgid "All from genre"
 msgstr "Toate ale genului"
 
 #. Add all from file
-#: ../src/mpdinteraction.c:1473
+#: ../src/mpdinteraction.c:1515
 msgid "All from same directory"
 msgstr "Toate din același director"
 
 #. Create sub menu
 #. Add
-#: ../src/mpdinteraction.c:1481
+#: ../src/mpdinteraction.c:1523
 msgid "Add more"
 msgstr "Adaugă mai multe"
 
-#: ../src/mpdinteraction.c:1491
-msgid "Set Rating"
-msgstr "Setează notare"
-
-#: ../src/playlist3.c:624
+#: ../src/playlist3.c:632
 msgid "MPD database is updating"
 msgstr "Se actualizează baza de date MPD"
 
-#: ../src/playlist3.c:634
-msgid "MPD is updating its database"
-msgstr "MPD îşi actualizează baza de date"
-
-#: ../src/playlist3.c:636
-msgid "MPD finished updating its database"
-msgstr "MPD a terminat actualizarea bazei de date"
-
-#: ../src/playlist3.c:785
+#: ../src/playlist3.c:793
 msgid "Connected"
 msgstr "Conectat"
 
-#: ../src/playlist3.c:794 ../src/playlist3.c:2242
+#: ../src/playlist3.c:802 ../src/playlist3.c:2274
 msgid "Not Connected"
 msgstr "Deconectat"
 
-#: ../src/playlist3.c:807 ../src/playlist3.c:812 ../src/playlist3.c:1647
+#: ../src/playlist3.c:815 ../src/playlist3.c:820 ../src/playlist3.c:1676
 msgid "GMPC"
 msgstr "GMPC"
 
-#: ../src/playlist3.c:807
+#: ../src/playlist3.c:815
 msgid "Connected to"
 msgstr "Conectat la"
 
-#: ../src/playlist3.c:812
+#: ../src/playlist3.c:820
 msgid "Disconnected"
 msgstr "Deconectat"
 
-#: ../src/playlist3.c:879
-msgid ""
-"Failed to open the interface description file!\n"
-"Please reinstall gmpc\n"
-msgstr ""
-"Fişierul de descriere al interfeţei nu a putut fi deschis!\n"
-"Vă rugăm reinstalaţi gmpc\n"
-
-#: ../src/playlist3.c:1680
+#: ../src/playlist3.c:1709
 #, c-format
 msgid "Repeat: %s"
 msgstr "Repetă: %s"
 
-#: ../src/playlist3.c:1681 ../src/playlist3.c:1694 ../src/playlist3.c:1706
-#: ../src/playlist3.c:1719
+#: ../src/playlist3.c:1710 ../src/playlist3.c:1723 ../src/playlist3.c:1738
+#: ../src/playlist3.c:1751
 msgid "On"
 msgstr "Activat"
 
-#: ../src/playlist3.c:1693
+#: ../src/playlist3.c:1722
 #, c-format
 msgid "Random: %s"
 msgstr "Aleator: %s"
 
-#: ../src/playlist3.c:1705
-#, c-format
-msgid "Single mode: %s"
-msgstr "Mod Singular: %s"
-
-#: ../src/playlist3.c:1718
-#, c-format
-msgid "Consume: %s"
-msgstr "Consumă: %s"
-
-#: ../src/playlist3.c:1783
-#, c-format
-msgid "MPD Database refreshed at: %c"
-msgstr "Baza de data MPD a fost reactualizată la: %c"
-
-#: ../src/playlist3.c:1791
+#: ../src/playlist3.c:1823
 msgid "MPD Reported the following error"
 msgstr "MPD a raportat eroarea următoare"
 
-#: ../src/playlist3.c:1924 ../src/playlist3.c:1930
+#: ../src/playlist3.c:1956 ../src/playlist3.c:1962
 msgid "Profile"
 msgstr "Profil"
 
-#: ../src/playlist3.c:1925
+#: ../src/playlist3.c:1957
 msgid "added"
 msgstr "adăugat"
 
-#: ../src/playlist3.c:1932
+#: ../src/playlist3.c:1964
 msgid "changed hostname to:"
 msgstr "s-a schimbat gazda în:"
 
 #. Update DB
-#: ../src/playlist3.c:2040
+#: ../src/playlist3.c:2072
 msgid "Update Database"
 msgstr "Actualizează baza de date"
 
-#. Server Information
-#: ../src/playlist3.c:2049 ../src/vala/gmpc-test-plugin.c:1021
-msgid "Information"
-msgstr "Informaţii"
-
-#: ../src/playlist3.c:2158
+#: ../src/playlist3.c:2190
 msgid "By"
 msgstr "de"
 
-#: ../src/playlist3.c:2164
+#: ../src/playlist3.c:2196
 msgid "From"
 msgstr "de pe"
 
-#: ../src/playlist3.c:2235
+#: ../src/playlist3.c:2267
 msgid "Not Playing"
 msgstr "Nu se redă nimic"
 
-#: ../src/playlist3.c:2349
+#: ../src/playlist3.c:2381
 msgid "Interface"
 msgstr "Interfață"
 
@@ -851,76 +443,12 @@ msgstr "Durată"
 msgid "Message"
 msgstr "Mesaj"
 
-#: ../src/plugin.c:60 ../src/plugin.c:68 ../src/plugin.c:75 ../src/plugin.c:83
-#: ../src/plugin.c:89 ../src/plugin.c:97 ../src/plugin.c:103
-#: ../src/plugin.c:110 ../src/plugin.c:117 ../src/plugin.c:124
-#: ../src/plugin.c:131 ../src/plugin.c:142 ../src/plugin.c:153
-#: ../src/plugin.c:221
-msgid "Failed to load plugin"
-msgstr "Eroare la încărcarea modulului"
-
-#: ../src/plugin.c:60
-msgid "plugin has no name"
-msgstr "modulul nu are nume"
-
-#: ../src/plugin.c:68
-#, fuzzy
-msgid "plugin with same name already exists"
-msgstr "un modul cu acelaşi nume există deja"
-
-#: ../src/plugin.c:75
-msgid "plugin is missing set/get enable function"
-msgstr "modulul nu are funcţiile set/get enable"
-
-#: ../src/plugin.c:83 ../src/plugin.c:89 ../src/plugin.c:142
-msgid "plugin browser structure is incorrect"
-msgstr "structura navigatorului de module este incorectă"
-
-#: ../src/plugin.c:97 ../src/plugin.c:103 ../src/plugin.c:110
-#: ../src/plugin.c:131
-msgid "plugin metadata structure is incorrect"
-msgstr "structura metadatelor modulelor este incorectă"
-
-#: ../src/plugin.c:117
-msgid "plugin get_image api is deprecated "
-msgstr "extensia api get_image pentru module este depreciată "
-
-#: ../src/plugin.c:124
-msgid "plugin get_uris api is deprecated "
-msgstr "extensia api get_uris pentru module este depreciată "
-
-#: ../src/plugin.c:153
-msgid "plugin preferences structure is incorrect"
-msgstr "structura preferintelor modulelor este incorectă"
-
-#: ../src/plugin.c:232
-msgid "Failed to create plugin instance"
-msgstr "Eroare la crearea unei instanţe a modulului"
-
-#: ../src/plugin.c:244
-msgid "Failed to bind symbol in plugin"
-msgstr "Eroare la legarea simbolurilor din modul"
-
-#: ../src/plugin.c:256
-#, c-format
-msgid "Plugin %s has wrong api version: %i"
-msgstr "Modulul %s are versiunea greşită de api: %i"
-
-#: ../src/plugin.c:266 ../src/plugin.c:273
-#, c-format
-msgid "Plugin %s has wrong no plugin structure: %s"
-msgstr "Modulul %s are structura incorectă: %s"
-
 #: ../src/plugin.c:292
 msgid ""
 "One or more plugins failed to load, see help->messages for more information"
 msgstr ""
 "Unul sau mai multe module nu au putut fi încărcate, a se vedea Ajutor-"
 ">Mesaje pentru mai multe informaţii"
-
-#: ../src/preferences.c:98 ../src/preferences.c:205
-msgid "Plugins"
-msgstr "Module"
 
 #: ../src/preferences.c:160
 msgid "Plugins:"
@@ -963,44 +491,36 @@ msgstr "Modul furnizor metadate şi navigator"
 msgid "Misc."
 msgstr "Diverse"
 
-#: ../src/preferences.c:384 ../src/vala/gmpc-metadata-browser2.c:3529
-#: ../src/vala/gmpc-metadata-browser2.c:3990
-#: ../src/vala/gmpc-metadata-browser2.c:3996
-#: ../src/vala/gmpc-metadata-browser2.c:4188
-#: ../src/vala/gmpc-metadata-browser2.c:4643
+#: ../src/preferences.c:384 ../src/vala/gmpc-metadata-browser2.c:3551
+#: ../src/vala/gmpc-metadata-browser2.c:4088
+#: ../src/vala/gmpc-metadata-browser2.c:4094
+#: ../src/vala/gmpc-metadata-browser2.c:4286
+#: ../src/vala/gmpc-metadata-browser2.c:4745
 msgid "Unknown"
 msgstr "Necunoscut"
 
-#: ../src/url-fetcher.c:65 ../src/url-fetcher.c:91 ../src/url-fetcher.c:149
-#: ../src/url-fetcher.c:226
+#: ../src/url-fetcher.c:64 ../src/url-fetcher.c:89 ../src/url-fetcher.c:147
+#: ../src/url-fetcher.c:224
 #, c-format
 msgid "Added %i %s"
 msgstr "S-a adăugat %i %s"
 
-#: ../src/url-fetcher.c:65 ../src/url-fetcher.c:91 ../src/url-fetcher.c:149
-#: ../src/url-fetcher.c:226
+#: ../src/url-fetcher.c:64 ../src/url-fetcher.c:89 ../src/url-fetcher.c:147
+#: ../src/url-fetcher.c:224
 msgid "stream"
 msgid_plural "streams"
 msgstr[0] "flux"
 msgstr[1] "fluxuri"
 msgstr[2] "de fluxuri"
 
-#: ../src/url-fetcher.c:293 ../src/url-fetcher.c:325
+#: ../src/url-fetcher.c:291 ../src/url-fetcher.c:323
 msgid "Added 1 stream"
 msgstr "S-a adăugat un flux"
 
-#: ../src/url-fetcher.c:406
-msgid "Failed to open local file"
-msgstr "Eroare la deschidera unui fişier local"
-
-#: ../src/url-fetcher.c:421
-msgid "Uri scheme not supported"
-msgstr "Schema din adresă nu este suportată"
-
 #. *
 #. * Setup the label
-#.
-#: ../src/url-fetcher.c:463
+#. 
+#: ../src/url-fetcher.c:461
 msgid "Enter an url"
 msgstr "Introduceți o adresă"
 
@@ -1008,13 +528,13 @@ msgstr "Introduceți o adresă"
 msgid "Pla_ylist"
 msgstr "_Listă de redare"
 
-#: ../src/tray-icon2.c:869
+#: ../src/tray-icon2.c:887
 msgid "Notification"
 msgstr "Notificare"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:111
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -1027,13 +547,9 @@ msgstr ""
 msgid "Welcome to GMPC"
 msgstr "Bine aţi venit la GMPC"
 
-#: ../src/setup-assistant.c:132
-msgid "Setup connection"
-msgstr "Setare conexiune"
-
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:141
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1045,69 +561,6 @@ msgstr ""
 #: ../src/setup-assistant.c:143
 msgid "Finish"
 msgstr "Finalizează"
-
-#: ../src/smclient/eggdesktopfile.c:165
-#, c-format
-msgid "File is not a valid .desktop file"
-msgstr ""
-
-#: ../src/smclient/eggdesktopfile.c:188
-#, c-format
-msgid "Unrecognized desktop file Version '%s'"
-msgstr ""
-
-#: ../src/smclient/eggdesktopfile.c:958
-#, fuzzy, c-format
-msgid "Starting %s"
-msgstr "Setează notare"
-
-#: ../src/smclient/eggdesktopfile.c:1100
-#, c-format
-msgid "Application does not accept documents on command line"
-msgstr ""
-
-#: ../src/smclient/eggdesktopfile.c:1168
-#, c-format
-msgid "Unrecognized launch option: %d"
-msgstr ""
-
-#: ../src/smclient/eggdesktopfile.c:1373
-#, c-format
-msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
-msgstr ""
-
-#: ../src/smclient/eggdesktopfile.c:1392
-#, c-format
-msgid "Not a launchable item"
-msgstr ""
-
-#: ../src/smclient/eggsmclient.c:225
-msgid "Disable connection to session manager"
-msgstr ""
-
-#: ../src/smclient/eggsmclient.c:228
-msgid "Specify file containing saved configuration"
-msgstr ""
-
-#: ../src/smclient/eggsmclient.c:228
-msgid "FILE"
-msgstr ""
-
-#: ../src/smclient/eggsmclient.c:231
-msgid "Specify session management ID"
-msgstr ""
-
-#: ../src/smclient/eggsmclient.c:231
-msgid "ID"
-msgstr ""
-
-#: ../src/smclient/eggsmclient.c:252
-msgid "Session management options:"
-msgstr ""
-
-#: ../src/smclient/eggsmclient.c:253
-msgid "Show session management options"
-msgstr ""
 
 #: ../glade/aboutdialog.ui.h:1
 msgid "Copyright 2003-2007 Qball Cow"
@@ -1194,13 +647,9 @@ msgstr "Conectare"
 msgid "Host:"
 msgstr "Gazdă:"
 
-#: ../glade/preferences-connection.ui.h:4
-msgid "Music Directory:"
-msgstr "Director muzică:"
-
 #: ../glade/preferences-connection.ui.h:5
-#: ../src/browsers/playlist3-playlist-editor.c:455
-#: ../src/browsers/playlist3-playlist-editor.c:496
+#: ../src/browsers/playlist3-playlist-editor.c:456
+#: ../src/browsers/playlist3-playlist-editor.c:497
 msgid "Name:"
 msgstr "Nume:"
 
@@ -1292,14 +741,6 @@ msgstr "Ascunde la închidere"
 msgid "Save position and size between sessions"
 msgstr "Salvează poziția și mărimea între sesiuni"
 
-#: ../glade/preferences-playlist.ui.h:6
-msgid "Show buttons instead of dropdown in collapsed view"
-msgstr "Arată butoane în loc de lista derulata in vederea restrânsă"
-
-#: ../glade/preferences-playlist.ui.h:7
-msgid "Show songlist tooltip"
-msgstr "Arată informaţii în lista de melodii"
-
 #: ../glade/preferences-playlist.ui.h:8
 msgid "Stop playing on exit"
 msgstr "Oprește redarea la ieșire"
@@ -1356,11 +797,6 @@ msgstr "Activează"
 msgid "Position:"
 msgstr "Poziție:"
 
-#: ../glade/preferences-trayicon.ui.h:6
-#, fuzzy
-msgid "Show on song change"
-msgstr "Arată melodia"
-
 #: ../glade/preferences-trayicon.ui.h:7
 msgid "Show severity"
 msgstr "Arată severitatea"
@@ -1369,10 +805,6 @@ msgstr "Arată severitatea"
 msgid "Timeout:"
 msgstr "Timp de așteptare:"
 
-#: ../glade/preferences-proxy.ui.h:1
-msgid "<b>Proxy settings</b>"
-msgstr "<b>Setări proxy</b>"
-
 #: ../glade/preferences-proxy.ui.h:2
 msgid "HTTP Proxy:"
 msgstr "Proxy HTTP:"
@@ -1380,19 +812,6 @@ msgstr "Proxy HTTP:"
 #: ../glade/preferences-proxy.ui.h:5
 msgid "Use a proxy for internet connectivity"
 msgstr "Folosește un proxy pentru conectarea la internet"
-
-#: ../glade/preferences-proxy.ui.h:6
-msgid "Use authentication"
-msgstr "Foloseşte autentificare"
-
-#: ../glade/preferences-proxy.ui.h:7
-msgid "Username:"
-msgstr "Nume utilizator:"
-
-#: ../glade/preferences-mmkeys.ui.h:1
-msgid "To disable a keybinding edit it and press 'backspace'"
-msgstr ""
-"Pentru a dezactiva o setare a tastaturii editaţi-o şi apăsaţi 'backspace'"
 
 #: ../glade/preferences.ui.h:1
 msgid ""
@@ -1426,64 +845,43 @@ msgstr "Salvează lista de redare"
 msgid "name:"
 msgstr "nume:"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:156
+#: ../src/browsers/playlist3-current-playlist-browser.c:155
 msgid "item"
 msgid_plural "items"
 msgstr[0] "element"
 msgstr[1] "elemente"
 msgstr[2] "de elemente"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:162
+#: ../src/browsers/playlist3-current-playlist-browser.c:161
 msgid "(Estimation)"
 msgstr "(Estimare)"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:211
-msgid "switch play queue"
-msgstr "schimbă lista de redare"
-
-#: ../src/browsers/playlist3-current-playlist-browser.c:212
-msgid "Switch to play queue"
-msgstr "Schimbă la lista de redare"
-
-#: ../src/browsers/playlist3-current-playlist-browser.c:215
-#: ../src/browsers/playlist3-current-playlist-browser.c:216
-msgid "Clear play queue"
-msgstr "Şterge lista de redare"
-
-#: ../src/browsers/playlist3-current-playlist-browser.c:220
-msgid "Crop current song"
-msgstr "Taie melodia curentă"
-
-#: ../src/browsers/playlist3-current-playlist-browser.c:221
-msgid "Crop the playlist so it only contains the current song"
-msgstr "Taie lista de redare încât să conţină numai melodia curentă"
-
-#: ../src/browsers/playlist3-current-playlist-browser.c:534
+#: ../src/browsers/playlist3-current-playlist-browser.c:531
 msgid "Are you sure you want to clear the playlist?"
 msgstr "Sigur doriți să curățați lista de redare?"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:651
-#: ../src/browsers/playlist3-current-playlist-browser.c:671
-#: ../src/browsers/playlist3-current-playlist-browser.c:713
-#: ../src/browsers/playlist3-current-playlist-browser.c:735
+#: ../src/browsers/playlist3-current-playlist-browser.c:648
+#: ../src/browsers/playlist3-current-playlist-browser.c:668
+#: ../src/browsers/playlist3-current-playlist-browser.c:710
+#: ../src/browsers/playlist3-current-playlist-browser.c:732
 msgid "Your mpd has a broken 'addid', pasting will fail."
 msgstr "Aplicaţia mpd din sistem are 'addid' eronat, adăugarea va eşua."
 
 #. add the delete widget
-#: ../src/browsers/playlist3-current-playlist-browser.c:764
+#: ../src/browsers/playlist3-current-playlist-browser.c:761
 msgid "Crop"
 msgstr "Taie"
 
 #. add the shuffle widget
-#: ../src/browsers/playlist3-current-playlist-browser.c:778
+#: ../src/browsers/playlist3-current-playlist-browser.c:775
 msgid "Shuffle"
 msgstr "Amestecă"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:911
+#: ../src/browsers/playlist3-current-playlist-browser.c:908
 msgid "Add URL"
 msgstr "Adaugă o adresă"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:1000
+#: ../src/browsers/playlist3-current-playlist-browser.c:997
 #, c-format
 msgid ""
 "<i>Playlist <b>\"%s\"</b> already exists\n"
@@ -1492,16 +890,16 @@ msgstr ""
 "<i>Lista de redare <b>„%s”</b> există deja\n"
 "O suprascrieți?</i>"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:1024
+#: ../src/browsers/playlist3-current-playlist-browser.c:1021
 msgid "Failed to save the playlist file."
 msgstr "Eșec la salvarea fișierului cu lista de redare."
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:1102
-#: ../src/browsers/playlist3-current-playlist-browser.c:1150
+#: ../src/browsers/playlist3-current-playlist-browser.c:1099
+#: ../src/browsers/playlist3-current-playlist-browser.c:1147
 msgid "Play Queue"
 msgstr "Coadă de redare"
 
-#: ../src/browsers/playlist3-file-browser.c:97
+#: ../src/browsers/playlist3-file-browser.c:98
 #: ../src/browsers/playlist3-file-browser.c:335
 #: ../src/browsers/playlist3-file-browser.c:1172
 msgid "File Browser"
@@ -1510,18 +908,6 @@ msgstr "Navigator de fișiere"
 #: ../src/browsers/playlist3-file-browser.c:164
 msgid "Directories"
 msgstr "Dosare"
-
-#: ../src/browsers/playlist3-file-browser.c:213
-msgid ""
-"It seems you have no music in your database.\n"
-"To add music, copy the music to your <i>music_directory</i> as specified in "
-"your mpd config file.\n"
-"Then update the database. (Server->Update Database)"
-msgstr ""
-"Aparent nu aveţi melodii în baza de date.\n"
-"Pentru a adăuga melodii, copiaţi melodiile in directorul <i>music_directory</"
-"i> specificat in fişierul de configurare mpd.\n"
-"Apoi actualizaţi baza de date. (Server->Actualizare baza de date)"
 
 #: ../src/browsers/playlist3-file-browser.c:246
 #, c-format
@@ -1536,10 +922,10 @@ msgstr "S-a adăugat recursiv dosarul „%s”"
 #: ../src/browsers/playlist3-file-browser.c:598
 #: ../src/browsers/playlist3-file-browser.c:890
 #: ../src/browsers/playlist3-file-browser.c:922
-#: ../src/browsers/playlist3-find2-browser.c:729
-#: ../src/browsers/playlist3-playlist-editor.c:541
-#: ../src/browsers/playlist3-playlist-editor.c:606
-#: ../src/browsers/playlist3-tag2-browser.c:407
+#: ../src/browsers/playlist3-find2-browser.c:730
+#: ../src/browsers/playlist3-playlist-editor.c:542
+#: ../src/browsers/playlist3-playlist-editor.c:607
+#: ../src/browsers/playlist3-tag2-browser.c:408
 #: ../src/browsers/playlist3-tag2-browser.c:1110
 msgid "Replace"
 msgstr "Înlocuiește"
@@ -1555,12 +941,12 @@ msgid "Loaded playlist"
 msgstr "S-a încărcat lista de redare"
 
 #: ../src/browsers/playlist3-file-browser.c:1004
-#: ../src/browsers/playlist3-playlist-editor.c:387
+#: ../src/browsers/playlist3-playlist-editor.c:388
 msgid "Added"
 msgstr "Adăugat"
 
 #: ../src/browsers/playlist3-file-browser.c:1006
-#: ../src/browsers/playlist3-playlist-editor.c:387
+#: ../src/browsers/playlist3-playlist-editor.c:388
 msgid "song"
 msgid_plural "songs"
 msgstr[0] "melodie"
@@ -1586,69 +972,1005 @@ msgstr[2] "de liste de redare"
 msgid "Are you sure you want to clear the selected playlist?"
 msgstr "Sigur doriți să curățați lista selectată?"
 
-#: ../src/browsers/playlist3-find2-browser.c:102
-#: ../src/vala/gmpc-test-plugin.c:1109
-msgid "Query"
-msgstr "Căutare"
-
-#: ../src/browsers/playlist3-find2-browser.c:240
-#: ../src/browsers/server-information.c:342
-msgid "Database"
-msgstr "Baza de date"
-
-#: ../src/browsers/playlist3-find2-browser.c:241
-msgid "Playlist"
-msgstr "Lista redare"
-
-#: ../src/browsers/playlist3-find2-browser.c:345
-#: ../src/browsers/playlist3-find2-browser.c:794
+#: ../src/browsers/playlist3-find2-browser.c:346
+#: ../src/browsers/playlist3-find2-browser.c:795
 msgid "Search"
 msgstr "Caută"
 
-#: ../src/browsers/playlist3-find2-browser.c:435
-msgid "Search failed"
-msgstr "Căutare eşuată"
-
-#: ../src/browsers/playlist3-find2-browser.c:721
-msgid "Add all"
-msgstr "Adaugă toate"
-
-#: ../src/browsers/playlist3-find2-browser.c:965
-msgid "switch search"
-msgstr "schimbă căutarea"
-
-#: ../src/browsers/playlist3-find2-browser.c:966
+#: ../src/browsers/playlist3-find2-browser.c:967
 msgid "Switch to the search browser"
 msgstr "Schimbă la navigatorul de căutare"
 
-#: ../src/browsers/playlist3-find2-browser.c:970
-msgid "search database"
-msgstr "caută în baza de date"
-
-#: ../src/browsers/playlist3-find2-browser.c:971
-msgid "Search database <query>"
-msgstr "Caută <query> în baza de date"
-
-#: ../src/browsers/playlist3-find2-browser.c:974
-msgid "search playlist"
-msgstr "caută în lista de redare"
-
-#: ../src/browsers/playlist3-find2-browser.c:975
-msgid "Search playlist <query>"
-msgstr "Caută <query> în lista de redare"
-
-#: ../src/browsers/playlist3-find2-browser.c:991
-msgid "Search Browser"
-msgstr "Fereastra de căutare"
-
-#: ../src/browsers/playlist3-playlist-editor.c:132
+#: ../src/browsers/playlist3-playlist-editor.c:133
 #: ../src/browsers/playlist3-playlist-editor.c:1026
 msgid "Playlist Editor"
 msgstr "Editor de listă de redare"
 
+#: ../src/browsers/playlist3-playlist-editor.c:451
+msgid "New playlist"
+msgstr "Listă de redare nouă"
+
+#: ../src/browsers/playlist3-playlist-editor.c:492
+msgid "Rename Playlist"
+msgstr "Redenumește lista de redare"
+
+#. delete
+#: ../src/browsers/playlist3-playlist-editor.c:499
+#: ../src/browsers/playlist3-playlist-editor.c:627
+msgid "Rename"
+msgstr "Redenumește"
+
+#. Add
+#: ../src/browsers/playlist3-playlist-editor.c:981
+msgid "Add to playlist"
+msgstr "Adaugă la lista de redare"
+
+#: ../src/browsers/playlist3-tag2-browser.c:104
+msgid "Tag based browser"
+msgstr "Navigare după etichete"
+
+#: ../src/gob/gmpc-mpddata-treeview.gob:69
+msgid "Markup"
+msgstr "Marcaj"
+
+#: ../src/gob/gmpc-mpddata-treeview.gob:70
+#: ../src/gob/gmpc-mpddata-treeview.gob:636
+#: ../src/vala/gmpc-test-plugin.c:1054
+#: ../src/vala/gmpc-metadata-browser2.c:2870
+#: ../src/vala/gmpc-metadata-browser2.c:3600
+#: ../src/vala/gmpc-metadata-browser2.c:4137
+msgid "Artist"
+msgstr "Artist"
+
+#: ../src/gob/gmpc-mpddata-treeview.gob:71
+#: ../src/gob/gmpc-mpddata-treeview.gob:650
+#: ../src/vala/gmpc-test-plugin.c:1069
+#: ../src/vala/gmpc-metadata-browser2.c:2929
+#: ../src/vala/gmpc-metadata-browser2.c:3622
+msgid "Album"
+msgstr "Album"
+
+#: ../src/gob/gmpc-mpddata-treeview.gob:72
+#: ../src/gob/gmpc-mpddata-treeview.gob:623
+#: ../src/vala/gmpc-test-plugin.c:1087
+#: ../src/vala/gmpc-metadata-browser2.c:3583
+msgid "Title"
+msgstr "Titlu"
+
+#: ../src/gob/gmpc-mpddata-treeview.gob:73
+msgid "File"
+msgstr "Fișier"
+
+#. Genre
+#: ../src/gob/gmpc-mpddata-treeview.gob:74
+#: ../src/gob/gmpc-mpddata-treeview.gob:662
+#: ../src/vala/gmpc-metadata-browser2.c:3634
+msgid "Genre"
+msgstr "Gen"
+
+#. track
+#: ../src/gob/gmpc-mpddata-treeview.gob:75
+#: ../src/vala/gmpc-metadata-browser2.c:2955
+#: ../src/vala/gmpc-metadata-browser2.c:3626
+msgid "Track"
+msgstr "Pistă"
+
+#: ../src/gob/gmpc-mpddata-treeview.gob:77
+msgid "Composer"
+msgstr "Compozitor"
+
+#. performer
+#: ../src/gob/gmpc-mpddata-treeview.gob:78
+#: ../src/vala/gmpc-metadata-browser2.c:3630
+msgid "Performer"
+msgstr "Interpret"
+
+#. date
+#: ../src/gob/gmpc-mpddata-treeview.gob:79
+#: ../src/gob/gmpc-mpddata-treeview.gob:674
+#: ../src/vala/gmpc-metadata-browser2.c:3628
+msgid "Date"
+msgstr "Dată"
+
+#: ../src/gob/gmpc-mpddata-treeview.gob:80
+#: ../src/gob/gmpc-mpddata-treeview.gob:686
+msgid "Duration"
+msgstr "Durată"
+
+#. disc
+#: ../src/gob/gmpc-mpddata-treeview.gob:81
+#: ../src/vala/gmpc-metadata-browser2.c:3632
+msgid "Disc"
+msgstr "Disc"
+
+#. Comment
+#: ../src/gob/gmpc-mpddata-treeview.gob:82
+#: ../src/vala/gmpc-metadata-browser2.c:3669
+msgid "Comment"
+msgstr "Comentariu"
+
+#: ../src/gob/gmpc-mpddata-treeview.gob:83
+msgid "Icon Id"
+msgstr "Id iconiță"
+
+#: ../src/gob/gmpc-mpddata-treeview.gob:84
+msgid "Position"
+msgstr "Poziție"
+
+#: ../src/gob/gmpc-mpddata-treeview.gob:983
+msgid "Paste before"
+msgstr "Adaugă înainte"
+
+#: ../src/gob/gmpc-mpddata-treeview.gob:992
+msgid "Paste after"
+msgstr "Adaugă după"
+
+#. * Edit column
+#: ../src/gob/gmpc-mpddata-treeview.gob:1024
+msgid "Edit Columns"
+msgstr "Editează coloanele"
+
+#: ../src/gob/gmpc-profiles.gob:90
+msgid "Added profile"
+msgstr "Profil adăugat"
+
+#. Generate removal message before the actual profile is destroyed
+#: ../src/gob/gmpc-profiles.gob:403
+msgid "Removed profile"
+msgstr "Profil șters"
+
+#: ../src/gob/gmpc-meta-text-view.gob:96 ../src/gob/gmpc-metaimage.gob:837
+msgid "Refetch"
+msgstr "Ia din nou"
+
+#: ../src/gob/gmpc-meta-text-view.gob:101 ../src/gob/gmpc-metaimage.gob:842
+msgid "Select file"
+msgstr "Selectează fișierul"
+
+#: ../src/gob/gmpc-meta-text-view.gob:302
+msgid "Failed to open file:"
+msgstr "Eșec la deschiderea fișierului:"
+
+#: ../src/gob/gmpc-meta-text-view.gob:302
+msgid "because of encoding issues"
+msgstr "din cauza problemelor de codare"
+
+#: ../src/gob/gmpc-meta-text-view.gob:361
+msgid "Fetching Artist Info"
+msgstr "Se obțin informații despre artist"
+
+#: ../src/gob/gmpc-meta-text-view.gob:369
+msgid "Fetching Album Info"
+msgstr "Se obțin informații despre album"
+
+#: ../src/gob/gmpc-meta-text-view.gob:380
+msgid "Not Available"
+msgstr "Nu sunt disponibile"
+
+#: ../src/gob/gmpc-meta-text-view.gob:445 ../src/gob/gmpc-metaimage.gob:888
+msgid "Select File"
+msgstr "Selectați fișierul"
+
+#: ../src/gob/gmpc-meta-text-view.gob:450
+msgid "Text Document"
+msgstr "Document text"
+
+#: ../src/gob/gmpc-meta-text-view.gob:454 ../src/gob/gmpc-metaimage.gob:898
+msgid "All"
+msgstr "Toate"
+
+#: ../src/gob/gmpc-metaimage.gob:893
+msgid "Images"
+msgstr "Imagini"
+
+#: ../src/vala/gmpc-metadata-browser2.c:2124
+msgid "Metadata Browser"
+msgstr "Navigator de metadate"
+
+#~ msgid "<b>Song Markup</b>"
+#~ msgstr "<b>Marcare melodie</b>"
+
+#~ msgid "_Server"
+#~ msgstr "_Server"
+
+#~ msgid "/path/to/file_name.mp3"
+#~ msgstr "/cale/către/nume_fișier.mp3"
+
+#~ msgid "--start-hidden"
+#~ msgstr "--start-hidden"
+
+#~ msgid "--config="
+#~ msgstr "--config="
+
+#~ msgid "--version"
+#~ msgstr "--version"
+
+#~ msgid "--help"
+#~ msgstr "--help"
+
+#~ msgid "--replace"
+#~ msgstr "--replace"
+
+#~ msgid "--quit"
+#~ msgstr "--quit"
+
+#~ msgid "--disable-plugins"
+#~ msgstr "--disable-plugins"
+
+#~ msgid "--clean-cover-db"
+#~ msgstr "--clean-cover-db"
+
+#~ msgid " Total time: "
+#~ msgstr " Timp total: "
+
+#~ msgid "View"
+#~ msgstr "Vizualizează"
+
+#~ msgid "Artist info:"
+#~ msgstr "Despre artist:"
+
+#~ msgid "<b>Date: </b>"
+#~ msgid_plural "<b>Dates: </b>"
+#~ msgstr[0] "<b>Dată: </b>"
+#~ msgstr[1] "<b>Date: </b>"
+#~ msgstr[2] "<b>Date: </b>"
+
+#~ msgid "<b>Genre: </b>"
+#~ msgid_plural "<b>Genres: </b>"
+#~ msgstr[0] "<b>Gen: </b>"
+#~ msgstr[1] "<b>Genuri: </b>"
+#~ msgstr[2] "<b>Genuri: </b>"
+
+#, c-format
+#~ msgid "Only the first %i result displayed, please refine your search query"
+#~ msgstr ""
+#~ "Se afișează doar primele %i rezultate, vă rugăm să rafinați termenii de "
+#~ "căutare"
+
+#~ msgid "Find Artist:"
+#~ msgstr "Caută artist:"
+
+#~ msgid "kbit/sec"
+#~ msgstr "kbit/sec"
+
+#~ msgid "Album info:"
+#~ msgstr "Despre album:"
+
+#~ msgid "Show Current Song"
+#~ msgstr "Arată melodia curentă"
+
+#~ msgid "Jonny Singer"
+#~ msgstr "Ion Cântărețul"
+
+#~ msgid "Sing or Swing you want"
+#~ msgstr "Cântă sau mâncă"
+
+#~ msgid "The kernel jazz"
+#~ msgstr "Balada kernelului"
+
+#~ msgid "01/24"
+#~ msgstr "01/24"
+
+#~ msgid "MPD's Streaming server"
+#~ msgstr "Serverul de streaming al MPD"
+
+#~ msgid "2 Feb 2006"
+#~ msgstr "2 Feb 2006"
+
+#~ msgid "Edit _Browser Markup"
+#~ msgstr "Editează marcajul pentru _navigator"
+
+#. Basic dialog with a close button
+#: ../glade/playlist3.glade.h:1 ../src/bug-information.c:239
+msgid "Bug information"
+msgstr "Informaţii erori"
+
+#: ../glade/playlist3.glade.h:2
+msgid "Consume"
+msgstr "Consumă"
+
+#: ../glade/playlist3.glade.h:3
+msgid "Easy Command Help"
+msgstr "Ajutor comenzi facile"
+
+#: ../glade/playlist3.glade.h:6 ../src/mpdinteraction.c:321
+msgid "Mute"
+msgstr "Mut"
+
+#: ../glade/playlist3.glade.h:13
+msgid "Se_rver"
+msgstr ""
+
+#: ../glade/playlist3.glade.h:15
+msgid "Single mode"
+msgstr "Mod singular"
+
+#: ../glade/playlist3.glade.h:30
+msgid "_Tools"
+msgstr "Unel_te"
+
+#: ../src/main.c:279
+msgid "Start the program in full screen"
+msgstr ""
+
+#: ../src/main.c:281
+msgid "Show program version and revision"
+msgstr "Arată versiunea şi revizia programului"
+
+#: ../src/main.c:283
+msgid "Quits the running gmpc"
+msgstr "Opreşte gmpc dacă rulează"
+
+#: ../src/main.c:285
+msgid "Replace the running gmpc"
+msgstr "Înlocuieşte gmpc-ul care rulează"
+
+#: ../src/main.c:287
+msgid "Don't load the plugins"
+msgstr "Nu încărca modulele"
+
+#: ../src/main.c:289
+msgid "Load alternative config file"
+msgstr "Încarcă un fişier de configurare alternativ"
+
+#: ../src/main.c:291
+msgid "Set the debug level"
+msgstr "Setează nivelul de depanare"
+
+#: ../src/main.c:293
+msgid "Start gmpc hidden to tray"
+msgstr "Porneşte gmpc ascuns"
+
+#: ../src/main.c:295
+msgid "Remove all failed hits from metadata cache"
+msgstr "Şterge toate informaţiile invalide din memoria de metadate"
+
+#: ../src/main.c:297
+msgid "Show redraw events in GTK+"
+msgstr "Arată evenimentele de redesenare în GTK+"
+
+#: ../src/main.c:299
+msgid "Show bug information dialog"
+msgstr "Arată dialogul de informaţii de depanare"
+
+#: ../src/main.c:301
+msgid "Shows all output from a certain log domain"
+msgstr "Arată toate ieşirile notate in jurnal dintr-un anume domeniu"
+
+#: ../src/main.c:438
+msgid "quit"
+msgstr "ieşire"
+
+#: ../src/main.c:439
+msgid "Quit gmpc"
+msgstr "Ieşire din gmpc"
+
+#: ../src/main.c:440
+msgid "hide"
+msgstr "ascunde"
+
+#: ../src/main.c:441
+msgid "Hide gmpc"
+msgstr "Ascundere gmpc"
+
+#: ../src/main.c:442
+msgid "show"
+msgstr "arată"
+
+#: ../src/main.c:443
+msgid "Show gmpc"
+msgstr "Arată gmpc"
+
+#: ../src/main.c:444
+msgid "show notification"
+msgstr "arată notificare"
+
+#: ../src/main.c:445
+msgid "Show trayicon notification"
+msgstr "Arată notificarea la iconiţa din tava de sistem"
+
+#: ../src/main.c:499
+msgid "Failed to load the configuration system."
+msgstr "Eroare la încărcarea sistemului de configurare."
+
+#: ../src/main.c:1133
+msgid "Insufficient permission to connect to mpd. Check password"
+msgstr "Permisiuni insuficiente pentru conectarea la mpd. Verificați parola."
+
+#: ../src/main.c:1168
+msgid "MPD versions before 0.13.0 are not supported"
+msgstr "Versiunile de MPD mai vechi de 0.13.0 nu sunt suportate"
+
+#: ../src/main.c:1236
+msgid "Connected to mpd"
+msgstr "Conectat la mpd"
+
+#: ../src/main.c:1238
+msgid "Disconnected from mpd"
+msgstr "Deconectat de la mpd"
+
+#: ../src/main.c:1272
+msgid "Error occurred during operation"
+msgstr "O eroare a survenit în timpul operaţiunii"
+
+#. Create label
+#: ../src/main.c:1296
+msgid "The following error(s) occurred:"
+msgstr "Următoarele erori au survenit"
+
+#: ../src/metadata.c:293
+msgid ""
+"A new metadata plugin was added, gmpc has purged all failed hits from the "
+"cache"
+msgstr ""
+"Un nou modul de metadate a fost adăugat, gmpc a curățat toate intrările "
+"eronate din memorie."
+
+#: ../src/metadata.c:1390
+msgid "Metadata Handler"
+msgstr "Modul pentru metadate"
+
+#: ../src/misc.c:39
+msgid "Total time"
+msgstr ""
+
+#. * MM_TOGGLE_MUTE
+#: ../src/mm-keys.c:88
+msgid "Show easy command entry"
+msgstr "Arată comenzile facile"
+
+#: ../src/mm-keys.c:632
+#, c-format
+msgid ""
+"Duplicate mapping detected\n"
+"\n"
+"%s is already mapped to %s"
+msgstr ""
+"A fost detectată o setare duplicat\n"
+"\n"
+"%s este deja setat ca %s"
+
+#: ../src/mpdinteraction.c:91
+msgid "enable"
+msgstr "activează"
+
+#: ../src/mpdinteraction.c:94
+msgid "disable"
+msgstr "dezactivează"
+
+#: ../src/mpdinteraction.c:162
+msgid "Single: The used MPD server is to old and does not support this."
+msgstr ""
+
+#: ../src/mpdinteraction.c:164
+msgid "Single: You have insufficient permission to use this option."
+msgstr ""
+
+#: ../src/mpdinteraction.c:181
+msgid "Consume: The used MPD server is to old and does not support this."
+msgstr ""
+
+#: ../src/mpdinteraction.c:183
+msgid "Consume: You have insufficient permission to use this option."
+msgstr ""
+
+#: ../src/mpdinteraction.c:268
+msgid ""
+"Stop after current song: The used MPD server is to old and does not support "
+"this."
+msgstr ""
+"Opreşte după melodia curentă: Versiunea de server MPD folosită este prea "
+"veche şi nu suportă această funcţie."
+
+#: ../src/mpdinteraction.c:270
+msgid "Stop after current song: You have insufficient permission."
+msgstr "Opreşte după melodia curentă: Nu posedaţi permisiunile de rigoare."
+
+#: ../src/mpdinteraction.c:272
+msgid "Playback will be stopped after the current playing song."
+msgstr "Redarea se va oprii după melodia curentă."
+
+#: ../src/mpdinteraction.c:282
+msgid ""
+"Repeat current song: The used MPD server is to old and does not support this."
+msgstr ""
+"Repetă melodia curentă: Versiunea de server MPD folosită este prea veche şi "
+"nu suportă această funcţie."
+
+#: ../src/mpdinteraction.c:284
+msgid "Repeat current song: You have insufficient permission."
+msgstr "Repetă melodia curentă: Nu dispuneţi de permisiunile necesare."
+
+#: ../src/mpdinteraction.c:286
+msgid "The current song will be forever repeated."
+msgstr "Această melodie va fi repetată mereu."
+
+#: ../src/mpdinteraction.c:296
+msgid ""
+"Update database: The used MPD server is to old and does not support this."
+msgstr ""
+"Actualizare baza de date: Versiunea de server MPD folosită este prea veche "
+"şi nu suportă această funcţie."
+
+#: ../src/mpdinteraction.c:298
+msgid "Update database: You have insufficient permission."
+msgstr "Actualizare bază de date: Nu dispuneţi de permisiunile necesare."
+
+#. Player control
+#. basic playlist commands
+#: ../src/mpdinteraction.c:307 ../src/mpdinteraction.c:328
+msgid "play"
+msgstr "redă"
+
+#: ../src/mpdinteraction.c:307
+msgid "start playback"
+msgstr "porneşte redarea"
+
+#: ../src/mpdinteraction.c:308
+msgid "pause"
+msgstr "pauză"
+
+#: ../src/mpdinteraction.c:308
+msgid "pause playback"
+msgstr "pauză redare"
+
+#: ../src/mpdinteraction.c:309
+msgid "next"
+msgstr "următoarea"
+
+#: ../src/mpdinteraction.c:309
+msgid "next song"
+msgstr "următoarea melodie"
+
+#: ../src/mpdinteraction.c:310
+msgid "prev"
+msgstr "precedenta"
+
+#: ../src/mpdinteraction.c:310
+msgid "previous song"
+msgstr "precedenta melodie"
+
+#: ../src/mpdinteraction.c:311
+msgid "stop"
+msgstr "oprire"
+
+#: ../src/mpdinteraction.c:311
+msgid "stop playback"
+msgstr "oprire redare"
+
+#: ../src/mpdinteraction.c:313
+msgid "random"
+msgstr "aleator"
+
+#: ../src/mpdinteraction.c:313
+msgid "Random (on|off)"
+msgstr "Aleator (da|nu)"
+
+#: ../src/mpdinteraction.c:314
+msgid "repeat"
+msgstr "repetare"
+
+#: ../src/mpdinteraction.c:314
+msgid "Repeat (on|off)"
+msgstr "Repetare (da|nu)"
+
+#: ../src/mpdinteraction.c:316
+msgid "single"
+msgstr ""
+
+#: ../src/mpdinteraction.c:316
+msgid "Single (on|off)"
+msgstr ""
+
+#: ../src/mpdinteraction.c:317
+msgid "consume"
+msgstr ""
+
+#: ../src/mpdinteraction.c:317
+msgid "Consume (on|off)"
+msgstr ""
+
+#. volume commands
+#: ../src/mpdinteraction.c:320
+msgid "volume"
+msgstr "volum"
+
+#: ../src/mpdinteraction.c:320
+msgid "Volume (+-)<level>"
+msgstr "Volum (+-)<nivel>"
+
+#: ../src/mpdinteraction.c:321
+msgid "mute"
+msgstr "oprire sunet"
+
+#: ../src/mpdinteraction.c:323
+msgid "crossfade"
+msgstr "crossfade"
+
+#: ../src/mpdinteraction.c:323
+msgctxt "Regex for matching crossfade, translate off"
+msgid "([0-9]+|Off)"
+msgstr "([0-9]+|Oprit)"
+
+#: ../src/mpdinteraction.c:323
+msgid "Set Crossfade <seconds>"
+msgstr "Setare crossfade <secunde>"
+
+#: ../src/mpdinteraction.c:325
+msgid "output"
+msgstr "ieşire"
+
+#: ../src/mpdinteraction.c:325
+msgctxt "Regex for matching output"
+msgid "[0-9]+ (Enable|Disable)"
+msgstr "[0-9]+ (Activează|Dezactivează)"
+
+#: ../src/mpdinteraction.c:326
+msgid "output X enable or disable"
+msgstr "ieşirea X activare sau dezactivare"
+
+#: ../src/mpdinteraction.c:328
+msgid "Play <query>"
+msgstr "Redare <query>"
+
+#: ../src/mpdinteraction.c:329
+msgid "add"
+msgstr "adaugă"
+
+#: ../src/mpdinteraction.c:329
+msgid "Add <query>"
+msgstr "Adaugă <query>"
+
+#: ../src/mpdinteraction.c:330
+msgid "replace"
+msgstr "înlocuieşte"
+
+#: ../src/mpdinteraction.c:330
+msgid "Replace <query>"
+msgstr "înlocuieşte <query>"
+
+#. Basic seek commands
+#: ../src/mpdinteraction.c:333
+msgid "seek"
+msgstr "derulare"
+
+#: ../src/mpdinteraction.c:333
+msgid "Seek within the current song"
+msgstr "Derulare în melodia curentă"
+
+#: ../src/mpdinteraction.c:336
+msgid "stop after current song"
+msgstr "opreşte după melodia curentă"
+
+#: ../src/mpdinteraction.c:338
+msgid "Stop playback after the current song"
+msgstr "Opreşte redarea după melodia curentă"
+
+#: ../src/mpdinteraction.c:342
+msgid "repeat current song"
+msgstr "repetă melodia curentă"
+
+#: ../src/mpdinteraction.c:344
+msgid "Repeat the current song"
+msgstr "Repetă melodia curentă"
+
+#: ../src/mpdinteraction.c:348
+msgid "update database"
+msgstr "actualizare baza de date"
+
+#: ../src/mpdinteraction.c:350
+msgid "Update the database"
+msgstr "Actualizare baza de date"
+
+#: ../src/mpdinteraction.c:1533
+msgid "Set Rating"
+msgstr "Setează notare"
+
+#: ../src/playlist3.c:642
+msgid "MPD is updating its database"
+msgstr "MPD îşi actualizează baza de date"
+
+#: ../src/playlist3.c:644
+msgid "MPD finished updating its database"
+msgstr "MPD a terminat actualizarea bazei de date"
+
+#: ../src/playlist3.c:887
+msgid ""
+"Failed to open the interface description file!\n"
+"Please reinstall gmpc\n"
+msgstr ""
+"Fişierul de descriere al interfeţei nu a putut fi deschis!\n"
+"Vă rugăm reinstalaţi gmpc\n"
+
+#: ../src/playlist3.c:1737
+#, c-format
+msgid "Single mode: %s"
+msgstr "Mod Singular: %s"
+
+#: ../src/playlist3.c:1750
+#, c-format
+msgid "Consume: %s"
+msgstr "Consumă: %s"
+
+#: ../src/playlist3.c:1815
+#, c-format
+msgid "MPD Database refreshed at: %c"
+msgstr "Baza de data MPD a fost reactualizată la: %c"
+
+#. Server Information
+#: ../src/playlist3.c:2081 ../src/vala/gmpc-test-plugin.c:1016
+msgid "Information"
+msgstr "Informaţii"
+
+#: ../src/playlist3.c:2658
+msgid "Repeat enabled"
+msgstr ""
+
+#: ../src/playlist3.c:2664
+msgid "Repeat disabled"
+msgstr ""
+
+#: ../src/playlist3.c:2684
+msgid "Random enabled"
+msgstr ""
+
+#: ../src/playlist3.c:2690
+msgid "Random disabled"
+msgstr ""
+
+#: ../src/plugin.c:60 ../src/plugin.c:68 ../src/plugin.c:75 ../src/plugin.c:83
+#: ../src/plugin.c:89 ../src/plugin.c:97 ../src/plugin.c:103
+#: ../src/plugin.c:110 ../src/plugin.c:117 ../src/plugin.c:124
+#: ../src/plugin.c:131 ../src/plugin.c:142 ../src/plugin.c:153
+#: ../src/plugin.c:221
+msgid "Failed to load plugin"
+msgstr "Eroare la încărcarea modulului"
+
+#: ../src/plugin.c:60
+msgid "plugin has no name"
+msgstr "modulul nu are nume"
+
+#: ../src/plugin.c:68
+msgid "plugin with same name already exists"
+msgstr ""
+
+#: ../src/plugin.c:75
+msgid "plugin is missing set/get enable function"
+msgstr "modulul nu are funcţiile set/get enable"
+
+#: ../src/plugin.c:83 ../src/plugin.c:89 ../src/plugin.c:142
+msgid "plugin browser structure is incorrect"
+msgstr "structura navigatorului de module este incorectă"
+
+#: ../src/plugin.c:97 ../src/plugin.c:103 ../src/plugin.c:110
+#: ../src/plugin.c:131
+msgid "plugin metadata structure is incorrect"
+msgstr "structura metadatelor modulelor este incorectă"
+
+#: ../src/plugin.c:117
+msgid "plugin get_image api is deprecated "
+msgstr "extensia api get_image pentru module este depreciată "
+
+#: ../src/plugin.c:124
+msgid "plugin get_uris api is deprecated "
+msgstr "extensia api get_uris pentru module este depreciată "
+
+#: ../src/plugin.c:153
+msgid "plugin preferences structure is incorrect"
+msgstr "structura preferintelor modulelor este incorectă"
+
+#: ../src/plugin.c:232
+msgid "Failed to create plugin instance"
+msgstr "Eroare la crearea unei instanţe a modulului"
+
+#: ../src/plugin.c:244
+msgid "Failed to bind symbol in plugin"
+msgstr "Eroare la legarea simbolurilor din modul"
+
+#: ../src/plugin.c:256
+#, c-format
+msgid "Plugin %s has wrong api version: %i"
+msgstr "Modulul %s are versiunea greşită de api: %i"
+
+#: ../src/plugin.c:266 ../src/plugin.c:273
+#, c-format
+msgid "Plugin %s has wrong no plugin structure: %s"
+msgstr "Modulul %s are structura incorectă: %s"
+
+#: ../src/preferences.c:98 ../src/preferences.c:205
+msgid "Plugins"
+msgstr "Module"
+
+#: ../src/url-fetcher.c:404
+msgid "Failed to open local file"
+msgstr "Eroare la deschidera unui fişier local"
+
+#: ../src/url-fetcher.c:419
+msgid "Uri scheme not supported"
+msgstr "Schema din adresă nu este suportată"
+
+#: ../src/setup-assistant.c:132
+msgid "Setup connection"
+msgstr "Setare conexiune"
+
+#: ../src/smclient/eggdesktopfile.c:165
+#, c-format
+msgid "File is not a valid .desktop file"
+msgstr ""
+
+#: ../src/smclient/eggdesktopfile.c:188
+#, c-format
+msgid "Unrecognized desktop file Version '%s'"
+msgstr ""
+
+#: ../src/smclient/eggdesktopfile.c:958
+#, c-format
+msgid "Starting %s"
+msgstr ""
+
+#: ../src/smclient/eggdesktopfile.c:1100
+#, c-format
+msgid "Application does not accept documents on command line"
+msgstr ""
+
+#: ../src/smclient/eggdesktopfile.c:1168
+#, c-format
+msgid "Unrecognized launch option: %d"
+msgstr ""
+
+#: ../src/smclient/eggdesktopfile.c:1373
+#, c-format
+msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
+msgstr ""
+
+#: ../src/smclient/eggdesktopfile.c:1392
+#, c-format
+msgid "Not a launchable item"
+msgstr ""
+
+#: ../src/smclient/eggsmclient.c:225
+msgid "Disable connection to session manager"
+msgstr ""
+
+#: ../src/smclient/eggsmclient.c:228
+msgid "Specify file containing saved configuration"
+msgstr ""
+
+#: ../src/smclient/eggsmclient.c:228
+msgid "FILE"
+msgstr ""
+
+#: ../src/smclient/eggsmclient.c:231
+msgid "Specify session management ID"
+msgstr ""
+
+#: ../src/smclient/eggsmclient.c:231
+msgid "ID"
+msgstr ""
+
+#: ../src/smclient/eggsmclient.c:252
+msgid "Session management options:"
+msgstr ""
+
+#: ../src/smclient/eggsmclient.c:253
+msgid "Show session management options"
+msgstr ""
+
+#: ../glade/preferences-connection.ui.h:4
+msgid "Music Directory:"
+msgstr "Director muzică:"
+
+#: ../glade/preferences-playlist.ui.h:6
+msgid "Show buttons instead of dropdown in collapsed view"
+msgstr "Arată butoane în loc de lista derulata in vederea restrânsă"
+
+#: ../glade/preferences-playlist.ui.h:7
+msgid "Show songlist tooltip"
+msgstr "Arată informaţii în lista de melodii"
+
+#: ../glade/preferences-trayicon.ui.h:6
+msgid "Show on song change"
+msgstr ""
+
+#: ../glade/preferences-proxy.ui.h:1
+msgid "<b>Proxy settings</b>"
+msgstr "<b>Setări proxy</b>"
+
+#: ../glade/preferences-proxy.ui.h:6
+msgid "Use authentication"
+msgstr "Foloseşte autentificare"
+
+#: ../glade/preferences-proxy.ui.h:7
+msgid "Username:"
+msgstr "Nume utilizator:"
+
+#: ../glade/preferences-mmkeys.ui.h:1
+msgid "To disable a keybinding edit it and press 'backspace'"
+msgstr ""
+"Pentru a dezactiva o setare a tastaturii editaţi-o şi apăsaţi 'backspace'"
+
+#: ../src/browsers/playlist3-current-playlist-browser.c:210
+msgid "switch play queue"
+msgstr "schimbă lista de redare"
+
+#: ../src/browsers/playlist3-current-playlist-browser.c:211
+msgid "Switch to play queue"
+msgstr "Schimbă la lista de redare"
+
+#: ../src/browsers/playlist3-current-playlist-browser.c:214
+#: ../src/browsers/playlist3-current-playlist-browser.c:215
+msgid "Clear play queue"
+msgstr "Şterge lista de redare"
+
+#: ../src/browsers/playlist3-current-playlist-browser.c:219
+msgid "Crop current song"
+msgstr "Taie melodia curentă"
+
+#: ../src/browsers/playlist3-current-playlist-browser.c:220
+msgid "Crop the playlist so it only contains the current song"
+msgstr "Taie lista de redare încât să conţină numai melodia curentă"
+
+#: ../src/browsers/playlist3-file-browser.c:213
+msgid ""
+"It seems you have no music in your database.\n"
+"To add music, copy the music to your <i>music_directory</i> as specified in "
+"your mpd config file.\n"
+"Then update the database. (Server->Update Database)"
+msgstr ""
+"Aparent nu aveţi melodii în baza de date.\n"
+"Pentru a adăuga melodii, copiaţi melodiile in directorul "
+"<i>music_directory</i> specificat in fişierul de configurare mpd.\n"
+"Apoi actualizaţi baza de date. (Server->Actualizare baza de date)"
+
+#: ../src/browsers/playlist3-find2-browser.c:102
+#: ../src/vala/gmpc-test-plugin.c:1104
+msgid "Query"
+msgstr "Căutare"
+
+#: ../src/browsers/playlist3-find2-browser.c:241
+#: ../src/browsers/server-information.c:342
+msgid "Database"
+msgstr "Baza de date"
+
+#: ../src/browsers/playlist3-find2-browser.c:242
+msgid "Playlist"
+msgstr "Lista redare"
+
+#: ../src/browsers/playlist3-find2-browser.c:436
+msgid "Search failed"
+msgstr "Căutare eşuată"
+
+#: ../src/browsers/playlist3-find2-browser.c:722
+msgid "Add all"
+msgstr "Adaugă toate"
+
+#: ../src/browsers/playlist3-find2-browser.c:966
+msgid "switch search"
+msgstr "schimbă căutarea"
+
+#: ../src/browsers/playlist3-find2-browser.c:971
+msgid "search database"
+msgstr "caută în baza de date"
+
+#: ../src/browsers/playlist3-find2-browser.c:972
+msgid "Search database <query>"
+msgstr "Caută <query> în baza de date"
+
+#: ../src/browsers/playlist3-find2-browser.c:975
+msgid "search playlist"
+msgstr "caută în lista de redare"
+
+#: ../src/browsers/playlist3-find2-browser.c:976
+msgid "Search playlist <query>"
+msgstr "Caută <query> în lista de redare"
+
+#: ../src/browsers/playlist3-find2-browser.c:992
+msgid "Search Browser"
+msgstr "Fereastra de căutare"
+
 #. Add it
-#: ../src/browsers/playlist3-playlist-editor.c:255
-#: ../src/browsers/playlist3-playlist-editor.c:277
+#: ../src/browsers/playlist3-playlist-editor.c:256
+#: ../src/browsers/playlist3-playlist-editor.c:278
 #: ../src/browsers/playlist3-playlist-editor.c:964
 #: ../src/browsers/playlist3-playlist-editor.c:1018
 #: ../src/vala/gmpc-favorites.c:137 ../src/vala/gmpc-favorites.c:157
@@ -1656,28 +1978,9 @@ msgstr "Editor de listă de redare"
 msgid "Favorites"
 msgstr "Favorite"
 
-#: ../src/browsers/playlist3-playlist-editor.c:450
-msgid "New playlist"
-msgstr "Listă de redare nouă"
-
-#: ../src/browsers/playlist3-playlist-editor.c:491
-msgid "Rename Playlist"
-msgstr "Redenumește lista de redare"
-
-#. delete
-#: ../src/browsers/playlist3-playlist-editor.c:498
-#: ../src/browsers/playlist3-playlist-editor.c:626
-msgid "Rename"
-msgstr "Redenumește"
-
 #: ../src/browsers/playlist3-playlist-editor.c:840
 msgid "Playlists"
 msgstr "Liste de redare"
-
-#. Add
-#: ../src/browsers/playlist3-playlist-editor.c:981
-msgid "Add to playlist"
-msgstr "Adaugă la lista de redare"
 
 #: ../src/browsers/playlist3-playlist-editor.c:1019
 msgid "Added playing song to favorites list."
@@ -1688,11 +1991,7 @@ msgstr "Adaugă melodia redată la lista de favorite"
 msgid "Add Current Song to favorites"
 msgstr "Adaugă melodia curentă la lista de favorite"
 
-#: ../src/browsers/playlist3-tag2-browser.c:103
-msgid "Tag based browser"
-msgstr "Navigare după etichete"
-
-#: ../src/browsers/playlist3-tag2-browser.c:1886
+#: ../src/browsers/playlist3-tag2-browser.c:1884
 msgid "Reset browser"
 msgstr "Resetează fereastra"
 
@@ -1749,94 +2048,6 @@ msgstr "Tipuri etichete"
 msgid "Tag statistics"
 msgstr "Statistici etichete"
 
-#: ../src/gob/gmpc-mpddata-treeview.gob:69
-msgid "Markup"
-msgstr "Marcaj"
-
-#: ../src/gob/gmpc-mpddata-treeview.gob:70
-#: ../src/gob/gmpc-mpddata-treeview.gob:636
-#: ../src/vala/gmpc-test-plugin.c:1059
-#: ../src/vala/gmpc-metadata-browser2.c:2810
-#: ../src/vala/gmpc-metadata-browser2.c:3578
-#: ../src/vala/gmpc-metadata-browser2.c:4039
-msgid "Artist"
-msgstr "Artist"
-
-#: ../src/gob/gmpc-mpddata-treeview.gob:71
-#: ../src/gob/gmpc-mpddata-treeview.gob:650
-#: ../src/vala/gmpc-test-plugin.c:1074
-#: ../src/vala/gmpc-metadata-browser2.c:2869
-#: ../src/vala/gmpc-metadata-browser2.c:3600
-msgid "Album"
-msgstr "Album"
-
-#: ../src/gob/gmpc-mpddata-treeview.gob:72
-#: ../src/gob/gmpc-mpddata-treeview.gob:623
-#: ../src/vala/gmpc-test-plugin.c:1092
-#: ../src/vala/gmpc-metadata-browser2.c:3561
-msgid "Title"
-msgstr "Titlu"
-
-#: ../src/gob/gmpc-mpddata-treeview.gob:73
-msgid "File"
-msgstr "Fișier"
-
-#. Genre
-#: ../src/gob/gmpc-mpddata-treeview.gob:74
-#: ../src/gob/gmpc-mpddata-treeview.gob:662
-#: ../src/vala/gmpc-metadata-browser2.c:3612
-msgid "Genre"
-msgstr "Gen"
-
-#. track
-#: ../src/gob/gmpc-mpddata-treeview.gob:75
-#: ../src/vala/gmpc-metadata-browser2.c:2895
-#: ../src/vala/gmpc-metadata-browser2.c:3604
-msgid "Track"
-msgstr "Pistă"
-
-#: ../src/gob/gmpc-mpddata-treeview.gob:77
-msgid "Composer"
-msgstr "Compozitor"
-
-#. performer
-#: ../src/gob/gmpc-mpddata-treeview.gob:78
-#: ../src/vala/gmpc-metadata-browser2.c:3608
-msgid "Performer"
-msgstr "Interpret"
-
-#. date
-#: ../src/gob/gmpc-mpddata-treeview.gob:79
-#: ../src/gob/gmpc-mpddata-treeview.gob:674
-#: ../src/vala/gmpc-metadata-browser2.c:3606
-msgid "Date"
-msgstr "Dată"
-
-#: ../src/gob/gmpc-mpddata-treeview.gob:80
-#: ../src/gob/gmpc-mpddata-treeview.gob:686
-msgid "Duration"
-msgstr "Durată"
-
-#. disc
-#: ../src/gob/gmpc-mpddata-treeview.gob:81
-#: ../src/vala/gmpc-metadata-browser2.c:3610
-msgid "Disc"
-msgstr "Disc"
-
-#. Comment
-#: ../src/gob/gmpc-mpddata-treeview.gob:82
-#: ../src/vala/gmpc-metadata-browser2.c:3647
-msgid "Comment"
-msgstr "Comentariu"
-
-#: ../src/gob/gmpc-mpddata-treeview.gob:83
-msgid "Icon Id"
-msgstr "Id iconiță"
-
-#: ../src/gob/gmpc-mpddata-treeview.gob:84
-msgid "Position"
-msgstr "Poziție"
-
 #: ../src/gob/gmpc-mpddata-treeview.gob:85
 msgid "AlbumArtist"
 msgstr "AlbumArtist"
@@ -1850,89 +2061,22 @@ msgid "Directory"
 msgstr "Director"
 
 #. Add a tools menu item with the previously generated menu as submenu
-#: ../src/gob/gmpc-mpddata-treeview.gob:950
+#: ../src/gob/gmpc-mpddata-treeview.gob:954
 msgid "Tools"
 msgstr "Unelte"
 
-#: ../src/gob/gmpc-mpddata-treeview.gob:979
-msgid "Paste before"
-msgstr "Adaugă înainte"
-
-#: ../src/gob/gmpc-mpddata-treeview.gob:988
-msgid "Paste after"
-msgstr "Adaugă după"
-
-#. * Edit column
-#: ../src/gob/gmpc-mpddata-treeview.gob:1020
-msgid "Edit Columns"
-msgstr "Editează coloanele"
-
-#: ../src/gob/gmpc-profiles.gob:90
-msgid "Added profile"
-msgstr "Profil adăugat"
-
-#. Generate removal message before the actual profile is destroyed
-#: ../src/gob/gmpc-profiles.gob:403
-msgid "Removed profile"
-msgstr "Profil șters"
-
-#: ../src/gob/gmpc-meta-text-view.gob:96 ../src/gob/gmpc-metaimage.gob:837
-msgid "Refetch"
-msgstr "Ia din nou"
-
-#: ../src/gob/gmpc-meta-text-view.gob:101 ../src/gob/gmpc-metaimage.gob:842
-msgid "Select file"
-msgstr "Selectează fișierul"
-
 #: ../src/gob/gmpc-meta-text-view.gob:110 ../src/gob/gmpc-metaimage.gob:851
-#: ../src/vala/gmpc-test-plugin.c:1420
+#: ../src/vala/gmpc-test-plugin.c:1398
 msgid "Metadata selector"
 msgstr "Selector metadate"
-
-#: ../src/gob/gmpc-meta-text-view.gob:302
-msgid "Failed to open file:"
-msgstr "Eșec la deschiderea fișierului:"
-
-#: ../src/gob/gmpc-meta-text-view.gob:302
-msgid "because of encoding issues"
-msgstr "din cauza problemelor de codare"
 
 #: ../src/gob/gmpc-meta-text-view.gob:357
 msgid "Fetching Lyrics"
 msgstr "Preluare versuri"
 
-#: ../src/gob/gmpc-meta-text-view.gob:361
-msgid "Fetching Artist Info"
-msgstr "Se obțin informații despre artist"
-
 #: ../src/gob/gmpc-meta-text-view.gob:365
-#, fuzzy
 msgid "Fetching Guitar tab"
-msgstr "Se obțin informații despre artist"
-
-#: ../src/gob/gmpc-meta-text-view.gob:369
-msgid "Fetching Album Info"
-msgstr "Se obțin informații despre album"
-
-#: ../src/gob/gmpc-meta-text-view.gob:380
-msgid "Not Available"
-msgstr "Nu sunt disponibile"
-
-#: ../src/gob/gmpc-meta-text-view.gob:445 ../src/gob/gmpc-metaimage.gob:888
-msgid "Select File"
-msgstr "Selectați fișierul"
-
-#: ../src/gob/gmpc-meta-text-view.gob:450
-msgid "Text Document"
-msgstr "Document text"
-
-#: ../src/gob/gmpc-meta-text-view.gob:454 ../src/gob/gmpc-metaimage.gob:898
-msgid "All"
-msgstr "Toate"
-
-#: ../src/gob/gmpc-metaimage.gob:893
-msgid "Images"
-msgstr "Imagini"
+msgstr ""
 
 #: ../src/gob/gmpc-stats-label.gob:106 ../src/gob/gmpc-stats-label.gob:128
 msgid "n/a"
@@ -1951,33 +2095,32 @@ msgid "Update list from internet"
 msgstr "Actualizează lista de pe Internet"
 
 #: ../src/vala/gmpc-song-links.c:191
-#, fuzzy
 msgid "Web Links"
-msgstr "Legături"
+msgstr ""
 
 #: ../src/vala/gmpc-song-links.c:629
 #, c-format
 msgid "Lookup %s on %s"
 msgstr "Căutare %s pe %s"
 
-#: ../src/vala/gmpc-easy-command.c:123
+#: ../src/vala/gmpc-easy-command.c:128
 msgid "Gmpc Easy Command"
 msgstr "Comenzi facile Gmpc"
 
 #. Create window
-#: ../src/vala/gmpc-easy-command.c:641
+#: ../src/vala/gmpc-easy-command.c:631
 msgid "Easy Command help"
 msgstr "Ajutor comenzi facile"
 
-#: ../src/vala/gmpc-easy-command.c:669
+#: ../src/vala/gmpc-easy-command.c:659
 msgid "Command"
 msgstr "Comandă"
 
-#: ../src/vala/gmpc-easy-command.c:680
+#: ../src/vala/gmpc-easy-command.c:670
 msgid "Usage"
 msgstr "Mod de utilizare"
 
-#: ../src/vala/gmpc-easy-command.c:685
+#: ../src/vala/gmpc-easy-command.c:675
 msgid ""
 "The following commands can be used in the easy command window.\n"
 "The easy command window can be opened by pressing ctrl-space"
@@ -1985,11 +2128,11 @@ msgstr ""
 "Următoarele comenzi pot fi utilizate in fereastra de comenzi facile.\n"
 "Fereastra de comenzi facile poate fi deschisă apăsând ctrl-space"
 
-#: ../src/vala/gmpc-easy-command.c:752
+#: ../src/vala/gmpc-easy-command.c:750
 msgid "Help"
 msgstr "Ajutor"
 
-#: ../src/vala/gmpc-easy-command.c:752
+#: ../src/vala/gmpc-easy-command.c:750
 msgid "Get a list of available commands"
 msgstr "Listă de comenzi disponibile"
 
@@ -2013,345 +2156,247 @@ msgstr "Mărime"
 msgid "wxh"
 msgstr "wxh"
 
-#: ../src/vala/gmpc-test-plugin.c:903
+#: ../src/vala/gmpc-test-plugin.c:898
 msgid "Cover"
 msgstr "Copertă"
 
-#: ../src/vala/gmpc-test-plugin.c:917
+#: ../src/vala/gmpc-test-plugin.c:912
 msgid "Lyric"
 msgstr "Versuri"
 
-#: ../src/vala/gmpc-test-plugin.c:1035
+#: ../src/vala/gmpc-test-plugin.c:1030
 msgid "Insufficient information to store/fetch this metadata"
 msgstr "Informaţii insuficiente pentru a pastra/prelua aceste metadate"
 
-#: ../src/vala/gmpc-test-plugin.c:1048
+#: ../src/vala/gmpc-test-plugin.c:1043
 msgid "Artist art"
 msgstr "Copertă artist"
 
-#: ../src/vala/gmpc-test-plugin.c:1049
+#: ../src/vala/gmpc-test-plugin.c:1044
 msgid "Album art"
 msgstr "Copertă album"
 
-#: ../src/vala/gmpc-test-plugin.c:1050
+#: ../src/vala/gmpc-test-plugin.c:1045
 msgid "Song Lyrics"
 msgstr "Versuri melodie"
 
-#: ../src/vala/gmpc-test-plugin.c:1051
+#: ../src/vala/gmpc-test-plugin.c:1046
 msgid "Album Info"
 msgstr "Informaţii album"
 
-#: ../src/vala/gmpc-test-plugin.c:1052
+#: ../src/vala/gmpc-test-plugin.c:1047
 msgid "Artist Biography"
 msgstr "Biografie artist"
 
-#: ../src/vala/gmpc-test-plugin.c:1053
+#: ../src/vala/gmpc-test-plugin.c:1048
 msgid "Guitar Tab"
 msgstr ""
 
-#: ../src/vala/gmpc-metadata-browser2.c:492
-#: ../src/vala/gmpc-metadata-browser2.c:494
+#: ../src/vala/gmpc-metadata-browser2.c:497
+#: ../src/vala/gmpc-metadata-browser2.c:499
 msgid "Similar songs"
 msgstr "Melodii similare"
 
-#: ../src/vala/gmpc-metadata-browser2.c:732
-#: ../src/vala/gmpc-metadata-browser2.c:2287
-#: ../src/vala/gmpc-metadata-browser2.c:2480
-#: ../src/vala/gmpc-metadata-browser2.c:2640
-#: ../src/vala/gmpc-metadata-browser2.c:3670
-#: ../src/vala/gmpc-metadata-browser2.c:3882
-#: ../src/vala/gmpc-metadata-browser2.c:4074
-#: ../src/vala/gmpc-metadata-browser2.c:4247
-#, fuzzy
+#: ../src/vala/gmpc-metadata-browser2.c:737
+#: ../src/vala/gmpc-metadata-browser2.c:2338
+#: ../src/vala/gmpc-metadata-browser2.c:2540
+#: ../src/vala/gmpc-metadata-browser2.c:2700
+#: ../src/vala/gmpc-metadata-browser2.c:3692
+#: ../src/vala/gmpc-metadata-browser2.c:3980
+#: ../src/vala/gmpc-metadata-browser2.c:4172
+#: ../src/vala/gmpc-metadata-browser2.c:4345
 msgid "_Replace"
-msgstr "Înlocuiește"
+msgstr ""
 
-#: ../src/vala/gmpc-metadata-browser2.c:857
-#: ../src/vala/gmpc-metadata-browser2.c:908
-#: ../src/vala/gmpc-metadata-browser2.c:926
-#: ../src/vala/gmpc-metadata-browser2.c:1090
+#: ../src/vala/gmpc-metadata-browser2.c:862
+#: ../src/vala/gmpc-metadata-browser2.c:913
+#: ../src/vala/gmpc-metadata-browser2.c:931
+#: ../src/vala/gmpc-metadata-browser2.c:1084
 msgid "Unavailable"
 msgstr "Nedisponibil"
 
-#: ../src/vala/gmpc-metadata-browser2.c:896
-#, fuzzy
+#: ../src/vala/gmpc-metadata-browser2.c:901
 msgid "Fetching .. "
-msgstr "Preiau..."
+msgstr ""
 
-#: ../src/vala/gmpc-metadata-browser2.c:1096
-#, fuzzy
+#: ../src/vala/gmpc-metadata-browser2.c:1090
 msgid "Fetching"
-msgstr "Preiau..."
+msgstr ""
 
-#: ../src/vala/gmpc-metadata-browser2.c:1409
-#: ../src/vala/gmpc-metadata-browser2.c:1521
+#: ../src/vala/gmpc-metadata-browser2.c:1399
+#: ../src/vala/gmpc-metadata-browser2.c:1511
 msgid "(less)"
 msgstr ""
 
-#: ../src/vala/gmpc-metadata-browser2.c:1413
-#: ../src/vala/gmpc-metadata-browser2.c:1519
+#: ../src/vala/gmpc-metadata-browser2.c:1403
+#: ../src/vala/gmpc-metadata-browser2.c:1509
 msgid "(more)"
 msgstr ""
 
-#: ../src/vala/gmpc-metadata-browser2.c:1603
+#: ../src/vala/gmpc-metadata-browser2.c:1593
 #: ../src/vala/gmpc-metadata-browser2.c:1979
-#, fuzzy
 msgid "Now Playing"
-msgstr "Nu se redă nimic"
+msgstr ""
 
-#: ../src/vala/gmpc-metadata-browser2.c:2121
-msgid "Metadata Browser"
-msgstr "Navigator de metadate"
-
-#: ../src/vala/gmpc-metadata-browser2.c:2860
-#, fuzzy
+#: ../src/vala/gmpc-metadata-browser2.c:2920
 msgid "Year"
-msgstr "Caută"
+msgstr ""
 
-#: ../src/vala/gmpc-metadata-browser2.c:2905
-#: ../src/vala/gmpc-metadata-browser2.c:4058
-#: ../src/vala/gmpc-metadata-browser2.c:4104
-#: ../src/vala/gmpc-metadata-browser2.c:4231
+#: ../src/vala/gmpc-metadata-browser2.c:2965
+#: ../src/vala/gmpc-metadata-browser2.c:4156
+#: ../src/vala/gmpc-metadata-browser2.c:4202
+#: ../src/vala/gmpc-metadata-browser2.c:4329
 msgid "Songs"
 msgstr "Melodii"
 
-#: ../src/vala/gmpc-metadata-browser2.c:3560
-#, fuzzy
+#: ../src/vala/gmpc-metadata-browser2.c:3582
 msgid "Search songs with similar title"
-msgstr "Melodii cu acelaşi titlu"
+msgstr ""
 
 #. AlbumArtist label
-#: ../src/vala/gmpc-metadata-browser2.c:3582
+#: ../src/vala/gmpc-metadata-browser2.c:3604
 msgid "Album artist"
 msgstr "Artist album"
 
-#: ../src/vala/gmpc-metadata-browser2.c:3624
+#: ../src/vala/gmpc-metadata-browser2.c:3646
 msgid "Open path to song in file browser"
 msgstr ""
 
-#: ../src/vala/gmpc-metadata-browser2.c:3625
+#: ../src/vala/gmpc-metadata-browser2.c:3647
 msgid "Path"
 msgstr "Cale"
 
-#: ../src/vala/gmpc-metadata-browser2.c:3634
+#: ../src/vala/gmpc-metadata-browser2.c:3656
 msgid "Favored"
 msgstr "Favorită"
 
-#: ../src/vala/gmpc-metadata-browser2.c:3643
+#: ../src/vala/gmpc-metadata-browser2.c:3665
 msgid "Rating"
 msgstr "Notare"
 
-#: ../src/vala/gmpc-metadata-browser2.c:3692
-#: ../src/vala/gmpc-metadata-browser2.c:5115
+#: ../src/vala/gmpc-metadata-browser2.c:3714
+#: ../src/vala/gmpc-metadata-browser2.c:5226
 msgid "Lyrics"
 msgstr "Versuri"
 
-#: ../src/vala/gmpc-metadata-browser2.c:3709
-#: ../src/vala/gmpc-metadata-browser2.c:5121
+#: ../src/vala/gmpc-metadata-browser2.c:3731
+#: ../src/vala/gmpc-metadata-browser2.c:5232
 msgid "Guitar Tabs"
 msgstr ""
 
-#: ../src/vala/gmpc-metadata-browser2.c:4046
-#: ../src/vala/gmpc-metadata-browser2.c:4219
-#, fuzzy
+#: ../src/vala/gmpc-metadata-browser2.c:4144
+#: ../src/vala/gmpc-metadata-browser2.c:4317
 msgid "Genres"
-msgstr "Gen"
+msgstr ""
 
-#: ../src/vala/gmpc-metadata-browser2.c:4052
-#: ../src/vala/gmpc-metadata-browser2.c:4225
-#, fuzzy
+#: ../src/vala/gmpc-metadata-browser2.c:4150
+#: ../src/vala/gmpc-metadata-browser2.c:4323
 msgid "Dates"
-msgstr "Dată"
+msgstr ""
 
-#: ../src/vala/gmpc-metadata-browser2.c:4064
-#: ../src/vala/gmpc-metadata-browser2.c:4237
+#: ../src/vala/gmpc-metadata-browser2.c:4162
+#: ../src/vala/gmpc-metadata-browser2.c:4335
 msgid "Playtime"
 msgstr "Timp de redare"
 
-#: ../src/vala/gmpc-metadata-browser2.c:4093
-#: ../src/vala/gmpc-metadata-browser2.c:5103
+#: ../src/vala/gmpc-metadata-browser2.c:4191
+#: ../src/vala/gmpc-metadata-browser2.c:5214
 msgid "Album information"
 msgstr "Informaţii album"
 
 #. Artist information
-#: ../src/vala/gmpc-metadata-browser2.c:4266
-#: ../src/vala/gmpc-metadata-browser2.c:5097
+#: ../src/vala/gmpc-metadata-browser2.c:4364
+#: ../src/vala/gmpc-metadata-browser2.c:5208
 msgid "Artist information"
 msgstr "Informaţii artist"
 
-#: ../src/vala/gmpc-metadata-browser2.c:4278
-#: ../src/vala/gmpc-metadata-browser2.c:4281
-#, fuzzy
+#: ../src/vala/gmpc-metadata-browser2.c:4377
+#: ../src/vala/gmpc-metadata-browser2.c:4380
 msgid "Similar artist"
-msgstr "Artişti similari"
+msgstr ""
 
 #. Title
-#: ../src/vala/gmpc-metadata-browser2.c:5093
+#: ../src/vala/gmpc-metadata-browser2.c:5204
 msgid "Enable/disable metadata options"
 msgstr ""
 
-#: ../src/vala/gmpc-metadata-browser2.c:5109
-#, fuzzy
+#: ../src/vala/gmpc-metadata-browser2.c:5220
 msgid "Similar Artist"
-msgstr "Artişti similari"
+msgstr ""
 
-#: ../src/vala/gmpc-metadata-browser2.c:5127
-#, fuzzy
+#: ../src/vala/gmpc-metadata-browser2.c:5238
 msgid "Similar Songs"
-msgstr "Melodii similare"
+msgstr ""
 
-#: ../src/vala/gmpc-metadata-browser2.c:5133
+#: ../src/vala/gmpc-metadata-browser2.c:5244
 msgid "Web links"
 msgstr ""
 
-#~ msgid "_Server"
-#~ msgstr "_Server"
-
-#~ msgid "/path/to/file_name.mp3"
-#~ msgstr "/cale/către/nume_fișier.mp3"
-
-#~ msgid "Jonny Singer"
-#~ msgstr "Ion Cântărețul"
-
-#~ msgid "Sing or Swing you want"
-#~ msgstr "Cântă sau mâncă"
-
-#~ msgid "The kernel jazz"
-#~ msgstr "Balada kernelului"
-
-#~ msgid "01/24"
-#~ msgstr "01/24"
-
-#~ msgid "2 Feb 2006"
-#~ msgstr "2 Feb 2006"
-
-#~ msgid "MPD's Streaming server"
-#~ msgstr "Serverul de streaming al MPD"
-
-#~ msgid "View"
-#~ msgstr "Vizualizează"
-
-#~ msgid "Only the first %i result displayed, please refine your search query"
-#~ msgstr ""
-#~ "Se afișează doar primele %i rezultate, vă rugăm să rafinați termenii de "
-#~ "căutare"
-
-#~ msgid "Find Artist:"
-#~ msgstr "Caută artist:"
-
-#~ msgid "<b>Genre: </b>"
-#~ msgid_plural "<b>Genres: </b>"
-#~ msgstr[0] "<b>Gen: </b>"
-#~ msgstr[1] "<b>Genuri: </b>"
-#~ msgstr[2] "<b>Genuri: </b>"
-
-#~ msgid "<b>Date: </b>"
-#~ msgid_plural "<b>Dates: </b>"
-#~ msgstr[0] "<b>Dată: </b>"
-#~ msgstr[1] "<b>Date: </b>"
-#~ msgstr[2] "<b>Date: </b>"
-
-#~ msgid "Artist info:"
-#~ msgstr "Despre artist:"
-
-#~ msgid "Album info:"
-#~ msgstr "Despre album:"
-
-#~ msgid "Show Current Song"
-#~ msgstr "Arată melodia curentă"
-
-#~ msgid "kbit/sec"
-#~ msgstr "kbit/sec"
-
-#~ msgid "<b>Song Markup</b>"
-#~ msgstr "<b>Marcare melodie</b>"
-
-#~ msgid "Edit _Browser Markup"
-#~ msgstr "Editează marcajul pentru _navigator"
-
-#~ msgid "--version"
-#~ msgstr "--version"
-
-#~ msgid "--config="
-#~ msgstr "--config="
-
-#~ msgid "--start-hidden"
-#~ msgstr "--start-hidden"
-
-#~ msgid "--clean-cover-db"
-#~ msgstr "--clean-cover-db"
-
-#~ msgid "--disable-plugins"
-#~ msgstr "--disable-plugins"
-
-#~ msgid "--replace"
-#~ msgstr "--replace"
-
-#~ msgid "--quit"
-#~ msgstr "--quit"
-
-#~ msgid "--help"
-#~ msgstr "--help"
-
-#~ msgid "second"
-#~ msgid_plural "seconds"
-#~ msgstr[0] "secundă"
-#~ msgstr[1] ""
-#~ msgstr[2] "secunde"
-
-#~ msgid "Collection"
-#~ msgstr "Colecţie"
-
-#~ msgid "Bitrate"
-#~ msgstr "Rată de biţi"
-
-#~ msgid "Audio format"
-#~ msgstr "Format audio"
+#~ msgid "Fetching..."
+#~ msgstr "Preiau..."
 
 #~ msgid "Invalid search"
 #~ msgstr "Căutare invalidă"
 
-#~ msgid "Albums"
-#~ msgstr "Albume"
+#~ msgid "Bitrate"
+#~ msgstr "Rată de biţi"
 
-#~ msgid "Tracks"
-#~ msgstr "Piese"
+#~ msgid "Collection"
+#~ msgstr "Colecţie"
 
-#~ msgid "kHz"
-#~ msgstr "kHz"
+#~ msgid "Songs with same title"
+#~ msgstr "Melodii cu acelaşi titlu"
+
+#~ msgid "Audio format"
+#~ msgstr "Format audio"
 
 #~ msgid "bits"
 #~ msgstr "biţi"
 
+#~ msgid "Tracks"
+#~ msgstr "Piese"
+
 #~ msgid "channels"
 #~ msgstr "canale"
 
-#~ msgid "switch metadata browser"
-#~ msgstr "schimbă fereastra de metadate"
+#~ msgid "Similar Artists"
+#~ msgstr "Artişti similari"
 
-#~ msgid "Switch to the metadata browser"
-#~ msgstr "Schimbă la fereastra de metadate"
+#~ msgid "Albums"
+#~ msgstr "Albume"
 
-#~ msgid "show current song"
-#~ msgstr "arată melodia curentă"
+#~ msgid "kHz"
+#~ msgstr "kHz"
 
-#~ msgid "Show the current songs information"
-#~ msgstr "Arată informaţii despre melodia curentă"
+#~ msgid "Show the current album information"
+#~ msgstr "Arată informaţii despre albumul curent"
 
 #~ msgid "show current artist"
 #~ msgstr "arată artistul curent"
 
-#~ msgid "Show the current artist information"
-#~ msgstr "Arată informaţii despre artistul curent"
+#~ msgid "Show the current songs information"
+#~ msgstr "Arată informaţii despre melodia curentă"
 
 #~ msgid "show current album"
 #~ msgstr "arată albumul curent"
 
-#~ msgid "Show the current album information"
-#~ msgstr "Arată informaţii despre albumul curent"
+#~ msgid "Show the current artist information"
+#~ msgstr "Arată informaţii despre artistul curent"
+
+#~ msgid "show current song"
+#~ msgstr "arată melodia curentă"
+
+#~ msgid "Links"
+#~ msgstr "Legături"
 
 #~ msgid "Orientation"
 #~ msgstr "Orientare"
 
 #~ msgid "The orientation of the tray."
 #~ msgstr "Orientare tavă sistem"
+
+#~ msgid "Switch to the metadata browser"
+#~ msgstr "Schimbă la fereastra de metadate"
+
+#~ msgid "switch metadata browser"
+#~ msgstr "schimbă fereastra de metadate"
