@@ -685,6 +685,8 @@ public class  Gmpc.NowPlaying : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface {
         }
         return false;
     }
+
+
     private void browser_init() {
         if(this.paned == null)
         {
@@ -1162,6 +1164,18 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         return false;
     }
 
+    private bool browser_button_release_event(Gtk.Widget widget, Gdk.EventButton event)
+    {
+        if(event.button == 8) {
+            history_previous();
+            return true;
+        }
+        else if (event.button == 9) {
+            history_next();
+            return true;
+        }
+        return false;
+    }
     private void browser_init()
     {
         if(this.paned == null)
@@ -1309,6 +1323,10 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             this.metadata_sw.add_with_viewport(this.metadata_box);
             
             this.paned.add2(this.metadata_sw);
+
+
+
+            this.paned.button_release_event.connect(browser_button_release_event);
 
             this.reload_browsers();
         }
@@ -2310,6 +2328,9 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         if(history == null || current == null){
          return;
         }
+        if(current.next == null) {
+            return;
+        }
         current = current.next;
         if(current != null) show_hitem(current.data);
         else metadata_box_clear();
@@ -2319,6 +2340,9 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
     {
         if(history == null || current == null){
          return;
+        }
+        if(current.prev == null) {
+            return;
         }
         current = current.prev;
         if(current != null) show_hitem(current.data);
