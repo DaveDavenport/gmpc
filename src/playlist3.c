@@ -1847,10 +1847,10 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
 							"[%title% - &[%artist%]]|%shortfile%",
 							song);
 					gtk_widget_set_tooltip_text(next_button, buffer);
+					mpd_freeSong(song);
 				}
 				else 
 					gtk_widget_set_tooltip_text(next_button, "");
-				mpd_freeSong(song);
 			}
 			else 
 					gtk_widget_set_tooltip_text(next_button, "");
