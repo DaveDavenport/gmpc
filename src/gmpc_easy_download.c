@@ -521,7 +521,6 @@ GEADAsyncHandler *gmpc_easy_async_downloader_with_headers(const gchar * uri, GEA
 	soup_message_body_set_accumulate(msg->response_body, FALSE);
 	g_signal_connect_after(msg, "got-chunk", G_CALLBACK(gmpc_easy_async_status_update), d);
 	g_signal_connect_after(msg, "got-headers", G_CALLBACK(gmpc_easy_async_headers_update), d);
-	printf("uri: %s\n", uri);
 	soup_session_queue_message(soup_session, msg, gmpc_easy_async_callback, d);
 
 	return (GEADAsyncHandler *) d;
