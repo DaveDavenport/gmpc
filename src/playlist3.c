@@ -627,23 +627,31 @@ int pl3_hide(void)
 	return TRUE;
 }
 
+static GtkWidget *si_update = NULL;
 static void pl3_updating_changed(MpdObj * mi, int updating)
 {
 	char *mesg = _("MPD database is updating");
 	if (pl3_xml != NULL) {
 		gtk_statusbar_pop(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar1")), updating_id);
-		gtk_widget_hide(glade_xml_get_widget(pl3_xml, "image_updating"));
 		if (updating > 0) {
 			updating_id =
 				gtk_statusbar_get_context_id(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar1")), mesg);
 			gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar1")), updating_id, mesg);
-			gtk_widget_show(glade_xml_get_widget(pl3_xml, "image_updating"));
-
 			playlist3_show_error_message(_("MPD is updating its database"), ERROR_INFO);
 		} else if (updating_id > 0) {
 			playlist3_show_error_message(_("MPD finished updating its database"), ERROR_INFO);
 			updating_id = 0;
 		}
+	}
+
+	if(updating && si_update == NULL) {
+		si_update = gtk_image_new_from_icon_name("gtk-refresh", GTK_ICON_SIZE_MENU);
+		gtk_widget_set_tooltip_text(GTK_WIDGET(si_update), _("MPD is rescanning the database"));
+		gtk_widget_show(GTK_WIDGET(si_update));
+		main_window_add_status_icon(si_update);
+	}else if (!updating && si_update != NULL) {
+		gtk_widget_destroy(si_update);
+		si_update = NULL;
 	}
 }
 
@@ -829,7 +837,7 @@ static void playlist_connection_changed(MpdObj * mi, int connect, gpointer data)
 							MPD_CST_STATE | MPD_CST_SONGID | MPD_CST_NEXTSONG | 
 							MPD_CST_ELAPSED_TIME | MPD_CST_VOLUME |
 							MPD_CST_REPEAT | MPD_CST_RANDOM | MPD_CST_PERMISSION
-							| MPD_CST_SINGLE_MODE | MPD_CST_CONSUME_MODE
+							| MPD_CST_SINGLE_MODE | MPD_CST_CONSUME_MODE | MPD_CST_UPDATING
 							, NULL);
 
 	/**

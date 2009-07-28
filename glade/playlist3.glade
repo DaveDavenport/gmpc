@@ -765,20 +765,6 @@
           <widget class="GtkHBox" id="hbox1">
             <property name="visible">True</property>
             <child>
-              <widget class="GtkEventBox" id="eventbox1">
-                <property name="visible">True</property>
-                <property name="tooltip" translatable="yes">MPD database is updating.</property>
-                <child>
-                  <widget class="GtkImage" id="image_updating">
-                    <property name="stock">gtk-refresh</property>
-                  </widget>
-                </child>
-              </widget>
-              <packing>
-                <property name="expand">False</property>
-              </packing>
-            </child>
-            <child>
               <widget class="GtkProgressBar" id="pl3_progressbar">
                 <property name="pulse_step">0.10000000149</property>
               </widget>
