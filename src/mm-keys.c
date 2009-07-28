@@ -291,36 +291,39 @@ static void mmkeys_init (MmKeys *object)
 	GdkScreen *screen;
 	GdkWindow *root;
 	gint i, j;
-	int keycode = 0;
+//	int keycode = 0;
 	int anyKeybindsFailed = FALSE;
 	int anyDuplicatesFound = FALSE;
 
 	display = gdk_display_get_default ();
 
 
-	/** Play Pause */
+	/** Play Pause 
 	keycode = XKeysymToKeycode (GDK_DISPLAY (), XF86XK_AudioPlay);
 	keycodes[MM_PLAYPAUSE] = cfg_get_single_value_as_int_with_default(config, "Keybindings", keynames[MM_PLAYPAUSE], keycode);
 	masks[MM_PLAYPAUSE] = cfg_get_single_value_as_int_with_default(config, "Keymasks", keynames[MM_PLAYPAUSE], 0);
+    */
 	/**
 	 * Previous
-	 */
+	 
 	keycode = XKeysymToKeycode (GDK_DISPLAY (), XF86XK_AudioPrev);
 	keycodes[MM_PREV] = cfg_get_single_value_as_int_with_default(config, "Keybindings", keynames[MM_PREV], keycode);
 	masks[MM_PREV] = cfg_get_single_value_as_int_with_default(config, "Keymasks", keynames[MM_PREV], 0);
+    */
 	/**
 	 * Next 
-	 */
+	 *
 	keycode = XKeysymToKeycode (GDK_DISPLAY (), XF86XK_AudioNext);
 	keycodes[MM_NEXT] = cfg_get_single_value_as_int_with_default(config, "Keybindings", keynames[MM_NEXT], keycode);
 	masks[MM_NEXT] = cfg_get_single_value_as_int_with_default(config, "Keymasks", keynames[MM_NEXT], 0);
+    */
 	/**
 	 * Stop
-	 */
+	 *
 	keycode = XKeysymToKeycode (GDK_DISPLAY (), XF86XK_AudioStop);
 	keycodes[MM_STOP] = cfg_get_single_value_as_int_with_default(config, "Keybindings", keynames[MM_STOP], keycode);
 	masks[MM_STOP] = cfg_get_single_value_as_int_with_default(config, "Keymasks", keynames[MM_STOP], 0);
-
+*/
 	for(i=0;i<LAST_SIGNAL;i++)
 	{
 		keycodes[i] = cfg_get_single_value_as_int_with_default(config, "Keybindings", keynames[i], 0);
