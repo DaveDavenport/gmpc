@@ -448,7 +448,10 @@ update_columns (GtkTreeView    *tree_view,
 	b = b->next;
 	
 	if (a == NULL)
-	  return;
+	{
+		g_free(new_order);
+		return;
+	}
 	m++;
       }
       
