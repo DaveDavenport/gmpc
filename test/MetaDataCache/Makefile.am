@@ -29,7 +29,7 @@ mtc_test_SOURCES = \
 		$(top_srcdir)/src/plugin.c\
 		$(top_srcdir)/src/misc.c\
         $(top_srcdir)/src/gmpc_easy_download.c\
-        $(top_srcdir)/src/gob/gmpc-meta-watcher.c\
+        $(top_srcdir)/src/gmpc-meta-watcher.c\
         $(top_srcdir)/src/vala/gmpc-plugin.c\
 		$(top_srcdir)/src/metadata-cache.c
 

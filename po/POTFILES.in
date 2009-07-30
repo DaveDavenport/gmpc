@@ -51,16 +51,16 @@ src/egg/eggcolumnchooserdialog.c
 
 
 # Gob files
-src/gob/gmpc-mpddata-model.gob
-src/gob/gmpc-mpddata-model-sort.gob
-src/gob/gmpc-mpddata-treeview.gob
-src/gob/gmpc-profiles.gob
-src/gob/gmpc-meta-text-view.gob
-src/gob/gmpc-metaimage.gob
-src/gob/gmpc-clicklabel.gob
-src/gob/gmpc-clicklabel.gob
-src/gob/gmpc-meta-watcher.gob
-src/gob/gmpc-stats-label.gob
+src/gmpc-mpddata-model.gob
+src/gmpc-mpddata-model-sort.gob
+src/gmpc-mpddata-treeview.gob
+src/gmpc-profiles.gob
+src/gmpc-meta-text-view.gob
+src/gmpc-metaimage.gob
+src/gmpc-clicklabel.gob
+src/gmpc-clicklabel.gob
+src/gmpc-meta-watcher.gob
+src/gmpc-stats-label.gob
 
 # Vala
 src/vala/gmpc_menu_item_rating.c

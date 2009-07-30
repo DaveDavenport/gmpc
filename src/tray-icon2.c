@@ -24,7 +24,7 @@
 #include "main.h"
 #include "playlist3.h"
 #include "vala/gmpc-progress.h"
-#include "gob/gmpc-metaimage.h"
+#include "gmpc-metaimage.h"
 #include "misc.h"
 
 

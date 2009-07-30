@@ -52,7 +52,7 @@
 #include "vala/gmpc-metadata-prefetcher.h"
 #include "vala/gmpc-paned-size-group.h"
 
-#include "gob/gmpc-mpddata-model-playlist.h"
+#include "gmpc-mpddata-model-playlist.h"
 #include "metadata-cache.h"
 #include "bug-information.h"
 

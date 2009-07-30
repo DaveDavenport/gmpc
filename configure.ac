@@ -393,8 +393,6 @@ shave-libtool
 Makefile
 src/Makefile
 src/gmpc-version.h
-src/gob/Makefile
-src/smclient/Makefile
 glade/Makefile
 data/Makefile
 po/Makefile.in

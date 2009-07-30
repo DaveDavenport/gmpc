@@ -6,8 +6,6 @@ endif
 CONF_VERSION=0
 -include Makefile.config
 
-SUBDIRS=gob smclient
-
 bin_PROGRAMS=gmpc
 
 gmpc_SOURCES=\
@@ -23,39 +21,21 @@ gmpc_SOURCES=\
 	config1.c\
 	metadata.c\
     metadata-cache.c\
-	browsers/playlist3-tag2-browser.c\
-	browsers/playlist3-file-browser.c\
-	browsers/playlist3-current-playlist-browser.c\
-	browsers/playlist3-find2-browser.c\
-	browsers/playlist3-playlist-editor.c\
-	vala/gmpc-image.c\
-	vala/gmpc-progress.c\
-	vala/gmpc-rating.c\
-	vala/gmpc_menu_item_rating.c\
-	vala/gmpc-easy-command.c\
-	vala/gmpc-song-links.c\
-	vala/gmpc-plugin.c\
-	vala/gmpc-test-plugin.c\
-    vala/gmpc-mpddata-treeview-tooltip.c\
-	vala/gmpc-metadata-browser2.c\
-	vala/gmpc-favorites.c\
-	vala/gmpc-paned-size-group.c\
-    vala/gmpc-liststore-sort.c\
-    vala/gmpc-connection.c\
-    vala/gmpc-metadata-prefetcher.c\
 	gmpc_easy_download.c\
 	setup-assistant.c\
 	url-fetcher.c\
-	egg/eggcolumnchooserdialog.c\
-	egg/eggcolumnmodel.c\
-	bacon/bacon-message-connection.c\
 	advanced-search.c\
-	browsers/server-information.c\
-	bug-information.c
+	bug-information.c\
+    $(gmpc_bacon_FILES)\
+    $(gmpc_egg_FILES)\
+    $(gmpc_vala_FILES)\
+    $(gmpc_browser_FILES)
+
+nodist_gmpc_SOURCES=\
+    $(gmpc_GOBCFILES)
 
 gmpc_LDADD=\
-			   gob/libcwidgets.la\
-               smclient/libeggsmclient.la
+           libeggsmclient.la
 
 
 if WIN32 
@@ -63,7 +43,8 @@ gmpc_LDADD += gmpc-win32.o
 endif
 
 BUILT_SOURCES=\
-		revisiont.h
+              $(gmpc_GOBSTAMPFILES)\
+              revisiont.h
 
 gmpc-win32.o: gmpc-win32.rc
 	$(LIBTOOL) --mode=compile --tag=RC $(RC) -i $^ -o $@
@@ -90,8 +71,6 @@ INCLUDES=\
 	-I$(top_builddir)/src\
 	-I$(top_srcdir)/src/egg\
 	-I$(top_builddir)/src/egg\
-	-I$(top_srcdir)/src/gob\
-	-I$(top_builddir)/src/gob\
 	-I$(top_srcdir)/src/vala\
 	-I$(top_builddir)/src/vala
 
@@ -165,6 +144,12 @@ gmpcinclude_HEADERS = \
         vala/gmpc-connection.h\
         vala/gmpc-mpddata-treeview-tooltip.h\
         vala/gmpc-paned-size-group.h\
+        gmpc-meta-watcher.h\
+        gmpc-mpddata-model.h\
+        gmpc-mpddata-model-sort.h\
+        gmpc-mpddata-treeview.h\
+        gmpc-metaimage.h\
+        gmpc-meta-text-view.h\
         playlist3-messages.h\
 		gmpc-version.h\
 		metadata.h
@@ -197,7 +182,7 @@ EXTRA_DIST=\
         vala/gmpc-connection.h\
         vala/gmpc-mpddata-treeview-tooltip.h\
         vala/gmpc-metadata-prefetcher.h\
-	vala/gmpc-paned-size-group.h\
+        vala/gmpc-paned-size-group.h\
         gtktransition.h\
         plugin-internal.h\
 		setup-assistant.h\
@@ -210,8 +195,162 @@ EXTRA_DIST=\
 		advanced-search.h\
 		gmpc-version.h.in\
 		bug-information.h\
-		gmpc-win32.rc
+        gmpc-win32.rc\
+        $(gmpc_GOBFILES)
 
 DISTCLEANFILES=\
 			   revision.h\
 			   Makefile.config
+
+CLEANFILES=\
+	$(gmpc_GOBCFILES)\
+	$(gmpc_GOBHFILES)\
+	$(gmpc_GOBSTAMPFILES)
+
+## 
+# GOB stuff
+##
+gmpc_GOBFILES = \
+		gmpc-profiles.gob\
+		gmpc-meta-watcher.gob\
+		gmpc-metaimage.gob\
+		gmpc-meta-text-view.gob\
+		gmpc-mpddata-model.gob\
+		gmpc-mpddata-model-playlist.gob\
+		gmpc-mpddata-model-sort.gob\
+		gmpc-mpddata-treeview.gob\
+		gmpc-clicklabel.gob\
+		gmpc-stats-label.gob
+
+gmpc_GOBSTAMPFILES=\
+	$(gmpc_GOBFILES:.gob=.gob.stamp)
+
+gmpc_GOBCFILES=\
+	$(gmpc_GOBFILES:.gob=.c)
+
+gmpc_GOBHFILES=\
+	$(gmpc_GOBFILES:.gob=.h)\
+	$(gmpc_GOBFILES:.gob=-private.h)
+
+%.gob.stamp: %.gob
+	$(QUIET_GE) echo "  GOB   $< - $(top_builddir)/src/gob/"
+	@GOB2@ --always-private-header $<
+	@touch $(top_builddir)/src/$@
+
+## 
+# Browsers
+##
+
+gmpc_browser_FILES=\
+	browsers/playlist3-tag2-browser.c\
+	browsers/playlist3-file-browser.c\
+	browsers/playlist3-current-playlist-browser.c\
+	browsers/playlist3-find2-browser.c\
+	browsers/server-information.c\
+	browsers/playlist3-playlist-editor.c
+
+##
+# Vala files
+##
+gmpc_vala_FILES=\
+	vala/gmpc-image.c\
+	vala/gmpc-progress.c\
+	vala/gmpc-rating.c\
+	vala/gmpc_menu_item_rating.c\
+	vala/gmpc-easy-command.c\
+	vala/gmpc-song-links.c\
+	vala/gmpc-plugin.c\
+	vala/gmpc-test-plugin.c\
+    vala/gmpc-mpddata-treeview-tooltip.c\
+	vala/gmpc-metadata-browser2.c\
+	vala/gmpc-favorites.c\
+	vala/gmpc-paned-size-group.c\
+    vala/gmpc-liststore-sort.c\
+    vala/gmpc-connection.c\
+    vala/gmpc-metadata-prefetcher.c
+
+##
+# Embedded egg
+##
+gmpc_egg_FILES=\
+	egg/eggcolumnchooserdialog.c\
+	egg/eggcolumnmodel.c
+
+##
+# Bacon
+##
+gmpc_bacon_FILES=\
+	bacon/bacon-message-connection.c
+
+
+###
+# SM CLIENT STUFF
+###
+
+if PLATFORM_WIN32
+platform_sources = smclient/eggsmclient-win32.c
+platform_logout_test_ldflags = -mwindows
+else
+if PLATFORM_OSX
+platform_defines = -xobjective-c
+platform_ldflags = -framework Carbon
+platform_session_end_ldflags = -framework Carbon
+platform_logout_test_ldflags = -framework Carbon
+platform_sources = smclient/eggsmclient-osx.c
+else
+platform_defines = -DEGG_SM_CLIENT_BACKEND_XSMP
+platform_ltlibraries =                   \
+	libeggdesktopfile.la             
+platform_libs = libeggdesktopfile.la -lSM -lICE
+platform_sources = smclient/eggsmclient-xsmp.c
+endif
+endif
+
+libeggsmclient_la_INCLUDES = \
+	-DG_LOG_DOMAIN=\""EggSMClient"\" \
+	$(platform_defines)              \
+	$(glib_CFLAGS)           \
+    $(gtk_CFLAGS)
+
+noinst_LTLIBRARIES =                     \
+	libeggsmclient.la                \
+	$(platform_ltlibraries)
+
+libeggsmclient_la_LIBADD =               \
+	$(glib_LIBS)             \
+	$(gtk_LIBS)             \
+	$(platform_libs)
+
+libeggsmclient_la_LDFLAGS =              \
+	$(platform_ldflags)
+
+libeggsmclient_la_SOURCES =              \
+	smclient/eggsmclient.c                    \
+	smclient/eggsmclient.h                    \
+	smclient/eggsmclient-private.h            \
+	$(platform_sources)
+
+libeggdesktopfile_la_LIBADD =            \
+	$(EGG_LIBS)
+
+libeggdesktopfile_la_SOURCES =           \
+	smclient/eggdesktopfile.c                 \
+	smclient/eggdesktopfile.h
+
+
+egg_session_end_LDADD =                  \
+	libeggsmclient.la
+
+egg_session_end_LDFLAGS =                \
+	$(platform_session_end_ldflags)
+
+egg_launch_SOURCES =                     \
+	smclient/egg-launch.c
+
+egg_launch_LDADD =                       \
+	libeggdesktopfile.la
+
+EXTRA_DIST +=                             \
+	smclient/eggsmclient-osx.c                \
+	smclient/eggsmclient-win32.c              \
+	smclient/eggsmclient-xsmp.c
