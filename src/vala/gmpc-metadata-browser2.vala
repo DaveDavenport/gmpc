@@ -231,7 +231,7 @@ public class Gmpc.Widget.SimilarSongs : Gtk.Expander {
         this.show_all();
         return false;
     }
-    private void metadata_changed(MetaWatcher gmw, MPD.Song song, Gmpc.MetaData.Type type, Gmpc.MetaData.Result result, Gmpc.MetaData.Item? met)
+    private void metadata_changed(MetaWatcher gmw2, MPD.Song song, Gmpc.MetaData.Type type, Gmpc.MetaData.Result result, Gmpc.MetaData.Item? met)
     {
         if(this.song.artist.collate(song.artist)!=0) return;
         if(type != Gmpc.MetaData.Type.SONG_SIMILAR) return;
@@ -295,7 +295,7 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
     /**
      * Handle signals from the metadata object.
      */
-    private void metadata_changed(MetaWatcher gmw, 
+    private void metadata_changed(MetaWatcher gmw2, 
             MPD.Song song, 
             Gmpc.MetaData.Type type, 
             Gmpc.MetaData.Result result, 

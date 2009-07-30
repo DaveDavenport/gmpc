@@ -29,6 +29,7 @@ requires 2.0.0
 
 %headertop{
 #include <gtk/gtk.h>
+#include <metadata.h>
 #include <libmpd/libmpd.h>
 #ifdef GMPC_BUILD 
 #include <gmpc-connection.h>
@@ -38,15 +39,15 @@ requires 2.0.0
 %}
 
 %{
-static int num_drag_targets = 4; /* skip hyperlinks for now */
+static unsigned int num_drag_targets = 4; /* skip hyperlinks for now */
 static GtkTargetEntry data_image_drag_target[] = 
 {
-    { "image/jpeg", 0, 0 },
-    { "image/png",  0, 1 },
-    { "image/gif",  0, 2 },
-	{ "text/uri-list", 0, 3},
-    { "_NETSCAPE_URL", 0,4},
-    { "x-url/http", 0,5}
+    { (gchar *)"image/jpeg", 0, 0 },
+    { (gchar *)"image/png",  0, 1 },
+    { (gchar *)"image/gif",  0, 2 },
+	{ (gchar *)"text/uri-list", 0, 3},
+    { (gchar *)"_NETSCAPE_URL", 0,4},
+    { (gchar *)"x-url/http", 0,5}
 };
 %}
 
@@ -85,7 +86,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 	/** Public */
 
 	public int size = {64};
-	public int image_type = {META_ALBUM_ART};
+	public MetaDataType image_type = {META_ALBUM_ART};
 	public MpdObj *connection= {NULL};
 	public gboolean hide_on_na = {FALSE};
 	public gboolean squared = {TRUE};
@@ -946,6 +947,9 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                         self_set_cover_from_path(self, temp);
                         g_free(temp);
                     }
+            /* fix bitching */
+            case STATE_EMPTY:
+            case NUM_STATES:
 			default:
 					break;
 		}

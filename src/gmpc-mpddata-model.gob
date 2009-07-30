@@ -670,6 +670,8 @@ end:
                             g_value_set_string(value, "media-audiofile");
                         }
                         break;
+                    default:
+                        break;
                 }
             }
         }
@@ -877,10 +879,9 @@ end:
         void set_sort_column_id (Gtk:Tree:Sortable *model ,  gint sort_column_id, GtkSortType order)
         {
             Self *self = GMPC_MPDDATA_MODEL(model);
-            int old_col = self->_priv->sort_column, old_ord = self->_priv->sort_order;
-/*            if(sort_column_id == -1)
-                return;
-  */          self->_priv->sort_column = sort_column_id;
+            gint old_col = self->_priv->sort_column;
+            GtkSortType old_ord = self->_priv->sort_order;
+            self->_priv->sort_column = sort_column_id;
             self->_priv->sort_order = order;
             /* trigger signal */
             if(old_col != sort_column_id || old_ord != order)

@@ -270,7 +270,7 @@ static gboolean _gmpc_widget_similar_songs_tree_right_menu_gtk_widget_button_rel
 static void _gmpc_widget_similar_songs_tree_row_activated_gtk_tree_view_row_activated (GmpcMpdDataTreeview* _sender, const GtkTreePath* path, GtkTreeViewColumn* column, gpointer self);
 static gboolean gmpc_widget_similar_songs_update_sim_song (GmpcWidgetSimilarSongs* self);
 static gboolean _gmpc_widget_similar_songs_update_sim_song_gsource_func (gpointer self);
-static void gmpc_widget_similar_songs_metadata_changed (GmpcWidgetSimilarSongs* self, GmpcMetaWatcher* gmw, const mpd_Song* song, MetaDataType type, MetaDataResult _result_, const MetaData* met);
+static void gmpc_widget_similar_songs_metadata_changed (GmpcWidgetSimilarSongs* self, GmpcMetaWatcher* gmw2, const mpd_Song* song, MetaDataType type, MetaDataResult _result_, const MetaData* met);
 static void _gmpc_widget_similar_songs_metadata_changed_gmpc_meta_watcher_data_changed (GmpcMetaWatcher* _sender, const mpd_Song* song, MetaDataType type, MetaDataResult _result_, const MetaData* met, gpointer self);
 static void gmpc_widget_similar_songs_update (GmpcWidgetSimilarSongs* self);
 static void gmpc_widget_similar_songs_real_activate (GtkExpander* base);
@@ -283,7 +283,7 @@ enum  {
 };
 GtkWidget* gmpc_widget_similar_artist_new_artist_button (GmpcWidgetSimilarArtist* self, const char* artist, gboolean in_db);
 static void _g_list_free_g_object_unref (GList* self);
-static void gmpc_widget_similar_artist_metadata_changed (GmpcWidgetSimilarArtist* self, GmpcMetaWatcher* gmw, const mpd_Song* song, MetaDataType type, MetaDataResult _result_, const MetaData* met);
+static void gmpc_widget_similar_artist_metadata_changed (GmpcWidgetSimilarArtist* self, GmpcMetaWatcher* gmw2, const mpd_Song* song, MetaDataType type, MetaDataResult _result_, const MetaData* met);
 void gmpc_metadata_browser_set_artist (GmpcMetadataBrowser* self, const char* artist);
 static void gmpc_widget_similar_artist_artist_button_clicked (GmpcWidgetSimilarArtist* self, GtkButton* button);
 static gboolean _misc_header_expose_event_gtk_widget_expose_event (GtkWidget* _sender, const GdkEventExpose* event, gpointer self);
@@ -885,9 +885,9 @@ static gboolean _gmpc_widget_similar_songs_update_sim_song_gsource_func (gpointe
 }
 
 
-static void gmpc_widget_similar_songs_metadata_changed (GmpcWidgetSimilarSongs* self, GmpcMetaWatcher* gmw, const mpd_Song* song, MetaDataType type, MetaDataResult _result_, const MetaData* met) {
+static void gmpc_widget_similar_songs_metadata_changed (GmpcWidgetSimilarSongs* self, GmpcMetaWatcher* gmw2, const mpd_Song* song, MetaDataType type, MetaDataResult _result_, const MetaData* met) {
 	g_return_if_fail (self != NULL);
-	g_return_if_fail (gmw != NULL);
+	g_return_if_fail (gmw2 != NULL);
 	g_return_if_fail (song != NULL);
 	if (g_utf8_collate (self->priv->song->artist, song->artist) != 0) {
 		return;
@@ -1039,12 +1039,12 @@ static void _g_list_free_g_object_unref (GList* self) {
 /**
      * Handle signals from the metadata object.
      */
-static void gmpc_widget_similar_artist_metadata_changed (GmpcWidgetSimilarArtist* self, GmpcMetaWatcher* gmw, const mpd_Song* song, MetaDataType type, MetaDataResult _result_, const MetaData* met) {
+static void gmpc_widget_similar_artist_metadata_changed (GmpcWidgetSimilarArtist* self, GmpcMetaWatcher* gmw2, const mpd_Song* song, MetaDataType type, MetaDataResult _result_, const MetaData* met) {
 	GList* child_list;
 	gboolean _tmp1_;
 	gboolean _tmp2_;
 	g_return_if_fail (self != NULL);
-	g_return_if_fail (gmw != NULL);
+	g_return_if_fail (gmw2 != NULL);
 	g_return_if_fail (song != NULL);
 	/* only listen to the same artist and the same type */
 	if (type != META_ARTIST_SIMILAR) {

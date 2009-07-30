@@ -55,11 +55,11 @@ class Gmpc:MpdData:Model:Playlist from Gmpc:MpdData:Model
 
 		private gboolean update_callback(self)
 		{
-			static const gint step_size = 100;
-			gint num_rows =  GMPC_MPDDATA_MODEL(self)->num_rows;
+			static const unsigned int step_size = 100;
+			unsigned int num_rows =  GMPC_MPDDATA_MODEL(self)->num_rows;
 			if(self->_priv->loaded_songs <num_rows)
 			{
-				int i = 0;
+				unsigned int i = 0;
 				MpdData *data =  GMPC_MPDDATA_MODEL(self)->_priv->data;
 				data = mpd_data_get_first(data);
 				if(!data) return TRUE;
