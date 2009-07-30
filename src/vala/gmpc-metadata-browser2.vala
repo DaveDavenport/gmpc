@@ -1699,6 +1699,16 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         /* Genre */
         this.add_entry(info_box, _("Genre"), song.genre, null, out i);
 
+        if(song.mtime > 0) {
+            Time t = Time();
+            stdout.printf("%i\n", (int)song.mtime);
+            t = t.local(song.mtime);
+            stdout.printf("r: %i\n", (int)t.mktime());
+            var str = t.format("%x");
+            /* Last modified*/
+            this.add_entry(info_box, _("Last modified"), str, null, out i);
+        }
+
         /* Path */
         if(song.file != null) {
             var dbutton = new Gtk.Button();

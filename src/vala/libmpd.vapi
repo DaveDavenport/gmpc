@@ -37,6 +37,7 @@ namespace MPD {
         public int    time;
         public int    pos;
         public int    id;
+        public time_t mtime;
         [CCode (cname="mpd_songDup")]
         public unowned MPD.Song copy ();
         [CCode (instance_pos = -1)]
