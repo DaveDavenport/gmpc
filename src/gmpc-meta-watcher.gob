@@ -116,7 +116,8 @@ class Gmpc:Meta:Watcher from  G:Object {
                 {
                     return TRUE;
                 }
-
+            case META_QUERY_DATA_TYPES:
+            case META_QUERY_NO_CACHE:
             default:
 				break;
 		}
