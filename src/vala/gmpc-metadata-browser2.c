@@ -313,7 +313,7 @@ GType gmpc_now_playing_get_type (void);
 enum  {
 	GMPC_NOW_PLAYING_DUMMY_PROPERTY
 };
-static gint gmpc_now_playing_real_get_version (GmpcPluginBase* base, int* result_length1);
+static gint* gmpc_now_playing_real_get_version (GmpcPluginBase* base, int* result_length1);
 static const char* gmpc_now_playing_real_get_name (GmpcPluginBase* base);
 static void gmpc_now_playing_real_save_yourself (GmpcPluginBase* base);
 static void gmpc_now_playing_update (GmpcNowPlaying* self);
@@ -349,7 +349,7 @@ enum  {
 	GMPC_METADATA_BROWSER_DUMMY_PROPERTY
 };
 static void _g_list_free_gmpc_metadata_browser_hitem_free (GList* self);
-static gint gmpc_metadata_browser_real_get_version (GmpcPluginBase* base, int* result_length1);
+static gint* gmpc_metadata_browser_real_get_version (GmpcPluginBase* base, int* result_length1);
 static const char* gmpc_metadata_browser_real_get_name (GmpcPluginBase* base);
 static void gmpc_metadata_browser_real_save_yourself (GmpcPluginBase* base);
 void gmpc_metadata_browser_select_browser (GmpcMetadataBrowser* self, GtkTreeView* tree);
@@ -1578,9 +1578,9 @@ GType gmpc_widget_more_get_type (void) {
 }
 
 
-static gint gmpc_now_playing_real_get_version (GmpcPluginBase* base, int* result_length1) {
+static gint* gmpc_now_playing_real_get_version (GmpcPluginBase* base, int* result_length1) {
 	GmpcNowPlaying * self;
-	gint result;
+	gint* result;
 	gint* _tmp0_;
 	self = (GmpcNowPlaying*) base;
 	_tmp0_ = NULL;
@@ -2110,9 +2110,9 @@ static void _g_list_free_gmpc_metadata_browser_hitem_free (GList* self) {
 }
 
 
-static gint gmpc_metadata_browser_real_get_version (GmpcPluginBase* base, int* result_length1) {
+static gint* gmpc_metadata_browser_real_get_version (GmpcPluginBase* base, int* result_length1) {
 	GmpcMetadataBrowser * self;
-	gint result;
+	gint* result;
 	gint* _tmp0_;
 	self = (GmpcMetadataBrowser*) base;
 	_tmp0_ = NULL;

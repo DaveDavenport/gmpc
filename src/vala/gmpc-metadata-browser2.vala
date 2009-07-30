@@ -595,7 +595,7 @@ public class  Gmpc.NowPlaying : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface {
     }
     /* Version */
     public const int[] version =  {0,0,0};
-    public override  weak int[3] get_version() {
+    public override  weak int[] get_version() {
         return version;
     }
     /* Name */
@@ -808,7 +808,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
     }
 
     public const int[] version =  {0,0,0};
-    public override  weak int[3] get_version() {
+    public override  weak int[] get_version() {
         return version;
     }
 
