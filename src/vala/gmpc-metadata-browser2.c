@@ -1120,7 +1120,7 @@ static void gmpc_widget_similar_artist_metadata_changed (GmpcWidgetSimilarArtist
 				data = misc_sort_mpddata_by_album_disc_track (data);
 				iter = mpd_data_get_first (data);
 				liter = g_list_first (list);
-				artist = g_utf8_strdown (iter->tag, -1);
+				artist = g_utf8_casefold (iter->tag, -1);
 				{
 					gboolean _tmp3_;
 					_tmp3_ = TRUE;
@@ -1149,7 +1149,7 @@ static void gmpc_widget_similar_artist_metadata_changed (GmpcWidgetSimilarArtist
 						}
 						_tmp3_ = FALSE;
 						_tmp6_ = NULL;
-						res = (_tmp7_ = g_utf8_collate (_tmp6_ = g_utf8_strdown ((const char*) liter->data, -1), artist), _tmp6_ = (g_free (_tmp6_), NULL), _tmp7_);
+						res = (_tmp7_ = g_utf8_collate (_tmp6_ = g_utf8_casefold ((const char*) liter->data, -1), artist), _tmp6_ = (g_free (_tmp6_), NULL), _tmp7_);
 						q++;
 						if (res == 0) {
 							const char* _tmp8_;

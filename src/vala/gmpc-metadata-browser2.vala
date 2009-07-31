@@ -344,9 +344,9 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
                 weak MPD.Data.Item iter = data.first();
 
                 liter = list.first();
-                var artist = iter.tag.down(); 
+                var artist = iter.tag.casefold(); 
                 do{
-                    var res = liter.data.down().collate(artist);
+                    var res = liter.data.casefold().collate(artist);
                     q++;
                     if(res == 0)
                     {
