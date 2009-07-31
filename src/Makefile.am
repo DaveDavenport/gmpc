@@ -150,6 +150,7 @@ gmpcinclude_HEADERS = \
         gmpc-mpddata-treeview.h\
         gmpc-metaimage.h\
         gmpc-meta-text-view.h\
+        gmpc-profiles.h\
         playlist3-messages.h\
 		gmpc-version.h\
 		metadata.h
