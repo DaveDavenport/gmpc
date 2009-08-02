@@ -18,7 +18,8 @@ mpd_data_model_LDADD = @LIBS@\
 
 mpd_data_model_SOURCES = \
 		mpd_data_model.c \
-		$(top_srcdir)/src/misc.c\
+		$(top_srcdir)/src/misc.c
+nodist_mpd_data_model_SOURCES = \        
 		$(top_srcdir)/src/gmpc-mpddata-model.c
 
 endif

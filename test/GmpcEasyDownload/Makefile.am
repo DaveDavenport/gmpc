@@ -20,7 +20,9 @@ gmpc_easy_download_LDADD = @LIBS@\
         @libsoup_LIBS@
 
 gmpc_easy_download_SOURCES = \
-		ged.c \
+		ged.c 
+
+nodist_gmpc_easy_download_SOURCES = \
 		$(top_srcdir)/src/misc.c\
 		$(top_srcdir)/src/gmpc_easy_download.c
 

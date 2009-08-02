@@ -23,7 +23,9 @@ mtc_test_LDADD = @LIBS@\
 		@glib_LIBS@
 
 mtc_test_SOURCES = \
-		mtc_test.c \
+		mtc_test.c 
+
+nodist_mtc_test_SOURCES = \        
 		$(top_srcdir)/src/config1.c\
 		$(top_srcdir)/src/metadata.c\
 		$(top_srcdir)/src/plugin.c\

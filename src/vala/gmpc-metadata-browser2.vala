@@ -189,18 +189,21 @@ public class Gmpc.Widget.SimilarSongs : Gtk.Expander {
             string entry = current.data;
             if(entry != null){
                 var split = entry.split("::",2);
-                MPD.Database.search_start(server, false);
-                var art_split = split[0].split(" ");
-                foreach(string artist in art_split)
+                if(split.length == 2)
                 {
-                    MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, artist);
-                }
+                    MPD.Database.search_start(server, false);
+                    var art_split = split[0].split(" ");
+                    foreach(string artist in art_split)
+                    {
+                        MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, artist);
+                    }
 
-                MPD.Database.search_add_constraint(server, MPD.Tag.Type.TITLE, split[1]);
-                var data = MPD.Database.search_commit(server);
-                if(data != null)
-                {
-                    item.concatenate((owned)data); 
+                    MPD.Database.search_add_constraint(server, MPD.Tag.Type.TITLE, split[1]);
+                    var data = MPD.Database.search_commit(server);
+                    if(data != null)
+                    {
+                        item.concatenate((owned)data); 
+                    }
                 }
             }
             current = current.next;
@@ -340,42 +343,50 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
 
                 int q =0;
 
-                data.sort_album_disc_track();
-                weak MPD.Data.Item iter = data.first();
+                if(data != null)
+                {
 
-                liter = list.first();
-                var artist = iter.tag.casefold(); 
-                do{
-                    var res = liter.data.casefold().collate(artist);
-                    q++;
-                    if(res == 0)
-                    {
-                        in_db_list.prepend(new_artist_button(iter.tag, true));
-                        i++;
-                        var d = liter.data;
-                        liter = liter.next;
-                        list.remove(d);
-                        //liter = null;
-                        iter = iter.next(false);
+                    data.sort_album_disc_track();
+                    weak MPD.Data.Item iter = data.first();
+
+                    liter = list.first();
+                    string artist = "";
+                    if(iter.tag.validate() == false) {
+                        error("Failed to validate"); 
+                    }
+                    if(iter.tag != null) 
                         artist = iter.tag.casefold(); 
-                    }
-                    else if (res > 0) {
-                        //list.remove(liter.data);
-
-                        iter = iter.next(false);
-                        if(iter != null)
+                    do{
+                        var res = liter.data.casefold().collate(artist);
+                        q++;
+                        if(res == 0)
+                        {
+                            in_db_list.prepend(new_artist_button(iter.tag, true));
+                            i++;
+                            var d = liter.data;
+                            liter = liter.next;
+                            list.remove(d);
+                            //liter = null;
+                            iter = iter.next(false);
                             artist = iter.tag.casefold(); 
-                    }
-                    else {
-                        liter = liter.next;
-                    }
-                }while(iter != null && liter != null && i < items);
-           
+                        }
+                        else if (res > 0) {
+                            //list.remove(liter.data);
+
+                            iter = iter.next(false);
+                            if(iter != null)
+                                artist = iter.tag.casefold(); 
+                        }
+                        else {
+                            liter = liter.next;
+                        }
+                    }while(iter != null && liter != null && i < items);
+                }
 
                 liter= list.first();
                 while(liter != null && i < items) 
                 {
-                    artist = liter.data;
+                    var artist = liter.data;
                     in_db_list.prepend(new_artist_button(artist, false));
                     i++;
                     liter = liter.next; 

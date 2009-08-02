@@ -134,6 +134,15 @@ AM_CFLAGS+=-Wall -Wdeclaration-after-statement -Wshadow -fno-common -Wextra -Wno
 endif
 
 
+nodist_gmpcinclude_HEADERS=\
+        gmpc-profiles.h\
+        gmpc-meta-watcher.h\
+        gmpc-mpddata-model.h\
+        gmpc-mpddata-model-sort.h\
+        gmpc-mpddata-treeview.h\
+        gmpc-metaimage.h\
+        gmpc-meta-text-view.h
+
 gmpcinclude_HEADERS = \
 		plugin.h	\
 		config1.h	\
@@ -144,13 +153,6 @@ gmpcinclude_HEADERS = \
         vala/gmpc-connection.h\
         vala/gmpc-mpddata-treeview-tooltip.h\
         vala/gmpc-paned-size-group.h\
-        gmpc-meta-watcher.h\
-        gmpc-mpddata-model.h\
-        gmpc-mpddata-model-sort.h\
-        gmpc-mpddata-treeview.h\
-        gmpc-metaimage.h\
-        gmpc-meta-text-view.h\
-        gmpc-profiles.h\
         playlist3-messages.h\
 		gmpc-version.h\
 		metadata.h

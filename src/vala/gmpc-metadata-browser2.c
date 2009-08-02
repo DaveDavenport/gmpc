@@ -790,46 +790,48 @@ static gboolean gmpc_widget_similar_songs_update_sim_song (GmpcWidgetSimilarSong
 			gint split_length1;
 			char** _tmp2_;
 			char** split;
-			char** _tmp5_;
-			gint art_split_size;
-			gint art_split_length1;
-			char** _tmp4_;
-			char** art_split;
-			MpdData* data;
 			_tmp3_ = NULL;
 			_tmp2_ = NULL;
 			split = (_tmp3_ = _tmp2_ = g_strsplit (entry, "::", 2), split_length1 = _vala_array_length (_tmp2_), split_size = split_length1, _tmp3_);
-			mpd_database_search_start (connection, FALSE);
-			_tmp5_ = NULL;
-			_tmp4_ = NULL;
-			art_split = (_tmp5_ = _tmp4_ = g_strsplit (split[0], " ", 0), art_split_length1 = _vala_array_length (_tmp4_), art_split_size = art_split_length1, _tmp5_);
-			{
-				char** artist_collection;
-				int artist_collection_length1;
-				int artist_it;
-				artist_collection = art_split;
-				artist_collection_length1 = art_split_length1;
-				for (artist_it = 0; artist_it < art_split_length1; artist_it = artist_it + 1) {
-					const char* _tmp6_;
-					char* artist;
-					_tmp6_ = NULL;
-					artist = (_tmp6_ = artist_collection[artist_it], (_tmp6_ == NULL) ? NULL : g_strdup (_tmp6_));
-					{
-						mpd_database_search_add_constraint (connection, MPD_TAG_ITEM_ARTIST, artist);
-						artist = (g_free (artist), NULL);
+			if (split_length1 == 2) {
+				char** _tmp5_;
+				gint art_split_size;
+				gint art_split_length1;
+				char** _tmp4_;
+				char** art_split;
+				MpdData* data;
+				mpd_database_search_start (connection, FALSE);
+				_tmp5_ = NULL;
+				_tmp4_ = NULL;
+				art_split = (_tmp5_ = _tmp4_ = g_strsplit (split[0], " ", 0), art_split_length1 = _vala_array_length (_tmp4_), art_split_size = art_split_length1, _tmp5_);
+				{
+					char** artist_collection;
+					int artist_collection_length1;
+					int artist_it;
+					artist_collection = art_split;
+					artist_collection_length1 = art_split_length1;
+					for (artist_it = 0; artist_it < art_split_length1; artist_it = artist_it + 1) {
+						const char* _tmp6_;
+						char* artist;
+						_tmp6_ = NULL;
+						artist = (_tmp6_ = artist_collection[artist_it], (_tmp6_ == NULL) ? NULL : g_strdup (_tmp6_));
+						{
+							mpd_database_search_add_constraint (connection, MPD_TAG_ITEM_ARTIST, artist);
+							artist = (g_free (artist), NULL);
+						}
 					}
 				}
-			}
-			mpd_database_search_add_constraint (connection, MPD_TAG_ITEM_TITLE, split[1]);
-			data = mpd_database_search_commit (connection);
-			if (data != NULL) {
-				MpdData* _tmp7_;
-				_tmp7_ = NULL;
-				self->priv->item = mpd_data_concatenate (self->priv->item, (_tmp7_ = data, data = NULL, _tmp7_));
+				mpd_database_search_add_constraint (connection, MPD_TAG_ITEM_TITLE, split[1]);
+				data = mpd_database_search_commit (connection);
+				if (data != NULL) {
+					MpdData* _tmp7_;
+					_tmp7_ = NULL;
+					self->priv->item = mpd_data_concatenate (self->priv->item, (_tmp7_ = data, data = NULL, _tmp7_));
+				}
+				art_split = (_vala_array_free (art_split, art_split_length1, (GDestroyNotify) g_free), NULL);
+				(data == NULL) ? NULL : (data = (mpd_data_free (data), NULL));
 			}
 			split = (_vala_array_free (split, split_length1, (GDestroyNotify) g_free), NULL);
-			art_split = (_vala_array_free (art_split, art_split_length1, (GDestroyNotify) g_free), NULL);
-			(data == NULL) ? NULL : (data = (mpd_data_free (data), NULL));
 		}
 		self->priv->current = self->priv->current->next;
 		if (self->priv->current != NULL) {
@@ -1111,99 +1113,109 @@ static void gmpc_widget_similar_artist_metadata_changed (GmpcWidgetSimilarArtist
 				GList* liter;
 				MpdData* data;
 				gint q;
-				const MpdData* iter;
-				char* artist;
 				liter = NULL;
 				mpd_database_search_field_start (connection, MPD_TAG_ITEM_ARTIST);
 				data = mpd_database_search_commit (connection);
 				q = 0;
-				data = misc_sort_mpddata_by_album_disc_track (data);
-				iter = mpd_data_get_first (data);
-				liter = g_list_first (list);
-				artist = g_utf8_casefold (iter->tag, -1);
-				{
-					gboolean _tmp3_;
-					_tmp3_ = TRUE;
-					while (TRUE) {
-						char* _tmp6_;
-						gint _tmp7_;
-						gint res;
-						if (!_tmp3_) {
-							gboolean _tmp4_;
-							gboolean _tmp5_;
-							_tmp4_ = FALSE;
-							_tmp5_ = FALSE;
-							if (iter != NULL) {
-								_tmp5_ = liter != NULL;
-							} else {
-								_tmp5_ = FALSE;
-							}
-							if (_tmp5_) {
-								_tmp4_ = i < items;
-							} else {
-								_tmp4_ = FALSE;
-							}
+				if (data != NULL) {
+					const MpdData* iter;
+					char* artist;
+					data = misc_sort_mpddata_by_album_disc_track (data);
+					iter = mpd_data_get_first (data);
+					liter = g_list_first (list);
+					artist = g_strdup ("");
+					if (g_utf8_validate (iter->tag, -1, NULL) == FALSE) {
+						g_error ("gmpc-metadata-browser2.vala:355: Failed to validate");
+					}
+					if (iter->tag != NULL) {
+						char* _tmp3_;
+						_tmp3_ = NULL;
+						artist = (_tmp3_ = g_utf8_casefold (iter->tag, -1), artist = (g_free (artist), NULL), _tmp3_);
+					}
+					{
+						gboolean _tmp4_;
+						_tmp4_ = TRUE;
+						while (TRUE) {
+							char* _tmp7_;
+							gint _tmp8_;
+							gint res;
 							if (!_tmp4_) {
-								break;
-							}
-						}
-						_tmp3_ = FALSE;
-						_tmp6_ = NULL;
-						res = (_tmp7_ = g_utf8_collate (_tmp6_ = g_utf8_casefold ((const char*) liter->data, -1), artist), _tmp6_ = (g_free (_tmp6_), NULL), _tmp7_);
-						q++;
-						if (res == 0) {
-							const char* _tmp8_;
-							char* d;
-							char* _tmp9_;
-							in_db_list = g_list_prepend (in_db_list, gmpc_widget_similar_artist_new_artist_button (self, iter->tag, TRUE));
-							i++;
-							_tmp8_ = NULL;
-							d = (_tmp8_ = (const char*) liter->data, (_tmp8_ == NULL) ? NULL : g_strdup (_tmp8_));
-							liter = liter->next;
-							list = g_list_remove (list, d);
-							/*liter = null;*/
-							iter = mpd_data_get_next_real (iter, FALSE);
-							_tmp9_ = NULL;
-							artist = (_tmp9_ = g_utf8_casefold (iter->tag, -1), artist = (g_free (artist), NULL), _tmp9_);
-							d = (g_free (d), NULL);
-						} else {
-							if (res > 0) {
-								/*list.remove(liter.data);*/
-								iter = mpd_data_get_next_real (iter, FALSE);
+								gboolean _tmp5_;
+								gboolean _tmp6_;
+								_tmp5_ = FALSE;
+								_tmp6_ = FALSE;
 								if (iter != NULL) {
-									char* _tmp10_;
-									_tmp10_ = NULL;
-									artist = (_tmp10_ = g_utf8_casefold (iter->tag, -1), artist = (g_free (artist), NULL), _tmp10_);
+									_tmp6_ = liter != NULL;
+								} else {
+									_tmp6_ = FALSE;
 								}
-							} else {
+								if (_tmp6_) {
+									_tmp5_ = i < items;
+								} else {
+									_tmp5_ = FALSE;
+								}
+								if (!_tmp5_) {
+									break;
+								}
+							}
+							_tmp4_ = FALSE;
+							_tmp7_ = NULL;
+							res = (_tmp8_ = g_utf8_collate (_tmp7_ = g_utf8_casefold ((const char*) liter->data, -1), artist), _tmp7_ = (g_free (_tmp7_), NULL), _tmp8_);
+							q++;
+							if (res == 0) {
+								const char* _tmp9_;
+								char* d;
+								char* _tmp10_;
+								in_db_list = g_list_prepend (in_db_list, gmpc_widget_similar_artist_new_artist_button (self, iter->tag, TRUE));
+								i++;
+								_tmp9_ = NULL;
+								d = (_tmp9_ = (const char*) liter->data, (_tmp9_ == NULL) ? NULL : g_strdup (_tmp9_));
 								liter = liter->next;
+								list = g_list_remove (list, d);
+								/*liter = null;*/
+								iter = mpd_data_get_next_real (iter, FALSE);
+								_tmp10_ = NULL;
+								artist = (_tmp10_ = g_utf8_casefold (iter->tag, -1), artist = (g_free (artist), NULL), _tmp10_);
+								d = (g_free (d), NULL);
+							} else {
+								if (res > 0) {
+									/*list.remove(liter.data);*/
+									iter = mpd_data_get_next_real (iter, FALSE);
+									if (iter != NULL) {
+										char* _tmp11_;
+										_tmp11_ = NULL;
+										artist = (_tmp11_ = g_utf8_casefold (iter->tag, -1), artist = (g_free (artist), NULL), _tmp11_);
+									}
+								} else {
+									liter = liter->next;
+								}
 							}
 						}
 					}
+					artist = (g_free (artist), NULL);
 				}
 				liter = g_list_first (list);
 				while (TRUE) {
-					gboolean _tmp11_;
-					char* _tmp13_;
-					const char* _tmp12_;
-					_tmp11_ = FALSE;
+					gboolean _tmp12_;
+					const char* _tmp13_;
+					char* artist;
+					_tmp12_ = FALSE;
 					if (liter != NULL) {
-						_tmp11_ = i < items;
+						_tmp12_ = i < items;
 					} else {
-						_tmp11_ = FALSE;
+						_tmp12_ = FALSE;
 					}
-					if (!_tmp11_) {
+					if (!_tmp12_) {
 						break;
 					}
 					_tmp13_ = NULL;
-					_tmp12_ = NULL;
-					artist = (_tmp13_ = (_tmp12_ = (const char*) liter->data, (_tmp12_ == NULL) ? NULL : g_strdup (_tmp12_)), artist = (g_free (artist), NULL), _tmp13_);
+					artist = (_tmp13_ = (const char*) liter->data, (_tmp13_ == NULL) ? NULL : g_strdup (_tmp13_));
 					in_db_list = g_list_prepend (in_db_list, gmpc_widget_similar_artist_new_artist_button (self, artist, FALSE));
 					i++;
 					liter = liter->next;
+					artist = (g_free (artist), NULL);
 				}
 				(data == NULL) ? NULL : (data = (mpd_data_free (data), NULL));
-				artist = (g_free (artist), NULL);
 			}
 			in_db_list = g_list_reverse (in_db_list);
 			i = 0;

@@ -12,7 +12,9 @@ read_conf_LDADD = @LIBS@\
 		@glib_LIBS@
 
 read_conf_SOURCES = \
-		read_conf.c \
+		read_conf.c 
+
+nodist_read_conf_SOURCES = \
 		$(top_srcdir)/src/config1.c
 
 endif
