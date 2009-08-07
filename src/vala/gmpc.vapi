@@ -10,7 +10,7 @@ namespace Gmpc {
     [CCode (cname = "gmpcconn", cheader_filename="main.h")]
     static Connection gmpcconn; 
 
-    [CCode (cname = "connection", cheader_filename="main.h")]
+    [CCode (cname = "connection", cheader_filename="plugin.h")]
     static MPD.Server server;
 
     [CCode (cname = "gmw", cheader_filename="main.h")]

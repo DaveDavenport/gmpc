@@ -10,6 +10,7 @@
 #include <libmpd/libmpdclient.h>
 #include <stdlib.h>
 #include <string.h>
+#include <plugin.h>
 #include <main.h>
 #include <gdk-pixbuf/gdk-pixdata.h>
 #include <gdk/gdk.h>
