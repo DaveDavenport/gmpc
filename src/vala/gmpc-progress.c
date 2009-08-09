@@ -121,6 +121,9 @@ static gboolean gmpc_progress_enter_notify_event_callback (GmpcProgress* self, G
 	if ((*event).type == GDK_ENTER_NOTIFY) {
 		GtkWindow* _tmp0_;
 		GtkLabel* _tmp1_;
+		if (self->priv->tooltip != NULL) {
+			gtk_object_destroy ((GtkObject*) self->priv->tooltip);
+		}
 		_tmp0_ = NULL;
 		self->priv->tooltip = (_tmp0_ = g_object_ref_sink ((GtkWindow*) gtk_window_new (GTK_WINDOW_POPUP)), (self->priv->tooltip == NULL) ? NULL : (self->priv->tooltip = (g_object_unref (self->priv->tooltip), NULL)), _tmp0_);
 		_tmp1_ = NULL;
