@@ -312,6 +312,7 @@ int main(int argc, char **argv)
 	INIT_TIC_TAC();
 
 
+	g_log_set_default_handler(gmpc_log_func, NULL);
 	/* *
 	 * Set the default debug level
 	 * Depending if it is a git build or not
@@ -323,6 +324,7 @@ int main(int argc, char **argv)
 		/* Ok, release version... no debug */
 		debug_set_level(0);
 	}
+
 
 	egg_sm_client_set_mode(EGG_SM_CLIENT_MODE_NO_RESTART);
 	/**
@@ -355,7 +357,6 @@ int main(int argc, char **argv)
 		return EXIT_SUCCESS;
 	}
 
-	g_log_set_default_handler(gmpc_log_func, NULL);
 	/**
 	 * Set debug level, options are
 	 * 0 = No debug
