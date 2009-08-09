@@ -9,14 +9,14 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-07-25 16:10+0200\n"
-"PO-Revision-Date: 2009-07-25 15:28+0000\n"
-"Last-Translator: Lukas Bögelein <Unknown>\n"
+"PO-Revision-Date: 2009-07-26 13:57+0000\n"
+"Last-Translator: André Klitzing <aklitzing@online.de>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-07-25 15:28+0000\n"
+"X-Launchpad-Export-Date: 2009-08-09 09:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -67,7 +67,7 @@ msgstr "Zufall"
 #. * MM_FASTBACKWARD
 #: ../glade/playlist3.glade.h:12 ../src/mm-keys.c:79
 msgid "Repeat"
-msgstr "Wiederholen"
+msgstr "Endlosschleife"
 
 #: ../glade/playlist3.glade.h:14
 msgid "Show Messages"
@@ -1417,7 +1417,7 @@ msgstr "Genre"
 #: ../src/vala/gmpc-metadata-browser2.c:2955
 #: ../src/vala/gmpc-metadata-browser2.c:3626
 msgid "Track"
-msgstr "Track"
+msgstr "Stück"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:77
 msgid "Composer"
@@ -1913,7 +1913,7 @@ msgstr "Metadaten-Verwaltung"
 
 #: ../src/misc.c:39
 msgid "Total time"
-msgstr ""
+msgstr "Gesamtzeit"
 
 #. * MM_TOGGLE_MUTE
 #: ../src/mm-keys.c:88
@@ -2438,11 +2438,11 @@ msgstr ""
 
 #: ../src/vala/gmpc-metadata-browser2.c:901
 msgid "Fetching .. "
-msgstr "Verschieben... "
+msgstr "Herunterladen... "
 
 #: ../src/vala/gmpc-metadata-browser2.c:1090
 msgid "Fetching"
-msgstr "Verschieben"
+msgstr "Herunterladen"
 
 #: ../src/vala/gmpc-metadata-browser2.c:1399
 #: ../src/vala/gmpc-metadata-browser2.c:1511
