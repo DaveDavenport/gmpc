@@ -503,10 +503,13 @@ public class Gmpc.Widget.More : Gtk.Frame {
     {
         if(this.expand_state == 0) {
             but.set_label(_("(less)"));
+            but.set_image(new Gtk.Image.from_stock("gtk-remove", Gtk.IconSize.MENU));
             this.ali.set_size_request(-1, -1);
             this.expand_state = 1;
         }else{
             but.set_label(_("(more)"));
+
+            but.set_image(new Gtk.Image.from_stock("gtk-add", Gtk.IconSize.MENU));
             this.ali.set_size_request(-1, this.max_height);
             this.expand_state = 0;
         }
@@ -580,6 +583,8 @@ public class Gmpc.Widget.More : Gtk.Frame {
         label.set_markup(markup);
         hbox.pack_start(label, false, false,0);
         this.expand_button = new Gtk.Button.with_label((this.expand_state == 0)?_("(more)"):_("(less)"));
+
+        this.expand_button.set_image(new Gtk.Image.from_stock((this.expand_state == 0)?"gtk-add":"gtk-remove", Gtk.IconSize.MENU));
         this.expand_button.set_relief(Gtk.ReliefStyle.NONE);
         this.expand_button.clicked+=expand;
         hbox.pack_start(this.expand_button, false, false,0);

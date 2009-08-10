@@ -1412,11 +1412,19 @@ static void gmpc_widget_more_expand (GmpcWidgetMore* self, GtkButton* but) {
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (but != NULL);
 	if (self->priv->expand_state == 0) {
+		GtkImage* _tmp0_;
 		gtk_button_set_label (but, _ ("(less)"));
+		_tmp0_ = NULL;
+		gtk_button_set_image (but, (GtkWidget*) (_tmp0_ = g_object_ref_sink ((GtkImage*) gtk_image_new_from_stock ("gtk-remove", GTK_ICON_SIZE_MENU))));
+		(_tmp0_ == NULL) ? NULL : (_tmp0_ = (g_object_unref (_tmp0_), NULL));
 		gtk_widget_set_size_request ((GtkWidget*) self->priv->ali, -1, -1);
 		self->priv->expand_state = 1;
 	} else {
+		GtkImage* _tmp1_;
 		gtk_button_set_label (but, _ ("(more)"));
+		_tmp1_ = NULL;
+		gtk_button_set_image (but, (GtkWidget*) (_tmp1_ = g_object_ref_sink ((GtkImage*) gtk_image_new_from_stock ("gtk-add", GTK_ICON_SIZE_MENU))));
+		(_tmp1_ == NULL) ? NULL : (_tmp1_ = (g_object_unref (_tmp1_), NULL));
 		gtk_widget_set_size_request ((GtkWidget*) self->priv->ali, -1, self->priv->max_height);
 		self->priv->expand_state = 0;
 	}
@@ -1488,6 +1496,8 @@ static GmpcWidgetMore* gmpc_widget_more_construct (GType object_type, const char
 	GtkLabel* label;
 	const char* _tmp6_;
 	GtkButton* _tmp7_;
+	const char* _tmp8_;
+	GtkImage* _tmp9_;
 	g_return_val_if_fail (unique_id != NULL, NULL);
 	g_return_val_if_fail (markup != NULL, NULL);
 	g_return_val_if_fail (child != NULL, NULL);
@@ -1528,6 +1538,15 @@ static GmpcWidgetMore* gmpc_widget_more_construct (GType object_type, const char
 	}
 	_tmp7_ = NULL;
 	self->priv->expand_button = (_tmp7_ = g_object_ref_sink ((GtkButton*) gtk_button_new_with_label (_tmp6_)), (self->priv->expand_button == NULL) ? NULL : (self->priv->expand_button = (g_object_unref (self->priv->expand_button), NULL)), _tmp7_);
+	_tmp8_ = NULL;
+	if (self->priv->expand_state == 0) {
+		_tmp8_ = "gtk-add";
+	} else {
+		_tmp8_ = "gtk-remove";
+	}
+	_tmp9_ = NULL;
+	gtk_button_set_image (self->priv->expand_button, (GtkWidget*) (_tmp9_ = g_object_ref_sink ((GtkImage*) gtk_image_new_from_stock (_tmp8_, GTK_ICON_SIZE_MENU))));
+	(_tmp9_ == NULL) ? NULL : (_tmp9_ = (g_object_unref (_tmp9_), NULL));
 	gtk_button_set_relief (self->priv->expand_button, GTK_RELIEF_NONE);
 	g_signal_connect_object (self->priv->expand_button, "clicked", (GCallback) _gmpc_widget_more_expand_gtk_button_clicked, self, 0);
 	gtk_box_pack_start ((GtkBox*) hbox, (GtkWidget*) self->priv->expand_button, FALSE, FALSE, (guint) 0);
