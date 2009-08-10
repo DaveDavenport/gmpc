@@ -692,23 +692,3 @@ colorshift_pixbuf(GdkPixbuf *dest, GdkPixbuf *src, int shift)
 		}
 	}
 }
-/**
- * Windows does not have a locatime_r,
-  * it doesn't need it as localtime() is thread safe.
-  * This wrapper should 'fake' localtime_r
-  */
-#ifdef WIN32
-struct tm *
-localtime_r (const time_t *timer, struct tm *result)
-{
-   struct tm *local_result;
-   /* This should work as it is thread safe on winblows */
-   local_result = localtime (timer);
-
-   if (local_result == NULL || result == NULL)
-     return NULL;
-
-   memcpy (result, local_result, sizeof (result));
-   return result;
-}
-#endif
