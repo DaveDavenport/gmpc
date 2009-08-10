@@ -776,17 +776,14 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 		int
 		paste_key_release_event(self, GdkEventKey *event,gpointer data)
 		{
-			printf("key release event\n");
 			if(event->keyval == GDK_Menu) {
 				GdkEventButton bevent;
 				gboolean value = FALSE;
 				bevent.window = NULL;
 				bevent.button = 3;
 				bevent.time = event->time;
-				printf("Fake right mouse menu\n");
 				g_signal_emit_by_name(self, "button-press-event", &bevent, &value,NULL);
 				if(!value){ 
-					printf("Fake release\n");
 					g_signal_emit_by_name(self, "button-release-event", &bevent, &value,NULL);
 					}
 

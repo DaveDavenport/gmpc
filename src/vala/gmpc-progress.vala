@@ -81,6 +81,7 @@ public class Gmpc.Progress : Gtk.HBox
         /* Create tooltip if mouse enters the event window */
         if (event.type == Gdk.EventType.ENTER_NOTIFY)
         {
+			if ( tooltip != null ) tooltip.destroy();
             tooltip = new Gtk.Window(Gtk.WindowType.POPUP);
             tooltip_label = new Gtk.Label("test");
             tooltip.add(tooltip_label);
