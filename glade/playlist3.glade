@@ -655,8 +655,8 @@
 
               <widget class="GtkAlignment" id="alignment_bread_crumb">
               <property name="top_padding">4</property>
-              <property name="left_padding">6</property>
-              <property name="right_padding">6</property>
+              <property name="left_padding">0</property>
+              <property name="right_padding">0</property>
               <property name="visible">True</property>
               <child>
               <widget class="GtkHBox" id="bread_crumb">
@@ -677,8 +677,8 @@
 
               <widget class="GtkAlignment" id="alignment_tab_bar">
               <property name="top_padding">4</property>
-              <property name="left_padding">6</property>
-              <property name="right_padding">6</property>
+              <property name="left_padding">0</property>
+              <property name="right_padding">0</property>
               <property name="visible">True</property>
               <child>
               <widget class="GtkHBox" id="box_tab_bar">
@@ -698,12 +698,12 @@
               <widget class="GtkHPaned" id="hpaned1">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="border_width">3</property>
+                <property name="border_width">0</property>
                 <property name="position">200</property>
                 <child>
                   <widget class="GtkVBox" id="vbox5">
                     <property name="visible">True</property>
-                    <property name="border_width">3</property>
+                    <property name="border_width">0</property>
                     <property name="spacing">6</property>
                     <child>
                       <widget class="GtkScrolledWindow" id="scrolledwindow2">
@@ -734,7 +734,7 @@
                 <child>
                   <widget class="GtkVBox" id="vbox7">
                     <property name="visible">True</property>
-                    <property name="border_width">3</property>
+                    <property name="border_width">0</property>
                     <property name="spacing">3</property>
                     <child>
                       <widget class="GtkEventBox" id="browser_container">
@@ -751,10 +751,12 @@
                   <packing>
                     <property name="resize">True</property>
                     <property name="shrink">True</property>
-                  </packing>
+                </packing>
                 </child>
               </widget>
-              <packing/>
+              <packing>
+                <property name="padding">6</property>
+              </packing>
             </child>
           </widget>
           <packing>
