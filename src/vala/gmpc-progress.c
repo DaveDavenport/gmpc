@@ -81,7 +81,6 @@ static gboolean gmpc_progress_scroll_event_callback (GmpcProgress* self, GtkScal
 gboolean gmpc_progress_get_hide_text (GmpcProgress* self);
 GmpcProgress* gmpc_progress_new (void);
 GmpcProgress* gmpc_progress_construct (GType object_type);
-GmpcProgress* gmpc_progress_new (void);
 void gmpc_progress_set_hide_text (GmpcProgress* self, gboolean value);
 static gboolean _gmpc_progress_scroll_event_callback_gtk_widget_scroll_event (GtkScale* _sender, const GdkEventScroll* event, gpointer self);
 static gboolean _gmpc_progress_button_release_event_callback_gtk_widget_button_release_event (GtkScale* _sender, const GdkEventButton* event, gpointer self);

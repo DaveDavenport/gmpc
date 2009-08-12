@@ -108,7 +108,6 @@ static void _gmpc_easy_command_help_window_destroy_gtk_dialog_response (GtkDialo
 void gmpc_easy_command_help_window (void* data, const char* param);
 GmpcEasyCommand* gmpc_easy_command_new (void);
 GmpcEasyCommand* gmpc_easy_command_construct (GType object_type);
-GmpcEasyCommand* gmpc_easy_command_new (void);
 static gboolean _gmpc_easy_command_completion_function_gtk_entry_completion_match_func (GtkEntryCompletion* completion, const char* key, GtkTreeIter* iter, gpointer self);
 static GObject * gmpc_easy_command_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);
 static void gmpc_easy_command_finalize (GObject* obj);

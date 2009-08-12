@@ -48,7 +48,6 @@ static gboolean gmpc_menu_item_rating_button_press_event_callback (GmpcMenuItemR
 static gboolean gmpc_menu_item_rating_button_release_event_callback (GmpcMenuItemRating* self, const GdkEventButton* event, void* userdata);
 GmpcMenuItemRating* gmpc_menu_item_rating_new (MpdObj* server, const mpd_Song* song);
 GmpcMenuItemRating* gmpc_menu_item_rating_construct (GType object_type, MpdObj* server, const mpd_Song* song);
-GmpcMenuItemRating* gmpc_menu_item_rating_new (MpdObj* server, const mpd_Song* song);
 static void gmpc_menu_item_rating_finalize (GObject* obj);
 
 

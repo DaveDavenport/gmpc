@@ -347,7 +347,7 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
                 {
 
                     data.sort_album_disc_track();
-                    weak MPD.Data.Item iter = data.first();
+                    weak MPD.Data.Item iter = data.get_first();
 
                     liter = list.first();
                     string artist = "";
@@ -950,7 +950,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             data.sort_album_disc_track();
             if(data != null)
             {
-                data = data.first();
+                data.first();
                 do{
                     MPD.PlayQueue.queue_add_song(server, data.song.file);
                     data.next_free();
@@ -1424,7 +1424,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
 
             this.model_albums.set_request_artist(artist);
             MPD.Data.Item list = null;
-            weak MPD.Data.Item iter = data.first();
+            weak MPD.Data.Item iter = data.get_first();
             if(iter!= null)
             {
                 do{

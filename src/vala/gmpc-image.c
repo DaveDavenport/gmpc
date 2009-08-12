@@ -82,7 +82,6 @@ void gmpc_image_set_pixbuf (GmpcImage* self, GdkPixbuf* buf, gboolean border);
 void gmpc_image_clear_pixbuf (GmpcImage* self);
 GmpcImage* gmpc_image_new (void);
 GmpcImage* gmpc_image_construct (GType object_type);
-GmpcImage* gmpc_image_new (void);
 void gmpc_image_set_text (GmpcImage* self, const char* value);
 static gboolean _gmpc_image_on_expose_gtk_widget_expose_event (GmpcImage* _sender, const GdkEventExpose* event, gpointer self);
 static GObject * gmpc_image_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);

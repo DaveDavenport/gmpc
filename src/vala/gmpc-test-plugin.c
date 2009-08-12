@@ -135,7 +135,6 @@ static void _gmpc_meta_data_edit_window_combo_box_changed_gtk_combo_box_changed 
 static void _gmpc_meta_data_edit_window_refresh_query_gtk_button_clicked (GtkButton* _sender, gpointer self);
 GmpcMetaDataEditWindow* gmpc_meta_data_edit_window_new (const mpd_Song* song, MetaDataType type);
 GmpcMetaDataEditWindow* gmpc_meta_data_edit_window_construct (GType object_type, const mpd_Song* song, MetaDataType type);
-GmpcMetaDataEditWindow* gmpc_meta_data_edit_window_new (const mpd_Song* song, MetaDataType type);
 static GObject * gmpc_meta_data_edit_window_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);
 static void gmpc_meta_data_edit_window_finalize (GObject* obj);
 GType gmpc_test_plugin_get_type (void);
@@ -156,7 +155,6 @@ static void _gmpc_test_plugin_menu_activated_album_gtk_menu_item_activate (GtkMe
 static gint gmpc_test_plugin_real_tool_menu_integration (GmpcPluginToolMenuIface* base, GtkMenu* menu);
 GmpcTestPlugin* gmpc_test_plugin_new (void);
 GmpcTestPlugin* gmpc_test_plugin_construct (GType object_type);
-GmpcTestPlugin* gmpc_test_plugin_new (void);
 static GObject * gmpc_test_plugin_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);
 
 static const gint GMPC_TEST_PLUGIN_version[] = {0, 0, 2};

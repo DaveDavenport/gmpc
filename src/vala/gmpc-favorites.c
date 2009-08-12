@@ -96,7 +96,6 @@ gboolean gmpc_favorites_list_is_favorite (GmpcFavoritesList* self, const char* p
 void gmpc_favorites_list_set_favorite (GmpcFavoritesList* self, const char* path, gboolean favorite);
 GmpcFavoritesList* gmpc_favorites_list_new (void);
 GmpcFavoritesList* gmpc_favorites_list_construct (GType object_type);
-GmpcFavoritesList* gmpc_favorites_list_new (void);
 static void _gmpc_favorites_list_con_changed_gmpc_connection_connection_changed (GmpcConnection* _sender, MpdObj* server, gint connect, gpointer self);
 static void _gmpc_favorites_list_status_changed_gmpc_connection_status_changed (GmpcConnection* _sender, MpdObj* server, ChangedStatusType what, gpointer self);
 static GObject * gmpc_favorites_list_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);
@@ -113,7 +112,6 @@ static gboolean gmpc_favorites_button_leave_notify_event_callback (GmpcFavorites
 void gmpc_favorites_button_set_song (GmpcFavoritesButton* self, const mpd_Song* song);
 GmpcFavoritesButton* gmpc_favorites_button_new (void);
 GmpcFavoritesButton* gmpc_favorites_button_construct (GType object_type);
-GmpcFavoritesButton* gmpc_favorites_button_new (void);
 static void _gmpc_favorites_button_update_gmpc_favorites_list_updated (GmpcFavoritesList* _sender, gpointer self);
 static gboolean _gmpc_favorites_button_button_press_event_callback_gtk_widget_button_press_event (GmpcFavoritesButton* _sender, const GdkEventButton* event, gpointer self);
 static gboolean _gmpc_favorites_button_enter_notify_event_callback_gtk_widget_enter_notify_event (GmpcFavoritesButton* _sender, const GdkEventCrossing* event, gpointer self);

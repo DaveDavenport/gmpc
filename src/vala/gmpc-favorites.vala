@@ -84,7 +84,7 @@ namespace Gmpc.Favorites{
         bool
         is_favorite(string path)
         {
-            weak MPD.Data.Item iter = this.list.first();
+            weak MPD.Data.Item iter = this.list.get_first();
             while(iter != null)
             {
                 if(iter.type == MPD.Data.Type.SONG)
@@ -115,7 +115,7 @@ namespace Gmpc.Favorites{
                     /* Remove it */
                     /* To be able to remove it we have to first lookup the position */
                     /* This needs libmpd 0.18.1 */
-                    weak MPD.Data.Item iter = this.list.first();
+                    weak MPD.Data.Item iter = this.list.get_first();
                     while(iter != null)
                     {
                         if(iter.type == MPD.Data.Type.SONG)

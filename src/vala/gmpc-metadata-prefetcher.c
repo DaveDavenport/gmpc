@@ -49,7 +49,6 @@ static const char* gmpc_plugin_metadata_prefetcher_real_get_name (GmpcPluginBase
 static void gmpc_plugin_metadata_prefetcher_status_changed (GmpcPluginMetadataPrefetcher* self, GmpcConnection* gmpcconn, MpdObj* server, ChangedStatusType what);
 GmpcPluginMetadataPrefetcher* gmpc_plugin_metadata_prefetcher_new (void);
 GmpcPluginMetadataPrefetcher* gmpc_plugin_metadata_prefetcher_construct (GType object_type);
-GmpcPluginMetadataPrefetcher* gmpc_plugin_metadata_prefetcher_new (void);
 static void _gmpc_plugin_metadata_prefetcher_status_changed_gmpc_connection_status_changed (GmpcConnection* _sender, MpdObj* server, ChangedStatusType what, gpointer self);
 static GObject * gmpc_plugin_metadata_prefetcher_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);
 static void gmpc_plugin_metadata_prefetcher_finalize (GObject* obj);

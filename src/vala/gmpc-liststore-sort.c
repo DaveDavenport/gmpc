@@ -59,7 +59,6 @@ static gboolean gmpc_liststore_sort_real_drag_data_delete (GtkTreeDragSource* ba
 static gboolean gmpc_liststore_sort_real_drag_data_received (GtkTreeDragDest* base, const GtkTreePath* dest, GtkSelectionData* selection_data);
 GmpcListstoreSort* gmpc_liststore_sort_new (void);
 GmpcListstoreSort* gmpc_liststore_sort_construct (GType object_type);
-GmpcListstoreSort* gmpc_liststore_sort_new (void);
 
 
 

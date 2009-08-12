@@ -79,7 +79,6 @@ void gmpc_rating_update (GmpcRating* self);
 static void gmpc_rating_status_changed (GmpcRating* self, MpdObj* server, ChangedStatusType what, GmpcConnection* conn);
 GmpcRating* gmpc_rating_new (MpdObj* server, const mpd_Song* song);
 GmpcRating* gmpc_rating_construct (GType object_type, MpdObj* server, const mpd_Song* song);
-GmpcRating* gmpc_rating_new (MpdObj* server, const mpd_Song* song);
 static gboolean _gmpc_rating_button_press_event_callback_gtk_widget_button_press_event (GtkEventBox* _sender, const GdkEventButton* event, gpointer self);
 static GObject * gmpc_rating_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);
 static void gmpc_rating_finalize (GObject* obj);

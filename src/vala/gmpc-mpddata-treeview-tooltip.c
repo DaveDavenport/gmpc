@@ -79,7 +79,6 @@ static gboolean _gmpc_mpd_data_treeview_tooltip_query_tooltip_callback_gtk_widge
 static void _gmpc_mpd_data_treeview_tooltip_metadata_changed_gmpc_meta_watcher_data_changed (GmpcMetaWatcher* _sender, const mpd_Song* song, MetaDataType type, MetaDataResult _result_, const MetaData* met, gpointer self);
 GmpcMpdDataTreeviewTooltip* gmpc_mpd_data_treeview_tooltip_new (GtkTreeView* pw, MetaDataType type);
 GmpcMpdDataTreeviewTooltip* gmpc_mpd_data_treeview_tooltip_construct (GType object_type, GtkTreeView* pw, MetaDataType type);
-GmpcMpdDataTreeviewTooltip* gmpc_mpd_data_treeview_tooltip_new (GtkTreeView* pw, MetaDataType type);
 static void gmpc_mpd_data_treeview_tooltip_finalize (GObject* obj);
 static int _vala_strcmp0 (const char * str1, const char * str2);
 

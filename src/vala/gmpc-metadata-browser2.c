@@ -254,7 +254,6 @@ enum  {
 };
 static GmpcWidgetSimilarSongs* gmpc_widget_similar_songs_new (const mpd_Song* song);
 static GmpcWidgetSimilarSongs* gmpc_widget_similar_songs_construct (GType object_type, const mpd_Song* song);
-static GmpcWidgetSimilarSongs* gmpc_widget_similar_songs_new (const mpd_Song* song);
 static void _g_list_free_gtk_tree_path_free (GList* self);
 static void gmpc_widget_similar_songs_add_clicked (GmpcWidgetSimilarSongs* self, GtkImageMenuItem* item);
 static void gmpc_widget_similar_songs_play_clicked (GmpcWidgetSimilarSongs* self, GtkImageMenuItem* item);
@@ -289,7 +288,6 @@ static void _gmpc_widget_similar_artist_artist_button_clicked_gtk_button_clicked
 static void _gmpc_widget_similar_artist_metadata_changed_gmpc_meta_watcher_data_changed (GmpcMetaWatcher* _sender, const mpd_Song* song, MetaDataType type, MetaDataResult _result_, const MetaData* met, gpointer self);
 static GmpcWidgetSimilarArtist* gmpc_widget_similar_artist_new (GmpcMetadataBrowser* browser, MpdObj* server, const mpd_Song* song);
 static GmpcWidgetSimilarArtist* gmpc_widget_similar_artist_construct (GType object_type, GmpcMetadataBrowser* browser, MpdObj* server, const mpd_Song* song);
-static GmpcWidgetSimilarArtist* gmpc_widget_similar_artist_new (GmpcMetadataBrowser* browser, MpdObj* server, const mpd_Song* song);
 static void gmpc_widget_similar_artist_finalize (GObject* obj);
 GType gmpc_widget_more_get_type (void);
 #define GMPC_WIDGET_MORE_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GMPC_WIDGET_TYPE_MORE, GmpcWidgetMorePrivate))
@@ -304,7 +302,6 @@ static void _gmpc_widget_more_expand_gtk_button_clicked (GtkButton* _sender, gpo
 static void _gmpc_widget_more_size_changed_gtk_widget_size_allocate (GtkWidget* _sender, const GdkRectangle* allocation, gpointer self);
 static GmpcWidgetMore* gmpc_widget_more_new (const char* unique_id, const char* markup, GtkWidget* child);
 static GmpcWidgetMore* gmpc_widget_more_construct (GType object_type, const char* unique_id, const char* markup, GtkWidget* child);
-static GmpcWidgetMore* gmpc_widget_more_new (const char* unique_id, const char* markup, GtkWidget* child);
 static void gmpc_widget_more_finalize (GObject* obj);
 GType gmpc_now_playing_get_type (void);
 #define GMPC_NOW_PLAYING_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GMPC_TYPE_NOW_PLAYING, GmpcNowPlayingPrivate))
@@ -330,7 +327,6 @@ static void _gmpc_now_playing_select_now_playing_browser_gtk_menu_item_activate 
 static gint gmpc_now_playing_real_browser_add_go_menu (GmpcPluginBrowserIface* base, GtkMenu* menu);
 GmpcNowPlaying* gmpc_now_playing_new (void);
 GmpcNowPlaying* gmpc_now_playing_construct (GType object_type);
-GmpcNowPlaying* gmpc_now_playing_new (void);
 static void _gmpc_now_playing_status_changed_gmpc_connection_status_changed (GmpcConnection* _sender, MpdObj* server, ChangedStatusType what, gpointer self);
 GmpcMetadataBrowser* gmpc_metadata_browser_new (void);
 GmpcMetadataBrowser* gmpc_metadata_browser_construct (GType object_type);
@@ -471,7 +467,6 @@ static void _lambda6_ (GtkToggleButton* source, GmpcMetadataBrowser* self);
 static void __lambda6__gtk_toggle_button_toggled (GtkToggleButton* _sender, gpointer self);
 static void gmpc_metadata_browser_real_preferences_pane_construct (GmpcPluginPreferencesIface* base, GtkContainer* container);
 static void gmpc_metadata_browser_real_preferences_pane_destroy (GmpcPluginPreferencesIface* base, GtkContainer* container);
-GmpcMetadataBrowser* gmpc_metadata_browser_new (void);
 static void _gmpc_metadata_browser_con_changed_gmpc_connection_connection_changed (GmpcConnection* _sender, MpdObj* server, gint connect, gpointer self);
 static void _gmpc_metadata_browser_status_changed_gmpc_connection_status_changed (GmpcConnection* _sender, MpdObj* server, ChangedStatusType what, gpointer self);
 static GObject * gmpc_metadata_browser_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);
@@ -2306,21 +2301,17 @@ static void gmpc_metadata_browser_artist_add_clicked (GmpcMetadataBrowser* self,
 		data = mpd_database_search_commit (connection);
 		data = misc_sort_mpddata_by_album_disc_track (data);
 		if (data != NULL) {
-			MpdData* _tmp1_;
-			const MpdData* _tmp0_;
-			_tmp1_ = NULL;
-			_tmp0_ = NULL;
-			data = (_tmp1_ = (_tmp0_ = mpd_data_get_first (data), (_tmp0_ == NULL) ? NULL :  (_tmp0_)), (data == NULL) ? NULL : (data = (mpd_data_free (data), NULL)), _tmp1_);
+			data = mpd_data_get_first (data);
 			{
-				gboolean _tmp2_;
-				_tmp2_ = TRUE;
+				gboolean _tmp0_;
+				_tmp0_ = TRUE;
 				while (TRUE) {
-					if (!_tmp2_) {
+					if (!_tmp0_) {
 						if (!(data != NULL)) {
 							break;
 						}
 					}
-					_tmp2_ = FALSE;
+					_tmp0_ = FALSE;
 					mpd_playlist_queue_add (connection, data->song->file);
 					data = mpd_data_get_next (data);
 				}
@@ -5273,43 +5264,43 @@ static void gmpc_metadata_browser_real_preferences_pane_construct (GmpcPluginPre
 	chk = g_object_ref_sink ((GtkCheckButton*) gtk_check_button_new_with_label (_ ("Artist information")));
 	gtk_toggle_button_set_active ((GtkToggleButton*) chk, cfg_get_single_value_as_int_with_default (config, "MetaData", "show-artist-information", 1) == 1);
 	gtk_box_pack_start ((GtkBox*) box, (GtkWidget*) chk, FALSE, FALSE, (guint) 0);
-	g_signal_connect ((GtkToggleButton*) chk, "toggled", (GCallback) __lambda0__gtk_toggle_button_toggled, self);
+	g_signal_connect_object ((GtkToggleButton*) chk, "toggled", (GCallback) __lambda0__gtk_toggle_button_toggled, self, 0);
 	/* Album information */
 	_tmp0_ = NULL;
 	chk = (_tmp0_ = g_object_ref_sink ((GtkCheckButton*) gtk_check_button_new_with_label (_ ("Album information"))), (chk == NULL) ? NULL : (chk = (g_object_unref (chk), NULL)), _tmp0_);
 	gtk_toggle_button_set_active ((GtkToggleButton*) chk, cfg_get_single_value_as_int_with_default (config, "MetaData", "show-album-information", 1) == 1);
 	gtk_box_pack_start ((GtkBox*) box, (GtkWidget*) chk, FALSE, FALSE, (guint) 0);
-	g_signal_connect ((GtkToggleButton*) chk, "toggled", (GCallback) __lambda1__gtk_toggle_button_toggled, self);
+	g_signal_connect_object ((GtkToggleButton*) chk, "toggled", (GCallback) __lambda1__gtk_toggle_button_toggled, self, 0);
 	/* Artist similar */
 	_tmp1_ = NULL;
 	chk = (_tmp1_ = g_object_ref_sink ((GtkCheckButton*) gtk_check_button_new_with_label (_ ("Similar Artist"))), (chk == NULL) ? NULL : (chk = (g_object_unref (chk), NULL)), _tmp1_);
 	gtk_toggle_button_set_active ((GtkToggleButton*) chk, cfg_get_single_value_as_int_with_default (config, "MetaData", "show-similar-artist", 1) == 1);
 	gtk_box_pack_start ((GtkBox*) box, (GtkWidget*) chk, FALSE, FALSE, (guint) 0);
-	g_signal_connect ((GtkToggleButton*) chk, "toggled", (GCallback) __lambda2__gtk_toggle_button_toggled, self);
+	g_signal_connect_object ((GtkToggleButton*) chk, "toggled", (GCallback) __lambda2__gtk_toggle_button_toggled, self, 0);
 	/* Lyrics */
 	_tmp2_ = NULL;
 	chk = (_tmp2_ = g_object_ref_sink ((GtkCheckButton*) gtk_check_button_new_with_label (_ ("Lyrics"))), (chk == NULL) ? NULL : (chk = (g_object_unref (chk), NULL)), _tmp2_);
 	gtk_toggle_button_set_active ((GtkToggleButton*) chk, cfg_get_single_value_as_int_with_default (config, "MetaData", "show-lyrics", 1) == 1);
 	gtk_box_pack_start ((GtkBox*) box, (GtkWidget*) chk, FALSE, FALSE, (guint) 0);
-	g_signal_connect ((GtkToggleButton*) chk, "toggled", (GCallback) __lambda3__gtk_toggle_button_toggled, self);
+	g_signal_connect_object ((GtkToggleButton*) chk, "toggled", (GCallback) __lambda3__gtk_toggle_button_toggled, self, 0);
 	/* Guitar Tabs*/
 	_tmp3_ = NULL;
 	chk = (_tmp3_ = g_object_ref_sink ((GtkCheckButton*) gtk_check_button_new_with_label (_ ("Guitar Tabs"))), (chk == NULL) ? NULL : (chk = (g_object_unref (chk), NULL)), _tmp3_);
 	gtk_toggle_button_set_active ((GtkToggleButton*) chk, cfg_get_single_value_as_int_with_default (config, "MetaData", "show-guitar-tabs", 1) == 1);
 	gtk_box_pack_start ((GtkBox*) box, (GtkWidget*) chk, FALSE, FALSE, (guint) 0);
-	g_signal_connect ((GtkToggleButton*) chk, "toggled", (GCallback) __lambda4__gtk_toggle_button_toggled, self);
+	g_signal_connect_object ((GtkToggleButton*) chk, "toggled", (GCallback) __lambda4__gtk_toggle_button_toggled, self, 0);
 	/* Similar songs*/
 	_tmp4_ = NULL;
 	chk = (_tmp4_ = g_object_ref_sink ((GtkCheckButton*) gtk_check_button_new_with_label (_ ("Similar Songs"))), (chk == NULL) ? NULL : (chk = (g_object_unref (chk), NULL)), _tmp4_);
 	gtk_toggle_button_set_active ((GtkToggleButton*) chk, cfg_get_single_value_as_int_with_default (config, "MetaData", "show-similar-songs", 1) == 1);
 	gtk_box_pack_start ((GtkBox*) box, (GtkWidget*) chk, FALSE, FALSE, (guint) 0);
-	g_signal_connect ((GtkToggleButton*) chk, "toggled", (GCallback) __lambda5__gtk_toggle_button_toggled, self);
+	g_signal_connect_object ((GtkToggleButton*) chk, "toggled", (GCallback) __lambda5__gtk_toggle_button_toggled, self, 0);
 	/* Web links*/
 	_tmp5_ = NULL;
 	chk = (_tmp5_ = g_object_ref_sink ((GtkCheckButton*) gtk_check_button_new_with_label (_ ("Web links"))), (chk == NULL) ? NULL : (chk = (g_object_unref (chk), NULL)), _tmp5_);
 	gtk_toggle_button_set_active ((GtkToggleButton*) chk, cfg_get_single_value_as_int_with_default (config, "MetaData", "show-web-links", 1) == 1);
 	gtk_box_pack_start ((GtkBox*) box, (GtkWidget*) chk, FALSE, FALSE, (guint) 0);
-	g_signal_connect ((GtkToggleButton*) chk, "toggled", (GCallback) __lambda6__gtk_toggle_button_toggled, self);
+	g_signal_connect_object ((GtkToggleButton*) chk, "toggled", (GCallback) __lambda6__gtk_toggle_button_toggled, self, 0);
 	gtk_container_add (container, (GtkWidget*) box);
 	gtk_widget_show_all ((GtkWidget*) box);
 	(box == NULL) ? NULL : (box = (g_object_unref (box), NULL));

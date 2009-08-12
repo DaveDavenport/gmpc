@@ -133,7 +133,11 @@ namespace MPD {
                 public weak Item? next(bool free);
 
                 [CCode (cname="mpd_data_get_first")] 
-                public weak Item? first();
+                public weak Item? get_first();
+
+                [CCode (cname="mpd_data_get_first")] 
+                [ReturnsModifiedPointer ()]
+                public void first();
 
                 [CCode (cname="mpd_data_concatenate")]
                 [ReturnsModifiedPointer ()]

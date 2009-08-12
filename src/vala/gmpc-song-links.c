@@ -88,7 +88,6 @@ static gboolean _gmpc_song_links_button_press_event_callback_gtk_widget_button_p
 static void gmpc_song_links_parse_uris (GmpcSongLinks* self);
 GmpcSongLinks* gmpc_song_links_new (GmpcSongLinksType type, const mpd_Song* song);
 GmpcSongLinks* gmpc_song_links_construct (GType object_type, GmpcSongLinksType type, const mpd_Song* song);
-GmpcSongLinks* gmpc_song_links_new (GmpcSongLinksType type, const mpd_Song* song);
 static guchar* _vala_array_dup1 (guchar* self, int length);
 static void gmpc_song_links_finalize (GObject* obj);
 static void _vala_array_destroy (gpointer array, gint array_length, GDestroyNotify destroy_func);

@@ -61,7 +61,6 @@ enum  {
 };
 GmpcPanedSizeGroup* gmpc_paned_size_group_new (void);
 GmpcPanedSizeGroup* gmpc_paned_size_group_construct (GType object_type);
-GmpcPanedSizeGroup* gmpc_paned_size_group_new (void);
 static gboolean gmpc_paned_size_group_child_destroy_event (GmpcPanedSizeGroup* self, GtkWidget* paned, GdkEvent* event);
 static void gmpc_paned_size_group_child_position_changed (GmpcPanedSizeGroup* self, GObject* paned, GParamSpec* spec);
 static void _gmpc_paned_size_group_child_position_changed_g_object_notify (GObject* _sender, GParamSpec* pspec, gpointer self);
