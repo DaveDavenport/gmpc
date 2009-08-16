@@ -368,7 +368,8 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
                             list.remove(d);
                             //liter = null;
                             iter = iter.next(false);
-                            artist = iter.tag.casefold(); 
+                            if(iter != null)
+                                artist = iter.tag.casefold();
                         }
                         else if (res > 0) {
                             //list.remove(liter.data);

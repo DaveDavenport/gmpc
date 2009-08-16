@@ -1158,7 +1158,6 @@ static void gmpc_widget_similar_artist_metadata_changed (GmpcWidgetSimilarArtist
 							if (res == 0) {
 								const char* _tmp9_;
 								char* d;
-								char* _tmp10_;
 								in_db_list = g_list_prepend (in_db_list, gmpc_widget_similar_artist_new_artist_button (self, iter->tag, TRUE));
 								i++;
 								_tmp9_ = NULL;
@@ -1167,8 +1166,11 @@ static void gmpc_widget_similar_artist_metadata_changed (GmpcWidgetSimilarArtist
 								list = g_list_remove (list, d);
 								/*liter = null;*/
 								iter = mpd_data_get_next_real (iter, FALSE);
-								_tmp10_ = NULL;
-								artist = (_tmp10_ = g_utf8_casefold (iter->tag, -1), artist = (g_free (artist), NULL), _tmp10_);
+								if (iter != NULL) {
+									char* _tmp10_;
+									_tmp10_ = NULL;
+									artist = (_tmp10_ = g_utf8_casefold (iter->tag, -1), artist = (g_free (artist), NULL), _tmp10_);
+								}
 								d = (g_free (d), NULL);
 							} else {
 								if (res > 0) {
