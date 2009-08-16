@@ -8,6 +8,27 @@ CONF_VERSION=0
 
 bin_PROGRAMS=gmpc
 
+vala_SOURCES=\
+    vala/gmpc.vapi\
+    vala/libmpd.vapi\
+    vala/config.vapi\
+    vala/gmpc-connection.vala\
+    vala/gmpc-easy-command.vala\
+    vala/gmpc-favorites.vala\
+    vala/gmpc-image.vala\
+    vala/gmpc-liststore-sort.vala\
+    vala/gmpc_menu_item_rating.vala\
+    vala/gmpc-metadata-browser2.vala\
+    vala/gmpc-metadata-prefetcher.vala\
+    vala/gmpc-mpddata-treeview-tooltip.vala\
+    vala/gmpc-paned-size-group.vala\
+    vala/gmpc-plugin.vala\
+    vala/gmpc-progress.vala\
+    vala/gmpc-rating.vala\
+    vala/gmpc-song-links.vala\
+    vala/gmpc-test-plugin.vala
+
+
 gmpc_SOURCES=\
 	main.c\
 	plugin.c\
@@ -199,6 +220,7 @@ EXTRA_DIST=\
 		gmpc-version.h.in\
 		bug-information.h\
         gmpc-win32.rc\
+        $(vala_SOURCES)\
         $(gmpc_GOBFILES)
 
 DISTCLEANFILES=\
