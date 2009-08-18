@@ -36,6 +36,7 @@ GtkStatusIcon 	*tray_icon2_gsi = NULL;
 static gchar *current_song_checksum = NULL;
 
 static void tray_icon2_status_changed(MpdObj *mi, ChangedStatusType what, void *userdata);
+static void tray_icon2_connection_changed(MpdObj *mi, int connect,void *user_data);
 static void tray_icon2_create_tooltip_real(int position);
 static gboolean tray_icon2_tooltip_destroy(void);
 /**
@@ -249,6 +250,8 @@ static void tray_icon2_init(void)
 
             g_signal_connect(G_OBJECT(tray_icon2_gsi), "query-tooltip", G_CALLBACK(tray_icon2_tooltip_query), NULL);
 		}
+        /* Make sure the icons are up2date */
+        tray_icon2_connection_changed(connection, mpd_check_connected(connection), NULL);
 	}
 }
 /**
