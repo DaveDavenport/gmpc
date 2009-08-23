@@ -49,7 +49,7 @@ public class Gmpc.Widget.SimilarSongs : Gtk.Expander {
         }
     }
 
-    SimilarSongs (MPD.Song song) 
+    public SimilarSongs (MPD.Song song) 
     {
         this.song = song;
         var label  = new Gtk.Label(_("Similar songs"));
@@ -464,7 +464,7 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
         return event;
     }
 
-    SimilarArtist(Gmpc.MetadataBrowser browser,MPD.Server server, MPD.Song song)
+    public SimilarArtist(Gmpc.MetadataBrowser browser,MPD.Server server, MPD.Song song)
     {
         MetaData.Item item = null;
         this.browser = browser;
@@ -554,7 +554,7 @@ public class Gmpc.Widget.More : Gtk.Frame {
      * 
      * @returns a Gmpc.Widget.More object.
      */
-    More(string unique_id, string markup,Gtk.Widget child)
+    public More(string unique_id, string markup,Gtk.Widget child)
     {
         this.unique_id = unique_id;
         this.set_shadow_type(Gtk.ShadowType.NONE);

@@ -118,7 +118,7 @@ static void gmpc_plugin_metadata_prefetcher_status_changed (GmpcPluginMetadataPr
 
 GmpcPluginMetadataPrefetcher* gmpc_plugin_metadata_prefetcher_construct (GType object_type) {
 	GmpcPluginMetadataPrefetcher * self;
-	self = g_object_newv (object_type, 0, NULL);
+	self = (GmpcPluginMetadataPrefetcher*) gmpc_plugin_base_construct (object_type);
 	return self;
 }
 

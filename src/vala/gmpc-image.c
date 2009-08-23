@@ -30,7 +30,6 @@
 #include <gdk/gdk.h>
 #include <cairo.h>
 #include <pango/pangocairo.h>
-#include <stdio.h>
 
 
 #define GMPC_TYPE_IMAGE (gmpc_image_get_type ())
@@ -220,7 +219,6 @@ static gboolean gmpc_image_on_expose (GmpcImage* self, GmpcImage* img, const Gdk
 		th = 0;
 		cairo_set_antialias (ctx, CAIRO_ANTIALIAS_DEFAULT);
 		size = gdk_pixbuf_get_width (self->priv->cover) / ((gint) string_get_length (self->priv->_text));
-		fprintf (stdout, "%i-%i-%i\n", size, ww, (gint) string_get_length (self->priv->_text));
 		pango_font_description_set_absolute_size (self->priv->fd, (double) (size * 1024));
 		pango_layout_set_font_description (layout, self->priv->fd);
 		pango_layout_set_text (layout, self->priv->_text, -1);

@@ -127,7 +127,6 @@ public class Gmpc.Image:Gtk.EventBox {
 
 			ctx.set_antialias(Cairo.Antialias.DEFAULT);
 			int size = (cover.width)/(int)this.text.length;
-			stdout.printf("%i-%i-%i\n", size, ww,(int)this.text.length);
 			fd.set_absolute_size(size*1024);
 			layout.set_font_description(fd);
 			layout.set_text(this.text,-1);

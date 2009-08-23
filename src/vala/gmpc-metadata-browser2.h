@@ -4,11 +4,11 @@
 
 #include <glib.h>
 #include <gtk/gtk.h>
+#include <libmpd/libmpdclient.h>
+#include <libmpd/libmpd.h>
 #include <stdlib.h>
 #include <string.h>
 #include <gmpc-plugin.h>
-#include <libmpd/libmpdclient.h>
-#include <libmpd/libmpd.h>
 
 G_BEGIN_DECLS
 
@@ -35,6 +35,16 @@ typedef struct _GmpcWidgetSimilarArtist GmpcWidgetSimilarArtist;
 typedef struct _GmpcWidgetSimilarArtistClass GmpcWidgetSimilarArtistClass;
 typedef struct _GmpcWidgetSimilarArtistPrivate GmpcWidgetSimilarArtistPrivate;
 
+#define GMPC_TYPE_METADATA_BROWSER (gmpc_metadata_browser_get_type ())
+#define GMPC_METADATA_BROWSER(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), GMPC_TYPE_METADATA_BROWSER, GmpcMetadataBrowser))
+#define GMPC_METADATA_BROWSER_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), GMPC_TYPE_METADATA_BROWSER, GmpcMetadataBrowserClass))
+#define GMPC_IS_METADATA_BROWSER(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GMPC_TYPE_METADATA_BROWSER))
+#define GMPC_IS_METADATA_BROWSER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GMPC_TYPE_METADATA_BROWSER))
+#define GMPC_METADATA_BROWSER_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), GMPC_TYPE_METADATA_BROWSER, GmpcMetadataBrowserClass))
+
+typedef struct _GmpcMetadataBrowser GmpcMetadataBrowser;
+typedef struct _GmpcMetadataBrowserClass GmpcMetadataBrowserClass;
+
 #define GMPC_WIDGET_TYPE_MORE (gmpc_widget_more_get_type ())
 #define GMPC_WIDGET_MORE(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), GMPC_WIDGET_TYPE_MORE, GmpcWidgetMore))
 #define GMPC_WIDGET_MORE_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), GMPC_WIDGET_TYPE_MORE, GmpcWidgetMoreClass))
@@ -56,16 +66,6 @@ typedef struct _GmpcWidgetMorePrivate GmpcWidgetMorePrivate;
 typedef struct _GmpcNowPlaying GmpcNowPlaying;
 typedef struct _GmpcNowPlayingClass GmpcNowPlayingClass;
 typedef struct _GmpcNowPlayingPrivate GmpcNowPlayingPrivate;
-
-#define GMPC_TYPE_METADATA_BROWSER (gmpc_metadata_browser_get_type ())
-#define GMPC_METADATA_BROWSER(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), GMPC_TYPE_METADATA_BROWSER, GmpcMetadataBrowser))
-#define GMPC_METADATA_BROWSER_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), GMPC_TYPE_METADATA_BROWSER, GmpcMetadataBrowserClass))
-#define GMPC_IS_METADATA_BROWSER(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GMPC_TYPE_METADATA_BROWSER))
-#define GMPC_IS_METADATA_BROWSER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GMPC_TYPE_METADATA_BROWSER))
-#define GMPC_METADATA_BROWSER_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), GMPC_TYPE_METADATA_BROWSER, GmpcMetadataBrowserClass))
-
-typedef struct _GmpcMetadataBrowser GmpcMetadataBrowser;
-typedef struct _GmpcMetadataBrowserClass GmpcMetadataBrowserClass;
 typedef struct _GmpcMetadataBrowserPrivate GmpcMetadataBrowserPrivate;
 
 struct _GmpcWidgetSimilarSongs {
@@ -121,13 +121,19 @@ struct _GmpcMetadataBrowserClass {
 
 
 GType gmpc_widget_similar_songs_get_type (void);
+GmpcWidgetSimilarSongs* gmpc_widget_similar_songs_new (const mpd_Song* song);
+GmpcWidgetSimilarSongs* gmpc_widget_similar_songs_construct (GType object_type, const mpd_Song* song);
 GType gmpc_widget_similar_artist_get_type (void);
 GtkWidget* gmpc_widget_similar_artist_new_artist_button (GmpcWidgetSimilarArtist* self, const char* artist, gboolean in_db);
+GType gmpc_metadata_browser_get_type (void);
+GmpcWidgetSimilarArtist* gmpc_widget_similar_artist_new (GmpcMetadataBrowser* browser, MpdObj* server, const mpd_Song* song);
+GmpcWidgetSimilarArtist* gmpc_widget_similar_artist_construct (GType object_type, GmpcMetadataBrowser* browser, MpdObj* server, const mpd_Song* song);
 GType gmpc_widget_more_get_type (void);
+GmpcWidgetMore* gmpc_widget_more_new (const char* unique_id, const char* markup, GtkWidget* child);
+GmpcWidgetMore* gmpc_widget_more_construct (GType object_type, const char* unique_id, const char* markup, GtkWidget* child);
 GType gmpc_now_playing_get_type (void);
 GmpcNowPlaying* gmpc_now_playing_new (void);
 GmpcNowPlaying* gmpc_now_playing_construct (GType object_type);
-GType gmpc_metadata_browser_get_type (void);
 GtkWidget* gmpc_metadata_browser_metadata_box_show_song (GmpcMetadataBrowser* self, const mpd_Song* song, gboolean show_controls);
 void gmpc_metadata_browser_set_artist (GmpcMetadataBrowser* self, const char* artist);
 void gmpc_metadata_browser_set_album (GmpcMetadataBrowser* self, const char* artist, const char* album);

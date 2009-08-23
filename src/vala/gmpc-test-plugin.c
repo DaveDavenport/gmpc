@@ -562,13 +562,13 @@ void gmpc_meta_data_edit_window_store_image (GmpcMetaDataEditWindow* self, const
 				goto __catch4_g_error;
 				goto __finally4;
 			}
-			met = g_new0 (MetaData, 1);
+			met = meta_data_new ();
 			met->type = self->priv->query_type;
 			met->plugin_name = "User set";
 			met->content_type = META_DATA_CONTENT_URI;
 			meta_data_set_uri (met, file);
 			meta_data_set_cache (self->priv->song, META_DATA_AVAILABLE, met);
-			met_false = g_new0 (MetaData, 1);
+			met_false = meta_data_new ();
 			met_false->type = self->priv->query_type;
 			met_false->plugin_name = "User set";
 			met_false->content_type = META_DATA_CONTENT_EMPTY;
@@ -640,13 +640,13 @@ static void gmpc_meta_data_edit_window_set_metadata (GmpcMetaDataEditWindow* sel
 			if (g_utf8_get_char (g_utf8_offset_to_pointer (path, 0)) == '/') {
 				MetaData* met;
 				MetaData* met_false;
-				met = g_new0 (MetaData, 1);
+				met = meta_data_new ();
 				met->type = self->priv->query_type;
 				met->plugin_name = "User set";
 				met->content_type = META_DATA_CONTENT_URI;
 				meta_data_set_uri (met, path);
 				meta_data_set_cache (self->priv->song, META_DATA_AVAILABLE, met);
-				met_false = g_new0 (MetaData, 1);
+				met_false = meta_data_new ();
 				met_false->type = self->priv->query_type;
 				met_false->plugin_name = "User set";
 				met_false->content_type = META_DATA_CONTENT_EMPTY;
@@ -675,13 +675,13 @@ static void gmpc_meta_data_edit_window_set_metadata (GmpcMetaDataEditWindow* sel
 					goto __catch5_g_error;
 					goto __finally5;
 				}
-				met = g_new0 (MetaData, 1);
+				met = meta_data_new ();
 				met->type = self->priv->query_type;
 				met->plugin_name = "User set";
 				met->content_type = META_DATA_CONTENT_URI;
 				meta_data_set_uri (met, file);
 				meta_data_set_cache (self->priv->song, META_DATA_AVAILABLE, met);
-				met_false = g_new0 (MetaData, 1);
+				met_false = meta_data_new ();
 				met_false->type = self->priv->query_type;
 				met_false->plugin_name = "User set";
 				met_false->content_type = META_DATA_CONTENT_EMPTY;
@@ -1447,7 +1447,7 @@ static gint gmpc_test_plugin_real_tool_menu_integration (GmpcPluginToolMenuIface
 
 GmpcTestPlugin* gmpc_test_plugin_construct (GType object_type) {
 	GmpcTestPlugin * self;
-	self = g_object_newv (object_type, 0, NULL);
+	self = (GmpcTestPlugin*) gmpc_plugin_base_construct (object_type);
 	return self;
 }
 

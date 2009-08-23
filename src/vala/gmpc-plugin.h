@@ -134,6 +134,7 @@ const char* gmpc_plugin_base_get_name (GmpcPluginBase* self);
 void gmpc_plugin_base_save_yourself (GmpcPluginBase* self);
 gboolean gmpc_plugin_base_get_enabled (GmpcPluginBase* self);
 void gmpc_plugin_base_set_enabled (GmpcPluginBase* self, gboolean state);
+GmpcPluginBase* gmpc_plugin_base_construct (GType object_type);
 GType gmpc_plugin_tool_menu_iface_get_type (void);
 gint gmpc_plugin_tool_menu_iface_tool_menu_integration (GmpcPluginToolMenuIface* self, GtkMenu* menu);
 GType gmpc_plugin_meta_data_iface_get_type (void);

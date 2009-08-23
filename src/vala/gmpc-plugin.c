@@ -159,6 +159,7 @@ gboolean gmpc_plugin_base_get_enabled (GmpcPluginBase* self);
 static gboolean gmpc_plugin_base_real_get_enabled (GmpcPluginBase* self);
 void gmpc_plugin_base_set_enabled (GmpcPluginBase* self, gboolean state);
 static void gmpc_plugin_base_real_set_enabled (GmpcPluginBase* self, gboolean state);
+GmpcPluginBase* gmpc_plugin_base_construct (GType object_type);
 static void gmpc_plugin_base_finalize (GObject* obj);
 GType gmpc_plugin_tool_menu_iface_get_type (void);
 gint gmpc_plugin_tool_menu_iface_tool_menu_integration (GmpcPluginToolMenuIface* self, GtkMenu* menu);
@@ -269,6 +270,17 @@ static void gmpc_plugin_base_real_set_enabled (GmpcPluginBase* self, gboolean st
 
 void gmpc_plugin_base_set_enabled (GmpcPluginBase* self, gboolean state) {
 	GMPC_PLUGIN_BASE_GET_CLASS (self)->set_enabled (self, state);
+}
+
+
+/**
+         * This is the base class that a plugin should inherit from.
+         *
+         */
+GmpcPluginBase* gmpc_plugin_base_construct (GType object_type) {
+	GmpcPluginBase * self;
+	self = g_object_newv (object_type, 0, NULL);
+	return self;
 }
 
 

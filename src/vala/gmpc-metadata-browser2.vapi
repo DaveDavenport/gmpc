@@ -6,13 +6,16 @@ namespace Gmpc {
 	namespace Widget {
 		[CCode (cheader_filename = "gmpc-metadata-browser2.h")]
 		public class More : Gtk.Frame {
+			public More (string unique_id, string markup, Gtk.Widget child);
 		}
 		[CCode (cheader_filename = "gmpc-metadata-browser2.h")]
 		public class SimilarArtist : Gtk.Table {
+			public SimilarArtist (Gmpc.MetadataBrowser browser, MPD.Server server, MPD.Song song);
 			public Gtk.Widget new_artist_button (string artist, bool in_db);
 		}
 		[CCode (cheader_filename = "gmpc-metadata-browser2.h")]
 		public class SimilarSongs : Gtk.Expander {
+			public SimilarSongs (MPD.Song song);
 		}
 	}
 	[CCode (cheader_filename = "gmpc-metadata-browser2.h")]

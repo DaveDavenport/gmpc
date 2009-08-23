@@ -5,7 +5,6 @@
 #include <gtktransition.h>
 #include <gmpc-rating.h>
 #include <config.h>
-#include <stdio.h>
 #include <gdk/gdk.h>
 #include <glib/gi18n-lib.h>
 #include <libmpd/libmpd.h>
@@ -63,7 +62,6 @@ gint gmpc_menu_item_rating_get_rating (GmpcMenuItemRating* self) {
 static gboolean gmpc_menu_item_rating_button_press_event_callback (GmpcMenuItemRating* self, const GdkEventButton* event, void* userdata) {
 	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
-	fprintf (stdout, "Button press event\n");
 	gmpc_rating_button_press_event_callback (self->rating, self->rating->event_box, &(*event));
 	result = TRUE;
 	return result;

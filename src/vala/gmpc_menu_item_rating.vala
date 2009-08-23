@@ -42,7 +42,6 @@ public class Gmpc.MenuItem.Rating : Gtk.MenuItem
     }
     bool button_press_event_callback(Gdk.EventButton event, void *userdata)
     {
-        stdout.printf("Button press event\n");
         this.rating.button_press_event_callback(this.rating.event_box, event);
         return true;
     }

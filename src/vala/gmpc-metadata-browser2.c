@@ -252,8 +252,8 @@ GType gmpc_widget_similar_songs_get_type (void);
 enum  {
 	GMPC_WIDGET_SIMILAR_SONGS_DUMMY_PROPERTY
 };
-static GmpcWidgetSimilarSongs* gmpc_widget_similar_songs_new (const mpd_Song* song);
-static GmpcWidgetSimilarSongs* gmpc_widget_similar_songs_construct (GType object_type, const mpd_Song* song);
+GmpcWidgetSimilarSongs* gmpc_widget_similar_songs_new (const mpd_Song* song);
+GmpcWidgetSimilarSongs* gmpc_widget_similar_songs_construct (GType object_type, const mpd_Song* song);
 static void _g_list_free_gtk_tree_path_free (GList* self);
 static void gmpc_widget_similar_songs_add_clicked (GmpcWidgetSimilarSongs* self, GtkImageMenuItem* item);
 static void gmpc_widget_similar_songs_play_clicked (GmpcWidgetSimilarSongs* self, GtkImageMenuItem* item);
@@ -286,8 +286,8 @@ static void gmpc_widget_similar_artist_artist_button_clicked (GmpcWidgetSimilarA
 static gboolean _misc_header_expose_event_gtk_widget_expose_event (GtkWidget* _sender, const GdkEventExpose* event, gpointer self);
 static void _gmpc_widget_similar_artist_artist_button_clicked_gtk_button_clicked (GtkButton* _sender, gpointer self);
 static void _gmpc_widget_similar_artist_metadata_changed_gmpc_meta_watcher_data_changed (GmpcMetaWatcher* _sender, const mpd_Song* song, MetaDataType type, MetaDataResult _result_, const MetaData* met, gpointer self);
-static GmpcWidgetSimilarArtist* gmpc_widget_similar_artist_new (GmpcMetadataBrowser* browser, MpdObj* server, const mpd_Song* song);
-static GmpcWidgetSimilarArtist* gmpc_widget_similar_artist_construct (GType object_type, GmpcMetadataBrowser* browser, MpdObj* server, const mpd_Song* song);
+GmpcWidgetSimilarArtist* gmpc_widget_similar_artist_new (GmpcMetadataBrowser* browser, MpdObj* server, const mpd_Song* song);
+GmpcWidgetSimilarArtist* gmpc_widget_similar_artist_construct (GType object_type, GmpcMetadataBrowser* browser, MpdObj* server, const mpd_Song* song);
 static void gmpc_widget_similar_artist_finalize (GObject* obj);
 GType gmpc_widget_more_get_type (void);
 #define GMPC_WIDGET_MORE_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GMPC_WIDGET_TYPE_MORE, GmpcWidgetMorePrivate))
@@ -300,8 +300,8 @@ static void gmpc_widget_more_bg_style_changed (GmpcWidgetMore* self, GtkWidget* 
 static void _gmpc_widget_more_bg_style_changed_gtk_widget_style_set (GmpcWidgetMore* _sender, GtkStyle* previous_style, gpointer self);
 static void _gmpc_widget_more_expand_gtk_button_clicked (GtkButton* _sender, gpointer self);
 static void _gmpc_widget_more_size_changed_gtk_widget_size_allocate (GtkWidget* _sender, const GdkRectangle* allocation, gpointer self);
-static GmpcWidgetMore* gmpc_widget_more_new (const char* unique_id, const char* markup, GtkWidget* child);
-static GmpcWidgetMore* gmpc_widget_more_construct (GType object_type, const char* unique_id, const char* markup, GtkWidget* child);
+GmpcWidgetMore* gmpc_widget_more_new (const char* unique_id, const char* markup, GtkWidget* child);
+GmpcWidgetMore* gmpc_widget_more_construct (GType object_type, const char* unique_id, const char* markup, GtkWidget* child);
 static void gmpc_widget_more_finalize (GObject* obj);
 GType gmpc_now_playing_get_type (void);
 #define GMPC_NOW_PLAYING_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GMPC_TYPE_NOW_PLAYING, GmpcNowPlayingPrivate))
@@ -480,7 +480,7 @@ static const gint GMPC_NOW_PLAYING_version[] = {0, 0, 0};
 static const gint GMPC_METADATA_BROWSER_version[] = {0, 0, 0};
 
 
-static GmpcWidgetSimilarSongs* gmpc_widget_similar_songs_construct (GType object_type, const mpd_Song* song) {
+GmpcWidgetSimilarSongs* gmpc_widget_similar_songs_construct (GType object_type, const mpd_Song* song) {
 	GmpcWidgetSimilarSongs * self;
 	mpd_Song* _tmp1_;
 	const mpd_Song* _tmp0_;
@@ -502,7 +502,7 @@ static GmpcWidgetSimilarSongs* gmpc_widget_similar_songs_construct (GType object
 }
 
 
-static GmpcWidgetSimilarSongs* gmpc_widget_similar_songs_new (const mpd_Song* song) {
+GmpcWidgetSimilarSongs* gmpc_widget_similar_songs_new (const mpd_Song* song) {
 	return gmpc_widget_similar_songs_construct (GMPC_WIDGET_TYPE_SIMILAR_SONGS, song);
 }
 
@@ -1325,7 +1325,7 @@ static void _gmpc_widget_similar_artist_metadata_changed_gmpc_meta_watcher_data_
 }
 
 
-static GmpcWidgetSimilarArtist* gmpc_widget_similar_artist_construct (GType object_type, GmpcMetadataBrowser* browser, MpdObj* server, const mpd_Song* song) {
+GmpcWidgetSimilarArtist* gmpc_widget_similar_artist_construct (GType object_type, GmpcMetadataBrowser* browser, MpdObj* server, const mpd_Song* song) {
 	GmpcWidgetSimilarArtist * self;
 	MetaData* item;
 	GmpcMetadataBrowser* _tmp1_;
@@ -1362,7 +1362,7 @@ static GmpcWidgetSimilarArtist* gmpc_widget_similar_artist_construct (GType obje
 }
 
 
-static GmpcWidgetSimilarArtist* gmpc_widget_similar_artist_new (GmpcMetadataBrowser* browser, MpdObj* server, const mpd_Song* song) {
+GmpcWidgetSimilarArtist* gmpc_widget_similar_artist_new (GmpcMetadataBrowser* browser, MpdObj* server, const mpd_Song* song) {
 	return gmpc_widget_similar_artist_construct (GMPC_WIDGET_TYPE_SIMILAR_ARTIST, browser, server, song);
 }
 
@@ -1479,7 +1479,7 @@ static void _gmpc_widget_more_size_changed_gtk_widget_size_allocate (GtkWidget* 
      * 
      * @returns a Gmpc.Widget.More object.
      */
-static GmpcWidgetMore* gmpc_widget_more_construct (GType object_type, const char* unique_id, const char* markup, GtkWidget* child) {
+GmpcWidgetMore* gmpc_widget_more_construct (GType object_type, const char* unique_id, const char* markup, GtkWidget* child) {
 	GmpcWidgetMore * self;
 	char* _tmp1_;
 	const char* _tmp0_;
@@ -1553,7 +1553,7 @@ static GmpcWidgetMore* gmpc_widget_more_construct (GType object_type, const char
 }
 
 
-static GmpcWidgetMore* gmpc_widget_more_new (const char* unique_id, const char* markup, GtkWidget* child) {
+GmpcWidgetMore* gmpc_widget_more_new (const char* unique_id, const char* markup, GtkWidget* child) {
 	return gmpc_widget_more_construct (GMPC_WIDGET_TYPE_MORE, unique_id, markup, child);
 }
 
@@ -2026,7 +2026,7 @@ static gint gmpc_now_playing_real_browser_add_go_menu (GmpcPluginBrowserIface* b
  * Now playing uses the MetaDataBrowser plugin to "plot" the view */
 GmpcNowPlaying* gmpc_now_playing_construct (GType object_type) {
 	GmpcNowPlaying * self;
-	self = g_object_newv (object_type, 0, NULL);
+	self = (GmpcNowPlaying*) gmpc_plugin_base_construct (object_type);
 	return self;
 }
 
@@ -5336,7 +5336,7 @@ static void gmpc_metadata_browser_real_preferences_pane_destroy (GmpcPluginPrefe
 
 GmpcMetadataBrowser* gmpc_metadata_browser_construct (GType object_type) {
 	GmpcMetadataBrowser * self;
-	self = g_object_newv (object_type, 0, NULL);
+	self = (GmpcMetadataBrowser*) gmpc_plugin_base_construct (object_type);
 	return self;
 }
 

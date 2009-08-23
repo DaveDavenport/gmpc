@@ -49,7 +49,9 @@ namespace Gmpc {
         [Immutable]
         [CCode (free_function="meta_data_free")]
         public class Item {
-           public Gmpc.MetaData.Type type; 
+            [CCode (cname="meta_data_new")]
+            public Item ();
+            public Gmpc.MetaData.Type type; 
            public weak string plugin_name;
            public int size;
            public Gmpc.MetaData.ContentType content_type;
@@ -284,7 +286,7 @@ namespace Gmpc {
         [CCode (chader_filename="gmpc-mpddata-treeview.h",cname="GmpcMpdDataTreeview")]
         public class TreeView : Gtk.TreeView {
             [CCode (cname="gmpc_mpddata_treeview_new")]
-            TreeView(string name, bool sort, Gtk.TreeModel model);
+            public TreeView(string name, bool sort, Gtk.TreeModel model);
             [CCode (cname="gmpc_mpddata_treeview_enable_click_fix")]
             public void enable_click_fix();
             [CCode (cname="gmpc_mpddata_treeview_right_mouse_intergration")]
