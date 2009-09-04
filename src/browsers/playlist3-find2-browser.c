@@ -786,6 +786,7 @@ static void pl3_find2_browser_activate(void)
         gtk_tree_selection_select_path(selec, path);
         gtk_tree_path_free(path);
     }
+    gtk_widget_grab_focus(GTK_WIDGET(search_entry));
 }
 
 static int pl3_find2_browser_add_go_menu(GtkWidget *menu)
