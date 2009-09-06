@@ -399,6 +399,7 @@ static void parse_uri(const char *uri, gpointer data)
 				parse_data(buffer, (guint)t, uri);
 
 				fclose(fp);
+				gtk_dialog_response(GTK_DIALOG(gtk_widget_get_toplevel(GTK_WIDGET(data))), GTK_RESPONSE_CANCEL);
 			}
 		}else{
 			gchar *temp = g_strdup_printf("%s: '%s'", _("Failed to open local file"), uri);
