@@ -414,6 +414,7 @@ static void parse_uri(const char *uri, gpointer data)
 				gmpc_easy_async_downloader(uri, url_fetcher_download_callback, data);
 			}else{
 				mpd_playlist_add(connection, (char *)uri);
+				gtk_dialog_response(GTK_DIALOG(gtk_widget_get_toplevel(GTK_WIDGET(data))), GTK_RESPONSE_CANCEL);
 			}
 		}else{
 			gchar *temp = g_strdup_printf("%s: '%s'", _("Uri scheme not supported"), scheme);
