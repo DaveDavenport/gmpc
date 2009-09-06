@@ -485,7 +485,7 @@ void url_start(void)
 	gtk_widget_show_all(dialog);
 	gtk_widget_hide(progress);
 
-	while (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_OK && !stop_loop) {
+	while ( !stop_loop && gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_OK) {
 		const gchar *text = gtk_entry_get_text(GTK_ENTRY(entry));
 
 		gtk_widget_show(progress);
