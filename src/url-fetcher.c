@@ -247,7 +247,6 @@ static gboolean url_validate_url(const gchar * text)
 	if(scheme == NULL){
 		return FALSE;
 	}
-	printf("scheme: %s\n", scheme);
 	handlers = mpd_server_get_url_handlers(connection);
 	/* iterate all entries and find matching handler */
 	for(i=0;handlers && handlers[i]; i++)
@@ -377,11 +376,11 @@ static void url_fetcher_download_callback(const GEADAsyncHandler * handle, const
  * Parsing uri
  */
 
-static void parse_uri(const char *uri, gpointer data)
+static int parse_uri(const char *uri, gpointer data)
 {
 	gchar *scheme;	
 	/* Check NULL */
-	if(uri == NULL) return;
+	if(uri == NULL) return FALSE;
 	/* Check local path */
 	scheme = g_uri_parse_scheme(uri);
 
@@ -399,12 +398,14 @@ static void parse_uri(const char *uri, gpointer data)
 				parse_data(buffer, (guint)t, uri);
 
 				fclose(fp);
-				gtk_dialog_response(GTK_DIALOG(gtk_widget_get_toplevel(GTK_WIDGET(data))), GTK_RESPONSE_CANCEL);
+				/* indicates it should stop */
+				return TRUE;
 			}
 		}else{
 			gchar *temp = g_strdup_printf("%s: '%s'", _("Failed to open local file"), uri);
 			playlist3_message_show(pl3_messages, temp, ERROR_WARNING);	
 			g_free(temp);
+			return TRUE;
 		}
 	}else
 	{
@@ -415,21 +416,28 @@ static void parse_uri(const char *uri, gpointer data)
 				gmpc_easy_async_downloader(uri, url_fetcher_download_callback, data);
 			}else{
 				mpd_playlist_add(connection, (char *)uri);
-				gtk_dialog_response(GTK_DIALOG(gtk_widget_get_toplevel(GTK_WIDGET(data))), GTK_RESPONSE_CANCEL);
+				/* indicates it should stop */
+				return TRUE;
 			}
 		}else{
 			gchar *temp = g_strdup_printf("%s: '%s'", _("Uri scheme not supported"), scheme);
 			playlist3_message_show(pl3_messages, temp,ERROR_WARNING);	
 			g_free(temp);
+			if(scheme)
+				g_free(scheme);
+			return TRUE;
 		}
 
 	}
 	if(scheme) 
 		g_free(scheme);
+	/* Dialog needs to be kept running */
+	return FALSE;
 }
 
 void url_start(void)
 {
+	gboolean stop_loop = FALSE;
 	/**
 	 * Setup the Dialog
 	 */
@@ -477,12 +485,12 @@ void url_start(void)
 	gtk_widget_show_all(dialog);
 	gtk_widget_hide(progress);
 
-	while (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_OK) {
+	while (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_OK && !stop_loop) {
 		const gchar *text = gtk_entry_get_text(GTK_ENTRY(entry));
 
 		gtk_widget_show(progress);
 		gtk_widget_set_sensitive(dialog, FALSE);
-		parse_uri(text, progress);
+		stop_loop = parse_uri(text, progress);
 	}
 
 	gtk_widget_destroy(dialog);
