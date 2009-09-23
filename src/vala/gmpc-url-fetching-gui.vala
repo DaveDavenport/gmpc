@@ -96,22 +96,46 @@ namespace Gmpc.UrlFetching
 			}
 			var dialog = (Gtk.Dialog) builder.get_object("add_url_dialog");
 			dialog.set_transient_for(Gmpc.Playlist.get_window());
-			dialog.show_all();
+			dialog.show();
 
 			var entry = (Gtk.Entry) builder.get_object("url_entry");
 			/* Connect by hand as connect_signals fails utterly */
 			dialog.response.connect(add_url_dialog_response);
 			entry.changed.connect(url_entry_changed);
+
 		}
 
 		private State state_counter = State.NORMAL;
 
+
+		private void sensitive(bool state)
+		{
+			if(this.builder == null) return;
+			var entry = (Gtk.Entry) builder.get_object("url_entry");
+			entry.sensitive = state;
+
+			var add_button = (Gtk.Button) builder.get_object("add_button");
+			add_button.sensitive = state;
+
+			var close_button = (Gtk.Button) builder.get_object("close_button");
+			close_button.sensitive = state;
+
+			var progress = (Gtk.ProgressBar) builder.get_object("url_progress");
+			if(!state){
+				progress.show();
+			}
+			else
+				progress.hide();
+		}
 		/* Tell the dialog that we started processing stuff.
 		 * This should make the window insensitive */
 		public void set_processing()
 		{
 			this.state_counter = State.PROCESSING;
+
+			sensitive(false);
 		}
+
 		/* Set progress 
 		 * This can only be set after set_processing
 		 * double -1 is a pulse.
@@ -121,12 +145,20 @@ namespace Gmpc.UrlFetching
 			GLib.log("GUFG", GLib.LogLevelFlags.LEVEL_DEBUG, "Set progress: %f", progress);
 			if(this.state_counter != State.PROCESSING) return;
 
+
+			var progressw = (Gtk.ProgressBar) builder.get_object("url_progress");
+			if(progress < 0) progressw.pulse();
+			else progressw.set_fraction(progress);
+
+
 		}		
 		/* Tell the dialog dialog we successfully parsed the pls. */
 		public void set_completed()
 		{
 			GLib.log("GUFG", GLib.LogLevelFlags.LEVEL_DEBUG, "Completed");
 			this.state_counter = State.DONE;
+
+			sensitive(true);
 			/* for now, destroy the window */
 			this.destroy_cb(this);
 		}
@@ -135,6 +167,8 @@ namespace Gmpc.UrlFetching
 		{
 			GLib.log("GUFG", GLib.LogLevelFlags.LEVEL_DEBUG, "Error: %s", error_message);
 			this.state_counter = State.ERROR;
+
+			sensitive(true);
 		}
 	}
 }

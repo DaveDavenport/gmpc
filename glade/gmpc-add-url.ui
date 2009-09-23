@@ -55,6 +55,15 @@
                   </packing>
                 </child>
                 <child>
+                  <object class="GtkProgressBar" id="url_progress">
+                    <property name="visible">False</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+                <child>
                   <placeholder/>
                 </child>
               </object>
@@ -72,7 +81,7 @@
             <property name="visible">True</property>
             <property name="layout_style">end</property>
             <child>
-              <object class="GtkButton" id="button1">
+              <object class="GtkButton" id="close_button">
                 <property name="label" translatable="yes">gtk-close</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
@@ -110,7 +119,7 @@
       </object>
     </child>
     <action-widgets>
-      <action-widget response="0">button1</action-widget>
+      <action-widget response="0">close_button</action-widget>
       <action-widget response="1">add_button</action-widget>
     </action-widgets>
   </object>

@@ -91,6 +91,7 @@ static void _gmpc_url_fetching_gui_add_url_dialog_response_gtk_dialog_response (
 static void _gmpc_url_fetching_gui_url_entry_changed_gtk_editable_changed (GtkEditable* _sender, gpointer self);
 GmpcUrlFetchingGui* gmpc_url_fetching_gui_new (GmpcUrlFetchingGuiParseUrl parse_callback, void* parse_callback_target, GmpcUrlFetchingGuiValidateUrl validate_callback, void* validate_callback_target, GDestroyNotify destroy_cb);
 GmpcUrlFetchingGui* gmpc_url_fetching_gui_construct (GType object_type, GmpcUrlFetchingGuiParseUrl parse_callback, void* parse_callback_target, GmpcUrlFetchingGuiValidateUrl validate_callback, void* validate_callback_target, GDestroyNotify destroy_cb);
+static void gmpc_url_fetching_gui_sensitive (GmpcUrlFetchingGui* self, gboolean state);
 void gmpc_url_fetching_gui_set_processing (GmpcUrlFetchingGui* self);
 void gmpc_url_fetching_gui_set_progress (GmpcUrlFetchingGui* self, double progress);
 void gmpc_url_fetching_gui_set_completed (GmpcUrlFetchingGui* self);
@@ -212,7 +213,7 @@ GmpcUrlFetchingGui* gmpc_url_fetching_gui_construct (GType object_type, GmpcUrlF
 	}
 	dialog = _g_object_ref0 (GTK_DIALOG (gtk_builder_get_object (self->priv->builder, "add_url_dialog")));
 	gtk_window_set_transient_for ((GtkWindow*) dialog, (GtkWindow *)playlist3_get_window ());
-	gtk_widget_show_all ((GtkWidget*) dialog);
+	gtk_widget_show ((GtkWidget*) dialog);
 	entry = _g_object_ref0 (GTK_ENTRY (gtk_builder_get_object (self->priv->builder, "url_entry")));
 	g_signal_connect_object (dialog, "response", (GCallback) _gmpc_url_fetching_gui_add_url_dialog_response_gtk_dialog_response, self, 0);
 	g_signal_connect_object ((GtkEditable*) entry, "changed", (GCallback) _gmpc_url_fetching_gui_url_entry_changed_gtk_editable_changed, self, 0);
@@ -227,25 +228,64 @@ GmpcUrlFetchingGui* gmpc_url_fetching_gui_new (GmpcUrlFetchingGuiParseUrl parse_
 }
 
 
+static void gmpc_url_fetching_gui_sensitive (GmpcUrlFetchingGui* self, gboolean state) {
+	GtkEntry* entry;
+	GtkButton* add_button;
+	GtkButton* close_button;
+	GtkProgressBar* progress;
+	g_return_if_fail (self != NULL);
+	if (self->priv->builder == NULL) {
+		return;
+	}
+	entry = _g_object_ref0 (GTK_ENTRY (gtk_builder_get_object (self->priv->builder, "url_entry")));
+	g_object_set ((GtkWidget*) entry, "sensitive", state, NULL);
+	add_button = _g_object_ref0 (GTK_BUTTON (gtk_builder_get_object (self->priv->builder, "add_button")));
+	g_object_set ((GtkWidget*) add_button, "sensitive", state, NULL);
+	close_button = _g_object_ref0 (GTK_BUTTON (gtk_builder_get_object (self->priv->builder, "close_button")));
+	g_object_set ((GtkWidget*) close_button, "sensitive", state, NULL);
+	progress = _g_object_ref0 (GTK_PROGRESS_BAR (gtk_builder_get_object (self->priv->builder, "url_progress")));
+	if (!state) {
+		g_log ("GUFG", G_LOG_LEVEL_DEBUG, "gmpc-url-fetching-gui.vala:125: show\n");
+		gtk_widget_show ((GtkWidget*) progress);
+	} else {
+		gtk_widget_hide ((GtkWidget*) progress);
+	}
+	_g_object_unref0 (entry);
+	_g_object_unref0 (add_button);
+	_g_object_unref0 (close_button);
+	_g_object_unref0 (progress);
+}
+
+
 void gmpc_url_fetching_gui_set_processing (GmpcUrlFetchingGui* self) {
 	g_return_if_fail (self != NULL);
 	self->priv->state_counter = GMPC_URL_FETCHING_GUI_STATE_PROCESSING;
+	gmpc_url_fetching_gui_sensitive (self, FALSE);
 }
 
 
 void gmpc_url_fetching_gui_set_progress (GmpcUrlFetchingGui* self, double progress) {
+	GtkProgressBar* progressw;
 	g_return_if_fail (self != NULL);
-	g_log ("GUFG", G_LOG_LEVEL_DEBUG, "gmpc-url-fetching-gui.vala:121: Set progress: %f", progress);
+	g_log ("GUFG", G_LOG_LEVEL_DEBUG, "gmpc-url-fetching-gui.vala:146: Set progress: %f", progress);
 	if (self->priv->state_counter != GMPC_URL_FETCHING_GUI_STATE_PROCESSING) {
 		return;
 	}
+	progressw = _g_object_ref0 (GTK_PROGRESS_BAR (gtk_builder_get_object (self->priv->builder, "url_progress")));
+	if (progress < 0) {
+		gtk_progress_bar_pulse (progressw);
+	} else {
+		gtk_progress_bar_set_fraction (progressw, progress);
+	}
+	_g_object_unref0 (progressw);
 }
 
 
 void gmpc_url_fetching_gui_set_completed (GmpcUrlFetchingGui* self) {
 	g_return_if_fail (self != NULL);
-	g_log ("GUFG", G_LOG_LEVEL_DEBUG, "gmpc-url-fetching-gui.vala:128: Completed");
+	g_log ("GUFG", G_LOG_LEVEL_DEBUG, "gmpc-url-fetching-gui.vala:159: Completed");
 	self->priv->state_counter = GMPC_URL_FETCHING_GUI_STATE_DONE;
+	gmpc_url_fetching_gui_sensitive (self, TRUE);
 	self->priv->destroy_cb (self);
 }
 
@@ -253,8 +293,9 @@ void gmpc_url_fetching_gui_set_completed (GmpcUrlFetchingGui* self) {
 void gmpc_url_fetching_gui_set_error (GmpcUrlFetchingGui* self, const char* error_message) {
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (error_message != NULL);
-	g_log ("GUFG", G_LOG_LEVEL_DEBUG, "gmpc-url-fetching-gui.vala:136: Error: %s", error_message);
+	g_log ("GUFG", G_LOG_LEVEL_DEBUG, "gmpc-url-fetching-gui.vala:169: Error: %s", error_message);
 	self->priv->state_counter = GMPC_URL_FETCHING_GUI_STATE_ERROR;
+	gmpc_url_fetching_gui_sensitive (self, TRUE);
 }
 
 
