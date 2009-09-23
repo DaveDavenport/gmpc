@@ -10,10 +10,10 @@ namespace Gmpc {
 			public string path;
 			public int plugin_type;
 			public weak string translation_domain;
+			public Base ();
 			public virtual bool get_enabled ();
 			public abstract unowned string get_name ();
 			public abstract unowned int[] get_version ();
-			public Base ();
 			public virtual void save_yourself ();
 			public virtual void set_enabled (bool state);
 		}

@@ -4,7 +4,7 @@
 namespace Gmpc {
 	[CCode (cheader_filename = "gmpc-paned-size-group.h")]
 	public class PanedSizeGroup : GLib.Object {
-		public void add_paned (Gtk.Paned paned);
 		public PanedSizeGroup ();
+		public void add_paned (Gtk.Paned paned);
 	}
 }

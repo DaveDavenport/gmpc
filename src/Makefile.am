@@ -26,6 +26,7 @@ vala_SOURCES=\
     vala/gmpc-progress.vala\
     vala/gmpc-rating.vala\
     vala/gmpc-song-links.vala\
+    vala/gmpc-url-fetching-gui.vala\
     vala/gmpc-test-plugin.vala
 
 
@@ -292,6 +293,7 @@ gmpc_vala_FILES=\
 	vala/gmpc-paned-size-group.c\
     vala/gmpc-liststore-sort.c\
     vala/gmpc-connection.c\
+    vala/gmpc-url-fetching-gui.c\
     vala/gmpc-metadata-prefetcher.c
 
 ##

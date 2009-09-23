@@ -1,3 +1,21 @@
+/* Gnome Music Player Client (GMPC)
+ * Copyright (C) 2004-2009 Qball Cow <qball@sarine.nl>
+ * Project homepage: http://gmpc.wikia.com/
+ 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+*/
 
 #include <glib.h>
 #include <glib-object.h>
@@ -22,25 +40,10 @@
 typedef struct _GmpcRating GmpcRating;
 typedef struct _GmpcRatingClass GmpcRatingClass;
 typedef struct _GmpcRatingPrivate GmpcRatingPrivate;
+#define _mpd_freeSong0(var) ((var == NULL) ? NULL : (var = (mpd_freeSong (var), NULL)))
+#define _g_object_unref0(var) ((var == NULL) ? NULL : (var = (g_object_unref (var), NULL)))
+#define _g_free0(var) (var = (g_free (var), NULL))
 
-/* Gnome Music Player Client (GMPC)
- * Copyright (C) 2004-2009 Qball Cow <qball@sarine.nl>
- * Project homepage: http://gmpc.wikia.com/
- 
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
-
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
-
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-*/
 struct _GmpcRating {
 	GtkFrame parent_instance;
 	GmpcRatingPrivate * priv;
@@ -98,9 +101,8 @@ gboolean gmpc_rating_button_press_event_callback (GmpcRating* self, GtkEventBox*
 			char* _tmp0_;
 			width = ((GtkWidget*) self)->allocation.width;
 			button = (gint) ((((*event).x / ((double) width)) + 0.15) * 5);
-			_tmp0_ = NULL;
 			mpd_sticker_song_set (self->priv->server, self->priv->song->file, "rating", _tmp0_ = g_strdup_printf ("%i", button));
-			_tmp0_ = (g_free (_tmp0_), NULL);
+			_g_free0 (_tmp0_);
 			gmpc_rating_set_rating (self, button);
 		}
 	}
@@ -119,17 +121,19 @@ static void gmpc_rating_status_changed (GmpcRating* self, MpdObj* server, Change
 }
 
 
+static gpointer _mpd_songDup0 (gpointer self) {
+	return self ? mpd_songDup (self) : NULL;
+}
+
+
 GmpcRating* gmpc_rating_construct (GType object_type, MpdObj* server, const mpd_Song* song) {
 	GmpcRating * self;
-	mpd_Song* _tmp1_;
-	const mpd_Song* _tmp0_;
+	mpd_Song* _tmp0_;
 	g_return_val_if_fail (server != NULL, NULL);
 	g_return_val_if_fail (song != NULL, NULL);
 	self = g_object_newv (object_type, 0, NULL);
 	self->priv->server = server;
-	_tmp1_ = NULL;
-	_tmp0_ = NULL;
-	self->priv->song = (_tmp1_ = (_tmp0_ = song, (_tmp0_ == NULL) ? NULL : mpd_songDup (_tmp0_)), (self->priv->song == NULL) ? NULL : (self->priv->song = (mpd_freeSong (self->priv->song), NULL)), _tmp1_);
+	self->priv->song = (_tmp0_ = _mpd_songDup0 (song), _mpd_freeSong0 (self->priv->song), _tmp0_);
 	gmpc_rating_update (self);
 	self->priv->status_changed_id = g_signal_connect_swapped (gmpcconn, "status_changed", (GCallback) gmpc_rating_status_changed, self);
 	return self;
@@ -175,7 +179,7 @@ void gmpc_rating_update (GmpcRating* self) {
 	} else {
 		gmpc_rating_set_rating (self, atoi (value));
 	}
-	value = (g_free (value), NULL);
+	_g_free0 (value);
 }
 
 
@@ -190,7 +194,7 @@ static GObject * gmpc_rating_constructor (GType type, guint n_construct_properti
 	GObjectClass * parent_class;
 	GmpcRating * self;
 	klass = GMPC_RATING_CLASS (g_type_class_peek (GMPC_TYPE_RATING));
-	parent_class = G_OBJECT_CLASS (g_type_class_peek_parent (klass));
+	parent_class = G_OBJECT_CLASS (gmpc_rating_parent_class);
 	obj = parent_class->constructor (type, n_construct_properties, construct_properties);
 	self = GMPC_RATING (obj);
 	{
@@ -200,12 +204,9 @@ static GObject * gmpc_rating_constructor (GType type, guint n_construct_properti
 		GtkImage** _tmp2_;
 		i = 0;
 		g_object_set ((GtkFrame*) self, "shadow", GTK_SHADOW_NONE, NULL);
-		_tmp0_ = NULL;
-		self->priv->box = (_tmp0_ = g_object_ref_sink ((GtkHBox*) gtk_hbox_new (TRUE, 6)), (self->priv->box == NULL) ? NULL : (self->priv->box = (g_object_unref (self->priv->box), NULL)), _tmp0_);
-		_tmp1_ = NULL;
-		self->event_box = (_tmp1_ = g_object_ref_sink ((GtkEventBox*) gtk_event_box_new ()), (self->event_box == NULL) ? NULL : (self->event_box = (g_object_unref (self->event_box), NULL)), _tmp1_);
+		self->priv->box = (_tmp0_ = g_object_ref_sink ((GtkHBox*) gtk_hbox_new (TRUE, 6)), _g_object_unref0 (self->priv->box), _tmp0_);
+		self->event_box = (_tmp1_ = g_object_ref_sink ((GtkEventBox*) gtk_event_box_new ()), _g_object_unref0 (self->event_box), _tmp1_);
 		gtk_event_box_set_visible_window (self->event_box, FALSE);
-		_tmp2_ = NULL;
 		self->priv->rat = (_tmp2_ = g_new0 (GtkImage*, 5 + 1), self->priv->rat = (_vala_array_free (self->priv->rat, self->priv->rat_length1, (GDestroyNotify) g_object_unref), NULL), self->priv->rat_length1 = 5, self->priv->rat_size = self->priv->rat_length1, _tmp2_);
 		{
 			gboolean _tmp3_;
@@ -220,8 +221,7 @@ static GObject * gmpc_rating_constructor (GType type, guint n_construct_properti
 				if (!(i < 5)) {
 					break;
 				}
-				_tmp4_ = NULL;
-				self->priv->rat[i] = (_tmp4_ = g_object_ref_sink ((GtkImage*) gtk_image_new_from_icon_name ("emblem-favorite", GTK_ICON_SIZE_MENU)), (self->priv->rat[i] == NULL) ? NULL : (self->priv->rat[i] = (g_object_unref (self->priv->rat[i]), NULL)), _tmp4_);
+				self->priv->rat[i] = (_tmp4_ = g_object_ref_sink ((GtkImage*) gtk_image_new_from_icon_name ("emblem-favorite", GTK_ICON_SIZE_MENU)), _g_object_unref0 (self->priv->rat[i]), _tmp4_);
 				gtk_box_pack_start ((GtkBox*) self->priv->box, (GtkWidget*) self->priv->rat[i], FALSE, FALSE, (guint) 0);
 			}
 		}
@@ -268,10 +268,10 @@ static void gmpc_rating_finalize (GObject* obj) {
 			self->priv->status_changed_id = (gulong) 0;
 		}
 	}
-	(self->priv->song == NULL) ? NULL : (self->priv->song = (mpd_freeSong (self->priv->song), NULL));
+	_mpd_freeSong0 (self->priv->song);
 	self->priv->rat = (_vala_array_free (self->priv->rat, self->priv->rat_length1, (GDestroyNotify) g_object_unref), NULL);
-	(self->priv->box == NULL) ? NULL : (self->priv->box = (g_object_unref (self->priv->box), NULL));
-	(self->event_box == NULL) ? NULL : (self->event_box = (g_object_unref (self->event_box), NULL));
+	_g_object_unref0 (self->priv->box);
+	_g_object_unref0 (self->event_box);
 	G_OBJECT_CLASS (gmpc_rating_parent_class)->finalize (obj);
 }
 

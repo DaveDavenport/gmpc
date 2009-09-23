@@ -21,9 +21,6 @@ typedef struct _GmpcFavoritesButton GmpcFavoritesButton;
 typedef struct _GmpcFavoritesButtonClass GmpcFavoritesButtonClass;
 typedef struct _GmpcFavoritesButtonPrivate GmpcFavoritesButtonPrivate;
 
-/**
-     * The actual favorite button
-     */
 struct _GmpcFavoritesButton {
 	GtkEventBox parent_instance;
 	GmpcFavoritesButtonPrivate * priv;

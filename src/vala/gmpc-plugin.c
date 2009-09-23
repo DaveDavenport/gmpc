@@ -39,6 +39,7 @@
 typedef struct _GmpcPluginBase GmpcPluginBase;
 typedef struct _GmpcPluginBaseClass GmpcPluginBaseClass;
 typedef struct _GmpcPluginBasePrivate GmpcPluginBasePrivate;
+#define _g_free0(var) (var = (g_free (var), NULL))
 
 #define GMPC_PLUGIN_TYPE_TOOL_MENU_IFACE (gmpc_plugin_tool_menu_iface_get_type ())
 #define GMPC_PLUGIN_TOOL_MENU_IFACE(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), GMPC_PLUGIN_TYPE_TOOL_MENU_IFACE, GmpcPluginToolMenuIface))
@@ -80,10 +81,6 @@ typedef struct _GmpcPluginPreferencesIfaceIface GmpcPluginPreferencesIfaceIface;
 typedef struct _GmpcPluginSongListIface GmpcPluginSongListIface;
 typedef struct _GmpcPluginSongListIfaceIface GmpcPluginSongListIfaceIface;
 
-/**
-         * This is the base class that a plugin should inherit from.
-         *
-         */
 struct _GmpcPluginBase {
 	GObject parent_instance;
 	GmpcPluginBasePrivate * priv;
@@ -102,18 +99,12 @@ struct _GmpcPluginBaseClass {
 	void (*set_enabled) (GmpcPluginBase* self, gboolean state);
 };
 
-/**
-         * This interface allows the plugin to add one, or more, entries in the Tools menu.
-         * If need to remove or undate an entry call pl3_tool_menu_update(). This will tell gmpc
-         * To clear the menu, and call this function again on every plugin.
-         */
 struct _GmpcPluginToolMenuIfaceIface {
 	GTypeInterface parent_iface;
 	gint (*tool_menu_integration) (GmpcPluginToolMenuIface* self, GtkMenu* menu);
 };
 
 typedef void (*GmpcPluginMetaDataCallback) (GList* list, void* user_data);
-/* untested */
 struct _GmpcPluginMetaDataIfaceIface {
 	GTypeInterface parent_iface;
 	void (*get_data) (GmpcPluginMetaDataIface* self, const mpd_Song* song, MetaDataType type, GmpcPluginMetaDataCallback callback, void* callback_target);
@@ -136,7 +127,6 @@ struct _GmpcPluginPreferencesIfaceIface {
 	void (*preferences_pane_destroy) (GmpcPluginPreferencesIface* self, GtkContainer* container);
 };
 
-/* untested */
 struct _GmpcPluginSongListIfaceIface {
 	GTypeInterface parent_iface;
 	gint (*song_list) (GmpcPluginSongListIface* self, GtkWidget* tree, GtkMenu* menu);
@@ -190,9 +180,6 @@ static gint* gmpc_plugin_base_real_get_version (GmpcPluginBase* self, int* resul
 }
 
 
-/**
-             * Function should return the version of the plugin
-             */
 gint* gmpc_plugin_base_get_version (GmpcPluginBase* self, int* result_length1) {
 	return GMPC_PLUGIN_BASE_GET_CLASS (self)->get_version (self, result_length1);
 }
@@ -205,20 +192,11 @@ static const char* gmpc_plugin_base_real_get_name (GmpcPluginBase* self) {
 }
 
 
-/**
-             * Return the name of the plugin
-             */
 const char* gmpc_plugin_base_get_name (GmpcPluginBase* self) {
 	return GMPC_PLUGIN_BASE_GET_CLASS (self)->get_name (self);
 }
 
 
-/**
-             * This is called before the plugin is destroyed. Plugins should save it state here.
-             *
-             * A Browser plugin should store the position in the side-tree here.
-             * Optional function. 
-             */
 static void gmpc_plugin_base_real_save_yourself (GmpcPluginBase* self) {
 	g_return_if_fail (self != NULL);
 }
@@ -229,12 +207,6 @@ void gmpc_plugin_base_save_yourself (GmpcPluginBase* self) {
 }
 
 
-/**
-             * Function used by gmpc to check if the plugin is enabled.
-             * By default it is stored in the get_name() category under the enabled key.
-             * 
-             * @return The state (true or false)
-             */
 static gboolean gmpc_plugin_base_real_get_enabled (GmpcPluginBase* self) {
 	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
@@ -252,14 +224,6 @@ gboolean gmpc_plugin_base_get_enabled (GmpcPluginBase* self) {
 }
 
 
-/**
-             * Function to enable/disable the plugin
-             * @param state the enable state to set the plugin in. (true or false)
-             * 
-             * Function used by gmpc to enable/disable the plugin. 
-             * By default it is stored in the get_name() category under the enabled key.
-             * If something needs to be done on enable/disable override this function.
-             */
 static void gmpc_plugin_base_real_set_enabled (GmpcPluginBase* self, gboolean state) {
 	g_return_if_fail (self != NULL);
 	if (gmpc_plugin_base_get_name (self) != NULL) {
@@ -273,13 +237,9 @@ void gmpc_plugin_base_set_enabled (GmpcPluginBase* self, gboolean state) {
 }
 
 
-/**
-         * This is the base class that a plugin should inherit from.
-         *
-         */
 GmpcPluginBase* gmpc_plugin_base_construct (GType object_type) {
 	GmpcPluginBase * self;
-	self = g_object_newv (object_type, 0, NULL);
+	self = (GmpcPluginBase*) g_object_new (object_type, NULL);
 	return self;
 }
 
@@ -304,7 +264,7 @@ static void gmpc_plugin_base_instance_init (GmpcPluginBase * self) {
 static void gmpc_plugin_base_finalize (GObject* obj) {
 	GmpcPluginBase * self;
 	self = GMPC_PLUGIN_BASE (obj);
-	self->path = (g_free (self->path), NULL);
+	_g_free0 (self->path);
 	G_OBJECT_CLASS (gmpc_plugin_base_parent_class)->finalize (obj);
 }
 
@@ -348,7 +308,6 @@ void gmpc_plugin_meta_data_iface_get_data (GmpcPluginMetaDataIface* self, const 
 }
 
 
-/* Set get priority */
 gint gmpc_plugin_meta_data_iface_get_priority (GmpcPluginMetaDataIface* self) {
 	return GMPC_PLUGIN_META_DATA_IFACE_GET_INTERFACE (self)->get_priority (self);
 }
@@ -378,25 +337,21 @@ GType gmpc_plugin_meta_data_iface_get_type (void) {
 }
 
 
-/* Function is called by gmpc, the plugin should then insert itself in the left tree  */
 void gmpc_plugin_browser_iface_browser_add (GmpcPluginBrowserIface* self, GtkWidget* category_tree) {
 	GMPC_PLUGIN_BROWSER_IFACE_GET_INTERFACE (self)->browser_add (self, category_tree);
 }
 
 
-/* This gets called, the plugin should add it view in container */
 void gmpc_plugin_browser_iface_browser_selected (GmpcPluginBrowserIface* self, GtkContainer* container) {
 	GMPC_PLUGIN_BROWSER_IFACE_GET_INTERFACE (self)->browser_selected (self, container);
 }
 
 
-/* Plugin should remove itself from container */
 void gmpc_plugin_browser_iface_browser_unselected (GmpcPluginBrowserIface* self, GtkContainer* container) {
 	GMPC_PLUGIN_BROWSER_IFACE_GET_INTERFACE (self)->browser_unselected (self, container);
 }
 
 
-/* Option menu */
 static gint gmpc_plugin_browser_iface_real_browser_option_menu (GmpcPluginBrowserIface* self, GtkMenu* menu) {
 	gint result;
 	g_return_val_if_fail (menu != NULL, 0);
@@ -410,7 +365,6 @@ gint gmpc_plugin_browser_iface_browser_option_menu (GmpcPluginBrowserIface* self
 }
 
 
-/* Go menu */
 static gint gmpc_plugin_browser_iface_real_browser_add_go_menu (GmpcPluginBrowserIface* self, GtkMenu* menu) {
 	gint result;
 	g_return_val_if_fail (menu != NULL, 0);

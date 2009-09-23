@@ -35,6 +35,8 @@
 typedef struct _GmpcPanedSizeGroup GmpcPanedSizeGroup;
 typedef struct _GmpcPanedSizeGroupClass GmpcPanedSizeGroupClass;
 typedef struct _GmpcPanedSizeGroupPrivate GmpcPanedSizeGroupPrivate;
+#define _g_list_free0(var) ((var == NULL) ? NULL : (var = (g_list_free (var), NULL)))
+#define _g_object_unref0(var) ((var == NULL) ? NULL : (var = (g_object_unref (var), NULL)))
 
 struct _GmpcPanedSizeGroup {
 	GObject parent_instance;
@@ -72,7 +74,7 @@ static void gmpc_paned_size_group_finalize (GObject* obj);
 
 GmpcPanedSizeGroup* gmpc_paned_size_group_construct (GType object_type) {
 	GmpcPanedSizeGroup * self;
-	self = g_object_newv (object_type, 0, NULL);
+	self = (GmpcPanedSizeGroup*) g_object_new (object_type, NULL);
 	return self;
 }
 
@@ -93,8 +95,12 @@ static gboolean gmpc_paned_size_group_child_destroy_event (GmpcPanedSizeGroup* s
 }
 
 
+static gpointer _g_object_ref0 (gpointer self) {
+	return self ? g_object_ref (self) : NULL;
+}
+
+
 static void gmpc_paned_size_group_child_position_changed (GmpcPanedSizeGroup* self, GObject* paned, GParamSpec* spec) {
-	GtkPaned* _tmp0_;
 	GtkPaned* pane;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (paned != NULL);
@@ -103,8 +109,7 @@ static void gmpc_paned_size_group_child_position_changed (GmpcPanedSizeGroup* se
 		return;
 	}
 	self->priv->block_changed_callback = TRUE;
-	_tmp0_ = NULL;
-	pane = (_tmp0_ = GTK_PANED (paned), (_tmp0_ == NULL) ? NULL : g_object_ref (_tmp0_));
+	pane = _g_object_ref0 (GTK_PANED (paned));
 	self->priv->position = gtk_paned_get_position (pane);
 	{
 		GList* p_collection;
@@ -121,7 +126,7 @@ static void gmpc_paned_size_group_child_position_changed (GmpcPanedSizeGroup* se
 		}
 	}
 	self->priv->block_changed_callback = FALSE;
-	(pane == NULL) ? NULL : (pane = (g_object_unref (pane), NULL));
+	_g_object_unref0 (pane);
 }
 
 
@@ -168,7 +173,7 @@ static void gmpc_paned_size_group_finalize (GObject* obj) {
 	{
 		cfg_set_single_value_as_int (config, "paned-size-group", "position", self->priv->position);
 	}
-	(self->priv->list == NULL) ? NULL : (self->priv->list = (g_list_free (self->priv->list), NULL));
+	_g_list_free0 (self->priv->list);
 	G_OBJECT_CLASS (gmpc_paned_size_group_parent_class)->finalize (obj);
 }
 

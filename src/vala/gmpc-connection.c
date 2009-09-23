@@ -57,7 +57,7 @@ static void g_cclosure_user_marshal_VOID__POINTER_INT (GClosure * closure, GValu
 
 GmpcConnection* gmpc_connection_construct (GType object_type) {
 	GmpcConnection * self;
-	self = g_object_newv (object_type, 0, NULL);
+	self = (GmpcConnection*) g_object_new (object_type, NULL);
 	return self;
 }
 

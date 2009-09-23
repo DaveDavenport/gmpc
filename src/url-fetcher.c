@@ -26,6 +26,7 @@
 #include "main.h"
 #include "playlist3.h"
 #include "gmpc_easy_download.h"
+#include "gmpc-url-fetching-gui.h"
 
  #ifdef XSPF
 #include <xspf_c.h>
@@ -251,7 +252,7 @@ static gboolean url_validate_url(const gchar * text)
 	/* iterate all entries and find matching handler */
 	for(i=0;handlers && handlers[i]; i++)
 	{
-		if(strncasecmp(handlers[i], scheme, strlen(scheme)) == 0)
+		if(strncasecmp(handlers[i], scheme, strlen(handlers[i]-3)) == 0)
 		{
 			/* If we found a match, the url is valid */
 			g_free(scheme);
@@ -405,7 +406,7 @@ static int parse_uri(const char *uri, gpointer data)
 			gchar *temp = g_strdup_printf("%s: '%s'", _("Failed to open local file"), uri);
 			playlist3_message_show(pl3_messages, temp, ERROR_WARNING);	
 			g_free(temp);
-			return TRUE;
+			return FALSE;
 		}
 	}else
 	{
@@ -425,7 +426,7 @@ static int parse_uri(const char *uri, gpointer data)
 			g_free(temp);
 			if(scheme)
 				g_free(scheme);
-			return TRUE;
+			return FALSE;
 		}
 
 	}
@@ -435,65 +436,26 @@ static int parse_uri(const char *uri, gpointer data)
 	return FALSE;
 }
 
+static gboolean gufg_parse_callback(GmpcUrlFetchingGui *a, const gchar *url, void *user_data, GError **error)
+{
+	if(!parse_uri(url, NULL)){
+		g_set_error(error,
+		gmpc_url_fetching_parse_error_quark(), 
+		GMPC_URL_FETCHING_PARSE_ERROR_FAILED_TO_PARSE,
+		_("Failed to parse file: %s"), url);
+		return FALSE;
+	}
+	return TRUE;
+}
+
+static gboolean gufg_validate_callback(GmpcUrlFetchingGui *a,const gchar *url)
+{
+	return (strlen(url) > 0 && (G_IS_DIR_SEPARATOR(url[0]) || url_validate_url(url)));
+}
+
 void url_start(void)
 {
-	gboolean stop_loop = FALSE;
-	/**
-	 * Setup the Dialog
-	 */
-	GtkWidget *vbox = NULL, *label = NULL, *entry = NULL, *ali = NULL, *progress = NULL;
-	GtkWidget *pl3_win = playlist3_get_window();
-	GtkWidget *add_button = NULL;
-	GtkWidget *dialog = gtk_dialog_new_with_buttons("Open URL", NULL,
-													GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
-													NULL);
-
-	gtk_window_set_resizable(GTK_WINDOW(dialog), FALSE);
-	gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(pl3_win));
-	/* Add buttons */
-	gtk_dialog_add_button(GTK_DIALOG(dialog), GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL); /** CANCEL BUTTON */
-	add_button = gtk_dialog_add_button(GTK_DIALOG(dialog), GTK_STOCK_ADD, GTK_RESPONSE_OK);	/** ADD BUTTON */
-
-	/* set default state */
-	gtk_widget_set_sensitive(add_button, FALSE);
-	/**
-	 * Setup widgets in dialog
-	 */
-	vbox = gtk_vbox_new(FALSE, 6);
-	gtk_container_add(GTK_CONTAINER(GTK_DIALOG(dialog)->vbox), vbox);
-
-	/* set hig margins */
-	gtk_container_set_border_width(GTK_CONTAINER(vbox), 9);
-	gtk_container_set_border_width(GTK_CONTAINER(dialog), 3);
-	/**
-	 * Setup the label
-	 */
-	label = gtk_label_new(_("Enter an url"));
-	ali = gtk_alignment_new(0, 0.5, 0, 0);
-	gtk_container_add(GTK_CONTAINER(ali), label);
-	gtk_box_pack_start(GTK_BOX(vbox), ali, FALSE, TRUE, 0);
-	/**
-	 * Setup the entry box
-	 */
-	entry = gtk_entry_new();
-	gtk_box_pack_start(GTK_BOX(vbox), entry, FALSE, TRUE, 0);
-	g_signal_connect(G_OBJECT(entry), "changed", G_CALLBACK(url_entry_changed), add_button);
-
-	progress = gtk_progress_bar_new();
-	gtk_box_pack_start(GTK_BOX(vbox), progress, FALSE, TRUE, 0);
-
-	gtk_widget_show_all(dialog);
-	gtk_widget_hide(progress);
-
-	while ( !stop_loop && gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_OK) {
-		const gchar *text = gtk_entry_get_text(GTK_ENTRY(entry));
-
-		gtk_widget_show(progress);
-		gtk_widget_set_sensitive(dialog, FALSE);
-		stop_loop = parse_uri(text, progress);
-	}
-
-	gtk_widget_destroy(dialog);
+	GtkWidget *a = gmpc_url_fetching_gui_new(gufg_parse_callback,NULL, gufg_validate_callback,NULL, g_object_unref);
 }
 
 void url_start_real(const gchar * url)

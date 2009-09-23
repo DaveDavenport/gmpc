@@ -45,6 +45,12 @@
 typedef struct _GmpcMpdDataTreeviewTooltip GmpcMpdDataTreeviewTooltip;
 typedef struct _GmpcMpdDataTreeviewTooltipClass GmpcMpdDataTreeviewTooltipClass;
 typedef struct _GmpcMpdDataTreeviewTooltipPrivate GmpcMpdDataTreeviewTooltipPrivate;
+#define _g_object_unref0(var) ((var == NULL) ? NULL : (var = (g_object_unref (var), NULL)))
+#define _g_free0(var) (var = (g_free (var), NULL))
+#define _gtk_tree_path_free0(var) ((var == NULL) ? NULL : (var = (gtk_tree_path_free (var), NULL)))
+#define _mpd_freeSong0(var) ((var == NULL) ? NULL : (var = (mpd_freeSong (var), NULL)))
+#define _meta_data_free0(var) ((var == NULL) ? NULL : (var = (meta_data_free (var), NULL)))
+#define _g_error_free0(var) ((var == NULL) ? NULL : (var = (g_error_free (var), NULL)))
 
 struct _GmpcMpdDataTreeviewTooltip {
 	GtkWindow parent_instance;
@@ -84,168 +90,147 @@ static int _vala_strcmp0 (const char * str1, const char * str2);
 
 
 
+static gpointer _g_object_ref0 (gpointer self) {
+	return self ? g_object_ref (self) : NULL;
+}
+
+
+static gpointer _gtk_tree_path_copy0 (gpointer self) {
+	return self ? gtk_tree_path_copy (self) : NULL;
+}
+
+
 static gboolean gmpc_mpd_data_treeview_tooltip_query_tooltip_callback (GmpcMpdDataTreeviewTooltip* self, gint x, gint y, gboolean keyboard_tip, GtkTooltip* tooltip) {
 	gboolean result;
 	char* tag;
 	gint row_type;
 	GtkTreePath* path;
 	GtkTreeIter iter = {0};
-	GtkTreeModel* _tmp0_;
 	GtkTreeModel* model;
-	gboolean _tmp1_;
-	const GtkTreePath* _tmp10_;
-	GtkTreePath* _tmp9_;
-	gboolean _tmp8_;
-	const GtkTreePath* _tmp7_;
-	GtkTreeModel* _tmp6_;
-	GtkTreeModel* _tmp5_;
-	gboolean _tmp4_;
-	GtkTreeModel* _tmp3_;
+	gboolean _tmp0_;
+	GtkTreePath* _tmp7_;
+	gboolean _tmp6_;
+	const GtkTreePath* _tmp5_;
+	GtkTreeModel* _tmp4_;
+	gboolean _tmp3_;
+	GtkTreeModel* _tmp2_;
 	mpd_Song* song;
 	char* new_check;
-	gboolean _tmp22_;
+	gboolean _tmp14_;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (tooltip != NULL, FALSE);
 	tag = NULL;
 	row_type = 0;
 	path = NULL;
-	_tmp0_ = NULL;
-	model = (_tmp0_ = gtk_tree_view_get_model (self->priv->par_widget), (_tmp0_ == NULL) ? NULL : g_object_ref (_tmp0_));
+	model = _g_object_ref0 (gtk_tree_view_get_model (self->priv->par_widget));
 	if (cfg_get_single_value_as_int_with_default (config, "GmpcTreeView", "show-tooltip", 1) != 1) {
 		result = FALSE;
-		tag = (g_free (tag), NULL);
-		(path == NULL) ? NULL : (path = (gtk_tree_path_free (path), NULL));
-		(model == NULL) ? NULL : (model = (g_object_unref (model), NULL));
+		_g_free0 (tag);
+		_gtk_tree_path_free0 (path);
+		_g_object_unref0 (model);
 		return result;
 	}
-	_tmp1_ = FALSE;
+	_tmp0_ = FALSE;
 	if (self->mtype != META_ARTIST_ART) {
-		_tmp1_ = self->mtype != META_ALBUM_ART;
+		_tmp0_ = self->mtype != META_ALBUM_ART;
 	} else {
-		_tmp1_ = FALSE;
+		_tmp0_ = FALSE;
 	}
-	if (_tmp1_) {
-		char* _tmp2_;
-		_tmp2_ = NULL;
-		self->priv->checksum = (_tmp2_ = NULL, self->priv->checksum = (g_free (self->priv->checksum), NULL), _tmp2_);
+	if (_tmp0_) {
+		char* _tmp1_;
+		self->priv->checksum = (_tmp1_ = NULL, _g_free0 (self->priv->checksum), _tmp1_);
 		result = FALSE;
-		tag = (g_free (tag), NULL);
-		(path == NULL) ? NULL : (path = (gtk_tree_path_free (path), NULL));
-		(model == NULL) ? NULL : (model = (g_object_unref (model), NULL));
+		_g_free0 (tag);
+		_gtk_tree_path_free0 (path);
+		_g_object_unref0 (model);
 		return result;
 	}
-	_tmp10_ = NULL;
-	_tmp9_ = NULL;
-	_tmp7_ = NULL;
-	_tmp6_ = NULL;
 	_tmp5_ = NULL;
-	_tmp3_ = NULL;
-	if (!(_tmp8_ = (_tmp4_ = gtk_tree_view_get_tooltip_context (self->priv->par_widget, &x, &y, keyboard_tip, &_tmp3_, &_tmp7_, &iter), model = (_tmp5_ = (_tmp6_ = _tmp3_, (_tmp6_ == NULL) ? NULL : g_object_ref (_tmp6_)), (model == NULL) ? NULL : (model = (g_object_unref (model), NULL)), _tmp5_), _tmp4_), path = (_tmp9_ = (_tmp10_ = _tmp7_, (_tmp10_ == NULL) ? NULL : gtk_tree_path_copy (_tmp10_)), (path == NULL) ? NULL : (path = (gtk_tree_path_free (path), NULL)), _tmp9_), _tmp8_)) {
-		char* _tmp11_;
-		_tmp11_ = NULL;
-		self->priv->checksum = (_tmp11_ = NULL, self->priv->checksum = (g_free (self->priv->checksum), NULL), _tmp11_);
+	_tmp2_ = NULL;
+	if (!(_tmp6_ = (_tmp3_ = gtk_tree_view_get_tooltip_context (self->priv->par_widget, &x, &y, keyboard_tip, &_tmp2_, &_tmp5_, &iter), model = (_tmp4_ = _g_object_ref0 (_tmp2_), _g_object_unref0 (model), _tmp4_), _tmp3_), path = (_tmp7_ = _gtk_tree_path_copy0 (_tmp5_), _gtk_tree_path_free0 (path), _tmp7_), _tmp6_)) {
+		char* _tmp8_;
+		self->priv->checksum = (_tmp8_ = NULL, _g_free0 (self->priv->checksum), _tmp8_);
 		result = FALSE;
-		tag = (g_free (tag), NULL);
-		(path == NULL) ? NULL : (path = (gtk_tree_path_free (path), NULL));
-		(model == NULL) ? NULL : (model = (g_object_unref (model), NULL));
+		_g_free0 (tag);
+		_gtk_tree_path_free0 (path);
+		_g_object_unref0 (model);
 		return result;
 	}
 	song = mpd_newSong ();
-	/* Get the row type */
 	gtk_tree_model_get (model, &iter, 26, &row_type, -1);
 	if (row_type == MPD_DATA_TYPE_SONG) {
 		char* album;
-		char* _tmp13_;
-		const char* _tmp12_;
-		char* _tmp15_;
-		const char* _tmp14_;
+		char* _tmp9_;
+		char* _tmp10_;
 		album = NULL;
 		gtk_tree_model_get (model, &iter, 5, &tag, 6, &album, -1);
-		_tmp13_ = NULL;
-		_tmp12_ = NULL;
-		song->artist = (_tmp13_ = (_tmp12_ = tag, (_tmp12_ == NULL) ? NULL : g_strdup (_tmp12_)), song->artist = (g_free (song->artist), NULL), _tmp13_);
-		_tmp15_ = NULL;
-		_tmp14_ = NULL;
-		song->album = (_tmp15_ = (_tmp14_ = album, (_tmp14_ == NULL) ? NULL : g_strdup (_tmp14_)), song->album = (g_free (song->album), NULL), _tmp15_);
-		album = (g_free (album), NULL);
+		song->artist = (_tmp9_ = g_strdup (tag), _g_free0 (song->artist), _tmp9_);
+		song->album = (_tmp10_ = g_strdup (album), _g_free0 (song->album), _tmp10_);
+		_g_free0 (album);
 	} else {
 		if (row_type == MPD_DATA_TYPE_TAG) {
 			if (self->mtype == META_ARTIST_ART) {
-				char* _tmp17_;
-				const char* _tmp16_;
+				char* _tmp11_;
 				gtk_tree_model_get (model, &iter, 7, &tag, -1);
-				_tmp17_ = NULL;
-				_tmp16_ = NULL;
-				song->artist = (_tmp17_ = (_tmp16_ = tag, (_tmp16_ == NULL) ? NULL : g_strdup (_tmp16_)), song->artist = (g_free (song->artist), NULL), _tmp17_);
+				song->artist = (_tmp11_ = g_strdup (tag), _g_free0 (song->artist), _tmp11_);
 			} else {
 				if (self->mtype == META_ALBUM_ART) {
-					char* _tmp19_;
-					const char* _tmp18_;
-					char* _tmp21_;
-					const char* _tmp20_;
+					char* _tmp12_;
+					char* _tmp13_;
 					gtk_tree_model_get (model, &iter, 7, &tag, -1);
-					_tmp19_ = NULL;
-					_tmp18_ = NULL;
-					song->artist = (_tmp19_ = (_tmp18_ = self->request_artist, (_tmp18_ == NULL) ? NULL : g_strdup (_tmp18_)), song->artist = (g_free (song->artist), NULL), _tmp19_);
-					_tmp21_ = NULL;
-					_tmp20_ = NULL;
-					song->album = (_tmp21_ = (_tmp20_ = tag, (_tmp20_ == NULL) ? NULL : g_strdup (_tmp20_)), song->album = (g_free (song->album), NULL), _tmp21_);
+					song->artist = (_tmp12_ = g_strdup (self->request_artist), _g_free0 (song->artist), _tmp12_);
+					song->album = (_tmp13_ = g_strdup (tag), _g_free0 (song->album), _tmp13_);
 				}
 			}
 		}
 	}
 	new_check = mpd_song_checksum (song);
-	_tmp22_ = FALSE;
+	_tmp14_ = FALSE;
 	if (_vala_strcmp0 (new_check, self->priv->checksum) != 0) {
-		_tmp22_ = self->priv->checksum != NULL;
+		_tmp14_ = self->priv->checksum != NULL;
 	} else {
-		_tmp22_ = FALSE;
+		_tmp14_ = FALSE;
 	}
-	if (_tmp22_) {
-		char* _tmp23_;
-		_tmp23_ = NULL;
-		self->priv->checksum = (_tmp23_ = NULL, self->priv->checksum = (g_free (self->priv->checksum), NULL), _tmp23_);
+	if (_tmp14_) {
+		char* _tmp15_;
+		self->priv->checksum = (_tmp15_ = NULL, _g_free0 (self->priv->checksum), _tmp15_);
 		result = FALSE;
-		tag = (g_free (tag), NULL);
-		(path == NULL) ? NULL : (path = (gtk_tree_path_free (path), NULL));
-		(model == NULL) ? NULL : (model = (g_object_unref (model), NULL));
-		(song == NULL) ? NULL : (song = (mpd_freeSong (song), NULL));
-		new_check = (g_free (new_check), NULL);
+		_g_free0 (tag);
+		_gtk_tree_path_free0 (path);
+		_g_object_unref0 (model);
+		_mpd_freeSong0 (song);
+		_g_free0 (new_check);
 		return result;
 	}
 	if (_vala_strcmp0 (new_check, self->priv->checksum) != 0) {
-		char* _tmp25_;
-		const char* _tmp24_;
+		char* _tmp16_;
 		MetaData* met;
-		MetaData* _tmp28_;
-		MetaDataResult _tmp27_;
-		MetaData* _tmp26_;
+		MetaData* _tmp19_;
+		MetaDataResult _tmp18_;
+		MetaData* _tmp17_;
 		MetaDataResult _result_;
-		_tmp25_ = NULL;
-		_tmp24_ = NULL;
-		self->priv->checksum = (_tmp25_ = (_tmp24_ = new_check, (_tmp24_ == NULL) ? NULL : g_strdup (_tmp24_)), self->priv->checksum = (g_free (self->priv->checksum), NULL), _tmp25_);
+		self->priv->checksum = (_tmp16_ = g_strdup (new_check), _g_free0 (self->priv->checksum), _tmp16_);
 		met = NULL;
-		_tmp28_ = NULL;
-		_tmp26_ = NULL;
-		_result_ = (_tmp27_ = gmpc_meta_watcher_get_meta_path (gmw, song, self->mtype, &_tmp26_), met = (_tmp28_ = _tmp26_, (met == NULL) ? NULL : (met = (meta_data_free (met), NULL)), _tmp28_), _tmp27_);
+		_tmp17_ = NULL;
+		_result_ = (_tmp18_ = gmpc_meta_watcher_get_meta_path (gmw, song, self->mtype, &_tmp17_), met = (_tmp19_ = _tmp17_, _meta_data_free0 (met), _tmp19_), _tmp18_);
 		gmpc_mpd_data_treeview_tooltip_metadata_changed (self, gmw, song, self->mtype, _result_, met);
-		(met == NULL) ? NULL : (met = (meta_data_free (met), NULL));
+		_meta_data_free0 (met);
 	}
 	if (gtk_image_get_storage_type (self->priv->image) == GTK_IMAGE_EMPTY) {
 		result = FALSE;
-		tag = (g_free (tag), NULL);
-		(path == NULL) ? NULL : (path = (gtk_tree_path_free (path), NULL));
-		(model == NULL) ? NULL : (model = (g_object_unref (model), NULL));
-		(song == NULL) ? NULL : (song = (mpd_freeSong (song), NULL));
-		new_check = (g_free (new_check), NULL);
+		_g_free0 (tag);
+		_gtk_tree_path_free0 (path);
+		_g_object_unref0 (model);
+		_mpd_freeSong0 (song);
+		_g_free0 (new_check);
 		return result;
 	}
 	result = TRUE;
-	tag = (g_free (tag), NULL);
-	(path == NULL) ? NULL : (path = (gtk_tree_path_free (path), NULL));
-	(model == NULL) ? NULL : (model = (g_object_unref (model), NULL));
-	(song == NULL) ? NULL : (song = (mpd_freeSong (song), NULL));
-	new_check = (g_free (new_check), NULL);
+	_g_free0 (tag);
+	_gtk_tree_path_free0 (path);
+	_g_object_unref0 (model);
+	_mpd_freeSong0 (song);
+	_g_free0 (new_check);
 	return result;
 }
 
@@ -261,8 +246,7 @@ static void gmpc_mpd_data_treeview_tooltip_metadata_changed (GmpcMpdDataTreeview
 	if (type != self->mtype) {
 		return;
 	}
-	_tmp0_ = NULL;
-	if ((_tmp1_ = _vala_strcmp0 (self->priv->checksum, _tmp0_ = mpd_song_checksum (song)) != 0, _tmp0_ = (g_free (_tmp0_), NULL), _tmp1_)) {
+	if ((_tmp1_ = _vala_strcmp0 (self->priv->checksum, _tmp0_ = mpd_song_checksum (song)) != 0, _g_free0 (_tmp0_), _tmp1_)) {
 		return;
 	}
 	if (_result_ == META_DATA_UNAVAILABLE) {
@@ -281,7 +265,7 @@ static void gmpc_mpd_data_treeview_tooltip_metadata_changed (GmpcMpdDataTreeview
 							goto __finally0;
 						}
 						gtk_image_set_from_pixbuf (self->priv->image, pb);
-						(pb == NULL) ? NULL : (pb = (g_object_unref (pb), NULL));
+						_g_object_unref0 (pb);
 					}
 					goto __finally0;
 					__catch0_g_error:
@@ -291,7 +275,7 @@ static void gmpc_mpd_data_treeview_tooltip_metadata_changed (GmpcMpdDataTreeview
 						_inner_error_ = NULL;
 						{
 							gtk_image_clear (self->priv->image);
-							(e == NULL) ? NULL : (e = (g_error_free (e), NULL));
+							_g_error_free0 (e);
 						}
 					}
 					__finally0:
@@ -323,9 +307,8 @@ GmpcMpdDataTreeviewTooltip* gmpc_mpd_data_treeview_tooltip_construct (GType obje
 	GParameter * __params;
 	GParameter * __params_it;
 	GmpcMpdDataTreeviewTooltip * self;
-	GtkTreeView* _tmp1_;
 	GtkTreeView* _tmp0_;
-	GtkImage* _tmp2_;
+	GtkImage* _tmp1_;
 	g_return_val_if_fail (pw != NULL, NULL);
 	__params = g_new0 (GParameter, 1);
 	__params_it = __params;
@@ -335,13 +318,10 @@ GmpcMpdDataTreeviewTooltip* gmpc_mpd_data_treeview_tooltip_construct (GType obje
 	__params_it++;
 	self = g_object_newv (object_type, __params_it - __params, __params);
 	gtk_window_set_resizable ((GtkWindow*) self, FALSE);
-	_tmp1_ = NULL;
-	_tmp0_ = NULL;
-	self->priv->par_widget = (_tmp1_ = (_tmp0_ = pw, (_tmp0_ == NULL) ? NULL : g_object_ref (_tmp0_)), (self->priv->par_widget == NULL) ? NULL : (self->priv->par_widget = (g_object_unref (self->priv->par_widget), NULL)), _tmp1_);
+	self->priv->par_widget = (_tmp0_ = _g_object_ref0 (pw), _g_object_unref0 (self->priv->par_widget), _tmp0_);
 	g_signal_connect_object ((GtkWidget*) pw, "query-tooltip", (GCallback) _gmpc_mpd_data_treeview_tooltip_query_tooltip_callback_gtk_widget_query_tooltip, self, 0);
 	gtk_widget_set_tooltip_window ((GtkWidget*) self->priv->par_widget, (GtkWindow*) self);
-	_tmp2_ = NULL;
-	self->priv->image = (_tmp2_ = g_object_ref_sink ((GtkImage*) gtk_image_new ()), (self->priv->image == NULL) ? NULL : (self->priv->image = (g_object_unref (self->priv->image), NULL)), _tmp2_);
+	self->priv->image = (_tmp1_ = g_object_ref_sink ((GtkImage*) gtk_image_new ()), _g_object_unref0 (self->priv->image), _tmp1_);
 	gtk_widget_show ((GtkWidget*) self->priv->image);
 	self->mtype = type;
 	gtk_container_add ((GtkContainer*) self, (GtkWidget*) self->priv->image);
@@ -382,10 +362,10 @@ static void gmpc_mpd_data_treeview_tooltip_instance_init (GmpcMpdDataTreeviewToo
 static void gmpc_mpd_data_treeview_tooltip_finalize (GObject* obj) {
 	GmpcMpdDataTreeviewTooltip * self;
 	self = GMPC_MPD_DATA_TREEVIEW_TOOLTIP (obj);
-	(self->priv->par_widget == NULL) ? NULL : (self->priv->par_widget = (g_object_unref (self->priv->par_widget), NULL));
-	(self->priv->image == NULL) ? NULL : (self->priv->image = (g_object_unref (self->priv->image), NULL));
-	self->request_artist = (g_free (self->request_artist), NULL);
-	self->priv->checksum = (g_free (self->priv->checksum), NULL);
+	_g_object_unref0 (self->priv->par_widget);
+	_g_object_unref0 (self->priv->image);
+	_g_free0 (self->request_artist);
+	_g_free0 (self->priv->checksum);
 	G_OBJECT_CLASS (gmpc_mpd_data_treeview_tooltip_parent_class)->finalize (obj);
 }
 

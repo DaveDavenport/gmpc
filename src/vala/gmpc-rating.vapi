@@ -5,8 +5,8 @@ namespace Gmpc {
 	[CCode (cheader_filename = "gmpc-rating.h")]
 	public class Rating : Gtk.Frame {
 		public Gtk.EventBox event_box;
-		public bool button_press_event_callback (Gtk.EventBox wid, Gdk.EventButton event);
 		public Rating (MPD.Server server, MPD.Song song);
+		public bool button_press_event_callback (Gtk.EventBox wid, Gdk.EventButton event);
 		public void set_rating (int rating);
 		public void update ();
 	}

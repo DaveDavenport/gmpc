@@ -65,10 +65,6 @@ typedef struct _GmpcPluginPreferencesIfaceIface GmpcPluginPreferencesIfaceIface;
 typedef struct _GmpcPluginSongListIface GmpcPluginSongListIface;
 typedef struct _GmpcPluginSongListIfaceIface GmpcPluginSongListIfaceIface;
 
-/**
-         * This is the base class that a plugin should inherit from.
-         *
-         */
 struct _GmpcPluginBase {
 	GObject parent_instance;
 	GmpcPluginBasePrivate * priv;
@@ -87,18 +83,12 @@ struct _GmpcPluginBaseClass {
 	void (*set_enabled) (GmpcPluginBase* self, gboolean state);
 };
 
-/**
-         * This interface allows the plugin to add one, or more, entries in the Tools menu.
-         * If need to remove or undate an entry call pl3_tool_menu_update(). This will tell gmpc
-         * To clear the menu, and call this function again on every plugin.
-         */
 struct _GmpcPluginToolMenuIfaceIface {
 	GTypeInterface parent_iface;
 	gint (*tool_menu_integration) (GmpcPluginToolMenuIface* self, GtkMenu* menu);
 };
 
 typedef void (*GmpcPluginMetaDataCallback) (GList* list, void* user_data);
-/* untested */
 struct _GmpcPluginMetaDataIfaceIface {
 	GTypeInterface parent_iface;
 	void (*get_data) (GmpcPluginMetaDataIface* self, const mpd_Song* song, MetaDataType type, GmpcPluginMetaDataCallback callback, void* callback_target);
@@ -121,7 +111,6 @@ struct _GmpcPluginPreferencesIfaceIface {
 	void (*preferences_pane_destroy) (GmpcPluginPreferencesIface* self, GtkContainer* container);
 };
 
-/* untested */
 struct _GmpcPluginSongListIfaceIface {
 	GTypeInterface parent_iface;
 	gint (*song_list) (GmpcPluginSongListIface* self, GtkWidget* tree, GtkMenu* menu);
