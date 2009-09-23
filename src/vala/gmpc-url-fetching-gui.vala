@@ -26,7 +26,6 @@ using Module;
 private const bool use_transition = Gmpc.use_transition;
 namespace Gmpc.UrlFetching
 {
-
 	public class Gui : GLib.Object 
 	{
 		private Gtk.Builder builder = new Gtk.Builder();
@@ -81,16 +80,14 @@ namespace Gmpc.UrlFetching
 					dialog.destroy();
 				}
 			}
-
-
 		}
-	
+
 		public Gui (ParseUrl parse_callback, ValidateUrl validate_callback, GLib.DestroyNotify destroy_cb)
 		{
 			this.parse_callback = parse_callback;
 			this.validate_callback = validate_callback;
 			this.destroy_cb = destroy_cb;
-			
+
 			try {
 				this.builder.add_from_file(Gmpc.data_path("gmpc-add-url.ui"));
 			}catch (GLib.Error e)

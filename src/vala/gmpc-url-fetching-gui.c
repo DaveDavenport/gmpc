@@ -200,7 +200,7 @@ GmpcUrlFetchingGui* gmpc_url_fetching_gui_construct (GType object_type, GmpcUrlF
 		e = _inner_error_;
 		_inner_error_ = NULL;
 		{
-			g_error ("gmpc-url-fetching-gui.vala:103: Failed to load GtkBuilder file: %s", e->message);
+			g_error ("gmpc-url-fetching-gui.vala:95: Failed to load GtkBuilder file: %s", e->message);
 			_g_error_free0 (e);
 		}
 	}
@@ -235,7 +235,7 @@ void gmpc_url_fetching_gui_set_processing (GmpcUrlFetchingGui* self) {
 
 void gmpc_url_fetching_gui_set_progress (GmpcUrlFetchingGui* self, double progress) {
 	g_return_if_fail (self != NULL);
-	g_log ("GUFG", G_LOG_LEVEL_DEBUG, "gmpc-url-fetching-gui.vala:129: Set progress: %f", progress);
+	g_log ("GUFG", G_LOG_LEVEL_DEBUG, "gmpc-url-fetching-gui.vala:121: Set progress: %f", progress);
 	if (self->priv->state_counter != GMPC_URL_FETCHING_GUI_STATE_PROCESSING) {
 		return;
 	}
@@ -244,7 +244,7 @@ void gmpc_url_fetching_gui_set_progress (GmpcUrlFetchingGui* self, double progre
 
 void gmpc_url_fetching_gui_set_completed (GmpcUrlFetchingGui* self) {
 	g_return_if_fail (self != NULL);
-	g_log ("GUFG", G_LOG_LEVEL_DEBUG, "gmpc-url-fetching-gui.vala:136: Completed");
+	g_log ("GUFG", G_LOG_LEVEL_DEBUG, "gmpc-url-fetching-gui.vala:128: Completed");
 	self->priv->state_counter = GMPC_URL_FETCHING_GUI_STATE_DONE;
 	self->priv->destroy_cb (self);
 }
@@ -253,7 +253,7 @@ void gmpc_url_fetching_gui_set_completed (GmpcUrlFetchingGui* self) {
 void gmpc_url_fetching_gui_set_error (GmpcUrlFetchingGui* self, const char* error_message) {
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (error_message != NULL);
-	g_log ("GUFG", G_LOG_LEVEL_DEBUG, "gmpc-url-fetching-gui.vala:144: Error: %s", error_message);
+	g_log ("GUFG", G_LOG_LEVEL_DEBUG, "gmpc-url-fetching-gui.vala:136: Error: %s", error_message);
 	self->priv->state_counter = GMPC_URL_FETCHING_GUI_STATE_ERROR;
 }
 
