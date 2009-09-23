@@ -238,10 +238,8 @@ static void _gmpc_favorites_list_status_changed_gmpc_connection_status_changed (
 
 static GObject * gmpc_favorites_list_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties) {
 	GObject * obj;
-	GmpcFavoritesListClass * klass;
 	GObjectClass * parent_class;
 	GmpcFavoritesList * self;
-	klass = GMPC_FAVORITES_LIST_CLASS (g_type_class_peek (GMPC_FAVORITES_TYPE_LIST));
 	parent_class = G_OBJECT_CLASS (gmpc_favorites_list_parent_class);
 	obj = parent_class->constructor (type, n_construct_properties, construct_properties);
 	self = GMPC_FAVORITES_LIST (obj);
@@ -436,11 +434,9 @@ static gboolean _gmpc_favorites_button_leave_notify_event_callback_gtk_widget_le
 
 static GObject * gmpc_favorites_button_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties) {
 	GObject * obj;
-	GmpcFavoritesButtonClass * klass;
 	GObjectClass * parent_class;
 	GmpcFavoritesButton * self;
 	GError * _inner_error_;
-	klass = GMPC_FAVORITES_BUTTON_CLASS (g_type_class_peek (GMPC_FAVORITES_TYPE_BUTTON));
 	parent_class = G_OBJECT_CLASS (gmpc_favorites_button_parent_class);
 	obj = parent_class->constructor (type, n_construct_properties, construct_properties);
 	self = GMPC_FAVORITES_BUTTON (obj);

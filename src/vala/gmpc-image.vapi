@@ -4,8 +4,8 @@
 namespace Gmpc {
 	[CCode (cheader_filename = "gmpc-image.h")]
 	public class Image : Gtk.EventBox {
-		public void clear_pixbuf ();
 		public Image ();
+		public void clear_pixbuf ();
 		public void set_pixbuf (Gdk.Pixbuf buf, bool border);
 		public string? text { get; set; }
 	}

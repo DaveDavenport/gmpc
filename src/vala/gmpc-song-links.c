@@ -135,7 +135,7 @@ static void gmpc_song_links_download (GmpcSongLinks* self, GtkImageMenuItem* ite
 	gtk_container_add ((GtkContainer*) self, (GtkWidget*) (_tmp0_ = g_object_ref_sink ((GtkProgressBar*) gtk_progress_bar_new ())));
 	_g_object_unref0 (_tmp0_);
 	gtk_widget_show_all ((GtkWidget*) self);
-	self->priv->handle = gmpc_easy_async_downloader ("http://gmpc.wikia.com/index.php?title=GMPC_METADATA_WEBLINKLIST&action=raw", _gmpc_song_links_download_file_gmpc_async_download_callback, g_object_ref (self));
+	self->priv->handle = gmpc_easy_async_downloader ("http://gmpc.wikia.com/index.php?title=GMPC_METADATA_WEBLINKLIST&action=raw", _gmpc_song_links_download_file_gmpc_async_download_callback, self);
 	_g_object_unref0 (child);
 }
 
@@ -396,7 +396,7 @@ static void gmpc_song_links_parse_uris (GmpcSongLinks* self) {
 			gtk_container_add ((GtkContainer*) self, (GtkWidget*) (_tmp1_ = g_object_ref_sink ((GtkProgressBar*) gtk_progress_bar_new ())));
 			_g_object_unref0 (_tmp1_);
 			gtk_widget_show_all ((GtkWidget*) self);
-			self->priv->handle = gmpc_easy_async_downloader ("http://gmpc.wikia.com/index.php?title=GMPC_METADATA_WEBLINKLIST&action=raw", _gmpc_song_links_download_file_gmpc_async_download_callback, g_object_ref (self));
+			self->priv->handle = gmpc_easy_async_downloader ("http://gmpc.wikia.com/index.php?title=GMPC_METADATA_WEBLINKLIST&action=raw", _gmpc_song_links_download_file_gmpc_async_download_callback, self);
 			_g_object_unref0 (child);
 			_g_key_file_free0 (file);
 			_g_free0 (path);

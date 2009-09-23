@@ -6,6 +6,8 @@
 #include <glib-object.h>
 #include <stdlib.h>
 #include <string.h>
+#include <float.h>
+#include <math.h>
 
 G_BEGIN_DECLS
 
@@ -21,11 +23,6 @@ typedef struct _GmpcUrlFetchingGui GmpcUrlFetchingGui;
 typedef struct _GmpcUrlFetchingGuiClass GmpcUrlFetchingGuiClass;
 typedef struct _GmpcUrlFetchingGuiPrivate GmpcUrlFetchingGuiPrivate;
 
-typedef enum  {
-	GMPC_URL_FETCHING_PARSE_ERROR_INVALID_SCHEME,
-	GMPC_URL_FETCHING_PARSE_ERROR_FAILED_TO_PARSE
-} GmpcUrlFetchingParseError;
-#define GMPC_URL_FETCHING_PARSE_ERROR gmpc_url_fetching_parse_error_quark ()
 struct _GmpcUrlFetchingGui {
 	GObject parent_instance;
 	GmpcUrlFetchingGuiPrivate * priv;
@@ -35,13 +32,16 @@ struct _GmpcUrlFetchingGuiClass {
 	GObjectClass parent_class;
 };
 
-typedef gboolean (*GmpcUrlFetchingGuiParseUrl) (GmpcUrlFetchingGui* gui, const char* url, void* user_data, GError** error);
+typedef void (*GmpcUrlFetchingGuiParseUrl) (GmpcUrlFetchingGui* gui, const char* url, void* user_data);
 typedef gboolean (*GmpcUrlFetchingGuiValidateUrl) (GmpcUrlFetchingGui* gui, const char* url, void* user_data);
 
-GQuark gmpc_url_fetching_parse_error_quark (void);
 GType gmpc_url_fetching_gui_get_type (void);
 GmpcUrlFetchingGui* gmpc_url_fetching_gui_new (GmpcUrlFetchingGuiParseUrl parse_callback, void* parse_callback_target, GmpcUrlFetchingGuiValidateUrl validate_callback, void* validate_callback_target, GDestroyNotify destroy_cb);
 GmpcUrlFetchingGui* gmpc_url_fetching_gui_construct (GType object_type, GmpcUrlFetchingGuiParseUrl parse_callback, void* parse_callback_target, GmpcUrlFetchingGuiValidateUrl validate_callback, void* validate_callback_target, GDestroyNotify destroy_cb);
+void gmpc_url_fetching_gui_set_processing (GmpcUrlFetchingGui* self);
+void gmpc_url_fetching_gui_set_progress (GmpcUrlFetchingGui* self, double progress);
+void gmpc_url_fetching_gui_set_completed (GmpcUrlFetchingGui* self);
+void gmpc_url_fetching_gui_set_error (GmpcUrlFetchingGui* self, const char* error_message);
 
 
 G_END_DECLS

@@ -7,15 +7,14 @@ namespace Gmpc {
 		[CCode (cheader_filename = "gmpc-url-fetching-gui.h")]
 		public class Gui : GLib.Object {
 			[CCode (cheader_filename = "gmpc-url-fetching-gui.h")]
-			public delegate bool ParseUrl (Gmpc.UrlFetching.Gui gui, string url);
+			public delegate void ParseUrl (Gmpc.UrlFetching.Gui gui, string url);
 			[CCode (cheader_filename = "gmpc-url-fetching-gui.h")]
 			public delegate bool ValidateUrl (Gmpc.UrlFetching.Gui gui, string url);
 			public Gui (Gmpc.UrlFetching.Gui.ParseUrl parse_callback, Gmpc.UrlFetching.Gui.ValidateUrl validate_callback, GLib.DestroyNotify destroy_cb);
-		}
-		[CCode (cprefix = "GMPC_URL_FETCHING_PARSE_ERROR_", cheader_filename = "gmpc-url-fetching-gui.h")]
-		public errordomain ParseError {
-			INVALID_SCHEME,
-			FAILED_TO_PARSE,
+			public void set_completed ();
+			public void set_error (string error_message);
+			public void set_processing ();
+			public void set_progress (double progress);
 		}
 	}
 }

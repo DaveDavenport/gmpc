@@ -324,52 +324,38 @@ static void parse_data(const char *data, guint size, const char *text)
 	}
 }
 
-static void url_fetcher_download_callback(const GEADAsyncHandler * handle, const GEADStatus status, gpointer user_data)
+static void url_fetcher_download_callback(const GEADAsyncHandler * handle, const GEADStatus status, gpointer data)
 {
 	const gchar *uri = gmpc_easy_handler_get_uri(handle);
 	if (status == GEAD_DONE) {
-		GtkWidget *dialog = user_data;
 		goffset length;
-		const char *data = gmpc_easy_handler_get_data(handle, &length);
-		parse_data(data, (guint) length, uri);
-		if (dialog) {
-			gtk_dialog_response(GTK_DIALOG(gtk_widget_get_toplevel(dialog)), GTK_RESPONSE_CANCEL);
-		}
+		const char *ddata = gmpc_easy_handler_get_data(handle, &length);
+		parse_data(ddata, (guint) length, uri);
+		gmpc_url_fetching_gui_set_completed(data);
 	} else if (status == GEAD_CANCELLED) {
-		GtkWidget *dialog = user_data;
-		printf("Download cancelled\n");
-		if (dialog) {
-			gtk_widget_hide(dialog);
-			gtk_widget_set_sensitive(gtk_widget_get_toplevel(dialog), TRUE);
-		}
+		gmpc_url_fetching_gui_set_completed(data);
 	} else if (status == GEAD_PROGRESS) {
 		goffset length;
 		goffset total = gmpc_easy_handler_get_content_size(handle);
-		const char *data = gmpc_easy_handler_get_data(handle, &length);
-		if (user_data) {
-			GtkWidget *progress = user_data;
+		const char *ddata = gmpc_easy_handler_get_data(handle, &length);
+		if (data) {
 			if (total > 0) {
 				gdouble prog = (length / (double)total);
-				gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(progress), (prog > 1)?1:prog);
-				printf("%f\n", prog);
+				gmpc_url_fetching_gui_set_progress(data, (prog > 1)?1:prog);
 			} else {
-				gtk_progress_bar_pulse(GTK_PROGRESS_BAR(progress));
+				gmpc_url_fetching_gui_set_progress(data,-1);
 			}
 		}
 		if (length > MAX_PLAYLIST_SIZE) {
 			printf("Cancel to much data. Try to parse\n");
-			parse_data(data, (guint) length, uri);
-			gmpc_easy_async_cancel(handle);
-			if (user_data)
-				gtk_dialog_response(GTK_DIALOG(gtk_widget_get_toplevel(GTK_WIDGET(user_data))), GTK_RESPONSE_CANCEL);
+			parse_data(ddata, (guint) length, uri);
 			printf("done\n");
+			gmpc_easy_async_cancel(handle);
 		}
 	} else {
-		GtkWidget *dialog = user_data;
-        /* add failed urls anyway */
-        mpd_playlist_add(connection, uri);
-		if (user_data)
-			gtk_dialog_response(GTK_DIALOG(gtk_widget_get_toplevel(dialog)), GTK_RESPONSE_CANCEL);
+		/* add failed urls anyway */
+		mpd_playlist_add(connection, uri);
+		gmpc_url_fetching_gui_set_completed(data);
 	}
 }
 
@@ -381,7 +367,10 @@ static int parse_uri(const char *uri, gpointer data)
 {
 	gchar *scheme;	
 	/* Check NULL */
-	if(uri == NULL) return FALSE;
+	if(uri == NULL) {
+		gmpc_url_fetching_gui_set_completed(data);
+		return;
+	}
 	/* Check local path */
 	scheme = g_uri_parse_scheme(uri);
 
@@ -399,14 +388,12 @@ static int parse_uri(const char *uri, gpointer data)
 				parse_data(buffer, (guint)t, uri);
 
 				fclose(fp);
-				/* indicates it should stop */
-				return TRUE;
+				gmpc_url_fetching_gui_set_completed(data);
 			}
 		}else{
 			gchar *temp = g_strdup_printf("%s: '%s'", _("Failed to open local file"), uri);
-			playlist3_message_show(pl3_messages, temp, ERROR_WARNING);	
+			gmpc_url_fetching_gui_set_error(data,temp);
 			g_free(temp);
-			return FALSE;
 		}
 	}else
 	{
@@ -418,17 +405,13 @@ static int parse_uri(const char *uri, gpointer data)
 			}else{
 				mpd_playlist_add(connection, (char *)uri);
 				/* indicates it should stop */
-				return TRUE;
+				gmpc_url_fetching_gui_set_completed(data);
 			}
 		}else{
 			gchar *temp = g_strdup_printf("%s: '%s'", _("Uri scheme not supported"), scheme);
-			playlist3_message_show(pl3_messages, temp,ERROR_WARNING);	
+			gmpc_url_fetching_gui_set_error(data,temp);
 			g_free(temp);
-			if(scheme)
-				g_free(scheme);
-			return FALSE;
 		}
-
 	}
 	if(scheme) 
 		g_free(scheme);
@@ -436,16 +419,10 @@ static int parse_uri(const char *uri, gpointer data)
 	return FALSE;
 }
 
-static gboolean gufg_parse_callback(GmpcUrlFetchingGui *a, const gchar *url, void *user_data, GError **error)
+static void gufg_parse_callback(GmpcUrlFetchingGui *a, const gchar *url, void *user_data, GError **error)
 {
-	if(!parse_uri(url, NULL)){
-		g_set_error(error,
-		gmpc_url_fetching_parse_error_quark(), 
-		GMPC_URL_FETCHING_PARSE_ERROR_FAILED_TO_PARSE,
-		_("Failed to parse file: %s"), url);
-		return FALSE;
-	}
-	return TRUE;
+	gmpc_url_fetching_gui_set_processing(a);
+	parse_uri(url, a);
 }
 
 static gboolean gufg_validate_callback(GmpcUrlFetchingGui *a,const gchar *url)

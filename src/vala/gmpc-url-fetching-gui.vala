@@ -17,11 +17,6 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-/**
- * TODO: this is wrong, don't work with the callbacks, but works with signals.
- * Add a a set_error and set_progress and so function.
- */
-
 using GLib;
 using Gtk;
 using Gdk;
@@ -31,10 +26,6 @@ using Module;
 private const bool use_transition = Gmpc.use_transition;
 namespace Gmpc.UrlFetching
 {
-	public errordomain ParseError {
-		INVALID_SCHEME,
-		FAILED_TO_PARSE
-	}
 
 	public class Gui : GLib.Object 
 	{
@@ -43,30 +34,31 @@ namespace Gmpc.UrlFetching
 		private ValidateUrl validate_callback = null;
 		private GLib.DestroyNotify destroy_cb;
 
+		private enum State {
+			NORMAL,
+			PROCESSING,
+			ERROR,
+			DONE
+		}
+
 		/* Called when an url needs to be validated.
 		 * returns bool is successfull
 		 */
 		public delegate bool ValidateUrl(Gui gui, string url);
 
 		/* Function you needs to parse setting */
-		public delegate bool ParseUrl (Gui gui, string url) throws ParseError;
+		public delegate void ParseUrl (Gui gui, string url); 
 
 		private void add_url_dialog_response( int response_id)
 		{
 			if(response_id == 1) {
 				weak Gtk.Entry entry = (Gtk.Entry)this.builder.get_object("url_entry");
 				string url = entry.get_text();
-				try {
-					this.parse_callback(this, url);
-				}catch (Error e) {
-					stdout.printf("Error callback: %s\n", e.message);
-
-					return;
-				}
+				this.parse_callback(this, url);
+				return;
 			}
 			stdout.printf("destroy callback\n");
 			this.destroy_cb(this);
-
 		}
 		private void url_entry_changed(Gtk.Editable editable)
 		{
@@ -113,6 +105,39 @@ namespace Gmpc.UrlFetching
 			/* Connect by hand as connect_signals fails utterly */
 			dialog.response.connect(add_url_dialog_response);
 			entry.changed.connect(url_entry_changed);
+		}
+
+		private State state_counter = State.NORMAL;
+
+		/* Tell the dialog that we started processing stuff.
+		 * This should make the window insensitive */
+		public void set_processing()
+		{
+			this.state_counter = State.PROCESSING;
+		}
+		/* Set progress 
+		 * This can only be set after set_processing
+		 * double -1 is a pulse.
+		 */
+		public void set_progress(double progress) 
+		{
+			GLib.log("GUFG", GLib.LogLevelFlags.LEVEL_DEBUG, "Set progress: %f", progress);
+			if(this.state_counter != State.PROCESSING) return;
+
+		}		
+		/* Tell the dialog dialog we successfully parsed the pls. */
+		public void set_completed()
+		{
+			GLib.log("GUFG", GLib.LogLevelFlags.LEVEL_DEBUG, "Completed");
+			this.state_counter = State.DONE;
+			/* for now, destroy the window */
+			this.destroy_cb(this);
+		}
+		/* Set error, this also undo's set_processing*/
+		public void set_error(string error_message)
+		{
+			GLib.log("GUFG", GLib.LogLevelFlags.LEVEL_DEBUG, "Error: %s", error_message);
+			this.state_counter = State.ERROR;
 		}
 	}
 }

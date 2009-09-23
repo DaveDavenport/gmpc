@@ -190,10 +190,8 @@ static gboolean _gmpc_rating_button_press_event_callback_gtk_widget_button_press
 
 static GObject * gmpc_rating_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties) {
 	GObject * obj;
-	GmpcRatingClass * klass;
 	GObjectClass * parent_class;
 	GmpcRating * self;
-	klass = GMPC_RATING_CLASS (g_type_class_peek (GMPC_TYPE_RATING));
 	parent_class = G_OBJECT_CLASS (gmpc_rating_parent_class);
 	obj = parent_class->constructor (type, n_construct_properties, construct_properties);
 	self = GMPC_RATING (obj);

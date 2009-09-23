@@ -25,6 +25,8 @@
 #include <string.h>
 #include <stdio.h>
 #include <plugin.h>
+#include <float.h>
+#include <math.h>
 
 
 #define GMPC_URL_FETCHING_TYPE_GUI (gmpc_url_fetching_gui_get_type ())
@@ -37,15 +39,12 @@
 typedef struct _GmpcUrlFetchingGui GmpcUrlFetchingGui;
 typedef struct _GmpcUrlFetchingGuiClass GmpcUrlFetchingGuiClass;
 typedef struct _GmpcUrlFetchingGuiPrivate GmpcUrlFetchingGuiPrivate;
-#define _g_object_unref0(var) ((var == NULL) ? NULL : (var = (g_object_unref (var), NULL)))
-#define _g_error_free0(var) ((var == NULL) ? NULL : (var = (g_error_free (var), NULL)))
-#define _g_free0(var) (var = (g_free (var), NULL))
 
-typedef enum  {
-	GMPC_URL_FETCHING_PARSE_ERROR_INVALID_SCHEME,
-	GMPC_URL_FETCHING_PARSE_ERROR_FAILED_TO_PARSE
-} GmpcUrlFetchingParseError;
-#define GMPC_URL_FETCHING_PARSE_ERROR gmpc_url_fetching_parse_error_quark ()
+#define GMPC_URL_FETCHING_GUI_TYPE_STATE (gmpc_url_fetching_gui_state_get_type ())
+#define _g_object_unref0(var) ((var == NULL) ? NULL : (var = (g_object_unref (var), NULL)))
+#define _g_free0(var) (var = (g_free (var), NULL))
+#define _g_error_free0(var) ((var == NULL) ? NULL : (var = (g_error_free (var), NULL)))
+
 struct _GmpcUrlFetchingGui {
 	GObject parent_instance;
 	GmpcUrlFetchingGuiPrivate * priv;
@@ -55,8 +54,15 @@ struct _GmpcUrlFetchingGuiClass {
 	GObjectClass parent_class;
 };
 
-typedef gboolean (*GmpcUrlFetchingGuiParseUrl) (GmpcUrlFetchingGui* gui, const char* url, void* user_data, GError** error);
+typedef void (*GmpcUrlFetchingGuiParseUrl) (GmpcUrlFetchingGui* gui, const char* url, void* user_data);
 typedef gboolean (*GmpcUrlFetchingGuiValidateUrl) (GmpcUrlFetchingGui* gui, const char* url, void* user_data);
+typedef enum  {
+	GMPC_URL_FETCHING_GUI_STATE_NORMAL,
+	GMPC_URL_FETCHING_GUI_STATE_PROCESSING,
+	GMPC_URL_FETCHING_GUI_STATE_ERROR,
+	GMPC_URL_FETCHING_GUI_STATE_DONE
+} GmpcUrlFetchingGuiState;
+
 struct _GmpcUrlFetchingGuiPrivate {
 	GtkBuilder* builder;
 	GmpcUrlFetchingGuiParseUrl parse_callback;
@@ -66,14 +72,15 @@ struct _GmpcUrlFetchingGuiPrivate {
 	gpointer validate_callback_target;
 	GDestroyNotify validate_callback_target_destroy_notify;
 	GDestroyNotify destroy_cb;
+	GmpcUrlFetchingGuiState state_counter;
 };
 
 
 static gpointer gmpc_url_fetching_gui_parent_class = NULL;
 
 #define use_transition TRUE
-GQuark gmpc_url_fetching_parse_error_quark (void);
 GType gmpc_url_fetching_gui_get_type (void);
+static GType gmpc_url_fetching_gui_state_get_type (void);
 #define GMPC_URL_FETCHING_GUI_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GMPC_URL_FETCHING_TYPE_GUI, GmpcUrlFetchingGuiPrivate))
 enum  {
 	GMPC_URL_FETCHING_GUI_DUMMY_PROPERTY
@@ -84,52 +91,35 @@ static void _gmpc_url_fetching_gui_add_url_dialog_response_gtk_dialog_response (
 static void _gmpc_url_fetching_gui_url_entry_changed_gtk_editable_changed (GtkEditable* _sender, gpointer self);
 GmpcUrlFetchingGui* gmpc_url_fetching_gui_new (GmpcUrlFetchingGuiParseUrl parse_callback, void* parse_callback_target, GmpcUrlFetchingGuiValidateUrl validate_callback, void* validate_callback_target, GDestroyNotify destroy_cb);
 GmpcUrlFetchingGui* gmpc_url_fetching_gui_construct (GType object_type, GmpcUrlFetchingGuiParseUrl parse_callback, void* parse_callback_target, GmpcUrlFetchingGuiValidateUrl validate_callback, void* validate_callback_target, GDestroyNotify destroy_cb);
+void gmpc_url_fetching_gui_set_processing (GmpcUrlFetchingGui* self);
+void gmpc_url_fetching_gui_set_progress (GmpcUrlFetchingGui* self, double progress);
+void gmpc_url_fetching_gui_set_completed (GmpcUrlFetchingGui* self);
+void gmpc_url_fetching_gui_set_error (GmpcUrlFetchingGui* self, const char* error_message);
 static void gmpc_url_fetching_gui_finalize (GObject* obj);
 
 
 
-GQuark gmpc_url_fetching_parse_error_quark (void) {
-	return g_quark_from_static_string ("gmpc_url_fetching_parse_error-quark");
+
+static GType gmpc_url_fetching_gui_state_get_type (void) {
+	static GType gmpc_url_fetching_gui_state_type_id = 0;
+	if (G_UNLIKELY (gmpc_url_fetching_gui_state_type_id == 0)) {
+		static const GEnumValue values[] = {{GMPC_URL_FETCHING_GUI_STATE_NORMAL, "GMPC_URL_FETCHING_GUI_STATE_NORMAL", "normal"}, {GMPC_URL_FETCHING_GUI_STATE_PROCESSING, "GMPC_URL_FETCHING_GUI_STATE_PROCESSING", "processing"}, {GMPC_URL_FETCHING_GUI_STATE_ERROR, "GMPC_URL_FETCHING_GUI_STATE_ERROR", "error"}, {GMPC_URL_FETCHING_GUI_STATE_DONE, "GMPC_URL_FETCHING_GUI_STATE_DONE", "done"}, {0, NULL, NULL}};
+		gmpc_url_fetching_gui_state_type_id = g_enum_register_static ("GmpcUrlFetchingGuiState", values);
+	}
+	return gmpc_url_fetching_gui_state_type_id;
 }
 
 
 static void gmpc_url_fetching_gui_add_url_dialog_response (GmpcUrlFetchingGui* self, gint response_id) {
-	GError * _inner_error_;
 	g_return_if_fail (self != NULL);
-	_inner_error_ = NULL;
 	if (response_id == 1) {
 		GtkEntry* entry;
 		char* url;
 		entry = GTK_ENTRY (gtk_builder_get_object (self->priv->builder, "url_entry"));
 		url = g_strdup (gtk_entry_get_text (entry));
-		{
-			self->priv->parse_callback (self, url, self->priv->parse_callback_target, &_inner_error_);
-			if (_inner_error_ != NULL) {
-				goto __catch0_g_error;
-				goto __finally0;
-			}
-		}
-		goto __finally0;
-		__catch0_g_error:
-		{
-			GError * e;
-			e = _inner_error_;
-			_inner_error_ = NULL;
-			{
-				fprintf (stdout, "Error callback: %s\n", e->message);
-				_g_error_free0 (e);
-				_g_free0 (url);
-				return;
-			}
-		}
-		__finally0:
-		if (_inner_error_ != NULL) {
-			_g_free0 (url);
-			g_critical ("file %s: line %d: uncaught error: %s", __FILE__, __LINE__, _inner_error_->message);
-			g_clear_error (&_inner_error_);
-			return;
-		}
+		self->priv->parse_callback (self, url, self->priv->parse_callback_target);
 		_g_free0 (url);
+		return;
 	}
 	fprintf (stdout, "destroy callback\n");
 	self->priv->destroy_cb (self);
@@ -198,23 +188,23 @@ GmpcUrlFetchingGui* gmpc_url_fetching_gui_construct (GType object_type, GmpcUrlF
 		char* _tmp2_;
 		gtk_builder_add_from_file (self->priv->builder, _tmp2_ = gmpc_get_full_glade_path ("gmpc-add-url.ui"), &_inner_error_);
 		if (_inner_error_ != NULL) {
-			goto __catch1_g_error;
-			goto __finally1;
+			goto __catch0_g_error;
+			goto __finally0;
 		}
 		_g_free0 (_tmp2_);
 	}
-	goto __finally1;
-	__catch1_g_error:
+	goto __finally0;
+	__catch0_g_error:
 	{
 		GError * e;
 		e = _inner_error_;
 		_inner_error_ = NULL;
 		{
-			g_error ("gmpc-url-fetching-gui.vala:101: Failed to load GtkBuilder file: %s", e->message);
+			g_error ("gmpc-url-fetching-gui.vala:103: Failed to load GtkBuilder file: %s", e->message);
 			_g_error_free0 (e);
 		}
 	}
-	__finally1:
+	__finally0:
 	if (_inner_error_ != NULL) {
 		g_critical ("file %s: line %d: uncaught error: %s", __FILE__, __LINE__, _inner_error_->message);
 		g_clear_error (&_inner_error_);
@@ -237,6 +227,37 @@ GmpcUrlFetchingGui* gmpc_url_fetching_gui_new (GmpcUrlFetchingGuiParseUrl parse_
 }
 
 
+void gmpc_url_fetching_gui_set_processing (GmpcUrlFetchingGui* self) {
+	g_return_if_fail (self != NULL);
+	self->priv->state_counter = GMPC_URL_FETCHING_GUI_STATE_PROCESSING;
+}
+
+
+void gmpc_url_fetching_gui_set_progress (GmpcUrlFetchingGui* self, double progress) {
+	g_return_if_fail (self != NULL);
+	g_log ("GUFG", G_LOG_LEVEL_DEBUG, "gmpc-url-fetching-gui.vala:129: Set progress: %f", progress);
+	if (self->priv->state_counter != GMPC_URL_FETCHING_GUI_STATE_PROCESSING) {
+		return;
+	}
+}
+
+
+void gmpc_url_fetching_gui_set_completed (GmpcUrlFetchingGui* self) {
+	g_return_if_fail (self != NULL);
+	g_log ("GUFG", G_LOG_LEVEL_DEBUG, "gmpc-url-fetching-gui.vala:136: Completed");
+	self->priv->state_counter = GMPC_URL_FETCHING_GUI_STATE_DONE;
+	self->priv->destroy_cb (self);
+}
+
+
+void gmpc_url_fetching_gui_set_error (GmpcUrlFetchingGui* self, const char* error_message) {
+	g_return_if_fail (self != NULL);
+	g_return_if_fail (error_message != NULL);
+	g_log ("GUFG", G_LOG_LEVEL_DEBUG, "gmpc-url-fetching-gui.vala:144: Error: %s", error_message);
+	self->priv->state_counter = GMPC_URL_FETCHING_GUI_STATE_ERROR;
+}
+
+
 static void gmpc_url_fetching_gui_class_init (GmpcUrlFetchingGuiClass * klass) {
 	gmpc_url_fetching_gui_parent_class = g_type_class_peek_parent (klass);
 	g_type_class_add_private (klass, sizeof (GmpcUrlFetchingGuiPrivate));
@@ -249,6 +270,7 @@ static void gmpc_url_fetching_gui_instance_init (GmpcUrlFetchingGui * self) {
 	self->priv->builder = gtk_builder_new ();
 	self->priv->parse_callback = NULL;
 	self->priv->validate_callback = NULL;
+	self->priv->state_counter = GMPC_URL_FETCHING_GUI_STATE_NORMAL;
 }
 
 

@@ -8,8 +8,8 @@ namespace Gmpc {
 		public class Rating : Gtk.MenuItem {
 			public Gtk.VBox hbox;
 			public Gmpc.Rating rating;
-			public int get_rating ();
 			public Rating (MPD.Server server, MPD.Song song);
+			public int get_rating ();
 		}
 	}
 }

@@ -1,3 +1,21 @@
+/* Gnome Music Player Client (GMPC)
+ * Copyright (C) 2004-2009 Qball Cow <qball@sarine.nl>
+ * Project homepage: http://gmpc.wikia.com/
+ 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+*/
 
 #include <glib.h>
 #include <glib-object.h>
@@ -21,6 +39,7 @@
 typedef struct _GmpcMenuItemRating GmpcMenuItemRating;
 typedef struct _GmpcMenuItemRatingClass GmpcMenuItemRatingClass;
 typedef struct _GmpcMenuItemRatingPrivate GmpcMenuItemRatingPrivate;
+#define _g_object_unref0(var) ((var == NULL) ? NULL : (var = (g_object_unref (var), NULL)))
 
 struct _GmpcMenuItemRating {
 	GtkMenuItem parent_instance;
@@ -62,7 +81,7 @@ gint gmpc_menu_item_rating_get_rating (GmpcMenuItemRating* self) {
 static gboolean gmpc_menu_item_rating_button_press_event_callback (GmpcMenuItemRating* self, const GdkEventButton* event, void* userdata) {
 	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
-	gmpc_rating_button_press_event_callback (self->rating, self->rating->event_box, &(*event));
+	gmpc_rating_button_press_event_callback (self->rating, self->rating->event_box, event);
 	result = TRUE;
 	return result;
 }
@@ -86,13 +105,10 @@ GmpcMenuItemRating* gmpc_menu_item_rating_construct (GType object_type, MpdObj* 
 	self = g_object_newv (object_type, 0, NULL);
 	g_signal_connect_swapped (self, "button-press-event", (GCallback) gmpc_menu_item_rating_button_press_event_callback, self);
 	g_signal_connect_swapped (self, "button-release-event", (GCallback) gmpc_menu_item_rating_button_release_event_callback, self);
-	_tmp0_ = NULL;
-	self->hbox = (_tmp0_ = g_object_ref_sink ((GtkVBox*) gtk_vbox_new (FALSE, 6)), (self->hbox == NULL) ? NULL : (self->hbox = (g_object_unref (self->hbox), NULL)), _tmp0_);
-	_tmp1_ = NULL;
-	self->rating = (_tmp1_ = g_object_ref_sink (gmpc_rating_new (server, song)), (self->rating == NULL) ? NULL : (self->rating = (g_object_unref (self->rating), NULL)), _tmp1_);
-	_tmp2_ = NULL;
+	self->hbox = (_tmp0_ = g_object_ref_sink ((GtkVBox*) gtk_vbox_new (FALSE, 6)), _g_object_unref0 (self->hbox), _tmp0_);
+	self->rating = (_tmp1_ = g_object_ref_sink (gmpc_rating_new (server, song)), _g_object_unref0 (self->rating), _tmp1_);
 	gtk_box_pack_start ((GtkBox*) self->hbox, (GtkWidget*) (_tmp2_ = g_object_ref_sink ((GtkLabel*) gtk_label_new (_ ("Rating:")))), FALSE, TRUE, (guint) 0);
-	(_tmp2_ == NULL) ? NULL : (_tmp2_ = (g_object_unref (_tmp2_), NULL));
+	_g_object_unref0 (_tmp2_);
 	gtk_box_pack_start ((GtkBox*) self->hbox, (GtkWidget*) self->rating, FALSE, TRUE, (guint) 0);
 	gtk_container_add ((GtkContainer*) self, (GtkWidget*) self->hbox);
 	gtk_widget_show_all ((GtkWidget*) self);
@@ -120,8 +136,8 @@ static void gmpc_menu_item_rating_instance_init (GmpcMenuItemRating * self) {
 static void gmpc_menu_item_rating_finalize (GObject* obj) {
 	GmpcMenuItemRating * self;
 	self = GMPC_MENU_ITEM_RATING (obj);
-	(self->hbox == NULL) ? NULL : (self->hbox = (g_object_unref (self->hbox), NULL));
-	(self->rating == NULL) ? NULL : (self->rating = (g_object_unref (self->rating), NULL));
+	_g_object_unref0 (self->hbox);
+	_g_object_unref0 (self->rating);
 	G_OBJECT_CLASS (gmpc_menu_item_rating_parent_class)->finalize (obj);
 }
 
