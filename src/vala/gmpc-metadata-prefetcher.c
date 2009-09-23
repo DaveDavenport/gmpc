@@ -1,3 +1,21 @@
+/* Gnome Music Player Client (GMPC)
+ * Copyright (C) 2004-2009 Qball Cow <qball@sarine.nl>
+ * Project homepage: http://gmpc.wikia.com/
+ 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+*/
 
 #include <glib.h>
 #include <glib-object.h>
@@ -24,6 +42,8 @@
 typedef struct _GmpcPluginMetadataPrefetcher GmpcPluginMetadataPrefetcher;
 typedef struct _GmpcPluginMetadataPrefetcherClass GmpcPluginMetadataPrefetcherClass;
 typedef struct _GmpcPluginMetadataPrefetcherPrivate GmpcPluginMetadataPrefetcherPrivate;
+#define _meta_data_free0(var) ((var == NULL) ? NULL : (var = (meta_data_free (var), NULL)))
+#define _mpd_freeSong0(var) ((var == NULL) ? NULL : (var = (mpd_freeSong (var), NULL)))
 
 struct _GmpcPluginMetadataPrefetcher {
 	GmpcPluginBase parent_instance;
@@ -60,7 +80,6 @@ static gint* gmpc_plugin_metadata_prefetcher_real_get_version (GmpcPluginBase* b
 	gint* result;
 	gint* _tmp0_;
 	self = (GmpcPluginMetadataPrefetcher*) base;
-	_tmp0_ = NULL;
 	result = (_tmp0_ = self->version, *result_length1 = self->version_length1, _tmp0_);
 	return result;
 }
@@ -100,17 +119,13 @@ static void gmpc_plugin_metadata_prefetcher_status_changed (GmpcPluginMetadataPr
 				met = NULL;
 				md_result = 0;
 				g_log ("MetadataPrefetcher", G_LOG_LEVEL_DEBUG, "gmpc-metadata-prefetcher.vala:58: Pre-fetching %s", song->file);
-				/* Query artist */
-				_tmp2_ = NULL;
 				_tmp0_ = NULL;
-				md_result = (_tmp1_ = gmpc_meta_watcher_get_meta_path (gmw, song, META_ARTIST_ART, &_tmp0_), met = (_tmp2_ = _tmp0_, (met == NULL) ? NULL : (met = (meta_data_free (met), NULL)), _tmp2_), _tmp1_);
-				/* Query album art */
-				_tmp5_ = NULL;
+				md_result = (_tmp1_ = gmpc_meta_watcher_get_meta_path (gmw, song, META_ARTIST_ART, &_tmp0_), met = (_tmp2_ = _tmp0_, _meta_data_free0 (met), _tmp2_), _tmp1_);
 				_tmp3_ = NULL;
-				md_result = (_tmp4_ = gmpc_meta_watcher_get_meta_path (gmw, song, META_ALBUM_ART, &_tmp3_), met = (_tmp5_ = _tmp3_, (met == NULL) ? NULL : (met = (meta_data_free (met), NULL)), _tmp5_), _tmp4_);
-				(met == NULL) ? NULL : (met = (meta_data_free (met), NULL));
+				md_result = (_tmp4_ = gmpc_meta_watcher_get_meta_path (gmw, song, META_ALBUM_ART, &_tmp3_), met = (_tmp5_ = _tmp3_, _meta_data_free0 (met), _tmp5_), _tmp4_);
+				_meta_data_free0 (met);
 			}
-			(song == NULL) ? NULL : (song = (mpd_freeSong (song), NULL));
+			_mpd_freeSong0 (song);
 		}
 	}
 }
@@ -118,7 +133,7 @@ static void gmpc_plugin_metadata_prefetcher_status_changed (GmpcPluginMetadataPr
 
 GmpcPluginMetadataPrefetcher* gmpc_plugin_metadata_prefetcher_construct (GType object_type) {
 	GmpcPluginMetadataPrefetcher * self;
-	self = (GmpcPluginMetadataPrefetcher*) gmpc_plugin_base_construct (object_type);
+	self = g_object_newv (object_type, 0, NULL);
 	return self;
 }
 
@@ -135,17 +150,13 @@ static void _gmpc_plugin_metadata_prefetcher_status_changed_gmpc_connection_stat
 
 static GObject * gmpc_plugin_metadata_prefetcher_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties) {
 	GObject * obj;
-	GmpcPluginMetadataPrefetcherClass * klass;
 	GObjectClass * parent_class;
 	GmpcPluginMetadataPrefetcher * self;
-	klass = GMPC_PLUGIN_METADATA_PREFETCHER_CLASS (g_type_class_peek (GMPC_PLUGIN_TYPE_METADATA_PREFETCHER));
-	parent_class = G_OBJECT_CLASS (g_type_class_peek_parent (klass));
+	parent_class = G_OBJECT_CLASS (gmpc_plugin_metadata_prefetcher_parent_class);
 	obj = parent_class->constructor (type, n_construct_properties, construct_properties);
 	self = GMPC_PLUGIN_METADATA_PREFETCHER (obj);
 	{
-		/* Mark the plugin as an internal dummy */
 		((GmpcPluginBase*) self)->plugin_type = 8 + 4;
-		/* Attach status changed signal */
 		g_signal_connect_object (gmpcconn, "status-changed", (GCallback) _gmpc_plugin_metadata_prefetcher_status_changed_gmpc_connection_status_changed, self, 0);
 	}
 	return obj;

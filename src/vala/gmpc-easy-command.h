@@ -22,13 +22,6 @@ typedef struct _GmpcEasyCommand GmpcEasyCommand;
 typedef struct _GmpcEasyCommandClass GmpcEasyCommandClass;
 typedef struct _GmpcEasyCommandPrivate GmpcEasyCommandPrivate;
 
-/**
- * This plugin implements the Easy Command system.
- * Easy command gives you a small command box, allowing you to quickly execute commands without having to use the mouse. 
- * It is inspired by f.e. gnome-do. 
- *
- * Entries can be dynamicly added using by calling the add_entry command.
- */
 struct _GmpcEasyCommand {
 	GmpcPluginBase parent_instance;
 	GmpcEasyCommandPrivate * priv;
@@ -38,11 +31,6 @@ struct _GmpcEasyCommandClass {
 	GmpcPluginBaseClass parent_class;
 };
 
-/**
-     * This function is called when the user entered a line matching this entry.
-     * param data the user data passed.
-     * param param a string with the extra parameters passed to the command
-     */
 typedef void (*GmpcEasyCommandCallback) (void* data, const char* param, void* user_data);
 
 GType gmpc_easy_command_get_type (void);

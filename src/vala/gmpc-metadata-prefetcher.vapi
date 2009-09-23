@@ -7,9 +7,9 @@ namespace Gmpc {
 		[CCode (cheader_filename = "gmpc-metadata-prefetcher.h")]
 		public class MetadataPrefetcher : Gmpc.Plugin.Base {
 			public int[] version;
+			public MetadataPrefetcher ();
 			public override unowned string get_name ();
 			public override unowned int[] get_version ();
-			public MetadataPrefetcher ();
 		}
 	}
 }

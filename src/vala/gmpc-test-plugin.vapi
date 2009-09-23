@@ -6,11 +6,11 @@ namespace Gmpc {
 	namespace MetaData {
 		[CCode (cheader_filename = "gmpc-test-plugin.h")]
 		public class EditWindow : Gtk.Window {
+			public EditWindow (MPD.Song song, Gmpc.MetaData.Type type);
 			public void b_cancel ();
 			public void callback (void* handle, string? plugin_name, GLib.List<Gmpc.MetaData.Item>? list);
 			public void destroy_popup (Gtk.Button button);
 			public void image_downloaded (Gmpc.AsyncDownload.Handle handle, Gmpc.AsyncDownload.Status status);
-			public EditWindow (MPD.Song song, Gmpc.MetaData.Type type);
 			public void refresh_query (Gtk.Button button);
 			public void store_image (Gmpc.AsyncDownload.Handle handle, Gmpc.AsyncDownload.Status status);
 		}
@@ -18,11 +18,11 @@ namespace Gmpc {
 	[CCode (cheader_filename = "gmpc-test-plugin.h")]
 	public class TestPlugin : Gmpc.Plugin.Base, Gmpc.Plugin.ToolMenuIface, Gmpc.Plugin.SongListIface {
 		public const int[] version;
+		public TestPlugin ();
 		public override bool get_enabled ();
 		public override unowned string get_name ();
 		public override unowned int[] get_version ();
 		public void menu_activated_album (Gtk.MenuItem item);
-		public TestPlugin ();
 		public override void save_yourself ();
 		public override void set_enabled (bool state);
 	}

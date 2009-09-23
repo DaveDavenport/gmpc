@@ -45,14 +45,11 @@
 typedef struct _GmpcEasyCommand GmpcEasyCommand;
 typedef struct _GmpcEasyCommandClass GmpcEasyCommandClass;
 typedef struct _GmpcEasyCommandPrivate GmpcEasyCommandPrivate;
+#define _g_object_unref0(var) ((var == NULL) ? NULL : (var = (g_object_unref (var), NULL)))
+#define _g_free0(var) (var = (g_free (var), NULL))
+#define _cairo_destroy0(var) ((var == NULL) ? NULL : (var = (cairo_destroy (var), NULL)))
+#define _cairo_pattern_destroy0(var) ((var == NULL) ? NULL : (var = (cairo_pattern_destroy (var), NULL)))
 
-/**
- * This plugin implements the Easy Command system.
- * Easy command gives you a small command box, allowing you to quickly execute commands without having to use the mouse. 
- * It is inspired by f.e. gnome-do. 
- *
- * Entries can be dynamicly added using by calling the add_entry command.
- */
 struct _GmpcEasyCommand {
 	GmpcPluginBase parent_instance;
 	GmpcEasyCommandPrivate * priv;
@@ -72,11 +69,6 @@ struct _GmpcEasyCommandPrivate {
 	gint version_size;
 };
 
-/**
-     * This function is called when the user entered a line matching this entry.
-     * param data the user data passed.
-     * param param a string with the extra parameters passed to the command
-     */
 typedef void (*GmpcEasyCommandCallback) (void* data, const char* param, void* user_data);
 
 static gpointer gmpc_easy_command_parent_class = NULL;
@@ -117,9 +109,6 @@ static gint _vala_array_length (gpointer array);
 
 
 
-/**
- * Required plugin implementation
- */
 static const char* gmpc_easy_command_real_get_name (GmpcPluginBase* base) {
 	GmpcEasyCommand * self;
 	const char* result;
@@ -134,15 +123,11 @@ static gint* gmpc_easy_command_real_get_version (GmpcPluginBase* base, int* resu
 	gint* result;
 	gint* _tmp0_;
 	self = (GmpcEasyCommand*) base;
-	_tmp0_ = NULL;
 	result = (_tmp0_ = self->priv->version, *result_length1 = self->priv->version_length1, _tmp0_);
 	return result;
 }
 
 
-/**
-     * Get set enabled
-     */
 static gboolean gmpc_easy_command_real_get_enabled (GmpcPluginBase* base) {
 	GmpcEasyCommand * self;
 	gboolean result;
@@ -162,58 +147,46 @@ static void gmpc_easy_command_real_set_enabled (GmpcPluginBase* base, gboolean s
 	} else {
 		_tmp0_ = FALSE;
 	}
-	/* if disabling and popup is open, close it */
 	if (_tmp0_) {
 		GtkWindow* _tmp1_;
 		gtk_object_destroy ((GtkObject*) self->priv->window);
-		_tmp1_ = NULL;
-		self->priv->window = (_tmp1_ = NULL, (self->priv->window == NULL) ? NULL : (self->priv->window = (g_object_unref (self->priv->window), NULL)), _tmp1_);
+		self->priv->window = (_tmp1_ = NULL, _g_object_unref0 (self->priv->window), _tmp1_);
 	}
 	cfg_set_single_value_as_int (config, gmpc_plugin_base_get_name ((GmpcPluginBase*) self), "enabled", (gint) state);
 }
 
 
-/************************************************
- * private
- */
+static gpointer _g_object_ref0 (gpointer self) {
+	return self ? g_object_ref (self) : NULL;
+}
+
+
 static gboolean gmpc_easy_command_completion_function (GmpcEasyCommand* self, GtkEntryCompletion* comp, const char* key, GtkTreeIter* iter) {
 	gboolean result;
 	char* value;
-	GtkTreeModel* _tmp0_;
 	GtkTreeModel* model;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (comp != NULL, FALSE);
 	g_return_val_if_fail (key != NULL, FALSE);
 	value = NULL;
-	_tmp0_ = NULL;
-	model = (_tmp0_ = gtk_entry_completion_get_model (comp), (_tmp0_ == NULL) ? NULL : g_object_ref (_tmp0_));
-	gtk_tree_model_get (model, &(*iter), 1, &value, -1);
+	model = _g_object_ref0 (gtk_entry_completion_get_model (comp));
+	gtk_tree_model_get (model, iter, 1, &value, -1);
 	if (value != NULL) {
 		char* a;
 		a = g_strdup_printf ("^%s.*", key);
 		result = g_regex_match_simple (a, value, G_REGEX_CASELESS, 0);
-		a = (g_free (a), NULL);
-		value = (g_free (value), NULL);
-		(model == NULL) ? NULL : (model = (g_object_unref (model), NULL));
+		_g_free0 (a);
+		_g_free0 (value);
+		_g_object_unref0 (model);
 		return result;
 	}
 	result = FALSE;
-	value = (g_free (value), NULL);
-	(model == NULL) ? NULL : (model = (g_object_unref (model), NULL));
+	_g_free0 (value);
+	_g_object_unref0 (model);
 	return result;
 }
 
 
-/**
-     * Add a match entry to the Easy command object.
-     * param self the GmpcEasyCommand object.
-     * param name the name of the command. This is the "prefix" that needs to be matched.
-     * param pattern the pattern where the parameters need to match.
-     * param callback a GmpcEasyCommandCallback that returns when a entry is matched.
-     * param userdata a pointer that is passed to callback.
-     *
-     * return an unique id for the entry.
-     */
 guint gmpc_easy_command_add_entry (GmpcEasyCommand* self, const char* name, const char* pattern, const char* hint, GmpcEasyCommandCallback* callback, void* userdata) {
 	guint result;
 	GtkTreeIter iter = {0};
@@ -272,191 +245,178 @@ static char* string_substring (const char* self, glong offset, glong len) {
 
 static void gmpc_easy_command_activate (GmpcEasyCommand* self, GtkEntry* entry) {
 	GtkTreeModel* model;
-	const char* _tmp0_;
 	char* value_unsplit;
 	GtkTreeIter iter = {0};
-	GtkWindow* _tmp21_;
+	GtkWindow* _tmp19_;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (entry != NULL);
 	model = (GtkTreeModel*) self->priv->store;
-	_tmp0_ = NULL;
-	value_unsplit = (_tmp0_ = gtk_entry_get_text (entry), (_tmp0_ == NULL) ? NULL : g_strdup (_tmp0_));
+	value_unsplit = g_strdup (gtk_entry_get_text (entry));
 	if (string_get_length (value_unsplit) == 0) {
-		GtkWindow* _tmp1_;
+		GtkWindow* _tmp0_;
 		gtk_object_destroy ((GtkObject*) self->priv->window);
-		_tmp1_ = NULL;
-		self->priv->window = (_tmp1_ = NULL, (self->priv->window == NULL) ? NULL : (self->priv->window = (g_object_unref (self->priv->window), NULL)), _tmp1_);
-		value_unsplit = (g_free (value_unsplit), NULL);
+		self->priv->window = (_tmp0_ = NULL, _g_object_unref0 (self->priv->window), _tmp0_);
+		_g_free0 (value_unsplit);
 		return;
 	}
 	{
-		char** _tmp2_;
+		char** _tmp1_;
 		char** value_collection;
 		int value_collection_length1;
 		int value_it;
-		_tmp2_ = NULL;
-		value_collection = _tmp2_ = g_strsplit (value_unsplit, ";", 0);
-		value_collection_length1 = _vala_array_length (_tmp2_);
-		for (value_it = 0; value_it < _vala_array_length (_tmp2_); value_it = value_it + 1) {
-			const char* _tmp20_;
+		value_collection = _tmp1_ = g_strsplit (value_unsplit, ";", 0);
+		value_collection_length1 = _vala_array_length (_tmp1_);
+		for (value_it = 0; value_it < _vala_array_length (_tmp1_); value_it = value_it + 1) {
 			char* value;
-			_tmp20_ = NULL;
-			value = (_tmp20_ = value_collection[value_it], (_tmp20_ == NULL) ? NULL : g_strdup (_tmp20_));
+			value = g_strdup (value_collection[value_it]);
 			{
 				gboolean found;
 				found = FALSE;
-				/* ToDo: Make this nicer... maybe some fancy parsing */
 				if (gtk_tree_model_get_iter_first (model, &iter)) {
 					{
-						gboolean _tmp3_;
-						_tmp3_ = TRUE;
+						gboolean _tmp2_;
+						_tmp2_ = TRUE;
 						while (TRUE) {
 							char* name;
 							char* pattern;
 							char* test;
-							GmpcEasyCommandCallback _tmp5_;
+							GmpcEasyCommandCallback _tmp4_;
+							GDestroyNotify callback_target_destroy_notify;
 							void* callback_target;
 							GmpcEasyCommandCallback callback;
 							void* data;
+							char* _tmp5_;
 							char* _tmp6_;
-							char* _tmp7_;
-							gboolean _tmp8_;
-							if (!_tmp3_) {
-								gboolean _tmp4_;
-								_tmp4_ = FALSE;
+							gboolean _tmp7_;
+							if (!_tmp2_) {
+								gboolean _tmp3_;
+								_tmp3_ = FALSE;
 								if (gtk_tree_model_iter_next (model, &iter)) {
-									_tmp4_ = !found;
+									_tmp3_ = !found;
 								} else {
-									_tmp4_ = FALSE;
+									_tmp3_ = FALSE;
 								}
-								if (!_tmp4_) {
+								if (!_tmp3_) {
 									break;
 								}
 							}
-							_tmp3_ = FALSE;
+							_tmp2_ = FALSE;
 							name = NULL;
 							pattern = NULL;
 							test = NULL;
 							callback_target = NULL;
-							callback = (_tmp5_ = NULL, callback_target = NULL, _tmp5_);
+							callback = (_tmp4_ = NULL, callback_target = NULL, callback_target_destroy_notify = NULL, _tmp4_);
 							data = NULL;
 							gtk_tree_model_get (model, &iter, 1, &name, 2, &pattern, 3, &callback, 4, &data, -1);
-							_tmp6_ = NULL;
-							test = (_tmp6_ = g_strdup_printf ("%s[ ]*%s$", name, pattern), test = (g_free (test), NULL), _tmp6_);
-							_tmp7_ = NULL;
-							if ((_tmp8_ = g_regex_match_simple (test, _tmp7_ = string_strip (value), G_REGEX_CASELESS, 0), _tmp7_ = (g_free (_tmp7_), NULL), _tmp8_)) {
+							test = (_tmp5_ = g_strdup_printf ("%s[ ]*%s$", name, pattern), _g_free0 (test), _tmp5_);
+							if ((_tmp7_ = g_regex_match_simple (test, _tmp6_ = string_strip (value), G_REGEX_CASELESS, 0), _g_free0 (_tmp6_), _tmp7_)) {
 								char* param;
 								char* param_str;
 								param = NULL;
 								if (string_get_length (value) > string_get_length (name)) {
-									char* _tmp9_;
-									_tmp9_ = NULL;
-									param = (_tmp9_ = string_substring (value, string_get_length (name), (glong) (-1)), param = (g_free (param), NULL), _tmp9_);
+									char* _tmp8_;
+									param = (_tmp8_ = string_substring (value, string_get_length (name), (glong) (-1)), _g_free0 (param), _tmp8_);
 								} else {
-									char* _tmp10_;
-									_tmp10_ = NULL;
-									param = (_tmp10_ = g_strdup (""), param = (g_free (param), NULL), _tmp10_);
+									char* _tmp9_;
+									param = (_tmp9_ = g_strdup (""), _g_free0 (param), _tmp9_);
 								}
 								param_str = string_strip (param);
 								callback (data, param_str, callback_target);
 								found = TRUE;
-								param = (g_free (param), NULL);
-								param_str = (g_free (param_str), NULL);
+								_g_free0 (param);
+								_g_free0 (param_str);
 							}
-							name = (g_free (name), NULL);
-							pattern = (g_free (pattern), NULL);
-							test = (g_free (test), NULL);
+							_g_free0 (name);
+							_g_free0 (pattern);
+							_g_free0 (test);
+							(callback_target_destroy_notify == NULL) ? NULL : callback_target_destroy_notify (callback_target);
+							callback = NULL;
+							callback_target = NULL;
+							callback_target_destroy_notify = NULL;
 						}
 					}
 				}
-				/* If now exact match is found, use the partial matching that is
-				             * also used by the completion popup.
-				             * First, partial, match is taken.
-				             */
 				if (!found) {
 					if (gtk_tree_model_get_iter_first (model, &iter)) {
 						{
-							gboolean _tmp11_;
-							_tmp11_ = TRUE;
+							gboolean _tmp10_;
+							_tmp10_ = TRUE;
 							while (TRUE) {
 								char* name;
 								char* pattern;
 								char* test;
-								GmpcEasyCommandCallback _tmp13_;
+								GmpcEasyCommandCallback _tmp12_;
+								GDestroyNotify callback_target_destroy_notify;
 								void* callback_target;
 								GmpcEasyCommandCallback callback;
 								void* data;
-								char* _tmp15_;
 								char* _tmp14_;
-								if (!_tmp11_) {
-									gboolean _tmp12_;
-									_tmp12_ = FALSE;
+								char* _tmp13_;
+								if (!_tmp10_) {
+									gboolean _tmp11_;
+									_tmp11_ = FALSE;
 									if (gtk_tree_model_iter_next (model, &iter)) {
-										_tmp12_ = !found;
+										_tmp11_ = !found;
 									} else {
-										_tmp12_ = FALSE;
+										_tmp11_ = FALSE;
 									}
-									if (!_tmp12_) {
+									if (!_tmp11_) {
 										break;
 									}
 								}
-								_tmp11_ = FALSE;
+								_tmp10_ = FALSE;
 								name = NULL;
 								pattern = NULL;
 								test = NULL;
 								callback_target = NULL;
-								callback = (_tmp13_ = NULL, callback_target = NULL, _tmp13_);
+								callback = (_tmp12_ = NULL, callback_target = NULL, callback_target_destroy_notify = NULL, _tmp12_);
 								data = NULL;
 								gtk_tree_model_get (model, &iter, 1, &name, 2, &pattern, 3, &callback, 4, &data, -1);
-								_tmp15_ = NULL;
-								_tmp14_ = NULL;
-								test = (_tmp15_ = g_strdup_printf ("^%s.*", _tmp14_ = string_strip (value)), test = (g_free (test), NULL), _tmp15_);
-								_tmp14_ = (g_free (_tmp14_), NULL);
+								test = (_tmp14_ = g_strdup_printf ("^%s.*", _tmp13_ = string_strip (value)), _g_free0 (test), _tmp14_);
+								_g_free0 (_tmp13_);
 								if (g_regex_match_simple (test, name, G_REGEX_CASELESS, 0)) {
 									char* param;
 									char* param_str;
 									param = NULL;
 									if (string_get_length (value) > string_get_length (name)) {
-										char* _tmp16_;
-										_tmp16_ = NULL;
-										param = (_tmp16_ = string_substring (value, string_get_length (name), (glong) (-1)), param = (g_free (param), NULL), _tmp16_);
+										char* _tmp15_;
+										param = (_tmp15_ = string_substring (value, string_get_length (name), (glong) (-1)), _g_free0 (param), _tmp15_);
 									} else {
-										char* _tmp17_;
-										_tmp17_ = NULL;
-										param = (_tmp17_ = g_strdup (""), param = (g_free (param), NULL), _tmp17_);
+										char* _tmp16_;
+										param = (_tmp16_ = g_strdup (""), _g_free0 (param), _tmp16_);
 									}
 									param_str = string_strip (param);
 									callback (data, param_str, callback_target);
 									found = TRUE;
-									param = (g_free (param), NULL);
-									param_str = (g_free (param_str), NULL);
+									_g_free0 (param);
+									_g_free0 (param_str);
 								}
-								name = (g_free (name), NULL);
-								pattern = (g_free (pattern), NULL);
-								test = (g_free (test), NULL);
+								_g_free0 (name);
+								_g_free0 (pattern);
+								_g_free0 (test);
+								(callback_target_destroy_notify == NULL) ? NULL : callback_target_destroy_notify (callback_target);
+								callback = NULL;
+								callback_target = NULL;
+								callback_target_destroy_notify = NULL;
 							}
 						}
 					}
 				}
-				/* If we still cannot match it, give a message */
 				if (!found) {
-					char* _tmp19_;
 					char* _tmp18_;
-					_tmp19_ = NULL;
-					_tmp18_ = NULL;
-					playlist3_show_error_message (_tmp19_ = g_strdup_printf ("Unknown command: '%s'", _tmp18_ = string_strip (value)), ERROR_INFO);
-					_tmp19_ = (g_free (_tmp19_), NULL);
-					_tmp18_ = (g_free (_tmp18_), NULL);
+					char* _tmp17_;
+					playlist3_show_error_message (_tmp18_ = g_strdup_printf ("Unknown command: '%s'", _tmp17_ = string_strip (value)), ERROR_INFO);
+					_g_free0 (_tmp18_);
+					_g_free0 (_tmp17_);
 				}
-				value = (g_free (value), NULL);
+				_g_free0 (value);
 			}
 		}
 		value_collection = (_vala_array_free (value_collection, value_collection_length1, (GDestroyNotify) g_free), NULL);
 	}
 	gtk_object_destroy ((GtkObject*) self->priv->window);
-	_tmp21_ = NULL;
-	self->priv->window = (_tmp21_ = NULL, (self->priv->window == NULL) ? NULL : (self->priv->window = (g_object_unref (self->priv->window), NULL)), _tmp21_);
-	value_unsplit = (g_free (value_unsplit), NULL);
+	self->priv->window = (_tmp19_ = NULL, _g_object_unref0 (self->priv->window), _tmp19_);
+	_g_free0 (value_unsplit);
 }
 
 
@@ -464,16 +424,13 @@ static gboolean gmpc_easy_command_key_press_event (GmpcEasyCommand* self, GtkEnt
 	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (widget != NULL, FALSE);
-	/* Escape */
 	if ((*event).keyval == 0xff1b) {
 		GtkWindow* _tmp0_;
 		gtk_object_destroy ((GtkObject*) self->priv->window);
-		_tmp0_ = NULL;
-		self->priv->window = (_tmp0_ = NULL, (self->priv->window == NULL) ? NULL : (self->priv->window = (g_object_unref (self->priv->window), NULL)), _tmp0_);
+		self->priv->window = (_tmp0_ = NULL, _g_object_unref0 (self->priv->window), _tmp0_);
 		result = TRUE;
 		return result;
 	}
-	/* Tab key */
 	if ((*event).keyval == 0xff09) {
 		gtk_editable_set_position (GTK_EDITABLE (widget), -1);
 		result = TRUE;
@@ -502,7 +459,6 @@ static gboolean gmpc_easy_command_popup_expose_handler (GmpcEasyCommand* self, G
 		cairo_set_source_rgb (ctx, 1.0, 1.0, 1.0);
 	}
 	cairo_paint (ctx);
-	/* */
 	cairo_rectangle (ctx, 1.0, 1.0, (double) (width - 2), (double) (height - 2));
 	pattern = cairo_pattern_create_linear (0.0, 0.0, 0.0, (double) height);
 	cairo_pattern_add_color_stop_rgba (pattern, 0.0, 0.0, 0.0, 0.2, 0.5);
@@ -516,8 +472,8 @@ static gboolean gmpc_easy_command_popup_expose_handler (GmpcEasyCommand* self, G
 	cairo_set_source_rgba (ctx, 0.0, 0.0, 0.0, 1.0);
 	cairo_stroke (ctx);
 	result = FALSE;
-	(ctx == NULL) ? NULL : (ctx = (cairo_destroy (ctx), NULL));
-	(pattern == NULL) ? NULL : (pattern = (cairo_pattern_destroy (pattern), NULL));
+	_cairo_destroy0 (ctx);
+	_cairo_pattern_destroy0 (pattern);
 	return result;
 }
 
@@ -542,25 +498,16 @@ static gboolean _gmpc_easy_command_focus_out_event_gtk_widget_focus_out_event (G
 }
 
 
-/** 
-     * Tell gmpc-easy-command to popup.
-     * @param self The GmpcEasyCommand object to popup
-     *
-     * This function will popup GmpcEasyCommand, or if allready open, preset it to the user.
-     */
 void gmpc_easy_command_popup (GmpcEasyCommand* self) {
 	g_return_if_fail (self != NULL);
-	/* if not enabled, don't popup */
 	if (!gmpc_plugin_base_get_enabled ((GmpcPluginBase*) self)) {
 		return;
 	}
 	if (self->priv->window == NULL) {
 		GtkWindow* _tmp0_;
 		GtkEntry* entry;
-		_tmp0_ = NULL;
-		self->priv->window = (_tmp0_ = g_object_ref_sink ((GtkWindow*) gtk_window_new (GTK_WINDOW_TOPLEVEL)), (self->priv->window == NULL) ? NULL : (self->priv->window = (g_object_unref (self->priv->window), NULL)), _tmp0_);
+		self->priv->window = (_tmp0_ = g_object_ref_sink ((GtkWindow*) gtk_window_new (GTK_WINDOW_TOPLEVEL)), _g_object_unref0 (self->priv->window), _tmp0_);
 		entry = g_object_ref_sink ((GtkEntry*) gtk_entry_new ());
-		/* Setup window */
 		gtk_window_set_role (self->priv->window, "easy command");
 		gtk_window_set_type_hint (self->priv->window, GDK_WINDOW_TYPE_HINT_DIALOG);
 		gtk_window_set_decorated (self->priv->window, FALSE);
@@ -569,19 +516,14 @@ void gmpc_easy_command_popup (GmpcEasyCommand* self) {
 		gtk_container_set_border_width ((GtkContainer*) self->priv->window, (guint) 24);
 		gtk_entry_set_width_chars (entry, 50);
 		gtk_container_add ((GtkContainer*) self->priv->window, (GtkWidget*) entry);
-		/* Composite */
 		if (gtk_widget_is_composited ((GtkWidget*) self->priv->window)) {
-			GdkScreen* _tmp1_;
 			GdkScreen* screen;
-			GdkColormap* _tmp2_;
 			GdkColormap* colormap;
-			_tmp1_ = NULL;
-			screen = (_tmp1_ = gtk_window_get_screen (self->priv->window), (_tmp1_ == NULL) ? NULL : g_object_ref (_tmp1_));
-			_tmp2_ = NULL;
-			colormap = (_tmp2_ = gdk_screen_get_rgba_colormap (screen), (_tmp2_ == NULL) ? NULL : g_object_ref (_tmp2_));
+			screen = _g_object_ref0 (gtk_window_get_screen (self->priv->window));
+			colormap = _g_object_ref0 (gdk_screen_get_rgba_colormap (screen));
 			gtk_widget_set_colormap ((GtkWidget*) self->priv->window, colormap);
-			(screen == NULL) ? NULL : (screen = (g_object_unref (screen), NULL));
-			(colormap == NULL) ? NULL : (colormap = (g_object_unref (colormap), NULL));
+			_g_object_unref0 (screen);
+			_g_object_unref0 (colormap);
 		}
 		g_object_set ((GtkWidget*) self->priv->window, "app-paintable", TRUE, NULL);
 		g_signal_connect_object ((GtkWidget*) self->priv->window, "expose-event", (GCallback) _gmpc_easy_command_popup_expose_handler_gtk_widget_expose_event, self, 0);
@@ -589,7 +531,6 @@ void gmpc_easy_command_popup (GmpcEasyCommand* self) {
 			gtk_window_set_transient_for (self->priv->window, (GtkWindow *)playlist3_get_window ());
 			self->priv->window->position = (guint) GTK_WIN_POS_CENTER_ON_PARENT;
 		}
-		/* setup entry */
 		gtk_entry_set_completion (entry, self->priv->completion);
 		g_signal_connect_object (entry, "activate", (GCallback) _gmpc_easy_command_activate_gtk_entry_activate, self, 0);
 		g_signal_connect_object ((GtkWidget*) entry, "key-press-event", (GCallback) _gmpc_easy_command_key_press_event_gtk_widget_key_press_event, self, 0);
@@ -597,7 +538,7 @@ void gmpc_easy_command_popup (GmpcEasyCommand* self) {
 		gtk_widget_show_all ((GtkWidget*) self->priv->window);
 		gtk_window_present (self->priv->window);
 		gtk_widget_grab_focus ((GtkWidget*) entry);
-		(entry == NULL) ? NULL : (entry = (g_object_unref (entry), NULL));
+		_g_object_unref0 (entry);
 	} else {
 		gtk_window_present (self->priv->window);
 	}
@@ -610,8 +551,7 @@ static gboolean gmpc_easy_command_focus_out_event (GmpcEasyCommand* self, GtkEnt
 	g_return_val_if_fail (self != NULL, FALSE);
 	g_return_val_if_fail (entry != NULL, FALSE);
 	gtk_object_destroy ((GtkObject*) self->priv->window);
-	_tmp0_ = NULL;
-	self->priv->window = (_tmp0_ = NULL, (self->priv->window == NULL) ? NULL : (self->priv->window = (g_object_unref (self->priv->window), NULL)), _tmp0_);
+	self->priv->window = (_tmp0_ = NULL, _g_object_unref0 (self->priv->window), _tmp0_);
 	result = FALSE;
 	return result;
 }
@@ -629,45 +569,29 @@ static void _gmpc_easy_command_help_window_destroy_gtk_dialog_response (GtkDialo
 
 
 void gmpc_easy_command_help_window (void* data, const char* param) {
-	GmpcEasyCommand* _tmp0_;
 	GmpcEasyCommand* ec;
 	GtkDialog* window;
 	GtkTreeView* tree;
-	GtkTreeModelSort* _tmp1_;
+	GtkTreeModelSort* _tmp0_;
 	GtkScrolledWindow* sw;
 	GtkCellRendererText* renderer;
 	GtkTreeViewColumn* column;
-	GtkCellRendererText* _tmp2_;
-	GtkTreeViewColumn* _tmp3_;
+	GtkCellRendererText* _tmp1_;
+	GtkTreeViewColumn* _tmp2_;
 	GtkLabel* label;
-	_tmp0_ = NULL;
-	ec = (_tmp0_ = (GmpcEasyCommand*) data, (_tmp0_ == NULL) ? NULL : g_object_ref (_tmp0_));
-	/*  Create window */
+	ec = _g_object_ref0 ((GmpcEasyCommand*) data);
 	window = g_object_ref_sink ((GtkDialog*) gtk_dialog_new_with_buttons (_ ("Easy Command help"), NULL, 0, "gtk-close", GTK_RESPONSE_OK, NULL, NULL));
-	/* set window size */
 	gtk_window_set_default_size ((GtkWindow*) window, 600, 400);
-	/* Treeview with commands */
 	tree = g_object_ref_sink ((GtkTreeView*) gtk_tree_view_new ());
-	/**
-	 * Don't sort the original model, but added a Sortable "wrapper" model
-	 * Set this wrapper as tree backend
-	 */
-	_tmp1_ = NULL;
-	gtk_tree_view_set_model (tree, (GtkTreeModel*) (_tmp1_ = (GtkTreeModelSort*) gtk_tree_model_sort_new_with_model ((GtkTreeModel*) ec->priv->store)));
-	(_tmp1_ == NULL) ? NULL : (_tmp1_ = (g_object_unref (_tmp1_), NULL));
-	/* Setting up tree view, rules-hint for alternating row-color, search_column for search as you type */
+	gtk_tree_view_set_model (tree, (GtkTreeModel*) (_tmp0_ = (GtkTreeModelSort*) gtk_tree_model_sort_new_with_model ((GtkTreeModel*) ec->priv->store)));
+	_g_object_unref0 (_tmp0_);
 	gtk_tree_view_set_rules_hint (tree, TRUE);
 	gtk_tree_view_set_search_column (tree, 1);
-	/* scrolled window to add it in */
 	sw = g_object_ref_sink ((GtkScrolledWindow*) gtk_scrolled_window_new (NULL, NULL));
-	/* setup scrolled window */
 	gtk_container_set_border_width ((GtkContainer*) sw, (guint) 8);
 	gtk_scrolled_window_set_shadow_type (sw, GTK_SHADOW_ETCHED_IN);
 	gtk_scrolled_window_set_policy (sw, GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-	/* add sw */
 	gtk_container_add ((GtkContainer*) sw, (GtkWidget*) tree);
-	/* Add columns 
-	 Command column */
 	renderer = g_object_ref_sink ((GtkCellRendererText*) gtk_cell_renderer_text_new ());
 	column = g_object_ref_sink (gtk_tree_view_column_new ());
 	gtk_tree_view_append_column (tree, column);
@@ -675,49 +599,34 @@ void gmpc_easy_command_help_window (void* data, const char* param) {
 	gtk_cell_layout_pack_start ((GtkCellLayout*) column, (GtkCellRenderer*) renderer, FALSE);
 	gtk_cell_layout_add_attribute ((GtkCellLayout*) column, (GtkCellRenderer*) renderer, "text", 1);
 	gtk_tree_view_column_set_sort_column_id (column, 1);
-	/* Usage column */
-	_tmp2_ = NULL;
-	renderer = (_tmp2_ = g_object_ref_sink ((GtkCellRendererText*) gtk_cell_renderer_text_new ()), (renderer == NULL) ? NULL : (renderer = (g_object_unref (renderer), NULL)), _tmp2_);
-	_tmp3_ = NULL;
-	column = (_tmp3_ = g_object_ref_sink (gtk_tree_view_column_new ()), (column == NULL) ? NULL : (column = (g_object_unref (column), NULL)), _tmp3_);
+	renderer = (_tmp1_ = g_object_ref_sink ((GtkCellRendererText*) gtk_cell_renderer_text_new ()), _g_object_unref0 (renderer), _tmp1_);
+	column = (_tmp2_ = g_object_ref_sink (gtk_tree_view_column_new ()), _g_object_unref0 (column), _tmp2_);
 	gtk_tree_view_append_column (tree, column);
 	gtk_cell_layout_pack_start ((GtkCellLayout*) column, (GtkCellRenderer*) renderer, FALSE);
 	gtk_tree_view_column_set_title (column, _ ("Usage"));
 	gtk_cell_layout_add_attribute ((GtkCellLayout*) column, (GtkCellRenderer*) renderer, "text", 5);
 	gtk_tree_view_column_set_sort_column_id (column, 5);
-	/* Label with explenation */
 	label = g_object_ref_sink ((GtkLabel*) gtk_label_new (""));
 	gtk_label_set_markup (label, _ ("The following commands can be used in the easy command window.\nThe easy command window can be opened by pressing ctrl-space"));
 	gtk_misc_set_alignment ((GtkMisc*) label, 0.0f, 0.5f);
 	gtk_misc_set_padding ((GtkMisc*) label, 8, 6);
-	/* Add scrolled windows (containing tree) to dialog */
 	gtk_box_pack_start ((GtkBox*) window->vbox, (GtkWidget*) label, FALSE, FALSE, (guint) 0);
-	/* Add scrolled windows (containing tree) to dialog */
 	gtk_box_pack_start ((GtkBox*) window->vbox, (GtkWidget*) sw, TRUE, TRUE, (guint) 0);
-	/* show all */
 	gtk_widget_show_all ((GtkWidget*) window);
-	/* delete event */
 	g_signal_connect (window, "response", (GCallback) _gmpc_easy_command_help_window_destroy_gtk_dialog_response, NULL);
-	(ec == NULL) ? NULL : (ec = (g_object_unref (ec), NULL));
-	(window == NULL) ? NULL : (window = (g_object_unref (window), NULL));
-	(tree == NULL) ? NULL : (tree = (g_object_unref (tree), NULL));
-	(sw == NULL) ? NULL : (sw = (g_object_unref (sw), NULL));
-	(renderer == NULL) ? NULL : (renderer = (g_object_unref (renderer), NULL));
-	(column == NULL) ? NULL : (column = (g_object_unref (column), NULL));
-	(label == NULL) ? NULL : (label = (g_object_unref (label), NULL));
+	_g_object_unref0 (ec);
+	_g_object_unref0 (window);
+	_g_object_unref0 (tree);
+	_g_object_unref0 (sw);
+	_g_object_unref0 (renderer);
+	_g_object_unref0 (column);
+	_g_object_unref0 (label);
 }
 
 
-/**
- * This plugin implements the Easy Command system.
- * Easy command gives you a small command box, allowing you to quickly execute commands without having to use the mouse. 
- * It is inspired by f.e. gnome-do. 
- *
- * Entries can be dynamicly added using by calling the add_entry command.
- */
 GmpcEasyCommand* gmpc_easy_command_construct (GType object_type) {
 	GmpcEasyCommand * self;
-	self = (GmpcEasyCommand*) gmpc_plugin_base_construct (object_type);
+	self = g_object_newv (object_type, 0, NULL);
 	return self;
 }
 
@@ -732,26 +641,20 @@ static gboolean _gmpc_easy_command_completion_function_gtk_entry_completion_matc
 }
 
 
-/* Construction of the plugin */
 static GObject * gmpc_easy_command_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties) {
 	GObject * obj;
-	GmpcEasyCommandClass * klass;
 	GObjectClass * parent_class;
 	GmpcEasyCommand * self;
-	klass = GMPC_EASY_COMMAND_CLASS (g_type_class_peek (GMPC_EASY_TYPE_COMMAND));
-	parent_class = G_OBJECT_CLASS (g_type_class_peek_parent (klass));
+	parent_class = G_OBJECT_CLASS (gmpc_easy_command_parent_class);
 	obj = parent_class->constructor (type, n_construct_properties, construct_properties);
 	self = GMPC_EASY_COMMAND (obj);
 	{
 		GtkListStore* _tmp1_;
 		GtkEntryCompletion* _tmp2_;
 		GtkCellRendererText* renderer;
-		/* Mark the plugin as an internal dummy */
 		((GmpcPluginBase*) self)->plugin_type = 8 + 4;
-		_tmp1_ = NULL;
-		self->priv->store = (_tmp1_ = gtk_list_store_new (6, G_TYPE_UINT, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_POINTER, G_TYPE_POINTER, G_TYPE_STRING, NULL), (self->priv->store == NULL) ? NULL : (self->priv->store = (g_object_unref (self->priv->store), NULL)), _tmp1_);
-		_tmp2_ = NULL;
-		self->priv->completion = (_tmp2_ = gtk_entry_completion_new (), (self->priv->completion == NULL) ? NULL : (self->priv->completion = (g_object_unref (self->priv->completion), NULL)), _tmp2_);
+		self->priv->store = (_tmp1_ = gtk_list_store_new (6, G_TYPE_UINT, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_POINTER, G_TYPE_POINTER, G_TYPE_STRING, NULL), _g_object_unref0 (self->priv->store), _tmp1_);
+		self->priv->completion = (_tmp2_ = gtk_entry_completion_new (), _g_object_unref0 (self->priv->completion), _tmp2_);
 		gtk_entry_completion_set_model (self->priv->completion, (GtkTreeModel*) self->priv->store);
 		gtk_entry_completion_set_text_column (self->priv->completion, 1);
 		gtk_entry_completion_set_inline_completion (self->priv->completion, TRUE);
@@ -763,7 +666,7 @@ static GObject * gmpc_easy_command_constructor (GType type, guint n_construct_pr
 		gtk_cell_layout_add_attribute ((GtkCellLayout*) self->priv->completion, (GtkCellRenderer*) renderer, "text", 5);
 		g_object_set ((GObject*) renderer, "foreground", "grey", NULL, NULL);
 		gmpc_easy_command_add_entry (self, _ ("Help"), "", _ ("Get a list of available commands"), (GmpcEasyCommandCallback*) gmpc_easy_command_help_window, self);
-		(renderer == NULL) ? NULL : (renderer = (g_object_unref (renderer), NULL));
+		_g_object_unref0 (renderer);
 	}
 	return obj;
 }
@@ -797,9 +700,9 @@ static void gmpc_easy_command_instance_init (GmpcEasyCommand * self) {
 static void gmpc_easy_command_finalize (GObject* obj) {
 	GmpcEasyCommand * self;
 	self = GMPC_EASY_COMMAND (obj);
-	(self->priv->completion == NULL) ? NULL : (self->priv->completion = (g_object_unref (self->priv->completion), NULL));
-	(self->priv->store == NULL) ? NULL : (self->priv->store = (g_object_unref (self->priv->store), NULL));
-	(self->priv->window == NULL) ? NULL : (self->priv->window = (g_object_unref (self->priv->window), NULL));
+	_g_object_unref0 (self->priv->completion);
+	_g_object_unref0 (self->priv->store);
+	_g_object_unref0 (self->priv->window);
 	self->priv->version = (g_free (self->priv->version), NULL);
 	G_OBJECT_CLASS (gmpc_easy_command_parent_class)->finalize (obj);
 }
