@@ -365,7 +365,12 @@ static void pl3_file_browser_add(GtkWidget *cat_tree)
 			-1);
     gtk_tree_store_append(pl3_fb_dir_store, &child, &iter);	
 }
-         
+static int directory_sort_func(gpointer ppaa, gpointer ppbb, gpointer data)
+{
+    MpdData_real *a = *(MpdData_real **)ppaa;
+    MpdData_real *b = *(MpdData_real **)ppbb;
+    return strcasecmp(a->directory, b->directory); 
+}
 static void pl3_file_browser_reupdate_folder(GtkTreeIter *iter)
 {
 	MpdData *data = NULL;
@@ -377,7 +382,9 @@ static void pl3_file_browser_reupdate_folder(GtkTreeIter *iter)
 	{
 		GtkTreeIter child, child2,child3;
 		data = mpd_database_get_directory(connection,path);
-		g_free(path);
+
+        data = misc_sort_mpddata(data,(GCompareDataFunc)directory_sort_func,NULL); 
+        g_free(path);
 		if(gtk_tree_model_iter_children(model, &child, iter))
 		{
 			gchar *test_path = NULL;
@@ -509,6 +516,7 @@ static void pl3_file_browser_view_folder(GtkTreeSelection *selection, gpointer u
 	if(strcmp("media-playlist",icon))
 	{
 		data = mpd_database_get_directory(connection, path);
+        data = misc_sort_mpddata(data,(GCompareDataFunc)directory_sort_func,NULL); 
 	}
 	else{
 		debug_printf(DEBUG_INFO,"View Playlist\n");
@@ -552,6 +560,7 @@ static void pl3_file_browser_fill_tree(GtkWidget *tree,GtkTreeIter *iter, GtkTre
     if(open == FALSE)
     {
         data = mpd_database_get_directory(connection, path);
+        data = misc_sort_mpddata(data,(GCompareDataFunc)directory_sort_func,NULL); 
         while (data != NULL)
         {
             if (data->type == MPD_DATA_TYPE_DIRECTORY)
