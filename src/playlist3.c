@@ -1607,83 +1607,94 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
 #endif
 		int state = mpd_player_get_state(mi);
 		switch (state) {
-		case MPD_PLAYER_PLAY:
-			{
-				gchar *markup = cfg_get_single_value_as_string_with_default(config,
-																			"playlist",	/* Category */
-																			"window-markup",	/* Key */
-																			"[%title% - &[%artist%]]|%name%|%shortfile%"	/* default value */
-					);
+			case MPD_PLAYER_PLAY:
+				{
+					gchar *markup = cfg_get_single_value_as_string_with_default(config,
+							"playlist",	/* Category */
+							"window-markup",	/* Key */
+							"[%title% - &[%artist%]]|%name%|%shortfile%"	/* default value */
+							);
 					/**
-                     * Update the image in the menu
-                     */
-				image = gtk_image_menu_item_get_image(GTK_IMAGE_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_play")));
-				gtk_image_set_from_stock(GTK_IMAGE(image), "gtk-media-pause", GTK_ICON_SIZE_MENU);
-				gtk_image_set_from_stock(GTK_IMAGE
-										 (glade_xml_get_widget
-										  (pl3_xml, "pp_but_play_img")), "gtk-media-pause", GTK_ICON_SIZE_BUTTON);
+					 * Update the image in the menu
+					 */
+					image = gtk_image_menu_item_get_image(GTK_IMAGE_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_play")));
+					gtk_image_set_from_stock(GTK_IMAGE(image), "gtk-media-pause", GTK_ICON_SIZE_MENU);
+					gtk_image_set_from_stock(GTK_IMAGE
+							(glade_xml_get_widget
+							 (pl3_xml, "pp_but_play_img")), "gtk-media-pause", GTK_ICON_SIZE_BUTTON);
 
 					/**
-                     * Update window title
-                     */
-				mpd_song_markup(buffer, 1024, markup, mpd_playlist_get_current_song(connection));
-				gtk_window_set_title(GTK_WINDOW(pl3_win), buffer);
+					 * Update window title
+					 */
+					mpd_song_markup(buffer, 1024, markup, mpd_playlist_get_current_song(connection));
+					gtk_window_set_title(GTK_WINDOW(pl3_win), buffer);
 
-				g_free(markup);
+					g_free(markup);
 
 #ifdef ENABLE_IGE
-				pb = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gmpc-tray-play", 64, 0, NULL);
+					pb = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gmpc-tray-play", 64, 0, NULL);
+					if (pb) {
+						ige_mac_dock_set_icon_from_pixbuf(dock, pb);
+					} else {
+						debug_printf(DEBUG_ERROR, "failed to get icon\n");
+					}
+#endif
+					break;
+				}
+			case MPD_PLAYER_PAUSE:
+				{
+					gchar *markup = cfg_get_single_value_as_string_with_default(config,
+							"playlist",	/* Category */
+							"window-markup",	/* Key */
+							"[%title% - &[%artist%]]|%name%|%shortfile%"	/* default value */
+							);
+					/** Update menu and button images */
+					image = gtk_image_menu_item_get_image(GTK_IMAGE_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_play")));
+					gtk_image_set_from_stock(GTK_IMAGE(image), "gtk-media-play", GTK_ICON_SIZE_MENU);
+					gtk_image_set_from_stock(GTK_IMAGE
+							(glade_xml_get_widget
+							 (pl3_xml, "pp_but_play_img")), "gtk-media-play", GTK_ICON_SIZE_BUTTON);
+
+					/**
+					 * Set paused in Window string
+					 */
+					mpd_song_markup(buffer, 1024-strlen(_("paused")-4),
+							markup,	
+							mpd_playlist_get_current_song(connection));
+					/* Append translated paused */
+					strcat(buffer, " (");
+					strcat(buffer, _("paused"));
+					strcat(buffer, ")");
+					gtk_window_set_title(GTK_WINDOW(pl3_win), buffer);
+#ifdef ENABLE_IGE
+					pb = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gmpc-tray-pause", 64, 0, NULL);
+					if (pb) {
+						ige_mac_dock_set_icon_from_pixbuf(dock, pb);
+					} else {
+						debug_printf(DEBUG_ERROR, "failed to get icon\n");
+					}
+#endif
+					g_free(markup);
+					break;
+				}
+			default:
+				image = gtk_image_menu_item_get_image(GTK_IMAGE_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_play")));
+				gtk_image_set_from_stock(GTK_IMAGE(image), "gtk-media-play", GTK_ICON_SIZE_MENU);
+				/* Make sure it's reset correctly */
+				gmpc_progress_set_time(GMPC_PROGRESS(new_pb), 0, 0);
+
+				gtk_image_set_from_stock(GTK_IMAGE
+						(glade_xml_get_widget
+						 (pl3_xml, "pp_but_play_img")), "gtk-media-play", GTK_ICON_SIZE_BUTTON);
+
+				gtk_window_set_title(GTK_WINDOW(pl3_win), _("GMPC"));
+#ifdef ENABLE_IGE
+				pb = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gmpc", 64, 0, NULL);
 				if (pb) {
 					ige_mac_dock_set_icon_from_pixbuf(dock, pb);
 				} else {
 					debug_printf(DEBUG_ERROR, "failed to get icon\n");
 				}
-#endif
-				break;
-			}
-		case MPD_PLAYER_PAUSE:
-				/** Update menu and button images */
-			image = gtk_image_menu_item_get_image(GTK_IMAGE_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_play")));
-			gtk_image_set_from_stock(GTK_IMAGE(image), "gtk-media-play", GTK_ICON_SIZE_MENU);
-			gtk_image_set_from_stock(GTK_IMAGE
-									 (glade_xml_get_widget
-									  (pl3_xml, "pp_but_play_img")), "gtk-media-play", GTK_ICON_SIZE_BUTTON);
-
-				/**
-				 * Set paused in Window string
-				 */
-			mpd_song_markup(buffer, 1024,
-							"[%title% - &[%artist%] (paused)]|%shortfile% (paused)",
-							mpd_playlist_get_current_song(connection));
-			gtk_window_set_title(GTK_WINDOW(pl3_win), buffer);
-#ifdef ENABLE_IGE
-			pb = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gmpc-tray-pause", 64, 0, NULL);
-			if (pb) {
-				ige_mac_dock_set_icon_from_pixbuf(dock, pb);
-			} else {
-				debug_printf(DEBUG_ERROR, "failed to get icon\n");
-			}
-#endif
-
-			break;
-		default:
-			image = gtk_image_menu_item_get_image(GTK_IMAGE_MENU_ITEM(glade_xml_get_widget(pl3_xml, "menu_play")));
-			gtk_image_set_from_stock(GTK_IMAGE(image), "gtk-media-play", GTK_ICON_SIZE_MENU);
-			/* Make sure it's reset correctly */
-			gmpc_progress_set_time(GMPC_PROGRESS(new_pb), 0, 0);
-
-			gtk_image_set_from_stock(GTK_IMAGE
-									 (glade_xml_get_widget
-									  (pl3_xml, "pp_but_play_img")), "gtk-media-play", GTK_ICON_SIZE_BUTTON);
-
-			gtk_window_set_title(GTK_WINDOW(pl3_win), _("GMPC"));
-#ifdef ENABLE_IGE
-			pb = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gmpc", 64, 0, NULL);
-			if (pb) {
-				ige_mac_dock_set_icon_from_pixbuf(dock, pb);
-			} else {
-				debug_printf(DEBUG_ERROR, "failed to get icon\n");
-			}
 #endif
 
 		}
