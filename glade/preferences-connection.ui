@@ -1,21 +1,20 @@
 <?xml version="1.0"?>
-<!--*- mode: xml -*-->
 <interface>
+  <!-- interface-requires gtk+ 2.12 -->
+  <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkAdjustment" id="adjustment1">
-    <property name="upper">60</property>
-    <property name="lower">0.050000000745099998</property>
-    <property name="page_increment">10</property>
-    <property name="step_increment">0.050000000745099998</property>
-    <property name="page_size">0</property>
     <property name="value">1.0499999523200001</property>
+    <property name="lower">0.050000000745099998</property>
+    <property name="upper">60</property>
+    <property name="step_increment">0.050000000745099998</property>
+    <property name="page_increment">10</property>
   </object>
   <object class="GtkAdjustment" id="adjustment2">
-    <property name="upper">65536</property>
-    <property name="lower">1</property>
-    <property name="page_increment">10</property>
-    <property name="step_increment">1</property>
-    <property name="page_size">0</property>
     <property name="value">2100</property>
+    <property name="lower">1</property>
+    <property name="upper">65536</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
   </object>
   <object class="GtkTable" id="connection-vbox">
     <property name="visible">True</property>
@@ -24,33 +23,31 @@
     <property name="column_spacing">6</property>
     <property name="row_spacing">6</property>
     <child>
-      <placeholder/>
-    </child>
-    <child>
       <object class="GtkSpinButton" id="timeout_spin">
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="adjustment">adjustment1</property>
         <property name="climb_rate">1</property>
         <property name="digits">2</property>
-        <signal handler="update_preferences_information" name="value_changed"/>
+        <signal name="value_changed" handler="update_preferences_information"/>
       </object>
       <packing>
         <property name="left_attach">1</property>
         <property name="right_attach">2</property>
         <property name="top_attach">1</property>
         <property name="bottom_attach">2</property>
-        <property name="y_options"/>
+        <property name="y_options"></property>
       </packing>
     </child>
     <child>
       <object class="GtkCheckButton" id="ck_autocon">
+        <property name="label" translatable="yes">_Autoconnect</property>
         <property name="visible">True</property>
         <property name="can_focus">True</property>
-        <property name="label" translatable="yes">_Autoconnect</property>
+        <property name="receives_default">False</property>
         <property name="use_underline">True</property>
         <property name="draw_indicator">True</property>
-        <signal handler="preferences_window_autoconnect" name="toggled"/>
+        <signal name="toggled" handler="preferences_window_autoconnect"/>
       </object>
       <packing>
         <property name="left_attach">1</property>
@@ -58,7 +55,7 @@
         <property name="top_attach">2</property>
         <property name="bottom_attach">3</property>
         <property name="x_options">GTK_FILL</property>
-        <property name="y_options"/>
+        <property name="y_options"></property>
       </packing>
     </child>
     <child>
@@ -75,7 +72,8 @@
                 <property name="visible">True</property>
                 <property name="sensitive">False</property>
                 <property name="can_focus">True</property>
-                <signal handler="preferences_window_disconnect" name="clicked"/>
+                <property name="receives_default">False</property>
+                <signal name="clicked" handler="preferences_window_disconnect"/>
                 <child>
                   <object class="GtkAlignment" id="alignment3">
                     <property name="visible">True</property>
@@ -93,6 +91,7 @@
                           <packing>
                             <property name="expand">False</property>
                             <property name="fill">False</property>
+                            <property name="position">0</property>
                           </packing>
                         </child>
                         <child>
@@ -114,6 +113,9 @@
               </object>
             </child>
           </object>
+          <packing>
+            <property name="position">0</property>
+          </packing>
         </child>
         <child>
           <object class="GtkAlignment" id="alignment16">
@@ -124,7 +126,8 @@
               <object class="GtkButton" id="bt_con">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <signal handler="preferences_window_connect" name="clicked"/>
+                <property name="receives_default">False</property>
+                <signal name="clicked" handler="preferences_window_connect"/>
                 <child>
                   <object class="GtkAlignment" id="alignment4">
                     <property name="visible">True</property>
@@ -142,6 +145,7 @@
                           <packing>
                             <property name="expand">False</property>
                             <property name="fill">False</property>
+                            <property name="position">0</property>
                           </packing>
                         </child>
                         <child>
@@ -186,14 +190,14 @@
         <property name="top_attach">1</property>
         <property name="bottom_attach">2</property>
         <property name="x_options">GTK_FILL</property>
-        <property name="y_options"/>
+        <property name="y_options"></property>
       </packing>
     </child>
     <child>
       <object class="GtkFrame" id="frame17">
         <property name="visible">True</property>
         <property name="label_xalign">0</property>
-        <property name="shadow_type">GTK_SHADOW_IN</property>
+        <property name="shadow_type">in</property>
         <child>
           <object class="GtkAlignment" id="alignment42">
             <property name="visible">True</property>
@@ -207,12 +211,6 @@
                 <property name="column_spacing">6</property>
                 <property name="row_spacing">6</property>
                 <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
                   <object class="GtkLabel" id="label3">
                     <property name="visible">True</property>
                     <property name="xalign">1</property>
@@ -222,7 +220,7 @@
                     <property name="top_attach">1</property>
                     <property name="bottom_attach">2</property>
                     <property name="x_options">GTK_FILL</property>
-                    <property name="y_options"/>
+                    <property name="y_options"></property>
                   </packing>
                 </child>
                 <child>
@@ -231,14 +229,14 @@
                     <property name="can_focus">True</property>
                     <property name="max_length">256</property>
                     <property name="text" translatable="yes">localhost</property>
-                    <signal handler="update_preferences_hostname" name="changed"/>
+                    <signal name="changed" handler="update_preferences_hostname"/>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
                     <property name="right_attach">2</property>
                     <property name="top_attach">1</property>
                     <property name="bottom_attach">2</property>
-                    <property name="y_options"/>
+                    <property name="y_options"></property>
                   </packing>
                 </child>
                 <child>
@@ -249,14 +247,14 @@
                     <property name="climb_rate">1</property>
                     <property name="snap_to_ticks">True</property>
                     <property name="numeric">True</property>
-                    <signal handler="update_preferences_portnumber" name="value_changed"/>
+                    <signal name="value_changed" handler="update_preferences_portnumber"/>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
                     <property name="right_attach">2</property>
                     <property name="top_attach">2</property>
                     <property name="bottom_attach">3</property>
-                    <property name="y_options"/>
+                    <property name="y_options"></property>
                   </packing>
                 </child>
                 <child>
@@ -269,17 +267,18 @@
                     <property name="top_attach">2</property>
                     <property name="bottom_attach">3</property>
                     <property name="x_options">GTK_FILL</property>
-                    <property name="y_options"/>
+                    <property name="y_options"></property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkCheckButton" id="ck_auth">
+                    <property name="label" translatable="yes">_Use Authentication</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">_Use Authentication</property>
+                    <property name="receives_default">False</property>
                     <property name="use_underline">True</property>
                     <property name="draw_indicator">True</property>
-                    <signal handler="auth_enable_toggled" name="toggled"/>
+                    <signal name="toggled" handler="auth_enable_toggled"/>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
@@ -287,7 +286,7 @@
                     <property name="top_attach">3</property>
                     <property name="bottom_attach">4</property>
                     <property name="x_options">GTK_FILL</property>
-                    <property name="y_options"/>
+                    <property name="y_options"></property>
                   </packing>
                 </child>
                 <child>
@@ -297,14 +296,14 @@
                     <property name="can_focus">True</property>
                     <property name="max_length">255</property>
                     <property name="visibility">False</property>
-                    <signal handler="entry_auth_changed" name="changed"/>
+                    <signal name="changed" handler="entry_auth_changed"/>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
                     <property name="right_attach">2</property>
                     <property name="top_attach">4</property>
                     <property name="bottom_attach">5</property>
-                    <property name="y_options"/>
+                    <property name="y_options"></property>
                   </packing>
                 </child>
                 <child>
@@ -317,7 +316,7 @@
                     <property name="top_attach">4</property>
                     <property name="bottom_attach">5</property>
                     <property name="x_options">GTK_FILL</property>
-                    <property name="y_options"/>
+                    <property name="y_options"></property>
                   </packing>
                 </child>
                 <child>
@@ -328,23 +327,23 @@
                   </object>
                   <packing>
                     <property name="x_options">GTK_FILL</property>
-                    <property name="y_options"/>
+                    <property name="y_options"></property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkEntry" id="name_entry">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <signal handler="update_preferences_name" name="changed"/>
+                    <signal name="changed" handler="update_preferences_name"/>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
                     <property name="right_attach">2</property>
-                    <property name="y_options"/>
+                    <property name="y_options"></property>
                   </packing>
                 </child>
                 <child>
-                   <object class="GtkLabel" id="label168">
+                  <object class="GtkLabel" id="label1">
                     <property name="visible">True</property>
                     <property name="xalign">1</property>
                     <property name="label" translatable="yes">Music Directory:</property>
@@ -353,23 +352,22 @@
                     <property name="top_attach">5</property>
                     <property name="bottom_attach">6</property>
                     <property name="x_options">GTK_FILL</property>
-                    <property name="y_options"/>
+                    <property name="y_options"></property>
                   </packing>
                 </child>
-
                 <child>
                   <object class="GtkEntry" id="music_directory">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="max_length">255</property>
-                    <signal handler="entry_music_directory_changed" name="changed"/>
+                    <signal name="changed" handler="entry_music_directory_changed"/>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
                     <property name="right_attach">2</property>
                     <property name="top_attach">5</property>
                     <property name="bottom_attach">6</property>
-                    <property name="y_options"/>
+                    <property name="y_options"></property>
                   </packing>
                 </child>
                 <child>
@@ -379,7 +377,8 @@
                       <object class="GtkButton" id="remove_butt">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <signal handler="connection_remove_profile" name="clicked"/>
+                        <property name="receives_default">False</property>
+                        <signal name="clicked" handler="connection_remove_profile"/>
                         <child>
                           <object class="GtkImage" id="remove_butt_image">
                             <property name="visible">True</property>
@@ -390,7 +389,7 @@
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">False</property>
-                        <property name="pack_type">GTK_PACK_END</property>
+                        <property name="pack_type">end</property>
                         <property name="position">1</property>
                       </packing>
                     </child>
@@ -398,7 +397,8 @@
                       <object class="GtkButton" id="add_butt">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <signal handler="connection_add_profile" name="clicked"/>
+                        <property name="receives_default">False</property>
+                        <signal name="clicked" handler="connection_add_profile"/>
                         <child>
                           <object class="GtkImage" id="image85">
                             <property name="visible">True</property>
@@ -409,7 +409,8 @@
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">False</property>
-                        <property name="pack_type">GTK_PACK_END</property>
+                        <property name="pack_type">end</property>
+                        <property name="position">0</property>
                       </packing>
                     </child>
                   </object>
@@ -420,6 +421,12 @@
                     <property name="bottom_attach">7</property>
                     <property name="x_options">GTK_FILL</property>
                   </packing>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
                 </child>
               </object>
             </child>
@@ -438,12 +445,13 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
+                <property name="position">0</property>
               </packing>
             </child>
             <child>
               <object class="GtkComboBox" id="cb_profiles">
                 <property name="visible">True</property>
-                <signal handler="connection_profiles_changed" name="changed"/>
+                <signal name="changed" handler="connection_profiles_changed"/>
               </object>
               <packing>
                 <property name="position">1</property>
@@ -454,9 +462,10 @@
       </object>
       <packing>
         <property name="right_attach">2</property>
-        <property name="x_options">GTK_FILL</property>
-        <property name="y_options">GTK_FILL</property>
       </packing>
+    </child>
+    <child>
+      <placeholder/>
     </child>
   </object>
 </interface>
