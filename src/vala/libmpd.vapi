@@ -9,7 +9,10 @@ namespace MPD {
         public MPD.Song playlist_get_song(int songid);
         public weak MPD.Song playlist_get_current_song();
         public int player_get_next_song_id();
-
+        [CCode (cname="mpd_server_get_database_update_time")]
+        public int get_database_update_time();
+        [CCode (cname="mpd_status_db_is_updating")]
+        public bool is_updating_database();
     }
 
 
@@ -191,6 +194,7 @@ namespace MPD {
 
         [CCode (cname="mpd_database_search_add_constraint")]
         public void search_add_constraint(MPD.Server server, MPD.Tag.Type type, string value);
+
     }
 
     namespace Tag {

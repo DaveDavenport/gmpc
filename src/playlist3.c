@@ -142,8 +142,6 @@ static GtkBuilder *playlist_pref_xml = NULL;
 
 static GtkWidget *volume_button = NULL;
 
-static guint updating_id = 0;
-
 /**
  * Status icons
  */
@@ -627,34 +625,6 @@ int pl3_hide(void)
 	return TRUE;
 }
 
-static GtkWidget *si_update = NULL;
-static void pl3_updating_changed(MpdObj * mi, int updating)
-{
-	char *mesg = _("MPD database is updating");
-	if (pl3_xml != NULL) {
-		gtk_statusbar_pop(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar1")), updating_id);
-		if (updating > 0) {
-			updating_id =
-				gtk_statusbar_get_context_id(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar1")), mesg);
-			gtk_statusbar_push(GTK_STATUSBAR(glade_xml_get_widget(pl3_xml, "statusbar1")), updating_id, mesg);
-			playlist3_show_error_message(_("MPD is updating its database"), ERROR_INFO);
-		} else if (updating_id > 0) {
-			playlist3_show_error_message(_("MPD finished updating its database"), ERROR_INFO);
-			updating_id = 0;
-		}
-	}
-
-	if(updating && si_update == NULL) {
-		si_update = gtk_image_new_from_icon_name("gtk-refresh", GTK_ICON_SIZE_MENU);
-		gtk_widget_set_tooltip_text(GTK_WIDGET(si_update), _("MPD is rescanning the database"));
-		gtk_widget_show(GTK_WIDGET(si_update));
-		main_window_add_status_icon(si_update);
-	}else if (!updating && si_update != NULL) {
-		gtk_widget_destroy(si_update);
-		si_update = NULL;
-	}
-}
-
 /* create the playlist view
  * This is done only once, for the rest its hidden, but still there
  */
@@ -1061,10 +1031,6 @@ void create_playlist3(void)
 
 	/* connect signals that are defined in the gui description */
 	glade_xml_signal_autoconnect(pl3_xml);
-
-	if (mpd_status_db_is_updating(connection)) {
-		pl3_updating_changed(connection, 1);
-	}
 
 	/* select the current playlist */
 	if (gtk_tree_model_get_iter_first(GTK_TREE_MODEL(pl3_tree), &iter)) {
@@ -1818,18 +1784,6 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
 		}
 	}
 
-	if (what & MPD_CST_UPDATING) {
-		pl3_updating_changed(connection, mpd_status_db_is_updating(connection));
-	}
-	if (what & MPD_CST_DATABASE) {
-		char date_buffer[128];
-		struct tm *tm;
-		time_t up = (time_t) mpd_server_get_database_update_time(connection);
-		tm = localtime(&up);
-		if (strftime(date_buffer, 128, _("MPD Database refreshed at: %c"), tm)) {
-			playlist3_show_error_message(date_buffer, ERROR_INFO);
-		}
-	}
 	if (what & MPD_CST_SERVER_ERROR) {
 		gchar *error = mpd_status_get_mpd_error(mi);
 		if (error) {

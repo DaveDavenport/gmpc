@@ -38,6 +38,8 @@ build_file "gmpc-metadata-prefetcher.vala"
 build_file "gmpc-metadata-browser2.vala" 
 
 build_file "gmpc-url-fetching-gui.vala"
+build_file "gmpc-database-update-tracker.vala"
+
 #"gmpc-song-links.vala gmpc-favorites.vala gmpc-rating.vala"
 
 valac -C --pkg libmpd --vapidir=`pwd` "gmpc-connection.vala" -H gmpc-connection.h

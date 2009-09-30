@@ -16,6 +16,9 @@ namespace Gmpc {
     [CCode (cname = "gmw", cheader_filename="main.h")]
     static MetaWatcher metawatcher;
 
+    [CCode (cname = "gmpc_profiles", cheader_filename="plugin.h")]
+    static Profiles profiles;
+
     [CCode (cheader_filename="gmpc-meta-watcher.h")]
     public class MetaWatcher {
         signal void data_changed(MPD.Song song,  Gmpc.MetaData.Type type, Gmpc.MetaData.Result result,MetaData.Item met);
@@ -279,6 +282,9 @@ namespace Gmpc {
     namespace Playlist3 {
         [CCode (cname="playlist3_get_category_tree_view")]
         public unowned Gtk.TreeView get_category_tree_view();
+
+        [CCode (cname="main_window_add_status_icon")]
+        public void add_status_icon(Gtk.Widget widget);
     }
 
     /* objects */
@@ -320,5 +326,16 @@ namespace Gmpc {
         public void play_path(string path);
         [CCode (cname="submenu_for_song")]
         public void submenu_for_song(Gtk.Widget menu, MPD.Song song);
+    }
+
+        [CCode (cheader_filename="gmpc-profiles.h")]
+        [Compact]
+        [Immutable]
+        class Profiles {
+            [CCode (cname="gmpc_profiles_get_current",cheader_filename="gmpc-profiles.h")]
+            public string? get_current_id();
+            public void set_db_update_time(string id, int value);
+            public int get_db_update_time(string id);
+
     }
 }
