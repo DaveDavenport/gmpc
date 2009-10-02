@@ -170,6 +170,7 @@ gmpcinclude_HEADERS = \
 		plugin.h	\
 		config1.h	\
 		misc.h\
+		mpdinteraction.h\
 		gmpc_easy_download.h\
 		vala/gmpc-easy-command.h\
 		vala/gmpc-plugin.h\
@@ -178,6 +179,7 @@ gmpcinclude_HEADERS = \
         vala/gmpc-paned-size-group.h\
         vala/gmpc-favorites.h\
         vala/gmpc-rating.h\
+		vala/gmpc-song-links.h\
         playlist3-messages.h\
 		gmpc-version.h\
 		metadata.h
@@ -190,7 +192,6 @@ EXTRA_DIST=\
 		main.h\
 		mm-keys.h\
 		misc.h\
-		mpdinteraction.h\
 		config-defaults.h\
 		browsers/playlist3-tag2-browser.h\
 		browsers/playlist3-file-browser.h\
@@ -201,7 +202,6 @@ EXTRA_DIST=\
 		vala/gmpc-progress.h\
 		vala/gmpc_menu_item_rating.h\
 		vala/gmpc-easy-command.h\
-		vala/gmpc-song-links.h\
 		vala/gmpc-test-plugin.h\
         vala/gmpc-metadata-browser2.h\
         vala/gmpc-liststore-sort.h\
