@@ -24,12 +24,12 @@ requires 2.0.0
 #include <glib/gstdio.h>
 #include <libmpd/libmpd.h>
 #include <unistd.h>
-#include "main.h"
 #include "misc.h"
 %}
 %ph{
 #include "vala/gmpc-test-plugin.h"
 #include "metadata-cache.h"
+#include "main.h"
 %}
 
 class Gmpc:Meta:Text:View from Gtk:Text:View {
