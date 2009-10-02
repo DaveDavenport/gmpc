@@ -101,6 +101,13 @@ namespace MPD {
                 SINGLE_MODE         = 0x400000,
                 CONSUME_MODE        = 0x800000
             }
+
+            [CCode (cname="mpd_status_get_bitrate")]
+            public int get_bitrate(MPD.Server server);
+            [CCode (cname="mpd_status_get_samplerate")]
+            public int get_samplerate(MPD.Server server);
+            [CCode (cname="mpd_status_get_channels")]
+            public int get_channels(MPD.Server server);
     }
     namespace Data{
         [CCode (cname="MpdDataType", cprefix = "MPD_DATA_TYPE_", cheader_filename = "libmpd/libmpd.h")]
