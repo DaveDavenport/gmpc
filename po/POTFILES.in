@@ -34,6 +34,7 @@ src/smclient/eggsmclient.c
 [type: gettext/glade]glade/preferences.ui
 [type: gettext/glade]glade/playlist-message-window.ui
 [type: gettext/glade]glade/playlist-save-dialog.ui
+[type: gettext/glade]glade/gmpc-add-url.ui
 
 
 # Browsers
@@ -69,3 +70,4 @@ src/vala/gmpc-easy-command.c
 src/vala/gmpc-test-plugin.c
 src/vala/gmpc-favorites.c
 src/vala/gmpc-metadata-browser2.c
+src/vala/gmpc-database-update-tracker.c

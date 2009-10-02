@@ -488,6 +488,12 @@ end:
                             case MPD_TAG_ITEM_ARTIST:
                                 g_value_set_string(value, "media-artist");
                                 break;
+                            case MPD_TAG_ITEM_GENRE:
+                                g_value_set_string(value, "media-genre");
+                                break;
+                            case MPD_TAG_ITEM_TRACK:
+                                g_value_set_string(value, "media-num-tracks");
+                                break;
                             default:
                                 g_value_set_string(value, "media-tag");
                         }

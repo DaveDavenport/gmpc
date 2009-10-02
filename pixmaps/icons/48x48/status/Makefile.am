@@ -9,4 +9,9 @@ dist_icons_DATA = \
 		frame-artist.png\
 		fetching-artist.png\
 		gmpc-tray.png\
-		no-artist.png
+		no-artist.png\
+        media-track-length.png\
+        media-album.png\
+        media-format.png\
+        media-genre.png\
+        media-num-tracks.png

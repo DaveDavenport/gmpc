@@ -10,4 +10,9 @@ dist_icons_DATA = \
 		stylized-cover.png\
 		no-artist.png\
 		fetching-artist.png\
-		frame-artist.png
+		frame-artist.png\
+        media-track-length.png\
+        media-album.png\
+        media-format.png\
+        media-genre.png\
+        media-num-tracks.png

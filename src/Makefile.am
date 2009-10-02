@@ -209,6 +209,7 @@ EXTRA_DIST=\
         vala/gmpc-mpddata-treeview-tooltip.h\
         vala/gmpc-metadata-prefetcher.h\
         vala/gmpc-paned-size-group.h\
+        vala/gmpc-database-update-tracker.h\
         gtktransition.h\
         plugin-internal.h\
 		setup-assistant.h\
@@ -296,6 +297,7 @@ gmpc_vala_FILES=\
     vala/gmpc-connection.c\
     vala/gmpc-url-fetching-gui.c\
     vala/gmpc-database-update-tracker.c\
+    vala/gmpc-url-fetching-gui.h\
     vala/gmpc-metadata-prefetcher.c
 
 ##

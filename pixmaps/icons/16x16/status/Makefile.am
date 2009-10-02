@@ -15,4 +15,9 @@ dist_icons_DATA = \
 		gmpc-tray-play.png\
 		stock_repeat.png\
 		stock_shuffle.png\
-		gmpc-tray.png
+		gmpc-tray.png\
+        media-track-length.png\
+        media-album.png\
+        media-format.png\
+        media-genre.png\
+        media-num-tracks.png
