@@ -222,7 +222,7 @@ static const char* gmpc_plugin_mockup_real_get_name (GmpcPluginBase* base) {
 	GmpcPluginMockup * self;
 	const char* result;
 	self = (GmpcPluginMockup*) base;
-	result = "Now Playing2";
+	result = "Now Playing";
 	return result;
 }
 
@@ -1394,7 +1394,7 @@ static GObject * gmpc_plugin_mockup_constructor (GType type, guint n_construct_p
 	obj = parent_class->constructor (type, n_construct_properties, construct_properties);
 	self = GMPC_PLUGIN_MOCKUP (obj);
 	{
-		((GmpcPluginBase*) self)->plugin_type = 2;
+		((GmpcPluginBase*) self)->plugin_type = 2 | 8;
 		g_signal_connect_object (gmpcconn, "status-changed", (GCallback) _gmpc_plugin_mockup_status_changed_gmpc_connection_status_changed, self, 0);
 		g_signal_connect_object (gmpcconn, "connection-changed", (GCallback) __lambda6__gmpc_connection_connection_changed, self, 0);
 	}

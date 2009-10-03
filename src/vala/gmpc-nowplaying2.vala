@@ -39,7 +39,7 @@ namespace Gmpc {
 
             construct {
                 /* Set the plugin as Browser type*/
-                this.plugin_type = 2; 
+                this.plugin_type = 2|8; 
                 /* Track changed status */
                 gmpcconn.status_changed.connect(status_changed);
                 /* Track connect/disconnect */
@@ -56,7 +56,7 @@ namespace Gmpc {
             }
             /* Name */
             public override weak string get_name() {
-                return ("Now Playing2");
+                return ("Now Playing");
             }
 
             public override void set_enabled(bool state) {
