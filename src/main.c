@@ -52,6 +52,7 @@
 #include "vala/gmpc-metadata-prefetcher.h"
 #include "vala/gmpc-database-update-tracker.h"
 #include "vala/gmpc-paned-size-group.h"
+#include "vala/gmpc-nowplaying2.h"
 
 #include "gmpc-mpddata-model-playlist.h"
 #include "metadata-cache.h"
@@ -713,9 +714,10 @@ int main(int argc, char **argv)
 	plugin_add_new(GMPC_PLUGIN_BASE(gmpc_test_plugin_new()), 0, NULL);
 	metadata_browser = gmpc_metadata_browser_new();
 	plugin_add_new(GMPC_PLUGIN_BASE(metadata_browser), 0, NULL);
-	plugin_add_new(GMPC_PLUGIN_BASE(gmpc_now_playing_new()), 0, NULL);
+//	plugin_add_new(GMPC_PLUGIN_BASE(gmpc_now_playing_new()), 0, NULL);
 	plugin_add_new(GMPC_PLUGIN_BASE(gmpc_plugin_metadata_prefetcher_new()), 0,NULL);
 	plugin_add_new(GMPC_PLUGIN_BASE(gmpc_plugin_database_update_tracker_new()), 0,NULL);
+	plugin_add_new(GMPC_PLUGIN_BASE(gmpc_plugin_mockup_new()), 0,NULL);
 	TEC("Loading new plugins");
 	/**
      *  load dynamic plugins

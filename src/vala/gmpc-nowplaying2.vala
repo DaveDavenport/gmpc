@@ -1,0 +1,729 @@
+/* Gnome Music Player Client Multimedia Keys plugin (gmpc-mmkeys)
+ * Copyright (C) 2009 Qball Cow <qball@sarine.nl>
+ * Project homepage: http://gmpc.wikia.com/
+ 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+*/
+using GLib;
+using Gmpc;
+using Gmpc.Plugin;
+using Gmpc.Favorites;
+using Gmpc.Rating;
+using Gmpc.Widget;
+
+private const bool use_transition_mb2 = Gmpc.use_transition;
+private const string some_unique_name_mb2 = Config.VERSION;
+/** 
+ * This plugin implements an 'improved' now playing interface, modeled after the mockup found here
+ * http://gmpc.wikia.com/wiki/GMPC_Mocup
+ */
+
+/* create teh plugin of type Gmpc.Plugin.Base that implements the Browser interface */
+namespace Gmpc {
+    namespace Plugin {
+        public class Mockup : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface {
+            private Gtk.Label bitrate_label = null;
+            private Gtk.TreeRowReference np_ref = null;
+
+            construct {
+                /* Set the plugin as Browser type*/
+                this.plugin_type = 2; 
+                /* Track changed status */
+                gmpcconn.status_changed.connect(status_changed);
+                /* Track connect/disconnect */
+                gmpcconn.connection_changed.connect((source, connect) => {
+                        /* If disconnect update the page */
+                        if(connect == 0 && this.paned != null)
+                        this.update_not_playing();
+                        });
+            }
+            /* Version of the plugin*/
+            public const int[] version =  {0,0,0};
+            public override  weak int[] get_version() {
+                return version;
+            }
+            /* Name */
+            public override weak string get_name() {
+                return ("Now Playing2");
+            }
+
+            public override void set_enabled(bool state) {
+                if(state) {
+                    if(paned == null) {
+                        browser_add( Gmpc.Playlist3.get_category_tree_view());
+                        browser_init();
+                    }
+                }else {
+                    if(this.np_ref != null) {
+                        var path = np_ref.get_path();
+                        if(path != null) {
+                            weak int[] indices  = path.get_indices();
+                            config.set_int(this.get_name(), "position", indices[0]);
+                            Gtk.ListStore model = (Gtk.ListStore) np_ref.get_model();
+                            Gtk.TreeIter iter;
+                            if(model.get_iter(out iter, path))
+                            {
+                                model.remove(iter);
+                            }
+                        }
+                    }
+                    if(this.paned != null) {
+                        this.paned.destroy();
+                        this.paned = null;
+                        this.song_checksum = null;
+                    }
+                }
+
+                if(this.get_name() != null)
+                    Gmpc.config.set_int(this.get_name(), "enabled", (int)state); 
+            }
+            /* Save our position in the side-bar */
+            public override void save_yourself() {
+                if(this.np_ref != null) {
+                    var path = np_ref.get_path();
+                    if(path != null) {
+                        weak int[] indices  = path.get_indices();
+                        config.set_int(this.get_name(), "position", indices[0]);
+                    }
+                }
+            }
+
+            /* React MPD's status changed */
+            private 
+                void
+                status_changed(Gmpc.Connection conn, MPD.Server server, MPD.Status.Changed what)
+                {
+                    if(!this.get_enabled())return;
+                    if(!this.selected) return;
+                    /* If the state changes, update. */
+                    if((what&MPD.Status.Changed.STATE) == MPD.Status.Changed.STATE)
+                    {
+                        this.update();
+                    }
+                    /* If the playlist changed, this might mean that the metadata of the currently playing song changed, update. */
+                    else if ((what&(MPD.Status.Changed.SONGID|MPD.Status.Changed.PLAYLIST)) > 0)
+                    {
+                        this.update();
+                    }
+                    /* If the bitrate changed, update the bitrate label. */
+                    if((what&(MPD.Status.Changed.BITRATE|MPD.Status.Changed.AUDIOFORMAT)) > 0)
+                    {
+                        if(bitrate_label != null)
+                        {
+                            debug("bitrate changed");
+                            var bitrate = MPD.Status.get_bitrate(Gmpc.server); 
+                            bitrate_label.set_markup(GLib.Markup.printf_escaped("<span color='#304ab8' weight='bold'>%s:</span> %i %s, %i %s, %i %s",("Format"), 
+                                        MPD.Status.get_channels(Gmpc.server), "Channel",
+                                        MPD.Status.get_samplerate(Gmpc.server), "Khz", 
+                                        bitrate, "kbps"
+                                        ));
+                        }
+                    }
+
+                }
+
+            /* Browser */
+            private Gtk.ScrolledWindow paned = null;
+            private Gtk.EventBox container = null;
+            private bool selected = false;
+            /** 
+             * Browser Interface bindings
+             */
+            public void browser_add (Gtk.Widget category_tree)
+            {
+                Gtk.TreeView tree = (Gtk.TreeView)category_tree;
+                Gtk.ListStore store = (Gtk.ListStore)tree.get_model();
+                Gtk.TreeModel model = tree.get_model();
+                Gtk.TreeIter iter;
+                Gmpc.Browser.insert(out iter, config.get_int_with_default(this.get_name(), "position", 0));
+                store.set(iter, 0, this.id, 1, this.get_name(), 3, "media-audiofile"); 
+                /* Create a row reference */
+                this.np_ref = new Gtk.TreeRowReference(model,  model.get_path(iter));
+            }
+            /* Called by gmpc, telling the plugin to embed itself in container */
+            public void browser_selected (Gtk.Container container)
+            {
+                this.selected = true;
+                this.browser_init();
+                container.add(this.paned);
+
+                container.show_all();
+                this.update();
+            }
+
+            /* Called by gmpc, telling the plugin to remove itself from the container */
+            public void browser_unselected(Gtk.Container container)
+            {
+                this.selected = false;
+                container.remove(this.paned);
+            }
+
+            /**
+             * If the style changed because f.e. the user switched theme, make sure the correct colouring is kept preserved.
+             */
+
+            private void browser_bg_style_changed(Gtk.Container bg,Gtk.Style? style)
+            {
+                debug("Change style signal");
+                this.change_color_style(this.container);
+            }
+            /** 
+             * Recursively force  a style on widget bg and children. 
+             */
+            private void change_color_style(Gtk.Widget bg)
+            {
+                debug("change style");
+                if(bg is Gtk.Separator || bg is Gtk.Notebook || bg is Gtk.CheckButton){
+                    /* Do nothing */
+                }else{
+                    bg.modify_bg(Gtk.StateType.NORMAL,this.paned.style.black);
+                    bg.modify_base(Gtk.StateType.NORMAL,this.paned.style.black);
+                    bg.modify_text(Gtk.StateType.NORMAL,this.paned.style.white);
+                    bg.modify_fg(Gtk.StateType.NORMAL,this.paned.style.white);
+                    bg.modify_text(Gtk.StateType.ACTIVE,this.paned.style.white);
+                    bg.modify_fg(Gtk.StateType.ACTIVE,this.paned.style.white);
+
+                }
+                /* Recurse into children, if the widget can hold children (so is a container */
+                if(bg is Gtk.Container){
+                    foreach(Gtk.Widget child in ((Gtk.Container)bg).get_children())
+                    {
+                        change_color_style(child);
+                    }
+                }
+            }
+            /* Create the basic gui. on initializing */
+            private void browser_init() {
+                if(this.paned == null)
+                {
+                    this.paned = new Gtk.ScrolledWindow(null,null);
+                    this.paned.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC);
+                    this.paned.set_shadow_type(Gtk.ShadowType.NONE);
+                    this.container = new Gtk.EventBox();
+                    this.container.set_visible_window(true);
+                    this.paned.style_set += browser_bg_style_changed;
+                    this.paned.add_with_viewport(this.container);
+                    this.paned.get_vadjustment().set("step-increment", 20.0);
+
+                    this.paned.show_all();
+                }
+            }
+
+            /* Clear the view inside the scrolled window*/
+            private void clear()
+            {
+                /* Clear */
+                var list = this.container.get_children();
+                foreach(Gtk.Widget child in list){
+                    child.destroy();
+                }
+                bitrate_label = null;
+            }
+
+            /** 
+             * Show the page when playing 
+             */
+            private string song_checksum = null;
+            private void update_playing()
+            {
+                MPD.Song song = server.playlist_get_current_song(); 
+                if(song == null) {
+                    debug("GMPC Is playing, cannot get this");
+                    update_not_playing();
+                    return;
+                }
+                /* Force it so we won't update when not needed */
+                var checksum = Gmpc.Misc.song_checksum(song);
+                if(checksum == this.song_checksum)
+                {
+                    /* No need to update. */
+                    return;
+                }
+                this.clear();
+                this.song_checksum = checksum;
+
+                var vbox = new Gtk.VBox (false,6);
+                vbox.border_width = 8;
+                /* Start building the gui */
+                /* Artist image */
+                var hbox = new Gtk.HBox(false, 6);
+                /* Album image */
+                var ali = new Gtk.Alignment(0f,0f,0f,0f);
+                var album_image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ALBUM_ART, 200);
+                album_image.set_scale_up(true);
+                album_image.set_squared(false);
+                ali.add(album_image);
+                album_image.update_from_song(song);
+                hbox.pack_start(ali, false, false, 0);
+
+                /* Artist image */
+                ali = new Gtk.Alignment(1f,0f,0f,0f);
+                var artist_image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ARTIST_ART, 200);
+                artist_image.set_scale_up(true);
+                artist_image.set_squared(false);
+                artist_image.update_from_song(song);
+                ali.add(artist_image);
+                hbox.pack_end(ali, false, false, 0);
+
+
+                /* Information box */
+                var info_vbox = new Gtk.VBox(false, 6);
+                /* Title */
+                if(song.title != null) {
+
+                    var box = new Gtk.HBox(false, 6);
+                    /* Favored button */
+                    var fav_button = new Gmpc.Favorites.Button();
+                    fav_button.set_song(song);
+                    ali = new Gtk.Alignment(0.0f, 0.5f,0f,0f);
+                    ali.add(fav_button);
+                    box.pack_start(ali, false, false, 0); 
+                    var label = new Gtk.Label(song.title);
+                    label.set_markup(GLib.Markup.printf_escaped("<span color='#4d90dd' size='%i' weight='bold'>%s</span>", Pango.SCALE*20 ,song.title));
+                    label.set_ellipsize(Pango.EllipsizeMode.END);
+                    label.set_alignment(0.0f, 0.5f);
+                    box.pack_start(label, true, true, 0); 
+                    info_vbox.pack_start(box, false, false, 0); 
+
+                    if(MPD.Sticker.supported(server))
+                    {
+                        /* Favored button */
+                        var rating_button = new Gmpc.Rating(server, song);
+                        ali = new Gtk.Alignment(0.0f, 0.5f,0f,0f);
+                        ali.add(rating_button);
+                        info_vbox.pack_start(ali, false, false, 0); 
+                    }
+                }else if (song.name!= null) {
+                    var label = new Gtk.Label(song.name);
+                    label.set_markup(GLib.Markup.printf_escaped("<span color='#4d90dd' size='%i' weight='bold'>%s</span>",Pango.SCALE*20, song.name));
+                    label.set_ellipsize(Pango.EllipsizeMode.END);
+                    label.set_alignment(0.0f, 0.5f);
+                    info_vbox.pack_start(label, false, false, 0); 
+                }
+                /* Artist */
+                if(song.artist != null) {
+                    var box = new Gtk.HBox(false, 6);
+                    var label = new Gtk.Label(song.artist);
+                    var image = new Gtk.Image.from_icon_name("media-artist", Gtk.IconSize.BUTTON);
+                    box.pack_start(image, false, false, 0);
+                    label.set_markup(GLib.Markup.printf_escaped("<span size='xx-large' weight='bold'>%s</span>", song.artist));
+                    label.set_ellipsize(Pango.EllipsizeMode.END);
+                    label.set_alignment(0.0f, 0.5f);
+                    box.pack_start(label, true, true, 0);
+                    info_vbox.pack_start(box, false, false, 0); 
+                }
+                /* Album */
+                if(song.album != null) {
+                    var box = new Gtk.HBox(false, 6);
+                    var label = new Gtk.Label(song.album);
+                    var image = new Gtk.Image.from_icon_name("media-album", Gtk.IconSize.BUTTON);
+                    box.pack_start(image, false, false, 0);
+                    label.set_markup(GLib.Markup.printf_escaped("<span size='x-large' weight='bold'>%s</span>", song.album));
+                    label.set_ellipsize(Pango.EllipsizeMode.END);
+                    label.set_alignment(0.0f, 0.5f);
+                    box.pack_start(label, true, true, 0);
+                    info_vbox.pack_start(box, false, false, 0); 
+                }
+                /* Genre */
+                if(song.genre != null) {
+                    var box = new Gtk.HBox(false, 6);
+                    var label = new Gtk.Label(song.title);
+                    var image = new Gtk.Image.from_icon_name("media-genre", Gtk.IconSize.MENU);
+                    box.pack_start(image, false, false, 0);
+                    label.set_markup(GLib.Markup.printf_escaped("<span color='#304ab8' weight='bold'>%s:</span> %s",("Genre"), song.genre));
+                    label.set_ellipsize(Pango.EllipsizeMode.END);
+                    label.set_alignment(0.0f, 0.5f);
+                    box.pack_start(label, true, true, 0);
+                    info_vbox.pack_start(box, false, false, 0); 
+
+                }
+                /* Format */
+                {
+                    var box = new Gtk.HBox(false, 6);
+                    var image = new Gtk.Image.from_icon_name("media-format", Gtk.IconSize.MENU);
+                    box.pack_start(image, false, false, 0);
+
+                    bitrate_label = new Gtk.Label(song.title);
+                    bitrate_label.set_ellipsize(Pango.EllipsizeMode.END);
+                    bitrate_label.set_alignment(0.0f, 0.5f);
+
+                    box.pack_start(bitrate_label, true, true, 0);
+
+                    var bitrate = MPD.Status.get_bitrate(Gmpc.server); 
+                    bitrate_label.set_markup(GLib.Markup.printf_escaped("<span color='#304ab8' weight='bold'>%s:</span> %i %s, %i %s, %i %s",("Format"), 
+                                MPD.Status.get_channels(Gmpc.server), "Channel",
+                                MPD.Status.get_samplerate(Gmpc.server), "Khz", 
+                                bitrate, "kbps"
+                                ));
+
+
+                    info_vbox.pack_start(box, false, false, 0); 
+                }
+                /* Time*/
+                if(song.time > 0) {
+                    var box = new Gtk.HBox(false, 6);
+                    var image = new Gtk.Image.from_icon_name("media-track-length", Gtk.IconSize.MENU);
+                    box.pack_start(image, false, false, 0);
+                    var label = new Gtk.Label("");
+                    label.set_ellipsize(Pango.EllipsizeMode.END);
+                    label.set_markup(GLib.Markup.printf_escaped("<span color='#304ab8' weight='bold'>%s:</span> %s",("Length"), 
+                                Gmpc.Misc.format_time((ulong) song.time, "")));
+                    label.set_alignment(0.0f, 0.5f);
+                    box.pack_start(label, true, true, 0);
+                    info_vbox.pack_start(box, false, false, 0); 
+                }
+
+                if(song.track != null) {
+                    var box = new Gtk.HBox(false, 6);
+                    var image = new Gtk.Image.from_icon_name("media-num-tracks", Gtk.IconSize.MENU);
+                    box.pack_start(image, false, false, 0);
+                    var label = new Gtk.Label("");
+                    label.set_ellipsize(Pango.EllipsizeMode.END);
+                    label.set_markup(GLib.Markup.printf_escaped("<span color='#304ab8' weight='bold'>%s:</span> %s %s",("Track number"), 
+                                song.track,
+                                (song.disc != null)? "[%s]".printf(song.disc):""
+                                ));
+                    label.set_alignment(0.0f, 0.5f);
+                    box.pack_start(label, true, true, 0);
+                    info_vbox.pack_start(box, false, false, 0); 
+                }
+
+
+                hbox.pack_start(info_vbox, true, true, 0);
+                vbox.pack_start(hbox, false, false, 0);
+
+                /* Separator */
+                var sep = new Gtk.HSeparator();
+                sep.set_size_request(-1, 4);
+                vbox.pack_start(sep, false, false, 0);
+
+                var hboxje = new Gtk.HBox(false, 6);
+
+                /* Notebook where all the metadata items are kept, Override the tabs by a radiobutton list. */
+                var notebook = new Gtk.Notebook();
+                notebook.set_show_border(false);
+                notebook.set_show_tabs(false);
+
+                /* Lyrics */
+                var i = 0;
+                weak SList<weak Gtk.RadioButton> group  = null;
+                if(config.get_int_with_default("MetaData", "show-lyrics",1) == 1)
+                {
+                    var text_view = new Gmpc.MetaData.TextView(Gmpc.MetaData.Type.SONG_TXT);
+                    text_view.set_left_margin(8);
+                    text_view.query_from_song(song);
+
+                    notebook.append_page(text_view, new Gtk.Label("Lyrics"));
+                    var button = new Gtk.RadioButton.with_label(group,("Lyrics"));
+                    group = button.get_group();
+                    hboxje.pack_start(button, false, false, 0);
+                    var j = i;
+                    button.clicked.connect((source) => {
+                            debug("notebook page %i clicked", j);
+                            notebook.set_current_page(j);
+                            });
+                    i++;
+
+                    text_view.show();
+                }
+
+                /* Guitar Tabs */
+                if(config.get_int_with_default("MetaData", "show-guitar-tabs",1) == 1)
+                {
+                    var text_view = new Gmpc.MetaData.TextView(Gmpc.MetaData.Type.SONG_GUITAR_TAB);
+                    text_view.use_monospace = true;
+                    text_view.set_left_margin(8);
+                    var text_view_queried = false;
+
+                    notebook.append_page(text_view, new Gtk.Label("Guitar Tabs"));
+                    var button = new Gtk.RadioButton.with_label(group,("Guitar Tabs"));
+                    group = button.get_group();
+                    hboxje.pack_start(button, false, false, 0);
+                    var j = i;
+                    /* Only query the guitar-tab when opened or first notebook page*/
+                    button.clicked.connect((source) => {
+                            debug("notebook page %i clicked", j);
+                            notebook.set_current_page(j);
+                            if(!text_view_queried){
+                            text_view.query_from_song(song);
+                            text_view_queried = true;
+                            this.change_color_style(text_view);
+                            }
+                            });
+                    if(i == 0){
+                        text_view.query_from_song(song);
+                        text_view_queried = true;
+                    }
+                    text_view.show();
+                    i++;
+                }
+                /* Similar songs */
+
+                if(config.get_int_with_default("MetaData", "show-similar-songs",1) == 1)
+                {
+                    var similar_songs_queried = false;
+                    var similar_songs_box = new Gtk.Alignment(0f,0f,0f,0f);
+
+                    notebook.append_page(similar_songs_box, new Gtk.Label("Similar Songs"));
+
+                    var button = new Gtk.RadioButton.with_label(group,("Similar Songs"));
+                    group = button.get_group();
+                    hboxje.pack_start(button, false, false, 0);
+
+                    var j = i;
+                    /* Only query when opened or first notebook page*/
+                    button.clicked.connect((source) => {
+                            debug("notebook page %i clicked", j);
+                            notebook.set_current_page(j);
+                            if(!similar_songs_queried){
+                            var similar_songs = new Gmpc.Widget.SimilarSongs(song);
+                            similar_songs.update();
+                            similar_songs_queried = true;
+                            similar_songs_box.add(similar_songs);
+                            this.change_color_style(similar_songs_box);
+                            similar_songs_box.show_all();
+                            }
+                            });
+                    if(i == 0){
+                        var similar_songs = new Gmpc.Widget.SimilarSongs(song);
+                        similar_songs.update();
+                        similar_songs_queried = true;
+                        similar_songs_box.add(similar_songs);
+                        similar_songs_box.show_all();
+                    }
+                    similar_songs_box.show();
+                    i++;
+                }
+
+                if(config.get_int_with_default("MetaData", "show-similar-artist",1) == 1 && song.artist != null)
+                {
+                    var similar_artist = new Gmpc.Widget.SimilarArtist(Gmpc.server,song);
+
+                    notebook.append_page(similar_artist, new Gtk.Label("Similar Artist"));
+
+                    var button = new Gtk.RadioButton.with_label(group,("Similar Artist"));
+                    group = button.get_group();
+                    hboxje.pack_start(button, false, false, 0);
+
+                    var j = i;
+                    button.clicked.connect((source) => {
+                            debug("notebook page %i clicked", j);
+                            notebook.set_current_page(j);
+                            });
+                    similar_artist.show();
+                    i++;
+                }
+                if(config.get_int_with_default("MetaData", "show-show-links",1) == 1)
+                {
+
+                    var song_links = new Gmpc.Song.Links(Gmpc.Song.Links.Type.SONG,song);
+                    notebook.append_page(song_links, new Gtk.Label("Web Links"));
+                    var button = new Gtk.RadioButton.with_label(group,("Web Links"));
+                    hboxje.pack_start(button, false, false, 0);
+                    var j = i;
+                    button.clicked.connect((source) => {
+                            debug("notebook page %i clicked", j);
+                            notebook.set_current_page(j);
+                            });
+                    song_links.show();
+                    i++;
+                }
+                if(i > 0){
+                    notebook.set_current_page(0);
+                }
+
+                ali = new Gtk.Alignment(0.0f, 0.5f,0f,0f);
+                ali.add(hboxje);
+
+                /* Create pane in 2. */
+                var bottom_hbox = new Gtk.HBox(false, 6);
+                /* left pane */
+                var metadata_vbox = new Gtk.VBox(false, 6);
+                metadata_vbox.pack_start(ali, false, false, 0);
+                sep = new Gtk.HSeparator();
+                sep.set_size_request(-1, 1);
+                metadata_vbox.pack_start(sep, false, false, 0);
+                metadata_vbox.pack_start(notebook, false, false, 0);
+
+                bottom_hbox.pack_start(metadata_vbox, true, true, 0);
+
+                /* Create album list */
+                if(song.album != null && song.artist != null)
+                {
+                    var sep2 = new Gtk.VSeparator();
+                    sep2.set_size_request(-1, 4);
+                    bottom_hbox.pack_start(sep2, false, false, 0);
+                    int albums =0;
+                    /* Create album list */
+                    ali = new Gtk.Alignment(0.0f, 0.0f, 0.0f, 0.0f);
+                    var album_hbox = new Gtk.VBox(false, 6);
+                    album_hbox.set_size_request(250, -1);
+                    ali.add(album_hbox);
+                    bottom_hbox.pack_start(ali, false, false, 0);
+
+                    var label = new Gtk.Label(song.artist);
+                    label.set_size_request(240, -1);
+                    label.set_markup(GLib.Markup.printf_escaped("<span size='x-large' weight='bold' color='#304ab8'>%s</span><span size='x-large' weight='bold'> %s</span>",("Other albums by"), song.artist));
+                    label.set_line_wrap_mode(Pango.WrapMode.WORD_CHAR);
+                    label.set_line_wrap(true);
+                    label.set_alignment(0.0f, 0.5f);
+                    album_hbox.pack_start(label, false, false,0);
+
+                    MPD.Database.search_field_start(server, MPD.Tag.Type.ALBUM);
+                    MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, song.artist);
+                    var data = MPD.Database.search_commit(server);
+                    if(data != null){
+                        weak MPD.Data.Item iter = data.get_first();
+                        do{
+                            if(iter.tag == song.album){
+                                iter = iter.next(false); 
+                                continue;
+                            }
+                            var button = new Gtk.Button();
+                            button.set_relief(Gtk.ReliefStyle.NONE);
+                            var but_hbox = new Gtk.HBox(false, 6);
+                            button.add(but_hbox);
+                            var image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ALBUM_ART, 48);
+                            var but_song = new MPD.Song();
+                            but_song.artist = song.artist;
+                            but_song.album = iter.tag;
+                            image.set_squared(true);
+                            image.update_from_song_delayed(but_song);
+
+                            but_hbox.pack_start(image, false, false, 0);
+
+                            var but_label = new Gtk.Label(iter.tag);
+                            but_label.set_alignment(0.0f, 0.5f);
+                            but_label.set_markup(GLib.Markup.printf_escaped("<b>%s</b>", (iter.tag.length == 0)? "No Album":iter.tag));
+                            but_label.set_ellipsize(Pango.EllipsizeMode.END);
+                            but_hbox.pack_start(but_label, true, true, 0);
+
+                            album_hbox.pack_start(button, false, false,0);
+
+                            button.clicked.connect((source) => {
+                                    Gmpc.Browser.Metadata.show_album(song.artist, but_song.album);
+                                    });
+                            albums++;
+
+                            iter = iter.next(false);
+                        }while(iter!= null);
+                    }
+
+                    if(albums == 0) {
+                        album_hbox.destroy();
+                        sep2.destroy();
+                    }
+                }
+                vbox.pack_start(bottom_hbox, true, true, 0);
+
+                /* show it */
+                this.container.add(vbox);
+                this.change_color_style(this.container);
+                this.container.show_all();
+            }
+            /** 
+             * This shows the page when mpd is not playing, for now it is the gmpc logo + Gnome Music Player Client 
+             */
+            private void update_not_playing()
+            {
+                this.clear();
+                song_checksum = null;
+
+                var it = Gtk.IconTheme.get_default();
+                Gtk.IconInfo info = it.lookup_icon("gmpc", 150, 0);
+                var path = info.get_filename();
+                Gtk.Image image = null;
+                if(path != null)
+                {
+                    try {
+                        var pb = new Gdk.Pixbuf.from_file_at_scale(path, 150, 150, true);
+                        image = new Gtk.Image.from_pixbuf(pb);
+                    } catch (Error e)
+                    {
+                        warning("Failed to load the gmpc logo: %s", e.message);
+                        return;
+                    }
+                }
+                if(image == null){
+                    image = new Gtk.Image.from_icon_name("gmpc", Gtk.IconSize.DIALOG);
+                }
+
+                var hbox = new Gtk.HBox(false, 6);
+                var label = new Gtk.Label(("Gnome Music Player Client"));
+                label.set_selectable(true);
+                label.set_markup("<span size='%i' weight='bold'>%s</span>".printf(28*Pango.SCALE,("Gnome Music Player Client")));
+                hbox.pack_start(image, false, false, 0);
+                hbox.pack_start(label, false, false, 0);
+
+                var ali = new Gtk.Alignment(0.5f,0.5f,0.0f, 0.0f);
+                ali.add(hbox);
+                this.container.add(ali);
+
+                this.change_color_style(this.container);
+                this.container.show_all();
+
+            }
+            /**
+             * Update the view according to state. If playing/paused show song info, other wise the not playing page
+             */
+            private void update()
+            {
+                switch(MPD.Player.get_state(Gmpc.server))
+                {
+                    case MPD.Player.State.PLAY:
+                    case MPD.Player.State.PAUSE:
+                        debug("Update playing");
+                        update_playing();
+                        break;
+                    default:
+                        debug("update not playing");
+                        update_not_playing();
+                        break;
+                }
+            }
+
+            /**
+             * Makes gmpc jump to the now playing browser 
+             */
+            private void select_now_playing_browser(Gtk.ImageMenuItem item)
+            {
+                weak Gtk.TreeView tree = Gmpc.Playlist3.get_category_tree_view();
+                var sel = tree.get_selection();
+                var path = np_ref.get_path();
+                if(path != null)
+                {
+                    sel.select_path(path);
+                }
+            }
+
+            /**
+             * Gmpc.Plugin.BrowserIface.add_go_menu 
+             */
+            private int browser_add_go_menu(Gtk.Menu menu)
+            {
+                if(this.get_enabled())
+                {
+                    var item = new Gtk.ImageMenuItem.with_mnemonic(_("Now Playing"));
+                    item.set_image(new Gtk.Image.from_icon_name("media-audiofile", Gtk.IconSize.MENU));
+                    item.activate += select_now_playing_browser;
+                    item.add_accelerator("activate", menu.get_accel_group(),0x069, Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
+                    menu.append(item);
+                    return 1;
+                }
+                return 0;
+            }
+        }
+    }
+}

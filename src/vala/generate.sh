@@ -39,6 +39,8 @@ build_file "gmpc-metadata-browser2.vala"
 
 build_file "gmpc-url-fetching-gui.vala"
 build_file "gmpc-database-update-tracker.vala"
+build_file "gmpc-nowplaying2.vala" "--pkg gmpc-metadata-browser2"
+
 
 #"gmpc-song-links.vala gmpc-favorites.vala gmpc-rating.vala"
 

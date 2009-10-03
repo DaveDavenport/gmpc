@@ -10,12 +10,13 @@ namespace Gmpc {
 		}
 		[CCode (cheader_filename = "gmpc-metadata-browser2.h")]
 		public class SimilarArtist : Gtk.Table {
-			public SimilarArtist (Gmpc.MetadataBrowser browser, MPD.Server server, MPD.Song song);
+			public SimilarArtist (MPD.Server server, MPD.Song song);
 			public Gtk.Widget new_artist_button (string artist, bool in_db);
 		}
 		[CCode (cheader_filename = "gmpc-metadata-browser2.h")]
-		public class SimilarSongs : Gtk.Expander {
+		public class SimilarSongs : Gtk.Alignment {
 			public SimilarSongs (MPD.Song song);
+			public void update ();
 		}
 	}
 	[CCode (cheader_filename = "gmpc-metadata-browser2.h")]
@@ -30,13 +31,5 @@ namespace Gmpc {
 		public void set_album (string artist, string album);
 		public void set_artist (string artist);
 		public void set_song (MPD.Song song);
-	}
-	[CCode (cheader_filename = "gmpc-metadata-browser2.h")]
-	public class NowPlaying : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface {
-		public const int[] version;
-		public NowPlaying ();
-		public override unowned string get_name ();
-		public override unowned int[] get_version ();
-		public override void save_yourself ();
 	}
 }

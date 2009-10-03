@@ -140,6 +140,8 @@ namespace Gmpc {
             [CCode (cname="gmpc_metaimage_set_hide_on_na")]
             public void set_hide_on_na(bool hide);
 
+            [CCode (cname="gmpc_metaimage_set_scale_up")]
+            public void set_scale_up(bool scale);
 
         }
         [CCode ( cname="GmpcStatsLabel", cheader_filename="gmpc-stats-label.h")]
@@ -257,6 +259,10 @@ namespace Gmpc {
         public void colorshift_pixbuf(Gdk.Pixbuf dest, Gdk.Pixbuf src, int shift);
         [CCode (cname="misc_header_expose_event",cheader_filename="misc.h")]
         public bool misc_header_expose_event(Gtk.Widget widget, Gdk.EventExpose event);
+
+
+        [CCode (cname="format_time_real", cheader_filename="misc.h")]
+        public string format_time(ulong seconds, string pre);
     }
 
     /* Browser */

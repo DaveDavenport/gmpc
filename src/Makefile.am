@@ -22,6 +22,7 @@ vala_SOURCES=\
     vala/gmpc-metadata-prefetcher.vala\
     vala/gmpc-mpddata-treeview-tooltip.vala\
     vala/gmpc-paned-size-group.vala\
+    vala/gmpc-nowplaying2.vala\
     vala/gmpc-plugin.vala\
     vala/gmpc-progress.vala\
     vala/gmpc-rating.vala\
@@ -204,6 +205,7 @@ EXTRA_DIST=\
 		vala/gmpc-easy-command.h\
 		vala/gmpc-test-plugin.h\
         vala/gmpc-metadata-browser2.h\
+        vala/gmpc-nowplaying2.h\
         vala/gmpc-liststore-sort.h\
         vala/gmpc-connection.h\
         vala/gmpc-mpddata-treeview-tooltip.h\
@@ -291,7 +293,8 @@ gmpc_vala_FILES=\
 	vala/gmpc-test-plugin.c\
     vala/gmpc-mpddata-treeview-tooltip.c\
 	vala/gmpc-metadata-browser2.c\
-	vala/gmpc-favorites.c\
+    vala/gmpc-nowplaying2.c\
+    vala/gmpc-favorites.c\
 	vala/gmpc-paned-size-group.c\
     vala/gmpc-liststore-sort.c\
     vala/gmpc-connection.c\
