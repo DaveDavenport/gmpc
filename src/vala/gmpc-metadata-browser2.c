@@ -1736,18 +1736,24 @@ static void gmpc_metadata_browser_album_add_clicked (GmpcMetadataBrowser* self, 
 	if (artist != NULL) {
 		char* albumartist;
 		char* album;
+		gboolean _tmp0_ = FALSE;
 		MpdData* data;
 		albumartist = NULL;
 		album = gmpc_metadata_browser_browser_get_selected_album (self);
 		if (album != NULL) {
+			_tmp0_ = mpd_server_tag_supported (connection, MPD_TAG_ITEM_ALBUM_ARTIST);
+		} else {
+			_tmp0_ = FALSE;
+		}
+		if (_tmp0_) {
 			MpdData* ydata;
 			mpd_database_search_field_start (connection, MPD_TAG_ITEM_ALBUM_ARTIST);
 			mpd_database_search_add_constraint (connection, MPD_TAG_ITEM_ALBUM, album);
 			ydata = mpd_database_search_commit (connection);
 			if (ydata != NULL) {
 				if (string_get_length (ydata->tag) > 0) {
-					char* _tmp0_;
-					albumartist = (_tmp0_ = g_strdup (ydata->tag), _g_free0 (albumartist), _tmp0_);
+					char* _tmp1_;
+					albumartist = (_tmp1_ = g_strdup (ydata->tag), _g_free0 (albumartist), _tmp1_);
 				}
 			}
 			_mpd_data_free0 (ydata);
@@ -1765,15 +1771,15 @@ static void gmpc_metadata_browser_album_add_clicked (GmpcMetadataBrowser* self, 
 		data = misc_sort_mpddata_by_album_disc_track (data);
 		if (data != NULL) {
 			{
-				gboolean _tmp1_;
-				_tmp1_ = TRUE;
+				gboolean _tmp2_;
+				_tmp2_ = TRUE;
 				while (TRUE) {
-					if (!_tmp1_) {
+					if (!_tmp2_) {
 						if (!(data != NULL)) {
 							break;
 						}
 					}
-					_tmp1_ = FALSE;
+					_tmp2_ = FALSE;
 					mpd_playlist_queue_add (connection, data->song->file);
 					data = mpd_data_get_next (data);
 				}
@@ -2420,19 +2426,25 @@ static void gmpc_metadata_browser_browser_album_changed (GmpcMetadataBrowser* se
 	if (artist != NULL) {
 		char* album;
 		char* albumartist;
+		gboolean _tmp0_ = FALSE;
 		MpdData* data;
-		MpdData* _tmp1_;
+		MpdData* _tmp2_;
 		album = gmpc_metadata_browser_browser_get_selected_album (self);
 		albumartist = NULL;
 		if (album != NULL) {
+			_tmp0_ = mpd_server_tag_supported (connection, MPD_TAG_ITEM_ALBUM_ARTIST);
+		} else {
+			_tmp0_ = FALSE;
+		}
+		if (_tmp0_) {
 			MpdData* ydata;
 			mpd_database_search_field_start (connection, MPD_TAG_ITEM_ALBUM_ARTIST);
 			mpd_database_search_add_constraint (connection, MPD_TAG_ITEM_ALBUM, album);
 			ydata = mpd_database_search_commit (connection);
 			if (ydata != NULL) {
 				if (string_get_length (ydata->tag) > 0) {
-					char* _tmp0_;
-					albumartist = (_tmp0_ = g_strdup (ydata->tag), _g_free0 (albumartist), _tmp0_);
+					char* _tmp1_;
+					albumartist = (_tmp1_ = g_strdup (ydata->tag), _g_free0 (albumartist), _tmp1_);
 				}
 			}
 			_mpd_data_free0 (ydata);
@@ -2448,7 +2460,7 @@ static void gmpc_metadata_browser_browser_album_changed (GmpcMetadataBrowser* se
 		}
 		data = mpd_database_search_commit (connection);
 		data = misc_sort_mpddata_by_album_disc_track (data);
-		gmpc_mpddata_model_set_mpd_data (self->priv->model_songs, (_tmp1_ = data, data = NULL, _tmp1_));
+		gmpc_mpddata_model_set_mpd_data (self->priv->model_songs, (_tmp2_ = data, data = NULL, _tmp2_));
 		_g_free0 (album);
 		_g_free0 (albumartist);
 		_mpd_data_free0 (data);
@@ -2526,17 +2538,23 @@ static void gmpc_metadata_browser_add_selected_song (GmpcMetadataBrowser* self, 
 	}
 	if (artist != NULL) {
 		char* albumartist;
+		gboolean _tmp0_ = FALSE;
 		MpdData* data;
 		albumartist = NULL;
 		if (album != NULL) {
+			_tmp0_ = mpd_server_tag_supported (connection, MPD_TAG_ITEM_ALBUM_ARTIST);
+		} else {
+			_tmp0_ = FALSE;
+		}
+		if (_tmp0_) {
 			MpdData* ydata;
 			mpd_database_search_field_start (connection, MPD_TAG_ITEM_ALBUM_ARTIST);
 			mpd_database_search_add_constraint (connection, MPD_TAG_ITEM_ALBUM, album);
 			ydata = mpd_database_search_commit (connection);
 			if (ydata != NULL) {
 				if (string_get_length (ydata->tag) > 0) {
-					char* _tmp0_;
-					albumartist = (_tmp0_ = g_strdup (ydata->tag), _g_free0 (albumartist), _tmp0_);
+					char* _tmp1_;
+					albumartist = (_tmp1_ = g_strdup (ydata->tag), _g_free0 (albumartist), _tmp1_);
 				}
 			}
 			_mpd_data_free0 (ydata);

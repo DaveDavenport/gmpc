@@ -13,6 +13,8 @@ namespace MPD {
         public int get_database_update_time();
         [CCode (cname="mpd_status_db_is_updating")]
         public bool is_updating_database();
+        [CCode (cname="mpd_server_tag_supported")]
+        public bool tag_supported(MPD.Tag.Type tag);
     }
 
 

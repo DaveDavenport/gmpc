@@ -807,7 +807,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         {
             string albumartist = null;
             string album = browser_get_selected_album();
-            if(album != null)
+            if(album != null && Gmpc.server.tag_supported(MPD.Tag.Type.ALBUM_ARTIST))
             {
                 MPD.Database.search_field_start(server, MPD.Tag.Type.ALBUM_ARTIST);
                 MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM, album);
@@ -1243,7 +1243,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             string album = browser_get_selected_album();
             string albumartist = null;
 
-            if(album != null)
+            if(album != null && Gmpc.server.tag_supported(MPD.Tag.Type.ALBUM_ARTIST))
             {
                 MPD.Database.search_field_start(server, MPD.Tag.Type.ALBUM_ARTIST);
                 MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM, album);
@@ -1316,7 +1316,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         if(artist != null ) {
             /* Hunt albumartist */
             string albumartist = null;
-            if(album != null)
+            if(album != null&& Gmpc.server.tag_supported(MPD.Tag.Type.ALBUM_ARTIST))
             {
                 MPD.Database.search_field_start(server, MPD.Tag.Type.ALBUM_ARTIST);
                 MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM, album);
