@@ -1133,6 +1133,7 @@ typedef struct MLQuery{
 static void metadata_get_list_itterate(GList *list, gpointer data);
 static gboolean metadata_get_list_itterate_idle(gpointer data)
 {
+	g_log("MetaData", G_LOG_LEVEL_DEBUG, "List itterate idle");
 	metadata_get_list_itterate(NULL, data);
 	return FALSE;
 }
@@ -1140,6 +1141,7 @@ static gboolean metadata_get_list_itterate_idle(gpointer data)
 static void metadata_get_list_itterate(GList *list, gpointer data)
 {
 	MLQuery *q = (MLQuery *)data;
+	g_log("MetaData", G_LOG_LEVEL_DEBUG, "List itterate");
 	q->calls--;
 	if(q->cancel){
 		if(list){
@@ -1166,6 +1168,7 @@ static void metadata_get_list_itterate(GList *list, gpointer data)
 		q->index++;
 		if(gmpc_plugin_get_enabled(plug)){
 			q->calls++;
+			g_log("MetaData", G_LOG_LEVEL_DEBUG, "Query: %s", gmpc_plugin_get_name(plug));
 			gmpc_plugin_metadata_query_metadata_list(plug, q->song, q->type&META_QUERY_DATA_TYPES,metadata_get_list_itterate, (gpointer)q); 
 		}
 		else g_idle_add(metadata_get_list_itterate_idle, q);
@@ -1199,18 +1202,24 @@ gpointer metadata_get_list(mpd_Song  *song, MetaDataType type, void (*callback)(
 	{
 		MetaData *met = NULL;
 		int retv = meta_data_get_from_cache(q->song, q->type,&met); 
+		g_log("MetaData", G_LOG_LEVEL_DEBUG, "Queried cache: %i",retv); 
 		if(retv == META_DATA_AVAILABLE)
 		{
 			GList *list = g_list_append(NULL, met);
+
+			g_log("MetaData", G_LOG_LEVEL_DEBUG, "Callback");
 			q->callback(q, met->plugin_name,list, q->userdata);
-			g_list_foreach(list,(GFunc) meta_data_free, NULL);
+			g_log("MetaData", G_LOG_LEVEL_DEBUG, "Cleanup");
+			g_list_foreach(g_list_first(list),(GFunc) meta_data_free, NULL);
 			g_list_free(list);
+			g_log("MetaData", G_LOG_LEVEL_DEBUG, "Cleanup done");
 			met = NULL;
 		}
 		if(met)
 			meta_data_free(met);
 	}
-
+	
+	g_log("MetaData", G_LOG_LEVEL_DEBUG, "Start first itteration idle");
 	g_idle_add(metadata_get_list_itterate_idle, q);
 	return q;
 }

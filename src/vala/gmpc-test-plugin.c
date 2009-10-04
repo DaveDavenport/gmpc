@@ -724,6 +724,7 @@ void gmpc_meta_data_edit_window_refresh_query (GmpcMetaDataEditWindow* self, Gtk
 	gboolean _tmp3_ = FALSE;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (button != NULL);
+	g_log ("MetadataSelector", G_LOG_LEVEL_DEBUG, "gmpc-test-plugin.vala:335: Query metadata");
 	gtk_list_store_clear (self->priv->model);
 	ss = _mpd_songDup0 (self->priv->song);
 	ss->artist = (_tmp0_ = g_strdup (gtk_entry_get_text (self->priv->artist_entry)), _g_free0 (ss->artist), _tmp0_);
@@ -735,10 +736,12 @@ void gmpc_meta_data_edit_window_refresh_query (GmpcMetaDataEditWindow* self, Gtk
 		_tmp3_ = FALSE;
 	}
 	if (_tmp3_) {
-		self->priv->handle = metadata_get_list (ss, self->priv->query_type, _gmpc_meta_data_edit_window_callback_gmpc_meta_data_callback, self);
+		gtk_widget_show ((GtkWidget*) self->priv->pbox);
 		g_object_set ((GtkWidget*) self->priv->refresh, "sensitive", FALSE, NULL);
 		g_object_set ((GtkWidget*) self->priv->combo, "sensitive", FALSE, NULL);
-		gtk_widget_show ((GtkWidget*) self->priv->pbox);
+		g_log ("MetadataSelector", G_LOG_LEVEL_DEBUG, "gmpc-test-plugin.vala:346: Start metdata get_list query");
+		self->priv->handle = metadata_get_list (ss, self->priv->query_type, _gmpc_meta_data_edit_window_callback_gmpc_meta_data_callback, self);
+		g_log ("MetadataSelector", G_LOG_LEVEL_DEBUG, "gmpc-test-plugin.vala:348: Wait");
 	}
 	_mpd_freeSong0 (ss);
 }

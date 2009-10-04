@@ -16,6 +16,7 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
+
 using Config;
 using Gtk;
 using Gmpc;
@@ -331,6 +332,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
 
     public void refresh_query(Gtk.Button button) 
     {
+        GLib.log("MetadataSelector", GLib.LogLevelFlags.LEVEL_DEBUG, "Query metadata");
         this.model.clear();
         MPD.Song ss = this.song;
         ss.artist = this.artist_entry.get_text();
@@ -338,10 +340,12 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
         ss.title = this.title_entry.get_text();
 
         if(this.handle == null && this.handle2 == null) {
-            this.handle = Gmpc.MetaData.get_list(ss, this.query_type, callback);
+            this.pbox.show();
             this.refresh.sensitive = false;
             this.combo.sensitive = false;
-            this.pbox.show();
+            GLib.log("MetadataSelector", GLib.LogLevelFlags.LEVEL_DEBUG,"Start metdata get_list query");
+            this.handle = Gmpc.MetaData.get_list(ss, this.query_type, callback);
+            GLib.log("MetadataSelector", GLib.LogLevelFlags.LEVEL_DEBUG,"Wait");
         }
         
     }
