@@ -34,6 +34,11 @@ private const string some_unique_name_mb2 = Config.VERSION;
 namespace Gmpc {
     namespace Plugin {
         public class Mockup : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface {
+            private string title_color = config.get_string_with_default("Now Playing", "title-color", "#4d90dd");
+            private string item_color = config.get_string_with_default("Now Playing", "item-color", "#304ab8");
+            private Gdk.Color background;
+            private Gdk.Color foreground;
+
             private Gtk.Label bitrate_label = null;
             private Gtk.TreeRowReference np_ref = null;
 
@@ -48,6 +53,12 @@ namespace Gmpc {
                         if(connect == 0 && this.paned != null)
                         this.update_not_playing();
                         });
+
+                var background = config.get_string_with_default("Now Playing", "background-color", "#000");
+                var foreground = config.get_string_with_default("Now Playing", "foreground-color", "#FFF");
+                Gdk.Color.parse(background,out this.background);
+                Gdk.Color.parse(foreground,out this.foreground);
+
             }
             /* Version of the plugin*/
             public const int[] version =  {0,0,0};
@@ -124,10 +135,10 @@ namespace Gmpc {
                         {
                             debug("bitrate changed");
                             var bitrate = MPD.Status.get_bitrate(Gmpc.server); 
-                            bitrate_label.set_markup(GLib.Markup.printf_escaped("<span color='#304ab8' weight='bold'>%s:</span> %i %s, %i %s, %i %s",("Format"), 
-                                        MPD.Status.get_channels(Gmpc.server), "Channel",
-                                        MPD.Status.get_samplerate(Gmpc.server), "Khz", 
-                                        bitrate, "kbps"
+                            bitrate_label.set_markup(GLib.Markup.printf_escaped("<span color='%s' weight='bold'>%s:</span> %i %s, %i %s, %i %s",this.item_color, _("Format"), 
+                                        MPD.Status.get_channels(Gmpc.server), _("Channel"),
+                                        MPD.Status.get_samplerate(Gmpc.server), _("Khz"), 
+                                        bitrate, _("kbps")
                                         ));
                         }
                     }
@@ -188,12 +199,12 @@ namespace Gmpc {
                 if(bg is Gtk.Separator || bg is Gtk.Notebook || bg is Gtk.CheckButton){
                     /* Do nothing */
                 }else{
-                    bg.modify_bg(Gtk.StateType.NORMAL,this.paned.style.black);
-                    bg.modify_base(Gtk.StateType.NORMAL,this.paned.style.black);
-                    bg.modify_text(Gtk.StateType.NORMAL,this.paned.style.white);
-                    bg.modify_fg(Gtk.StateType.NORMAL,this.paned.style.white);
-                    bg.modify_text(Gtk.StateType.ACTIVE,this.paned.style.white);
-                    bg.modify_fg(Gtk.StateType.ACTIVE,this.paned.style.white);
+                    bg.modify_bg(Gtk.StateType.NORMAL,this.background);
+                    bg.modify_base(Gtk.StateType.NORMAL,this.background);
+                    bg.modify_text(Gtk.StateType.NORMAL,this.foreground);
+                    bg.modify_fg(Gtk.StateType.NORMAL,this.foreground);
+                    bg.modify_text(Gtk.StateType.ACTIVE,this.foreground);
+                    bg.modify_fg(Gtk.StateType.ACTIVE,this.foreground);
 
                 }
                 /* Recurse into children, if the widget can hold children (so is a container */
@@ -291,7 +302,7 @@ namespace Gmpc {
                     ali.add(fav_button);
                     box.pack_start(ali, false, false, 0); 
                     var label = new Gtk.Label(song.title);
-                    label.set_markup(GLib.Markup.printf_escaped("<span color='#4d90dd' size='%i' weight='bold'>%s</span>", Pango.SCALE*20 ,song.title));
+                    label.set_markup(GLib.Markup.printf_escaped("<span color='%s' size='%i' weight='bold'>%s</span>", this.title_color,Pango.SCALE*20 ,song.title));
                     label.set_ellipsize(Pango.EllipsizeMode.END);
                     label.set_alignment(0.0f, 0.5f);
                     box.pack_start(label, true, true, 0); 
@@ -307,7 +318,7 @@ namespace Gmpc {
                     }
                 }else if (song.name!= null) {
                     var label = new Gtk.Label(song.name);
-                    label.set_markup(GLib.Markup.printf_escaped("<span color='#4d90dd' size='%i' weight='bold'>%s</span>",Pango.SCALE*20, song.name));
+                    label.set_markup(GLib.Markup.printf_escaped("<span color='%s' size='%i' weight='bold'>%s</span>",this.title_color, Pango.SCALE*20, song.name));
                     label.set_ellipsize(Pango.EllipsizeMode.END);
                     label.set_alignment(0.0f, 0.5f);
                     info_vbox.pack_start(label, false, false, 0); 
@@ -342,7 +353,7 @@ namespace Gmpc {
                     var label = new Gtk.Label(song.title);
                     var image = new Gtk.Image.from_icon_name("media-genre", Gtk.IconSize.MENU);
                     box.pack_start(image, false, false, 0);
-                    label.set_markup(GLib.Markup.printf_escaped("<span color='#304ab8' weight='bold'>%s:</span> %s",("Genre"), song.genre));
+                    label.set_markup(GLib.Markup.printf_escaped("<span color='%s' weight='bold'>%s:</span> %s",this.item_color,_("Genre"), song.genre));
                     label.set_ellipsize(Pango.EllipsizeMode.END);
                     label.set_alignment(0.0f, 0.5f);
                     box.pack_start(label, true, true, 0);
@@ -362,10 +373,10 @@ namespace Gmpc {
                     box.pack_start(bitrate_label, true, true, 0);
 
                     var bitrate = MPD.Status.get_bitrate(Gmpc.server); 
-                    bitrate_label.set_markup(GLib.Markup.printf_escaped("<span color='#304ab8' weight='bold'>%s:</span> %i %s, %i %s, %i %s",("Format"), 
-                                MPD.Status.get_channels(Gmpc.server), "Channel",
-                                MPD.Status.get_samplerate(Gmpc.server), "Khz", 
-                                bitrate, "kbps"
+                    bitrate_label.set_markup(GLib.Markup.printf_escaped("<span color='%s' weight='bold'>%s:</span> %i %s, %i %s, %i %s",this.item_color,_("Format"), 
+                                MPD.Status.get_channels(Gmpc.server), _("Channel"),
+                                MPD.Status.get_samplerate(Gmpc.server), _("Khz"), 
+                                bitrate, _("kbps")
                                 ));
 
 
@@ -378,7 +389,7 @@ namespace Gmpc {
                     box.pack_start(image, false, false, 0);
                     var label = new Gtk.Label("");
                     label.set_ellipsize(Pango.EllipsizeMode.END);
-                    label.set_markup(GLib.Markup.printf_escaped("<span color='#304ab8' weight='bold'>%s:</span> %s",("Length"), 
+                    label.set_markup(GLib.Markup.printf_escaped("<span color='%s' weight='bold'>%s:</span> %s",this.item_color,_("Length"), 
                                 Gmpc.Misc.format_time((ulong) song.time, "")));
                     label.set_alignment(0.0f, 0.5f);
                     box.pack_start(label, true, true, 0);
@@ -391,7 +402,7 @@ namespace Gmpc {
                     box.pack_start(image, false, false, 0);
                     var label = new Gtk.Label("");
                     label.set_ellipsize(Pango.EllipsizeMode.END);
-                    label.set_markup(GLib.Markup.printf_escaped("<span color='#304ab8' weight='bold'>%s:</span> %s %s",("Track number"), 
+                    label.set_markup(GLib.Markup.printf_escaped("<span color='%s' weight='bold'>%s:</span> %s %s",this.item_color, _("Track number"), 
                                 song.track,
                                 (song.disc != null)? "[%s]".printf(song.disc):""
                                 ));
@@ -447,8 +458,8 @@ namespace Gmpc {
                     text_view.set_left_margin(8);
                     var text_view_queried = false;
 
-                    notebook.append_page(text_view, new Gtk.Label("Guitar Tabs"));
-                    var button = new Gtk.RadioButton.with_label(group,("Guitar Tabs"));
+                    notebook.append_page(text_view, new Gtk.Label(_("Guitar Tabs")));
+                    var button = new Gtk.RadioButton.with_label(group,_("Guitar Tabs"));
                     group = button.get_group();
                     hboxje.pack_start(button, false, false, 0);
                     var j = i;
@@ -476,9 +487,9 @@ namespace Gmpc {
                     var similar_songs_queried = false;
                     var similar_songs_box = new Gtk.Alignment(0f,0f,0f,0f);
 
-                    notebook.append_page(similar_songs_box, new Gtk.Label("Similar Songs"));
+                    notebook.append_page(similar_songs_box, new Gtk.Label(_("Similar Songs")));
 
-                    var button = new Gtk.RadioButton.with_label(group,("Similar Songs"));
+                    var button = new Gtk.RadioButton.with_label(group,_("Similar Songs"));
                     group = button.get_group();
                     hboxje.pack_start(button, false, false, 0);
 
@@ -511,9 +522,9 @@ namespace Gmpc {
                 {
                     var similar_artist = new Gmpc.Widget.SimilarArtist(Gmpc.server,song);
 
-                    notebook.append_page(similar_artist, new Gtk.Label("Similar Artist"));
+                    notebook.append_page(similar_artist, new Gtk.Label(_("Similar Artist")));
 
-                    var button = new Gtk.RadioButton.with_label(group,("Similar Artist"));
+                    var button = new Gtk.RadioButton.with_label(group,_("Similar Artist"));
                     group = button.get_group();
                     hboxje.pack_start(button, false, false, 0);
 
@@ -529,8 +540,8 @@ namespace Gmpc {
                 {
 
                     var song_links = new Gmpc.Song.Links(Gmpc.Song.Links.Type.SONG,song);
-                    notebook.append_page(song_links, new Gtk.Label("Web Links"));
-                    var button = new Gtk.RadioButton.with_label(group,("Web Links"));
+                    notebook.append_page(song_links, new Gtk.Label(_("Web Links")));
+                    var button = new Gtk.RadioButton.with_label(group,_("Web Links"));
                     hboxje.pack_start(button, false, false, 0);
                     var j = i;
                     button.clicked.connect((source) => {
@@ -575,7 +586,7 @@ namespace Gmpc {
 
                     var label = new Gtk.Label(song.artist);
                     label.set_size_request(240, -1);
-                    label.set_markup(GLib.Markup.printf_escaped("<span size='x-large' weight='bold' color='#304ab8'>%s</span><span size='x-large' weight='bold'> %s</span>",("Other albums by"), song.artist));
+                    label.set_markup(GLib.Markup.printf_escaped("<span size='x-large' weight='bold' color='%s'>%s</span><span size='x-large' weight='bold'> %s</span>",this.item_color,_("Other albums by"), song.artist));
                     label.set_line_wrap_mode(Pango.WrapMode.WORD_CHAR);
                     label.set_line_wrap(true);
                     label.set_alignment(0.0f, 0.5f);
@@ -606,7 +617,7 @@ namespace Gmpc {
 
                             var but_label = new Gtk.Label(iter.tag);
                             but_label.set_alignment(0.0f, 0.5f);
-                            but_label.set_markup(GLib.Markup.printf_escaped("<b>%s</b>", (iter.tag.length == 0)? "No Album":iter.tag));
+                            but_label.set_markup(GLib.Markup.printf_escaped("<b>%s</b>", (iter.tag.length == 0)? _("No Album"):iter.tag));
                             but_label.set_ellipsize(Pango.EllipsizeMode.END);
                             but_hbox.pack_start(but_label, true, true, 0);
 
@@ -661,9 +672,9 @@ namespace Gmpc {
                 }
 
                 var hbox = new Gtk.HBox(false, 6);
-                var label = new Gtk.Label(("Gnome Music Player Client"));
+                var label = new Gtk.Label(_("Gnome Music Player Client"));
                 label.set_selectable(true);
-                label.set_markup("<span size='%i' weight='bold'>%s</span>".printf(28*Pango.SCALE,("Gnome Music Player Client")));
+                label.set_markup("<span size='%i' weight='bold'>%s</span>".printf(28*Pango.SCALE,_("Gnome Music Player Client")));
                 hbox.pack_start(image, false, false, 0);
                 hbox.pack_start(label, false, false, 0);
 

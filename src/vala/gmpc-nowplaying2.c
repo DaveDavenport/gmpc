@@ -28,9 +28,11 @@
 #include <gmpc-plugin.h>
 #include <stdlib.h>
 #include <string.h>
+#include <gdk/gdk.h>
 #include <plugin.h>
 #include <config1.h>
 #include <libmpd/libmpd.h>
+#include <glib/gi18n-lib.h>
 #include <gmpc-connection.h>
 #include <libmpd/libmpdclient.h>
 #include <misc.h>
@@ -43,8 +45,6 @@
 #include <gmpc-metadata-browser2.h>
 #include <gmpc-song-links.h>
 #include <gdk-pixbuf/gdk-pixdata.h>
-#include <glib/gi18n-lib.h>
-#include <gdk/gdk.h>
 #include <main.h>
 
 
@@ -58,9 +58,9 @@
 typedef struct _GmpcPluginMockup GmpcPluginMockup;
 typedef struct _GmpcPluginMockupClass GmpcPluginMockupClass;
 typedef struct _GmpcPluginMockupPrivate GmpcPluginMockupPrivate;
+#define _g_free0(var) (var = (g_free (var), NULL))
 #define _g_object_unref0(var) ((var == NULL) ? NULL : (var = (g_object_unref (var), NULL)))
 #define _gtk_tree_row_reference_free0(var) ((var == NULL) ? NULL : (var = (gtk_tree_row_reference_free (var), NULL)))
-#define _g_free0(var) (var = (g_free (var), NULL))
 #define _gtk_tree_path_free0(var) ((var == NULL) ? NULL : (var = (gtk_tree_path_free (var), NULL)))
 #define _g_list_free0(var) ((var == NULL) ? NULL : (var = (g_list_free (var), NULL)))
 typedef struct _Block2Data Block2Data;
@@ -85,6 +85,10 @@ struct _GmpcPluginMockupClass {
 };
 
 struct _GmpcPluginMockupPrivate {
+	char* title_color;
+	char* item_color;
+	GdkColor background;
+	GdkColor foreground;
 	GtkLabel* bitrate_label;
 	GtkTreeRowReference* np_ref;
 	GtkScrolledWindow* paned;
@@ -315,9 +319,9 @@ static void gmpc_plugin_mockup_status_changed (GmpcPluginMockup* self, GmpcConne
 		if (self->priv->bitrate_label != NULL) {
 			gint bitrate;
 			char* _tmp0_;
-			g_debug ("gmpc-nowplaying2.vala:125: bitrate changed");
+			g_debug ("gmpc-nowplaying2.vala:136: bitrate changed");
 			bitrate = mpd_status_get_bitrate (connection);
-			gtk_label_set_markup (self->priv->bitrate_label, _tmp0_ = g_markup_printf_escaped ("<span color='#304ab8' weight='bold'>%s:</span> %i %s, %i %s, %i %s", "Format", mpd_status_get_channels (connection), "Channel", mpd_status_get_samplerate (connection), "Khz", bitrate, "kbps"));
+			gtk_label_set_markup (self->priv->bitrate_label, _tmp0_ = g_markup_printf_escaped ("<span color='%s' weight='bold'>%s:</span> %i %s, %i %s, %i %s", self->priv->item_color, _ ("Format"), mpd_status_get_channels (connection), _ ("Channel"), mpd_status_get_samplerate (connection), _ ("Khz"), bitrate, _ ("kbps")));
 			_g_free0 (_tmp0_);
 		}
 	}
@@ -371,7 +375,7 @@ static void gmpc_plugin_mockup_real_browser_unselected (GmpcPluginBrowserIface* 
 static void gmpc_plugin_mockup_browser_bg_style_changed (GmpcPluginMockup* self, GtkContainer* bg, GtkStyle* style) {
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (bg != NULL);
-	g_debug ("gmpc-nowplaying2.vala:179: Change style signal");
+	g_debug ("gmpc-nowplaying2.vala:190: Change style signal");
 	gmpc_plugin_mockup_change_color_style (self, (GtkWidget*) self->priv->container);
 }
 
@@ -381,7 +385,7 @@ static void gmpc_plugin_mockup_change_color_style (GmpcPluginMockup* self, GtkWi
 	gboolean _tmp1_ = FALSE;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (bg != NULL);
-	g_debug ("gmpc-nowplaying2.vala:187: change style");
+	g_debug ("gmpc-nowplaying2.vala:198: change style");
 	if (GTK_IS_SEPARATOR (bg)) {
 		_tmp1_ = TRUE;
 	} else {
@@ -394,12 +398,12 @@ static void gmpc_plugin_mockup_change_color_style (GmpcPluginMockup* self, GtkWi
 	}
 	if (_tmp0_) {
 	} else {
-		gtk_widget_modify_bg (bg, GTK_STATE_NORMAL, &gtk_widget_get_style ((GtkWidget*) self->priv->paned)->black);
-		gtk_widget_modify_base (bg, GTK_STATE_NORMAL, &gtk_widget_get_style ((GtkWidget*) self->priv->paned)->black);
-		gtk_widget_modify_text (bg, GTK_STATE_NORMAL, &gtk_widget_get_style ((GtkWidget*) self->priv->paned)->white);
-		gtk_widget_modify_fg (bg, GTK_STATE_NORMAL, &gtk_widget_get_style ((GtkWidget*) self->priv->paned)->white);
-		gtk_widget_modify_text (bg, GTK_STATE_ACTIVE, &gtk_widget_get_style ((GtkWidget*) self->priv->paned)->white);
-		gtk_widget_modify_fg (bg, GTK_STATE_ACTIVE, &gtk_widget_get_style ((GtkWidget*) self->priv->paned)->white);
+		gtk_widget_modify_bg (bg, GTK_STATE_NORMAL, &self->priv->background);
+		gtk_widget_modify_base (bg, GTK_STATE_NORMAL, &self->priv->background);
+		gtk_widget_modify_text (bg, GTK_STATE_NORMAL, &self->priv->foreground);
+		gtk_widget_modify_fg (bg, GTK_STATE_NORMAL, &self->priv->foreground);
+		gtk_widget_modify_text (bg, GTK_STATE_ACTIVE, &self->priv->foreground);
+		gtk_widget_modify_fg (bg, GTK_STATE_ACTIVE, &self->priv->foreground);
 	}
 	if (GTK_IS_CONTAINER (bg)) {
 		{
@@ -477,7 +481,7 @@ static void _lambda0_ (GtkButton* source, Block2Data* _data2_) {
 	_data1_ = _data2_->_data1_;
 	self = _data1_->self;
 	g_return_if_fail (source != NULL);
-	g_debug ("gmpc-nowplaying2.vala:434: notebook page %i clicked", _data2_->j);
+	g_debug ("gmpc-nowplaying2.vala:445: notebook page %i clicked", _data2_->j);
 	gtk_notebook_set_current_page (_data1_->notebook, _data2_->j);
 }
 
@@ -507,7 +511,7 @@ static void _lambda1_ (GtkButton* source, Block3Data* _data3_) {
 	_data1_ = _data3_->_data1_;
 	self = _data1_->self;
 	g_return_if_fail (source != NULL);
-	g_debug ("gmpc-nowplaying2.vala:457: notebook page %i clicked", _data3_->j);
+	g_debug ("gmpc-nowplaying2.vala:468: notebook page %i clicked", _data3_->j);
 	gtk_notebook_set_current_page (_data1_->notebook, _data3_->j);
 	if (!_data3_->text_view_queried) {
 		gmpc_meta_text_view_query_text_from_song (_data3_->text_view, _data1_->song);
@@ -543,7 +547,7 @@ static void _lambda2_ (GtkButton* source, Block4Data* _data4_) {
 	_data1_ = _data4_->_data1_;
 	self = _data1_->self;
 	g_return_if_fail (source != NULL);
-	g_debug ("gmpc-nowplaying2.vala:488: notebook page %i clicked", _data4_->j);
+	g_debug ("gmpc-nowplaying2.vala:499: notebook page %i clicked", _data4_->j);
 	gtk_notebook_set_current_page (_data1_->notebook, _data4_->j);
 	if (!_data4_->similar_songs_queried) {
 		GmpcWidgetSimilarSongs* similar_songs;
@@ -584,7 +588,7 @@ static void _lambda3_ (GtkButton* source, Block5Data* _data5_) {
 	_data1_ = _data5_->_data1_;
 	self = _data1_->self;
 	g_return_if_fail (source != NULL);
-	g_debug ("gmpc-nowplaying2.vala:522: notebook page %i clicked", _data5_->j);
+	g_debug ("gmpc-nowplaying2.vala:533: notebook page %i clicked", _data5_->j);
 	gtk_notebook_set_current_page (_data1_->notebook, _data5_->j);
 }
 
@@ -614,7 +618,7 @@ static void _lambda4_ (GtkButton* source, Block6Data* _data6_) {
 	_data1_ = _data6_->_data1_;
 	self = _data1_->self;
 	g_return_if_fail (source != NULL);
-	g_debug ("gmpc-nowplaying2.vala:537: notebook page %i clicked", _data6_->j);
+	g_debug ("gmpc-nowplaying2.vala:548: notebook page %i clicked", _data6_->j);
 	gtk_notebook_set_current_page (_data1_->notebook, _data6_->j);
 }
 
@@ -719,7 +723,7 @@ static void gmpc_plugin_mockup_update_playing (GmpcPluginMockup* self) {
 	_data1_->self = g_object_ref (self);
 	_data1_->song = _mpd_songDup0 (mpd_playlist_get_current_song (connection));
 	if (_data1_->song == NULL) {
-		g_debug ("gmpc-nowplaying2.vala:243: GMPC Is playing, cannot get this");
+		g_debug ("gmpc-nowplaying2.vala:254: GMPC Is playing, cannot get this");
 		gmpc_plugin_mockup_update_not_playing (self);
 		block1_data_unref (_data1_);
 		return;
@@ -763,7 +767,7 @@ static void gmpc_plugin_mockup_update_playing (GmpcPluginMockup* self) {
 		gtk_container_add ((GtkContainer*) ali, (GtkWidget*) fav_button);
 		gtk_box_pack_start ((GtkBox*) box, (GtkWidget*) ali, FALSE, FALSE, (guint) 0);
 		label = g_object_ref_sink ((GtkLabel*) gtk_label_new (_data1_->song->title));
-		gtk_label_set_markup (label, _tmp3_ = g_markup_printf_escaped ("<span color='#4d90dd' size='%i' weight='bold'>%s</span>", PANGO_SCALE * 20, _data1_->song->title));
+		gtk_label_set_markup (label, _tmp3_ = g_markup_printf_escaped ("<span color='%s' size='%i' weight='bold'>%s</span>", self->priv->title_color, PANGO_SCALE * 20, _data1_->song->title));
 		_g_free0 (_tmp3_);
 		gtk_label_set_ellipsize (label, PANGO_ELLIPSIZE_END);
 		gtk_misc_set_alignment ((GtkMisc*) label, 0.0f, 0.5f);
@@ -786,7 +790,7 @@ static void gmpc_plugin_mockup_update_playing (GmpcPluginMockup* self) {
 			GtkLabel* label;
 			char* _tmp5_;
 			label = g_object_ref_sink ((GtkLabel*) gtk_label_new (_data1_->song->name));
-			gtk_label_set_markup (label, _tmp5_ = g_markup_printf_escaped ("<span color='#4d90dd' size='%i' weight='bold'>%s</span>", PANGO_SCALE * 20, _data1_->song->name));
+			gtk_label_set_markup (label, _tmp5_ = g_markup_printf_escaped ("<span color='%s' size='%i' weight='bold'>%s</span>", self->priv->title_color, PANGO_SCALE * 20, _data1_->song->name));
 			_g_free0 (_tmp5_);
 			gtk_label_set_ellipsize (label, PANGO_ELLIPSIZE_END);
 			gtk_misc_set_alignment ((GtkMisc*) label, 0.0f, 0.5f);
@@ -841,7 +845,7 @@ static void gmpc_plugin_mockup_update_playing (GmpcPluginMockup* self) {
 		label = g_object_ref_sink ((GtkLabel*) gtk_label_new (_data1_->song->title));
 		image = g_object_ref_sink ((GtkImage*) gtk_image_new_from_icon_name ("media-genre", GTK_ICON_SIZE_MENU));
 		gtk_box_pack_start ((GtkBox*) box, (GtkWidget*) image, FALSE, FALSE, (guint) 0);
-		gtk_label_set_markup (label, _tmp8_ = g_markup_printf_escaped ("<span color='#304ab8' weight='bold'>%s:</span> %s", "Genre", _data1_->song->genre));
+		gtk_label_set_markup (label, _tmp8_ = g_markup_printf_escaped ("<span color='%s' weight='bold'>%s:</span> %s", self->priv->item_color, _ ("Genre"), _data1_->song->genre));
 		_g_free0 (_tmp8_);
 		gtk_label_set_ellipsize (label, PANGO_ELLIPSIZE_END);
 		gtk_misc_set_alignment ((GtkMisc*) label, 0.0f, 0.5f);
@@ -865,7 +869,7 @@ static void gmpc_plugin_mockup_update_playing (GmpcPluginMockup* self) {
 		gtk_misc_set_alignment ((GtkMisc*) self->priv->bitrate_label, 0.0f, 0.5f);
 		gtk_box_pack_start ((GtkBox*) box, (GtkWidget*) self->priv->bitrate_label, TRUE, TRUE, (guint) 0);
 		bitrate = mpd_status_get_bitrate (connection);
-		gtk_label_set_markup (self->priv->bitrate_label, _tmp10_ = g_markup_printf_escaped ("<span color='#304ab8' weight='bold'>%s:</span> %i %s, %i %s, %i %s", "Format", mpd_status_get_channels (connection), "Channel", mpd_status_get_samplerate (connection), "Khz", bitrate, "kbps"));
+		gtk_label_set_markup (self->priv->bitrate_label, _tmp10_ = g_markup_printf_escaped ("<span color='%s' weight='bold'>%s:</span> %i %s, %i %s, %i %s", self->priv->item_color, _ ("Format"), mpd_status_get_channels (connection), _ ("Channel"), mpd_status_get_samplerate (connection), _ ("Khz"), bitrate, _ ("kbps")));
 		_g_free0 (_tmp10_);
 		gtk_box_pack_start ((GtkBox*) info_vbox, (GtkWidget*) box, FALSE, FALSE, (guint) 0);
 		_g_object_unref0 (box);
@@ -882,7 +886,7 @@ static void gmpc_plugin_mockup_update_playing (GmpcPluginMockup* self) {
 		gtk_box_pack_start ((GtkBox*) box, (GtkWidget*) image, FALSE, FALSE, (guint) 0);
 		label = g_object_ref_sink ((GtkLabel*) gtk_label_new (""));
 		gtk_label_set_ellipsize (label, PANGO_ELLIPSIZE_END);
-		gtk_label_set_markup (label, _tmp12_ = g_markup_printf_escaped ("<span color='#304ab8' weight='bold'>%s:</span> %s", "Length", _tmp11_ = format_time_real ((gulong) _data1_->song->time, "")));
+		gtk_label_set_markup (label, _tmp12_ = g_markup_printf_escaped ("<span color='%s' weight='bold'>%s:</span> %s", self->priv->item_color, _ ("Length"), _tmp11_ = format_time_real ((gulong) _data1_->song->time, "")));
 		_g_free0 (_tmp12_);
 		_g_free0 (_tmp11_);
 		gtk_misc_set_alignment ((GtkMisc*) label, 0.0f, 0.5f);
@@ -911,7 +915,7 @@ static void gmpc_plugin_mockup_update_playing (GmpcPluginMockup* self) {
 			char* _tmp15_;
 			_tmp13_ = (_tmp15_ = g_strdup (""), _g_free0 (_tmp13_), _tmp15_);
 		}
-		gtk_label_set_markup (label, _tmp16_ = g_markup_printf_escaped ("<span color='#304ab8' weight='bold'>%s:</span> %s %s", "Track number", _data1_->song->track, _tmp13_));
+		gtk_label_set_markup (label, _tmp16_ = g_markup_printf_escaped ("<span color='%s' weight='bold'>%s:</span> %s %s", self->priv->item_color, _ ("Track number"), _data1_->song->track, _tmp13_));
 		_g_free0 (_tmp16_);
 		gtk_misc_set_alignment ((GtkMisc*) label, 0.0f, 0.5f);
 		gtk_box_pack_start ((GtkBox*) box, (GtkWidget*) label, TRUE, TRUE, (guint) 0);
@@ -967,9 +971,9 @@ static void gmpc_plugin_mockup_update_playing (GmpcPluginMockup* self) {
 		_data3_->text_view->use_monospace = TRUE;
 		gtk_text_view_set_left_margin ((GtkTextView*) _data3_->text_view, 8);
 		_data3_->text_view_queried = FALSE;
-		gtk_notebook_append_page (_data1_->notebook, (GtkWidget*) _data3_->text_view, (GtkWidget*) (_tmp18_ = g_object_ref_sink ((GtkLabel*) gtk_label_new ("Guitar Tabs"))));
+		gtk_notebook_append_page (_data1_->notebook, (GtkWidget*) _data3_->text_view, (GtkWidget*) (_tmp18_ = g_object_ref_sink ((GtkLabel*) gtk_label_new (_ ("Guitar Tabs")))));
 		_g_object_unref0 (_tmp18_);
-		button = g_object_ref_sink ((GtkRadioButton*) gtk_radio_button_new_with_label (group, "Guitar Tabs"));
+		button = g_object_ref_sink ((GtkRadioButton*) gtk_radio_button_new_with_label (group, _ ("Guitar Tabs")));
 		group = gtk_radio_button_get_group (button);
 		gtk_box_pack_start ((GtkBox*) hboxje, (GtkWidget*) button, FALSE, FALSE, (guint) 0);
 		_data3_->j = i;
@@ -992,9 +996,9 @@ static void gmpc_plugin_mockup_update_playing (GmpcPluginMockup* self) {
 		_data4_->_data1_ = block1_data_ref (_data1_);
 		_data4_->similar_songs_queried = FALSE;
 		_data4_->similar_songs_box = g_object_ref_sink ((GtkAlignment*) gtk_alignment_new (0.f, 0.f, 0.f, 0.f));
-		gtk_notebook_append_page (_data1_->notebook, (GtkWidget*) _data4_->similar_songs_box, (GtkWidget*) (_tmp19_ = g_object_ref_sink ((GtkLabel*) gtk_label_new ("Similar Songs"))));
+		gtk_notebook_append_page (_data1_->notebook, (GtkWidget*) _data4_->similar_songs_box, (GtkWidget*) (_tmp19_ = g_object_ref_sink ((GtkLabel*) gtk_label_new (_ ("Similar Songs")))));
 		_g_object_unref0 (_tmp19_);
-		button = g_object_ref_sink ((GtkRadioButton*) gtk_radio_button_new_with_label (group, "Similar Songs"));
+		button = g_object_ref_sink ((GtkRadioButton*) gtk_radio_button_new_with_label (group, _ ("Similar Songs")));
 		group = gtk_radio_button_get_group (button);
 		gtk_box_pack_start ((GtkBox*) hboxje, (GtkWidget*) button, FALSE, FALSE, (guint) 0);
 		_data4_->j = i;
@@ -1027,9 +1031,9 @@ static void gmpc_plugin_mockup_update_playing (GmpcPluginMockup* self) {
 		_data5_->_ref_count_ = 1;
 		_data5_->_data1_ = block1_data_ref (_data1_);
 		similar_artist = g_object_ref_sink (gmpc_widget_similar_artist_new (connection, _data1_->song));
-		gtk_notebook_append_page (_data1_->notebook, (GtkWidget*) similar_artist, (GtkWidget*) (_tmp21_ = g_object_ref_sink ((GtkLabel*) gtk_label_new ("Similar Artist"))));
+		gtk_notebook_append_page (_data1_->notebook, (GtkWidget*) similar_artist, (GtkWidget*) (_tmp21_ = g_object_ref_sink ((GtkLabel*) gtk_label_new (_ ("Similar Artist")))));
 		_g_object_unref0 (_tmp21_);
-		button = g_object_ref_sink ((GtkRadioButton*) gtk_radio_button_new_with_label (group, "Similar Artist"));
+		button = g_object_ref_sink ((GtkRadioButton*) gtk_radio_button_new_with_label (group, _ ("Similar Artist")));
 		group = gtk_radio_button_get_group (button);
 		gtk_box_pack_start ((GtkBox*) hboxje, (GtkWidget*) button, FALSE, FALSE, (guint) 0);
 		_data5_->j = i;
@@ -1049,9 +1053,9 @@ static void gmpc_plugin_mockup_update_playing (GmpcPluginMockup* self) {
 		_data6_->_ref_count_ = 1;
 		_data6_->_data1_ = block1_data_ref (_data1_);
 		song_links = g_object_ref_sink (gmpc_song_links_new (GMPC_SONG_LINKS_TYPE_SONG, _data1_->song));
-		gtk_notebook_append_page (_data1_->notebook, (GtkWidget*) song_links, (GtkWidget*) (_tmp22_ = g_object_ref_sink ((GtkLabel*) gtk_label_new ("Web Links"))));
+		gtk_notebook_append_page (_data1_->notebook, (GtkWidget*) song_links, (GtkWidget*) (_tmp22_ = g_object_ref_sink ((GtkLabel*) gtk_label_new (_ ("Web Links")))));
 		_g_object_unref0 (_tmp22_);
-		button = g_object_ref_sink ((GtkRadioButton*) gtk_radio_button_new_with_label (group, "Web Links"));
+		button = g_object_ref_sink ((GtkRadioButton*) gtk_radio_button_new_with_label (group, _ ("Web Links")));
 		gtk_box_pack_start ((GtkBox*) hboxje, (GtkWidget*) button, FALSE, FALSE, (guint) 0);
 		_data6_->j = i;
 		g_signal_connect_data ((GtkButton*) button, "clicked", (GCallback) __lambda4__gtk_button_clicked, block6_data_ref (_data6_), (GClosureNotify) block6_data_unref, 0);
@@ -1098,7 +1102,7 @@ static void gmpc_plugin_mockup_update_playing (GmpcPluginMockup* self) {
 		gtk_box_pack_start ((GtkBox*) bottom_hbox, (GtkWidget*) ali, FALSE, FALSE, (guint) 0);
 		label = g_object_ref_sink ((GtkLabel*) gtk_label_new (_data1_->song->artist));
 		gtk_widget_set_size_request ((GtkWidget*) label, 240, -1);
-		gtk_label_set_markup (label, _tmp27_ = g_markup_printf_escaped ("<span size='x-large' weight='bold' color='#304ab8'>%s</span><span size='x-large' weight='bold'> %s</span>", "Other albums by", _data1_->song->artist));
+		gtk_label_set_markup (label, _tmp27_ = g_markup_printf_escaped ("<span size='x-large' weight='bold' color='%s'>%s</span><span size='x-large' weight='bold'> %s</span>", self->priv->item_color, _ ("Other albums by"), _data1_->song->artist));
 		_g_free0 (_tmp27_);
 		gtk_label_set_line_wrap_mode (label, PANGO_WRAP_WORD_CHAR);
 		gtk_label_set_line_wrap (label, TRUE);
@@ -1153,7 +1157,7 @@ static void gmpc_plugin_mockup_update_playing (GmpcPluginMockup* self) {
 					gtk_misc_set_alignment ((GtkMisc*) but_label, 0.0f, 0.5f);
 					_tmp31_ = NULL;
 					if (string_get_length (iter->tag) == 0) {
-						_tmp31_ = "No Album";
+						_tmp31_ = _ ("No Album");
 					} else {
 						_tmp31_ = iter->tag;
 					}
@@ -1239,7 +1243,7 @@ static void gmpc_plugin_mockup_update_not_playing (GmpcPluginMockup* self) {
 			e = _inner_error_;
 			_inner_error_ = NULL;
 			{
-				g_warning ("gmpc-nowplaying2.vala:655: Failed to load the gmpc logo: %s", e->message);
+				g_warning ("gmpc-nowplaying2.vala:666: Failed to load the gmpc logo: %s", e->message);
 				_g_error_free0 (e);
 				_g_object_unref0 (it);
 				_gtk_icon_info_free0 (info);
@@ -1264,9 +1268,9 @@ static void gmpc_plugin_mockup_update_not_playing (GmpcPluginMockup* self) {
 		image = (_tmp2_ = g_object_ref_sink ((GtkImage*) gtk_image_new_from_icon_name ("gmpc", GTK_ICON_SIZE_DIALOG)), _g_object_unref0 (image), _tmp2_);
 	}
 	hbox = g_object_ref_sink ((GtkHBox*) gtk_hbox_new (FALSE, 6));
-	label = g_object_ref_sink ((GtkLabel*) gtk_label_new ("Gnome Music Player Client"));
+	label = g_object_ref_sink ((GtkLabel*) gtk_label_new (_ ("Gnome Music Player Client")));
 	gtk_label_set_selectable (label, TRUE);
-	gtk_label_set_markup (label, _tmp3_ = g_strdup_printf ("<span size='%i' weight='bold'>%s</span>", 28 * PANGO_SCALE, "Gnome Music Player Client"));
+	gtk_label_set_markup (label, _tmp3_ = g_strdup_printf ("<span size='%i' weight='bold'>%s</span>", 28 * PANGO_SCALE, _ ("Gnome Music Player Client")));
 	_g_free0 (_tmp3_);
 	gtk_box_pack_start ((GtkBox*) hbox, (GtkWidget*) image, FALSE, FALSE, (guint) 0);
 	gtk_box_pack_start ((GtkBox*) hbox, (GtkWidget*) label, FALSE, FALSE, (guint) 0);
@@ -1291,13 +1295,13 @@ static void gmpc_plugin_mockup_update (GmpcPluginMockup* self) {
 		case MPD_STATUS_STATE_PLAY:
 		case MPD_STATUS_STATE_PAUSE:
 		{
-			g_debug ("gmpc-nowplaying2.vala:687: Update playing");
+			g_debug ("gmpc-nowplaying2.vala:698: Update playing");
 			gmpc_plugin_mockup_update_playing (self);
 			break;
 		}
 		default:
 		{
-			g_debug ("gmpc-nowplaying2.vala:691: update not playing");
+			g_debug ("gmpc-nowplaying2.vala:702: update not playing");
 			gmpc_plugin_mockup_update_not_playing (self);
 			break;
 		}
@@ -1394,9 +1398,17 @@ static GObject * gmpc_plugin_mockup_constructor (GType type, guint n_construct_p
 	obj = parent_class->constructor (type, n_construct_properties, construct_properties);
 	self = GMPC_PLUGIN_MOCKUP (obj);
 	{
+		char* background;
+		char* foreground;
 		((GmpcPluginBase*) self)->plugin_type = 2 | 8;
 		g_signal_connect_object (gmpcconn, "status-changed", (GCallback) _gmpc_plugin_mockup_status_changed_gmpc_connection_status_changed, self, 0);
 		g_signal_connect_object (gmpcconn, "connection-changed", (GCallback) __lambda6__gmpc_connection_connection_changed, self, 0);
+		background = cfg_get_single_value_as_string_with_default (config, "Now Playing", "background-color", "#000");
+		foreground = cfg_get_single_value_as_string_with_default (config, "Now Playing", "foreground-color", "#FFF");
+		gdk_color_parse (background, &self->priv->background);
+		gdk_color_parse (foreground, &self->priv->foreground);
+		_g_free0 (background);
+		_g_free0 (foreground);
 	}
 	return obj;
 }
@@ -1425,6 +1437,8 @@ static void gmpc_plugin_mockup_gmpc_plugin_browser_iface_interface_init (GmpcPlu
 
 static void gmpc_plugin_mockup_instance_init (GmpcPluginMockup * self) {
 	self->priv = GMPC_PLUGIN_MOCKUP_GET_PRIVATE (self);
+	self->priv->title_color = cfg_get_single_value_as_string_with_default (config, "Now Playing", "title-color", "#4d90dd");
+	self->priv->item_color = cfg_get_single_value_as_string_with_default (config, "Now Playing", "item-color", "#304ab8");
 	self->priv->bitrate_label = NULL;
 	self->priv->np_ref = NULL;
 	self->priv->paned = NULL;
@@ -1437,6 +1451,8 @@ static void gmpc_plugin_mockup_instance_init (GmpcPluginMockup * self) {
 static void gmpc_plugin_mockup_finalize (GObject* obj) {
 	GmpcPluginMockup * self;
 	self = GMPC_PLUGIN_MOCKUP (obj);
+	_g_free0 (self->priv->title_color);
+	_g_free0 (self->priv->item_color);
 	_g_object_unref0 (self->priv->bitrate_label);
 	_gtk_tree_row_reference_free0 (self->priv->np_ref);
 	_g_object_unref0 (self->priv->paned);
