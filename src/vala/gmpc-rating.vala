@@ -87,7 +87,7 @@ public class Gmpc.Rating : Gtk.Frame
         this.event_box.visible_window = false;
         this.rat = new Gtk.Image[5];
         for(i=0;i<5;i++) {
-            this.rat[i] = new Gtk.Image.from_icon_name("emblem-favorite", Gtk.IconSize.MENU);
+            this.rat[i] = new Gtk.Image.from_icon_name("rating", Gtk.IconSize.MENU);
             this.box.pack_start(this.rat[i], false, false, 0);
         }
 

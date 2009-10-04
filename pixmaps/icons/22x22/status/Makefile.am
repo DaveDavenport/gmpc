@@ -18,4 +18,5 @@ dist_icons_DATA = \
         media-album.png\
         media-format.png\
         media-genre.png\
-        media-num-tracks.png
+        media-num-tracks.png\
+        rating.png

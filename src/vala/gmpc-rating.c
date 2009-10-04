@@ -221,7 +221,7 @@ static GObject * gmpc_rating_constructor (GType type, guint n_construct_properti
 				if (!(i < 5)) {
 					break;
 				}
-				self->priv->rat[i] = (_tmp4_ = g_object_ref_sink ((GtkImage*) gtk_image_new_from_icon_name ("emblem-favorite", GTK_ICON_SIZE_MENU)), _g_object_unref0 (self->priv->rat[i]), _tmp4_);
+				self->priv->rat[i] = (_tmp4_ = g_object_ref_sink ((GtkImage*) gtk_image_new_from_icon_name ("rating", GTK_ICON_SIZE_MENU)), _g_object_unref0 (self->priv->rat[i]), _tmp4_);
 				gtk_box_pack_start ((GtkBox*) self->priv->box, (GtkWidget*) self->priv->rat[i], FALSE, FALSE, (guint) 0);
 			}
 		}

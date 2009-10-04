@@ -71,3 +71,4 @@ src/vala/gmpc-test-plugin.c
 src/vala/gmpc-favorites.c
 src/vala/gmpc-metadata-browser2.c
 src/vala/gmpc-database-update-tracker.c
+src/vala/gmpc-nowplaying2.c
