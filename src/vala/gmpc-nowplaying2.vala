@@ -135,9 +135,9 @@ namespace Gmpc {
                         {
                             debug("bitrate changed");
                             var bitrate = MPD.Status.get_bitrate(Gmpc.server); 
-                            bitrate_label.set_markup(GLib.Markup.printf_escaped("<span color='%s' weight='bold'>%s:</span> %i %s, %i %s, %i %s",this.item_color, _("Format"), 
+                            bitrate_label.set_markup(GLib.Markup.printf_escaped("<span color='%s' weight='bold'>%s:</span> %i %s, %.1f %s, %i %s",this.item_color, _("Format"), 
                                         MPD.Status.get_channels(Gmpc.server), _("Channel"),
-                                        MPD.Status.get_samplerate(Gmpc.server), _("Khz"), 
+                                        MPD.Status.get_samplerate(Gmpc.server)/1000.0, _("kHz"), 
                                         bitrate, _("kbps")
                                         ));
                         }
@@ -373,12 +373,11 @@ namespace Gmpc {
                     box.pack_start(bitrate_label, true, true, 0);
 
                     var bitrate = MPD.Status.get_bitrate(Gmpc.server); 
-                    bitrate_label.set_markup(GLib.Markup.printf_escaped("<span color='%s' weight='bold'>%s:</span> %i %s, %i %s, %i %s",this.item_color,_("Format"), 
+                    bitrate_label.set_markup(GLib.Markup.printf_escaped("<span color='%s' weight='bold'>%s:</span> %i %s, %.1f %s, %i %s",this.item_color, _("Format"), 
                                 MPD.Status.get_channels(Gmpc.server), _("Channel"),
-                                MPD.Status.get_samplerate(Gmpc.server), _("Khz"), 
+                                MPD.Status.get_samplerate(Gmpc.server)/1000.0, _("kHz"), 
                                 bitrate, _("kbps")
                                 ));
-
 
                     info_vbox.pack_start(box, false, false, 0); 
                 }

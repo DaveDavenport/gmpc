@@ -321,7 +321,7 @@ static void gmpc_plugin_mockup_status_changed (GmpcPluginMockup* self, GmpcConne
 			char* _tmp0_;
 			g_debug ("gmpc-nowplaying2.vala:136: bitrate changed");
 			bitrate = mpd_status_get_bitrate (connection);
-			gtk_label_set_markup (self->priv->bitrate_label, _tmp0_ = g_markup_printf_escaped ("<span color='%s' weight='bold'>%s:</span> %i %s, %i %s, %i %s", self->priv->item_color, _ ("Format"), mpd_status_get_channels (connection), _ ("Channel"), mpd_status_get_samplerate (connection), _ ("Khz"), bitrate, _ ("kbps")));
+			gtk_label_set_markup (self->priv->bitrate_label, _tmp0_ = g_markup_printf_escaped ("<span color='%s' weight='bold'>%s:</span> %i %s, %.1f %s, %i %s", self->priv->item_color, _ ("Format"), mpd_status_get_channels (connection), _ ("Channel"), mpd_status_get_samplerate (connection) / 1000.0, _ ("kHz"), bitrate, _ ("kbps")));
 			_g_free0 (_tmp0_);
 		}
 	}
@@ -481,7 +481,7 @@ static void _lambda0_ (GtkButton* source, Block2Data* _data2_) {
 	_data1_ = _data2_->_data1_;
 	self = _data1_->self;
 	g_return_if_fail (source != NULL);
-	g_debug ("gmpc-nowplaying2.vala:445: notebook page %i clicked", _data2_->j);
+	g_debug ("gmpc-nowplaying2.vala:444: notebook page %i clicked", _data2_->j);
 	gtk_notebook_set_current_page (_data1_->notebook, _data2_->j);
 }
 
@@ -511,7 +511,7 @@ static void _lambda1_ (GtkButton* source, Block3Data* _data3_) {
 	_data1_ = _data3_->_data1_;
 	self = _data1_->self;
 	g_return_if_fail (source != NULL);
-	g_debug ("gmpc-nowplaying2.vala:468: notebook page %i clicked", _data3_->j);
+	g_debug ("gmpc-nowplaying2.vala:467: notebook page %i clicked", _data3_->j);
 	gtk_notebook_set_current_page (_data1_->notebook, _data3_->j);
 	if (!_data3_->text_view_queried) {
 		gmpc_meta_text_view_query_text_from_song (_data3_->text_view, _data1_->song);
@@ -547,7 +547,7 @@ static void _lambda2_ (GtkButton* source, Block4Data* _data4_) {
 	_data1_ = _data4_->_data1_;
 	self = _data1_->self;
 	g_return_if_fail (source != NULL);
-	g_debug ("gmpc-nowplaying2.vala:499: notebook page %i clicked", _data4_->j);
+	g_debug ("gmpc-nowplaying2.vala:498: notebook page %i clicked", _data4_->j);
 	gtk_notebook_set_current_page (_data1_->notebook, _data4_->j);
 	if (!_data4_->similar_songs_queried) {
 		GmpcWidgetSimilarSongs* similar_songs;
@@ -588,7 +588,7 @@ static void _lambda3_ (GtkButton* source, Block5Data* _data5_) {
 	_data1_ = _data5_->_data1_;
 	self = _data1_->self;
 	g_return_if_fail (source != NULL);
-	g_debug ("gmpc-nowplaying2.vala:533: notebook page %i clicked", _data5_->j);
+	g_debug ("gmpc-nowplaying2.vala:532: notebook page %i clicked", _data5_->j);
 	gtk_notebook_set_current_page (_data1_->notebook, _data5_->j);
 }
 
@@ -618,7 +618,7 @@ static void _lambda4_ (GtkButton* source, Block6Data* _data6_) {
 	_data1_ = _data6_->_data1_;
 	self = _data1_->self;
 	g_return_if_fail (source != NULL);
-	g_debug ("gmpc-nowplaying2.vala:548: notebook page %i clicked", _data6_->j);
+	g_debug ("gmpc-nowplaying2.vala:547: notebook page %i clicked", _data6_->j);
 	gtk_notebook_set_current_page (_data1_->notebook, _data6_->j);
 }
 
@@ -869,7 +869,7 @@ static void gmpc_plugin_mockup_update_playing (GmpcPluginMockup* self) {
 		gtk_misc_set_alignment ((GtkMisc*) self->priv->bitrate_label, 0.0f, 0.5f);
 		gtk_box_pack_start ((GtkBox*) box, (GtkWidget*) self->priv->bitrate_label, TRUE, TRUE, (guint) 0);
 		bitrate = mpd_status_get_bitrate (connection);
-		gtk_label_set_markup (self->priv->bitrate_label, _tmp10_ = g_markup_printf_escaped ("<span color='%s' weight='bold'>%s:</span> %i %s, %i %s, %i %s", self->priv->item_color, _ ("Format"), mpd_status_get_channels (connection), _ ("Channel"), mpd_status_get_samplerate (connection), _ ("Khz"), bitrate, _ ("kbps")));
+		gtk_label_set_markup (self->priv->bitrate_label, _tmp10_ = g_markup_printf_escaped ("<span color='%s' weight='bold'>%s:</span> %i %s, %.1f %s, %i %s", self->priv->item_color, _ ("Format"), mpd_status_get_channels (connection), _ ("Channel"), mpd_status_get_samplerate (connection) / 1000.0, _ ("kHz"), bitrate, _ ("kbps")));
 		_g_free0 (_tmp10_);
 		gtk_box_pack_start ((GtkBox*) info_vbox, (GtkWidget*) box, FALSE, FALSE, (guint) 0);
 		_g_object_unref0 (box);
@@ -1243,7 +1243,7 @@ static void gmpc_plugin_mockup_update_not_playing (GmpcPluginMockup* self) {
 			e = _inner_error_;
 			_inner_error_ = NULL;
 			{
-				g_warning ("gmpc-nowplaying2.vala:666: Failed to load the gmpc logo: %s", e->message);
+				g_warning ("gmpc-nowplaying2.vala:665: Failed to load the gmpc logo: %s", e->message);
 				_g_error_free0 (e);
 				_g_object_unref0 (it);
 				_gtk_icon_info_free0 (info);
@@ -1295,13 +1295,13 @@ static void gmpc_plugin_mockup_update (GmpcPluginMockup* self) {
 		case MPD_STATUS_STATE_PLAY:
 		case MPD_STATUS_STATE_PAUSE:
 		{
-			g_debug ("gmpc-nowplaying2.vala:698: Update playing");
+			g_debug ("gmpc-nowplaying2.vala:697: Update playing");
 			gmpc_plugin_mockup_update_playing (self);
 			break;
 		}
 		default:
 		{
-			g_debug ("gmpc-nowplaying2.vala:702: update not playing");
+			g_debug ("gmpc-nowplaying2.vala:701: update not playing");
 			gmpc_plugin_mockup_update_not_playing (self);
 			break;
 		}
