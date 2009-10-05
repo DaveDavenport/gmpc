@@ -34,6 +34,7 @@ private const string some_unique_name_mb2 = Config.VERSION;
 namespace Gmpc {
     namespace Plugin {
         public class Mockup : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface {
+            private bool theme_colors = (bool) config.get_int_with_default("Now Playing", "theme-color",0); 
             private string title_color = config.get_string_with_default("Now Playing", "title-color", "#4d90dd");
             private string item_color = config.get_string_with_default("Now Playing", "item-color", "#304ab8");
             private Gdk.Color background;
@@ -166,11 +167,19 @@ namespace Gmpc {
             /* Called by gmpc, telling the plugin to embed itself in container */
             public void browser_selected (Gtk.Container container)
             {
+
+
+
                 this.selected = true;
                 this.browser_init();
                 container.add(this.paned);
 
                 container.show_all();
+                container.ensure_style();
+                if(this.theme_colors) {
+                    this.title_color = this.paned.style.text[Gtk.StateType.PRELIGHT].to_string();
+                    this.item_color = this.paned.style.text[Gtk.StateType.PRELIGHT].to_string();
+                }
                 this.update();
             }
 
@@ -188,6 +197,10 @@ namespace Gmpc {
             private void browser_bg_style_changed(Gtk.Container bg,Gtk.Style? style)
             {
                 debug("Change style signal");
+                if(this.theme_colors) {
+                    this.title_color = this.paned.style.text[Gtk.StateType.PRELIGHT].to_string();
+                    this.item_color = this.paned.style.text[Gtk.StateType.PRELIGHT].to_string();
+                }
                 this.change_color_style(this.container);
             }
             /** 
@@ -199,13 +212,22 @@ namespace Gmpc {
                 if(bg is Gtk.Separator || bg is Gtk.Notebook || bg is Gtk.CheckButton){
                     /* Do nothing */
                 }else{
-                    bg.modify_bg(Gtk.StateType.NORMAL,this.background);
-                    bg.modify_base(Gtk.StateType.NORMAL,this.background);
-                    bg.modify_text(Gtk.StateType.NORMAL,this.foreground);
-                    bg.modify_fg(Gtk.StateType.NORMAL,this.foreground);
-                    bg.modify_text(Gtk.StateType.ACTIVE,this.foreground);
-                    bg.modify_fg(Gtk.StateType.ACTIVE,this.foreground);
-
+                    if(theme_colors)
+                    {
+                        bg.modify_bg(Gtk.StateType.NORMAL,this.paned.style.dark[Gtk.StateType.NORMAL]);
+                        bg.modify_base(Gtk.StateType.NORMAL,this.paned.style.dark[Gtk.StateType.NORMAL]);
+                        bg.modify_text(Gtk.StateType.NORMAL,this.paned.style.light[Gtk.StateType.NORMAL]);
+                        bg.modify_fg(Gtk.StateType.NORMAL,this.paned.style.light[Gtk.StateType.NORMAL]);
+                        bg.modify_text(Gtk.StateType.ACTIVE,this.paned.style.light[Gtk.StateType.NORMAL]);
+                        bg.modify_fg(Gtk.StateType.ACTIVE,this.paned.style.light[Gtk.StateType.NORMAL]);
+                    }else{
+                        bg.modify_bg(Gtk.StateType.NORMAL,this.background);
+                        bg.modify_base(Gtk.StateType.NORMAL,this.background);
+                        bg.modify_text(Gtk.StateType.NORMAL,this.foreground);
+                        bg.modify_fg(Gtk.StateType.NORMAL,this.foreground);
+                        bg.modify_text(Gtk.StateType.ACTIVE,this.foreground);
+                        bg.modify_fg(Gtk.StateType.ACTIVE,this.foreground);
+                    }
                 }
                 /* Recurse into children, if the widget can hold children (so is a container */
                 if(bg is Gtk.Container){
@@ -229,6 +251,7 @@ namespace Gmpc {
                     this.paned.get_vadjustment().set("step-increment", 20.0);
 
                     this.paned.show_all();
+
                 }
             }
 
@@ -302,7 +325,8 @@ namespace Gmpc {
                     ali.add(fav_button);
                     box.pack_start(ali, false, false, 0); 
                     var label = new Gtk.Label(song.title);
-                    label.set_markup(GLib.Markup.printf_escaped("<span color='%s' size='%i' weight='bold'>%s</span>", this.title_color,Pango.SCALE*20 ,song.title));
+                    label.set_markup(GLib.Markup.printf_escaped("<span color='%s' size='%i' weight='bold'>%s</span>", 
+                                this.title_color,Pango.SCALE*20 ,song.title));
                     label.set_ellipsize(Pango.EllipsizeMode.END);
                     label.set_alignment(0.0f, 0.5f);
                     box.pack_start(label, true, true, 0); 
@@ -318,7 +342,8 @@ namespace Gmpc {
                     }
                 }else if (song.name!= null) {
                     var label = new Gtk.Label(song.name);
-                    label.set_markup(GLib.Markup.printf_escaped("<span color='%s' size='%i' weight='bold'>%s</span>",this.title_color, Pango.SCALE*20, song.name));
+                    label.set_markup(GLib.Markup.printf_escaped("<span color='%s' size='%i' weight='bold'>%s</span>",this.
+                                title_color, Pango.SCALE*20, song.name));
                     label.set_ellipsize(Pango.EllipsizeMode.END);
                     label.set_alignment(0.0f, 0.5f);
                     info_vbox.pack_start(label, false, false, 0); 
