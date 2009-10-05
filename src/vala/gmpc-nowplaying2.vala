@@ -34,7 +34,7 @@ private const string some_unique_name_mb2 = Config.VERSION;
 namespace Gmpc {
     namespace Plugin {
         public class Mockup : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface {
-            private bool theme_colors = (bool) config.get_int_with_default("Now Playing", "theme-color",0); 
+            private bool theme_colors = (bool) config.get_int_with_default("Now Playing", "use-theme-color",1); 
             private string title_color = config.get_string_with_default("Now Playing", "title-color", "#4d90dd");
             private string item_color = config.get_string_with_default("Now Playing", "item-color", "#304ab8");
             private Gdk.Color background;

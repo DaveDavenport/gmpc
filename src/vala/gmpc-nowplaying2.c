@@ -1589,7 +1589,7 @@ static void gmpc_plugin_mockup_gmpc_plugin_browser_iface_interface_init (GmpcPlu
 
 static void gmpc_plugin_mockup_instance_init (GmpcPluginMockup * self) {
 	self->priv = GMPC_PLUGIN_MOCKUP_GET_PRIVATE (self);
-	self->priv->theme_colors = (gboolean) cfg_get_single_value_as_int_with_default (config, "Now Playing", "theme-color", 0);
+	self->priv->theme_colors = (gboolean) cfg_get_single_value_as_int_with_default (config, "Now Playing", "use-theme-color", 1);
 	self->priv->title_color = cfg_get_single_value_as_string_with_default (config, "Now Playing", "title-color", "#4d90dd");
 	self->priv->item_color = cfg_get_single_value_as_string_with_default (config, "Now Playing", "item-color", "#304ab8");
 	self->priv->bitrate_label = NULL;
