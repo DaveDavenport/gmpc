@@ -348,6 +348,30 @@ namespace Gmpc {
                     label.set_alignment(0.0f, 0.5f);
                     info_vbox.pack_start(label, false, false, 0); 
                 }
+                else if (song.file != null){
+                    var filename = GLib.Path.get_basename(song.file);
+                    var label = new Gtk.Label(song.name);
+                    try {
+                    var regex = new GLib.Regex ("\\.[0-9a-zA-Z]*$");
+                        filename = regex.replace_literal (filename, -1, 0, "");
+                    } catch (GLib.RegexError e) {
+                        stdout.printf("%s", e.message);
+                        GLib.assert_not_reached ();
+                    }
+                    try {
+                    var regex = new GLib.Regex ("_");
+                        filename = regex.replace_literal (filename, -1, 0, " ");
+                    } catch (GLib.RegexError e) {
+                        stdout.printf("%s", e.message);
+                        GLib.assert_not_reached ();
+                    }
+                    label.set_markup(GLib.Markup.printf_escaped("<span color='%s' size='%i' weight='bold'>%s</span>",this.
+                                title_color, Pango.SCALE*20, filename));
+                    label.set_ellipsize(Pango.EllipsizeMode.END);
+                    label.set_alignment(0.0f, 0.5f);
+                    info_vbox.pack_start(label, false, false, 0); 
+
+                }
                 /* Artist */
                 if(song.artist != null) {
                     var box = new Gtk.HBox(false, 6);

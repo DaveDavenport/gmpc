@@ -41,6 +41,7 @@
 #include <gmpc-favorites.h>
 #include <pango/pango.h>
 #include <gmpc-rating.h>
+#include <stdio.h>
 #include <gmpc-meta-text-view.h>
 #include <gmpc-metadata-browser2.h>
 #include <gmpc-song-links.h>
@@ -63,6 +64,8 @@ typedef struct _GmpcPluginMockupPrivate GmpcPluginMockupPrivate;
 #define _gtk_tree_row_reference_free0(var) ((var == NULL) ? NULL : (var = (gtk_tree_row_reference_free (var), NULL)))
 #define _gtk_tree_path_free0(var) ((var == NULL) ? NULL : (var = (gtk_tree_path_free (var), NULL)))
 #define _g_list_free0(var) ((var == NULL) ? NULL : (var = (g_list_free (var), NULL)))
+#define _g_regex_unref0(var) ((var == NULL) ? NULL : (var = (g_regex_unref (var), NULL)))
+#define _g_error_free0(var) ((var == NULL) ? NULL : (var = (g_error_free (var), NULL)))
 typedef struct _Block2Data Block2Data;
 typedef struct _Block3Data Block3Data;
 typedef struct _Block4Data Block4Data;
@@ -72,7 +75,6 @@ typedef struct _Block6Data Block6Data;
 typedef struct _Block7Data Block7Data;
 #define _mpd_data_free0(var) ((var == NULL) ? NULL : (var = (mpd_data_free (var), NULL)))
 typedef struct _Block1Data Block1Data;
-#define _g_error_free0(var) ((var == NULL) ? NULL : (var = (g_error_free (var), NULL)))
 #define _gtk_icon_info_free0(var) ((var == NULL) ? NULL : (var = (gtk_icon_info_free (var), NULL)))
 
 struct _GmpcPluginMockup {
@@ -514,7 +516,7 @@ static void _lambda0_ (GtkButton* source, Block2Data* _data2_) {
 	_data1_ = _data2_->_data1_;
 	self = _data1_->self;
 	g_return_if_fail (source != NULL);
-	g_debug ("gmpc-nowplaying2.vala:469: notebook page %i clicked", _data2_->j);
+	g_debug ("gmpc-nowplaying2.vala:493: notebook page %i clicked", _data2_->j);
 	gtk_notebook_set_current_page (_data1_->notebook, _data2_->j);
 }
 
@@ -544,7 +546,7 @@ static void _lambda1_ (GtkButton* source, Block3Data* _data3_) {
 	_data1_ = _data3_->_data1_;
 	self = _data1_->self;
 	g_return_if_fail (source != NULL);
-	g_debug ("gmpc-nowplaying2.vala:492: notebook page %i clicked", _data3_->j);
+	g_debug ("gmpc-nowplaying2.vala:516: notebook page %i clicked", _data3_->j);
 	gtk_notebook_set_current_page (_data1_->notebook, _data3_->j);
 	if (!_data3_->text_view_queried) {
 		gmpc_meta_text_view_query_text_from_song (_data3_->text_view, _data1_->song);
@@ -580,7 +582,7 @@ static void _lambda2_ (GtkButton* source, Block4Data* _data4_) {
 	_data1_ = _data4_->_data1_;
 	self = _data1_->self;
 	g_return_if_fail (source != NULL);
-	g_debug ("gmpc-nowplaying2.vala:523: notebook page %i clicked", _data4_->j);
+	g_debug ("gmpc-nowplaying2.vala:547: notebook page %i clicked", _data4_->j);
 	gtk_notebook_set_current_page (_data1_->notebook, _data4_->j);
 	if (!_data4_->similar_songs_queried) {
 		GmpcWidgetSimilarSongs* similar_songs;
@@ -621,7 +623,7 @@ static void _lambda3_ (GtkButton* source, Block5Data* _data5_) {
 	_data1_ = _data5_->_data1_;
 	self = _data1_->self;
 	g_return_if_fail (source != NULL);
-	g_debug ("gmpc-nowplaying2.vala:557: notebook page %i clicked", _data5_->j);
+	g_debug ("gmpc-nowplaying2.vala:581: notebook page %i clicked", _data5_->j);
 	gtk_notebook_set_current_page (_data1_->notebook, _data5_->j);
 }
 
@@ -651,7 +653,7 @@ static void _lambda4_ (GtkButton* source, Block6Data* _data6_) {
 	_data1_ = _data6_->_data1_;
 	self = _data1_->self;
 	g_return_if_fail (source != NULL);
-	g_debug ("gmpc-nowplaying2.vala:572: notebook page %i clicked", _data6_->j);
+	g_debug ("gmpc-nowplaying2.vala:596: notebook page %i clicked", _data6_->j);
 	gtk_notebook_set_current_page (_data1_->notebook, _data6_->j);
 }
 
@@ -730,6 +732,7 @@ static void block1_data_unref (Block1Data* _data1_) {
 
 
 static void gmpc_plugin_mockup_update_playing (GmpcPluginMockup* self) {
+	GError * _inner_error_;
 	Block1Data* _data1_;
 	char* checksum;
 	char* _tmp0_;
@@ -744,13 +747,14 @@ static void gmpc_plugin_mockup_update_playing (GmpcPluginMockup* self) {
 	GtkHBox* hboxje;
 	gint i;
 	GSList* group;
-	gboolean _tmp20_ = FALSE;
-	GtkAlignment* _tmp23_;
+	gboolean _tmp25_ = FALSE;
+	GtkAlignment* _tmp28_;
 	GtkHBox* bottom_hbox;
 	GtkVBox* metadata_vbox;
-	GtkHSeparator* _tmp24_;
-	gboolean _tmp25_ = FALSE;
+	GtkHSeparator* _tmp29_;
+	gboolean _tmp30_ = FALSE;
 	g_return_if_fail (self != NULL);
+	_inner_error_ = NULL;
 	_data1_ = g_slice_new0 (Block1Data);
 	_data1_->_ref_count_ = 1;
 	_data1_->self = g_object_ref (self);
@@ -829,19 +833,134 @@ static void gmpc_plugin_mockup_update_playing (GmpcPluginMockup* self) {
 			gtk_misc_set_alignment ((GtkMisc*) label, 0.0f, 0.5f);
 			gtk_box_pack_start ((GtkBox*) info_vbox, (GtkWidget*) label, FALSE, FALSE, (guint) 0);
 			_g_object_unref0 (label);
+		} else {
+			if (_data1_->song->file != NULL) {
+				char* filename;
+				GtkLabel* label;
+				char* _tmp10_;
+				filename = g_path_get_basename (_data1_->song->file);
+				label = g_object_ref_sink ((GtkLabel*) gtk_label_new (_data1_->song->name));
+				{
+					GRegex* regex;
+					char* _tmp6_;
+					char* _tmp7_;
+					regex = g_regex_new ("\\.[0-9a-zA-Z]*$", 0, 0, &_inner_error_);
+					if (_inner_error_ != NULL) {
+						if (_inner_error_->domain == G_REGEX_ERROR) {
+							goto __catch0_g_regex_error;
+						}
+						goto __finally0;
+					}
+					_tmp6_ = g_regex_replace_literal (regex, filename, (glong) (-1), 0, "", 0, &_inner_error_);
+					if (_inner_error_ != NULL) {
+						_g_regex_unref0 (regex);
+						if (_inner_error_->domain == G_REGEX_ERROR) {
+							goto __catch0_g_regex_error;
+						}
+						goto __finally0;
+					}
+					filename = (_tmp7_ = _tmp6_, _g_free0 (filename), _tmp7_);
+					_g_regex_unref0 (regex);
+				}
+				goto __finally0;
+				__catch0_g_regex_error:
+				{
+					GError * e;
+					e = _inner_error_;
+					_inner_error_ = NULL;
+					{
+						fprintf (stdout, "%s", e->message);
+						g_assert_not_reached ();
+						_g_error_free0 (e);
+					}
+				}
+				__finally0:
+				if (_inner_error_ != NULL) {
+					_g_free0 (filename);
+					_g_object_unref0 (label);
+					_g_free0 (checksum);
+					_g_object_unref0 (vbox);
+					_g_object_unref0 (hbox);
+					_g_object_unref0 (ali);
+					_g_object_unref0 (album_image);
+					_g_object_unref0 (artist_image);
+					_g_object_unref0 (info_vbox);
+					block1_data_unref (_data1_);
+					g_critical ("file %s: line %d: uncaught error: %s", __FILE__, __LINE__, _inner_error_->message);
+					g_clear_error (&_inner_error_);
+					return;
+				}
+				{
+					GRegex* regex;
+					char* _tmp8_;
+					char* _tmp9_;
+					regex = g_regex_new ("_", 0, 0, &_inner_error_);
+					if (_inner_error_ != NULL) {
+						if (_inner_error_->domain == G_REGEX_ERROR) {
+							goto __catch1_g_regex_error;
+						}
+						goto __finally1;
+					}
+					_tmp8_ = g_regex_replace_literal (regex, filename, (glong) (-1), 0, " ", 0, &_inner_error_);
+					if (_inner_error_ != NULL) {
+						_g_regex_unref0 (regex);
+						if (_inner_error_->domain == G_REGEX_ERROR) {
+							goto __catch1_g_regex_error;
+						}
+						goto __finally1;
+					}
+					filename = (_tmp9_ = _tmp8_, _g_free0 (filename), _tmp9_);
+					_g_regex_unref0 (regex);
+				}
+				goto __finally1;
+				__catch1_g_regex_error:
+				{
+					GError * e;
+					e = _inner_error_;
+					_inner_error_ = NULL;
+					{
+						fprintf (stdout, "%s", e->message);
+						g_assert_not_reached ();
+						_g_error_free0 (e);
+					}
+				}
+				__finally1:
+				if (_inner_error_ != NULL) {
+					_g_free0 (filename);
+					_g_object_unref0 (label);
+					_g_free0 (checksum);
+					_g_object_unref0 (vbox);
+					_g_object_unref0 (hbox);
+					_g_object_unref0 (ali);
+					_g_object_unref0 (album_image);
+					_g_object_unref0 (artist_image);
+					_g_object_unref0 (info_vbox);
+					block1_data_unref (_data1_);
+					g_critical ("file %s: line %d: uncaught error: %s", __FILE__, __LINE__, _inner_error_->message);
+					g_clear_error (&_inner_error_);
+					return;
+				}
+				gtk_label_set_markup (label, _tmp10_ = g_markup_printf_escaped ("<span color='%s' size='%i' weight='bold'>%s</span>", self->priv->title_color, PANGO_SCALE * 20, filename));
+				_g_free0 (_tmp10_);
+				gtk_label_set_ellipsize (label, PANGO_ELLIPSIZE_END);
+				gtk_misc_set_alignment ((GtkMisc*) label, 0.0f, 0.5f);
+				gtk_box_pack_start ((GtkBox*) info_vbox, (GtkWidget*) label, FALSE, FALSE, (guint) 0);
+				_g_free0 (filename);
+				_g_object_unref0 (label);
+			}
 		}
 	}
 	if (_data1_->song->artist != NULL) {
 		GtkHBox* box;
 		GtkLabel* label;
 		GtkImage* image;
-		char* _tmp6_;
+		char* _tmp11_;
 		box = g_object_ref_sink ((GtkHBox*) gtk_hbox_new (FALSE, 6));
 		label = g_object_ref_sink ((GtkLabel*) gtk_label_new (_data1_->song->artist));
 		image = g_object_ref_sink ((GtkImage*) gtk_image_new_from_icon_name ("media-artist", GTK_ICON_SIZE_BUTTON));
 		gtk_box_pack_start ((GtkBox*) box, (GtkWidget*) image, FALSE, FALSE, (guint) 0);
-		gtk_label_set_markup (label, _tmp6_ = g_markup_printf_escaped ("<span size='xx-large' weight='bold'>%s</span>", _data1_->song->artist));
-		_g_free0 (_tmp6_);
+		gtk_label_set_markup (label, _tmp11_ = g_markup_printf_escaped ("<span size='xx-large' weight='bold'>%s</span>", _data1_->song->artist));
+		_g_free0 (_tmp11_);
 		gtk_label_set_ellipsize (label, PANGO_ELLIPSIZE_END);
 		gtk_misc_set_alignment ((GtkMisc*) label, 0.0f, 0.5f);
 		gtk_box_pack_start ((GtkBox*) box, (GtkWidget*) label, TRUE, TRUE, (guint) 0);
@@ -854,13 +973,13 @@ static void gmpc_plugin_mockup_update_playing (GmpcPluginMockup* self) {
 		GtkHBox* box;
 		GtkLabel* label;
 		GtkImage* image;
-		char* _tmp7_;
+		char* _tmp12_;
 		box = g_object_ref_sink ((GtkHBox*) gtk_hbox_new (FALSE, 6));
 		label = g_object_ref_sink ((GtkLabel*) gtk_label_new (_data1_->song->album));
 		image = g_object_ref_sink ((GtkImage*) gtk_image_new_from_icon_name ("media-album", GTK_ICON_SIZE_BUTTON));
 		gtk_box_pack_start ((GtkBox*) box, (GtkWidget*) image, FALSE, FALSE, (guint) 0);
-		gtk_label_set_markup (label, _tmp7_ = g_markup_printf_escaped ("<span size='x-large' weight='bold'>%s</span>", _data1_->song->album));
-		_g_free0 (_tmp7_);
+		gtk_label_set_markup (label, _tmp12_ = g_markup_printf_escaped ("<span size='x-large' weight='bold'>%s</span>", _data1_->song->album));
+		_g_free0 (_tmp12_);
 		gtk_label_set_ellipsize (label, PANGO_ELLIPSIZE_END);
 		gtk_misc_set_alignment ((GtkMisc*) label, 0.0f, 0.5f);
 		gtk_box_pack_start ((GtkBox*) box, (GtkWidget*) label, TRUE, TRUE, (guint) 0);
@@ -873,13 +992,13 @@ static void gmpc_plugin_mockup_update_playing (GmpcPluginMockup* self) {
 		GtkHBox* box;
 		GtkLabel* label;
 		GtkImage* image;
-		char* _tmp8_;
+		char* _tmp13_;
 		box = g_object_ref_sink ((GtkHBox*) gtk_hbox_new (FALSE, 6));
 		label = g_object_ref_sink ((GtkLabel*) gtk_label_new (_data1_->song->title));
 		image = g_object_ref_sink ((GtkImage*) gtk_image_new_from_icon_name ("media-genre", GTK_ICON_SIZE_MENU));
 		gtk_box_pack_start ((GtkBox*) box, (GtkWidget*) image, FALSE, FALSE, (guint) 0);
-		gtk_label_set_markup (label, _tmp8_ = g_markup_printf_escaped ("<span color='%s' weight='bold'>%s:</span> %s", self->priv->item_color, _ ("Genre"), _data1_->song->genre));
-		_g_free0 (_tmp8_);
+		gtk_label_set_markup (label, _tmp13_ = g_markup_printf_escaped ("<span color='%s' weight='bold'>%s:</span> %s", self->priv->item_color, _ ("Genre"), _data1_->song->genre));
+		_g_free0 (_tmp13_);
 		gtk_label_set_ellipsize (label, PANGO_ELLIPSIZE_END);
 		gtk_misc_set_alignment ((GtkMisc*) label, 0.0f, 0.5f);
 		gtk_box_pack_start ((GtkBox*) box, (GtkWidget*) label, TRUE, TRUE, (guint) 0);
@@ -891,19 +1010,19 @@ static void gmpc_plugin_mockup_update_playing (GmpcPluginMockup* self) {
 	{
 		GtkHBox* box;
 		GtkImage* image;
-		GtkLabel* _tmp9_;
+		GtkLabel* _tmp14_;
 		gint bitrate;
-		char* _tmp10_;
+		char* _tmp15_;
 		box = g_object_ref_sink ((GtkHBox*) gtk_hbox_new (FALSE, 6));
 		image = g_object_ref_sink ((GtkImage*) gtk_image_new_from_icon_name ("media-format", GTK_ICON_SIZE_MENU));
 		gtk_box_pack_start ((GtkBox*) box, (GtkWidget*) image, FALSE, FALSE, (guint) 0);
-		self->priv->bitrate_label = (_tmp9_ = g_object_ref_sink ((GtkLabel*) gtk_label_new (_data1_->song->title)), _g_object_unref0 (self->priv->bitrate_label), _tmp9_);
+		self->priv->bitrate_label = (_tmp14_ = g_object_ref_sink ((GtkLabel*) gtk_label_new (_data1_->song->title)), _g_object_unref0 (self->priv->bitrate_label), _tmp14_);
 		gtk_label_set_ellipsize (self->priv->bitrate_label, PANGO_ELLIPSIZE_END);
 		gtk_misc_set_alignment ((GtkMisc*) self->priv->bitrate_label, 0.0f, 0.5f);
 		gtk_box_pack_start ((GtkBox*) box, (GtkWidget*) self->priv->bitrate_label, TRUE, TRUE, (guint) 0);
 		bitrate = mpd_status_get_bitrate (connection);
-		gtk_label_set_markup (self->priv->bitrate_label, _tmp10_ = g_markup_printf_escaped ("<span color='%s' weight='bold'>%s:</span> %i %s, %.1f %s, %i %s", self->priv->item_color, _ ("Format"), mpd_status_get_channels (connection), _ ("Channel"), mpd_status_get_samplerate (connection) / 1000.0, _ ("kHz"), bitrate, _ ("kbps")));
-		_g_free0 (_tmp10_);
+		gtk_label_set_markup (self->priv->bitrate_label, _tmp15_ = g_markup_printf_escaped ("<span color='%s' weight='bold'>%s:</span> %i %s, %.1f %s, %i %s", self->priv->item_color, _ ("Format"), mpd_status_get_channels (connection), _ ("Channel"), mpd_status_get_samplerate (connection) / 1000.0, _ ("kHz"), bitrate, _ ("kbps")));
+		_g_free0 (_tmp15_);
 		gtk_box_pack_start ((GtkBox*) info_vbox, (GtkWidget*) box, FALSE, FALSE, (guint) 0);
 		_g_object_unref0 (box);
 		_g_object_unref0 (image);
@@ -912,16 +1031,16 @@ static void gmpc_plugin_mockup_update_playing (GmpcPluginMockup* self) {
 		GtkHBox* box;
 		GtkImage* image;
 		GtkLabel* label;
-		char* _tmp12_;
-		char* _tmp11_;
+		char* _tmp17_;
+		char* _tmp16_;
 		box = g_object_ref_sink ((GtkHBox*) gtk_hbox_new (FALSE, 6));
 		image = g_object_ref_sink ((GtkImage*) gtk_image_new_from_icon_name ("media-track-length", GTK_ICON_SIZE_MENU));
 		gtk_box_pack_start ((GtkBox*) box, (GtkWidget*) image, FALSE, FALSE, (guint) 0);
 		label = g_object_ref_sink ((GtkLabel*) gtk_label_new (""));
 		gtk_label_set_ellipsize (label, PANGO_ELLIPSIZE_END);
-		gtk_label_set_markup (label, _tmp12_ = g_markup_printf_escaped ("<span color='%s' weight='bold'>%s:</span> %s", self->priv->item_color, _ ("Length"), _tmp11_ = format_time_real ((gulong) _data1_->song->time, "")));
-		_g_free0 (_tmp12_);
-		_g_free0 (_tmp11_);
+		gtk_label_set_markup (label, _tmp17_ = g_markup_printf_escaped ("<span color='%s' weight='bold'>%s:</span> %s", self->priv->item_color, _ ("Length"), _tmp16_ = format_time_real ((gulong) _data1_->song->time, "")));
+		_g_free0 (_tmp17_);
+		_g_free0 (_tmp16_);
 		gtk_misc_set_alignment ((GtkMisc*) label, 0.0f, 0.5f);
 		gtk_box_pack_start ((GtkBox*) box, (GtkWidget*) label, TRUE, TRUE, (guint) 0);
 		gtk_box_pack_start ((GtkBox*) info_vbox, (GtkWidget*) box, FALSE, FALSE, (guint) 0);
@@ -933,30 +1052,30 @@ static void gmpc_plugin_mockup_update_playing (GmpcPluginMockup* self) {
 		GtkHBox* box;
 		GtkImage* image;
 		GtkLabel* label;
-		char* _tmp13_;
-		char* _tmp16_;
+		char* _tmp18_;
+		char* _tmp21_;
 		box = g_object_ref_sink ((GtkHBox*) gtk_hbox_new (FALSE, 6));
 		image = g_object_ref_sink ((GtkImage*) gtk_image_new_from_icon_name ("media-num-tracks", GTK_ICON_SIZE_MENU));
 		gtk_box_pack_start ((GtkBox*) box, (GtkWidget*) image, FALSE, FALSE, (guint) 0);
 		label = g_object_ref_sink ((GtkLabel*) gtk_label_new (""));
 		gtk_label_set_ellipsize (label, PANGO_ELLIPSIZE_END);
-		_tmp13_ = NULL;
+		_tmp18_ = NULL;
 		if (_data1_->song->disc != NULL) {
-			char* _tmp14_;
-			_tmp13_ = (_tmp14_ = g_strdup_printf ("[%s]", _data1_->song->disc), _g_free0 (_tmp13_), _tmp14_);
+			char* _tmp19_;
+			_tmp18_ = (_tmp19_ = g_strdup_printf ("[%s]", _data1_->song->disc), _g_free0 (_tmp18_), _tmp19_);
 		} else {
-			char* _tmp15_;
-			_tmp13_ = (_tmp15_ = g_strdup (""), _g_free0 (_tmp13_), _tmp15_);
+			char* _tmp20_;
+			_tmp18_ = (_tmp20_ = g_strdup (""), _g_free0 (_tmp18_), _tmp20_);
 		}
-		gtk_label_set_markup (label, _tmp16_ = g_markup_printf_escaped ("<span color='%s' weight='bold'>%s:</span> %s %s", self->priv->item_color, _ ("Track number"), _data1_->song->track, _tmp13_));
-		_g_free0 (_tmp16_);
+		gtk_label_set_markup (label, _tmp21_ = g_markup_printf_escaped ("<span color='%s' weight='bold'>%s:</span> %s %s", self->priv->item_color, _ ("Track number"), _data1_->song->track, _tmp18_));
+		_g_free0 (_tmp21_);
 		gtk_misc_set_alignment ((GtkMisc*) label, 0.0f, 0.5f);
 		gtk_box_pack_start ((GtkBox*) box, (GtkWidget*) label, TRUE, TRUE, (guint) 0);
 		gtk_box_pack_start ((GtkBox*) info_vbox, (GtkWidget*) box, FALSE, FALSE, (guint) 0);
 		_g_object_unref0 (box);
 		_g_object_unref0 (image);
 		_g_object_unref0 (label);
-		_g_free0 (_tmp13_);
+		_g_free0 (_tmp18_);
 	}
 	gtk_box_pack_start ((GtkBox*) hbox, (GtkWidget*) info_vbox, TRUE, TRUE, (guint) 0);
 	gtk_box_pack_start ((GtkBox*) vbox, (GtkWidget*) hbox, FALSE, FALSE, (guint) 0);
@@ -972,7 +1091,7 @@ static void gmpc_plugin_mockup_update_playing (GmpcPluginMockup* self) {
 	if (cfg_get_single_value_as_int_with_default (config, "MetaData", "show-lyrics", 1) == 1) {
 		Block2Data* _data2_;
 		GmpcMetaTextView* text_view;
-		GtkLabel* _tmp17_;
+		GtkLabel* _tmp22_;
 		GtkRadioButton* button;
 		_data2_ = g_slice_new0 (Block2Data);
 		_data2_->_ref_count_ = 1;
@@ -980,8 +1099,8 @@ static void gmpc_plugin_mockup_update_playing (GmpcPluginMockup* self) {
 		text_view = g_object_ref_sink (gmpc_meta_text_view_new (META_SONG_TXT));
 		gtk_text_view_set_left_margin ((GtkTextView*) text_view, 8);
 		gmpc_meta_text_view_query_text_from_song (text_view, _data1_->song);
-		gtk_notebook_append_page (_data1_->notebook, (GtkWidget*) text_view, (GtkWidget*) (_tmp17_ = g_object_ref_sink ((GtkLabel*) gtk_label_new ("Lyrics"))));
-		_g_object_unref0 (_tmp17_);
+		gtk_notebook_append_page (_data1_->notebook, (GtkWidget*) text_view, (GtkWidget*) (_tmp22_ = g_object_ref_sink ((GtkLabel*) gtk_label_new ("Lyrics"))));
+		_g_object_unref0 (_tmp22_);
 		button = g_object_ref_sink ((GtkRadioButton*) gtk_radio_button_new_with_label (group, "Lyrics"));
 		group = gtk_radio_button_get_group (button);
 		gtk_box_pack_start ((GtkBox*) hboxje, (GtkWidget*) button, FALSE, FALSE, (guint) 0);
@@ -995,7 +1114,7 @@ static void gmpc_plugin_mockup_update_playing (GmpcPluginMockup* self) {
 	}
 	if (cfg_get_single_value_as_int_with_default (config, "MetaData", "show-guitar-tabs", 1) == 1) {
 		Block3Data* _data3_;
-		GtkLabel* _tmp18_;
+		GtkLabel* _tmp23_;
 		GtkRadioButton* button;
 		_data3_ = g_slice_new0 (Block3Data);
 		_data3_->_ref_count_ = 1;
@@ -1004,8 +1123,8 @@ static void gmpc_plugin_mockup_update_playing (GmpcPluginMockup* self) {
 		_data3_->text_view->use_monospace = TRUE;
 		gtk_text_view_set_left_margin ((GtkTextView*) _data3_->text_view, 8);
 		_data3_->text_view_queried = FALSE;
-		gtk_notebook_append_page (_data1_->notebook, (GtkWidget*) _data3_->text_view, (GtkWidget*) (_tmp18_ = g_object_ref_sink ((GtkLabel*) gtk_label_new (_ ("Guitar Tabs")))));
-		_g_object_unref0 (_tmp18_);
+		gtk_notebook_append_page (_data1_->notebook, (GtkWidget*) _data3_->text_view, (GtkWidget*) (_tmp23_ = g_object_ref_sink ((GtkLabel*) gtk_label_new (_ ("Guitar Tabs")))));
+		_g_object_unref0 (_tmp23_);
 		button = g_object_ref_sink ((GtkRadioButton*) gtk_radio_button_new_with_label (group, _ ("Guitar Tabs")));
 		group = gtk_radio_button_get_group (button);
 		gtk_box_pack_start ((GtkBox*) hboxje, (GtkWidget*) button, FALSE, FALSE, (guint) 0);
@@ -1022,15 +1141,15 @@ static void gmpc_plugin_mockup_update_playing (GmpcPluginMockup* self) {
 	}
 	if (cfg_get_single_value_as_int_with_default (config, "MetaData", "show-similar-songs", 1) == 1) {
 		Block4Data* _data4_;
-		GtkLabel* _tmp19_;
+		GtkLabel* _tmp24_;
 		GtkRadioButton* button;
 		_data4_ = g_slice_new0 (Block4Data);
 		_data4_->_ref_count_ = 1;
 		_data4_->_data1_ = block1_data_ref (_data1_);
 		_data4_->similar_songs_queried = FALSE;
 		_data4_->similar_songs_box = g_object_ref_sink ((GtkAlignment*) gtk_alignment_new (0.f, 0.f, 0.f, 0.f));
-		gtk_notebook_append_page (_data1_->notebook, (GtkWidget*) _data4_->similar_songs_box, (GtkWidget*) (_tmp19_ = g_object_ref_sink ((GtkLabel*) gtk_label_new (_ ("Similar Songs")))));
-		_g_object_unref0 (_tmp19_);
+		gtk_notebook_append_page (_data1_->notebook, (GtkWidget*) _data4_->similar_songs_box, (GtkWidget*) (_tmp24_ = g_object_ref_sink ((GtkLabel*) gtk_label_new (_ ("Similar Songs")))));
+		_g_object_unref0 (_tmp24_);
 		button = g_object_ref_sink ((GtkRadioButton*) gtk_radio_button_new_with_label (group, _ ("Similar Songs")));
 		group = gtk_radio_button_get_group (button);
 		gtk_box_pack_start ((GtkBox*) hboxje, (GtkWidget*) button, FALSE, FALSE, (guint) 0);
@@ -1051,21 +1170,21 @@ static void gmpc_plugin_mockup_update_playing (GmpcPluginMockup* self) {
 		block4_data_unref (_data4_);
 	}
 	if (cfg_get_single_value_as_int_with_default (config, "MetaData", "show-similar-artist", 1) == 1) {
-		_tmp20_ = _data1_->song->artist != NULL;
+		_tmp25_ = _data1_->song->artist != NULL;
 	} else {
-		_tmp20_ = FALSE;
+		_tmp25_ = FALSE;
 	}
-	if (_tmp20_) {
+	if (_tmp25_) {
 		Block5Data* _data5_;
 		GmpcWidgetSimilarArtist* similar_artist;
-		GtkLabel* _tmp21_;
+		GtkLabel* _tmp26_;
 		GtkRadioButton* button;
 		_data5_ = g_slice_new0 (Block5Data);
 		_data5_->_ref_count_ = 1;
 		_data5_->_data1_ = block1_data_ref (_data1_);
 		similar_artist = g_object_ref_sink (gmpc_widget_similar_artist_new (connection, _data1_->song));
-		gtk_notebook_append_page (_data1_->notebook, (GtkWidget*) similar_artist, (GtkWidget*) (_tmp21_ = g_object_ref_sink ((GtkLabel*) gtk_label_new (_ ("Similar Artist")))));
-		_g_object_unref0 (_tmp21_);
+		gtk_notebook_append_page (_data1_->notebook, (GtkWidget*) similar_artist, (GtkWidget*) (_tmp26_ = g_object_ref_sink ((GtkLabel*) gtk_label_new (_ ("Similar Artist")))));
+		_g_object_unref0 (_tmp26_);
 		button = g_object_ref_sink ((GtkRadioButton*) gtk_radio_button_new_with_label (group, _ ("Similar Artist")));
 		group = gtk_radio_button_get_group (button);
 		gtk_box_pack_start ((GtkBox*) hboxje, (GtkWidget*) button, FALSE, FALSE, (guint) 0);
@@ -1080,14 +1199,14 @@ static void gmpc_plugin_mockup_update_playing (GmpcPluginMockup* self) {
 	if (cfg_get_single_value_as_int_with_default (config, "MetaData", "show-show-links", 1) == 1) {
 		Block6Data* _data6_;
 		GmpcSongLinks* song_links;
-		GtkLabel* _tmp22_;
+		GtkLabel* _tmp27_;
 		GtkRadioButton* button;
 		_data6_ = g_slice_new0 (Block6Data);
 		_data6_->_ref_count_ = 1;
 		_data6_->_data1_ = block1_data_ref (_data1_);
 		song_links = g_object_ref_sink (gmpc_song_links_new (GMPC_SONG_LINKS_TYPE_SONG, _data1_->song));
-		gtk_notebook_append_page (_data1_->notebook, (GtkWidget*) song_links, (GtkWidget*) (_tmp22_ = g_object_ref_sink ((GtkLabel*) gtk_label_new (_ ("Web Links")))));
-		_g_object_unref0 (_tmp22_);
+		gtk_notebook_append_page (_data1_->notebook, (GtkWidget*) song_links, (GtkWidget*) (_tmp27_ = g_object_ref_sink ((GtkLabel*) gtk_label_new (_ ("Web Links")))));
+		_g_object_unref0 (_tmp27_);
 		button = g_object_ref_sink ((GtkRadioButton*) gtk_radio_button_new_with_label (group, _ ("Web Links")));
 		gtk_box_pack_start ((GtkBox*) hboxje, (GtkWidget*) button, FALSE, FALSE, (guint) 0);
 		_data6_->j = i;
@@ -1101,42 +1220,42 @@ static void gmpc_plugin_mockup_update_playing (GmpcPluginMockup* self) {
 	if (i > 0) {
 		gtk_notebook_set_current_page (_data1_->notebook, 0);
 	}
-	ali = (_tmp23_ = g_object_ref_sink ((GtkAlignment*) gtk_alignment_new (0.0f, 0.5f, 0.f, 0.f)), _g_object_unref0 (ali), _tmp23_);
+	ali = (_tmp28_ = g_object_ref_sink ((GtkAlignment*) gtk_alignment_new (0.0f, 0.5f, 0.f, 0.f)), _g_object_unref0 (ali), _tmp28_);
 	gtk_container_add ((GtkContainer*) ali, (GtkWidget*) hboxje);
 	bottom_hbox = g_object_ref_sink ((GtkHBox*) gtk_hbox_new (FALSE, 6));
 	metadata_vbox = g_object_ref_sink ((GtkVBox*) gtk_vbox_new (FALSE, 6));
 	gtk_box_pack_start ((GtkBox*) metadata_vbox, (GtkWidget*) ali, FALSE, FALSE, (guint) 0);
-	sep = (_tmp24_ = g_object_ref_sink ((GtkHSeparator*) gtk_hseparator_new ()), _g_object_unref0 (sep), _tmp24_);
+	sep = (_tmp29_ = g_object_ref_sink ((GtkHSeparator*) gtk_hseparator_new ()), _g_object_unref0 (sep), _tmp29_);
 	gtk_widget_set_size_request ((GtkWidget*) sep, -1, 1);
 	gtk_box_pack_start ((GtkBox*) metadata_vbox, (GtkWidget*) sep, FALSE, FALSE, (guint) 0);
 	gtk_box_pack_start ((GtkBox*) metadata_vbox, (GtkWidget*) _data1_->notebook, FALSE, FALSE, (guint) 0);
 	gtk_box_pack_start ((GtkBox*) bottom_hbox, (GtkWidget*) metadata_vbox, TRUE, TRUE, (guint) 0);
 	if (_data1_->song->album != NULL) {
-		_tmp25_ = _data1_->song->artist != NULL;
+		_tmp30_ = _data1_->song->artist != NULL;
 	} else {
-		_tmp25_ = FALSE;
+		_tmp30_ = FALSE;
 	}
-	if (_tmp25_) {
+	if (_tmp30_) {
 		GtkVSeparator* sep2;
 		gint albums;
-		GtkAlignment* _tmp26_;
+		GtkAlignment* _tmp31_;
 		GtkVBox* album_hbox;
 		GtkLabel* label;
-		char* _tmp27_;
+		char* _tmp32_;
 		MpdData* data;
 		sep2 = g_object_ref_sink ((GtkVSeparator*) gtk_vseparator_new ());
 		gtk_widget_set_size_request ((GtkWidget*) sep2, -1, 4);
 		gtk_box_pack_start ((GtkBox*) bottom_hbox, (GtkWidget*) sep2, FALSE, FALSE, (guint) 0);
 		albums = 0;
-		ali = (_tmp26_ = g_object_ref_sink ((GtkAlignment*) gtk_alignment_new (0.0f, 0.0f, 0.0f, 0.0f)), _g_object_unref0 (ali), _tmp26_);
+		ali = (_tmp31_ = g_object_ref_sink ((GtkAlignment*) gtk_alignment_new (0.0f, 0.0f, 0.0f, 0.0f)), _g_object_unref0 (ali), _tmp31_);
 		album_hbox = g_object_ref_sink ((GtkVBox*) gtk_vbox_new (FALSE, 6));
 		gtk_widget_set_size_request ((GtkWidget*) album_hbox, 250, -1);
 		gtk_container_add ((GtkContainer*) ali, (GtkWidget*) album_hbox);
 		gtk_box_pack_start ((GtkBox*) bottom_hbox, (GtkWidget*) ali, FALSE, FALSE, (guint) 0);
 		label = g_object_ref_sink ((GtkLabel*) gtk_label_new (_data1_->song->artist));
 		gtk_widget_set_size_request ((GtkWidget*) label, 240, -1);
-		gtk_label_set_markup (label, _tmp27_ = g_markup_printf_escaped ("<span size='x-large' weight='bold' color='%s'>%s</span><span size='x-large' weight='bold'> %s</span>", self->priv->item_color, _ ("Other albums by"), _data1_->song->artist));
-		_g_free0 (_tmp27_);
+		gtk_label_set_markup (label, _tmp32_ = g_markup_printf_escaped ("<span size='x-large' weight='bold' color='%s'>%s</span><span size='x-large' weight='bold'> %s</span>", self->priv->item_color, _ ("Other albums by"), _data1_->song->artist));
+		_g_free0 (_tmp32_);
 		gtk_label_set_line_wrap_mode (label, PANGO_WRAP_WORD_CHAR);
 		gtk_label_set_line_wrap (label, TRUE);
 		gtk_misc_set_alignment ((GtkMisc*) label, 0.0f, 0.5f);
@@ -1148,28 +1267,28 @@ static void gmpc_plugin_mockup_update_playing (GmpcPluginMockup* self) {
 			const MpdData* iter;
 			iter = mpd_data_get_first (data);
 			{
-				gboolean _tmp28_;
-				_tmp28_ = TRUE;
+				gboolean _tmp33_;
+				_tmp33_ = TRUE;
 				while (TRUE) {
 					Block7Data* _data7_;
 					GtkButton* button;
 					GtkHBox* but_hbox;
 					GmpcMetaImage* image;
-					char* _tmp29_;
-					char* _tmp30_;
+					char* _tmp34_;
+					char* _tmp35_;
 					GtkLabel* but_label;
-					const char* _tmp31_;
-					char* _tmp32_;
+					const char* _tmp36_;
+					char* _tmp37_;
 					_data7_ = g_slice_new0 (Block7Data);
 					_data7_->_ref_count_ = 1;
 					_data7_->_data1_ = block1_data_ref (_data1_);
-					if (!_tmp28_) {
+					if (!_tmp33_) {
 						if (!(iter != NULL)) {
 							block7_data_unref (_data7_);
 							break;
 						}
 					}
-					_tmp28_ = FALSE;
+					_tmp33_ = FALSE;
 					if (_vala_strcmp0 (iter->tag, _data1_->song->album) == 0) {
 						iter = mpd_data_get_next_real (iter, FALSE);
 						block7_data_unref (_data7_);
@@ -1181,21 +1300,21 @@ static void gmpc_plugin_mockup_update_playing (GmpcPluginMockup* self) {
 					gtk_container_add ((GtkContainer*) button, (GtkWidget*) but_hbox);
 					image = g_object_ref_sink (gmpc_metaimage_new_size (META_ALBUM_ART, 48));
 					_data7_->but_song = mpd_newSong ();
-					_data7_->but_song->artist = (_tmp29_ = g_strdup (_data1_->song->artist), _g_free0 (_data7_->but_song->artist), _tmp29_);
-					_data7_->but_song->album = (_tmp30_ = g_strdup (iter->tag), _g_free0 (_data7_->but_song->album), _tmp30_);
+					_data7_->but_song->artist = (_tmp34_ = g_strdup (_data1_->song->artist), _g_free0 (_data7_->but_song->artist), _tmp34_);
+					_data7_->but_song->album = (_tmp35_ = g_strdup (iter->tag), _g_free0 (_data7_->but_song->album), _tmp35_);
 					gmpc_metaimage_set_squared (image, TRUE);
 					gmpc_metaimage_update_cover_from_song_delayed (image, _data7_->but_song);
 					gtk_box_pack_start ((GtkBox*) but_hbox, (GtkWidget*) image, FALSE, FALSE, (guint) 0);
 					but_label = g_object_ref_sink ((GtkLabel*) gtk_label_new (iter->tag));
 					gtk_misc_set_alignment ((GtkMisc*) but_label, 0.0f, 0.5f);
-					_tmp31_ = NULL;
+					_tmp36_ = NULL;
 					if (string_get_length (iter->tag) == 0) {
-						_tmp31_ = _ ("No Album");
+						_tmp36_ = _ ("No Album");
 					} else {
-						_tmp31_ = iter->tag;
+						_tmp36_ = iter->tag;
 					}
-					gtk_label_set_markup (but_label, _tmp32_ = g_markup_printf_escaped ("<b>%s</b>", _tmp31_));
-					_g_free0 (_tmp32_);
+					gtk_label_set_markup (but_label, _tmp37_ = g_markup_printf_escaped ("<b>%s</b>", _tmp36_));
+					_g_free0 (_tmp37_);
 					gtk_label_set_ellipsize (but_label, PANGO_ELLIPSIZE_END);
 					gtk_box_pack_start ((GtkBox*) but_hbox, (GtkWidget*) but_label, TRUE, TRUE, (guint) 0);
 					gtk_box_pack_start ((GtkBox*) album_hbox, (GtkWidget*) button, FALSE, FALSE, (guint) 0);
@@ -1263,20 +1382,20 @@ static void gmpc_plugin_mockup_update_not_playing (GmpcPluginMockup* self) {
 			GtkImage* _tmp1_;
 			pb = gdk_pixbuf_new_from_file_at_scale (path, 150, 150, TRUE, &_inner_error_);
 			if (_inner_error_ != NULL) {
-				goto __catch0_g_error;
-				goto __finally0;
+				goto __catch2_g_error;
+				goto __finally2;
 			}
 			image = (_tmp1_ = g_object_ref_sink ((GtkImage*) gtk_image_new_from_pixbuf (pb)), _g_object_unref0 (image), _tmp1_);
 			_g_object_unref0 (pb);
 		}
-		goto __finally0;
-		__catch0_g_error:
+		goto __finally2;
+		__catch2_g_error:
 		{
 			GError * e;
 			e = _inner_error_;
 			_inner_error_ = NULL;
 			{
-				g_warning ("gmpc-nowplaying2.vala:690: Failed to load the gmpc logo: %s", e->message);
+				g_warning ("gmpc-nowplaying2.vala:714: Failed to load the gmpc logo: %s", e->message);
 				_g_error_free0 (e);
 				_g_object_unref0 (it);
 				_gtk_icon_info_free0 (info);
@@ -1285,7 +1404,7 @@ static void gmpc_plugin_mockup_update_not_playing (GmpcPluginMockup* self) {
 				return;
 			}
 		}
-		__finally0:
+		__finally2:
 		if (_inner_error_ != NULL) {
 			_g_object_unref0 (it);
 			_gtk_icon_info_free0 (info);
@@ -1328,13 +1447,13 @@ static void gmpc_plugin_mockup_update (GmpcPluginMockup* self) {
 		case MPD_STATUS_STATE_PLAY:
 		case MPD_STATUS_STATE_PAUSE:
 		{
-			g_debug ("gmpc-nowplaying2.vala:722: Update playing");
+			g_debug ("gmpc-nowplaying2.vala:746: Update playing");
 			gmpc_plugin_mockup_update_playing (self);
 			break;
 		}
 		default:
 		{
-			g_debug ("gmpc-nowplaying2.vala:726: update not playing");
+			g_debug ("gmpc-nowplaying2.vala:750: update not playing");
 			gmpc_plugin_mockup_update_not_playing (self);
 			break;
 		}
