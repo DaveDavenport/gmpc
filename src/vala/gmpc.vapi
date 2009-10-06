@@ -167,6 +167,7 @@ namespace Gmpc {
                 public TextView(Type type);
             [CCode (cname="gmpc_meta_text_view_query_text_from_song")]
                 public void query_from_song(MPD.Song song);
+                public bool force_ro;
         }
 
    }

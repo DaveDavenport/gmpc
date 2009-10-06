@@ -41,7 +41,9 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
     private GtkWidget *cancel       = {NULL};
     private MetaData *met = {NULL} destroywith meta_data_free;
 
+    public gboolean force_ro       = {FALSE};
     public gboolean use_monospace       = {FALSE};
+    
 
     private gboolean
     key_press_event(self, GdkEventKey *key, gpointer user_data)
@@ -237,7 +239,7 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
         if(self->use_monospace) {
             gtk_text_buffer_apply_tag_by_name(self->_priv->buffer, "monospace",&iter, &end_iter);
         }
-        if(!ro)
+        if(!ro && !self->force_ro)
         {
             GtkTextChildAnchor *anch;
             self->_priv->edit = gtk_button_new_from_stock(GTK_STOCK_EDIT); 

@@ -506,7 +506,7 @@ static void _lambda0_ (GtkButton* source, Block2Data* _data2_) {
 	_data1_ = _data2_->_data1_;
 	self = _data1_->self;
 	g_return_if_fail (source != NULL);
-	g_debug ("gmpc-nowplaying2.vala:495: notebook page %i clicked", _data2_->j);
+	g_debug ("gmpc-nowplaying2.vala:496: notebook page %i clicked", _data2_->j);
 	gtk_notebook_set_current_page (_data1_->notebook, _data2_->j);
 }
 
@@ -536,7 +536,7 @@ static void _lambda1_ (GtkButton* source, Block3Data* _data3_) {
 	_data1_ = _data3_->_data1_;
 	self = _data1_->self;
 	g_return_if_fail (source != NULL);
-	g_debug ("gmpc-nowplaying2.vala:520: notebook page %i clicked", _data3_->j);
+	g_debug ("gmpc-nowplaying2.vala:522: notebook page %i clicked", _data3_->j);
 	gtk_notebook_set_current_page (_data1_->notebook, _data3_->j);
 	if (!_data3_->text_view_queried) {
 		gmpc_meta_text_view_query_text_from_song (_data3_->text_view, _data1_->song);
@@ -572,7 +572,7 @@ static void _lambda2_ (GtkButton* source, Block4Data* _data4_) {
 	_data1_ = _data4_->_data1_;
 	self = _data1_->self;
 	g_return_if_fail (source != NULL);
-	g_debug ("gmpc-nowplaying2.vala:551: notebook page %i clicked", _data4_->j);
+	g_debug ("gmpc-nowplaying2.vala:553: notebook page %i clicked", _data4_->j);
 	gtk_notebook_set_current_page (_data1_->notebook, _data4_->j);
 	if (!_data4_->similar_songs_queried) {
 		GmpcWidgetSimilarSongs* similar_songs;
@@ -613,7 +613,7 @@ static void _lambda3_ (GtkButton* source, Block5Data* _data5_) {
 	_data1_ = _data5_->_data1_;
 	self = _data1_->self;
 	g_return_if_fail (source != NULL);
-	g_debug ("gmpc-nowplaying2.vala:585: notebook page %i clicked", _data5_->j);
+	g_debug ("gmpc-nowplaying2.vala:587: notebook page %i clicked", _data5_->j);
 	gtk_notebook_set_current_page (_data1_->notebook, _data5_->j);
 }
 
@@ -643,7 +643,7 @@ static void _lambda4_ (GtkButton* source, Block6Data* _data6_) {
 	_data1_ = _data6_->_data1_;
 	self = _data1_->self;
 	g_return_if_fail (source != NULL);
-	g_debug ("gmpc-nowplaying2.vala:600: notebook page %i clicked", _data6_->j);
+	g_debug ("gmpc-nowplaying2.vala:602: notebook page %i clicked", _data6_->j);
 	gtk_notebook_set_current_page (_data1_->notebook, _data6_->j);
 }
 
@@ -1089,6 +1089,7 @@ static void gmpc_plugin_mockup_update_playing (GmpcPluginMockup* self) {
 		_data2_->_data1_ = block1_data_ref (_data1_);
 		alib = g_object_ref_sink ((GtkAlignment*) gtk_alignment_new (0.f, 0.f, 1.f, 0.f));
 		text_view = g_object_ref_sink (gmpc_meta_text_view_new (META_SONG_TXT));
+		text_view->force_ro = TRUE;
 		gtk_text_view_set_left_margin ((GtkTextView*) text_view, 8);
 		gmpc_meta_text_view_query_text_from_song (text_view, _data1_->song);
 		gtk_container_add ((GtkContainer*) alib, (GtkWidget*) text_view);
@@ -1116,6 +1117,7 @@ static void gmpc_plugin_mockup_update_playing (GmpcPluginMockup* self) {
 		_data3_->_data1_ = block1_data_ref (_data1_);
 		alib = g_object_ref_sink ((GtkAlignment*) gtk_alignment_new (0.f, 0.f, 1.f, 0.f));
 		_data3_->text_view = g_object_ref_sink (gmpc_meta_text_view_new (META_SONG_GUITAR_TAB));
+		_data3_->text_view->force_ro = TRUE;
 		_data3_->text_view->use_monospace = TRUE;
 		gtk_text_view_set_left_margin ((GtkTextView*) _data3_->text_view, 8);
 		_data3_->text_view_queried = FALSE;
@@ -1393,7 +1395,7 @@ static void gmpc_plugin_mockup_update_not_playing (GmpcPluginMockup* self) {
 			e = _inner_error_;
 			_inner_error_ = NULL;
 			{
-				g_warning ("gmpc-nowplaying2.vala:718: Failed to load the gmpc logo: %s", e->message);
+				g_warning ("gmpc-nowplaying2.vala:720: Failed to load the gmpc logo: %s", e->message);
 				_g_error_free0 (e);
 				_g_object_unref0 (it);
 				_gtk_icon_info_free0 (info);
@@ -1445,13 +1447,13 @@ static void gmpc_plugin_mockup_update (GmpcPluginMockup* self) {
 		case MPD_STATUS_STATE_PLAY:
 		case MPD_STATUS_STATE_PAUSE:
 		{
-			g_debug ("gmpc-nowplaying2.vala:750: Update playing");
+			g_debug ("gmpc-nowplaying2.vala:752: Update playing");
 			gmpc_plugin_mockup_update_playing (self);
 			break;
 		}
 		default:
 		{
-			g_debug ("gmpc-nowplaying2.vala:754: update not playing");
+			g_debug ("gmpc-nowplaying2.vala:756: update not playing");
 			gmpc_plugin_mockup_update_not_playing (self);
 			break;
 		}

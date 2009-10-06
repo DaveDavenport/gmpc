@@ -482,6 +482,7 @@ namespace Gmpc {
                 {
                     var alib = new Gtk.Alignment(0f,0f,1f,0f);
                     var text_view = new Gmpc.MetaData.TextView(Gmpc.MetaData.Type.SONG_TXT);
+                    text_view.force_ro = true;
                     text_view.set_left_margin(8);
                     text_view.query_from_song(song);
 
@@ -505,6 +506,7 @@ namespace Gmpc {
                 {
                     var alib = new Gtk.Alignment(0f,0f,1f,0f);
                     var text_view = new Gmpc.MetaData.TextView(Gmpc.MetaData.Type.SONG_GUITAR_TAB);
+                    text_view.force_ro = true;
                     text_view.use_monospace = true;
                     text_view.set_left_margin(8);
                     var text_view_queried = false;
