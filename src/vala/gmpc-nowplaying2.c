@@ -420,17 +420,7 @@ static void gmpc_plugin_mockup_change_color_style (GmpcPluginMockup* self, GtkWi
 	} else {
 		if (self->priv->theme_colors) {
 			GdkColor _tmp2_;
-			GdkColor _tmp3_;
-			GdkColor _tmp4_;
-			GdkColor _tmp5_;
-			GdkColor _tmp6_;
-			GdkColor _tmp7_;
-			gtk_widget_modify_bg (bg, GTK_STATE_NORMAL, (_tmp2_ = gtk_widget_get_style ((GtkWidget*) self->priv->paned)->dark[GTK_STATE_NORMAL], &_tmp2_));
-			gtk_widget_modify_base (bg, GTK_STATE_NORMAL, (_tmp3_ = gtk_widget_get_style ((GtkWidget*) self->priv->paned)->dark[GTK_STATE_NORMAL], &_tmp3_));
-			gtk_widget_modify_text (bg, GTK_STATE_NORMAL, (_tmp4_ = gtk_widget_get_style ((GtkWidget*) self->priv->paned)->light[GTK_STATE_NORMAL], &_tmp4_));
-			gtk_widget_modify_fg (bg, GTK_STATE_NORMAL, (_tmp5_ = gtk_widget_get_style ((GtkWidget*) self->priv->paned)->light[GTK_STATE_NORMAL], &_tmp5_));
-			gtk_widget_modify_text (bg, GTK_STATE_ACTIVE, (_tmp6_ = gtk_widget_get_style ((GtkWidget*) self->priv->paned)->light[GTK_STATE_NORMAL], &_tmp6_));
-			gtk_widget_modify_fg (bg, GTK_STATE_ACTIVE, (_tmp7_ = gtk_widget_get_style ((GtkWidget*) self->priv->paned)->light[GTK_STATE_NORMAL], &_tmp7_));
+			gtk_widget_modify_bg (bg, GTK_STATE_NORMAL, (_tmp2_ = gtk_widget_get_style ((GtkWidget*) self->priv->paned)->base[GTK_STATE_NORMAL], &_tmp2_));
 		} else {
 			gtk_widget_modify_bg (bg, GTK_STATE_NORMAL, &self->priv->background);
 			gtk_widget_modify_base (bg, GTK_STATE_NORMAL, &self->priv->background);
@@ -516,7 +506,7 @@ static void _lambda0_ (GtkButton* source, Block2Data* _data2_) {
 	_data1_ = _data2_->_data1_;
 	self = _data1_->self;
 	g_return_if_fail (source != NULL);
-	g_debug ("gmpc-nowplaying2.vala:493: notebook page %i clicked", _data2_->j);
+	g_debug ("gmpc-nowplaying2.vala:495: notebook page %i clicked", _data2_->j);
 	gtk_notebook_set_current_page (_data1_->notebook, _data2_->j);
 }
 
@@ -546,7 +536,7 @@ static void _lambda1_ (GtkButton* source, Block3Data* _data3_) {
 	_data1_ = _data3_->_data1_;
 	self = _data1_->self;
 	g_return_if_fail (source != NULL);
-	g_debug ("gmpc-nowplaying2.vala:516: notebook page %i clicked", _data3_->j);
+	g_debug ("gmpc-nowplaying2.vala:520: notebook page %i clicked", _data3_->j);
 	gtk_notebook_set_current_page (_data1_->notebook, _data3_->j);
 	if (!_data3_->text_view_queried) {
 		gmpc_meta_text_view_query_text_from_song (_data3_->text_view, _data1_->song);
@@ -582,7 +572,7 @@ static void _lambda2_ (GtkButton* source, Block4Data* _data4_) {
 	_data1_ = _data4_->_data1_;
 	self = _data1_->self;
 	g_return_if_fail (source != NULL);
-	g_debug ("gmpc-nowplaying2.vala:547: notebook page %i clicked", _data4_->j);
+	g_debug ("gmpc-nowplaying2.vala:551: notebook page %i clicked", _data4_->j);
 	gtk_notebook_set_current_page (_data1_->notebook, _data4_->j);
 	if (!_data4_->similar_songs_queried) {
 		GmpcWidgetSimilarSongs* similar_songs;
@@ -623,7 +613,7 @@ static void _lambda3_ (GtkButton* source, Block5Data* _data5_) {
 	_data1_ = _data5_->_data1_;
 	self = _data1_->self;
 	g_return_if_fail (source != NULL);
-	g_debug ("gmpc-nowplaying2.vala:581: notebook page %i clicked", _data5_->j);
+	g_debug ("gmpc-nowplaying2.vala:585: notebook page %i clicked", _data5_->j);
 	gtk_notebook_set_current_page (_data1_->notebook, _data5_->j);
 }
 
@@ -653,7 +643,7 @@ static void _lambda4_ (GtkButton* source, Block6Data* _data6_) {
 	_data1_ = _data6_->_data1_;
 	self = _data1_->self;
 	g_return_if_fail (source != NULL);
-	g_debug ("gmpc-nowplaying2.vala:596: notebook page %i clicked", _data6_->j);
+	g_debug ("gmpc-nowplaying2.vala:600: notebook page %i clicked", _data6_->j);
 	gtk_notebook_set_current_page (_data1_->notebook, _data6_->j);
 }
 
@@ -1090,16 +1080,19 @@ static void gmpc_plugin_mockup_update_playing (GmpcPluginMockup* self) {
 	group = NULL;
 	if (cfg_get_single_value_as_int_with_default (config, "MetaData", "show-lyrics", 1) == 1) {
 		Block2Data* _data2_;
+		GtkAlignment* alib;
 		GmpcMetaTextView* text_view;
 		GtkLabel* _tmp22_;
 		GtkRadioButton* button;
 		_data2_ = g_slice_new0 (Block2Data);
 		_data2_->_ref_count_ = 1;
 		_data2_->_data1_ = block1_data_ref (_data1_);
+		alib = g_object_ref_sink ((GtkAlignment*) gtk_alignment_new (0.f, 0.f, 1.f, 0.f));
 		text_view = g_object_ref_sink (gmpc_meta_text_view_new (META_SONG_TXT));
 		gtk_text_view_set_left_margin ((GtkTextView*) text_view, 8);
 		gmpc_meta_text_view_query_text_from_song (text_view, _data1_->song);
-		gtk_notebook_append_page (_data1_->notebook, (GtkWidget*) text_view, (GtkWidget*) (_tmp22_ = g_object_ref_sink ((GtkLabel*) gtk_label_new ("Lyrics"))));
+		gtk_container_add ((GtkContainer*) alib, (GtkWidget*) text_view);
+		gtk_notebook_append_page (_data1_->notebook, (GtkWidget*) alib, (GtkWidget*) (_tmp22_ = g_object_ref_sink ((GtkLabel*) gtk_label_new ("Lyrics"))));
 		_g_object_unref0 (_tmp22_);
 		button = g_object_ref_sink ((GtkRadioButton*) gtk_radio_button_new_with_label (group, "Lyrics"));
 		group = gtk_radio_button_get_group (button);
@@ -1107,23 +1100,27 @@ static void gmpc_plugin_mockup_update_playing (GmpcPluginMockup* self) {
 		_data2_->j = i;
 		g_signal_connect_data ((GtkButton*) button, "clicked", (GCallback) __lambda0__gtk_button_clicked, block2_data_ref (_data2_), (GClosureNotify) block2_data_unref, 0);
 		i++;
-		gtk_widget_show ((GtkWidget*) text_view);
+		gtk_widget_show ((GtkWidget*) alib);
+		_g_object_unref0 (alib);
 		_g_object_unref0 (text_view);
 		_g_object_unref0 (button);
 		block2_data_unref (_data2_);
 	}
 	if (cfg_get_single_value_as_int_with_default (config, "MetaData", "show-guitar-tabs", 1) == 1) {
 		Block3Data* _data3_;
+		GtkAlignment* alib;
 		GtkLabel* _tmp23_;
 		GtkRadioButton* button;
 		_data3_ = g_slice_new0 (Block3Data);
 		_data3_->_ref_count_ = 1;
 		_data3_->_data1_ = block1_data_ref (_data1_);
+		alib = g_object_ref_sink ((GtkAlignment*) gtk_alignment_new (0.f, 0.f, 1.f, 0.f));
 		_data3_->text_view = g_object_ref_sink (gmpc_meta_text_view_new (META_SONG_GUITAR_TAB));
 		_data3_->text_view->use_monospace = TRUE;
 		gtk_text_view_set_left_margin ((GtkTextView*) _data3_->text_view, 8);
 		_data3_->text_view_queried = FALSE;
-		gtk_notebook_append_page (_data1_->notebook, (GtkWidget*) _data3_->text_view, (GtkWidget*) (_tmp23_ = g_object_ref_sink ((GtkLabel*) gtk_label_new (_ ("Guitar Tabs")))));
+		gtk_container_add ((GtkContainer*) alib, (GtkWidget*) _data3_->text_view);
+		gtk_notebook_append_page (_data1_->notebook, (GtkWidget*) alib, (GtkWidget*) (_tmp23_ = g_object_ref_sink ((GtkLabel*) gtk_label_new (_ ("Guitar Tabs")))));
 		_g_object_unref0 (_tmp23_);
 		button = g_object_ref_sink ((GtkRadioButton*) gtk_radio_button_new_with_label (group, _ ("Guitar Tabs")));
 		group = gtk_radio_button_get_group (button);
@@ -1134,8 +1131,9 @@ static void gmpc_plugin_mockup_update_playing (GmpcPluginMockup* self) {
 			gmpc_meta_text_view_query_text_from_song (_data3_->text_view, _data1_->song);
 			_data3_->text_view_queried = TRUE;
 		}
-		gtk_widget_show ((GtkWidget*) _data3_->text_view);
+		gtk_widget_show ((GtkWidget*) alib);
 		i++;
+		_g_object_unref0 (alib);
 		_g_object_unref0 (button);
 		block3_data_unref (_data3_);
 	}
@@ -1395,7 +1393,7 @@ static void gmpc_plugin_mockup_update_not_playing (GmpcPluginMockup* self) {
 			e = _inner_error_;
 			_inner_error_ = NULL;
 			{
-				g_warning ("gmpc-nowplaying2.vala:714: Failed to load the gmpc logo: %s", e->message);
+				g_warning ("gmpc-nowplaying2.vala:718: Failed to load the gmpc logo: %s", e->message);
 				_g_error_free0 (e);
 				_g_object_unref0 (it);
 				_gtk_icon_info_free0 (info);
@@ -1447,13 +1445,13 @@ static void gmpc_plugin_mockup_update (GmpcPluginMockup* self) {
 		case MPD_STATUS_STATE_PLAY:
 		case MPD_STATUS_STATE_PAUSE:
 		{
-			g_debug ("gmpc-nowplaying2.vala:746: Update playing");
+			g_debug ("gmpc-nowplaying2.vala:750: Update playing");
 			gmpc_plugin_mockup_update_playing (self);
 			break;
 		}
 		default:
 		{
-			g_debug ("gmpc-nowplaying2.vala:750: update not playing");
+			g_debug ("gmpc-nowplaying2.vala:754: update not playing");
 			gmpc_plugin_mockup_update_not_playing (self);
 			break;
 		}

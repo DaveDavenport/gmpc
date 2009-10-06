@@ -214,12 +214,12 @@ namespace Gmpc {
                 }else{
                     if(theme_colors)
                     {
-                        bg.modify_bg(Gtk.StateType.NORMAL,this.paned.style.dark[Gtk.StateType.NORMAL]);
-                        bg.modify_base(Gtk.StateType.NORMAL,this.paned.style.dark[Gtk.StateType.NORMAL]);
-                        bg.modify_text(Gtk.StateType.NORMAL,this.paned.style.light[Gtk.StateType.NORMAL]);
-                        bg.modify_fg(Gtk.StateType.NORMAL,this.paned.style.light[Gtk.StateType.NORMAL]);
-                        bg.modify_text(Gtk.StateType.ACTIVE,this.paned.style.light[Gtk.StateType.NORMAL]);
-                        bg.modify_fg(Gtk.StateType.ACTIVE,this.paned.style.light[Gtk.StateType.NORMAL]);
+                        bg.modify_bg(Gtk.StateType.NORMAL,this.paned.style.base[Gtk.StateType.NORMAL]);
+                        /*bg.modify_base(Gtk.StateType.NORMAL,this.paned.style.mid[Gtk.StateType.NORMAL]);/*
+//                        bg.modify_text(Gtk.StateType.NORMAL,this.paned.style.text[Gtk.StateType.NORMAL]);
+                        bg.modify_fg(Gtk.StateType.NORMAL,this.paned.style.text[Gtk.StateType.NORMAL]);
+                       bg.modify_text(Gtk.StateType.ACTIVE,this.paned.style.light[Gtk.StateType.NORMAL]);
+                        bg.modify_fg(Gtk.StateType.ACTIVE,this.paned.style.light[Gtk.StateType.NORMAL]);*/
                     }else{
                         bg.modify_bg(Gtk.StateType.NORMAL,this.background);
                         bg.modify_base(Gtk.StateType.NORMAL,this.background);
@@ -480,11 +480,13 @@ namespace Gmpc {
                 weak SList<weak Gtk.RadioButton> group  = null;
                 if(config.get_int_with_default("MetaData", "show-lyrics",1) == 1)
                 {
+                    var alib = new Gtk.Alignment(0f,0f,1f,0f);
                     var text_view = new Gmpc.MetaData.TextView(Gmpc.MetaData.Type.SONG_TXT);
                     text_view.set_left_margin(8);
                     text_view.query_from_song(song);
 
-                    notebook.append_page(text_view, new Gtk.Label("Lyrics"));
+                    alib.add(text_view);
+                    notebook.append_page(alib, new Gtk.Label("Lyrics"));
                     var button = new Gtk.RadioButton.with_label(group,("Lyrics"));
                     group = button.get_group();
                     hboxje.pack_start(button, false, false, 0);
@@ -495,18 +497,20 @@ namespace Gmpc {
                             });
                     i++;
 
-                    text_view.show();
+                    alib.show();
                 }
 
                 /* Guitar Tabs */
                 if(config.get_int_with_default("MetaData", "show-guitar-tabs",1) == 1)
                 {
+                    var alib = new Gtk.Alignment(0f,0f,1f,0f);
                     var text_view = new Gmpc.MetaData.TextView(Gmpc.MetaData.Type.SONG_GUITAR_TAB);
                     text_view.use_monospace = true;
                     text_view.set_left_margin(8);
                     var text_view_queried = false;
 
-                    notebook.append_page(text_view, new Gtk.Label(_("Guitar Tabs")));
+                    alib.add(text_view);
+                    notebook.append_page(alib, new Gtk.Label(_("Guitar Tabs")));
                     var button = new Gtk.RadioButton.with_label(group,_("Guitar Tabs"));
                     group = button.get_group();
                     hboxje.pack_start(button, false, false, 0);
@@ -525,7 +529,7 @@ namespace Gmpc {
                         text_view.query_from_song(song);
                         text_view_queried = true;
                     }
-                    text_view.show();
+                    alib.show();
                     i++;
                 }
                 /* Similar songs */
