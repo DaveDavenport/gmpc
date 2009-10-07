@@ -537,7 +537,7 @@ void gmpc_easy_async_quit(void)
 
 char *gmpc_easy_download_uri_escape(const char *part)
 {
-	return soup_uri_encode(part, NULL);
+	return soup_uri_encode(part, "&+");
 }
 
 /* vim: set noexpandtab ts=4 sw=4 sts=4 tw=120: */
