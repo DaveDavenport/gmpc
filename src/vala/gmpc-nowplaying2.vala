@@ -648,6 +648,7 @@ namespace Gmpc {
 
                     MPD.Database.search_field_start(server, MPD.Tag.Type.ALBUM);
                     MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, song.artist);
+                    MPD.Data.Item list = null;
                     var data = MPD.Database.search_commit(server);
                     if(data != null){
                         weak MPD.Data.Item iter = data.get_first();
@@ -656,22 +657,46 @@ namespace Gmpc {
                                 iter = iter.next(false); 
                                 continue;
                             }
+                            list.append_new();
+                            list.type = MPD.Data.Type.SONG;
+                            list.song = new MPD.Song();
+                            list.song.artist = song.artist;
+                            list.song.album  = iter.tag;
+                            MPD.Database.search_field_start(server,MPD.Tag.Type.DATE);
+                            MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, song.artist);
+                            MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM, iter.tag);
+                            var ydata = MPD.Database.search_commit(server);
+                            if(ydata != null) {
+                                list.song.date = ydata.tag;
+                            }
+                            iter = iter.next(false);
+                        }while(iter != null);
+                    }
+
+                    list.sort_album_disc_track();
+                    if(list != null) {
+                        weak MPD.Data.Item iter = list.get_first();
+                        do{
                             var button = new Gtk.Button();
                             button.set_relief(Gtk.ReliefStyle.NONE);
                             var but_hbox = new Gtk.HBox(false, 6);
                             button.add(but_hbox);
                             var image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ALBUM_ART, 48);
-                            var but_song = new MPD.Song();
-                            but_song.artist = song.artist;
-                            but_song.album = iter.tag;
+                            var but_song = iter.song; 
+//                            but_song.artist = song.artist;
+  //                          but_song.album = iter.tag;
                             image.set_squared(true);
                             image.update_from_song_delayed(but_song);
 
                             but_hbox.pack_start(image, false, false, 0);
 
-                            var but_label = new Gtk.Label(iter.tag);
+                            var but_label = new Gtk.Label(iter.song.album);
                             but_label.set_alignment(0.0f, 0.5f);
-                            but_label.set_markup(GLib.Markup.printf_escaped("<b>%s</b>", (iter.tag.length == 0)? _("No Album"):iter.tag));
+                            var strlabel = "";
+                            if(iter.song.date != null && iter.song.date.length > 0) strlabel += "%s: ".printf(iter.song.date);
+                            if(iter.song.album != null) strlabel+= iter.song.album;
+                            else strlabel += _("No Album");
+                            but_label.set_markup(GLib.Markup.printf_escaped("<b>%s</b>",strlabel)); 
                             but_label.set_ellipsize(Pango.EllipsizeMode.END);
                             but_hbox.pack_start(but_label, true, true, 0);
 

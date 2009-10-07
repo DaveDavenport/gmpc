@@ -72,8 +72,8 @@ typedef struct _Block4Data Block4Data;
 typedef struct _Block5Data Block5Data;
 typedef struct _Block6Data Block6Data;
 #define _mpd_freeSong0(var) ((var == NULL) ? NULL : (var = (mpd_freeSong (var), NULL)))
-typedef struct _Block7Data Block7Data;
 #define _mpd_data_free0(var) ((var == NULL) ? NULL : (var = (mpd_data_free (var), NULL)))
+typedef struct _Block7Data Block7Data;
 typedef struct _Block1Data Block1Data;
 #define _gtk_icon_info_free0(var) ((var == NULL) ? NULL : (var = (gtk_icon_info_free (var), NULL)))
 
@@ -1242,6 +1242,7 @@ static void gmpc_plugin_mockup_update_playing (GmpcPluginMockup* self) {
 		GtkVBox* album_hbox;
 		GtkLabel* label;
 		char* _tmp32_;
+		MpdData* list;
 		MpdData* data;
 		sep2 = g_object_ref_sink ((GtkVSeparator*) gtk_vseparator_new ());
 		gtk_widget_set_size_request ((GtkWidget*) sep2, -1, 4);
@@ -1262,6 +1263,7 @@ static void gmpc_plugin_mockup_update_playing (GmpcPluginMockup* self) {
 		gtk_box_pack_start ((GtkBox*) album_hbox, (GtkWidget*) label, FALSE, FALSE, (guint) 0);
 		mpd_database_search_field_start (connection, MPD_TAG_ITEM_ALBUM);
 		mpd_database_search_add_constraint (connection, MPD_TAG_ITEM_ARTIST, _data1_->song->artist);
+		list = NULL;
 		data = mpd_database_search_commit (connection);
 		if (data != NULL) {
 			const MpdData* iter;
@@ -1270,51 +1272,96 @@ static void gmpc_plugin_mockup_update_playing (GmpcPluginMockup* self) {
 				gboolean _tmp33_;
 				_tmp33_ = TRUE;
 				while (TRUE) {
-					Block7Data* _data7_;
-					GtkButton* button;
-					GtkHBox* but_hbox;
-					GmpcMetaImage* image;
-					char* _tmp34_;
+					mpd_Song* _tmp34_;
 					char* _tmp35_;
-					GtkLabel* but_label;
-					const char* _tmp36_;
-					char* _tmp37_;
-					_data7_ = g_slice_new0 (Block7Data);
-					_data7_->_ref_count_ = 1;
-					_data7_->_data1_ = block1_data_ref (_data1_);
+					char* _tmp36_;
+					MpdData* ydata;
 					if (!_tmp33_) {
 						if (!(iter != NULL)) {
-							block7_data_unref (_data7_);
 							break;
 						}
 					}
 					_tmp33_ = FALSE;
 					if (_vala_strcmp0 (iter->tag, _data1_->song->album) == 0) {
 						iter = mpd_data_get_next_real (iter, FALSE);
-						block7_data_unref (_data7_);
 						continue;
 					}
+					list = mpd_new_data_struct_append (list);
+					list->type = MPD_DATA_TYPE_SONG;
+					list->song = (_tmp34_ = mpd_newSong (), _mpd_freeSong0 (list->song), _tmp34_);
+					list->song->artist = (_tmp35_ = g_strdup (_data1_->song->artist), _g_free0 (list->song->artist), _tmp35_);
+					list->song->album = (_tmp36_ = g_strdup (iter->tag), _g_free0 (list->song->album), _tmp36_);
+					mpd_database_search_field_start (connection, MPD_TAG_ITEM_DATE);
+					mpd_database_search_add_constraint (connection, MPD_TAG_ITEM_ARTIST, _data1_->song->artist);
+					mpd_database_search_add_constraint (connection, MPD_TAG_ITEM_ALBUM, iter->tag);
+					ydata = mpd_database_search_commit (connection);
+					if (ydata != NULL) {
+						char* _tmp37_;
+						list->song->date = (_tmp37_ = g_strdup (ydata->tag), _g_free0 (list->song->date), _tmp37_);
+					}
+					iter = mpd_data_get_next_real (iter, FALSE);
+					_mpd_data_free0 (ydata);
+				}
+			}
+		}
+		list = misc_sort_mpddata_by_album_disc_track (list);
+		if (list != NULL) {
+			const MpdData* iter;
+			iter = mpd_data_get_first (list);
+			{
+				gboolean _tmp38_;
+				_tmp38_ = TRUE;
+				while (TRUE) {
+					Block7Data* _data7_;
+					GtkButton* button;
+					GtkHBox* but_hbox;
+					GmpcMetaImage* image;
+					GtkLabel* but_label;
+					char* strlabel;
+					gboolean _tmp39_ = FALSE;
+					char* _tmp44_;
+					_data7_ = g_slice_new0 (Block7Data);
+					_data7_->_ref_count_ = 1;
+					_data7_->_data1_ = block1_data_ref (_data1_);
+					if (!_tmp38_) {
+						if (!(iter != NULL)) {
+							block7_data_unref (_data7_);
+							break;
+						}
+					}
+					_tmp38_ = FALSE;
 					button = g_object_ref_sink ((GtkButton*) gtk_button_new ());
 					gtk_button_set_relief (button, GTK_RELIEF_NONE);
 					but_hbox = g_object_ref_sink ((GtkHBox*) gtk_hbox_new (FALSE, 6));
 					gtk_container_add ((GtkContainer*) button, (GtkWidget*) but_hbox);
 					image = g_object_ref_sink (gmpc_metaimage_new_size (META_ALBUM_ART, 48));
-					_data7_->but_song = mpd_newSong ();
-					_data7_->but_song->artist = (_tmp34_ = g_strdup (_data1_->song->artist), _g_free0 (_data7_->but_song->artist), _tmp34_);
-					_data7_->but_song->album = (_tmp35_ = g_strdup (iter->tag), _g_free0 (_data7_->but_song->album), _tmp35_);
+					_data7_->but_song = _mpd_songDup0 (iter->song);
 					gmpc_metaimage_set_squared (image, TRUE);
 					gmpc_metaimage_update_cover_from_song_delayed (image, _data7_->but_song);
 					gtk_box_pack_start ((GtkBox*) but_hbox, (GtkWidget*) image, FALSE, FALSE, (guint) 0);
-					but_label = g_object_ref_sink ((GtkLabel*) gtk_label_new (iter->tag));
+					but_label = g_object_ref_sink ((GtkLabel*) gtk_label_new (iter->song->album));
 					gtk_misc_set_alignment ((GtkMisc*) but_label, 0.0f, 0.5f);
-					_tmp36_ = NULL;
-					if (string_get_length (iter->tag) == 0) {
-						_tmp36_ = _ ("No Album");
+					strlabel = g_strdup ("");
+					if (iter->song->date != NULL) {
+						_tmp39_ = string_get_length (iter->song->date) > 0;
 					} else {
-						_tmp36_ = iter->tag;
+						_tmp39_ = FALSE;
 					}
-					gtk_label_set_markup (but_label, _tmp37_ = g_markup_printf_escaped ("<b>%s</b>", _tmp36_));
-					_g_free0 (_tmp37_);
+					if (_tmp39_) {
+						char* _tmp41_;
+						char* _tmp40_;
+						strlabel = (_tmp41_ = g_strconcat (strlabel, _tmp40_ = g_strdup_printf ("%s: ", iter->song->date), NULL), _g_free0 (strlabel), _tmp41_);
+						_g_free0 (_tmp40_);
+					}
+					if (iter->song->album != NULL) {
+						char* _tmp42_;
+						strlabel = (_tmp42_ = g_strconcat (strlabel, iter->song->album, NULL), _g_free0 (strlabel), _tmp42_);
+					} else {
+						char* _tmp43_;
+						strlabel = (_tmp43_ = g_strconcat (strlabel, _ ("No Album"), NULL), _g_free0 (strlabel), _tmp43_);
+					}
+					gtk_label_set_markup (but_label, _tmp44_ = g_markup_printf_escaped ("<b>%s</b>", strlabel));
+					_g_free0 (_tmp44_);
 					gtk_label_set_ellipsize (but_label, PANGO_ELLIPSIZE_END);
 					gtk_box_pack_start ((GtkBox*) but_hbox, (GtkWidget*) but_label, TRUE, TRUE, (guint) 0);
 					gtk_box_pack_start ((GtkBox*) album_hbox, (GtkWidget*) button, FALSE, FALSE, (guint) 0);
@@ -1325,6 +1372,7 @@ static void gmpc_plugin_mockup_update_playing (GmpcPluginMockup* self) {
 					_g_object_unref0 (but_hbox);
 					_g_object_unref0 (image);
 					_g_object_unref0 (but_label);
+					_g_free0 (strlabel);
 					block7_data_unref (_data7_);
 				}
 			}
@@ -1336,6 +1384,7 @@ static void gmpc_plugin_mockup_update_playing (GmpcPluginMockup* self) {
 		_g_object_unref0 (sep2);
 		_g_object_unref0 (album_hbox);
 		_g_object_unref0 (label);
+		_mpd_data_free0 (list);
 		_mpd_data_free0 (data);
 	}
 	gtk_box_pack_start ((GtkBox*) vbox, (GtkWidget*) bottom_hbox, TRUE, TRUE, (guint) 0);
@@ -1395,7 +1444,7 @@ static void gmpc_plugin_mockup_update_not_playing (GmpcPluginMockup* self) {
 			e = _inner_error_;
 			_inner_error_ = NULL;
 			{
-				g_warning ("gmpc-nowplaying2.vala:720: Failed to load the gmpc logo: %s", e->message);
+				g_warning ("gmpc-nowplaying2.vala:745: Failed to load the gmpc logo: %s", e->message);
 				_g_error_free0 (e);
 				_g_object_unref0 (it);
 				_gtk_icon_info_free0 (info);
@@ -1447,13 +1496,13 @@ static void gmpc_plugin_mockup_update (GmpcPluginMockup* self) {
 		case MPD_STATUS_STATE_PLAY:
 		case MPD_STATUS_STATE_PAUSE:
 		{
-			g_debug ("gmpc-nowplaying2.vala:752: Update playing");
+			g_debug ("gmpc-nowplaying2.vala:777: Update playing");
 			gmpc_plugin_mockup_update_playing (self);
 			break;
 		}
 		default:
 		{
-			g_debug ("gmpc-nowplaying2.vala:756: update not playing");
+			g_debug ("gmpc-nowplaying2.vala:781: update not playing");
 			gmpc_plugin_mockup_update_not_playing (self);
 			break;
 		}
