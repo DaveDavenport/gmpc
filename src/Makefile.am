@@ -193,18 +193,6 @@ EXTRA_DIST=\
 		browsers/playlist3-current-playlist-browser.h\
 		browsers/playlist3-find2-browser.h\
 		browsers/playlist3-playlist-editor.h\
-		vala/gmpc-image.h\
-		vala/gmpc_menu_item_rating.h\
-		vala/gmpc-easy-command.h\
-		vala/gmpc-test-plugin.h\
-        vala/gmpc-metadata-browser2.h\
-        vala/gmpc-nowplaying2.h\
-        vala/gmpc-liststore-sort.h\
-        vala/gmpc-connection.h\
-        vala/gmpc-mpddata-treeview-tooltip.h\
-        vala/gmpc-metadata-prefetcher.h\
-        vala/gmpc-paned-size-group.h\
-        vala/gmpc-database-update-tracker.h\
         gtktransition.h\
         plugin-internal.h\
 		setup-assistant.h\
@@ -350,15 +338,17 @@ libeggsmclient_la_LDFLAGS =              \
 
 libeggsmclient_la_SOURCES =              \
 	smclient/eggsmclient.c                    \
-	smclient/eggsmclient.h                    \
-	smclient/eggsmclient-private.h            \
 	$(platform_sources)
 
 libeggdesktopfile_la_LIBADD =            \
 	$(EGG_LIBS)
 
 libeggdesktopfile_la_SOURCES =           \
-	smclient/eggdesktopfile.c                 \
+	smclient/eggdesktopfile.c                 
+
+EXTRA_DIST+=\
+	smclient/eggsmclient.h                    \
+	smclient/eggsmclient-private.h            \
 	smclient/eggdesktopfile.h
 
 
