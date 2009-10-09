@@ -27,7 +27,7 @@ using Gtk;
 using Cairo;
 using Gmpc;
 
-private const bool use_transition = Gmpc.use_transition;
+private const bool use_transition_image = Gmpc.use_transition;
 
 public class Gmpc.Image:Gtk.EventBox {
 

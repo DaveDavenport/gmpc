@@ -22,7 +22,7 @@ requires 2.0.0
 %a{
 #include "gmpc-mpddata-model.h" 
 
-#include "gmpc-connection.h" 
+#include "gmpc-extras.h" 
 %}
 %h{
 #include "gmpc-mpddata-model-private.h" 

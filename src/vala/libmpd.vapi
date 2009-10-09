@@ -57,7 +57,9 @@ namespace MPD {
         public bool supported(MPD.Server connection);
     }
     namespace Status {
-        [CCode (cname="ChangedStatusType", cprefix = "MPD_CST_", cheader_filename = "libmpd/libmpd.h")]
+        [CCode (cname="ChangedStatusType", cprefix = "MPD_CST_", 
+            cheader_filename = "libmpd/libmpd.h",
+            has_type_id=false)]
             public enum Changed {
                 /** The playlist has changed */
                 PLAYLIST      = 0x0001,

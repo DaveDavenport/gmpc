@@ -22,6 +22,16 @@
 #include "main.h"
 #include "playlist3.h"
 
+struct _Playlist3MessagePlugin
+{
+        GmpcPluginBase  parent_instance;
+        Playlist3MessagePluginPrivate *priv;
+};
+
+struct _Playlist3MessagePluginClass
+{
+        GmpcPluginBaseClass parent_class;
+};
 static const char *error_levels[3] = {
 	N_("Info"),
 	N_("Warning"),

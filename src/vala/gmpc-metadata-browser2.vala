@@ -32,8 +32,8 @@ using Gtk;
 using Gmpc;
 using Gmpc.MpdData.Treeview.Tooltip;
 
-private const bool use_transition_mb = Gmpc.use_transition;
-private const string some_unique_name_mb = Config.VERSION;
+private const bool use_transition_mdb = Gmpc.use_transition;
+private const string some_unique_name_mdb = Config.VERSION;
 
 
 public class Gmpc.Widget.SimilarSongs : Gtk.Alignment{

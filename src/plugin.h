@@ -20,11 +20,10 @@
 #include <gtk/gtk.h>
 #include <libmpd/libmpd.h>
 #include "metadata.h"
+#include "config1.h"
+#include "gmpc-extras.h"
 #include "gmpc-profiles.h"
-#include "gmpc-mpddata-model.h"
 #include "gmpc-mpddata-treeview.h"
-//#include "gmpc-plugin.h"
-#include "gmpc-connection.h"
 
 //#include "gmpc-paned-size-group.h"
 
@@ -35,7 +34,6 @@
 #define PLUGIN_ID_INTERNALL 2048
 /* Usefull signal objects. */
 extern MpdObj *connection;
-extern config_obj *config;
 extern GmpcProfiles *gmpc_profiles;
 extern GmpcConnection 	*gmpcconn;
 

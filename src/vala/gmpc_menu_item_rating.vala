@@ -28,7 +28,7 @@ using Gmpc;
 using Gmpc.Rating;
 
 
-private const bool use_transition = Gmpc.use_transition;
+private const bool use_transition_mir = Gmpc.use_transition;
 
 public class Gmpc.MenuItem.Rating : Gtk.MenuItem
 {

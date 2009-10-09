@@ -46,14 +46,14 @@
 #include "browsers/playlist3-current-playlist-browser.h"
 
 /* vala */
-#include "vala/gmpc-easy-command.h"
+/*#include "vala/gmpc-easy-command.h"
 #include "vala/gmpc-test-plugin.h"
 #include "vala/gmpc-metadata-browser2.h"
 #include "vala/gmpc-metadata-prefetcher.h"
 #include "vala/gmpc-database-update-tracker.h"
 #include "vala/gmpc-paned-size-group.h"
 #include "vala/gmpc-nowplaying2.h"
-
+*/
 #include "gmpc-mpddata-model-playlist.h"
 #include "metadata-cache.h"
 #include "bug-information.h"

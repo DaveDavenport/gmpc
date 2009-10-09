@@ -23,7 +23,7 @@ using Gdk;
 using Module;
 
 
-private const bool use_transition = Gmpc.use_transition;
+private const bool use_transition_ufg = Gmpc.use_transition;
 namespace Gmpc.UrlFetching
 {
 	public class Gui : GLib.Object 

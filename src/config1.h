@@ -23,7 +23,9 @@
 #include <libmpd/debug_printf.h>
 #define CFG_INT_NOT_DEFINED -65536
 
+
 typedef struct _config_obj config_obj;
+extern config_obj *config;
 
 typedef struct conf_mult_obj
 {

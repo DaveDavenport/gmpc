@@ -27,7 +27,7 @@
 #include "gmpc-mpddata-model.h"
 #include "gmpc-mpddata-treeview.h"
 #include "gmpc-mpddata-model-sort.h"
-#include "gmpc-paned-size-group.h"
+#include "gmpc-extras.h"
 #include "browsers/playlist3-playlist-editor.h"
 
 #define DEFAULT_MARKUP_BROWSER 	"[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|"

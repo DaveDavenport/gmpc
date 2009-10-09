@@ -8,13 +8,17 @@ CONF_VERSION=0
 
 bin_PROGRAMS=gmpc
 
-gmpc_VALAFLAGS=--pkg=gtk+-2.0 --pkg=gmpc --pkg=libmpd --vapidir=$(top_srcdir)/src/vala/ --basedir=$(top_builddir) -H gmpc-extras.h
+gmpc_VALAFLAGS=--pkg=gmodule-2.0 --pkg=config --pkg=gtk+-2.0 --pkg=gmpc --pkg=libmpd --vapidir=$(top_srcdir)/src/vala/ --basedir=$(top_builddir) -H gmpc-extras.h --library=gmpc-extra --use-header
 
 vala_SOURCES=\
     vala/gmpc.vapi\
     vala/libmpd.vapi\
-    vala/config.vapi\
+    vala/config.vapi
+
+
+gmpc_SOURCES=\
     vala/gmpc-connection.vala\
+    vala/gmpc-progress.vala\
     vala/gmpc-easy-command.vala\
     vala/gmpc-favorites.vala\
     vala/gmpc-image.vala\
@@ -23,18 +27,14 @@ vala_SOURCES=\
     vala/gmpc-metadata-browser2.vala\
     vala/gmpc-metadata-prefetcher.vala\
     vala/gmpc-mpddata-treeview-tooltip.vala\
-    vala/gmpc-paned-size-group.vala\
     vala/gmpc-nowplaying2.vala\
     vala/gmpc-plugin.vala\
     vala/gmpc-rating.vala\
     vala/gmpc-song-links.vala\
     vala/gmpc-url-fetching-gui.vala\
     vala/gmpc-database-update-tracker.vala\
-    vala/gmpc-test-plugin.vala
-
-
-gmpc_SOURCES=\
-    vala/gmpc-progress.vala\
+    vala/gmpc-test-plugin.vala\
+    vala/gmpc-paned-size-group.vala\
 	main.c\
 	plugin.c\
 	mpdinteraction.c\
@@ -54,7 +54,6 @@ gmpc_SOURCES=\
 	bug-information.c\
     $(gmpc_bacon_FILES)\
     $(gmpc_egg_FILES)\
-    $(gmpc_vala_FILES)\
     $(gmpc_browser_FILES)
 
 nodist_gmpc_SOURCES=\
@@ -175,14 +174,7 @@ gmpcinclude_HEADERS = \
 		misc.h\
 		mpdinteraction.h\
 		gmpc_easy_download.h\
-		vala/gmpc-easy-command.h\
-		vala/gmpc-plugin.h\
-        vala/gmpc-connection.h\
-        vala/gmpc-mpddata-treeview-tooltip.h\
-        vala/gmpc-paned-size-group.h\
-        vala/gmpc-favorites.h\
-        vala/gmpc-rating.h\
-		vala/gmpc-song-links.h\
+        gmpc-extras.h\
         playlist3-messages.h\
 		gmpc-version.h\
 		metadata.h
@@ -283,25 +275,23 @@ gmpc_browser_FILES=\
 ##
 # Vala files
 ##
-gmpc_vala_FILES=\
-	vala/gmpc-image.c\
-	vala/gmpc-rating.c\
-	vala/gmpc_menu_item_rating.c\
-	vala/gmpc-easy-command.c\
-	vala/gmpc-song-links.c\
-	vala/gmpc-plugin.c\
-	vala/gmpc-test-plugin.c\
-    vala/gmpc-mpddata-treeview-tooltip.c\
-	vala/gmpc-metadata-browser2.c\
-    vala/gmpc-nowplaying2.c\
-    vala/gmpc-favorites.c\
-	vala/gmpc-paned-size-group.c\
-    vala/gmpc-liststore-sort.c\
-    vala/gmpc-connection.c\
-    vala/gmpc-url-fetching-gui.c\
-    vala/gmpc-database-update-tracker.c\
-    vala/gmpc-url-fetching-gui.h\
-    vala/gmpc-metadata-prefetcher.c
+#gmpc_vala_FILES=\
+#	vala/gmpc-image.c\
+#	vala/gmpc-rating.c\
+#	vala/gmpc_menu_item_rating.c\
+#	vala/gmpc-easy-command.c\
+#	vala/gmpc-song-links.c\
+#	vala/gmpc-plugin.c\
+#	vala/gmpc-test-plugin.c\
+#    vala/gmpc-mpddata-treeview-tooltip.c\
+#	vala/gmpc-metadata-browser2.c\
+#    vala/gmpc-nowplaying2.c\
+#    vala/gmpc-favorites.c\
+#    vala/gmpc-liststore-sort.c\
+#    vala/gmpc-connection.c\
+#    vala/gmpc-url-fetching-gui.c\
+#    vala/gmpc-database-update-tracker.c\
+#    vala/gmpc-metadata-prefetcher.c
 
 ##
 # Embedded egg

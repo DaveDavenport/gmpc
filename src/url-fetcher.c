@@ -26,7 +26,7 @@
 #include "main.h"
 #include "playlist3.h"
 #include "gmpc_easy_download.h"
-#include "gmpc-url-fetching-gui.h"
+#include "gmpc-extras.h"
 
  #ifdef XSPF
 #include <xspf_c.h>
