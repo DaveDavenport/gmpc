@@ -8,6 +8,8 @@ CONF_VERSION=0
 
 bin_PROGRAMS=gmpc
 
+gmpc_VALAFLAGS=--pkg=gtk+-2.0 --pkg=gmpc --pkg=libmpd --vapidir=$(top_srcdir)/src/vala/ --basedir=$(top_builddir) -H gmpc-extras.h
+
 vala_SOURCES=\
     vala/gmpc.vapi\
     vala/libmpd.vapi\
@@ -24,7 +26,6 @@ vala_SOURCES=\
     vala/gmpc-paned-size-group.vala\
     vala/gmpc-nowplaying2.vala\
     vala/gmpc-plugin.vala\
-    vala/gmpc-progress.vala\
     vala/gmpc-rating.vala\
     vala/gmpc-song-links.vala\
     vala/gmpc-url-fetching-gui.vala\
@@ -33,6 +34,7 @@ vala_SOURCES=\
 
 
 gmpc_SOURCES=\
+    vala/gmpc-progress.vala\
 	main.c\
 	plugin.c\
 	mpdinteraction.c\
@@ -200,7 +202,6 @@ EXTRA_DIST=\
 		browsers/playlist3-find2-browser.h\
 		browsers/playlist3-playlist-editor.h\
 		vala/gmpc-image.h\
-		vala/gmpc-progress.h\
 		vala/gmpc_menu_item_rating.h\
 		vala/gmpc-easy-command.h\
 		vala/gmpc-test-plugin.h\
@@ -284,7 +285,6 @@ gmpc_browser_FILES=\
 ##
 gmpc_vala_FILES=\
 	vala/gmpc-image.c\
-	vala/gmpc-progress.c\
 	vala/gmpc-rating.c\
 	vala/gmpc_menu_item_rating.c\
 	vala/gmpc-easy-command.c\
