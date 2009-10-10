@@ -32,4 +32,10 @@
 #endif
 
 #endif
+
+#ifdef WIN32
+#define localtime_r( _clock, _result ) \
+          ( *(_result) = *localtime( (_clock) ), \
+                      (_result) )
+#endif
 /* vim: set ts=2 sts=2 sw=2 ai cindent : */
