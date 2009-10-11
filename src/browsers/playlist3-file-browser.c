@@ -370,14 +370,17 @@ static int directory_sort_func(gpointer ppaa, gpointer ppbb, gpointer data)
     MpdData_real *a = *(MpdData_real **)ppaa;
     MpdData_real *b = *(MpdData_real **)ppbb;
     int val = 0;
-    if(a->directory && b->directory) {
-        gchar *sa,*sb;
-        sa = g_utf8_strdown(a->directory, -1);
-        sb = g_utf8_strdown(b->directory, -1);
-        val = g_utf8_collate(sa,sb);
-        g_free(sa);
-        g_free(sb);
-    } 
+    if(a->type == MPD_DATA_TYPE_DIRECTORY & b->type == MPD_DATA_TYPE_DIRECTORY)
+    {
+        if(a->directory && b->directory) {
+            gchar *sa,*sb;
+            sa = g_utf8_strdown(a->directory, -1);
+            sb = g_utf8_strdown(b->directory, -1);
+            val = g_utf8_collate(sa,sb);
+            g_free(sa);
+            g_free(sb);
+        }
+    }
     return val;
 }
 static void pl3_file_browser_reupdate_folder(GtkTreeIter *iter)
