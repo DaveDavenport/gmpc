@@ -23,3 +23,4 @@ update-icon-cache:
 		echo "***   $(gtk_update_icon_cache)"; \
 		fi
 
+EXTRA_DIST=gmpc.ico
