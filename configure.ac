@@ -1,10 +1,10 @@
 #Define the version
 m4_define([package_major_version], [0])
 m4_define([package_minor_version], [19])
-m4_define([package_micro_version], [1])
+m4_define([package_micro_version], [95])
 m4_define([package_version], [package_major_version.package_minor_version.package_micro_version])
 
-AC_INIT([gmpc], [0.19.1], [qball@sarine.nl])
+AC_INIT([gmpc], [0.19.95], [qball@sarine.nl])
 
 #Define variable
 m4_define([package_tagline],       "♯♪ + ♭♪ = ☺")
