@@ -374,7 +374,7 @@ if test x${GOB2} = x""; then
 	exit 0;
 fi
 
-AM_PROG_VALAC([0.7.0])
+AM_PROG_VALAC([0.7.8])
 
 
 AC_ARG_ENABLE([shave],
