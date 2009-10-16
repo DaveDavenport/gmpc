@@ -21,7 +21,7 @@ using Config;
 using Gtk;
 using Gmpc;
 
-private const bool use_transition = Gmpc.use_transition;
+private const bool use_transition_mpf = Gmpc.use_transition;
 
 public class  Gmpc.Plugin.MetadataPrefetcher : Gmpc.Plugin.Base {
     public int[] version = {0,0,2};

@@ -29,11 +29,6 @@ namespace Gmpc {
 
     }
 
-    [CCode (cheader_filename="gmpc-connection.h")]
-    public class Connection {
-        signal void connection_changed(MPD.Server server, int connect);
-        signal void status_changed (MPD.Server server, MPD.Status.Changed what);
-    }
 
    namespace MetaData {
     

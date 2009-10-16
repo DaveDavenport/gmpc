@@ -41,8 +41,7 @@
 #include <libmpd/libmpd-internal.h>
 #include "playlist3.h"
 #include "playlist3-playlist-editor.h"
-#include "gmpc-paned-size-group.h"
-#include "gmpc-mpddata-treeview-tooltip.h"
+#include "gmpc-extras.h"
 
 /**
  * dirty hack to workaround single parameter for now 
@@ -336,7 +335,6 @@ static void tag2_browser_add_selected(GtkWidget *item, tag_element *te)
  * Redirect to metadata browser 
  */
 
-#include "vala/gmpc-metadata-browser2.h"
 extern GmpcMetadataBrowser *metadata_browser;
 static void tag2_browser_header_information(GtkWidget *item, tag_element *te)
 {

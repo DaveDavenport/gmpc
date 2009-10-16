@@ -27,7 +27,7 @@ requires 2.0.0
 #include "misc.h"
 %}
 %ph{
-#include "vala/gmpc-test-plugin.h"
+#include "gmpc-extras.h"
 #include "metadata-cache.h"
 #include "main.h"
 %}

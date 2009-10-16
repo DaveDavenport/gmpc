@@ -24,7 +24,7 @@ namespace Gmpc{
     public class Connection : GLib.Object{
         public signal void connection_changed (MPD.Server mi, int connect);
 
-        public signal void status_changed (MPD.Server mi,int what); 
+        public signal void status_changed (MPD.Server mi, MPD.Status.Changed what); 
     }
 
 }

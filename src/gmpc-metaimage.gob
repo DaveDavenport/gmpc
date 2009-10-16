@@ -23,19 +23,13 @@ requires 2.0.0
 #include "main.h"
 #include "metadata-cache.h"
 #include "misc.h"
-#include "vala/gmpc-image.h"
-#include "vala/gmpc-test-plugin.h"
 %}
 
 %headertop{
 #include <gtk/gtk.h>
 #include <metadata.h>
 #include <libmpd/libmpd.h>
-#ifdef GMPC_BUILD 
-#include <gmpc-connection.h>
-#else
-#include <gmpc/gmpc-connection.h>
-#endif
+#include "gmpc-extras.h"
 %}
 
 %{

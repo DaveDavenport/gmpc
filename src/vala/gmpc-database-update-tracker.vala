@@ -21,7 +21,7 @@ using Config;
 using Gtk;
 using Gmpc;
 
-private const bool use_transition = Gmpc.use_transition;
+private const bool use_transition_mb = Gmpc.use_transition;
 private const string some_unique_name_mb = Config.VERSION;
 
 public class  Gmpc.Plugin.DatabaseUpdateTracker : Gmpc.Plugin.Base {

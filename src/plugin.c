@@ -21,7 +21,7 @@
 #include <glib.h>
 #include <gtk/gtk.h>
 #include <gmodule.h>
-#include "vala/gmpc-plugin.h"
+#include "gmpc-extras.h"
 #include "main.h"
 #include "metadata.h"
 

@@ -25,7 +25,7 @@ using Cairo;
 using MPD;
 using Gmpc;
 
-private const bool use_transition = Gmpc.use_transition;
+private const bool use_transition_sl = Gmpc.use_transition;
 
 public class Gmpc.Song.Links: Gtk.Frame 
 {

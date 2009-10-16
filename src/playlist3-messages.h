@@ -22,21 +22,10 @@
 /**
  * Object based plugin integration
  */
-#include <gmpc-plugin.h>
 
 typedef struct _Playlist3MessagePlugin      Playlist3MessagePlugin;
 typedef struct _Playlist3MessagePluginClass Playlist3MessagePluginClass;
 typedef struct _Playlist3MessagePluginPrivate Playlist3MessagePluginPrivate;
-struct _Playlist3MessagePlugin
-{
-        GmpcPluginBase  parent_instance;
-        Playlist3MessagePluginPrivate *priv;
-};
-
-struct _Playlist3MessagePluginClass
-{
-        GmpcPluginBaseClass parent_class;
-};
 
 typedef enum {
 	ERROR_INFO,

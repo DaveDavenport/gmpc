@@ -31,10 +31,10 @@ using Gmpc;
  *
  * Entries can be dynamicly added using by calling the add_entry command.
  */
+private const bool use_transition_ec = Gmpc.use_transition;
+private const string some_unique_name_ec = Config.VERSION;
 public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
-	private const bool use_transition = Gmpc.use_transition;
 	/* hack to make gettext happy */
-    private const string some_unique_name = Config.VERSION;
 	private Gtk.EntryCompletion completion = null;
 	private Gtk.ListStore store = null;
 	private uint signals = 0;

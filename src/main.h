@@ -35,7 +35,7 @@
 #include "config1.h"
 #include "plugin.h"
 #include "plugin-internal.h"
-#include "vala/gmpc-plugin.h"
+#include "gmpc-extras.h"
 #include "mpdinteraction.h"
 
 #include "playlist3-messages.h" 
@@ -45,8 +45,6 @@
  * Some gobjects
  */
 #include "gmpc-profiles.h"
-#include "gmpc-connection.h"
-#include "vala/gmpc-easy-command.h"
 #include "smclient/eggsmclient.h"
 
 extern GmpcEasyCommand *gmpc_easy_command;
