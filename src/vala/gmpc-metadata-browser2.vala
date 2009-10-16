@@ -820,7 +820,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             } 
             /* Fill in the first browser */ 
             MPD.Database.search_start(server,true);
-            if(albumartist != null)
+            if(albumartist != null && albumartist.length > 0)
                 MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM_ARTIST, albumartist);
             else
                 MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, artist);
@@ -1256,7 +1256,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             } 
             /* Fill in the first browser */ 
             MPD.Database.search_start(server,true);
-            if(albumartist != null)
+            if(albumartist != null&& albumartist.length > 0)
                 MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM_ARTIST, albumartist);
             else
                 MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, artist);
@@ -1329,7 +1329,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             }
 
             MPD.Database.search_start(server,true);//server,MPD.Tag.Type.FILENAME);
-            if(albumartist != null)
+            if(albumartist != null&& albumartist.length > 0)
                 MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM_ARTIST, albumartist);
             else
                 MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, artist);
