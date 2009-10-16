@@ -596,6 +596,7 @@ namespace Gmpc {
                     var song_links = new Gmpc.Song.Links(Gmpc.Song.Links.Type.SONG,song);
                     notebook.append_page(song_links, new Gtk.Label(_("Web Links")));
                     var button = new Gtk.RadioButton.with_label(group,_("Web Links"));
+                    group = button.get_group();
                     hboxje.pack_start(button, false, false, 0);
                     var j = i;
                     button.clicked.connect((source) => {
@@ -605,8 +606,23 @@ namespace Gmpc {
                     song_links.show();
                     i++;
                 }
+                /* Track changed pages */
+                notebook.notify["page"].connect((source,spec) => {
+                        var page = notebook.get_current_page();
+                        config.set_int("NowPlaying", "last-page", (int)page);
+
+                });
+                /* Restore right page */
                 if(i > 0){
-                    notebook.set_current_page(0);
+                    var page = config.get_int_with_default("NowPlaying", "last-page", 0);
+                    if(page > i)
+                    {
+                        notebook.set_current_page(0);
+                    }else{
+                        /* The list is in reversed order, compensate for that. */
+                        var w = group.nth_data(i-page-1);
+                        w.set_active(true);
+                    }
                 }
 
                 ali = new Gtk.Alignment(0.0f, 0.5f,0f,0f);
