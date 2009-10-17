@@ -622,6 +622,7 @@ namespace Gmpc {
                         /* The list is in reversed order, compensate for that. */
                         var w = group.nth_data(i-page-1);
                         w.set_active(true);
+                        notebook.set_current_page(page);
                     }
                 }
 
