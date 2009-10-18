@@ -50,8 +50,21 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
 
     construct {
         this.type = Gtk.WindowType.TOPLEVEL;
-        this.set_default_size(650,800);
+        int height = config.get_int_with_default(
+                "Metadata Selector" , "window_height", 600);
+        int width = config.get_int_with_default(
+                "Metadata Selector" , "window_width", 480);
+
+        this.set_default_size(width,height);
         this.set_border_width(8);
+        /* Connect to allocation changes so I can store new size */
+        this.size_allocate.connect((source, alloc) => {
+                config.set_int(
+                    "Metadata Selector" , "window_width", alloc.width);
+
+                config.set_int(
+                    "Metadata Selector" , "window_height", alloc.height);
+        });
     }
 
     private void add_entry_image(string? provider, string uri,Gdk.PixbufFormat? format, Gdk.Pixbuf pb)
