@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2009-08-09 09:52+0000\n"
+"X-Launchpad-Export-Date: 2009-10-18 08:48+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -27,6 +27,19 @@ msgstr "Gnome frontend untuk mpd daemon"
 #: ../src/vala/gmpc-metadata-browser2.c:1920
 msgid "Gnome Music Player Client"
 msgstr "Gnome Music Player Client"
+
+#. Basic dialog with a close button
+#: ../glade/playlist3.glade.h:1 ../src/bug-information.c:239
+msgid "Bug information"
+msgstr "Informasi Kutu"
+
+#: ../glade/playlist3.glade.h:2
+msgid "Consume"
+msgstr ""
+
+#: ../glade/playlist3.glade.h:3
+msgid "Easy Command Help"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:4
 msgid "Getting help"
@@ -68,9 +81,17 @@ msgstr "Acak"
 msgid "Repeat"
 msgstr "Berulang"
 
+#: ../glade/playlist3.glade.h:13
+msgid "Se_rver"
+msgstr ""
+
 #: ../glade/playlist3.glade.h:14
 msgid "Show Messages"
 msgstr "Tampilkan Pesan"
+
+#: ../glade/playlist3.glade.h:15
+msgid "Single mode"
+msgstr ""
 
 #. * MM_PREV
 #: ../glade/playlist3.glade.h:16 ../src/mm-keys.c:76
@@ -125,6 +146,14 @@ msgstr "_Pilihan"
 msgid "_Send Password"
 msgstr "_Kirim Kata Sandi"
 
+#: ../glade/playlist3.glade.h:29
+msgid "_Show Artist Image"
+msgstr "Tampilkan Gambar Arti_S"
+
+#: ../glade/playlist3.glade.h:30
+msgid "_Tools"
+msgstr "Perala_Tan"
+
 #: ../glade/playlist3.glade.h:31
 msgid "_View"
 msgstr "_Tampilkan"
@@ -136,6 +165,54 @@ msgstr "gmpc - Pengatur Daftar Musik"
 #: ../src/gmpc_easy_download.c:274
 msgid "Proxy"
 msgstr "Proxy"
+
+#: ../src/main.c:279
+msgid "Start the program in full screen"
+msgstr ""
+
+#: ../src/main.c:281
+msgid "Show program version and revision"
+msgstr ""
+
+#: ../src/main.c:283
+msgid "Quits the running gmpc"
+msgstr ""
+
+#: ../src/main.c:285
+msgid "Replace the running gmpc"
+msgstr ""
+
+#: ../src/main.c:287
+msgid "Don't load the plugins"
+msgstr ""
+
+#: ../src/main.c:289
+msgid "Load alternative config file"
+msgstr ""
+
+#: ../src/main.c:291
+msgid "Set the debug level"
+msgstr ""
+
+#: ../src/main.c:293
+msgid "Start gmpc hidden to tray"
+msgstr ""
+
+#: ../src/main.c:295
+msgid "Remove all failed hits from metadata cache"
+msgstr ""
+
+#: ../src/main.c:297
+msgid "Show redraw events in GTK+"
+msgstr ""
+
+#: ../src/main.c:299
+msgid "Show bug information dialog"
+msgstr ""
+
+#: ../src/main.c:301
+msgid "Shows all output from a certain log domain"
+msgstr ""
 
 #: ../src/main.c:438
 msgid "quit"
@@ -220,9 +297,34 @@ msgstr "Terhubung ke mpd"
 msgid "Disconnected from mpd"
 msgstr "Terputus dari mpd"
 
+#: ../src/main.c:1272
+msgid "Error occurred during operation"
+msgstr ""
+
+#. Create label
+#: ../src/main.c:1296
+msgid "The following error(s) occurred:"
+msgstr ""
+
 #: ../src/main.c:1313
 msgid "Error Message"
 msgstr "Pesan Kesalahan"
+
+#: ../src/metadata.c:293
+msgid ""
+"A new metadata plugin was added, gmpc has purged all failed hits from the "
+"cache"
+msgstr ""
+"Metadata plugin baru sudah ditambahkan, gmpc sudah menghapus semua kegagalan "
+"dari tembolok"
+
+#: ../src/metadata.c:1390
+msgid "Metadata Handler"
+msgstr "Kendali metadata"
+
+#: ../src/misc.c:39
+msgid "Total time"
+msgstr ""
 
 #: ../src/misc.c:56
 msgid "day"
@@ -267,6 +369,11 @@ msgstr "Tampilkan window"
 msgid "Hide window"
 msgstr "Sembunyikan window"
 
+#. * MM_HIDE
+#: ../src/mm-keys.c:83
+msgid "Toggle window"
+msgstr ""
+
 #. * MM_TOGGLE_HIDDEN
 #: ../src/mm-keys.c:84
 msgid "Volume Up"
@@ -281,263 +388,6 @@ msgstr "Kecilkan Suara"
 #: ../src/mm-keys.c:86
 msgid "Show song"
 msgstr "Tampilkan lagu"
-
-#: ../src/mm-keys.c:570
-msgid "Multimedia Keys"
-msgstr "Kunci Multimedia"
-
-#: ../src/mm-keys.c:716
-msgid "Action"
-msgstr "Tindakan"
-
-#: ../src/mm-keys.c:738
-msgid "Shortcut"
-msgstr "Pintasan"
-
-#. Player control
-#. basic playlist commands
-#: ../src/mpdinteraction.c:307 ../src/mpdinteraction.c:328
-msgid "play"
-msgstr "mainkan"
-
-#: ../src/mpdinteraction.c:309
-msgid "next"
-msgstr "berikutnya"
-
-#: ../src/mpdinteraction.c:309
-msgid "next song"
-msgstr "lagu berikutnya"
-
-#: ../src/mpdinteraction.c:310
-msgid "prev"
-msgstr "sebelumnya"
-
-#: ../src/mpdinteraction.c:310
-msgid "previous song"
-msgstr "lagu sebelumnya"
-
-#: ../src/mpdinteraction.c:311
-msgid "stop"
-msgstr "berhenti"
-
-#: ../src/mpdinteraction.c:313
-msgid "random"
-msgstr "acak"
-
-#: ../src/mpdinteraction.c:313
-msgid "Random (on|off)"
-msgstr "Acak (ya|tidak)"
-
-#: ../src/mpdinteraction.c:314
-msgid "repeat"
-msgstr "berulang"
-
-#: ../src/mpdinteraction.c:314
-msgid "Repeat (on|off)"
-msgstr "Berulang (ya|tidak)"
-
-#. volume commands
-#: ../src/mpdinteraction.c:320
-msgid "volume"
-msgstr "volume"
-
-#: ../src/mpdinteraction.c:329
-msgid "add"
-msgstr "tambah"
-
-#: ../src/mpdinteraction.c:329
-msgid "Add <query>"
-msgstr "Tambah <query>"
-
-#: ../src/mpdinteraction.c:330
-msgid "replace"
-msgstr "ganti"
-
-#: ../src/mpdinteraction.c:330
-msgid "Replace <query>"
-msgstr "Ganti <query>"
-
-#: ../src/mpdinteraction.c:355
-msgid "Server Settings"
-msgstr "Pengaturan Server"
-
-#: ../src/mpdinteraction.c:385
-msgid "Connection"
-msgstr "Koneksi"
-
-#: ../src/preferences.c:331
-msgid "Enabled"
-msgstr "Difungsikan"
-
-#. * Mpd version
-#: ../src/preferences.c:338 ../src/browsers/server-information.c:333
-msgid "Version"
-msgstr "Versi"
-
-#: ../glade/aboutdialog.ui.h:2
-msgid "translator-credits"
-msgstr ""
-"Launchpad Contributions:\n"
-"  Rahman Yusri Aftian https://launchpad.net/~aftian\n"
-"  Sri Ariyani https://launchpad.net/~sri-ariyani\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Qball Cow https://launchpad.net/~qball-qballcow\n"
-"  Rahman Yusri Aftian https://launchpad.net/~aftian\n"
-"  Sri Ariyani https://launchpad.net/~sri-ariyani\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Arief Setiadi Wibowo https://launchpad.net/~q-thrynx\n"
-"  Qball Cow https://launchpad.net/~qball-qballcow\n"
-"  Rahman Yusri Aftian https://launchpad.net/~aftian\n"
-"  Sri Ariyani https://launchpad.net/~sri-ariyani\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Arief Setiadi Wibowo https://launchpad.net/~q-thrynx\n"
-"  Qball Cow https://launchpad.net/~qball-qballcow\n"
-"  Rahman Yusri Aftian https://launchpad.net/~aftian\n"
-"  Sri Ariyani https://launchpad.net/~sri-ariyani"
-
-#~ msgid "_Server"
-#~ msgstr "_Server"
-
-#~ msgid "/path/to/file_name.mp3"
-#~ msgstr "/path/to/file_name.mp3"
-
-#~ msgid "Jonny Singer"
-#~ msgstr "Jonny Singer"
-
-#~ msgid "Sing or Swing you want"
-#~ msgstr "Bernyanyi atau Bergoyang sesukamu"
-
-#~ msgid "01/24"
-#~ msgstr "01/24"
-
-#~ msgid "2 Feb 2006"
-#~ msgstr "2 Feb 2006"
-
-#~ msgid "MPD's Streaming server"
-#~ msgstr "server MPD Streaming"
-
-#~ msgid "--version"
-#~ msgstr "--versi"
-
-#~ msgid "--config="
-#~ msgstr "--config="
-
-#~ msgid " Total time: "
-#~ msgstr " Waktu Total "
-
-#~ msgid "second"
-#~ msgid_plural "seconds"
-#~ msgstr[0] "detik"
-
-#. Basic dialog with a close button
-#: ../glade/playlist3.glade.h:1 ../src/bug-information.c:239
-msgid "Bug information"
-msgstr "Informasi Kutu"
-
-#: ../glade/playlist3.glade.h:2
-msgid "Consume"
-msgstr ""
-
-#: ../glade/playlist3.glade.h:3
-msgid "Easy Command Help"
-msgstr ""
-
-#: ../glade/playlist3.glade.h:13
-msgid "Se_rver"
-msgstr ""
-
-#: ../glade/playlist3.glade.h:15
-msgid "Single mode"
-msgstr ""
-
-#: ../glade/playlist3.glade.h:29
-msgid "_Show Artist Image"
-msgstr "Tampilkan Gambar Arti_S"
-
-#: ../glade/playlist3.glade.h:30
-msgid "_Tools"
-msgstr "Perala_Tan"
-
-#: ../src/main.c:279
-msgid "Start the program in full screen"
-msgstr ""
-
-#: ../src/main.c:281
-msgid "Show program version and revision"
-msgstr ""
-
-#: ../src/main.c:283
-msgid "Quits the running gmpc"
-msgstr ""
-
-#: ../src/main.c:285
-msgid "Replace the running gmpc"
-msgstr ""
-
-#: ../src/main.c:287
-msgid "Don't load the plugins"
-msgstr ""
-
-#: ../src/main.c:289
-msgid "Load alternative config file"
-msgstr ""
-
-#: ../src/main.c:291
-msgid "Set the debug level"
-msgstr ""
-
-#: ../src/main.c:293
-msgid "Start gmpc hidden to tray"
-msgstr ""
-
-#: ../src/main.c:295
-msgid "Remove all failed hits from metadata cache"
-msgstr ""
-
-#: ../src/main.c:297
-msgid "Show redraw events in GTK+"
-msgstr ""
-
-#: ../src/main.c:299
-msgid "Show bug information dialog"
-msgstr ""
-
-#: ../src/main.c:301
-msgid "Shows all output from a certain log domain"
-msgstr ""
-
-#: ../src/main.c:1272
-msgid "Error occurred during operation"
-msgstr ""
-
-#. Create label
-#: ../src/main.c:1296
-msgid "The following error(s) occurred:"
-msgstr ""
-
-#: ../src/metadata.c:293
-msgid ""
-"A new metadata plugin was added, gmpc has purged all failed hits from the "
-"cache"
-msgstr ""
-"Metadata plugin baru sudah ditambahkan, gmpc sudah menghapus semua kegagalan "
-"dari tembolok"
-
-#: ../src/metadata.c:1390
-msgid "Metadata Handler"
-msgstr "Kendali metadata"
-
-#: ../src/misc.c:39
-msgid "Total time"
-msgstr ""
-
-#. * MM_HIDE
-#: ../src/mm-keys.c:83
-msgid "Toggle window"
-msgstr ""
 
 #. * MM_SHOW_NOTIFICATION
 #: ../src/mm-keys.c:87
@@ -570,6 +420,10 @@ msgid ""
 "revisit the preferences and ensure your settings are now correct."
 msgstr ""
 
+#: ../src/mm-keys.c:570
+msgid "Multimedia Keys"
+msgstr "Kunci Multimedia"
+
 #: ../src/mm-keys.c:632
 #, c-format
 msgid ""
@@ -588,6 +442,14 @@ msgid ""
 "Ensure that your window manager (or other applications) have not already "
 "bound this key for some other function, then restart gmpc."
 msgstr ""
+
+#: ../src/mm-keys.c:716
+msgid "Action"
+msgstr "Tindakan"
+
+#: ../src/mm-keys.c:738
+msgid "Shortcut"
+msgstr "Pintasan"
 
 #: ../src/mpdinteraction.c:91
 msgid "enable"
@@ -654,6 +516,12 @@ msgstr ""
 msgid "Update database: You have insufficient permission."
 msgstr ""
 
+#. Player control
+#. basic playlist commands
+#: ../src/mpdinteraction.c:307 ../src/mpdinteraction.c:328
+msgid "play"
+msgstr "mainkan"
+
 #: ../src/mpdinteraction.c:307
 msgid "start playback"
 msgstr ""
@@ -666,9 +534,45 @@ msgstr "Tunda"
 msgid "pause playback"
 msgstr ""
 
+#: ../src/mpdinteraction.c:309
+msgid "next"
+msgstr "berikutnya"
+
+#: ../src/mpdinteraction.c:309
+msgid "next song"
+msgstr "lagu berikutnya"
+
+#: ../src/mpdinteraction.c:310
+msgid "prev"
+msgstr "sebelumnya"
+
+#: ../src/mpdinteraction.c:310
+msgid "previous song"
+msgstr "lagu sebelumnya"
+
+#: ../src/mpdinteraction.c:311
+msgid "stop"
+msgstr "berhenti"
+
 #: ../src/mpdinteraction.c:311
 msgid "stop playback"
 msgstr ""
+
+#: ../src/mpdinteraction.c:313
+msgid "random"
+msgstr "acak"
+
+#: ../src/mpdinteraction.c:313
+msgid "Random (on|off)"
+msgstr "Acak (ya|tidak)"
+
+#: ../src/mpdinteraction.c:314
+msgid "repeat"
+msgstr "berulang"
+
+#: ../src/mpdinteraction.c:314
+msgid "Repeat (on|off)"
+msgstr "Berulang (ya|tidak)"
 
 #: ../src/mpdinteraction.c:316
 msgid "single"
@@ -685,6 +589,11 @@ msgstr ""
 #: ../src/mpdinteraction.c:317
 msgid "Consume (on|off)"
 msgstr ""
+
+#. volume commands
+#: ../src/mpdinteraction.c:320
+msgid "volume"
+msgstr "volume"
 
 #: ../src/mpdinteraction.c:320
 msgid "Volume (+-)<level>"
@@ -724,6 +633,22 @@ msgstr ""
 msgid "Play <query>"
 msgstr "Putar <query>"
 
+#: ../src/mpdinteraction.c:329
+msgid "add"
+msgstr "tambah"
+
+#: ../src/mpdinteraction.c:329
+msgid "Add <query>"
+msgstr "Tambah <query>"
+
+#: ../src/mpdinteraction.c:330
+msgid "replace"
+msgstr "ganti"
+
+#: ../src/mpdinteraction.c:330
+msgid "Replace <query>"
+msgstr "Ganti <query>"
+
 #. Basic seek commands
 #: ../src/mpdinteraction.c:333
 msgid "seek"
@@ -756,6 +681,14 @@ msgstr ""
 #: ../src/mpdinteraction.c:350
 msgid "Update the database"
 msgstr ""
+
+#: ../src/mpdinteraction.c:355
+msgid "Server Settings"
+msgstr "Pengaturan Server"
+
+#: ../src/mpdinteraction.c:385
+msgid "Connection"
+msgstr "Koneksi"
 
 #: ../src/mpdinteraction.c:478
 msgid "Connecting"
@@ -1011,6 +944,10 @@ msgstr "Plugin"
 msgid "Plugins:"
 msgstr "Plugin:"
 
+#: ../src/preferences.c:331
+msgid "Enabled"
+msgstr "Difungsikan"
+
 #: ../src/preferences.c:334 ../src/gob/gmpc-mpddata-treeview.gob:76
 msgid "Name"
 msgstr "Nama"
@@ -1018,6 +955,11 @@ msgstr "Nama"
 #: ../src/preferences.c:336
 msgid "Function"
 msgstr "Fungsi"
+
+#. * Mpd version
+#: ../src/preferences.c:338 ../src/browsers/server-information.c:333
+msgid "Version"
+msgstr "Versi"
 
 #: ../src/preferences.c:367
 msgid "Dummy"
@@ -1185,6 +1127,15 @@ msgstr ""
 #: ../glade/aboutdialog.ui.h:1
 msgid "Copyright 2003-2007 Qball Cow"
 msgstr "Copyright 2003-2007 Qball Cow"
+
+#: ../glade/aboutdialog.ui.h:2
+msgid "translator-credits"
+msgstr ""
+"Launchpad Contributions:\n"
+"  Arief Setiadi Wibowo https://launchpad.net/~q-thrynx\n"
+"  Qball Cow https://launchpad.net/~qball-qballcow\n"
+"  Rahman Yusri Aftian https://launchpad.net/~aftian\n"
+"  Sri Ariyani https://launchpad.net/~sri-ariyani"
 
 #: ../glade/password-dialog.ui.h:1
 msgid "Enter your password for: '<hostname>'"
@@ -2186,6 +2137,40 @@ msgstr ""
 #: ../src/vala/gmpc-metadata-browser2.c:5244
 msgid "Web links"
 msgstr ""
+
+#~ msgid "_Server"
+#~ msgstr "_Server"
+
+#~ msgid "/path/to/file_name.mp3"
+#~ msgstr "/path/to/file_name.mp3"
+
+#~ msgid "Jonny Singer"
+#~ msgstr "Jonny Singer"
+
+#~ msgid "Sing or Swing you want"
+#~ msgstr "Bernyanyi atau Bergoyang sesukamu"
+
+#~ msgid "01/24"
+#~ msgstr "01/24"
+
+#~ msgid "2 Feb 2006"
+#~ msgstr "2 Feb 2006"
+
+#~ msgid "MPD's Streaming server"
+#~ msgstr "server MPD Streaming"
+
+#~ msgid "--version"
+#~ msgstr "--versi"
+
+#~ msgid "--config="
+#~ msgstr "--config="
+
+#~ msgid " Total time: "
+#~ msgstr " Waktu Total "
+
+#~ msgid "second"
+#~ msgid_plural "seconds"
+#~ msgstr[0] "detik"
 
 #~ msgid "View"
 #~ msgstr "Tampilan"

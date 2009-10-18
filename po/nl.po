@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-08-09 09:52+0000\n"
+"X-Launchpad-Export-Date: 2009-10-18 08:48+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -28,9 +28,30 @@ msgstr "Een gnome front-end voor de Music Player Daemon"
 msgid "Gnome Music Player Client"
 msgstr "Gnome Music Player Client"
 
+#. Basic dialog with a close button
+#: ../glade/playlist3.glade.h:1 ../src/bug-information.c:239
+msgid "Bug information"
+msgstr "Bug informatie"
+
+#: ../glade/playlist3.glade.h:2
+msgid "Consume"
+msgstr ""
+
+#: ../glade/playlist3.glade.h:3
+msgid "Easy Command Help"
+msgstr ""
+
+#: ../glade/playlist3.glade.h:4
+msgid "Getting help"
+msgstr "Hulp zoeken"
+
 #: ../glade/playlist3.glade.h:5
 msgid "MPD database is updating."
 msgstr "MPD database wordt geupdate."
+
+#: ../glade/playlist3.glade.h:6 ../src/mpdinteraction.c:321
+msgid "Mute"
+msgstr "Dempen"
 
 #. * MM_PLAYPAUSE
 #: ../glade/playlist3.glade.h:7 ../src/mm-keys.c:74 ../src/tray-icon2.c:577
@@ -60,10 +81,26 @@ msgstr "Willekeurig"
 msgid "Repeat"
 msgstr "Herhalen"
 
+#: ../glade/playlist3.glade.h:13
+msgid "Se_rver"
+msgstr ""
+
+#: ../glade/playlist3.glade.h:14
+msgid "Show Messages"
+msgstr "Berichten weergeven"
+
+#: ../glade/playlist3.glade.h:15
+msgid "Single mode"
+msgstr ""
+
 #. * MM_PREV
 #: ../glade/playlist3.glade.h:16 ../src/mm-keys.c:76
 msgid "Stop"
 msgstr "Stop"
+
+#: ../glade/playlist3.glade.h:17
+msgid "Visit website"
+msgstr "Website bezoeken"
 
 #: ../glade/playlist3.glade.h:18
 msgid "_Collapse Interface"
@@ -85,6 +122,10 @@ msgstr "Verb_reek verbinding"
 msgid "_Expand Interface"
 msgstr "Breid beeld _uit"
 
+#: ../glade/playlist3.glade.h:23
+msgid "_Fullscreen"
+msgstr "_Volledig Scherm"
+
 #: ../glade/playlist3.glade.h:24
 msgid "_Go"
 msgstr "_Ga naar"
@@ -97,6 +138,10 @@ msgstr "_Hulp"
 msgid "_Music"
 msgstr "_Muziek"
 
+#: ../glade/playlist3.glade.h:27
+msgid "_Option"
+msgstr "_Optie"
+
 #: ../glade/playlist3.glade.h:28
 msgid "_Send Password"
 msgstr "_Stuur wachtwoord"
@@ -104,6 +149,10 @@ msgstr "_Stuur wachtwoord"
 #: ../glade/playlist3.glade.h:29
 msgid "_Show Artist Image"
 msgstr "_Toon artiestenafbeelding"
+
+#: ../glade/playlist3.glade.h:30
+msgid "_Tools"
+msgstr "_Gereedschap"
 
 #: ../glade/playlist3.glade.h:31
 msgid "_View"
@@ -116,706 +165,6 @@ msgstr "gmpc - Afspeellijst Manager"
 #: ../src/gmpc_easy_download.c:274
 msgid "Proxy"
 msgstr "Proxy"
-
-#: ../src/main.c:646
-msgid "Failed to setup libmpd"
-msgstr "Niet ingeslaagd om libmpd in te stellen"
-
-#: ../src/main.c:1092
-#, c-format
-msgid ""
-"Failed to set password on: '%s'\n"
-"Please try again"
-msgstr ""
-"Kon geen wachtwoord veranderen op: '%s'\n"
-"Probeer opnieuw"
-
-#: ../src/main.c:1094
-#, c-format
-msgid "Please enter your password for: '%s'"
-msgstr "Voer het wachtwoord in voor: '%s'"
-
-#: ../src/main.c:1123 ../src/main.c:1144
-msgid "error code"
-msgstr "Fout code"
-
-#. * MM_STOP
-#: ../src/mm-keys.c:77
-msgid "Fast Forward"
-msgstr "Vooruitspoelen"
-
-#. * MM_FASTFORWARD
-#: ../src/mm-keys.c:78
-msgid "Fast Backward"
-msgstr "Achteruitspoelen"
-
-#. * MM_RAISE
-#: ../src/mm-keys.c:82
-msgid "Hide window"
-msgstr "Venster verbergen"
-
-#. * MM_TOGGLE_HIDDEN
-#: ../src/mm-keys.c:84
-msgid "Volume Up"
-msgstr "Volume omhoog"
-
-#. * MM_VOLUME_UP
-#: ../src/mm-keys.c:85
-msgid "Volume Down"
-msgstr "Volume omlaag"
-
-#: ../src/mm-keys.c:382
-msgid ""
-"\n"
-"Ensure that your window manager (or other applications) have not already "
-"bound this key for some other function, then restart gmpc."
-msgstr ""
-"\n"
-"Kijk of andere programma's deze toets niet al hebben gebonden aan een of "
-"andere functie, herstart Gmpc daarna."
-
-#: ../src/mm-keys.c:570
-msgid "Multimedia Keys"
-msgstr "Multimediatoetsen"
-
-#: ../src/mm-keys.c:716
-msgid "Action"
-msgstr "Actie"
-
-#: ../src/mm-keys.c:738
-msgid "Shortcut"
-msgstr "Sneltoets"
-
-#: ../src/mpdinteraction.c:107 ../src/playlist3.c:1710 ../src/playlist3.c:1723
-#: ../src/playlist3.c:1738 ../src/playlist3.c:1751
-msgid "Off"
-msgstr "Uit"
-
-#: ../src/mpdinteraction.c:355
-msgid "Server Settings"
-msgstr "Server-instellingen"
-
-#: ../src/mpdinteraction.c:385
-msgid "Connection"
-msgstr "Verbinding"
-
-#. Add all from album
-#: ../src/mpdinteraction.c:1485
-msgid "All from album"
-msgstr "Alles van album"
-
-#. Add all from artist
-#: ../src/mpdinteraction.c:1497
-msgid "All from artist"
-msgstr "Alles van artiest"
-
-#. Add all from genre
-#: ../src/mpdinteraction.c:1507
-msgid "All from genre"
-msgstr "Alles van genre"
-
-#. Add all from file
-#: ../src/mpdinteraction.c:1515
-msgid "All from same directory"
-msgstr "Alles uit dezelfde map"
-
-#. Create sub menu
-#. Add
-#: ../src/mpdinteraction.c:1523
-msgid "Add more"
-msgstr "Voeg meer toe"
-
-#: ../src/playlist3.c:802 ../src/playlist3.c:2274
-msgid "Not Connected"
-msgstr "Niet verbonden"
-
-#: ../src/playlist3.c:815 ../src/playlist3.c:820 ../src/playlist3.c:1676
-msgid "GMPC"
-msgstr "GMPC"
-
-#: ../src/playlist3.c:815
-msgid "Connected to"
-msgstr "Verbonden met"
-
-#: ../src/playlist3.c:820
-msgid "Disconnected"
-msgstr "Niet verbonden"
-
-#: ../src/playlist3.c:1709
-#, c-format
-msgid "Repeat: %s"
-msgstr "Herhalen: %s"
-
-#: ../src/playlist3.c:1710 ../src/playlist3.c:1723 ../src/playlist3.c:1738
-#: ../src/playlist3.c:1751
-msgid "On"
-msgstr "Aan"
-
-#: ../src/playlist3.c:1722
-#, c-format
-msgid "Random: %s"
-msgstr "Willekeurig: %s"
-
-#: ../src/playlist3.c:1957
-msgid "added"
-msgstr "toegevoegd"
-
-#: ../src/playlist3.c:1964
-msgid "changed hostname to:"
-msgstr "Hostnaam veranderd naar:"
-
-#. Update DB
-#: ../src/playlist3.c:2072
-msgid "Update Database"
-msgstr "Database bijwerken"
-
-#: ../src/playlist3.c:2190
-msgid "By"
-msgstr "Door"
-
-#: ../src/playlist3.c:2267
-msgid "Not Playing"
-msgstr "Niet aan het afspelen"
-
-#: ../src/playlist3-messages.c:27
-msgid "Warning"
-msgstr "Waarschuwing"
-
-#: ../src/playlist3-messages.c:28
-msgid "Critical"
-msgstr "Kritiek"
-
-#: ../src/preferences.c:160
-msgid "Plugins:"
-msgstr "Plugins:"
-
-#: ../src/preferences.c:331
-msgid "Enabled"
-msgstr "Ingeschakeld"
-
-#: ../src/preferences.c:334 ../src/gob/gmpc-mpddata-treeview.gob:76
-msgid "Name"
-msgstr "Naam"
-
-#: ../src/preferences.c:336
-msgid "Function"
-msgstr "Functie"
-
-#: ../src/preferences.c:367
-msgid "Dummy"
-msgstr "Dummy"
-
-#: ../src/preferences.c:373
-msgid "Metadata Provider"
-msgstr "Metadataleverancier"
-
-#: ../src/url-fetcher.c:64 ../src/url-fetcher.c:89 ../src/url-fetcher.c:147
-#: ../src/url-fetcher.c:224
-#, c-format
-msgid "Added %i %s"
-msgstr "Toegevoegd %i %s"
-
-#. *
-#. * Setup the label
-#. 
-#: ../src/url-fetcher.c:461
-msgid "Enter an url"
-msgstr "Voer een url in"
-
-#: ../src/tray-icon2.c:142
-msgid "Pla_ylist"
-msgstr "_Afspeellijst"
-
-#: ../glade/aboutdialog.ui.h:1
-msgid "Copyright 2003-2007 Qball Cow"
-msgstr "Copyright 2003-2007 Qball Cow"
-
-#: ../glade/aboutdialog.ui.h:2
-msgid "translator-credits"
-msgstr ""
-"EneNL\n"
-"\n"
-"Launchpad Contributions:\n"
-"  PjotrAmslap https://launchpad.net/~pieterpalsma\n"
-"  Qball Cow https://launchpad.net/~qball-qballcow\n"
-"\n"
-"Launchpad Contributions:\n"
-"  PjotrAmslap https://launchpad.net/~pieterpalsma\n"
-"  Qball Cow https://launchpad.net/~qball-qballcow\n"
-"\n"
-"Launchpad Contributions:\n"
-"  PjotrAmslap https://launchpad.net/~pieterpalsma\n"
-"  Qball Cow https://launchpad.net/~qball-qballcow\n"
-"\n"
-"Launchpad Contributions:\n"
-"  PjotrAmslap https://launchpad.net/~pieterpalsma\n"
-"  Qball Cow https://launchpad.net/~qball-qballcow\n"
-"\n"
-"Launchpad Contributions:\n"
-"  PjotrAmslap https://launchpad.net/~pieterpalsma\n"
-"  Qball Cow https://launchpad.net/~qball-qballcow\n"
-"\n"
-"Launchpad Contributions:\n"
-"  PjotrAmslap https://launchpad.net/~pieterpalsma\n"
-"  Qball Cow https://launchpad.net/~qball-qballcow\n"
-"\n"
-"Launchpad Contributions:\n"
-"  PjotrAmslap https://launchpad.net/~pieterpalsma\n"
-"  Qball Cow https://launchpad.net/~qball-qballcow\n"
-"\n"
-"Launchpad Contributions:\n"
-"  PjotrAmslap https://launchpad.net/~pieterpalsma\n"
-"  Qball Cow https://launchpad.net/~qball-qballcow\n"
-"\n"
-"Launchpad Contributions:\n"
-"  PjotrAmslap https://launchpad.net/~pieterpalsma\n"
-"  Qball Cow https://launchpad.net/~qball-qballcow\n"
-"\n"
-"Launchpad Contributions:\n"
-"  PjotrAmslap https://launchpad.net/~pieterpalsma\n"
-"  Qball Cow https://launchpad.net/~qball-qballcow\n"
-"\n"
-"Launchpad Contributions:\n"
-"  PjotrAmslap https://launchpad.net/~pieterpalsma\n"
-"  Qball Cow https://launchpad.net/~qball-qballcow\n"
-"  Yentl https://launchpad.net/~yentlvt"
-
-#: ../glade/password-dialog.ui.h:1
-msgid "Enter your password for: '<hostname>'"
-msgstr "Voer uw wachtwoord voor '<hostname>' in"
-
-#: ../glade/password-dialog.ui.h:2
-msgid "Password"
-msgstr "Wachtwoord"
-
-#: ../glade/password-dialog.ui.h:3
-msgid "_Save password"
-msgstr "_Sla wachtwoord op"
-
-#: ../glade/preferences-connection.ui.h:2
-msgid "Conn_ect"
-msgstr "_Verbind"
-
-#: ../glade/preferences-connection.ui.h:3
-msgid "Host:"
-msgstr "Host:"
-
-#: ../glade/preferences-connection.ui.h:5
-#: ../src/browsers/playlist3-playlist-editor.c:456
-#: ../src/browsers/playlist3-playlist-editor.c:497
-msgid "Name:"
-msgstr "Naam:"
-
-#: ../glade/preferences-connection.ui.h:6 ../glade/preferences-proxy.ui.h:3
-msgid "Password:"
-msgstr "Wachtwoord:"
-
-#: ../glade/preferences-connection.ui.h:7 ../glade/preferences-proxy.ui.h:4
-msgid "Port:"
-msgstr "Poort:"
-
-#: ../glade/preferences-connection.ui.h:8
-msgid "Timeout (s):"
-msgstr "Onderbreking (s):"
-
-#: ../glade/preferences-connection.ui.h:9
-msgid "_Autoconnect"
-msgstr "Automatisch verbinden"
-
-#: ../glade/preferences-connection.ui.h:11
-msgid "_Use Authentication"
-msgstr "Gebr_uik verificatie"
-
-#: ../glade/preferences-connection.ui.h:12
-msgid "localhost"
-msgstr "localhost"
-
-#: ../glade/preferences-esf-dialog.ui.h:1
-msgid "<b>Enable Field:</b>"
-msgstr "<b>Schakel veld in:</b>"
-
-#: ../glade/preferences-esf-dialog.ui.h:2
-msgid "<b>Example:</b>"
-msgstr "<b>Voorbeeld:</b>"
-
-#: ../glade/preferences-esf-dialog.ui.h:4
-msgid "A_lbum"
-msgstr "A_lbum"
-
-#: ../glade/preferences-esf-dialog.ui.h:5
-msgid "Edit Song Formatting"
-msgstr "Bewerk nummer opmaak"
-
-#: ../glade/preferences-esf-dialog.ui.h:6
-msgid "T_rack"
-msgstr "T_rack"
-
-#: ../glade/preferences-esf-dialog.ui.h:7
-msgid "_Artist"
-msgstr "_Artiest"
-
-#: ../glade/preferences-esf-dialog.ui.h:8
-msgid "_Date"
-msgstr "_Datum"
-
-#: ../glade/preferences-esf-dialog.ui.h:9
-msgid "_Stream name"
-msgstr "_Naam stream"
-
-#: ../glade/preferences-esf-dialog.ui.h:10
-msgid "_Title"
-msgstr "_Titel"
-
-#: ../glade/preferences-esf-dialog.ui.h:11
-msgid "example"
-msgstr "voorbeeld"
-
-#: ../glade/preferences-playlist.ui.h:3
-msgid "Center playing song"
-msgstr "Spring naar huidig afgespeelde nummer"
-
-#: ../glade/preferences-playlist.ui.h:4
-msgid "Hide on close"
-msgstr "Verbergen in plaats van sluiten"
-
-#: ../glade/preferences-playlist.ui.h:5
-msgid "Save position and size between sessions"
-msgstr "Onthoud positie en grootte tussen sessies"
-
-#: ../glade/preferences-playlist.ui.h:9
-msgid "Stylize album covers"
-msgstr "Style albumhoezen"
-
-#: ../glade/preferences-plugins.ui.h:1
-msgid "<b>Loaded Plugins:</b>"
-msgstr "<b>Gelade plug-ins:</b>"
-
-#: ../glade/preferences-server.ui.h:1
-msgid "<b>Crossfade:</b>"
-msgstr "<b>Overvloeiing:</b>"
-
-#: ../glade/preferences-server.ui.h:2
-msgid "<b>Output Devices:</b>"
-msgstr "<b>Output apparaten:</b>"
-
-#: ../glade/preferences-server.ui.h:3
-msgid ""
-"<span size=\"small\"><i>You need to be connected\n"
-"in order to change these settings</i></span>"
-msgstr ""
-"<span size=\"small\"><i>U moet verbonden zijn om\n"
-"deze instellingen aan te kunnen passen</i></span>"
-
-#: ../glade/preferences-server.ui.h:5
-msgid "Enable crossfade"
-msgstr "Schakel overvloeiing in"
-
-# fade time -> Fade time?
-#: ../glade/preferences-server.ui.h:6
-msgid "fade time (s):"
-msgstr "Overvloeitijd (s)"
-
-#: ../glade/preferences-trayicon.ui.h:2
-msgid "<b>Notification Area Icon</b>"
-msgstr "<b>Mededelingengebiedsicoon</b>"
-
-#: ../glade/preferences-trayicon.ui.h:3
-msgid "<b>PopUp</b>"
-msgstr "<b>Pop-up</b>"
-
-#: ../glade/preferences-trayicon.ui.h:4
-msgid "Enable"
-msgstr "Inschakelen"
-
-#: ../glade/preferences-trayicon.ui.h:5
-msgid "Position:"
-msgstr "Positie"
-
-#: ../glade/preferences-trayicon.ui.h:8
-msgid "Timeout:"
-msgstr "Tijd:"
-
-#: ../glade/preferences-proxy.ui.h:2
-msgid "HTTP Proxy:"
-msgstr "HTTP Proxy:"
-
-#: ../glade/preferences-proxy.ui.h:5
-msgid "Use a proxy for internet connectivity"
-msgstr "Gebruik een proxy voor internet verbinding"
-
-#: ../glade/preferences.ui.h:1
-msgid ""
-"<span size=\"x-large\"><b>Plugins</b></span>\n"
-"<i>None Selected</i>"
-msgstr ""
-"<span size=\"x-large\"><b>Plug-ins</b></span>\n"
-"<i>Geen geselecteerd</i>"
-
-#: ../glade/preferences.ui.h:3
-msgid "gmpc - Configuration"
-msgstr "gmpc - Configuratie"
-
-#: ../glade/playlist-save-dialog.ui.h:1
-msgid "<enter playlist name>"
-msgstr "<voer naam van afspeellijst in>"
-
-#: ../glade/playlist-save-dialog.ui.h:2
-msgid "<span size=\"x-small\"><i>Playlist already exists.</i></span>"
-msgstr "<span size=\"x-small\"><i>Afspeellijst bestaat al.</i></span>"
-
-#: ../glade/playlist-save-dialog.ui.h:3
-msgid "Save Playlist"
-msgstr "Afspeellijsto opslaan"
-
-#: ../glade/playlist-save-dialog.ui.h:4
-msgid "name:"
-msgstr "Naam:"
-
-#: ../src/browsers/playlist3-current-playlist-browser.c:161
-msgid "(Estimation)"
-msgstr "(Schatting)"
-
-#: ../src/browsers/playlist3-current-playlist-browser.c:531
-msgid "Are you sure you want to clear the playlist?"
-msgstr "Weet u zeker dat u de afspeellijst wil legen?"
-
-#. add the delete widget
-#: ../src/browsers/playlist3-current-playlist-browser.c:761
-msgid "Crop"
-msgstr "Uitknippen"
-
-#. add the shuffle widget
-#: ../src/browsers/playlist3-current-playlist-browser.c:775
-msgid "Shuffle"
-msgstr "Willekeurig"
-
-#: ../src/browsers/playlist3-current-playlist-browser.c:908
-msgid "Add URL"
-msgstr "URL toevoegen"
-
-#: ../src/browsers/playlist3-current-playlist-browser.c:997
-#, c-format
-msgid ""
-"<i>Playlist <b>\"%s\"</b> already exists\n"
-"Overwrite?</i>"
-msgstr ""
-"<i>Afspeellijst <b>\"%s\"</b> bestaat al\n"
-"Overschrijven?</i>"
-
-#: ../src/browsers/playlist3-file-browser.c:98
-#: ../src/browsers/playlist3-file-browser.c:335
-#: ../src/browsers/playlist3-file-browser.c:1172
-msgid "File Browser"
-msgstr "Bestandsbrowser"
-
-#. add the update widget
-#: ../src/browsers/playlist3-file-browser.c:623
-#: ../src/browsers/playlist3-file-browser.c:879
-msgid "Update"
-msgstr "Bijwerken"
-
-#: ../src/browsers/playlist3-file-browser.c:1004
-#: ../src/browsers/playlist3-playlist-editor.c:388
-msgid "Added"
-msgstr "Toegevoegd"
-
-#: ../src/browsers/playlist3-file-browser.c:1033
-#: ../src/browsers/playlist3-file-browser.c:1083
-msgid "Are you sure you want to clear the selected playlist?"
-msgstr "Weet u zeker dat u de gekozen afspeellijst wil legen?"
-
-#: ../src/browsers/playlist3-find2-browser.c:346
-#: ../src/browsers/playlist3-find2-browser.c:795
-msgid "Search"
-msgstr "Zoeken"
-
-#: ../src/gob/gmpc-mpddata-treeview.gob:69
-msgid "Markup"
-msgstr "Opmaak"
-
-#: ../src/gob/gmpc-mpddata-treeview.gob:70
-#: ../src/gob/gmpc-mpddata-treeview.gob:636
-#: ../src/vala/gmpc-test-plugin.c:1054
-#: ../src/vala/gmpc-metadata-browser2.c:2870
-#: ../src/vala/gmpc-metadata-browser2.c:3600
-#: ../src/vala/gmpc-metadata-browser2.c:4137
-msgid "Artist"
-msgstr "Artiest"
-
-#: ../src/gob/gmpc-mpddata-treeview.gob:71
-#: ../src/gob/gmpc-mpddata-treeview.gob:650
-#: ../src/vala/gmpc-test-plugin.c:1069
-#: ../src/vala/gmpc-metadata-browser2.c:2929
-#: ../src/vala/gmpc-metadata-browser2.c:3622
-msgid "Album"
-msgstr "Album"
-
-#: ../src/gob/gmpc-mpddata-treeview.gob:72
-#: ../src/gob/gmpc-mpddata-treeview.gob:623
-#: ../src/vala/gmpc-test-plugin.c:1087
-#: ../src/vala/gmpc-metadata-browser2.c:3583
-msgid "Title"
-msgstr "Titel"
-
-#. Genre
-#: ../src/gob/gmpc-mpddata-treeview.gob:74
-#: ../src/gob/gmpc-mpddata-treeview.gob:662
-#: ../src/vala/gmpc-metadata-browser2.c:3634
-msgid "Genre"
-msgstr "Genre"
-
-#. track
-#: ../src/gob/gmpc-mpddata-treeview.gob:75
-#: ../src/vala/gmpc-metadata-browser2.c:2955
-#: ../src/vala/gmpc-metadata-browser2.c:3626
-msgid "Track"
-msgstr "Track"
-
-#: ../src/gob/gmpc-mpddata-treeview.gob:77
-msgid "Composer"
-msgstr "Componist"
-
-#. disc
-#: ../src/gob/gmpc-mpddata-treeview.gob:81
-#: ../src/vala/gmpc-metadata-browser2.c:3632
-msgid "Disc"
-msgstr "Disc"
-
-#. Comment
-#: ../src/gob/gmpc-mpddata-treeview.gob:82
-#: ../src/vala/gmpc-metadata-browser2.c:3669
-msgid "Comment"
-msgstr "Commentaar"
-
-#. * Edit column
-#: ../src/gob/gmpc-mpddata-treeview.gob:1024
-msgid "Edit Columns"
-msgstr "Kolommen bewerken"
-
-#. Generate removal message before the actual profile is destroyed
-#: ../src/gob/gmpc-profiles.gob:403
-msgid "Removed profile"
-msgstr "Profiel verwijderd"
-
-#: ../src/gob/gmpc-meta-text-view.gob:96 ../src/gob/gmpc-metaimage.gob:837
-msgid "Refetch"
-msgstr "Opnieuw halen"
-
-#: ../src/gob/gmpc-meta-text-view.gob:302
-msgid "because of encoding issues"
-msgstr "vanwege encoderingsproblemen"
-
-#: ../src/gob/gmpc-meta-text-view.gob:369
-msgid "Fetching Album Info"
-msgstr "Album info ophalen"
-
-#: ../src/gob/gmpc-meta-text-view.gob:380
-msgid "Not Available"
-msgstr "Niet beschikbaar"
-
-#: ../src/gob/gmpc-meta-text-view.gob:450
-msgid "Text Document"
-msgstr "Tekstdocument"
-
-#: ../src/gob/gmpc-meta-text-view.gob:454 ../src/gob/gmpc-metaimage.gob:898
-msgid "All"
-msgstr "Alles"
-
-#: ../src/vala/gmpc-test-plugin.c:199
-msgid "Size"
-msgstr "Grootte"
-
-#: ../src/vala/gmpc-metadata-browser2.c:2124
-msgid "Metadata Browser"
-msgstr "Metadatabrowser"
-
-#~ msgid "<b>Song Markup</b>"
-#~ msgstr "<b>Nummer opmaak</b>"
-
-#~ msgid "Edit _Browser Markup"
-#~ msgstr "Bewerk _browser opmaak"
-
-#~ msgid "/path/to/file_name.mp3"
-#~ msgstr "/pad/naar/bestandsnaam.mp3"
-
-#~ msgid " Total time: "
-#~ msgstr " Totale afspeeltijd: "
-
-#~ msgid "Sing or Swing you want"
-#~ msgstr "Zing en dans wat je wil"
-
-#~ msgid "The kernel jazz"
-#~ msgstr "De kernel jazz"
-
-#~ msgid "Jonny Singer"
-#~ msgstr "Jonny Singer"
-
-#~ msgid "01/24"
-#~ msgstr "24-01"
-
-#~ msgid "_Server"
-#~ msgstr "_Server"
-
-#~ msgid "2 Feb 2006"
-#~ msgstr "2 Feb 2006"
-
-#~ msgid "MPD's Streaming server"
-#~ msgstr "MPD's Streaming server"
-
-#~ msgid "kbit/sec"
-#~ msgstr "kbit/sec"
-
-#~ msgid "Show Current Song"
-#~ msgstr "Laat huidige nummer zien"
-
-#. Basic dialog with a close button
-#: ../glade/playlist3.glade.h:1 ../src/bug-information.c:239
-msgid "Bug information"
-msgstr "Bug informatie"
-
-#: ../glade/playlist3.glade.h:2
-msgid "Consume"
-msgstr ""
-
-#: ../glade/playlist3.glade.h:3
-msgid "Easy Command Help"
-msgstr ""
-
-#: ../glade/playlist3.glade.h:4
-msgid "Getting help"
-msgstr "Hulp zoeken"
-
-#: ../glade/playlist3.glade.h:6 ../src/mpdinteraction.c:321
-msgid "Mute"
-msgstr "Dempen"
-
-#: ../glade/playlist3.glade.h:13
-msgid "Se_rver"
-msgstr ""
-
-#: ../glade/playlist3.glade.h:14
-msgid "Show Messages"
-msgstr "Berichten weergeven"
-
-#: ../glade/playlist3.glade.h:15
-msgid "Single mode"
-msgstr ""
-
-#: ../glade/playlist3.glade.h:17
-msgid "Visit website"
-msgstr "Website bezoeken"
-
-#: ../glade/playlist3.glade.h:23
-msgid "_Fullscreen"
-msgstr "_Volledig Scherm"
-
-#: ../glade/playlist3.glade.h:27
-msgid "_Option"
-msgstr "_Optie"
-
-#: ../glade/playlist3.glade.h:30
-msgid "_Tools"
-msgstr "_Gereedschap"
 
 #: ../src/main.c:279
 msgid "Start the program in full screen"
@@ -905,9 +254,31 @@ msgstr "Kan het configuratiesysteem niet laden."
 msgid "Failed to load debug-log file."
 msgstr "Kan het debug-log bestand niet laden."
 
+#: ../src/main.c:646
+msgid "Failed to setup libmpd"
+msgstr "Niet ingeslaagd om libmpd in te stellen"
+
 #: ../src/main.c:1066
 msgid "GMPC has insufficient permissions on the mpd server."
 msgstr "GMPC heeft onvoldoende rechten op de mpd server."
+
+#: ../src/main.c:1092
+#, c-format
+msgid ""
+"Failed to set password on: '%s'\n"
+"Please try again"
+msgstr ""
+"Kon geen wachtwoord veranderen op: '%s'\n"
+"Probeer opnieuw"
+
+#: ../src/main.c:1094
+#, c-format
+msgid "Please enter your password for: '%s'"
+msgstr "Voer het wachtwoord in voor: '%s'"
+
+#: ../src/main.c:1123 ../src/main.c:1144
+msgid "error code"
+msgstr "Fout code"
 
 #: ../src/main.c:1133
 msgid "Insufficient permission to connect to mpd. Check password"
@@ -978,15 +349,40 @@ msgstr "Kan niet uitvoeren"
 msgid "PlayPause"
 msgstr "SpeelPauzeer"
 
+#. * MM_STOP
+#: ../src/mm-keys.c:77
+msgid "Fast Forward"
+msgstr "Vooruitspoelen"
+
+#. * MM_FASTFORWARD
+#: ../src/mm-keys.c:78
+msgid "Fast Backward"
+msgstr "Achteruitspoelen"
+
 #. * MM_RANDOM
 #: ../src/mm-keys.c:81
 msgid "Raise window"
 msgstr "Venster naar de voorgrond halen"
 
+#. * MM_RAISE
+#: ../src/mm-keys.c:82
+msgid "Hide window"
+msgstr "Venster verbergen"
+
 #. * MM_HIDE
 #: ../src/mm-keys.c:83
 msgid "Toggle window"
 msgstr "Wisselen tussen venster"
+
+#. * MM_TOGGLE_HIDDEN
+#: ../src/mm-keys.c:84
+msgid "Volume Up"
+msgstr "Volume omhoog"
+
+#. * MM_VOLUME_UP
+#: ../src/mm-keys.c:85
+msgid "Volume Down"
+msgstr "Volume omlaag"
 
 #. * MM_VOLUME_DOWN
 #: ../src/mm-keys.c:86
@@ -1009,6 +405,16 @@ msgid ""
 "\n"
 msgstr ""
 
+#: ../src/mm-keys.c:382
+msgid ""
+"\n"
+"Ensure that your window manager (or other applications) have not already "
+"bound this key for some other function, then restart gmpc."
+msgstr ""
+"\n"
+"Kijk of andere programma's deze toets niet al hebben gebonden aan een of "
+"andere functie, herstart Gmpc daarna."
+
 #: ../src/mm-keys.c:391
 msgid ""
 "Duplicate mapping(s) detected\n"
@@ -1021,6 +427,10 @@ msgstr ""
 "sommige multimediatoetsen werden dubbel ingesteld en werden uitgeschakeld. "
 "Ga aub terug naar de instellingen en zorg ervoor dat de instellingen nu "
 "correct zijn."
+
+#: ../src/mm-keys.c:570
+msgid "Multimedia Keys"
+msgstr "Multimediatoetsen"
 
 #: ../src/mm-keys.c:632
 #, c-format
@@ -1044,6 +454,14 @@ msgid ""
 "bound this key for some other function, then restart gmpc."
 msgstr ""
 
+#: ../src/mm-keys.c:716
+msgid "Action"
+msgstr "Actie"
+
+#: ../src/mm-keys.c:738
+msgid "Shortcut"
+msgstr "Sneltoets"
+
 #: ../src/mpdinteraction.c:91
 msgid "enable"
 msgstr "inschakelen"
@@ -1051,6 +469,11 @@ msgstr "inschakelen"
 #: ../src/mpdinteraction.c:94
 msgid "disable"
 msgstr "uitschakelen"
+
+#: ../src/mpdinteraction.c:107 ../src/playlist3.c:1710 ../src/playlist3.c:1723
+#: ../src/playlist3.c:1738 ../src/playlist3.c:1751
+msgid "Off"
+msgstr "Uit"
 
 #: ../src/mpdinteraction.c:162
 msgid "Single: The used MPD server is to old and does not support this."
@@ -1275,9 +698,43 @@ msgstr "Database updaten"
 msgid "Update the database"
 msgstr "De database updaten"
 
+#: ../src/mpdinteraction.c:355
+msgid "Server Settings"
+msgstr "Server-instellingen"
+
+#: ../src/mpdinteraction.c:385
+msgid "Connection"
+msgstr "Verbinding"
+
 #: ../src/mpdinteraction.c:478
 msgid "Connecting"
 msgstr "Bezig verbinding te maken"
+
+#. Add all from album
+#: ../src/mpdinteraction.c:1485
+msgid "All from album"
+msgstr "Alles van album"
+
+#. Add all from artist
+#: ../src/mpdinteraction.c:1497
+msgid "All from artist"
+msgstr "Alles van artiest"
+
+#. Add all from genre
+#: ../src/mpdinteraction.c:1507
+msgid "All from genre"
+msgstr "Alles van genre"
+
+#. Add all from file
+#: ../src/mpdinteraction.c:1515
+msgid "All from same directory"
+msgstr "Alles uit dezelfde map"
+
+#. Create sub menu
+#. Add
+#: ../src/mpdinteraction.c:1523
+msgid "Add more"
+msgstr "Voeg meer toe"
 
 #: ../src/mpdinteraction.c:1533
 msgid "Set Rating"
@@ -1299,6 +756,22 @@ msgstr "MPD heeft zijn database geupdate"
 msgid "Connected"
 msgstr "Verbonden"
 
+#: ../src/playlist3.c:802 ../src/playlist3.c:2274
+msgid "Not Connected"
+msgstr "Niet verbonden"
+
+#: ../src/playlist3.c:815 ../src/playlist3.c:820 ../src/playlist3.c:1676
+msgid "GMPC"
+msgstr "GMPC"
+
+#: ../src/playlist3.c:815
+msgid "Connected to"
+msgstr "Verbonden met"
+
+#: ../src/playlist3.c:820
+msgid "Disconnected"
+msgstr "Niet verbonden"
+
 #: ../src/playlist3.c:887
 msgid ""
 "Failed to open the interface description file!\n"
@@ -1306,6 +779,21 @@ msgid ""
 msgstr ""
 "Kon het interfacebeschrijvingsbestand niet openen!\n"
 "Herinstalleer gmpc aub\n"
+
+#: ../src/playlist3.c:1709
+#, c-format
+msgid "Repeat: %s"
+msgstr "Herhalen: %s"
+
+#: ../src/playlist3.c:1710 ../src/playlist3.c:1723 ../src/playlist3.c:1738
+#: ../src/playlist3.c:1751
+msgid "On"
+msgstr "Aan"
+
+#: ../src/playlist3.c:1722
+#, c-format
+msgid "Random: %s"
+msgstr "Willekeurig: %s"
 
 #: ../src/playlist3.c:1737
 #, c-format
@@ -1330,14 +818,35 @@ msgstr "MPD geeft de volgende foutmelding"
 msgid "Profile"
 msgstr "Profiel"
 
+#: ../src/playlist3.c:1957
+msgid "added"
+msgstr "toegevoegd"
+
+#: ../src/playlist3.c:1964
+msgid "changed hostname to:"
+msgstr "Hostnaam veranderd naar:"
+
+#. Update DB
+#: ../src/playlist3.c:2072
+msgid "Update Database"
+msgstr "Database bijwerken"
+
 #. Server Information
 #: ../src/playlist3.c:2081 ../src/vala/gmpc-test-plugin.c:1016
 msgid "Information"
 msgstr "Informatie"
 
+#: ../src/playlist3.c:2190
+msgid "By"
+msgstr "Door"
+
 #: ../src/playlist3.c:2196
 msgid "From"
 msgstr "Van"
+
+#: ../src/playlist3.c:2267
+msgid "Not Playing"
+msgstr "Niet aan het afspelen"
 
 #: ../src/playlist3.c:2381
 msgid "Interface"
@@ -1362,6 +871,14 @@ msgstr ""
 #: ../src/playlist3-messages.c:26
 msgid "Info"
 msgstr "Info"
+
+#: ../src/playlist3-messages.c:27
+msgid "Warning"
+msgstr "Waarschuwing"
+
+#: ../src/playlist3-messages.c:28
+msgid "Critical"
+msgstr "Kritiek"
 
 #: ../src/playlist3-messages.c:251
 msgid "Time"
@@ -1441,14 +958,38 @@ msgstr ""
 msgid "Plugins"
 msgstr "Plugins"
 
+#: ../src/preferences.c:160
+msgid "Plugins:"
+msgstr "Plugins:"
+
+#: ../src/preferences.c:331
+msgid "Enabled"
+msgstr "Ingeschakeld"
+
+#: ../src/preferences.c:334 ../src/gob/gmpc-mpddata-treeview.gob:76
+msgid "Name"
+msgstr "Naam"
+
+#: ../src/preferences.c:336
+msgid "Function"
+msgstr "Functie"
+
 #. * Mpd version
 #: ../src/preferences.c:338 ../src/browsers/server-information.c:333
 msgid "Version"
 msgstr "Versie"
 
+#: ../src/preferences.c:367
+msgid "Dummy"
+msgstr "Dummy"
+
 #: ../src/preferences.c:370
 msgid "Browser Extension"
 msgstr "Browser extentie"
+
+#: ../src/preferences.c:373
+msgid "Metadata Provider"
+msgstr "Metadataleverancier"
 
 #: ../src/preferences.c:376
 msgid "Metadata Provider and Browser Extension"
@@ -1468,6 +1009,12 @@ msgstr "Onbekend"
 
 #: ../src/url-fetcher.c:64 ../src/url-fetcher.c:89 ../src/url-fetcher.c:147
 #: ../src/url-fetcher.c:224
+#, c-format
+msgid "Added %i %s"
+msgstr "Toegevoegd %i %s"
+
+#: ../src/url-fetcher.c:64 ../src/url-fetcher.c:89 ../src/url-fetcher.c:147
+#: ../src/url-fetcher.c:224
 msgid "stream"
 msgid_plural "streams"
 msgstr[0] "stream"
@@ -1484,6 +1031,17 @@ msgstr "Kon lokaal bestand niet openen"
 #: ../src/url-fetcher.c:419
 msgid "Uri scheme not supported"
 msgstr "Uri schema wordt niet ondersteund"
+
+#. *
+#. * Setup the label
+#. 
+#: ../src/url-fetcher.c:461
+msgid "Enter an url"
+msgstr "Voer een url in"
+
+#: ../src/tray-icon2.c:142
+msgid "Pla_ylist"
+msgstr "_Afspeellijst"
 
 #: ../src/tray-icon2.c:887
 msgid "Notification"
@@ -1586,17 +1144,121 @@ msgstr ""
 msgid "Show session management options"
 msgstr ""
 
+#: ../glade/aboutdialog.ui.h:1
+msgid "Copyright 2003-2007 Qball Cow"
+msgstr "Copyright 2003-2007 Qball Cow"
+
+#: ../glade/aboutdialog.ui.h:2
+msgid "translator-credits"
+msgstr ""
+"EneNL\n"
+"\n"
+"Launchpad Contributions:\n"
+"  PjotrAmslap https://launchpad.net/~pieterpalsma\n"
+"  Qball Cow https://launchpad.net/~qball-qballcow\n"
+"  Yentl https://launchpad.net/~yentlvt"
+
+#: ../glade/password-dialog.ui.h:1
+msgid "Enter your password for: '<hostname>'"
+msgstr "Voer uw wachtwoord voor '<hostname>' in"
+
+#: ../glade/password-dialog.ui.h:2
+msgid "Password"
+msgstr "Wachtwoord"
+
+#: ../glade/password-dialog.ui.h:3
+msgid "_Save password"
+msgstr "_Sla wachtwoord op"
+
 #: ../glade/preferences-connection.ui.h:1
 msgid "<b>Profile:</b>"
 msgstr "<b>Profiel:</b>"
+
+#: ../glade/preferences-connection.ui.h:2
+msgid "Conn_ect"
+msgstr "_Verbind"
+
+#: ../glade/preferences-connection.ui.h:3
+msgid "Host:"
+msgstr "Host:"
 
 #: ../glade/preferences-connection.ui.h:4
 msgid "Music Directory:"
 msgstr "Muziekmap:"
 
+#: ../glade/preferences-connection.ui.h:5
+#: ../src/browsers/playlist3-playlist-editor.c:456
+#: ../src/browsers/playlist3-playlist-editor.c:497
+msgid "Name:"
+msgstr "Naam:"
+
+#: ../glade/preferences-connection.ui.h:6 ../glade/preferences-proxy.ui.h:3
+msgid "Password:"
+msgstr "Wachtwoord:"
+
+#: ../glade/preferences-connection.ui.h:7 ../glade/preferences-proxy.ui.h:4
+msgid "Port:"
+msgstr "Poort:"
+
+#: ../glade/preferences-connection.ui.h:8
+msgid "Timeout (s):"
+msgstr "Onderbreking (s):"
+
+#: ../glade/preferences-connection.ui.h:9
+msgid "_Autoconnect"
+msgstr "Automatisch verbinden"
+
+#: ../glade/preferences-connection.ui.h:11
+msgid "_Use Authentication"
+msgstr "Gebr_uik verificatie"
+
+#: ../glade/preferences-connection.ui.h:12
+msgid "localhost"
+msgstr "localhost"
+
+#: ../glade/preferences-esf-dialog.ui.h:1
+msgid "<b>Enable Field:</b>"
+msgstr "<b>Schakel veld in:</b>"
+
+#: ../glade/preferences-esf-dialog.ui.h:2
+msgid "<b>Example:</b>"
+msgstr "<b>Voorbeeld:</b>"
+
 #: ../glade/preferences-esf-dialog.ui.h:3
 msgid "<span size=\"large\"><b>Format Rule:</b></span>"
 msgstr ""
+
+#: ../glade/preferences-esf-dialog.ui.h:4
+msgid "A_lbum"
+msgstr "A_lbum"
+
+#: ../glade/preferences-esf-dialog.ui.h:5
+msgid "Edit Song Formatting"
+msgstr "Bewerk nummer opmaak"
+
+#: ../glade/preferences-esf-dialog.ui.h:6
+msgid "T_rack"
+msgstr "T_rack"
+
+#: ../glade/preferences-esf-dialog.ui.h:7
+msgid "_Artist"
+msgstr "_Artiest"
+
+#: ../glade/preferences-esf-dialog.ui.h:8
+msgid "_Date"
+msgstr "_Datum"
+
+#: ../glade/preferences-esf-dialog.ui.h:9
+msgid "_Stream name"
+msgstr "_Naam stream"
+
+#: ../glade/preferences-esf-dialog.ui.h:10
+msgid "_Title"
+msgstr "_Titel"
+
+#: ../glade/preferences-esf-dialog.ui.h:11
+msgid "example"
+msgstr "voorbeeld"
 
 #: ../glade/preferences-playlist.ui.h:1
 msgid "<b>Main:</b>"
@@ -1605,6 +1267,18 @@ msgstr ""
 #: ../glade/preferences-playlist.ui.h:2
 msgid "<b>Playlist:</b>"
 msgstr "<b>Afspeellijst:</b>"
+
+#: ../glade/preferences-playlist.ui.h:3
+msgid "Center playing song"
+msgstr "Spring naar huidig afgespeelde nummer"
+
+#: ../glade/preferences-playlist.ui.h:4
+msgid "Hide on close"
+msgstr "Verbergen in plaats van sluiten"
+
+#: ../glade/preferences-playlist.ui.h:5
+msgid "Save position and size between sessions"
+msgstr "Onthoud positie en grootte tussen sessies"
 
 #: ../glade/preferences-playlist.ui.h:6
 msgid "Show buttons instead of dropdown in collapsed view"
@@ -1618,9 +1292,58 @@ msgstr "Songlist werkbalktips weergeven"
 msgid "Stop playing on exit"
 msgstr "Afspelen stoppen bij afsluiten"
 
+#: ../glade/preferences-playlist.ui.h:9
+msgid "Stylize album covers"
+msgstr "Style albumhoezen"
+
+#: ../glade/preferences-plugins.ui.h:1
+msgid "<b>Loaded Plugins:</b>"
+msgstr "<b>Gelade plug-ins:</b>"
+
+#: ../glade/preferences-server.ui.h:1
+msgid "<b>Crossfade:</b>"
+msgstr "<b>Overvloeiing:</b>"
+
+#: ../glade/preferences-server.ui.h:2
+msgid "<b>Output Devices:</b>"
+msgstr "<b>Output apparaten:</b>"
+
+#: ../glade/preferences-server.ui.h:3
+msgid ""
+"<span size=\"small\"><i>You need to be connected\n"
+"in order to change these settings</i></span>"
+msgstr ""
+"<span size=\"small\"><i>U moet verbonden zijn om\n"
+"deze instellingen aan te kunnen passen</i></span>"
+
+#: ../glade/preferences-server.ui.h:5
+msgid "Enable crossfade"
+msgstr "Schakel overvloeiing in"
+
+# fade time -> Fade time?
+#: ../glade/preferences-server.ui.h:6
+msgid "fade time (s):"
+msgstr "Overvloeitijd (s)"
+
 #: ../glade/preferences-trayicon.ui.h:1
 msgid "<b>Inline messages</b>"
 msgstr ""
+
+#: ../glade/preferences-trayicon.ui.h:2
+msgid "<b>Notification Area Icon</b>"
+msgstr "<b>Mededelingengebiedsicoon</b>"
+
+#: ../glade/preferences-trayicon.ui.h:3
+msgid "<b>PopUp</b>"
+msgstr "<b>Pop-up</b>"
+
+#: ../glade/preferences-trayicon.ui.h:4
+msgid "Enable"
+msgstr "Inschakelen"
+
+#: ../glade/preferences-trayicon.ui.h:5
+msgid "Position:"
+msgstr "Positie"
 
 #: ../glade/preferences-trayicon.ui.h:6
 msgid "Show on song change"
@@ -1630,9 +1353,21 @@ msgstr ""
 msgid "Show severity"
 msgstr ""
 
+#: ../glade/preferences-trayicon.ui.h:8
+msgid "Timeout:"
+msgstr "Tijd:"
+
 #: ../glade/preferences-proxy.ui.h:1
 msgid "<b>Proxy settings</b>"
 msgstr "<b>Proxy instellingen</b>"
+
+#: ../glade/preferences-proxy.ui.h:2
+msgid "HTTP Proxy:"
+msgstr "HTTP Proxy:"
+
+#: ../glade/preferences-proxy.ui.h:5
+msgid "Use a proxy for internet connectivity"
+msgstr "Gebruik een proxy voor internet verbinding"
 
 #: ../glade/preferences-proxy.ui.h:6
 msgid "Use authentication"
@@ -1646,15 +1381,47 @@ msgstr "Gebruikersnaam:"
 msgid "To disable a keybinding edit it and press 'backspace'"
 msgstr ""
 
+#: ../glade/preferences.ui.h:1
+msgid ""
+"<span size=\"x-large\"><b>Plugins</b></span>\n"
+"<i>None Selected</i>"
+msgstr ""
+"<span size=\"x-large\"><b>Plug-ins</b></span>\n"
+"<i>Geen geselecteerd</i>"
+
+#: ../glade/preferences.ui.h:3
+msgid "gmpc - Configuration"
+msgstr "gmpc - Configuratie"
+
 #: ../glade/playlist-message-window.ui.h:1
 msgid "Messages"
 msgstr "Berichten"
+
+#: ../glade/playlist-save-dialog.ui.h:1
+msgid "<enter playlist name>"
+msgstr "<voer naam van afspeellijst in>"
+
+#: ../glade/playlist-save-dialog.ui.h:2
+msgid "<span size=\"x-small\"><i>Playlist already exists.</i></span>"
+msgstr "<span size=\"x-small\"><i>Afspeellijst bestaat al.</i></span>"
+
+#: ../glade/playlist-save-dialog.ui.h:3
+msgid "Save Playlist"
+msgstr "Afspeellijsto opslaan"
+
+#: ../glade/playlist-save-dialog.ui.h:4
+msgid "name:"
+msgstr "Naam:"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:155
 msgid "item"
 msgid_plural "items"
 msgstr[0] "item"
 msgstr[1] "items"
+
+#: ../src/browsers/playlist3-current-playlist-browser.c:161
+msgid "(Estimation)"
+msgstr "(Schatting)"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:210
 msgid "switch play queue"
@@ -1677,12 +1444,39 @@ msgstr "Huidig liedje inkorten"
 msgid "Crop the playlist so it only contains the current song"
 msgstr "Kort de afspeellijst in zodat ze enkel het huidige liedje bevat"
 
+#: ../src/browsers/playlist3-current-playlist-browser.c:531
+msgid "Are you sure you want to clear the playlist?"
+msgstr "Weet u zeker dat u de afspeellijst wil legen?"
+
 #: ../src/browsers/playlist3-current-playlist-browser.c:648
 #: ../src/browsers/playlist3-current-playlist-browser.c:668
 #: ../src/browsers/playlist3-current-playlist-browser.c:710
 #: ../src/browsers/playlist3-current-playlist-browser.c:732
 msgid "Your mpd has a broken 'addid', pasting will fail."
 msgstr "Jouw mpd heeft een beschadigde 'addid', plakken zal mislukken."
+
+#. add the delete widget
+#: ../src/browsers/playlist3-current-playlist-browser.c:761
+msgid "Crop"
+msgstr "Uitknippen"
+
+#. add the shuffle widget
+#: ../src/browsers/playlist3-current-playlist-browser.c:775
+msgid "Shuffle"
+msgstr "Willekeurig"
+
+#: ../src/browsers/playlist3-current-playlist-browser.c:908
+msgid "Add URL"
+msgstr "URL toevoegen"
+
+#: ../src/browsers/playlist3-current-playlist-browser.c:997
+#, c-format
+msgid ""
+"<i>Playlist <b>\"%s\"</b> already exists\n"
+"Overwrite?</i>"
+msgstr ""
+"<i>Afspeellijst <b>\"%s\"</b> bestaat al\n"
+"Overschrijven?</i>"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:1021
 msgid "Failed to save the playlist file."
@@ -1692,6 +1486,12 @@ msgstr "Kan de afspeellijst niet opslaan naar bestand."
 #: ../src/browsers/playlist3-current-playlist-browser.c:1147
 msgid "Play Queue"
 msgstr "Wachtrij"
+
+#: ../src/browsers/playlist3-file-browser.c:98
+#: ../src/browsers/playlist3-file-browser.c:335
+#: ../src/browsers/playlist3-file-browser.c:1172
+msgid "File Browser"
+msgstr "Bestandsbrowser"
 
 #: ../src/browsers/playlist3-file-browser.c:164
 msgid "Directories"
@@ -1730,9 +1530,20 @@ msgstr ""
 msgid "Replace"
 msgstr ""
 
+#. add the update widget
+#: ../src/browsers/playlist3-file-browser.c:623
+#: ../src/browsers/playlist3-file-browser.c:879
+msgid "Update"
+msgstr "Bijwerken"
+
 #: ../src/browsers/playlist3-file-browser.c:733
 msgid "Loaded playlist"
 msgstr ""
+
+#: ../src/browsers/playlist3-file-browser.c:1004
+#: ../src/browsers/playlist3-playlist-editor.c:388
+msgid "Added"
+msgstr "Toegevoegd"
 
 #: ../src/browsers/playlist3-file-browser.c:1006
 #: ../src/browsers/playlist3-playlist-editor.c:388
@@ -1753,6 +1564,11 @@ msgid_plural "playlists"
 msgstr[0] ""
 msgstr[1] ""
 
+#: ../src/browsers/playlist3-file-browser.c:1033
+#: ../src/browsers/playlist3-file-browser.c:1083
+msgid "Are you sure you want to clear the selected playlist?"
+msgstr "Weet u zeker dat u de gekozen afspeellijst wil legen?"
+
 #: ../src/browsers/playlist3-find2-browser.c:102
 #: ../src/vala/gmpc-test-plugin.c:1104
 msgid "Query"
@@ -1766,6 +1582,11 @@ msgstr ""
 #: ../src/browsers/playlist3-find2-browser.c:242
 msgid "Playlist"
 msgstr ""
+
+#: ../src/browsers/playlist3-find2-browser.c:346
+#: ../src/browsers/playlist3-find2-browser.c:795
+msgid "Search"
+msgstr "Zoeken"
 
 #: ../src/browsers/playlist3-find2-browser.c:436
 msgid "Search failed"
@@ -1911,9 +1732,55 @@ msgstr ""
 msgid "Tag statistics"
 msgstr ""
 
+#: ../src/gob/gmpc-mpddata-treeview.gob:69
+msgid "Markup"
+msgstr "Opmaak"
+
+#: ../src/gob/gmpc-mpddata-treeview.gob:70
+#: ../src/gob/gmpc-mpddata-treeview.gob:636
+#: ../src/vala/gmpc-test-plugin.c:1054
+#: ../src/vala/gmpc-metadata-browser2.c:2870
+#: ../src/vala/gmpc-metadata-browser2.c:3600
+#: ../src/vala/gmpc-metadata-browser2.c:4137
+msgid "Artist"
+msgstr "Artiest"
+
+#: ../src/gob/gmpc-mpddata-treeview.gob:71
+#: ../src/gob/gmpc-mpddata-treeview.gob:650
+#: ../src/vala/gmpc-test-plugin.c:1069
+#: ../src/vala/gmpc-metadata-browser2.c:2929
+#: ../src/vala/gmpc-metadata-browser2.c:3622
+msgid "Album"
+msgstr "Album"
+
+#: ../src/gob/gmpc-mpddata-treeview.gob:72
+#: ../src/gob/gmpc-mpddata-treeview.gob:623
+#: ../src/vala/gmpc-test-plugin.c:1087
+#: ../src/vala/gmpc-metadata-browser2.c:3583
+msgid "Title"
+msgstr "Titel"
+
 #: ../src/gob/gmpc-mpddata-treeview.gob:73
 msgid "File"
 msgstr ""
+
+#. Genre
+#: ../src/gob/gmpc-mpddata-treeview.gob:74
+#: ../src/gob/gmpc-mpddata-treeview.gob:662
+#: ../src/vala/gmpc-metadata-browser2.c:3634
+msgid "Genre"
+msgstr "Genre"
+
+#. track
+#: ../src/gob/gmpc-mpddata-treeview.gob:75
+#: ../src/vala/gmpc-metadata-browser2.c:2955
+#: ../src/vala/gmpc-metadata-browser2.c:3626
+msgid "Track"
+msgstr "Track"
+
+#: ../src/gob/gmpc-mpddata-treeview.gob:77
+msgid "Composer"
+msgstr "Componist"
 
 #. performer
 #: ../src/gob/gmpc-mpddata-treeview.gob:78
@@ -1932,6 +1799,18 @@ msgstr ""
 #: ../src/gob/gmpc-mpddata-treeview.gob:686
 msgid "Duration"
 msgstr ""
+
+#. disc
+#: ../src/gob/gmpc-mpddata-treeview.gob:81
+#: ../src/vala/gmpc-metadata-browser2.c:3632
+msgid "Disc"
+msgstr "Disc"
+
+#. Comment
+#: ../src/gob/gmpc-mpddata-treeview.gob:82
+#: ../src/vala/gmpc-metadata-browser2.c:3669
+msgid "Comment"
+msgstr "Commentaar"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:83
 msgid "Icon Id"
@@ -1966,9 +1845,23 @@ msgstr ""
 msgid "Paste after"
 msgstr ""
 
+#. * Edit column
+#: ../src/gob/gmpc-mpddata-treeview.gob:1024
+msgid "Edit Columns"
+msgstr "Kolommen bewerken"
+
 #: ../src/gob/gmpc-profiles.gob:90
 msgid "Added profile"
 msgstr ""
+
+#. Generate removal message before the actual profile is destroyed
+#: ../src/gob/gmpc-profiles.gob:403
+msgid "Removed profile"
+msgstr "Profiel verwijderd"
+
+#: ../src/gob/gmpc-meta-text-view.gob:96 ../src/gob/gmpc-metaimage.gob:837
+msgid "Refetch"
+msgstr "Opnieuw halen"
 
 #: ../src/gob/gmpc-meta-text-view.gob:101 ../src/gob/gmpc-metaimage.gob:842
 msgid "Select file"
@@ -1983,6 +1876,10 @@ msgstr ""
 msgid "Failed to open file:"
 msgstr ""
 
+#: ../src/gob/gmpc-meta-text-view.gob:302
+msgid "because of encoding issues"
+msgstr "vanwege encoderingsproblemen"
+
 #: ../src/gob/gmpc-meta-text-view.gob:357
 msgid "Fetching Lyrics"
 msgstr ""
@@ -1995,9 +1892,25 @@ msgstr ""
 msgid "Fetching Guitar tab"
 msgstr ""
 
+#: ../src/gob/gmpc-meta-text-view.gob:369
+msgid "Fetching Album Info"
+msgstr "Album info ophalen"
+
+#: ../src/gob/gmpc-meta-text-view.gob:380
+msgid "Not Available"
+msgstr "Niet beschikbaar"
+
 #: ../src/gob/gmpc-meta-text-view.gob:445 ../src/gob/gmpc-metaimage.gob:888
 msgid "Select File"
 msgstr ""
+
+#: ../src/gob/gmpc-meta-text-view.gob:450
+msgid "Text Document"
+msgstr "Tekstdocument"
+
+#: ../src/gob/gmpc-meta-text-view.gob:454 ../src/gob/gmpc-metaimage.gob:898
+msgid "All"
+msgstr "Alles"
 
 #: ../src/gob/gmpc-metaimage.gob:893
 msgid "Images"
@@ -2070,6 +1983,10 @@ msgstr ""
 #: ../src/vala/gmpc-test-plugin.c:191
 msgid "Filetype"
 msgstr ""
+
+#: ../src/vala/gmpc-test-plugin.c:199
+msgid "Size"
+msgstr "Grootte"
 
 #: ../src/vala/gmpc-test-plugin.c:199
 msgid "wxh"
@@ -2156,6 +2073,10 @@ msgstr ""
 #: ../src/vala/gmpc-metadata-browser2.c:1979
 msgid "Now Playing"
 msgstr ""
+
+#: ../src/vala/gmpc-metadata-browser2.c:2124
+msgid "Metadata Browser"
+msgstr "Metadatabrowser"
 
 #: ../src/vala/gmpc-metadata-browser2.c:2920
 msgid "Year"
@@ -2250,3 +2171,42 @@ msgstr ""
 #: ../src/vala/gmpc-metadata-browser2.c:5244
 msgid "Web links"
 msgstr ""
+
+#~ msgid "<b>Song Markup</b>"
+#~ msgstr "<b>Nummer opmaak</b>"
+
+#~ msgid "Edit _Browser Markup"
+#~ msgstr "Bewerk _browser opmaak"
+
+#~ msgid "/path/to/file_name.mp3"
+#~ msgstr "/pad/naar/bestandsnaam.mp3"
+
+#~ msgid " Total time: "
+#~ msgstr " Totale afspeeltijd: "
+
+#~ msgid "Sing or Swing you want"
+#~ msgstr "Zing en dans wat je wil"
+
+#~ msgid "The kernel jazz"
+#~ msgstr "De kernel jazz"
+
+#~ msgid "Jonny Singer"
+#~ msgstr "Jonny Singer"
+
+#~ msgid "01/24"
+#~ msgstr "24-01"
+
+#~ msgid "_Server"
+#~ msgstr "_Server"
+
+#~ msgid "2 Feb 2006"
+#~ msgstr "2 Feb 2006"
+
+#~ msgid "MPD's Streaming server"
+#~ msgstr "MPD's Streaming server"
+
+#~ msgid "kbit/sec"
+#~ msgstr "kbit/sec"
+
+#~ msgid "Show Current Song"
+#~ msgstr "Laat huidige nummer zien"

@@ -15,14 +15,39 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 0;\n"
-"X-Launchpad-Export-Date: 2009-08-09 09:52+0000\n"
+"X-Launchpad-Export-Date: 2009-10-18 08:48+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+
+#: ../data/gmpc.desktop.in.h:1
+msgid "A gnome frontend for the mpd daemon"
+msgstr ""
 
 #: ../data/gmpc.desktop.in.h:2 ../src/main.c:341 ../src/tray-icon2.c:589
 #: ../src/vala/gmpc-metadata-browser2.c:1917
 #: ../src/vala/gmpc-metadata-browser2.c:1920
 msgid "Gnome Music Player Client"
 msgstr "Gnome Musik Player Client"
+
+#. Basic dialog with a close button
+#: ../glade/playlist3.glade.h:1 ../src/bug-information.c:239
+msgid "Bug information"
+msgstr ""
+
+#: ../glade/playlist3.glade.h:2
+msgid "Consume"
+msgstr ""
+
+#: ../glade/playlist3.glade.h:3
+msgid "Easy Command Help"
+msgstr ""
+
+#: ../glade/playlist3.glade.h:4
+msgid "Getting help"
+msgstr "Golek pitulungan"
+
+#: ../glade/playlist3.glade.h:5
+msgid "MPD database is updating."
+msgstr ""
 
 #: ../glade/playlist3.glade.h:6 ../src/mpdinteraction.c:321
 msgid "Mute"
@@ -50,49 +75,6 @@ msgstr "Profil"
 #: ../glade/playlist3.glade.h:11 ../src/mm-keys.c:80
 msgid "Random"
 msgstr "Acak"
-
-#: ../glade/aboutdialog.ui.h:2
-msgid "translator-credits"
-msgstr ""
-"Launchpad Contributions:\n"
-"  Rahman Yusri Aftian https://launchpad.net/~aftian\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Rahman Yusri Aftian https://launchpad.net/~aftian\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Arief Setiadi Wibowo https://launchpad.net/~q-thrynx\n"
-"  Rahman Yusri Aftian https://launchpad.net/~aftian\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Arief Setiadi Wibowo https://launchpad.net/~q-thrynx\n"
-"  Qball Cow https://launchpad.net/~qball-qballcow\n"
-"  Rahman Yusri Aftian https://launchpad.net/~aftian"
-
-#: ../data/gmpc.desktop.in.h:1
-msgid "A gnome frontend for the mpd daemon"
-msgstr ""
-
-#. Basic dialog with a close button
-#: ../glade/playlist3.glade.h:1 ../src/bug-information.c:239
-msgid "Bug information"
-msgstr ""
-
-#: ../glade/playlist3.glade.h:2
-msgid "Consume"
-msgstr ""
-
-#: ../glade/playlist3.glade.h:3
-msgid "Easy Command Help"
-msgstr ""
-
-#: ../glade/playlist3.glade.h:4
-msgid "Getting help"
-msgstr "Golek pitulungan"
-
-#: ../glade/playlist3.glade.h:5
-msgid "MPD database is updating."
-msgstr ""
 
 #. * MM_FASTBACKWARD
 #: ../glade/playlist3.glade.h:12 ../src/mm-keys.c:79
@@ -1139,6 +1121,14 @@ msgstr ""
 #: ../glade/aboutdialog.ui.h:1
 msgid "Copyright 2003-2007 Qball Cow"
 msgstr ""
+
+#: ../glade/aboutdialog.ui.h:2
+msgid "translator-credits"
+msgstr ""
+"Launchpad Contributions:\n"
+"  Arief Setiadi Wibowo https://launchpad.net/~q-thrynx\n"
+"  Qball Cow https://launchpad.net/~qball-qballcow\n"
+"  Rahman Yusri Aftian https://launchpad.net/~aftian"
 
 #: ../glade/password-dialog.ui.h:1
 msgid "Enter your password for: '<hostname>'"

@@ -15,12 +15,39 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-08-09 09:52+0000\n"
+"X-Launchpad-Export-Date: 2009-10-18 08:48+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+
+#: ../data/gmpc.desktop.in.h:1
+msgid "A gnome frontend for the mpd daemon"
+msgstr ""
+
+#: ../data/gmpc.desktop.in.h:2 ../src/main.c:341 ../src/tray-icon2.c:589
+#: ../src/vala/gmpc-metadata-browser2.c:1917
+#: ../src/vala/gmpc-metadata-browser2.c:1920
+msgid "Gnome Music Player Client"
+msgstr "Cliente Reprodutor de Musica Gnome"
+
+#. Basic dialog with a close button
+#: ../glade/playlist3.glade.h:1 ../src/bug-information.c:239
+msgid "Bug information"
+msgstr "Informação de erro"
+
+#: ../glade/playlist3.glade.h:2
+msgid "Consume"
+msgstr ""
+
+#: ../glade/playlist3.glade.h:3
+msgid "Easy Command Help"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:4
 msgid "Getting help"
 msgstr "Obter ajuda"
+
+#: ../glade/playlist3.glade.h:5
+msgid "MPD database is updating."
+msgstr "A base de dados MPD está a actualizar."
 
 #: ../glade/playlist3.glade.h:6 ../src/mpdinteraction.c:321
 msgid "Mute"
@@ -48,82 +75,6 @@ msgstr "Perfis"
 #: ../glade/playlist3.glade.h:11 ../src/mm-keys.c:80
 msgid "Random"
 msgstr "Aleatório"
-
-#: ../glade/aboutdialog.ui.h:2
-msgid "translator-credits"
-msgstr ""
-"Launchpad Contributions:\n"
-"  Pulsar https://launchpad.net/~gamma-pulsar\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Pulsar https://launchpad.net/~gamma-pulsar\n"
-"  Qball Cow https://launchpad.net/~qball-qballcow\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Pulsar https://launchpad.net/~gamma-pulsar\n"
-"  Qball Cow https://launchpad.net/~qball-qballcow\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Pulsar https://launchpad.net/~gamma-pulsar\n"
-"  Qball Cow https://launchpad.net/~qball-qballcow\n"
-"  nitrofurano https://launchpad.net/~nitrofurano-3t\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Pulsar https://launchpad.net/~gamma-pulsar\n"
-"  Qball Cow https://launchpad.net/~qball-qballcow\n"
-"  nitrofurano https://launchpad.net/~nitrofurano-3t\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Pulsar https://launchpad.net/~gamma-pulsar\n"
-"  Qball Cow https://launchpad.net/~qball-qballcow\n"
-"  nitrofurano https://launchpad.net/~nitrofurano-3t\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Diogo Lavareda https://launchpad.net/~diogolavareda\n"
-"  Pulsar https://launchpad.net/~gamma-pulsar\n"
-"  Qball Cow https://launchpad.net/~qball-qballcow\n"
-"  nitrofurano https://launchpad.net/~nitrofurano-3t\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Diogo Lavareda https://launchpad.net/~diogolavareda\n"
-"  Pulsar https://launchpad.net/~gamma-pulsar\n"
-"  Qball Cow https://launchpad.net/~qball-qballcow\n"
-"  nitrofurano https://launchpad.net/~nitrofurano-3t"
-
-#: ../glade/preferences-esf-dialog.ui.h:1
-msgid "<b>Enable Field:</b>"
-msgstr "<b>Activar Campo:</b>"
-
-#: ../glade/preferences-esf-dialog.ui.h:2
-msgid "<b>Example:</b>"
-msgstr "<b>Examplo:</b>"
-
-#: ../data/gmpc.desktop.in.h:1
-msgid "A gnome frontend for the mpd daemon"
-msgstr ""
-
-#: ../data/gmpc.desktop.in.h:2 ../src/main.c:341 ../src/tray-icon2.c:589
-#: ../src/vala/gmpc-metadata-browser2.c:1917
-#: ../src/vala/gmpc-metadata-browser2.c:1920
-msgid "Gnome Music Player Client"
-msgstr "Cliente Reprodutor de Musica Gnome"
-
-#. Basic dialog with a close button
-#: ../glade/playlist3.glade.h:1 ../src/bug-information.c:239
-msgid "Bug information"
-msgstr "Informação de erro"
-
-#: ../glade/playlist3.glade.h:2
-msgid "Consume"
-msgstr ""
-
-#: ../glade/playlist3.glade.h:3
-msgid "Easy Command Help"
-msgstr ""
-
-#: ../glade/playlist3.glade.h:5
-msgid "MPD database is updating."
-msgstr "A base de dados MPD está a actualizar."
 
 #. * MM_FASTBACKWARD
 #: ../glade/playlist3.glade.h:12 ../src/mm-keys.c:79
@@ -1177,6 +1128,15 @@ msgstr ""
 msgid "Copyright 2003-2007 Qball Cow"
 msgstr "Copyright 2003-2007 Qball Cow"
 
+#: ../glade/aboutdialog.ui.h:2
+msgid "translator-credits"
+msgstr ""
+"Launchpad Contributions:\n"
+"  Diogo Lavareda https://launchpad.net/~diogolavareda\n"
+"  Pulsar https://launchpad.net/~gamma-pulsar\n"
+"  Qball Cow https://launchpad.net/~qball-qballcow\n"
+"  nitrofurano https://launchpad.net/~nitrofurano-3t"
+
 #: ../glade/password-dialog.ui.h:1
 msgid "Enter your password for: '<hostname>'"
 msgstr "Introduza a sua senha para: '<hostname>'"
@@ -1234,6 +1194,14 @@ msgstr "_Usar Autenticação"
 #: ../glade/preferences-connection.ui.h:12
 msgid "localhost"
 msgstr "localhost"
+
+#: ../glade/preferences-esf-dialog.ui.h:1
+msgid "<b>Enable Field:</b>"
+msgstr "<b>Activar Campo:</b>"
+
+#: ../glade/preferences-esf-dialog.ui.h:2
+msgid "<b>Example:</b>"
+msgstr "<b>Examplo:</b>"
 
 #: ../glade/preferences-esf-dialog.ui.h:3
 msgid "<span size=\"large\"><b>Format Rule:</b></span>"

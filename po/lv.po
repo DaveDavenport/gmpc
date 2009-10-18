@@ -15,8 +15,31 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2009-08-09 09:52+0000\n"
+"X-Launchpad-Export-Date: 2009-10-18 08:48+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+
+#: ../data/gmpc.desktop.in.h:1
+msgid "A gnome frontend for the mpd daemon"
+msgstr ""
+
+#: ../data/gmpc.desktop.in.h:2 ../src/main.c:341 ../src/tray-icon2.c:589
+#: ../src/vala/gmpc-metadata-browser2.c:1917
+#: ../src/vala/gmpc-metadata-browser2.c:1920
+msgid "Gnome Music Player Client"
+msgstr ""
+
+#. Basic dialog with a close button
+#: ../glade/playlist3.glade.h:1 ../src/bug-information.c:239
+msgid "Bug information"
+msgstr ""
+
+#: ../glade/playlist3.glade.h:2
+msgid "Consume"
+msgstr ""
+
+#: ../glade/playlist3.glade.h:3
+msgid "Easy Command Help"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:4
 msgid "Getting help"
@@ -58,9 +81,17 @@ msgstr "Nejaušs"
 msgid "Repeat"
 msgstr "Atkārtot"
 
+#: ../glade/playlist3.glade.h:13
+msgid "Se_rver"
+msgstr ""
+
 #: ../glade/playlist3.glade.h:14
 msgid "Show Messages"
 msgstr "Parādīt Ziņojumus"
+
+#: ../glade/playlist3.glade.h:15
+msgid "Single mode"
+msgstr ""
 
 #. * MM_PREV
 #: ../glade/playlist3.glade.h:16 ../src/mm-keys.c:76
@@ -71,6 +102,14 @@ msgstr "Pārtraukt"
 msgid "Visit website"
 msgstr "Apmeklēt mājaslapu"
 
+#: ../glade/playlist3.glade.h:18
+msgid "_Collapse Interface"
+msgstr ""
+
+#: ../glade/playlist3.glade.h:19
+msgid "_Connect"
+msgstr ""
+
 #: ../glade/playlist3.glade.h:20
 msgid "_Control"
 msgstr "_Kontrole"
@@ -78,6 +117,10 @@ msgstr "_Kontrole"
 #: ../glade/playlist3.glade.h:21 ../glade/preferences-connection.ui.h:10
 msgid "_Disconnect"
 msgstr "_Atvienot"
+
+#: ../glade/playlist3.glade.h:22
+msgid "_Expand Interface"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:23
 msgid "_Fullscreen"
@@ -107,77 +150,13 @@ msgstr "_Sūtīt Paroli"
 msgid "_Show Artist Image"
 msgstr "_Parādīt Izpildītāja Attēlu"
 
-#: ../glade/playlist3.glade.h:31
-msgid "_View"
-msgstr "_Skats"
-
-#: ../glade/aboutdialog.ui.h:2
-msgid "translator-credits"
-msgstr ""
-"Launchpad Contributions:\n"
-"  Kristaps https://launchpad.net/~retail\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Kristaps https://launchpad.net/~retail\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Kristaps https://launchpad.net/~retail\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Kristaps https://launchpad.net/~retail\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Kristaps https://launchpad.net/~retail"
-
-#~ msgid "_Server"
-#~ msgstr "_Serveris"
-
-#: ../data/gmpc.desktop.in.h:1
-msgid "A gnome frontend for the mpd daemon"
-msgstr ""
-
-#: ../data/gmpc.desktop.in.h:2 ../src/main.c:341 ../src/tray-icon2.c:589
-#: ../src/vala/gmpc-metadata-browser2.c:1917
-#: ../src/vala/gmpc-metadata-browser2.c:1920
-msgid "Gnome Music Player Client"
-msgstr ""
-
-#. Basic dialog with a close button
-#: ../glade/playlist3.glade.h:1 ../src/bug-information.c:239
-msgid "Bug information"
-msgstr ""
-
-#: ../glade/playlist3.glade.h:2
-msgid "Consume"
-msgstr ""
-
-#: ../glade/playlist3.glade.h:3
-msgid "Easy Command Help"
-msgstr ""
-
-#: ../glade/playlist3.glade.h:13
-msgid "Se_rver"
-msgstr ""
-
-#: ../glade/playlist3.glade.h:15
-msgid "Single mode"
-msgstr ""
-
-#: ../glade/playlist3.glade.h:18
-msgid "_Collapse Interface"
-msgstr ""
-
-#: ../glade/playlist3.glade.h:19
-msgid "_Connect"
-msgstr ""
-
-#: ../glade/playlist3.glade.h:22
-msgid "_Expand Interface"
-msgstr ""
-
 #: ../glade/playlist3.glade.h:30
 msgid "_Tools"
 msgstr ""
+
+#: ../glade/playlist3.glade.h:31
+msgid "_View"
+msgstr "_Skats"
 
 #: ../glade/playlist3.glade.h:32
 msgid "gmpc - Playlist Manager"
@@ -1142,6 +1121,12 @@ msgstr ""
 #: ../glade/aboutdialog.ui.h:1
 msgid "Copyright 2003-2007 Qball Cow"
 msgstr ""
+
+#: ../glade/aboutdialog.ui.h:2
+msgid "translator-credits"
+msgstr ""
+"Launchpad Contributions:\n"
+"  Kristaps https://launchpad.net/~retail"
 
 #: ../glade/password-dialog.ui.h:1
 msgid "Enter your password for: '<hostname>'"
@@ -2145,3 +2130,6 @@ msgstr ""
 #: ../src/vala/gmpc-metadata-browser2.c:5244
 msgid "Web links"
 msgstr ""
+
+#~ msgid "_Server"
+#~ msgstr "_Serveris"

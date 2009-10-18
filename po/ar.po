@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2009-07-25 16:10+0200\n"
-"PO-Revision-Date: 2009-07-22 01:04+0000\n"
-"Last-Translator: AtomCell <shelhatem@gmail.com>\n"
+"PO-Revision-Date: 2009-10-02 14:05+0000\n"
+"Last-Translator: الـشـبـح <the-ghost@live.com>\n"
 "Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n % 100 >= "
 "3 && n % 100 <= 10 ? 3 : n % 100 >= 11 && n % 100 <= 99 ? 4 : 5;\n"
-"X-Launchpad-Export-Date: 2009-08-09 09:52+0000\n"
+"X-Launchpad-Export-Date: 2009-10-18 08:48+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -27,7 +27,7 @@ msgstr ""
 #: ../src/vala/gmpc-metadata-browser2.c:1917
 #: ../src/vala/gmpc-metadata-browser2.c:1920
 msgid "Gnome Music Player Client"
-msgstr ""
+msgstr "عميل مشغل المسيقى لجِنوم"
 
 #. Basic dialog with a close button
 #: ../glade/playlist3.glade.h:1 ../src/bug-information.c:239
@@ -84,7 +84,7 @@ msgstr "إعادة"
 
 #: ../glade/playlist3.glade.h:13
 msgid "Se_rver"
-msgstr ""
+msgstr "ال_خادم"
 
 #: ../glade/playlist3.glade.h:14
 msgid "Show Messages"
@@ -105,7 +105,7 @@ msgstr "زر الموقع"
 
 #: ../glade/playlist3.glade.h:18
 msgid "_Collapse Interface"
-msgstr ""
+msgstr "_تصغير الواجهة"
 
 #: ../glade/playlist3.glade.h:19
 msgid "_Connect"
@@ -121,7 +121,7 @@ msgstr "_قطع الاتصال"
 
 #: ../glade/playlist3.glade.h:22
 msgid "_Expand Interface"
-msgstr ""
+msgstr "_تكبير الواجهة"
 
 #: ../glade/playlist3.glade.h:23
 msgid "_Fullscreen"
@@ -141,15 +141,15 @@ msgstr "_موسيقى"
 
 #: ../glade/playlist3.glade.h:27
 msgid "_Option"
-msgstr ""
+msgstr "_خيار"
 
 #: ../glade/playlist3.glade.h:28
 msgid "_Send Password"
-msgstr ""
+msgstr "_إرسال كلمة المرور"
 
 #: ../glade/playlist3.glade.h:29
 msgid "_Show Artist Image"
-msgstr ""
+msgstr "_عرض صورة الفنان"
 
 #: ../glade/playlist3.glade.h:30
 msgid "_Tools"
@@ -169,7 +169,7 @@ msgstr "وكيل"
 
 #: ../src/main.c:279
 msgid "Start the program in full screen"
-msgstr ""
+msgstr "ابدا البرنامج على كامل الشاشة"
 
 #: ../src/main.c:281
 msgid "Show program version and revision"
@@ -185,7 +185,7 @@ msgstr ""
 
 #: ../src/main.c:287
 msgid "Don't load the plugins"
-msgstr ""
+msgstr "لا تٌحمِل الإضافات"
 
 #: ../src/main.c:289
 msgid "Load alternative config file"
@@ -209,7 +209,7 @@ msgstr ""
 
 #: ../src/main.c:299
 msgid "Show bug information dialog"
-msgstr ""
+msgstr "عرض مربع حوار معلومات العلة"
 
 #: ../src/main.c:301
 msgid "Shows all output from a certain log domain"
@@ -241,11 +241,11 @@ msgstr ""
 
 #: ../src/main.c:444
 msgid "show notification"
-msgstr ""
+msgstr "عرض التنبيه"
 
 #: ../src/main.c:445
 msgid "Show trayicon notification"
-msgstr ""
+msgstr "إظهار أيقونة شريط المهام"
 
 #: ../src/main.c:499
 msgid "Failed to load the configuration system."
@@ -269,11 +269,13 @@ msgid ""
 "Failed to set password on: '%s'\n"
 "Please try again"
 msgstr ""
+"فشل وضع كلمة المرور على '%s'\n"
+"يرجى إعادة المحاولة"
 
 #: ../src/main.c:1094
 #, c-format
 msgid "Please enter your password for: '%s'"
-msgstr ""
+msgstr "رجاءاً ادخل كلمة المرور لـ: '%s'"
 
 #: ../src/main.c:1123 ../src/main.c:1144
 msgid "error code"
@@ -297,12 +299,12 @@ msgstr ""
 
 #: ../src/main.c:1272
 msgid "Error occurred during operation"
-msgstr ""
+msgstr "حدث خلل أثناء العملية"
 
 #. Create label
 #: ../src/main.c:1296
 msgid "The following error(s) occurred:"
-msgstr ""
+msgstr "الخطأ\\أخطاء التالية حدثت:"
 
 #: ../src/main.c:1313
 msgid "Error Message"
@@ -320,14 +322,17 @@ msgstr ""
 
 #: ../src/misc.c:39
 msgid "Total time"
-msgstr ""
+msgstr "مجموع الوقت"
 
 #: ../src/misc.c:56
 msgid "day"
 msgid_plural "days"
 msgstr[0] "يوم"
-msgstr[1] "أيام"
-msgstr[2] "يوم"
+msgstr[1] "يومين"
+msgstr[2] "أيام"
+msgstr[3] "أيام"
+msgstr[4] "أيام"
+msgstr[5] "أيام"
 
 #: ../src/misc.c:59
 msgid "hour"
@@ -371,27 +376,27 @@ msgstr ""
 #. * MM_RAISE
 #: ../src/mm-keys.c:82
 msgid "Hide window"
-msgstr ""
+msgstr "إخفاء النافذة"
 
 #. * MM_HIDE
 #: ../src/mm-keys.c:83
 msgid "Toggle window"
-msgstr ""
+msgstr "ا"
 
 #. * MM_TOGGLE_HIDDEN
 #: ../src/mm-keys.c:84
 msgid "Volume Up"
-msgstr ""
+msgstr "رفع الصوت"
 
 #. * MM_VOLUME_UP
 #: ../src/mm-keys.c:85
 msgid "Volume Down"
-msgstr ""
+msgstr "خفض الصوت"
 
 #. * MM_VOLUME_DOWN
 #: ../src/mm-keys.c:86
 msgid "Show song"
-msgstr ""
+msgstr "عرض الأغنية"
 
 #. * MM_SHOW_NOTIFICATION
 #: ../src/mm-keys.c:87
@@ -426,7 +431,7 @@ msgstr ""
 
 #: ../src/mm-keys.c:570
 msgid "Multimedia Keys"
-msgstr ""
+msgstr "مفاتيح الوسائط المتعددة"
 
 #: ../src/mm-keys.c:632
 #, c-format
@@ -449,24 +454,24 @@ msgstr ""
 
 #: ../src/mm-keys.c:716
 msgid "Action"
-msgstr ""
+msgstr "الإجراء"
 
 #: ../src/mm-keys.c:738
 msgid "Shortcut"
-msgstr ""
+msgstr "الإختصار"
 
 #: ../src/mpdinteraction.c:91
 msgid "enable"
-msgstr ""
+msgstr "تفعيل"
 
 #: ../src/mpdinteraction.c:94
 msgid "disable"
-msgstr ""
+msgstr "تعطيل"
 
 #: ../src/mpdinteraction.c:107 ../src/playlist3.c:1710 ../src/playlist3.c:1723
 #: ../src/playlist3.c:1738 ../src/playlist3.c:1751
 msgid "Off"
-msgstr ""
+msgstr "إيقاف"
 
 #: ../src/mpdinteraction.c:162
 msgid "Single: The used MPD server is to old and does not support this."
@@ -509,7 +514,7 @@ msgstr ""
 
 #: ../src/mpdinteraction.c:286
 msgid "The current song will be forever repeated."
-msgstr ""
+msgstr "الأغنية الحالية سيتم تكريرها للأبد."
 
 #: ../src/mpdinteraction.c:296
 msgid ""
@@ -524,7 +529,7 @@ msgstr ""
 #. basic playlist commands
 #: ../src/mpdinteraction.c:307 ../src/mpdinteraction.c:328
 msgid "play"
-msgstr ""
+msgstr "تشغيل"
 
 #: ../src/mpdinteraction.c:307
 msgid "start playback"
@@ -532,7 +537,7 @@ msgstr ""
 
 #: ../src/mpdinteraction.c:308
 msgid "pause"
-msgstr ""
+msgstr "ألبِث"
 
 #: ../src/mpdinteraction.c:308
 msgid "pause playback"
@@ -540,23 +545,23 @@ msgstr ""
 
 #: ../src/mpdinteraction.c:309
 msgid "next"
-msgstr ""
+msgstr "التالي"
 
 #: ../src/mpdinteraction.c:309
 msgid "next song"
-msgstr ""
+msgstr "الأغنية التالية"
 
 #: ../src/mpdinteraction.c:310
 msgid "prev"
-msgstr ""
+msgstr "السابق"
 
 #: ../src/mpdinteraction.c:310
 msgid "previous song"
-msgstr ""
+msgstr "الأغنية السابقة"
 
 #: ../src/mpdinteraction.c:311
 msgid "stop"
-msgstr ""
+msgstr "إيقاف"
 
 #: ../src/mpdinteraction.c:311
 msgid "stop playback"
@@ -564,7 +569,7 @@ msgstr ""
 
 #: ../src/mpdinteraction.c:313
 msgid "random"
-msgstr ""
+msgstr "عشوائي"
 
 #: ../src/mpdinteraction.c:313
 msgid "Random (on|off)"
@@ -572,7 +577,7 @@ msgstr ""
 
 #: ../src/mpdinteraction.c:314
 msgid "repeat"
-msgstr ""
+msgstr "تكرار"
 
 #: ../src/mpdinteraction.c:314
 msgid "Repeat (on|off)"
@@ -580,7 +585,7 @@ msgstr ""
 
 #: ../src/mpdinteraction.c:316
 msgid "single"
-msgstr ""
+msgstr "مفرد"
 
 #: ../src/mpdinteraction.c:316
 msgid "Single (on|off)"
@@ -1133,7 +1138,8 @@ msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
 "  AtomCell https://launchpad.net/~shelhatem\n"
-"  Maayouf Rashid Al-Naimi https://launchpad.net/~balnaimi"
+"  Maayouf Rashid Al-Naimi https://launchpad.net/~balnaimi\n"
+"  الـشـبـح https://launchpad.net/~the-ghost-live"
 
 #: ../glade/password-dialog.ui.h:1
 msgid "Enter your password for: '<hostname>'"

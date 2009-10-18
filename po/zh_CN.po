@@ -8,21 +8,38 @@ msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-07-25 16:10+0200\n"
-"PO-Revision-Date: 2009-05-21 09:36+0000\n"
+"PO-Revision-Date: 2009-10-08 12:11+0000\n"
 "Last-Translator: Yinghua Wang <Unknown>\n"
 "Language-Team: Simplified Chinese <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2009-08-09 09:52+0000\n"
+"X-Launchpad-Export-Date: 2009-10-18 08:48+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+
+#: ../data/gmpc.desktop.in.h:1
+msgid "A gnome frontend for the mpd daemon"
+msgstr "一个 mpd 守护进程的 gnome 前端"
 
 #: ../data/gmpc.desktop.in.h:2 ../src/main.c:341 ../src/tray-icon2.c:589
 #: ../src/vala/gmpc-metadata-browser2.c:1917
 #: ../src/vala/gmpc-metadata-browser2.c:1920
 msgid "Gnome Music Player Client"
 msgstr "Gnome 音乐播放器客户端"
+
+#. Basic dialog with a close button
+#: ../glade/playlist3.glade.h:1 ../src/bug-information.c:239
+msgid "Bug information"
+msgstr "错误信息"
+
+#: ../glade/playlist3.glade.h:2
+msgid "Consume"
+msgstr ""
+
+#: ../glade/playlist3.glade.h:3
+msgid "Easy Command Help"
+msgstr "简单的命令帮助"
 
 #: ../glade/playlist3.glade.h:4
 msgid "Getting help"
@@ -64,9 +81,17 @@ msgstr "随机"
 msgid "Repeat"
 msgstr "重复"
 
+#: ../glade/playlist3.glade.h:13
+msgid "Se_rver"
+msgstr "服务器(_R)"
+
 #: ../glade/playlist3.glade.h:14
 msgid "Show Messages"
 msgstr "显示消息"
+
+#: ../glade/playlist3.glade.h:15
+msgid "Single mode"
+msgstr "单曲模式"
 
 #. * MM_PREV
 #: ../glade/playlist3.glade.h:16 ../src/mm-keys.c:76
@@ -125,6 +150,10 @@ msgstr "发送密码(_S)"
 msgid "_Show Artist Image"
 msgstr "显示艺术家图片(_S)"
 
+#: ../glade/playlist3.glade.h:30
+msgid "_Tools"
+msgstr "工具(_T)"
+
 #: ../glade/playlist3.glade.h:31
 msgid "_View"
 msgstr "视图(_V)"
@@ -137,13 +166,85 @@ msgstr "gmpc - 播放列表管理器"
 msgid "Proxy"
 msgstr "代理"
 
+#: ../src/main.c:279
+msgid "Start the program in full screen"
+msgstr "以全屏方式启动程序"
+
+#: ../src/main.c:281
+msgid "Show program version and revision"
+msgstr "显示程序版本和修订"
+
+#: ../src/main.c:283
+msgid "Quits the running gmpc"
+msgstr "退出运行中的 gmpc"
+
+#: ../src/main.c:285
+msgid "Replace the running gmpc"
+msgstr "替换运行中的 gmpc"
+
+#: ../src/main.c:287
+msgid "Don't load the plugins"
+msgstr "不要加载插件"
+
+#: ../src/main.c:289
+msgid "Load alternative config file"
+msgstr "载入另一个配置文件"
+
+#: ../src/main.c:291
+msgid "Set the debug level"
+msgstr "设置调试级别"
+
+#: ../src/main.c:293
+msgid "Start gmpc hidden to tray"
+msgstr "启动 gmpc 时隐藏到通知区域"
+
+#: ../src/main.c:295
+msgid "Remove all failed hits from metadata cache"
+msgstr "从元数据缓存中移除所有命中失败的项"
+
+#: ../src/main.c:297
+msgid "Show redraw events in GTK+"
+msgstr "在 GTK+ 中显示重绘事件"
+
+#: ../src/main.c:299
+msgid "Show bug information dialog"
+msgstr "显示错误信息对话框"
+
+#: ../src/main.c:301
+msgid "Shows all output from a certain log domain"
+msgstr ""
+
 #: ../src/main.c:438
 msgid "quit"
 msgstr "停止"
 
+#: ../src/main.c:439
+msgid "Quit gmpc"
+msgstr "退出 gmpc"
+
+#: ../src/main.c:440
+msgid "hide"
+msgstr "隐藏"
+
+#: ../src/main.c:441
+msgid "Hide gmpc"
+msgstr "隐藏 gmpc"
+
+#: ../src/main.c:442
+msgid "show"
+msgstr "显示"
+
+#: ../src/main.c:443
+msgid "Show gmpc"
+msgstr "显示 gmpc"
+
 #: ../src/main.c:444
 msgid "show notification"
 msgstr "显示通知"
+
+#: ../src/main.c:445
+msgid "Show trayicon notification"
+msgstr "在通知区域图标处显示提示"
 
 #: ../src/main.c:499
 msgid "Failed to load the configuration system."
@@ -157,6 +258,17 @@ msgstr "加载debug日志文件时出现错误。"
 msgid "Failed to setup libmpd"
 msgstr "设置libmpd时出现错误"
 
+#: ../src/main.c:1066
+msgid "GMPC has insufficient permissions on the mpd server."
+msgstr "GMPC 没有足够的权限访问 mpd 服务器。"
+
+#: ../src/main.c:1092
+#, c-format
+msgid ""
+"Failed to set password on: '%s'\n"
+"Please try again"
+msgstr ""
+
 #: ../src/main.c:1094
 #, c-format
 msgid "Please enter your password for: '%s'"
@@ -165,6 +277,49 @@ msgstr "请出入你的密码: '%s'"
 #: ../src/main.c:1123 ../src/main.c:1144
 msgid "error code"
 msgstr "错误代码"
+
+#: ../src/main.c:1133
+msgid "Insufficient permission to connect to mpd. Check password"
+msgstr "没有足够的权限连接 mpd。请检查密码"
+
+#: ../src/main.c:1168
+msgid "MPD versions before 0.13.0 are not supported"
+msgstr "不支持 0.13.0 之前的 MPD 版本"
+
+#: ../src/main.c:1236
+msgid "Connected to mpd"
+msgstr "已连接到 mpd"
+
+#: ../src/main.c:1238
+msgid "Disconnected from mpd"
+msgstr "已从 mpd 断开连接"
+
+#: ../src/main.c:1272
+msgid "Error occurred during operation"
+msgstr "操作时发生了错误"
+
+#. Create label
+#: ../src/main.c:1296
+msgid "The following error(s) occurred:"
+msgstr "发生了下面的错误 :"
+
+#: ../src/main.c:1313
+msgid "Error Message"
+msgstr "错误讯息"
+
+#: ../src/metadata.c:293
+msgid ""
+"A new metadata plugin was added, gmpc has purged all failed hits from the "
+"cache"
+msgstr "已经添加了一个新的元数据插件，gmpc 已经从缓存中清理了所有命中失败的项"
+
+#: ../src/metadata.c:1390
+msgid "Metadata Handler"
+msgstr "元数据处理器"
+
+#: ../src/misc.c:39
+msgid "Total time"
+msgstr "总计时间"
 
 #: ../src/misc.c:56
 msgid "day"
@@ -180,6 +335,10 @@ msgstr[0] "小时"
 msgid "minute"
 msgid_plural "minutes"
 msgstr[0] "分钟"
+
+#: ../src/misc.c:295
+msgid "Failed to execute"
+msgstr "执行失败"
 
 #: ../src/mm-keys.c:73
 msgid "PlayPause"
@@ -230,901 +389,6 @@ msgstr "显示提示"
 msgid "Toggle Mute"
 msgstr "切换静音"
 
-#: ../src/mm-keys.c:570
-msgid "Multimedia Keys"
-msgstr "快捷键"
-
-#: ../src/mm-keys.c:716
-msgid "Action"
-msgstr "操作"
-
-#: ../src/mm-keys.c:738
-msgid "Shortcut"
-msgstr "快捷键"
-
-#: ../src/mpdinteraction.c:107 ../src/playlist3.c:1710 ../src/playlist3.c:1723
-#: ../src/playlist3.c:1738 ../src/playlist3.c:1751
-msgid "Off"
-msgstr "关闭"
-
-#: ../src/mpdinteraction.c:355
-msgid "Server Settings"
-msgstr "服务器设置"
-
-#: ../src/mpdinteraction.c:385
-msgid "Connection"
-msgstr "连接"
-
-#: ../src/mpdinteraction.c:478
-msgid "Connecting"
-msgstr "正在连接"
-
-#. Add all from album
-#: ../src/mpdinteraction.c:1485
-msgid "All from album"
-msgstr "此专辑的所有歌曲"
-
-#. Add all from artist
-#: ../src/mpdinteraction.c:1497
-msgid "All from artist"
-msgstr "此艺术家的所有歌曲"
-
-#. Add all from genre
-#: ../src/mpdinteraction.c:1507
-msgid "All from genre"
-msgstr "此流派的所有歌曲"
-
-#. Add all from file
-#: ../src/mpdinteraction.c:1515
-msgid "All from same directory"
-msgstr "此歌曲相同目录下的所有歌曲"
-
-#. Create sub menu
-#. Add
-#: ../src/mpdinteraction.c:1523
-msgid "Add more"
-msgstr "添加更多"
-
-#: ../src/playlist3.c:632
-msgid "MPD database is updating"
-msgstr "正在更新MPD媒体库。"
-
-#: ../src/playlist3.c:793
-msgid "Connected"
-msgstr "已连接"
-
-#: ../src/playlist3.c:802 ../src/playlist3.c:2274
-msgid "Not Connected"
-msgstr "未连接"
-
-#: ../src/playlist3.c:815
-msgid "Connected to"
-msgstr "连接到"
-
-#: ../src/playlist3.c:820
-msgid "Disconnected"
-msgstr "断开连接"
-
-#: ../src/playlist3.c:1710 ../src/playlist3.c:1723 ../src/playlist3.c:1738
-#: ../src/playlist3.c:1751
-msgid "On"
-msgstr "打开"
-
-#: ../src/playlist3.c:1956 ../src/playlist3.c:1962
-msgid "Profile"
-msgstr "配置文件"
-
-#: ../src/playlist3.c:1964
-msgid "changed hostname to:"
-msgstr "将主机名称修改为："
-
-#. Update DB
-#: ../src/playlist3.c:2072
-msgid "Update Database"
-msgstr "更新媒体库"
-
-#: ../src/playlist3.c:2381
-msgid "Interface"
-msgstr "界面"
-
-#: ../src/playlist3-messages.c:26
-msgid "Info"
-msgstr "信息"
-
-#: ../src/playlist3-messages.c:27
-msgid "Warning"
-msgstr "警告"
-
-#: ../src/playlist3-messages.c:28
-msgid "Critical"
-msgstr "严重"
-
-#: ../src/playlist3-messages.c:251
-msgid "Time"
-msgstr "时间"
-
-#: ../src/playlist3-messages.c:253
-msgid "Message"
-msgstr "消息"
-
-#: ../src/preferences.c:160
-msgid "Plugins:"
-msgstr "插件："
-
-#: ../src/preferences.c:331
-msgid "Enabled"
-msgstr "启用"
-
-#: ../src/preferences.c:334 ../src/gob/gmpc-mpddata-treeview.gob:76
-msgid "Name"
-msgstr "名称"
-
-#: ../src/preferences.c:336
-msgid "Function"
-msgstr "功能类别"
-
-#. * Mpd version
-#: ../src/preferences.c:338 ../src/browsers/server-information.c:333
-msgid "Version"
-msgstr "版本"
-
-#: ../src/tray-icon2.c:142
-msgid "Pla_ylist"
-msgstr "播放列表(_Y)"
-
-#: ../src/tray-icon2.c:887
-msgid "Notification"
-msgstr "提示"
-
-#: ../src/setup-assistant.c:132
-msgid "Setup connection"
-msgstr "连接设置"
-
-#: ../src/setup-assistant.c:143
-msgid "Finish"
-msgstr "完成"
-
-#: ../glade/aboutdialog.ui.h:1
-msgid "Copyright 2003-2007 Qball Cow"
-msgstr "Copyright 2003-2007 Qball Cow"
-
-#: ../glade/aboutdialog.ui.h:2
-msgid "translator-credits"
-msgstr ""
-"Launchpad Contributions:\n"
-"  Aron Xu https://launchpad.net/~cnfavor\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Aron Xu https://launchpad.net/~cnfavor\n"
-"  Qball Cow https://launchpad.net/~qball-qballcow\n"
-"  rainofchaos https://launchpad.net/~rainofchaos\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Aron Xu https://launchpad.net/~cnfavor\n"
-"  Jonathan Ye https://launchpad.net/~microjo\n"
-"  Qball Cow https://launchpad.net/~qball-qballcow\n"
-"  rainofchaos https://launchpad.net/~rainofchaos\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Aron Xu https://launchpad.net/~cnfavor\n"
-"  Jonathan Ye https://launchpad.net/~microjo\n"
-"  Qball Cow https://launchpad.net/~qball-qballcow\n"
-"  rainofchaos https://launchpad.net/~rainofchaos\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Aron Xu https://launchpad.net/~cnfavor\n"
-"  Jonathan Ye https://launchpad.net/~microjo\n"
-"  Qball Cow https://launchpad.net/~qball-qballcow\n"
-"  rainofchaos https://launchpad.net/~rainofchaos\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Aron Xu https://launchpad.net/~cnfavor\n"
-"  Jonathan Ye https://launchpad.net/~microjo\n"
-"  Qball Cow https://launchpad.net/~qball-qballcow\n"
-"  rainofchaos https://launchpad.net/~rainofchaos\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Aron Xu https://launchpad.net/~cnfavor\n"
-"  Jonathan Ye https://launchpad.net/~microjo\n"
-"  Qball Cow https://launchpad.net/~qball-qballcow\n"
-"  rainofchaos https://launchpad.net/~rainofchaos\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Aron Xu https://launchpad.net/~cnfavor\n"
-"  Jonathan Ye https://launchpad.net/~microjo\n"
-"  Qball Cow https://launchpad.net/~qball-qballcow\n"
-"  rainofchaos https://launchpad.net/~rainofchaos\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Aron Xu https://launchpad.net/~cnfavor\n"
-"  Jonathan Ye https://launchpad.net/~microjo\n"
-"  Qball Cow https://launchpad.net/~qball-qballcow\n"
-"  rainofchaos https://launchpad.net/~rainofchaos\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Aron Xu https://launchpad.net/~cnfavor\n"
-"  Jonathan Ye https://launchpad.net/~microjo\n"
-"  Qball Cow https://launchpad.net/~qball-qballcow\n"
-"  rainofchaos https://launchpad.net/~rainofchaos\n"
-"  yuan https://launchpad.net/~zwjyuan\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Aron Xu https://launchpad.net/~cnfavor\n"
-"  Jonathan Ye https://launchpad.net/~microjo\n"
-"  Qball Cow https://launchpad.net/~qball-qballcow\n"
-"  Yinghua Wang https://launchpad.net/~wantinghard\n"
-"  rainofchaos https://launchpad.net/~rainofchaos\n"
-"  yuan https://launchpad.net/~zwjyuan\n"
-"  zhangmiao https://launchpad.net/~mymzhang\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Aron Xu https://launchpad.net/~happyaron\n"
-"  Jonathan Ye https://launchpad.net/~microjo\n"
-"  Qball Cow https://launchpad.net/~qball-qballcow\n"
-"  Yinghua Wang https://launchpad.net/~wantinghard\n"
-"  rainofchaos https://launchpad.net/~rainofchaos\n"
-"  yuane https://launchpad.net/~yuane\n"
-"  zhangmiao https://launchpad.net/~mymzhang"
-
-#: ../glade/password-dialog.ui.h:1
-msgid "Enter your password for: '<hostname>'"
-msgstr "输入主机密码: '<hostname>'"
-
-#: ../glade/password-dialog.ui.h:2
-msgid "Password"
-msgstr "密码"
-
-#: ../glade/password-dialog.ui.h:3
-msgid "_Save password"
-msgstr "保存密码(_S)"
-
-#: ../glade/preferences-connection.ui.h:1
-msgid "<b>Profile:</b>"
-msgstr "<b>配置：</b>"
-
-#: ../glade/preferences-connection.ui.h:2
-msgid "Conn_ect"
-msgstr "连接(_E)"
-
-#: ../glade/preferences-connection.ui.h:3
-msgid "Host:"
-msgstr "主机："
-
-#: ../glade/preferences-connection.ui.h:5
-#: ../src/browsers/playlist3-playlist-editor.c:456
-#: ../src/browsers/playlist3-playlist-editor.c:497
-msgid "Name:"
-msgstr "名称："
-
-#: ../glade/preferences-connection.ui.h:6 ../glade/preferences-proxy.ui.h:3
-msgid "Password:"
-msgstr "密码："
-
-#: ../glade/preferences-connection.ui.h:7 ../glade/preferences-proxy.ui.h:4
-msgid "Port:"
-msgstr "端口："
-
-#: ../glade/preferences-connection.ui.h:8
-msgid "Timeout (s):"
-msgstr "超时秒数："
-
-#: ../glade/preferences-connection.ui.h:9
-msgid "_Autoconnect"
-msgstr "自动连接(_A)"
-
-#: ../glade/preferences-connection.ui.h:11
-msgid "_Use Authentication"
-msgstr "使用密码验证(_U)"
-
-#: ../glade/preferences-connection.ui.h:12
-msgid "localhost"
-msgstr "本机"
-
-#: ../glade/preferences-esf-dialog.ui.h:2
-msgid "<b>Example:</b>"
-msgstr "<b>例子:</b>"
-
-#: ../glade/preferences-esf-dialog.ui.h:4
-msgid "A_lbum"
-msgstr "专辑(_L)"
-
-#: ../glade/preferences-esf-dialog.ui.h:6
-msgid "T_rack"
-msgstr "音轨(_R)"
-
-#: ../glade/preferences-esf-dialog.ui.h:7
-msgid "_Artist"
-msgstr "艺术家(_A)"
-
-#: ../glade/preferences-esf-dialog.ui.h:8
-msgid "_Date"
-msgstr "日期(_D)"
-
-#: ../glade/preferences-esf-dialog.ui.h:10
-msgid "_Title"
-msgstr "标题(_T)"
-
-#: ../glade/preferences-playlist.ui.h:2
-msgid "<b>Playlist:</b>"
-msgstr "<b>播放列表：</b>"
-
-#: ../glade/preferences-playlist.ui.h:3
-msgid "Center playing song"
-msgstr "在播放队列居中显示当前播放的歌曲"
-
-#: ../glade/preferences-playlist.ui.h:8
-msgid "Stop playing on exit"
-msgstr "退出时停止播放"
-
-#: ../glade/preferences-plugins.ui.h:1
-msgid "<b>Loaded Plugins:</b>"
-msgstr "<b>载入的插件：</b>"
-
-#: ../glade/preferences-server.ui.h:1
-msgid "<b>Crossfade:</b>"
-msgstr "<b>声音淡入淡出：</b>"
-
-#: ../glade/preferences-server.ui.h:2
-msgid "<b>Output Devices:</b>"
-msgstr "<b>输出设备：</b>"
-
-#: ../glade/preferences-server.ui.h:3
-msgid ""
-"<span size=\"small\"><i>You need to be connected\n"
-"in order to change these settings</i></span>"
-msgstr ""
-"<span size=\"small\"><i>You need to be connected\n"
-"in order to change these settings</i></span>"
-
-#: ../glade/preferences-server.ui.h:5
-msgid "Enable crossfade"
-msgstr "启用"
-
-#: ../glade/preferences-server.ui.h:6
-msgid "fade time (s):"
-msgstr "淡入淡出时长(以秒计)："
-
-#: ../glade/preferences-trayicon.ui.h:2
-msgid "<b>Notification Area Icon</b>"
-msgstr "<b>通知区域图标</b>"
-
-#: ../glade/preferences-trayicon.ui.h:3
-msgid "<b>PopUp</b>"
-msgstr "<b>弹出</b>"
-
-#: ../glade/preferences-trayicon.ui.h:4
-msgid "Enable"
-msgstr "启用"
-
-#: ../glade/preferences-trayicon.ui.h:5
-msgid "Position:"
-msgstr "位置："
-
-#: ../glade/preferences-trayicon.ui.h:8
-msgid "Timeout:"
-msgstr "超时："
-
-#: ../glade/preferences-proxy.ui.h:2
-msgid "HTTP Proxy:"
-msgstr "HTTP 代理："
-
-#: ../glade/preferences-proxy.ui.h:5
-msgid "Use a proxy for internet connectivity"
-msgstr "通过代理访问英特网"
-
-#: ../glade/preferences.ui.h:1
-msgid ""
-"<span size=\"x-large\"><b>Plugins</b></span>\n"
-"<i>None Selected</i>"
-msgstr ""
-"<span size=\"x-large\"><b>插件</b></span>\n"
-"<i>没有一个被选中</i>"
-
-#: ../glade/preferences.ui.h:3
-msgid "gmpc - Configuration"
-msgstr "gmpc - 配置"
-
-#: ../glade/playlist-message-window.ui.h:1
-msgid "Messages"
-msgstr "消息"
-
-#: ../glade/playlist-save-dialog.ui.h:1
-msgid "<enter playlist name>"
-msgstr "<输入播放列表名>"
-
-#: ../glade/playlist-save-dialog.ui.h:2
-msgid "<span size=\"x-small\"><i>Playlist already exists.</i></span>"
-msgstr "<span size=\"x-small\"><i>播放列表已存在。</i></span>"
-
-#: ../glade/playlist-save-dialog.ui.h:3
-msgid "Save Playlist"
-msgstr "保存播放列表"
-
-#: ../glade/playlist-save-dialog.ui.h:4
-msgid "name:"
-msgstr "名称："
-
-#: ../src/browsers/playlist3-current-playlist-browser.c:531
-msgid "Are you sure you want to clear the playlist?"
-msgstr "是否确定清空播放列表？"
-
-#. add the delete widget
-#: ../src/browsers/playlist3-current-playlist-browser.c:761
-msgid "Crop"
-msgstr "Crop"
-
-#. add the shuffle widget
-#: ../src/browsers/playlist3-current-playlist-browser.c:775
-msgid "Shuffle"
-msgstr "打乱顺序"
-
-#: ../src/browsers/playlist3-current-playlist-browser.c:997
-#, c-format
-msgid ""
-"<i>Playlist <b>\"%s\"</b> already exists\n"
-"Overwrite?</i>"
-msgstr ""
-"<i>播放列表 <b>“%s”</b> 已存在\n"
-"是否覆盖？</i>"
-
-#: ../src/browsers/playlist3-current-playlist-browser.c:1021
-msgid "Failed to save the playlist file."
-msgstr "保存播放列表失败。"
-
-#: ../src/browsers/playlist3-current-playlist-browser.c:1099
-#: ../src/browsers/playlist3-current-playlist-browser.c:1147
-msgid "Play Queue"
-msgstr "播放队列"
-
-#: ../src/browsers/playlist3-file-browser.c:164
-msgid "Directories"
-msgstr "目录"
-
-#. add the update widget
-#: ../src/browsers/playlist3-file-browser.c:623
-#: ../src/browsers/playlist3-file-browser.c:879
-msgid "Update"
-msgstr "更新"
-
-#: ../src/browsers/playlist3-file-browser.c:733
-msgid "Loaded playlist"
-msgstr "播放列表已加载"
-
-#: ../src/browsers/playlist3-file-browser.c:1006
-#: ../src/browsers/playlist3-playlist-editor.c:388
-msgid "song"
-msgid_plural "songs"
-msgstr[0] "歌曲"
-
-#: ../src/browsers/playlist3-file-browser.c:1008
-msgid "directory"
-msgid_plural "directories"
-msgstr[0] "目录"
-
-#: ../src/browsers/playlist3-file-browser.c:1010
-msgid "playlist"
-msgid_plural "playlists"
-msgstr[0] "播放列表"
-
-#: ../src/browsers/playlist3-file-browser.c:1033
-#: ../src/browsers/playlist3-file-browser.c:1083
-msgid "Are you sure you want to clear the selected playlist?"
-msgstr "是否确定清空选中的播放列表？"
-
-#: ../src/browsers/playlist3-find2-browser.c:346
-#: ../src/browsers/playlist3-find2-browser.c:795
-msgid "Search"
-msgstr "搜索"
-
-#: ../src/browsers/playlist3-playlist-editor.c:133
-#: ../src/browsers/playlist3-playlist-editor.c:1026
-msgid "Playlist Editor"
-msgstr "播放列表编辑器"
-
-#: ../src/browsers/playlist3-playlist-editor.c:451
-msgid "New playlist"
-msgstr "新建播放列表"
-
-#: ../src/browsers/playlist3-playlist-editor.c:492
-msgid "Rename Playlist"
-msgstr "重命名播放列表"
-
-#. delete
-#: ../src/browsers/playlist3-playlist-editor.c:499
-#: ../src/browsers/playlist3-playlist-editor.c:627
-msgid "Rename"
-msgstr "重命名"
-
-#. Add
-#: ../src/browsers/playlist3-playlist-editor.c:981
-msgid "Add to playlist"
-msgstr "添加到播放列表"
-
-#: ../src/gob/gmpc-mpddata-treeview.gob:70
-#: ../src/gob/gmpc-mpddata-treeview.gob:636
-#: ../src/vala/gmpc-test-plugin.c:1054
-#: ../src/vala/gmpc-metadata-browser2.c:2870
-#: ../src/vala/gmpc-metadata-browser2.c:3600
-#: ../src/vala/gmpc-metadata-browser2.c:4137
-msgid "Artist"
-msgstr "艺术家"
-
-#: ../src/gob/gmpc-mpddata-treeview.gob:71
-#: ../src/gob/gmpc-mpddata-treeview.gob:650
-#: ../src/vala/gmpc-test-plugin.c:1069
-#: ../src/vala/gmpc-metadata-browser2.c:2929
-#: ../src/vala/gmpc-metadata-browser2.c:3622
-msgid "Album"
-msgstr "专辑"
-
-#: ../src/gob/gmpc-mpddata-treeview.gob:72
-#: ../src/gob/gmpc-mpddata-treeview.gob:623
-#: ../src/vala/gmpc-test-plugin.c:1087
-#: ../src/vala/gmpc-metadata-browser2.c:3583
-msgid "Title"
-msgstr "标题"
-
-#: ../src/gob/gmpc-mpddata-treeview.gob:73
-msgid "File"
-msgstr "文件"
-
-#. Genre
-#: ../src/gob/gmpc-mpddata-treeview.gob:74
-#: ../src/gob/gmpc-mpddata-treeview.gob:662
-#: ../src/vala/gmpc-metadata-browser2.c:3634
-msgid "Genre"
-msgstr "流派"
-
-#. track
-#: ../src/gob/gmpc-mpddata-treeview.gob:75
-#: ../src/vala/gmpc-metadata-browser2.c:2955
-#: ../src/vala/gmpc-metadata-browser2.c:3626
-msgid "Track"
-msgstr "音轨"
-
-#: ../src/gob/gmpc-mpddata-treeview.gob:77
-msgid "Composer"
-msgstr "作曲"
-
-#. performer
-#: ../src/gob/gmpc-mpddata-treeview.gob:78
-#: ../src/vala/gmpc-metadata-browser2.c:3630
-msgid "Performer"
-msgstr "表演者"
-
-#. date
-#: ../src/gob/gmpc-mpddata-treeview.gob:79
-#: ../src/gob/gmpc-mpddata-treeview.gob:674
-#: ../src/vala/gmpc-metadata-browser2.c:3628
-msgid "Date"
-msgstr "日期"
-
-#: ../src/gob/gmpc-mpddata-treeview.gob:80
-#: ../src/gob/gmpc-mpddata-treeview.gob:686
-msgid "Duration"
-msgstr "时长"
-
-#. disc
-#: ../src/gob/gmpc-mpddata-treeview.gob:81
-#: ../src/vala/gmpc-metadata-browser2.c:3632
-msgid "Disc"
-msgstr "光盘编号"
-
-#. Comment
-#: ../src/gob/gmpc-mpddata-treeview.gob:82
-#: ../src/vala/gmpc-metadata-browser2.c:3669
-msgid "Comment"
-msgstr "备注"
-
-#: ../src/gob/gmpc-mpddata-treeview.gob:84
-msgid "Position"
-msgstr "位置"
-
-#: ../src/gob/gmpc-mpddata-treeview.gob:86
-msgid "Extension"
-msgstr "扩展名"
-
-#: ../src/gob/gmpc-mpddata-treeview.gob:87
-msgid "Directory"
-msgstr "目录"
-
-#: ../src/gob/gmpc-mpddata-treeview.gob:983
-msgid "Paste before"
-msgstr "粘贴在前面"
-
-#: ../src/gob/gmpc-mpddata-treeview.gob:992
-msgid "Paste after"
-msgstr "粘贴在后面"
-
-#: ../src/gob/gmpc-meta-text-view.gob:96 ../src/gob/gmpc-metaimage.gob:837
-msgid "Refetch"
-msgstr "重新获取"
-
-#: ../src/gob/gmpc-meta-text-view.gob:101 ../src/gob/gmpc-metaimage.gob:842
-msgid "Select file"
-msgstr "选择文件"
-
-#: ../src/gob/gmpc-meta-text-view.gob:302
-msgid "Failed to open file:"
-msgstr "打开文件失败："
-
-#: ../src/gob/gmpc-meta-text-view.gob:302
-msgid "because of encoding issues"
-msgstr "由于编码问题"
-
-#: ../src/gob/gmpc-meta-text-view.gob:361
-msgid "Fetching Artist Info"
-msgstr "正在获取艺术家简介"
-
-#: ../src/gob/gmpc-meta-text-view.gob:369
-msgid "Fetching Album Info"
-msgstr "正在获取专辑介绍"
-
-#: ../src/gob/gmpc-meta-text-view.gob:380
-msgid "Not Available"
-msgstr "不可用"
-
-#: ../src/gob/gmpc-meta-text-view.gob:445 ../src/gob/gmpc-metaimage.gob:888
-msgid "Select File"
-msgstr "选择文件"
-
-#: ../src/gob/gmpc-meta-text-view.gob:450
-msgid "Text Document"
-msgstr "文本文档"
-
-#: ../src/gob/gmpc-meta-text-view.gob:454 ../src/gob/gmpc-metaimage.gob:898
-msgid "All"
-msgstr "所有文件"
-
-#: ../src/gob/gmpc-metaimage.gob:893
-msgid "Images"
-msgstr "图像文件"
-
-#: ../src/vala/gmpc-metadata-browser2.c:862
-#: ../src/vala/gmpc-metadata-browser2.c:913
-#: ../src/vala/gmpc-metadata-browser2.c:931
-#: ../src/vala/gmpc-metadata-browser2.c:1084
-msgid "Unavailable"
-msgstr "不可用"
-
-#: ../src/vala/gmpc-metadata-browser2.c:3714
-#: ../src/vala/gmpc-metadata-browser2.c:5226
-msgid "Lyrics"
-msgstr "歌词"
-
-#: ../src/vala/gmpc-metadata-browser2.c:4191
-#: ../src/vala/gmpc-metadata-browser2.c:5214
-msgid "Album information"
-msgstr "专辑介绍"
-
-#. Artist information
-#: ../src/vala/gmpc-metadata-browser2.c:4364
-#: ../src/vala/gmpc-metadata-browser2.c:5208
-msgid "Artist information"
-msgstr "艺术家简介"
-
-#~ msgid "_Server"
-#~ msgstr "服务器(_S)"
-
-#~ msgid "Album info:"
-#~ msgstr "专辑介绍："
-
-#~ msgid "<b>Genre: </b>"
-#~ msgid_plural "<b>Genres: </b>"
-#~ msgstr[0] "<b>流派：</b>"
-
-#~ msgid "Artist info:"
-#~ msgstr "艺术家简介："
-
-#~ msgid "Find Artist:"
-#~ msgstr "搜索艺术家："
-
-#~ msgid "<b>Date: </b>"
-#~ msgid_plural "<b>Dates: </b>"
-#~ msgstr[0] "<b>日期：</b>"
-
-#, c-format
-#~ msgid "Only the first %i result displayed, please refine your search query"
-#~ msgstr "仅显示前 %i 个结果，请改进你的搜索条件"
-
-#~ msgid "Fetching..."
-#~ msgstr "正在获取..."
-
-#~ msgid "Albums"
-#~ msgstr "专辑"
-
-#~ msgid "Tracks"
-#~ msgstr "音轨"
-
-#~ msgid "Links"
-#~ msgstr "链接"
-
-#~ msgid "Similar Artists"
-#~ msgstr "相似艺术家"
-
-#~ msgid "Sing or Swing you want"
-#~ msgstr "唱歌或摆动你所想"
-
-#~ msgid "01/24"
-#~ msgstr "01/24"
-
-#~ msgid "2 Feb 2006"
-#~ msgstr "2 Feb 2006"
-
-#~ msgid "--version"
-#~ msgstr "版本--"
-
-#~ msgid "--help"
-#~ msgstr "帮助"
-
-#~ msgid "--replace"
-#~ msgstr "由--替代"
-
-#~ msgid "--quit"
-#~ msgstr "停止--"
-
-#~ msgid "--config="
-#~ msgstr "--配置="
-
-#: ../data/gmpc.desktop.in.h:1
-msgid "A gnome frontend for the mpd daemon"
-msgstr "一个 mpd 守护进程的 gnome 前端"
-
-#. Basic dialog with a close button
-#: ../glade/playlist3.glade.h:1 ../src/bug-information.c:239
-msgid "Bug information"
-msgstr "错误信息"
-
-#: ../glade/playlist3.glade.h:2
-msgid "Consume"
-msgstr ""
-
-#: ../glade/playlist3.glade.h:3
-msgid "Easy Command Help"
-msgstr "简单的命令帮助"
-
-#: ../glade/playlist3.glade.h:13
-msgid "Se_rver"
-msgstr ""
-
-#: ../glade/playlist3.glade.h:15
-msgid "Single mode"
-msgstr ""
-
-#: ../glade/playlist3.glade.h:30
-msgid "_Tools"
-msgstr "工具(_T)"
-
-#: ../src/main.c:279
-msgid "Start the program in full screen"
-msgstr ""
-
-#: ../src/main.c:281
-msgid "Show program version and revision"
-msgstr "显示程序版本和修订"
-
-#: ../src/main.c:283
-msgid "Quits the running gmpc"
-msgstr "退出运行中的 gmpc"
-
-#: ../src/main.c:285
-msgid "Replace the running gmpc"
-msgstr "替换运行中的 gmpc"
-
-#: ../src/main.c:287
-msgid "Don't load the plugins"
-msgstr "不要加载插件"
-
-#: ../src/main.c:289
-msgid "Load alternative config file"
-msgstr ""
-
-#: ../src/main.c:291
-msgid "Set the debug level"
-msgstr "设置调试级别"
-
-#: ../src/main.c:293
-msgid "Start gmpc hidden to tray"
-msgstr "启动 gmpc 时隐藏到通知区域"
-
-#: ../src/main.c:295
-msgid "Remove all failed hits from metadata cache"
-msgstr ""
-
-#: ../src/main.c:297
-msgid "Show redraw events in GTK+"
-msgstr "在 GTK+ 中显示重绘事件"
-
-#: ../src/main.c:299
-msgid "Show bug information dialog"
-msgstr "显示错误信息对话框"
-
-#: ../src/main.c:301
-msgid "Shows all output from a certain log domain"
-msgstr ""
-
-#: ../src/main.c:439
-msgid "Quit gmpc"
-msgstr "退出 gmpc"
-
-#: ../src/main.c:440
-msgid "hide"
-msgstr "隐藏"
-
-#: ../src/main.c:441
-msgid "Hide gmpc"
-msgstr "隐藏 gmpc"
-
-#: ../src/main.c:442
-msgid "show"
-msgstr "显示"
-
-#: ../src/main.c:443
-msgid "Show gmpc"
-msgstr "显示 gmpc"
-
-#: ../src/main.c:445
-msgid "Show trayicon notification"
-msgstr "在通知区域图标处显示提示"
-
-#: ../src/main.c:1066
-msgid "GMPC has insufficient permissions on the mpd server."
-msgstr ""
-
-#: ../src/main.c:1092
-#, c-format
-msgid ""
-"Failed to set password on: '%s'\n"
-"Please try again"
-msgstr ""
-
-#: ../src/main.c:1133
-msgid "Insufficient permission to connect to mpd. Check password"
-msgstr "没有足够的权限连接 mpd。请检查密码"
-
-#: ../src/main.c:1168
-msgid "MPD versions before 0.13.0 are not supported"
-msgstr "不支持 0.13.0 之前的 MPD 版本"
-
-#: ../src/main.c:1236
-msgid "Connected to mpd"
-msgstr "已连接到 mpd"
-
-#: ../src/main.c:1238
-msgid "Disconnected from mpd"
-msgstr "已从 mpd 断开连接"
-
-#: ../src/main.c:1272
-msgid "Error occurred during operation"
-msgstr "操作时发生了错误"
-
-#. Create label
-#: ../src/main.c:1296
-msgid "The following error(s) occurred:"
-msgstr "发生了下面的错误 :"
-
-#: ../src/main.c:1313
-msgid "Error Message"
-msgstr "错误讯息"
-
-#: ../src/metadata.c:293
-msgid ""
-"A new metadata plugin was added, gmpc has purged all failed hits from the "
-"cache"
-msgstr ""
-
-#: ../src/metadata.c:1390
-msgid "Metadata Handler"
-msgstr ""
-
-#: ../src/misc.c:39
-msgid "Total time"
-msgstr ""
-
-#: ../src/misc.c:295
-msgid "Failed to execute"
-msgstr "执行失败"
-
 #. * MM_TOGGLE_MUTE
 #: ../src/mm-keys.c:88
 msgid "Show easy command entry"
@@ -1151,6 +415,10 @@ msgid ""
 "revisit the preferences and ensure your settings are now correct."
 msgstr ""
 
+#: ../src/mm-keys.c:570
+msgid "Multimedia Keys"
+msgstr "快捷键"
+
 #: ../src/mm-keys.c:632
 #, c-format
 msgid ""
@@ -1170,6 +438,14 @@ msgid ""
 "bound this key for some other function, then restart gmpc."
 msgstr ""
 
+#: ../src/mm-keys.c:716
+msgid "Action"
+msgstr "操作"
+
+#: ../src/mm-keys.c:738
+msgid "Shortcut"
+msgstr "快捷键"
+
 #: ../src/mpdinteraction.c:91
 msgid "enable"
 msgstr "启用"
@@ -1177,6 +453,11 @@ msgstr "启用"
 #: ../src/mpdinteraction.c:94
 msgid "disable"
 msgstr "禁用"
+
+#: ../src/mpdinteraction.c:107 ../src/playlist3.c:1710 ../src/playlist3.c:1723
+#: ../src/playlist3.c:1738 ../src/playlist3.c:1751
+msgid "Off"
+msgstr "关闭"
 
 #: ../src/mpdinteraction.c:162
 msgid "Single: The used MPD server is to old and does not support this."
@@ -1198,7 +479,7 @@ msgstr ""
 msgid ""
 "Stop after current song: The used MPD server is to old and does not support "
 "this."
-msgstr ""
+msgstr "当前歌曲后停止：所用的 MPD 服务器太旧，不支持。"
 
 #: ../src/mpdinteraction.c:270
 msgid "Stop after current song: You have insufficient permission."
@@ -1211,7 +492,7 @@ msgstr "会在当前播放的歌曲之后停止回放。"
 #: ../src/mpdinteraction.c:282
 msgid ""
 "Repeat current song: The used MPD server is to old and does not support this."
-msgstr ""
+msgstr "重复当前歌曲：所用的 MPD 服务器太旧，不支持。"
 
 #: ../src/mpdinteraction.c:284
 msgid "Repeat current song: You have insufficient permission."
@@ -1224,7 +505,7 @@ msgstr "当前歌曲会一直重复播放"
 #: ../src/mpdinteraction.c:296
 msgid ""
 "Update database: The used MPD server is to old and does not support this."
-msgstr ""
+msgstr "更新数据库：所用的 MPD 服务器太旧，不支持。"
 
 #: ../src/mpdinteraction.c:298
 msgid "Update database: You have insufficient permission."
@@ -1319,7 +600,7 @@ msgstr "静音"
 
 #: ../src/mpdinteraction.c:323
 msgid "crossfade"
-msgstr ""
+msgstr "淡入淡出"
 
 #: ../src/mpdinteraction.c:323
 msgctxt "Regex for matching crossfade, translate off"
@@ -1328,7 +609,7 @@ msgstr "([0-9]+|Off)"
 
 #: ../src/mpdinteraction.c:323
 msgid "Set Crossfade <seconds>"
-msgstr ""
+msgstr "设置淡入淡出 <秒>"
 
 #: ../src/mpdinteraction.c:325
 msgid "output"
@@ -1366,11 +647,11 @@ msgstr ""
 #. Basic seek commands
 #: ../src/mpdinteraction.c:333
 msgid "seek"
-msgstr ""
+msgstr "搜寻"
 
 #: ../src/mpdinteraction.c:333
 msgid "Seek within the current song"
-msgstr ""
+msgstr "在当前歌曲中搜寻"
 
 #: ../src/mpdinteraction.c:336
 msgid "stop after current song"
@@ -1396,9 +677,51 @@ msgstr "更新数据库"
 msgid "Update the database"
 msgstr "更新数据库"
 
+#: ../src/mpdinteraction.c:355
+msgid "Server Settings"
+msgstr "服务器设置"
+
+#: ../src/mpdinteraction.c:385
+msgid "Connection"
+msgstr "连接"
+
+#: ../src/mpdinteraction.c:478
+msgid "Connecting"
+msgstr "正在连接"
+
+#. Add all from album
+#: ../src/mpdinteraction.c:1485
+msgid "All from album"
+msgstr "此专辑的所有歌曲"
+
+#. Add all from artist
+#: ../src/mpdinteraction.c:1497
+msgid "All from artist"
+msgstr "此艺术家的所有歌曲"
+
+#. Add all from genre
+#: ../src/mpdinteraction.c:1507
+msgid "All from genre"
+msgstr "此流派的所有歌曲"
+
+#. Add all from file
+#: ../src/mpdinteraction.c:1515
+msgid "All from same directory"
+msgstr "此歌曲相同目录下的所有歌曲"
+
+#. Create sub menu
+#. Add
+#: ../src/mpdinteraction.c:1523
+msgid "Add more"
+msgstr "添加更多"
+
 #: ../src/mpdinteraction.c:1533
 msgid "Set Rating"
-msgstr ""
+msgstr "评分"
+
+#: ../src/playlist3.c:632
+msgid "MPD database is updating"
+msgstr "正在更新MPD媒体库。"
 
 #: ../src/playlist3.c:642
 msgid "MPD is updating its database"
@@ -1408,9 +731,25 @@ msgstr "MPD 正在更新数据库"
 msgid "MPD finished updating its database"
 msgstr "MPD 数据库更新完成"
 
+#: ../src/playlist3.c:793
+msgid "Connected"
+msgstr "已连接"
+
+#: ../src/playlist3.c:802 ../src/playlist3.c:2274
+msgid "Not Connected"
+msgstr "未连接"
+
 #: ../src/playlist3.c:815 ../src/playlist3.c:820 ../src/playlist3.c:1676
 msgid "GMPC"
 msgstr "GMPC"
+
+#: ../src/playlist3.c:815
+msgid "Connected to"
+msgstr "连接到"
+
+#: ../src/playlist3.c:820
+msgid "Disconnected"
+msgstr "断开连接"
 
 #: ../src/playlist3.c:887
 msgid ""
@@ -1424,6 +763,11 @@ msgstr ""
 #, c-format
 msgid "Repeat: %s"
 msgstr "重复: %s"
+
+#: ../src/playlist3.c:1710 ../src/playlist3.c:1723 ../src/playlist3.c:1738
+#: ../src/playlist3.c:1751
+msgid "On"
+msgstr "打开"
 
 #: ../src/playlist3.c:1722
 #, c-format
@@ -1449,9 +793,22 @@ msgstr "MPD 数据库刷新于: %c"
 msgid "MPD Reported the following error"
 msgstr "MPD 报告了如下错误"
 
+#: ../src/playlist3.c:1956 ../src/playlist3.c:1962
+msgid "Profile"
+msgstr "配置文件"
+
 #: ../src/playlist3.c:1957
 msgid "added"
 msgstr "已添加"
+
+#: ../src/playlist3.c:1964
+msgid "changed hostname to:"
+msgstr "将主机名称修改为："
+
+#. Update DB
+#: ../src/playlist3.c:2072
+msgid "Update Database"
+msgstr "更新媒体库"
 
 #. Server Information
 #: ../src/playlist3.c:2081 ../src/vala/gmpc-test-plugin.c:1016
@@ -1470,21 +827,45 @@ msgstr ""
 msgid "Not Playing"
 msgstr "没有播放"
 
+#: ../src/playlist3.c:2381
+msgid "Interface"
+msgstr "界面"
+
 #: ../src/playlist3.c:2658
 msgid "Repeat enabled"
-msgstr ""
+msgstr "重复播放已启用"
 
 #: ../src/playlist3.c:2664
 msgid "Repeat disabled"
-msgstr ""
+msgstr "重复播放已禁用"
 
 #: ../src/playlist3.c:2684
 msgid "Random enabled"
-msgstr ""
+msgstr "随机播放已启用"
 
 #: ../src/playlist3.c:2690
 msgid "Random disabled"
-msgstr ""
+msgstr "随机播放已禁用"
+
+#: ../src/playlist3-messages.c:26
+msgid "Info"
+msgstr "信息"
+
+#: ../src/playlist3-messages.c:27
+msgid "Warning"
+msgstr "警告"
+
+#: ../src/playlist3-messages.c:28
+msgid "Critical"
+msgstr "严重"
+
+#: ../src/playlist3-messages.c:251
+msgid "Time"
+msgstr "时间"
+
+#: ../src/playlist3-messages.c:253
+msgid "Message"
+msgstr "消息"
 
 #: ../src/plugin.c:60 ../src/plugin.c:68 ../src/plugin.c:75 ../src/plugin.c:83
 #: ../src/plugin.c:89 ../src/plugin.c:97 ../src/plugin.c:103
@@ -1500,7 +881,7 @@ msgstr "插件没有命名"
 
 #: ../src/plugin.c:68
 msgid "plugin with same name already exists"
-msgstr ""
+msgstr "同名的插件已存在"
 
 #: ../src/plugin.c:75
 msgid "plugin is missing set/get enable function"
@@ -1538,7 +919,7 @@ msgstr "无法在插件中绑定符号"
 #: ../src/plugin.c:256
 #, c-format
 msgid "Plugin %s has wrong api version: %i"
-msgstr ""
+msgstr "插件 %s 的 api 版本错误：%i"
 
 #: ../src/plugin.c:266 ../src/plugin.c:273
 #, c-format
@@ -1548,11 +929,32 @@ msgstr ""
 #: ../src/plugin.c:292
 msgid ""
 "One or more plugins failed to load, see help->messages for more information"
-msgstr ""
+msgstr "一个或数个插件加载失败，更多信息请查看 帮助->消息"
 
 #: ../src/preferences.c:98 ../src/preferences.c:205
 msgid "Plugins"
 msgstr "插件"
+
+#: ../src/preferences.c:160
+msgid "Plugins:"
+msgstr "插件："
+
+#: ../src/preferences.c:331
+msgid "Enabled"
+msgstr "启用"
+
+#: ../src/preferences.c:334 ../src/gob/gmpc-mpddata-treeview.gob:76
+msgid "Name"
+msgstr "名称"
+
+#: ../src/preferences.c:336
+msgid "Function"
+msgstr "功能类别"
+
+#. * Mpd version
+#: ../src/preferences.c:338 ../src/browsers/server-information.c:333
+msgid "Version"
+msgstr "版本"
 
 #: ../src/preferences.c:367
 msgid "Dummy"
@@ -1564,11 +966,11 @@ msgstr "浏览器扩展"
 
 #: ../src/preferences.c:373
 msgid "Metadata Provider"
-msgstr ""
+msgstr "元数据提供者"
 
 #: ../src/preferences.c:376
 msgid "Metadata Provider and Browser Extension"
-msgstr ""
+msgstr "元数据提供者和浏览器扩展"
 
 #: ../src/preferences.c:379
 msgid "Misc."
@@ -1614,6 +1016,14 @@ msgstr ""
 msgid "Enter an url"
 msgstr "请输入url"
 
+#: ../src/tray-icon2.c:142
+msgid "Pla_ylist"
+msgstr "播放列表(_Y)"
+
+#: ../src/tray-icon2.c:887
+msgid "Notification"
+msgstr "提示"
+
 #. *
 #. * Append an introduction page
 #. 
@@ -1627,6 +1037,10 @@ msgstr ""
 msgid "Welcome to GMPC"
 msgstr "欢迎您使用 GMPC"
 
+#: ../src/setup-assistant.c:132
+msgid "Setup connection"
+msgstr "连接设置"
+
 #. *
 #. * End
 #. 
@@ -1636,30 +1050,34 @@ msgid ""
 "Enjoy using gmpc."
 msgstr ""
 
+#: ../src/setup-assistant.c:143
+msgid "Finish"
+msgstr "完成"
+
 #: ../src/smclient/eggdesktopfile.c:165
 #, c-format
 msgid "File is not a valid .desktop file"
-msgstr ""
+msgstr "该文件不是有效的 .desktop 文件"
 
 #: ../src/smclient/eggdesktopfile.c:188
 #, c-format
 msgid "Unrecognized desktop file Version '%s'"
-msgstr ""
+msgstr "不能识别的桌面文件版本 '%s'"
 
 #: ../src/smclient/eggdesktopfile.c:958
 #, c-format
 msgid "Starting %s"
-msgstr ""
+msgstr "正在启动 %s"
 
 #: ../src/smclient/eggdesktopfile.c:1100
 #, c-format
 msgid "Application does not accept documents on command line"
-msgstr ""
+msgstr "程序在命令行中不接受文档"
 
 #: ../src/smclient/eggdesktopfile.c:1168
 #, c-format
 msgid "Unrecognized launch option: %d"
-msgstr ""
+msgstr "无法识别的启动选项：%d"
 
 #: ../src/smclient/eggdesktopfile.c:1373
 #, c-format
@@ -1669,63 +1087,165 @@ msgstr ""
 #: ../src/smclient/eggdesktopfile.c:1392
 #, c-format
 msgid "Not a launchable item"
-msgstr ""
+msgstr "不是可启动项目"
 
 #: ../src/smclient/eggsmclient.c:225
 msgid "Disable connection to session manager"
-msgstr ""
+msgstr "禁止连接到会话管理器"
 
 #: ../src/smclient/eggsmclient.c:228
 msgid "Specify file containing saved configuration"
-msgstr ""
+msgstr "指定包含已保存配置的文件"
 
 #: ../src/smclient/eggsmclient.c:228
 msgid "FILE"
-msgstr ""
+msgstr "FILE"
 
 #: ../src/smclient/eggsmclient.c:231
 msgid "Specify session management ID"
-msgstr ""
+msgstr "指定会话管理 ID"
 
 #: ../src/smclient/eggsmclient.c:231
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #: ../src/smclient/eggsmclient.c:252
 msgid "Session management options:"
-msgstr ""
+msgstr "会话管理选项："
 
 #: ../src/smclient/eggsmclient.c:253
 msgid "Show session management options"
+msgstr "显示会话管理选项"
+
+#: ../glade/aboutdialog.ui.h:1
+msgid "Copyright 2003-2007 Qball Cow"
+msgstr "Copyright 2003-2007 Qball Cow"
+
+#: ../glade/aboutdialog.ui.h:2
+msgid "translator-credits"
 msgstr ""
+"Launchpad Contributions:\n"
+"  Aron Xu https://launchpad.net/~happyaron\n"
+"  Jonathan Ye https://launchpad.net/~microjo\n"
+"  Qball Cow https://launchpad.net/~qball-qballcow\n"
+"  Yinghua Wang https://launchpad.net/~wantinghard\n"
+"  rainofchaos https://launchpad.net/~rainofchaos\n"
+"  yuane https://launchpad.net/~yuane\n"
+"  zhangmiao https://launchpad.net/~mymzhang"
+
+#: ../glade/password-dialog.ui.h:1
+msgid "Enter your password for: '<hostname>'"
+msgstr "输入主机密码: '<hostname>'"
+
+#: ../glade/password-dialog.ui.h:2
+msgid "Password"
+msgstr "密码"
+
+#: ../glade/password-dialog.ui.h:3
+msgid "_Save password"
+msgstr "保存密码(_S)"
+
+#: ../glade/preferences-connection.ui.h:1
+msgid "<b>Profile:</b>"
+msgstr "<b>配置：</b>"
+
+#: ../glade/preferences-connection.ui.h:2
+msgid "Conn_ect"
+msgstr "连接(_E)"
+
+#: ../glade/preferences-connection.ui.h:3
+msgid "Host:"
+msgstr "主机："
 
 #: ../glade/preferences-connection.ui.h:4
 msgid "Music Directory:"
 msgstr "音乐目录:"
 
+#: ../glade/preferences-connection.ui.h:5
+#: ../src/browsers/playlist3-playlist-editor.c:456
+#: ../src/browsers/playlist3-playlist-editor.c:497
+msgid "Name:"
+msgstr "名称："
+
+#: ../glade/preferences-connection.ui.h:6 ../glade/preferences-proxy.ui.h:3
+msgid "Password:"
+msgstr "密码："
+
+#: ../glade/preferences-connection.ui.h:7 ../glade/preferences-proxy.ui.h:4
+msgid "Port:"
+msgstr "端口："
+
+#: ../glade/preferences-connection.ui.h:8
+msgid "Timeout (s):"
+msgstr "超时秒数："
+
+#: ../glade/preferences-connection.ui.h:9
+msgid "_Autoconnect"
+msgstr "自动连接(_A)"
+
+#: ../glade/preferences-connection.ui.h:11
+msgid "_Use Authentication"
+msgstr "使用密码验证(_U)"
+
+#: ../glade/preferences-connection.ui.h:12
+msgid "localhost"
+msgstr "本机"
+
 #: ../glade/preferences-esf-dialog.ui.h:1
 msgid "<b>Enable Field:</b>"
 msgstr ""
+
+#: ../glade/preferences-esf-dialog.ui.h:2
+msgid "<b>Example:</b>"
+msgstr "<b>例子:</b>"
 
 #: ../glade/preferences-esf-dialog.ui.h:3
 msgid "<span size=\"large\"><b>Format Rule:</b></span>"
 msgstr ""
 
+#: ../glade/preferences-esf-dialog.ui.h:4
+msgid "A_lbum"
+msgstr "专辑(_L)"
+
 #: ../glade/preferences-esf-dialog.ui.h:5
 msgid "Edit Song Formatting"
 msgstr ""
+
+#: ../glade/preferences-esf-dialog.ui.h:6
+msgid "T_rack"
+msgstr "音轨(_R)"
+
+#: ../glade/preferences-esf-dialog.ui.h:7
+msgid "_Artist"
+msgstr "艺术家(_A)"
+
+#: ../glade/preferences-esf-dialog.ui.h:8
+msgid "_Date"
+msgstr "日期(_D)"
 
 #: ../glade/preferences-esf-dialog.ui.h:9
 msgid "_Stream name"
 msgstr ""
 
+#: ../glade/preferences-esf-dialog.ui.h:10
+msgid "_Title"
+msgstr "标题(_T)"
+
 #: ../glade/preferences-esf-dialog.ui.h:11
 msgid "example"
-msgstr ""
+msgstr "示例"
 
 #: ../glade/preferences-playlist.ui.h:1
 msgid "<b>Main:</b>"
 msgstr ""
+
+#: ../glade/preferences-playlist.ui.h:2
+msgid "<b>Playlist:</b>"
+msgstr "<b>播放列表：</b>"
+
+#: ../glade/preferences-playlist.ui.h:3
+msgid "Center playing song"
+msgstr "在播放队列居中显示当前播放的歌曲"
 
 #: ../glade/preferences-playlist.ui.h:4
 msgid "Hide on close"
@@ -1743,13 +1263,61 @@ msgstr ""
 msgid "Show songlist tooltip"
 msgstr ""
 
+#: ../glade/preferences-playlist.ui.h:8
+msgid "Stop playing on exit"
+msgstr "退出时停止播放"
+
 #: ../glade/preferences-playlist.ui.h:9
 msgid "Stylize album covers"
 msgstr ""
 
+#: ../glade/preferences-plugins.ui.h:1
+msgid "<b>Loaded Plugins:</b>"
+msgstr "<b>载入的插件：</b>"
+
+#: ../glade/preferences-server.ui.h:1
+msgid "<b>Crossfade:</b>"
+msgstr "<b>声音淡入淡出：</b>"
+
+#: ../glade/preferences-server.ui.h:2
+msgid "<b>Output Devices:</b>"
+msgstr "<b>输出设备：</b>"
+
+#: ../glade/preferences-server.ui.h:3
+msgid ""
+"<span size=\"small\"><i>You need to be connected\n"
+"in order to change these settings</i></span>"
+msgstr ""
+"<span size=\"small\"><i>You need to be connected\n"
+"in order to change these settings</i></span>"
+
+#: ../glade/preferences-server.ui.h:5
+msgid "Enable crossfade"
+msgstr "启用"
+
+#: ../glade/preferences-server.ui.h:6
+msgid "fade time (s):"
+msgstr "淡入淡出时长(以秒计)："
+
 #: ../glade/preferences-trayicon.ui.h:1
 msgid "<b>Inline messages</b>"
 msgstr ""
+
+#: ../glade/preferences-trayicon.ui.h:2
+msgid "<b>Notification Area Icon</b>"
+msgstr "<b>通知区域图标</b>"
+
+#: ../glade/preferences-trayicon.ui.h:3
+msgid "<b>PopUp</b>"
+msgstr "<b>弹出</b>"
+
+#: ../glade/preferences-trayicon.ui.h:4
+msgid "Enable"
+msgstr "启用"
+
+#: ../glade/preferences-trayicon.ui.h:5
+msgid "Position:"
+msgstr "位置："
 
 #: ../glade/preferences-trayicon.ui.h:6
 msgid "Show on song change"
@@ -1759,9 +1327,21 @@ msgstr ""
 msgid "Show severity"
 msgstr ""
 
+#: ../glade/preferences-trayicon.ui.h:8
+msgid "Timeout:"
+msgstr "超时："
+
 #: ../glade/preferences-proxy.ui.h:1
 msgid "<b>Proxy settings</b>"
 msgstr ""
+
+#: ../glade/preferences-proxy.ui.h:2
+msgid "HTTP Proxy:"
+msgstr "HTTP 代理："
+
+#: ../glade/preferences-proxy.ui.h:5
+msgid "Use a proxy for internet connectivity"
+msgstr "通过代理访问英特网"
 
 #: ../glade/preferences-proxy.ui.h:6
 msgid "Use authentication"
@@ -1774,6 +1354,38 @@ msgstr "用户名:"
 #: ../glade/preferences-mmkeys.ui.h:1
 msgid "To disable a keybinding edit it and press 'backspace'"
 msgstr ""
+
+#: ../glade/preferences.ui.h:1
+msgid ""
+"<span size=\"x-large\"><b>Plugins</b></span>\n"
+"<i>None Selected</i>"
+msgstr ""
+"<span size=\"x-large\"><b>插件</b></span>\n"
+"<i>没有一个被选中</i>"
+
+#: ../glade/preferences.ui.h:3
+msgid "gmpc - Configuration"
+msgstr "gmpc - 配置"
+
+#: ../glade/playlist-message-window.ui.h:1
+msgid "Messages"
+msgstr "消息"
+
+#: ../glade/playlist-save-dialog.ui.h:1
+msgid "<enter playlist name>"
+msgstr "<输入播放列表名>"
+
+#: ../glade/playlist-save-dialog.ui.h:2
+msgid "<span size=\"x-small\"><i>Playlist already exists.</i></span>"
+msgstr "<span size=\"x-small\"><i>播放列表已存在。</i></span>"
+
+#: ../glade/playlist-save-dialog.ui.h:3
+msgid "Save Playlist"
+msgstr "保存播放列表"
+
+#: ../glade/playlist-save-dialog.ui.h:4
+msgid "name:"
+msgstr "名称："
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:155
 msgid "item"
@@ -1806,6 +1418,10 @@ msgstr ""
 msgid "Crop the playlist so it only contains the current song"
 msgstr ""
 
+#: ../src/browsers/playlist3-current-playlist-browser.c:531
+msgid "Are you sure you want to clear the playlist?"
+msgstr "是否确定清空播放列表？"
+
 #: ../src/browsers/playlist3-current-playlist-browser.c:648
 #: ../src/browsers/playlist3-current-playlist-browser.c:668
 #: ../src/browsers/playlist3-current-playlist-browser.c:710
@@ -1813,15 +1429,47 @@ msgstr ""
 msgid "Your mpd has a broken 'addid', pasting will fail."
 msgstr ""
 
+#. add the delete widget
+#: ../src/browsers/playlist3-current-playlist-browser.c:761
+msgid "Crop"
+msgstr "Crop"
+
+#. add the shuffle widget
+#: ../src/browsers/playlist3-current-playlist-browser.c:775
+msgid "Shuffle"
+msgstr "打乱顺序"
+
 #: ../src/browsers/playlist3-current-playlist-browser.c:908
 msgid "Add URL"
 msgstr "添加 URL"
+
+#: ../src/browsers/playlist3-current-playlist-browser.c:997
+#, c-format
+msgid ""
+"<i>Playlist <b>\"%s\"</b> already exists\n"
+"Overwrite?</i>"
+msgstr ""
+"<i>播放列表 <b>“%s”</b> 已存在\n"
+"是否覆盖？</i>"
+
+#: ../src/browsers/playlist3-current-playlist-browser.c:1021
+msgid "Failed to save the playlist file."
+msgstr "保存播放列表失败。"
+
+#: ../src/browsers/playlist3-current-playlist-browser.c:1099
+#: ../src/browsers/playlist3-current-playlist-browser.c:1147
+msgid "Play Queue"
+msgstr "播放队列"
 
 #: ../src/browsers/playlist3-file-browser.c:98
 #: ../src/browsers/playlist3-file-browser.c:335
 #: ../src/browsers/playlist3-file-browser.c:1172
 msgid "File Browser"
 msgstr "文件浏览器"
+
+#: ../src/browsers/playlist3-file-browser.c:164
+msgid "Directories"
+msgstr "目录"
 
 #: ../src/browsers/playlist3-file-browser.c:213
 msgid ""
@@ -1852,10 +1500,41 @@ msgstr "已递归地添加了文件夹 '%s'"
 msgid "Replace"
 msgstr "替换"
 
+#. add the update widget
+#: ../src/browsers/playlist3-file-browser.c:623
+#: ../src/browsers/playlist3-file-browser.c:879
+msgid "Update"
+msgstr "更新"
+
+#: ../src/browsers/playlist3-file-browser.c:733
+msgid "Loaded playlist"
+msgstr "播放列表已加载"
+
 #: ../src/browsers/playlist3-file-browser.c:1004
 #: ../src/browsers/playlist3-playlist-editor.c:388
 msgid "Added"
 msgstr "已添加"
+
+#: ../src/browsers/playlist3-file-browser.c:1006
+#: ../src/browsers/playlist3-playlist-editor.c:388
+msgid "song"
+msgid_plural "songs"
+msgstr[0] "歌曲"
+
+#: ../src/browsers/playlist3-file-browser.c:1008
+msgid "directory"
+msgid_plural "directories"
+msgstr[0] "目录"
+
+#: ../src/browsers/playlist3-file-browser.c:1010
+msgid "playlist"
+msgid_plural "playlists"
+msgstr[0] "播放列表"
+
+#: ../src/browsers/playlist3-file-browser.c:1033
+#: ../src/browsers/playlist3-file-browser.c:1083
+msgid "Are you sure you want to clear the selected playlist?"
+msgstr "是否确定清空选中的播放列表？"
 
 #: ../src/browsers/playlist3-find2-browser.c:102
 #: ../src/vala/gmpc-test-plugin.c:1104
@@ -1870,6 +1549,11 @@ msgstr "数据库"
 #: ../src/browsers/playlist3-find2-browser.c:242
 msgid "Playlist"
 msgstr "播放列表"
+
+#: ../src/browsers/playlist3-find2-browser.c:346
+#: ../src/browsers/playlist3-find2-browser.c:795
+msgid "Search"
+msgstr "搜索"
 
 #: ../src/browsers/playlist3-find2-browser.c:436
 msgid "Search failed"
@@ -1907,6 +1591,11 @@ msgstr ""
 msgid "Search Browser"
 msgstr "搜索浏览器"
 
+#: ../src/browsers/playlist3-playlist-editor.c:133
+#: ../src/browsers/playlist3-playlist-editor.c:1026
+msgid "Playlist Editor"
+msgstr "播放列表编辑器"
+
 #. Add it
 #: ../src/browsers/playlist3-playlist-editor.c:256
 #: ../src/browsers/playlist3-playlist-editor.c:278
@@ -1917,9 +1606,28 @@ msgstr "搜索浏览器"
 msgid "Favorites"
 msgstr ""
 
+#: ../src/browsers/playlist3-playlist-editor.c:451
+msgid "New playlist"
+msgstr "新建播放列表"
+
+#: ../src/browsers/playlist3-playlist-editor.c:492
+msgid "Rename Playlist"
+msgstr "重命名播放列表"
+
+#. delete
+#: ../src/browsers/playlist3-playlist-editor.c:499
+#: ../src/browsers/playlist3-playlist-editor.c:627
+msgid "Rename"
+msgstr "重命名"
+
 #: ../src/browsers/playlist3-playlist-editor.c:840
 msgid "Playlists"
 msgstr "播放列表"
+
+#. Add
+#: ../src/browsers/playlist3-playlist-editor.c:981
+msgid "Add to playlist"
+msgstr "添加到播放列表"
 
 #: ../src/browsers/playlist3-playlist-editor.c:1019
 msgid "Added playing song to favorites list."
@@ -1995,18 +1703,114 @@ msgstr ""
 msgid "Markup"
 msgstr ""
 
+#: ../src/gob/gmpc-mpddata-treeview.gob:70
+#: ../src/gob/gmpc-mpddata-treeview.gob:636
+#: ../src/vala/gmpc-test-plugin.c:1054
+#: ../src/vala/gmpc-metadata-browser2.c:2870
+#: ../src/vala/gmpc-metadata-browser2.c:3600
+#: ../src/vala/gmpc-metadata-browser2.c:4137
+msgid "Artist"
+msgstr "艺术家"
+
+#: ../src/gob/gmpc-mpddata-treeview.gob:71
+#: ../src/gob/gmpc-mpddata-treeview.gob:650
+#: ../src/vala/gmpc-test-plugin.c:1069
+#: ../src/vala/gmpc-metadata-browser2.c:2929
+#: ../src/vala/gmpc-metadata-browser2.c:3622
+msgid "Album"
+msgstr "专辑"
+
+#: ../src/gob/gmpc-mpddata-treeview.gob:72
+#: ../src/gob/gmpc-mpddata-treeview.gob:623
+#: ../src/vala/gmpc-test-plugin.c:1087
+#: ../src/vala/gmpc-metadata-browser2.c:3583
+msgid "Title"
+msgstr "标题"
+
+#: ../src/gob/gmpc-mpddata-treeview.gob:73
+msgid "File"
+msgstr "文件"
+
+#. Genre
+#: ../src/gob/gmpc-mpddata-treeview.gob:74
+#: ../src/gob/gmpc-mpddata-treeview.gob:662
+#: ../src/vala/gmpc-metadata-browser2.c:3634
+msgid "Genre"
+msgstr "流派"
+
+#. track
+#: ../src/gob/gmpc-mpddata-treeview.gob:75
+#: ../src/vala/gmpc-metadata-browser2.c:2955
+#: ../src/vala/gmpc-metadata-browser2.c:3626
+msgid "Track"
+msgstr "音轨"
+
+#: ../src/gob/gmpc-mpddata-treeview.gob:77
+msgid "Composer"
+msgstr "作曲"
+
+#. performer
+#: ../src/gob/gmpc-mpddata-treeview.gob:78
+#: ../src/vala/gmpc-metadata-browser2.c:3630
+msgid "Performer"
+msgstr "表演者"
+
+#. date
+#: ../src/gob/gmpc-mpddata-treeview.gob:79
+#: ../src/gob/gmpc-mpddata-treeview.gob:674
+#: ../src/vala/gmpc-metadata-browser2.c:3628
+msgid "Date"
+msgstr "日期"
+
+#: ../src/gob/gmpc-mpddata-treeview.gob:80
+#: ../src/gob/gmpc-mpddata-treeview.gob:686
+msgid "Duration"
+msgstr "时长"
+
+#. disc
+#: ../src/gob/gmpc-mpddata-treeview.gob:81
+#: ../src/vala/gmpc-metadata-browser2.c:3632
+msgid "Disc"
+msgstr "光盘编号"
+
+#. Comment
+#: ../src/gob/gmpc-mpddata-treeview.gob:82
+#: ../src/vala/gmpc-metadata-browser2.c:3669
+msgid "Comment"
+msgstr "备注"
+
 #: ../src/gob/gmpc-mpddata-treeview.gob:83
 msgid "Icon Id"
 msgstr "图标 Id"
+
+#: ../src/gob/gmpc-mpddata-treeview.gob:84
+msgid "Position"
+msgstr "位置"
 
 #: ../src/gob/gmpc-mpddata-treeview.gob:85
 msgid "AlbumArtist"
 msgstr "专辑艺术家"
 
+#: ../src/gob/gmpc-mpddata-treeview.gob:86
+msgid "Extension"
+msgstr "扩展名"
+
+#: ../src/gob/gmpc-mpddata-treeview.gob:87
+msgid "Directory"
+msgstr "目录"
+
 #. Add a tools menu item with the previously generated menu as submenu
 #: ../src/gob/gmpc-mpddata-treeview.gob:954
 msgid "Tools"
 msgstr "工具"
+
+#: ../src/gob/gmpc-mpddata-treeview.gob:983
+msgid "Paste before"
+msgstr "粘贴在前面"
+
+#: ../src/gob/gmpc-mpddata-treeview.gob:992
+msgid "Paste after"
+msgstr "粘贴在后面"
 
 #. * Edit column
 #: ../src/gob/gmpc-mpddata-treeview.gob:1024
@@ -2022,18 +1826,62 @@ msgstr "已添加配置文件"
 msgid "Removed profile"
 msgstr "已删除配置文件"
 
+#: ../src/gob/gmpc-meta-text-view.gob:96 ../src/gob/gmpc-metaimage.gob:837
+msgid "Refetch"
+msgstr "重新获取"
+
+#: ../src/gob/gmpc-meta-text-view.gob:101 ../src/gob/gmpc-metaimage.gob:842
+msgid "Select file"
+msgstr "选择文件"
+
 #: ../src/gob/gmpc-meta-text-view.gob:110 ../src/gob/gmpc-metaimage.gob:851
 #: ../src/vala/gmpc-test-plugin.c:1398
 msgid "Metadata selector"
 msgstr "元数据选择器"
 
+#: ../src/gob/gmpc-meta-text-view.gob:302
+msgid "Failed to open file:"
+msgstr "打开文件失败："
+
+#: ../src/gob/gmpc-meta-text-view.gob:302
+msgid "because of encoding issues"
+msgstr "由于编码问题"
+
 #: ../src/gob/gmpc-meta-text-view.gob:357
 msgid "Fetching Lyrics"
 msgstr "正在获取歌词"
 
+#: ../src/gob/gmpc-meta-text-view.gob:361
+msgid "Fetching Artist Info"
+msgstr "正在获取艺术家简介"
+
 #: ../src/gob/gmpc-meta-text-view.gob:365
 msgid "Fetching Guitar tab"
 msgstr ""
+
+#: ../src/gob/gmpc-meta-text-view.gob:369
+msgid "Fetching Album Info"
+msgstr "正在获取专辑介绍"
+
+#: ../src/gob/gmpc-meta-text-view.gob:380
+msgid "Not Available"
+msgstr "不可用"
+
+#: ../src/gob/gmpc-meta-text-view.gob:445 ../src/gob/gmpc-metaimage.gob:888
+msgid "Select File"
+msgstr "选择文件"
+
+#: ../src/gob/gmpc-meta-text-view.gob:450
+msgid "Text Document"
+msgstr "文本文档"
+
+#: ../src/gob/gmpc-meta-text-view.gob:454 ../src/gob/gmpc-metaimage.gob:898
+msgid "All"
+msgstr "所有文件"
+
+#: ../src/gob/gmpc-metaimage.gob:893
+msgid "Images"
+msgstr "图像文件"
 
 #: ../src/gob/gmpc-stats-label.gob:106 ../src/gob/gmpc-stats-label.gob:128
 msgid "n/a"
@@ -2163,6 +2011,13 @@ msgstr "相似歌曲"
 msgid "_Replace"
 msgstr ""
 
+#: ../src/vala/gmpc-metadata-browser2.c:862
+#: ../src/vala/gmpc-metadata-browser2.c:913
+#: ../src/vala/gmpc-metadata-browser2.c:931
+#: ../src/vala/gmpc-metadata-browser2.c:1084
+msgid "Unavailable"
+msgstr "不可用"
+
 #: ../src/vala/gmpc-metadata-browser2.c:901
 msgid "Fetching .. "
 msgstr ""
@@ -2226,6 +2081,11 @@ msgstr ""
 msgid "Rating"
 msgstr ""
 
+#: ../src/vala/gmpc-metadata-browser2.c:3714
+#: ../src/vala/gmpc-metadata-browser2.c:5226
+msgid "Lyrics"
+msgstr "歌词"
+
 #: ../src/vala/gmpc-metadata-browser2.c:3731
 #: ../src/vala/gmpc-metadata-browser2.c:5232
 msgid "Guitar Tabs"
@@ -2245,6 +2105,17 @@ msgstr ""
 #: ../src/vala/gmpc-metadata-browser2.c:4335
 msgid "Playtime"
 msgstr "播放时间"
+
+#: ../src/vala/gmpc-metadata-browser2.c:4191
+#: ../src/vala/gmpc-metadata-browser2.c:5214
+msgid "Album information"
+msgstr "专辑介绍"
+
+#. Artist information
+#: ../src/vala/gmpc-metadata-browser2.c:4364
+#: ../src/vala/gmpc-metadata-browser2.c:5208
+msgid "Artist information"
+msgstr "艺术家简介"
 
 #: ../src/vala/gmpc-metadata-browser2.c:4377
 #: ../src/vala/gmpc-metadata-browser2.c:4380
@@ -2267,6 +2138,69 @@ msgstr ""
 #: ../src/vala/gmpc-metadata-browser2.c:5244
 msgid "Web links"
 msgstr ""
+
+#~ msgid "_Server"
+#~ msgstr "服务器(_S)"
+
+#~ msgid "Album info:"
+#~ msgstr "专辑介绍："
+
+#~ msgid "<b>Genre: </b>"
+#~ msgid_plural "<b>Genres: </b>"
+#~ msgstr[0] "<b>流派：</b>"
+
+#~ msgid "Artist info:"
+#~ msgstr "艺术家简介："
+
+#~ msgid "Find Artist:"
+#~ msgstr "搜索艺术家："
+
+#~ msgid "<b>Date: </b>"
+#~ msgid_plural "<b>Dates: </b>"
+#~ msgstr[0] "<b>日期：</b>"
+
+#, c-format
+#~ msgid "Only the first %i result displayed, please refine your search query"
+#~ msgstr "仅显示前 %i 个结果，请改进你的搜索条件"
+
+#~ msgid "Fetching..."
+#~ msgstr "正在获取..."
+
+#~ msgid "Albums"
+#~ msgstr "专辑"
+
+#~ msgid "Tracks"
+#~ msgstr "音轨"
+
+#~ msgid "Links"
+#~ msgstr "链接"
+
+#~ msgid "Similar Artists"
+#~ msgstr "相似艺术家"
+
+#~ msgid "Sing or Swing you want"
+#~ msgstr "唱歌或摆动你所想"
+
+#~ msgid "01/24"
+#~ msgstr "01/24"
+
+#~ msgid "2 Feb 2006"
+#~ msgstr "2 Feb 2006"
+
+#~ msgid "--version"
+#~ msgstr "版本--"
+
+#~ msgid "--help"
+#~ msgstr "帮助"
+
+#~ msgid "--replace"
+#~ msgstr "由--替代"
+
+#~ msgid "--quit"
+#~ msgstr "停止--"
+
+#~ msgid "--config="
+#~ msgstr "--配置="
 
 #~ msgid "/path/to/file_name.mp3"
 #~ msgstr "/path/to/file_name.mp3"

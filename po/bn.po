@@ -15,127 +15,18 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-08-09 09:52+0000\n"
+"X-Launchpad-Export-Date: 2009-10-18 08:48+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+
+#: ../data/gmpc.desktop.in.h:1
+msgid "A gnome frontend for the mpd daemon"
+msgstr ""
 
 #: ../data/gmpc.desktop.in.h:2 ../src/main.c:341 ../src/tray-icon2.c:589
 #: ../src/vala/gmpc-metadata-browser2.c:1917
 #: ../src/vala/gmpc-metadata-browser2.c:1920
 msgid "Gnome Music Player Client"
 msgstr "জিনম মিউজিক প্লেয়ার ক্লায়েন্ট"
-
-#: ../glade/playlist3.glade.h:20
-msgid "_Control"
-msgstr "নিয়ন্ত্রণ_C"
-
-#: ../glade/playlist3.glade.h:23
-msgid "_Fullscreen"
-msgstr "সম্পূর্ণ পর্দা জুড়ে প্রদর্শন_F"
-
-#: ../glade/playlist3.glade.h:24
-msgid "_Go"
-msgstr "যাওয়া_G"
-
-#: ../glade/playlist3.glade.h:26
-msgid "_Music"
-msgstr "মিউজিক_M"
-
-#: ../glade/aboutdialog.ui.h:1
-msgid "Copyright 2003-2007 Qball Cow"
-msgstr "কপিরাইট ২০০৩-২০০৭ Qball Cow"
-
-#: ../glade/aboutdialog.ui.h:2
-msgid "translator-credits"
-msgstr ""
-"Launchpad Contributions:\n"
-"  Mohammad Niazul Alam https://launchpad.net/~niaz\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Mohammad Niazul Alam https://launchpad.net/~niaz\n"
-"  Qball Cow https://launchpad.net/~qball-qballcow\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Mohammad Niazul Alam https://launchpad.net/~niaz\n"
-"  Qball Cow https://launchpad.net/~qball-qballcow\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Mohammad Niazul Alam https://launchpad.net/~niaz\n"
-"  Qball Cow https://launchpad.net/~qball-qballcow\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Mohammad Niazul Alam https://launchpad.net/~niaz\n"
-"  Qball Cow https://launchpad.net/~qball-qballcow\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Mohammad Niazul Alam https://launchpad.net/~niaz\n"
-"  Qball Cow https://launchpad.net/~qball-qballcow\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Mohammad Niazul Alam https://launchpad.net/~niaz\n"
-"  Qball Cow https://launchpad.net/~qball-qballcow\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Mohammad Niazul Alam https://launchpad.net/~niaz\n"
-"  Qball Cow https://launchpad.net/~qball-qballcow"
-
-#: ../glade/preferences-connection.ui.h:1
-msgid "<b>Profile:</b>"
-msgstr "<b>প্রফাইলঃ</b>"
-
-#: ../glade/preferences-connection.ui.h:2
-msgid "Conn_ect"
-msgstr "সংযুক্ত_e"
-
-#: ../glade/preferences-esf-dialog.ui.h:1
-msgid "<b>Enable Field:</b>"
-msgstr "<b>খোলা মাঠঃ</b>"
-
-#: ../glade/preferences-esf-dialog.ui.h:2
-msgid "<b>Example:</b>"
-msgstr "<b>উদাহরণঃ</b>"
-
-#: ../glade/preferences-esf-dialog.ui.h:4
-msgid "A_lbum"
-msgstr "অ্যালবাম_A"
-
-#: ../glade/preferences-esf-dialog.ui.h:5
-msgid "Edit Song Formatting"
-msgstr "গানের ধারা সাজানো হছে"
-
-#: ../glade/preferences-esf-dialog.ui.h:10
-msgid "_Title"
-msgstr "শিরোনাম_T"
-
-#: ../glade/preferences-playlist.ui.h:1
-msgid "<b>Main:</b>"
-msgstr "<b>প্রধানঃ</b>"
-
-#: ../glade/preferences-playlist.ui.h:2
-msgid "<b>Playlist:</b>"
-msgstr "<b>গানের তালিকাঃ</b>"
-
-#: ../glade/preferences-playlist.ui.h:3
-msgid "Center playing song"
-msgstr "মধ্যের গানটি চলছে"
-
-#: ../glade/preferences-server.ui.h:1
-msgid "<b>Crossfade:</b>"
-msgstr "<b>ক্রসফেডঃ</b>"
-
-#: ../glade/preferences-server.ui.h:2
-msgid "<b>Output Devices:</b>"
-msgstr "<b>বাইরের ডিভাইসঃ</b>"
-
-#: ../glade/preferences-trayicon.ui.h:4
-msgid "Enable"
-msgstr "সক্রিয়"
-
-#~ msgid "<b>Song Markup</b>"
-#~ msgstr "<b>গান চিহ্নিতকরন</b>"
-
-#: ../data/gmpc.desktop.in.h:1
-msgid "A gnome frontend for the mpd daemon"
-msgstr ""
 
 #. Basic dialog with a close button
 #: ../glade/playlist3.glade.h:1 ../src/bug-information.c:239
@@ -219,6 +110,10 @@ msgstr ""
 msgid "_Connect"
 msgstr ""
 
+#: ../glade/playlist3.glade.h:20
+msgid "_Control"
+msgstr "নিয়ন্ত্রণ_C"
+
 #: ../glade/playlist3.glade.h:21 ../glade/preferences-connection.ui.h:10
 msgid "_Disconnect"
 msgstr ""
@@ -227,9 +122,21 @@ msgstr ""
 msgid "_Expand Interface"
 msgstr ""
 
+#: ../glade/playlist3.glade.h:23
+msgid "_Fullscreen"
+msgstr "সম্পূর্ণ পর্দা জুড়ে প্রদর্শন_F"
+
+#: ../glade/playlist3.glade.h:24
+msgid "_Go"
+msgstr "যাওয়া_G"
+
 #: ../glade/playlist3.glade.h:25
 msgid "_Help"
 msgstr ""
+
+#: ../glade/playlist3.glade.h:26
+msgid "_Music"
+msgstr "মিউজিক_M"
 
 #: ../glade/playlist3.glade.h:27
 msgid "_Option"
@@ -1211,6 +1118,17 @@ msgstr ""
 msgid "Show session management options"
 msgstr ""
 
+#: ../glade/aboutdialog.ui.h:1
+msgid "Copyright 2003-2007 Qball Cow"
+msgstr "কপিরাইট ২০০৩-২০০৭ Qball Cow"
+
+#: ../glade/aboutdialog.ui.h:2
+msgid "translator-credits"
+msgstr ""
+"Launchpad Contributions:\n"
+"  Mohammad Niazul Alam https://launchpad.net/~niaz\n"
+"  Qball Cow https://launchpad.net/~qball-qballcow"
+
 #: ../glade/password-dialog.ui.h:1
 msgid "Enter your password for: '<hostname>'"
 msgstr ""
@@ -1222,6 +1140,14 @@ msgstr ""
 #: ../glade/password-dialog.ui.h:3
 msgid "_Save password"
 msgstr ""
+
+#: ../glade/preferences-connection.ui.h:1
+msgid "<b>Profile:</b>"
+msgstr "<b>প্রফাইলঃ</b>"
+
+#: ../glade/preferences-connection.ui.h:2
+msgid "Conn_ect"
+msgstr "সংযুক্ত_e"
 
 #: ../glade/preferences-connection.ui.h:3
 msgid "Host:"
@@ -1261,9 +1187,25 @@ msgstr ""
 msgid "localhost"
 msgstr ""
 
+#: ../glade/preferences-esf-dialog.ui.h:1
+msgid "<b>Enable Field:</b>"
+msgstr "<b>খোলা মাঠঃ</b>"
+
+#: ../glade/preferences-esf-dialog.ui.h:2
+msgid "<b>Example:</b>"
+msgstr "<b>উদাহরণঃ</b>"
+
 #: ../glade/preferences-esf-dialog.ui.h:3
 msgid "<span size=\"large\"><b>Format Rule:</b></span>"
 msgstr ""
+
+#: ../glade/preferences-esf-dialog.ui.h:4
+msgid "A_lbum"
+msgstr "অ্যালবাম_A"
+
+#: ../glade/preferences-esf-dialog.ui.h:5
+msgid "Edit Song Formatting"
+msgstr "গানের ধারা সাজানো হছে"
 
 #: ../glade/preferences-esf-dialog.ui.h:6
 msgid "T_rack"
@@ -1281,9 +1223,25 @@ msgstr ""
 msgid "_Stream name"
 msgstr ""
 
+#: ../glade/preferences-esf-dialog.ui.h:10
+msgid "_Title"
+msgstr "শিরোনাম_T"
+
 #: ../glade/preferences-esf-dialog.ui.h:11
 msgid "example"
 msgstr ""
+
+#: ../glade/preferences-playlist.ui.h:1
+msgid "<b>Main:</b>"
+msgstr "<b>প্রধানঃ</b>"
+
+#: ../glade/preferences-playlist.ui.h:2
+msgid "<b>Playlist:</b>"
+msgstr "<b>গানের তালিকাঃ</b>"
+
+#: ../glade/preferences-playlist.ui.h:3
+msgid "Center playing song"
+msgstr "মধ্যের গানটি চলছে"
 
 #: ../glade/preferences-playlist.ui.h:4
 msgid "Hide on close"
@@ -1313,6 +1271,14 @@ msgstr ""
 msgid "<b>Loaded Plugins:</b>"
 msgstr ""
 
+#: ../glade/preferences-server.ui.h:1
+msgid "<b>Crossfade:</b>"
+msgstr "<b>ক্রসফেডঃ</b>"
+
+#: ../glade/preferences-server.ui.h:2
+msgid "<b>Output Devices:</b>"
+msgstr "<b>বাইরের ডিভাইসঃ</b>"
+
 #: ../glade/preferences-server.ui.h:3
 msgid ""
 "<span size=\"small\"><i>You need to be connected\n"
@@ -1338,6 +1304,10 @@ msgstr ""
 #: ../glade/preferences-trayicon.ui.h:3
 msgid "<b>PopUp</b>"
 msgstr ""
+
+#: ../glade/preferences-trayicon.ui.h:4
+msgid "Enable"
+msgstr "সক্রিয়"
 
 #: ../glade/preferences-trayicon.ui.h:5
 msgid "Position:"
@@ -2161,3 +2131,6 @@ msgstr ""
 #: ../src/vala/gmpc-metadata-browser2.c:5244
 msgid "Web links"
 msgstr ""
+
+#~ msgid "<b>Song Markup</b>"
+#~ msgstr "<b>গান চিহ্নিতকরন</b>"

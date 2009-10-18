@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-08-09 09:52+0000\n"
+"X-Launchpad-Export-Date: 2009-10-18 08:48+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -27,6 +27,19 @@ msgstr "Gnome-edustaohjelma MPD-palvelulle"
 #: ../src/vala/gmpc-metadata-browser2.c:1920
 msgid "Gnome Music Player Client"
 msgstr "Gnomen musiikkisoitinasiakas"
+
+#. Basic dialog with a close button
+#: ../glade/playlist3.glade.h:1 ../src/bug-information.c:239
+msgid "Bug information"
+msgstr ""
+
+#: ../glade/playlist3.glade.h:2
+msgid "Consume"
+msgstr ""
+
+#: ../glade/playlist3.glade.h:3
+msgid "Easy Command Help"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:4
 msgid "Getting help"
@@ -44,6 +57,10 @@ msgstr "Hiljennä"
 #: ../glade/playlist3.glade.h:7 ../src/mm-keys.c:74 ../src/tray-icon2.c:577
 msgid "Next"
 msgstr "Seuraava"
+
+#: ../glade/playlist3.glade.h:8
+msgid "Play/Pause"
+msgstr "Toista/Pysäytä"
 
 #. * MM_NEXT
 #: ../glade/playlist3.glade.h:9 ../src/mm-keys.c:75
@@ -64,9 +81,17 @@ msgstr "Satunnainen"
 msgid "Repeat"
 msgstr "Toista"
 
+#: ../glade/playlist3.glade.h:13
+msgid "Se_rver"
+msgstr "Pa_lvelin"
+
 #: ../glade/playlist3.glade.h:14
 msgid "Show Messages"
 msgstr "Näytä viesti"
+
+#: ../glade/playlist3.glade.h:15
+msgid "Single mode"
+msgstr ""
 
 #. * MM_PREV
 #: ../glade/playlist3.glade.h:16 ../src/mm-keys.c:76
@@ -76,6 +101,10 @@ msgstr "Pysäytä"
 #: ../glade/playlist3.glade.h:17
 msgid "Visit website"
 msgstr "Vieraile nettisivulla"
+
+#: ../glade/playlist3.glade.h:18
+msgid "_Collapse Interface"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:19
 msgid "_Connect"
@@ -88,6 +117,10 @@ msgstr "_Ohjaus"
 #: ../glade/playlist3.glade.h:21 ../glade/preferences-connection.ui.h:10
 msgid "_Disconnect"
 msgstr "_Katkaise yhteys"
+
+#: ../glade/playlist3.glade.h:22
+msgid "_Expand Interface"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:23
 msgid "_Fullscreen"
@@ -105,6 +138,10 @@ msgstr "O_hje"
 msgid "_Music"
 msgstr "_Musiikki"
 
+#: ../glade/playlist3.glade.h:27
+msgid "_Option"
+msgstr "_Valinta"
+
 #: ../glade/playlist3.glade.h:28
 msgid "_Send Password"
 msgstr "_Lähetä salasana"
@@ -113,175 +150,21 @@ msgstr "_Lähetä salasana"
 msgid "_Show Artist Image"
 msgstr "_Näytä artistin kuva"
 
-#: ../glade/playlist3.glade.h:31
-msgid "_View"
-msgstr "_Näytä"
-
-#: ../src/gmpc_easy_download.c:274
-msgid "Proxy"
-msgstr "Välityspalvelin"
-
-#: ../src/main.c:1313
-msgid "Error Message"
-msgstr "Virheviesti"
-
-#: ../src/misc.c:56
-msgid "day"
-msgid_plural "days"
-msgstr[0] "päivä"
-msgstr[1] "päivää"
-
-#: ../src/misc.c:59
-msgid "hour"
-msgid_plural "hours"
-msgstr[0] "tunti"
-msgstr[1] "tuntia"
-
-#: ../src/misc.c:62
-msgid "minute"
-msgid_plural "minutes"
-msgstr[0] "minuutti"
-msgstr[1] "minuuttia"
-
-#: ../src/mm-keys.c:73
-msgid "PlayPause"
-msgstr "ToistaPysäytä"
-
-#. * MM_STOP
-#: ../src/mm-keys.c:77
-msgid "Fast Forward"
-msgstr "Kelaa eteenpäin"
-
-#. * MM_FASTFORWARD
-#: ../src/mm-keys.c:78
-msgid "Fast Backward"
-msgstr "Kelaa taaksepäin"
-
-#. * MM_RANDOM
-#: ../src/mm-keys.c:81
-msgid "Raise window"
-msgstr "Nosta ikkuna"
-
-#. * MM_RAISE
-#: ../src/mm-keys.c:82
-msgid "Hide window"
-msgstr "Piilota ikkuna"
-
-#. * MM_TOGGLE_HIDDEN
-#: ../src/mm-keys.c:84
-msgid "Volume Up"
-msgstr "Kovemmalle"
-
-#. * MM_VOLUME_UP
-#: ../src/mm-keys.c:85
-msgid "Volume Down"
-msgstr "Hiljemmalle"
-
-#. * MM_SHOW_NOTIFICATION
-#: ../src/mm-keys.c:87
-msgid "Toggle Mute"
-msgstr "Vaihda äänettömälle"
-
-#: ../src/mm-keys.c:570
-msgid "Multimedia Keys"
-msgstr "Multimedianäppäimet"
-
-#: ../src/mm-keys.c:716
-msgid "Action"
-msgstr "Toiminto"
-
-#: ../src/mm-keys.c:738
-msgid "Shortcut"
-msgstr "Pikavalinta"
-
-#: ../src/preferences.c:331
-msgid "Enabled"
-msgstr "Käytössä"
-
-#. * Mpd version
-#: ../src/preferences.c:338 ../src/browsers/server-information.c:333
-msgid "Version"
-msgstr "Versio"
-
-#: ../glade/aboutdialog.ui.h:2
-msgid "translator-credits"
-msgstr ""
-"Launchpad Contributions:\n"
-"  Ilari Oras https://launchpad.net/~ilarioras\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Ilari Oras https://launchpad.net/~ilarioras\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Ilari Oras https://launchpad.net/~ilarioras\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Ilari Oras https://launchpad.net/~ilarioras\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Ilari Oras https://launchpad.net/~ilarioras"
-
-#: ../glade/preferences-connection.ui.h:7 ../glade/preferences-proxy.ui.h:4
-msgid "Port:"
-msgstr "Portti:"
-
-#: ../glade/preferences-proxy.ui.h:2
-msgid "HTTP Proxy:"
-msgstr "HTTP-välityspalvelin:"
-
-#~ msgid "_Server"
-#~ msgstr "_Palvelin"
-
-#~ msgid "01/24"
-#~ msgstr "01/24"
-
-#~ msgid "2 Feb 2006"
-#~ msgstr "2 Helmi 2006"
-
-#. Basic dialog with a close button
-#: ../glade/playlist3.glade.h:1 ../src/bug-information.c:239
-msgid "Bug information"
-msgstr ""
-
-#: ../glade/playlist3.glade.h:2
-msgid "Consume"
-msgstr ""
-
-#: ../glade/playlist3.glade.h:3
-msgid "Easy Command Help"
-msgstr ""
-
-#: ../glade/playlist3.glade.h:8
-msgid "Play/Pause"
-msgstr "Toista/Pysäytä"
-
-#: ../glade/playlist3.glade.h:13
-msgid "Se_rver"
-msgstr "Pa_lvelin"
-
-#: ../glade/playlist3.glade.h:15
-msgid "Single mode"
-msgstr ""
-
-#: ../glade/playlist3.glade.h:18
-msgid "_Collapse Interface"
-msgstr ""
-
-#: ../glade/playlist3.glade.h:22
-msgid "_Expand Interface"
-msgstr ""
-
-#: ../glade/playlist3.glade.h:27
-msgid "_Option"
-msgstr "_Valinta"
-
 #: ../glade/playlist3.glade.h:30
 msgid "_Tools"
 msgstr "_Työkalut"
 
+#: ../glade/playlist3.glade.h:31
+msgid "_View"
+msgstr "_Näytä"
+
 #: ../glade/playlist3.glade.h:32
 msgid "gmpc - Playlist Manager"
 msgstr ""
+
+#: ../src/gmpc_easy_download.c:274
+msgid "Proxy"
+msgstr "Välityspalvelin"
 
 #: ../src/main.c:279
 msgid "Start the program in full screen"
@@ -420,6 +303,10 @@ msgstr ""
 msgid "The following error(s) occurred:"
 msgstr ""
 
+#: ../src/main.c:1313
+msgid "Error Message"
+msgstr "Virheviesti"
+
 #: ../src/metadata.c:293
 msgid ""
 "A new metadata plugin was added, gmpc has purged all failed hits from the "
@@ -434,19 +321,76 @@ msgstr ""
 msgid "Total time"
 msgstr ""
 
+#: ../src/misc.c:56
+msgid "day"
+msgid_plural "days"
+msgstr[0] "päivä"
+msgstr[1] "päivää"
+
+#: ../src/misc.c:59
+msgid "hour"
+msgid_plural "hours"
+msgstr[0] "tunti"
+msgstr[1] "tuntia"
+
+#: ../src/misc.c:62
+msgid "minute"
+msgid_plural "minutes"
+msgstr[0] "minuutti"
+msgstr[1] "minuuttia"
+
 #: ../src/misc.c:295
 msgid "Failed to execute"
 msgstr ""
+
+#: ../src/mm-keys.c:73
+msgid "PlayPause"
+msgstr "ToistaPysäytä"
+
+#. * MM_STOP
+#: ../src/mm-keys.c:77
+msgid "Fast Forward"
+msgstr "Kelaa eteenpäin"
+
+#. * MM_FASTFORWARD
+#: ../src/mm-keys.c:78
+msgid "Fast Backward"
+msgstr "Kelaa taaksepäin"
+
+#. * MM_RANDOM
+#: ../src/mm-keys.c:81
+msgid "Raise window"
+msgstr "Nosta ikkuna"
+
+#. * MM_RAISE
+#: ../src/mm-keys.c:82
+msgid "Hide window"
+msgstr "Piilota ikkuna"
 
 #. * MM_HIDE
 #: ../src/mm-keys.c:83
 msgid "Toggle window"
 msgstr ""
 
+#. * MM_TOGGLE_HIDDEN
+#: ../src/mm-keys.c:84
+msgid "Volume Up"
+msgstr "Kovemmalle"
+
+#. * MM_VOLUME_UP
+#: ../src/mm-keys.c:85
+msgid "Volume Down"
+msgstr "Hiljemmalle"
+
 #. * MM_VOLUME_DOWN
 #: ../src/mm-keys.c:86
 msgid "Show song"
 msgstr ""
+
+#. * MM_SHOW_NOTIFICATION
+#: ../src/mm-keys.c:87
+msgid "Toggle Mute"
+msgstr "Vaihda äänettömälle"
 
 #. * MM_TOGGLE_MUTE
 #: ../src/mm-keys.c:88
@@ -474,6 +418,10 @@ msgid ""
 "revisit the preferences and ensure your settings are now correct."
 msgstr ""
 
+#: ../src/mm-keys.c:570
+msgid "Multimedia Keys"
+msgstr "Multimedianäppäimet"
+
 #: ../src/mm-keys.c:632
 #, c-format
 msgid ""
@@ -492,6 +440,14 @@ msgid ""
 "Ensure that your window manager (or other applications) have not already "
 "bound this key for some other function, then restart gmpc."
 msgstr ""
+
+#: ../src/mm-keys.c:716
+msgid "Action"
+msgstr "Toiminto"
+
+#: ../src/mm-keys.c:738
+msgid "Shortcut"
+msgstr "Pikavalinta"
 
 #: ../src/mpdinteraction.c:91
 msgid "enable"
@@ -984,6 +940,10 @@ msgstr ""
 msgid "Plugins:"
 msgstr ""
 
+#: ../src/preferences.c:331
+msgid "Enabled"
+msgstr "Käytössä"
+
 #: ../src/preferences.c:334 ../src/gob/gmpc-mpddata-treeview.gob:76
 msgid "Name"
 msgstr ""
@@ -991,6 +951,11 @@ msgstr ""
 #: ../src/preferences.c:336
 msgid "Function"
 msgstr ""
+
+#. * Mpd version
+#: ../src/preferences.c:338 ../src/browsers/server-information.c:333
+msgid "Version"
+msgstr "Versio"
 
 #: ../src/preferences.c:367
 msgid "Dummy"
@@ -1157,6 +1122,12 @@ msgstr ""
 msgid "Copyright 2003-2007 Qball Cow"
 msgstr ""
 
+#: ../glade/aboutdialog.ui.h:2
+msgid "translator-credits"
+msgstr ""
+"Launchpad Contributions:\n"
+"  Ilari Oras https://launchpad.net/~ilarioras"
+
 #: ../glade/password-dialog.ui.h:1
 msgid "Enter your password for: '<hostname>'"
 msgstr ""
@@ -1194,6 +1165,10 @@ msgstr ""
 #: ../glade/preferences-connection.ui.h:6 ../glade/preferences-proxy.ui.h:3
 msgid "Password:"
 msgstr ""
+
+#: ../glade/preferences-connection.ui.h:7 ../glade/preferences-proxy.ui.h:4
+msgid "Port:"
+msgstr "Portti:"
 
 #: ../glade/preferences-connection.ui.h:8
 msgid "Timeout (s):"
@@ -1352,6 +1327,10 @@ msgstr ""
 #: ../glade/preferences-proxy.ui.h:1
 msgid "<b>Proxy settings</b>"
 msgstr ""
+
+#: ../glade/preferences-proxy.ui.h:2
+msgid "HTTP Proxy:"
+msgstr "HTTP-välityspalvelin:"
 
 #: ../glade/preferences-proxy.ui.h:5
 msgid "Use a proxy for internet connectivity"
@@ -2151,3 +2130,12 @@ msgstr ""
 #: ../src/vala/gmpc-metadata-browser2.c:5244
 msgid "Web links"
 msgstr ""
+
+#~ msgid "_Server"
+#~ msgstr "_Palvelin"
+
+#~ msgid "01/24"
+#~ msgstr "01/24"
+
+#~ msgid "2 Feb 2006"
+#~ msgstr "2 Helmi 2006"

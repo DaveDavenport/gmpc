@@ -1,4 +1,4 @@
-# Malayalam translation for gmpc
+# English (Canada) translation for gmpc
 # Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
 # This file is distributed under the same license as the gmpc package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
@@ -6,11 +6,11 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
-"Report-Msgid-Bugs-To: \n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2009-07-25 16:10+0200\n"
-"PO-Revision-Date: 2009-05-13 15:59+0000\n"
-"Last-Translator: Qball Cow <qball@qballcow.nl>\n"
-"Language-Team: Malayalam <ml@li.org>\n"
+"PO-Revision-Date: 2009-09-25 11:14+0000\n"
+"Last-Translator: Itai Molenaar <imolenaar28@gmail.com>\n"
+"Language-Team: English (Canada) <en_CA@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -20,247 +20,247 @@ msgstr ""
 
 #: ../data/gmpc.desktop.in.h:1
 msgid "A gnome frontend for the mpd daemon"
-msgstr ""
+msgstr "A gnome frontend for the mpd daemon"
 
 #: ../data/gmpc.desktop.in.h:2 ../src/main.c:341 ../src/tray-icon2.c:589
 #: ../src/vala/gmpc-metadata-browser2.c:1917
 #: ../src/vala/gmpc-metadata-browser2.c:1920
 msgid "Gnome Music Player Client"
-msgstr ""
+msgstr "Gnome Music Player Client"
 
 #. Basic dialog with a close button
 #: ../glade/playlist3.glade.h:1 ../src/bug-information.c:239
 msgid "Bug information"
-msgstr ""
+msgstr "Bug information"
 
 #: ../glade/playlist3.glade.h:2
 msgid "Consume"
-msgstr ""
+msgstr "Consume"
 
 #: ../glade/playlist3.glade.h:3
 msgid "Easy Command Help"
-msgstr ""
+msgstr "Easy Command Help"
 
 #: ../glade/playlist3.glade.h:4
 msgid "Getting help"
-msgstr ""
+msgstr "Getting help"
 
 #: ../glade/playlist3.glade.h:5
 msgid "MPD database is updating."
-msgstr ""
+msgstr "MPD database is updating."
 
 #: ../glade/playlist3.glade.h:6 ../src/mpdinteraction.c:321
 msgid "Mute"
-msgstr "നിശബ്ദമാക്കുക"
+msgstr "Mute"
 
 #. * MM_PLAYPAUSE
 #: ../glade/playlist3.glade.h:7 ../src/mm-keys.c:74 ../src/tray-icon2.c:577
 msgid "Next"
-msgstr "അടുത്തത്"
+msgstr "Next"
 
 #: ../glade/playlist3.glade.h:8
 msgid "Play/Pause"
-msgstr "പ്രവര്‍ത്തിപ്പിക്കുക/താല്‍കാലികമായി നിര്‍ത്തുക"
+msgstr "Play/Pause"
 
 #. * MM_NEXT
 #: ../glade/playlist3.glade.h:9 ../src/mm-keys.c:75
 msgid "Previous"
-msgstr "മുന്‍പത്തേത്"
+msgstr "Previous"
 
 #: ../glade/playlist3.glade.h:10
 msgid "Profiles"
-msgstr "പ്രൊഫൈലുകള്‍"
+msgstr "Profiles"
 
 #. * MM_REPEAT
 #: ../glade/playlist3.glade.h:11 ../src/mm-keys.c:80
 msgid "Random"
-msgstr "ക്രമമല്ലാതെ"
+msgstr "Random"
 
 #. * MM_FASTBACKWARD
 #: ../glade/playlist3.glade.h:12 ../src/mm-keys.c:79
 msgid "Repeat"
-msgstr "ആവര്‍ത്തിക്കുക"
+msgstr "Repeat"
 
 #: ../glade/playlist3.glade.h:13
 msgid "Se_rver"
-msgstr ""
+msgstr "Se_rver"
 
 #: ../glade/playlist3.glade.h:14
 msgid "Show Messages"
-msgstr "സന്ദേശങ്ങള്‍ കാണിക്കുക"
+msgstr "Show Messages"
 
 #: ../glade/playlist3.glade.h:15
 msgid "Single mode"
-msgstr ""
+msgstr "Single mode"
 
 #. * MM_PREV
 #: ../glade/playlist3.glade.h:16 ../src/mm-keys.c:76
 msgid "Stop"
-msgstr "നിര്‍ത്തുക"
+msgstr "Stop"
 
 #: ../glade/playlist3.glade.h:17
 msgid "Visit website"
-msgstr "വെബ്‌സൈറ്റ് സന്ദര്‍ശിക്കുക"
+msgstr "Visit website"
 
 #: ../glade/playlist3.glade.h:18
 msgid "_Collapse Interface"
-msgstr ""
+msgstr "_Collapse Interface"
 
 #: ../glade/playlist3.glade.h:19
 msgid "_Connect"
-msgstr ""
+msgstr "_Connect"
 
 #: ../glade/playlist3.glade.h:20
 msgid "_Control"
-msgstr "_നിയന്ത്രണം"
+msgstr "_Control"
 
 #: ../glade/playlist3.glade.h:21 ../glade/preferences-connection.ui.h:10
 msgid "_Disconnect"
-msgstr "_വിഛേദിക്കുക"
+msgstr "_Disconnect"
 
 #: ../glade/playlist3.glade.h:22
 msgid "_Expand Interface"
-msgstr ""
+msgstr "_Expand Interface"
 
 #: ../glade/playlist3.glade.h:23
 msgid "_Fullscreen"
-msgstr ""
+msgstr "_Fullscreen"
 
 #: ../glade/playlist3.glade.h:24
 msgid "_Go"
-msgstr "_പോകുക"
+msgstr "_Go"
 
 #: ../glade/playlist3.glade.h:25
 msgid "_Help"
-msgstr "_സഹായം"
+msgstr "_Help"
 
 #: ../glade/playlist3.glade.h:26
 msgid "_Music"
-msgstr ""
+msgstr "_Music"
 
 #: ../glade/playlist3.glade.h:27
 msgid "_Option"
-msgstr "‌_ഐച്ഛീകം"
+msgstr "_Option"
 
 #: ../glade/playlist3.glade.h:28
 msgid "_Send Password"
-msgstr "_രഹസ്യവാക്ക് അയക്കുക"
+msgstr "_Send Password"
 
 #: ../glade/playlist3.glade.h:29
 msgid "_Show Artist Image"
-msgstr "_ഗായകന്റെ ചിത്രം കാണിക്കുക"
+msgstr "_Show Artist Image"
 
 #: ../glade/playlist3.glade.h:30
 msgid "_Tools"
-msgstr "_ഉപകരണങ്ങള്‍"
+msgstr "_Tools"
 
 #: ../glade/playlist3.glade.h:31
 msgid "_View"
-msgstr "_കാഴ്ച"
+msgstr "_View"
 
 #: ../glade/playlist3.glade.h:32
 msgid "gmpc - Playlist Manager"
-msgstr ""
+msgstr "gmpc - Playlist Manager"
 
 #: ../src/gmpc_easy_download.c:274
 msgid "Proxy"
-msgstr "പ്രോക്സി"
+msgstr "Proxy"
 
 #: ../src/main.c:279
 msgid "Start the program in full screen"
-msgstr ""
+msgstr "Start the program in full screen"
 
 #: ../src/main.c:281
 msgid "Show program version and revision"
-msgstr ""
+msgstr "Show program version and revision"
 
 #: ../src/main.c:283
 msgid "Quits the running gmpc"
-msgstr ""
+msgstr "Quits the running gmpc"
 
 #: ../src/main.c:285
 msgid "Replace the running gmpc"
-msgstr ""
+msgstr "Replace the running gmpc"
 
 #: ../src/main.c:287
 msgid "Don't load the plugins"
-msgstr ""
+msgstr "Don't load the plugins"
 
 #: ../src/main.c:289
 msgid "Load alternative config file"
-msgstr ""
+msgstr "Load alternative config file"
 
 #: ../src/main.c:291
 msgid "Set the debug level"
-msgstr ""
+msgstr "Set the debug level"
 
 #: ../src/main.c:293
 msgid "Start gmpc hidden to tray"
-msgstr ""
+msgstr "Start gmpc hidden to tray"
 
 #: ../src/main.c:295
 msgid "Remove all failed hits from metadata cache"
-msgstr ""
+msgstr "Remove all failed hits from metadata cache"
 
 #: ../src/main.c:297
 msgid "Show redraw events in GTK+"
-msgstr ""
+msgstr "Show redraw events in GTK+"
 
 #: ../src/main.c:299
 msgid "Show bug information dialog"
-msgstr ""
+msgstr "Show bug information dialog"
 
 #: ../src/main.c:301
 msgid "Shows all output from a certain log domain"
-msgstr ""
+msgstr "Shows all output from a certain log domain"
 
 #: ../src/main.c:438
 msgid "quit"
-msgstr ""
+msgstr "quit"
 
 #: ../src/main.c:439
 msgid "Quit gmpc"
-msgstr ""
+msgstr "Quit gmpc"
 
 #: ../src/main.c:440
 msgid "hide"
-msgstr ""
+msgstr "hide"
 
 #: ../src/main.c:441
 msgid "Hide gmpc"
-msgstr ""
+msgstr "Hide gmpc"
 
 #: ../src/main.c:442
 msgid "show"
-msgstr ""
+msgstr "show"
 
 #: ../src/main.c:443
 msgid "Show gmpc"
-msgstr ""
+msgstr "Show gmpc"
 
 #: ../src/main.c:444
 msgid "show notification"
-msgstr ""
+msgstr "show notification"
 
 #: ../src/main.c:445
 msgid "Show trayicon notification"
-msgstr ""
+msgstr "Show trayicon notification"
 
 #: ../src/main.c:499
 msgid "Failed to load the configuration system."
-msgstr ""
+msgstr "Failed to load the configuration system."
 
 #: ../src/main.c:518
 msgid "Failed to load debug-log file."
-msgstr ""
+msgstr "Failed to load debug-log file."
 
 #: ../src/main.c:646
 msgid "Failed to setup libmpd"
-msgstr ""
+msgstr "Failed to setup libmpd"
 
 #: ../src/main.c:1066
 msgid "GMPC has insufficient permissions on the mpd server."
-msgstr ""
+msgstr "GMPC has insufficient permissions on the mpd server."
 
 #: ../src/main.c:1092
 #, c-format
@@ -268,80 +268,84 @@ msgid ""
 "Failed to set password on: '%s'\n"
 "Please try again"
 msgstr ""
+"Failed to set password on: '%s'\n"
+"Please try again"
 
 #: ../src/main.c:1094
 #, c-format
 msgid "Please enter your password for: '%s'"
-msgstr ""
+msgstr "Please enter your password for: '%s'"
 
 #: ../src/main.c:1123 ../src/main.c:1144
 msgid "error code"
-msgstr ""
+msgstr "error code"
 
 #: ../src/main.c:1133
 msgid "Insufficient permission to connect to mpd. Check password"
-msgstr ""
+msgstr "Insufficient permission to connect to mpd. Check password"
 
 #: ../src/main.c:1168
 msgid "MPD versions before 0.13.0 are not supported"
-msgstr ""
+msgstr "MPD versions before 0.13.0 are not supported"
 
 #: ../src/main.c:1236
 msgid "Connected to mpd"
-msgstr ""
+msgstr "Connected to mpd"
 
 #: ../src/main.c:1238
 msgid "Disconnected from mpd"
-msgstr ""
+msgstr "Disconnected from mpd"
 
 #: ../src/main.c:1272
 msgid "Error occurred during operation"
-msgstr ""
+msgstr "Error occurred during operation"
 
 #. Create label
 #: ../src/main.c:1296
 msgid "The following error(s) occurred:"
-msgstr ""
+msgstr "The following error(s) occurred:"
 
 #: ../src/main.c:1313
 msgid "Error Message"
-msgstr ""
+msgstr "Error Message"
 
 #: ../src/metadata.c:293
 msgid ""
 "A new metadata plugin was added, gmpc has purged all failed hits from the "
 "cache"
 msgstr ""
+"A new metadata plugin was added, gmpc has purged all failed hits from the "
+"cache"
 
 #: ../src/metadata.c:1390
 msgid "Metadata Handler"
-msgstr ""
+msgstr "Metadata Handler"
 
 #: ../src/misc.c:39
 msgid "Total time"
-msgstr ""
+msgstr "Total time"
 
 #: ../src/misc.c:56
 msgid "day"
 msgid_plural "days"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "day"
+msgstr[1] "days"
 
 #: ../src/misc.c:59
 msgid "hour"
 msgid_plural "hours"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "hour"
+msgstr[1] "hours"
 
 #: ../src/misc.c:62
 msgid "minute"
 msgid_plural "minutes"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "minute"
+msgstr[1] "minutes"
 
 #: ../src/misc.c:295
 msgid "Failed to execute"
-msgstr ""
+msgstr "Failed to execute"
 
 #: ../src/mm-keys.c:73
 msgid "PlayPause"
@@ -350,58 +354,60 @@ msgstr ""
 #. * MM_STOP
 #: ../src/mm-keys.c:77
 msgid "Fast Forward"
-msgstr ""
+msgstr "Fast Forward"
 
 #. * MM_FASTFORWARD
 #: ../src/mm-keys.c:78
 msgid "Fast Backward"
-msgstr ""
+msgstr "Fast Backward"
 
 #. * MM_RANDOM
 #: ../src/mm-keys.c:81
 msgid "Raise window"
-msgstr ""
+msgstr "Raise window"
 
 #. * MM_RAISE
 #: ../src/mm-keys.c:82
 msgid "Hide window"
-msgstr ""
+msgstr "Hide window"
 
 #. * MM_HIDE
 #: ../src/mm-keys.c:83
 msgid "Toggle window"
-msgstr ""
+msgstr "Toggle window"
 
 #. * MM_TOGGLE_HIDDEN
 #: ../src/mm-keys.c:84
 msgid "Volume Up"
-msgstr ""
+msgstr "Volume Up"
 
 #. * MM_VOLUME_UP
 #: ../src/mm-keys.c:85
 msgid "Volume Down"
-msgstr ""
+msgstr "Volume Down"
 
 #. * MM_VOLUME_DOWN
 #: ../src/mm-keys.c:86
 msgid "Show song"
-msgstr ""
+msgstr "Show song"
 
 #. * MM_SHOW_NOTIFICATION
 #: ../src/mm-keys.c:87
 msgid "Toggle Mute"
-msgstr ""
+msgstr "Toggle Mute"
 
 #. * MM_TOGGLE_MUTE
 #: ../src/mm-keys.c:88
 msgid "Show easy command entry"
-msgstr ""
+msgstr "Show easy command entry"
 
 #: ../src/mm-keys.c:367
 msgid ""
 "Could not grab the following multimedia keys:\n"
 "\n"
 msgstr ""
+"Could not grab the following multimedia keys:\n"
+"\n"
 
 #: ../src/mm-keys.c:382
 msgid ""
@@ -409,6 +415,9 @@ msgid ""
 "Ensure that your window manager (or other applications) have not already "
 "bound this key for some other function, then restart gmpc."
 msgstr ""
+"\n"
+"Ensure that your window manager (or other applications) has not already "
+"bound this key for some other function, then restart gmpc."
 
 #: ../src/mm-keys.c:391
 msgid ""
@@ -417,10 +426,14 @@ msgid ""
 "Some duplicate multimedia key mappings were detected, and disabled.  Please "
 "revisit the preferences and ensure your settings are now correct."
 msgstr ""
+"Duplicate mapping(s) detected\n"
+"\n"
+"Some duplicate multimedia key mappings were detected, and disabled.  Please "
+"revisit the preferences and ensure your settings are now correct."
 
 #: ../src/mm-keys.c:570
 msgid "Multimedia Keys"
-msgstr ""
+msgstr "Multimedia Keys"
 
 #: ../src/mm-keys.c:632
 #, c-format
@@ -429,6 +442,9 @@ msgid ""
 "\n"
 "%s is already mapped to %s"
 msgstr ""
+"Duplicate mapping detected\n"
+"\n"
+"%s is already mapped to %s"
 
 #: ../src/mm-keys.c:661
 #, c-format
@@ -440,109 +456,123 @@ msgid ""
 "Ensure that your window manager (or other applications) have not already "
 "bound this key for some other function, then restart gmpc."
 msgstr ""
+"Could not grab multimedia key:\n"
+"\n"
+"\t%s: %s\n"
+"\n"
+"Ensure that your window manager (or other applications) has not already "
+"bound this key for some other function, then restart gmpc."
 
 #: ../src/mm-keys.c:716
 msgid "Action"
-msgstr ""
+msgstr "Action"
 
 #: ../src/mm-keys.c:738
 msgid "Shortcut"
-msgstr ""
+msgstr "Shortcut"
 
 #: ../src/mpdinteraction.c:91
 msgid "enable"
-msgstr ""
+msgstr "enable"
 
 #: ../src/mpdinteraction.c:94
 msgid "disable"
-msgstr ""
+msgstr "disable"
 
 #: ../src/mpdinteraction.c:107 ../src/playlist3.c:1710 ../src/playlist3.c:1723
 #: ../src/playlist3.c:1738 ../src/playlist3.c:1751
 msgid "Off"
-msgstr ""
+msgstr "Off"
 
 #: ../src/mpdinteraction.c:162
 msgid "Single: The used MPD server is to old and does not support this."
 msgstr ""
+"Single: The specified MPD server is to old and does not support this."
 
 #: ../src/mpdinteraction.c:164
 msgid "Single: You have insufficient permission to use this option."
-msgstr ""
+msgstr "Single: You have insufficient permission to use this option."
 
 #: ../src/mpdinteraction.c:181
 msgid "Consume: The used MPD server is to old and does not support this."
 msgstr ""
+"Consume: The specified MPD server is to old and does not support this."
 
 #: ../src/mpdinteraction.c:183
 msgid "Consume: You have insufficient permission to use this option."
-msgstr ""
+msgstr "Consume: You have insufficient permission to use this option."
 
 #: ../src/mpdinteraction.c:268
 msgid ""
 "Stop after current song: The used MPD server is to old and does not support "
 "this."
 msgstr ""
+"Stop after current song: The specified MPD server is to old and does not "
+"support this."
 
 #: ../src/mpdinteraction.c:270
 msgid "Stop after current song: You have insufficient permission."
-msgstr ""
+msgstr "Stop after current song: You have insufficient permission."
 
 #: ../src/mpdinteraction.c:272
 msgid "Playback will be stopped after the current playing song."
-msgstr ""
+msgstr "Playback will be stopped after the current playing song."
 
 #: ../src/mpdinteraction.c:282
 msgid ""
 "Repeat current song: The used MPD server is to old and does not support this."
 msgstr ""
+"Repeat current song: The specified MPD server is to old and does not support "
+"this."
 
 #: ../src/mpdinteraction.c:284
 msgid "Repeat current song: You have insufficient permission."
-msgstr ""
+msgstr "Repeat current song: You have insufficient permission."
 
 #: ../src/mpdinteraction.c:286
 msgid "The current song will be forever repeated."
-msgstr ""
+msgstr "The current song will be forever repeated."
 
 #: ../src/mpdinteraction.c:296
 msgid ""
 "Update database: The used MPD server is to old and does not support this."
 msgstr ""
+"Update database: The specified MPD server is to old and does not support "
+"this."
 
 #: ../src/mpdinteraction.c:298
 msgid "Update database: You have insufficient permission."
-msgstr ""
+msgstr "Update database: You have insufficient permission."
 
 #. Player control
 #. basic playlist commands
 #: ../src/mpdinteraction.c:307 ../src/mpdinteraction.c:328
 msgid "play"
-msgstr ""
+msgstr "play"
 
 #: ../src/mpdinteraction.c:307
 msgid "start playback"
-msgstr ""
+msgstr "start playback"
 
 #: ../src/mpdinteraction.c:308
 msgid "pause"
-msgstr ""
+msgstr "pause"
 
 #: ../src/mpdinteraction.c:308
 msgid "pause playback"
-msgstr ""
+msgstr "pause playback"
 
 #: ../src/mpdinteraction.c:309
 msgid "next"
-msgstr ""
+msgstr "next"
 
 #: ../src/mpdinteraction.c:309
 msgid "next song"
-msgstr ""
+msgstr "next song"
 
 #: ../src/mpdinteraction.c:310
 msgid "prev"
-msgstr ""
+msgstr "prev"
 
 #: ../src/mpdinteraction.c:310
 msgid "previous song"
@@ -550,323 +580,325 @@ msgstr ""
 
 #: ../src/mpdinteraction.c:311
 msgid "stop"
-msgstr ""
+msgstr "stop"
 
 #: ../src/mpdinteraction.c:311
 msgid "stop playback"
-msgstr ""
+msgstr "stop playback"
 
 #: ../src/mpdinteraction.c:313
 msgid "random"
-msgstr ""
+msgstr "random"
 
 #: ../src/mpdinteraction.c:313
 msgid "Random (on|off)"
-msgstr ""
+msgstr "Random (on|off)"
 
 #: ../src/mpdinteraction.c:314
 msgid "repeat"
-msgstr ""
+msgstr "repeat"
 
 #: ../src/mpdinteraction.c:314
 msgid "Repeat (on|off)"
-msgstr ""
+msgstr "Repeat (on|off)"
 
 #: ../src/mpdinteraction.c:316
 msgid "single"
-msgstr ""
+msgstr "single"
 
 #: ../src/mpdinteraction.c:316
 msgid "Single (on|off)"
-msgstr ""
+msgstr "Single (on|off)"
 
 #: ../src/mpdinteraction.c:317
 msgid "consume"
-msgstr ""
+msgstr "consume"
 
 #: ../src/mpdinteraction.c:317
 msgid "Consume (on|off)"
-msgstr ""
+msgstr "Consume (on|off)"
 
 #. volume commands
 #: ../src/mpdinteraction.c:320
 msgid "volume"
-msgstr ""
+msgstr "volume"
 
 #: ../src/mpdinteraction.c:320
 msgid "Volume (+-)<level>"
-msgstr ""
+msgstr "Volume (+-)<level>"
 
 #: ../src/mpdinteraction.c:321
 msgid "mute"
-msgstr ""
+msgstr "mute"
 
 #: ../src/mpdinteraction.c:323
 msgid "crossfade"
-msgstr ""
+msgstr "crossfade"
 
 #: ../src/mpdinteraction.c:323
 msgctxt "Regex for matching crossfade, translate off"
 msgid "([0-9]+|Off)"
-msgstr ""
+msgstr "([0-9]+|Off)"
 
 #: ../src/mpdinteraction.c:323
 msgid "Set Crossfade <seconds>"
-msgstr ""
+msgstr "Set Crossfade <seconds>"
 
 #: ../src/mpdinteraction.c:325
 msgid "output"
-msgstr ""
+msgstr "output"
 
 #: ../src/mpdinteraction.c:325
 msgctxt "Regex for matching output"
 msgid "[0-9]+ (Enable|Disable)"
-msgstr ""
+msgstr "[0-9]+ (Enable|Disable)"
 
 #: ../src/mpdinteraction.c:326
 msgid "output X enable or disable"
-msgstr ""
+msgstr "output X enable or disable"
 
 #: ../src/mpdinteraction.c:328
 msgid "Play <query>"
-msgstr ""
+msgstr "Play <query>"
 
 #: ../src/mpdinteraction.c:329
 msgid "add"
-msgstr ""
+msgstr "add"
 
 #: ../src/mpdinteraction.c:329
 msgid "Add <query>"
-msgstr ""
+msgstr "Add <query>"
 
 #: ../src/mpdinteraction.c:330
 msgid "replace"
-msgstr ""
+msgstr "replace"
 
 #: ../src/mpdinteraction.c:330
 msgid "Replace <query>"
-msgstr ""
+msgstr "Replace <query>"
 
 #. Basic seek commands
 #: ../src/mpdinteraction.c:333
 msgid "seek"
-msgstr ""
+msgstr "seek"
 
 #: ../src/mpdinteraction.c:333
 msgid "Seek within the current song"
-msgstr ""
+msgstr "Seek within the current song"
 
 #: ../src/mpdinteraction.c:336
 msgid "stop after current song"
-msgstr ""
+msgstr "stop after current song"
 
 #: ../src/mpdinteraction.c:338
 msgid "Stop playback after the current song"
-msgstr ""
+msgstr "Stop playback after the current song"
 
 #: ../src/mpdinteraction.c:342
 msgid "repeat current song"
-msgstr ""
+msgstr "repeat current song"
 
 #: ../src/mpdinteraction.c:344
 msgid "Repeat the current song"
-msgstr ""
+msgstr "Repeat the current song"
 
 #: ../src/mpdinteraction.c:348
 msgid "update database"
-msgstr ""
+msgstr "update database"
 
 #: ../src/mpdinteraction.c:350
 msgid "Update the database"
-msgstr ""
+msgstr "Update the database"
 
 #: ../src/mpdinteraction.c:355
 msgid "Server Settings"
-msgstr ""
+msgstr "Server Settings"
 
 #: ../src/mpdinteraction.c:385
 msgid "Connection"
-msgstr ""
+msgstr "Connection"
 
 #: ../src/mpdinteraction.c:478
 msgid "Connecting"
-msgstr ""
+msgstr "Connecting"
 
 #. Add all from album
 #: ../src/mpdinteraction.c:1485
 msgid "All from album"
-msgstr ""
+msgstr "All from album"
 
 #. Add all from artist
 #: ../src/mpdinteraction.c:1497
 msgid "All from artist"
-msgstr ""
+msgstr "All from artist"
 
 #. Add all from genre
 #: ../src/mpdinteraction.c:1507
 msgid "All from genre"
-msgstr ""
+msgstr "All from genre"
 
 #. Add all from file
 #: ../src/mpdinteraction.c:1515
 msgid "All from same directory"
-msgstr ""
+msgstr "All from same directory"
 
 #. Create sub menu
 #. Add
 #: ../src/mpdinteraction.c:1523
 msgid "Add more"
-msgstr ""
+msgstr "Add more"
 
 #: ../src/mpdinteraction.c:1533
 msgid "Set Rating"
-msgstr ""
+msgstr "Set Rating"
 
 #: ../src/playlist3.c:632
 msgid "MPD database is updating"
-msgstr ""
+msgstr "MPD database is updating"
 
 #: ../src/playlist3.c:642
 msgid "MPD is updating its database"
-msgstr ""
+msgstr "MPD is updating its database"
 
 #: ../src/playlist3.c:644
 msgid "MPD finished updating its database"
-msgstr ""
+msgstr "MPD finished updating its database"
 
 #: ../src/playlist3.c:793
 msgid "Connected"
-msgstr ""
+msgstr "Connected"
 
 #: ../src/playlist3.c:802 ../src/playlist3.c:2274
 msgid "Not Connected"
-msgstr ""
+msgstr "Not Connected"
 
 #: ../src/playlist3.c:815 ../src/playlist3.c:820 ../src/playlist3.c:1676
 msgid "GMPC"
-msgstr ""
+msgstr "GMPC"
 
 #: ../src/playlist3.c:815
 msgid "Connected to"
-msgstr ""
+msgstr "Connected to"
 
 #: ../src/playlist3.c:820
 msgid "Disconnected"
-msgstr ""
+msgstr "Disconnected"
 
 #: ../src/playlist3.c:887
 msgid ""
 "Failed to open the interface description file!\n"
 "Please reinstall gmpc\n"
 msgstr ""
+"Failed to open the interface description file!\n"
+"Please reinstall gmpc\n"
 
 #: ../src/playlist3.c:1709
 #, c-format
 msgid "Repeat: %s"
-msgstr ""
+msgstr "Repeat: %s"
 
 #: ../src/playlist3.c:1710 ../src/playlist3.c:1723 ../src/playlist3.c:1738
 #: ../src/playlist3.c:1751
 msgid "On"
-msgstr ""
+msgstr "On"
 
 #: ../src/playlist3.c:1722
 #, c-format
 msgid "Random: %s"
-msgstr ""
+msgstr "Random: %s"
 
 #: ../src/playlist3.c:1737
 #, c-format
 msgid "Single mode: %s"
-msgstr ""
+msgstr "Single mode: %s"
 
 #: ../src/playlist3.c:1750
 #, c-format
 msgid "Consume: %s"
-msgstr ""
+msgstr "Consume: %s"
 
 #: ../src/playlist3.c:1815
 #, c-format
 msgid "MPD Database refreshed at: %c"
-msgstr ""
+msgstr "MPD Database refreshed at: %c"
 
 #: ../src/playlist3.c:1823
 msgid "MPD Reported the following error"
-msgstr ""
+msgstr "MPD Reported the following error"
 
 #: ../src/playlist3.c:1956 ../src/playlist3.c:1962
 msgid "Profile"
-msgstr ""
+msgstr "Profile"
 
 #: ../src/playlist3.c:1957
 msgid "added"
-msgstr ""
+msgstr "added"
 
 #: ../src/playlist3.c:1964
 msgid "changed hostname to:"
-msgstr ""
+msgstr "changed hostname to:"
 
 #. Update DB
 #: ../src/playlist3.c:2072
 msgid "Update Database"
-msgstr ""
+msgstr "Update Database"
 
 #. Server Information
 #: ../src/playlist3.c:2081 ../src/vala/gmpc-test-plugin.c:1016
 msgid "Information"
-msgstr ""
+msgstr "Information"
 
 #: ../src/playlist3.c:2190
 msgid "By"
-msgstr ""
+msgstr "By"
 
 #: ../src/playlist3.c:2196
 msgid "From"
-msgstr ""
+msgstr "From"
 
 #: ../src/playlist3.c:2267
 msgid "Not Playing"
-msgstr ""
+msgstr "Not Playing"
 
 #: ../src/playlist3.c:2381
 msgid "Interface"
-msgstr ""
+msgstr "Interface"
 
 #: ../src/playlist3.c:2658
 msgid "Repeat enabled"
-msgstr ""
+msgstr "Repeat enabled"
 
 #: ../src/playlist3.c:2664
 msgid "Repeat disabled"
-msgstr ""
+msgstr "Repeat disabled"
 
 #: ../src/playlist3.c:2684
 msgid "Random enabled"
-msgstr ""
+msgstr "Random enabled"
 
 #: ../src/playlist3.c:2690
 msgid "Random disabled"
-msgstr ""
+msgstr "Random disabled"
 
 #: ../src/playlist3-messages.c:26
 msgid "Info"
-msgstr ""
+msgstr "Info"
 
 #: ../src/playlist3-messages.c:27
 msgid "Warning"
-msgstr ""
+msgstr "Warning"
 
 #: ../src/playlist3-messages.c:28
 msgid "Critical"
-msgstr ""
+msgstr "Critical"
 
 #: ../src/playlist3-messages.c:251
 msgid "Time"
-msgstr ""
+msgstr "Time"
 
 #: ../src/playlist3-messages.c:253
 msgid "Message"
-msgstr ""
+msgstr "Message"
 
 #: ../src/plugin.c:60 ../src/plugin.c:68 ../src/plugin.c:75 ../src/plugin.c:83
 #: ../src/plugin.c:89 ../src/plugin.c:97 ../src/plugin.c:103
@@ -874,108 +906,109 @@ msgstr ""
 #: ../src/plugin.c:131 ../src/plugin.c:142 ../src/plugin.c:153
 #: ../src/plugin.c:221
 msgid "Failed to load plugin"
-msgstr ""
+msgstr "Failed to load plugin"
 
 #: ../src/plugin.c:60
 msgid "plugin has no name"
-msgstr ""
+msgstr "plugin has no name"
 
 #: ../src/plugin.c:68
 msgid "plugin with same name already exists"
-msgstr ""
+msgstr "plugin with same name already exists"
 
 #: ../src/plugin.c:75
 msgid "plugin is missing set/get enable function"
-msgstr ""
+msgstr "plugin is missing set/get enable function"
 
 #: ../src/plugin.c:83 ../src/plugin.c:89 ../src/plugin.c:142
 msgid "plugin browser structure is incorrect"
-msgstr ""
+msgstr "plugin browser structure is incorrect"
 
 #: ../src/plugin.c:97 ../src/plugin.c:103 ../src/plugin.c:110
 #: ../src/plugin.c:131
 msgid "plugin metadata structure is incorrect"
-msgstr ""
+msgstr "plugin metadata structure is incorrect"
 
 #: ../src/plugin.c:117
 msgid "plugin get_image api is deprecated "
-msgstr ""
+msgstr "plugin get_image api is deprecated "
 
 #: ../src/plugin.c:124
 msgid "plugin get_uris api is deprecated "
-msgstr ""
+msgstr "plugin get_uris api is deprecated "
 
 #: ../src/plugin.c:153
 msgid "plugin preferences structure is incorrect"
-msgstr ""
+msgstr "plugin preferences structure is incorrect"
 
 #: ../src/plugin.c:232
 msgid "Failed to create plugin instance"
-msgstr ""
+msgstr "Failed to create plugin instance"
 
 #: ../src/plugin.c:244
 msgid "Failed to bind symbol in plugin"
-msgstr ""
+msgstr "Failed to bind symbol in plugin"
 
 #: ../src/plugin.c:256
 #, c-format
 msgid "Plugin %s has wrong api version: %i"
-msgstr ""
+msgstr "Plugin %s has wrong api version: %i"
 
 #: ../src/plugin.c:266 ../src/plugin.c:273
 #, c-format
 msgid "Plugin %s has wrong no plugin structure: %s"
-msgstr ""
+msgstr "Plugin %s has wrong no plugin structure: %s"
 
 #: ../src/plugin.c:292
 msgid ""
 "One or more plugins failed to load, see help->messages for more information"
 msgstr ""
+"One or more plugins failed to load, see help->messages for more information"
 
 #: ../src/preferences.c:98 ../src/preferences.c:205
 msgid "Plugins"
-msgstr ""
+msgstr "Plugins"
 
 #: ../src/preferences.c:160
 msgid "Plugins:"
-msgstr ""
+msgstr "Plugins:"
 
 #: ../src/preferences.c:331
 msgid "Enabled"
-msgstr ""
+msgstr "Enabled"
 
 #: ../src/preferences.c:334 ../src/gob/gmpc-mpddata-treeview.gob:76
 msgid "Name"
-msgstr ""
+msgstr "Name"
 
 #: ../src/preferences.c:336
 msgid "Function"
-msgstr ""
+msgstr "Function"
 
 #. * Mpd version
 #: ../src/preferences.c:338 ../src/browsers/server-information.c:333
 msgid "Version"
-msgstr ""
+msgstr "Version"
 
 #: ../src/preferences.c:367
 msgid "Dummy"
-msgstr ""
+msgstr "Dummy"
 
 #: ../src/preferences.c:370
 msgid "Browser Extension"
-msgstr ""
+msgstr "Browser Extension"
 
 #: ../src/preferences.c:373
 msgid "Metadata Provider"
-msgstr ""
+msgstr "Metadata Provider"
 
 #: ../src/preferences.c:376
 msgid "Metadata Provider and Browser Extension"
-msgstr ""
+msgstr "Metadata Provider and Browser Extension"
 
 #: ../src/preferences.c:379
 msgid "Misc."
-msgstr ""
+msgstr "Misc."
 
 #: ../src/preferences.c:384 ../src/vala/gmpc-metadata-browser2.c:3551
 #: ../src/vala/gmpc-metadata-browser2.c:4088
@@ -983,47 +1016,47 @@ msgstr ""
 #: ../src/vala/gmpc-metadata-browser2.c:4286
 #: ../src/vala/gmpc-metadata-browser2.c:4745
 msgid "Unknown"
-msgstr ""
+msgstr "Unknown"
 
 #: ../src/url-fetcher.c:64 ../src/url-fetcher.c:89 ../src/url-fetcher.c:147
 #: ../src/url-fetcher.c:224
 #, c-format
 msgid "Added %i %s"
-msgstr ""
+msgstr "Added %i %s"
 
 #: ../src/url-fetcher.c:64 ../src/url-fetcher.c:89 ../src/url-fetcher.c:147
 #: ../src/url-fetcher.c:224
 msgid "stream"
 msgid_plural "streams"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "stream"
+msgstr[1] "streams"
 
 #: ../src/url-fetcher.c:291 ../src/url-fetcher.c:323
 msgid "Added 1 stream"
-msgstr ""
+msgstr "Added 1 stream"
 
 #: ../src/url-fetcher.c:404
 msgid "Failed to open local file"
-msgstr ""
+msgstr "Failed to open local file"
 
 #: ../src/url-fetcher.c:419
 msgid "Uri scheme not supported"
-msgstr ""
+msgstr "Uri scheme not supported"
 
 #. *
 #. * Setup the label
 #. 
 #: ../src/url-fetcher.c:461
 msgid "Enter an url"
-msgstr ""
+msgstr "Enter an url"
 
 #: ../src/tray-icon2.c:142
 msgid "Pla_ylist"
-msgstr ""
+msgstr "Pla_ylist"
 
 #: ../src/tray-icon2.c:887
 msgid "Notification"
-msgstr ""
+msgstr "Notification"
 
 #. *
 #. * Append an introduction page
@@ -1036,11 +1069,11 @@ msgstr ""
 
 #: ../src/setup-assistant.c:113
 msgid "Welcome to GMPC"
-msgstr ""
+msgstr "Welcome to GMPC"
 
 #: ../src/setup-assistant.c:132
 msgid "Setup connection"
-msgstr ""
+msgstr "Setup connection"
 
 #. *
 #. * End
@@ -1126,8 +1159,7 @@ msgstr ""
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
-"  Junaid https://launchpad.net/~junaidpv\n"
-"  Qball Cow https://launchpad.net/~qball-qballcow"
+"  Travis Friesen https://launchpad.net/~travis-friesen"
 
 #: ../glade/password-dialog.ui.h:1
 msgid "Enter your password for: '<hostname>'"
@@ -2131,6 +2163,3 @@ msgstr ""
 #: ../src/vala/gmpc-metadata-browser2.c:5244
 msgid "Web links"
 msgstr ""
-
-#~ msgid "_Server"
-#~ msgstr "_സെര്‍വര്‍"

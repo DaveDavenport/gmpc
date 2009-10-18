@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-08-09 09:52+0000\n"
+"X-Launchpad-Export-Date: 2009-10-18 08:48+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -27,6 +27,19 @@ msgstr "מנשק GNOME עבור סוכן ה־mpd"
 #: ../src/vala/gmpc-metadata-browser2.c:1920
 msgid "Gnome Music Player Client"
 msgstr "לקוח נגן המוסיקה של GNOME"
+
+#. Basic dialog with a close button
+#: ../glade/playlist3.glade.h:1 ../src/bug-information.c:239
+msgid "Bug information"
+msgstr ""
+
+#: ../glade/playlist3.glade.h:2
+msgid "Consume"
+msgstr ""
+
+#: ../glade/playlist3.glade.h:3
+msgid "Easy Command Help"
+msgstr ""
 
 #: ../glade/playlist3.glade.h:4
 msgid "Getting help"
@@ -68,9 +81,17 @@ msgstr "אקראי"
 msgid "Repeat"
 msgstr "חזרה"
 
+#: ../glade/playlist3.glade.h:13
+msgid "Se_rver"
+msgstr ""
+
 #: ../glade/playlist3.glade.h:14
 msgid "Show Messages"
 msgstr "הצגת הודעות"
+
+#: ../glade/playlist3.glade.h:15
+msgid "Single mode"
+msgstr ""
 
 #. * MM_PREV
 #: ../glade/playlist3.glade.h:16 ../src/mm-keys.c:76
@@ -109,6 +130,10 @@ msgstr "_מסך מלא"
 msgid "_Go"
 msgstr "_עבור"
 
+#: ../glade/playlist3.glade.h:25
+msgid "_Help"
+msgstr ""
+
 #: ../glade/playlist3.glade.h:26
 msgid "_Music"
 msgstr "_מוסיקה"
@@ -125,6 +150,10 @@ msgstr "_שלח סיסמה"
 msgid "_Show Artist Image"
 msgstr "הצג את _תמונת האמן"
 
+#: ../glade/playlist3.glade.h:30
+msgid "_Tools"
+msgstr ""
+
 #: ../glade/playlist3.glade.h:31
 msgid "_View"
 msgstr "_תצוגה"
@@ -136,953 +165,6 @@ msgstr "gmpc - מנהל רשימות ההשמעה"
 #: ../src/gmpc_easy_download.c:274
 msgid "Proxy"
 msgstr "מתווך"
-
-#: ../src/main.c:499
-msgid "Failed to load the configuration system."
-msgstr "כשל בטעינת מערכת התצורה."
-
-#: ../src/main.c:518
-msgid "Failed to load debug-log file."
-msgstr "כשל בטעינת קובץ רישום ניפוי השגיאות."
-
-#: ../src/main.c:646
-msgid "Failed to setup libmpd"
-msgstr "כשל בהגדרת libmpd"
-
-#: ../src/main.c:1066
-msgid "GMPC has insufficient permissions on the mpd server."
-msgstr "ל־GMPC אין די הרשאות בשרת ה־mpd."
-
-#: ../src/main.c:1092
-#, c-format
-msgid ""
-"Failed to set password on: '%s'\n"
-"Please try again"
-msgstr ""
-"כשל בהגדרת הסיסמה עבור: '%s'\n"
-"אנא נסה שוב"
-
-#: ../src/main.c:1094
-#, c-format
-msgid "Please enter your password for: '%s'"
-msgstr "אנא הזן את סיסמתך עבור: '%s'"
-
-#: ../src/main.c:1123 ../src/main.c:1144
-msgid "error code"
-msgstr "קוד שגיאה"
-
-#: ../src/main.c:1133
-msgid "Insufficient permission to connect to mpd. Check password"
-msgstr "ההרשאות להתחברות אל ה־mpd אינן מספקות. בדוק את הסיסמה"
-
-#: ../src/main.c:1313
-msgid "Error Message"
-msgstr "הודעת שגיאה"
-
-#: ../src/metadata.c:293
-msgid ""
-"A new metadata plugin was added, gmpc has purged all failed hits from the "
-"cache"
-msgstr "נוסף תוסף נתוני מטא חדש, gmpc הסירה את כל הפניות שנכשלו מהמטמון"
-
-#: ../src/metadata.c:1390
-msgid "Metadata Handler"
-msgstr "מטפל בנתוני מטא"
-
-#: ../src/misc.c:56
-msgid "day"
-msgid_plural "days"
-msgstr[0] "יום"
-msgstr[1] "ימים"
-
-#: ../src/misc.c:59
-msgid "hour"
-msgid_plural "hours"
-msgstr[0] "שעה"
-msgstr[1] "שעות"
-
-#: ../src/misc.c:62
-msgid "minute"
-msgid_plural "minutes"
-msgstr[0] "דקה"
-msgstr[1] "דקות"
-
-#: ../src/misc.c:295
-msgid "Failed to execute"
-msgstr "כשל בהפעלה"
-
-#: ../src/mm-keys.c:73
-msgid "PlayPause"
-msgstr "נגן/השהה"
-
-#. * MM_STOP
-#: ../src/mm-keys.c:77
-msgid "Fast Forward"
-msgstr "הרץ קדימה"
-
-#. * MM_FASTFORWARD
-#: ../src/mm-keys.c:78
-msgid "Fast Backward"
-msgstr "הרץ אחורה"
-
-#. * MM_RANDOM
-#: ../src/mm-keys.c:81
-msgid "Raise window"
-msgstr "העלה חלון"
-
-#. * MM_RAISE
-#: ../src/mm-keys.c:82
-msgid "Hide window"
-msgstr "הסתר חלון"
-
-#. * MM_HIDE
-#: ../src/mm-keys.c:83
-msgid "Toggle window"
-msgstr "החלף חלון"
-
-#. * MM_TOGGLE_HIDDEN
-#: ../src/mm-keys.c:84
-msgid "Volume Up"
-msgstr "הגבר עוצמה"
-
-#. * MM_VOLUME_UP
-#: ../src/mm-keys.c:85
-msgid "Volume Down"
-msgstr "הנמך עוצמה"
-
-#. * MM_VOLUME_DOWN
-#: ../src/mm-keys.c:86
-msgid "Show song"
-msgstr "הצג שיר"
-
-#. * MM_SHOW_NOTIFICATION
-#: ../src/mm-keys.c:87
-msgid "Toggle Mute"
-msgstr "החלפת השתקה"
-
-#: ../src/mm-keys.c:367
-msgid ""
-"Could not grab the following multimedia keys:\n"
-"\n"
-msgstr ""
-"לא ניתן ללכוד את מקשי המולטימדיה הבאים:\n"
-"\n"
-
-#: ../src/mm-keys.c:382
-msgid ""
-"\n"
-"Ensure that your window manager (or other applications) have not already "
-"bound this key for some other function, then restart gmpc."
-msgstr ""
-"\n"
-"וודא כי מנהל החלונות שלך (או יישומים אחרים) לא איגדו את המקש הזה לטובת "
-"פונקציות אחרות, ואז הפעל את gmpc מחדש."
-
-#: ../src/mm-keys.c:391
-msgid ""
-"Duplicate mapping(s) detected\n"
-"\n"
-"Some duplicate multimedia key mappings were detected, and disabled.  Please "
-"revisit the preferences and ensure your settings are now correct."
-msgstr ""
-"זוהה מיפוי כפול\n"
-"\n"
-"זוהו כמה מקשי מולטימדיה כפולים, והם בוטלו. אנא בקשר שוב בהעדפות כדי לוודא "
-"שהגדרותיך נכונות כעת."
-
-#: ../src/mm-keys.c:570
-msgid "Multimedia Keys"
-msgstr "מקשי מולטימדיה"
-
-#: ../src/mm-keys.c:661
-#, c-format
-msgid ""
-"Could not grab multimedia key:\n"
-"\n"
-"\t%s: %s\n"
-"\n"
-"Ensure that your window manager (or other applications) have not already "
-"bound this key for some other function, then restart gmpc."
-msgstr ""
-"לא ניתן ללכוד את מקש המולטימדיה:\n"
-"\n"
-"\t%s: %s\n"
-"\n"
-"וודא כי מנהל החלונות שלך (או יישומים אחרים) לא איגדו את המקש הזה לטובת "
-"פונקציות אחרות, ואז הפעל את gmpc מחדש."
-
-#: ../src/mm-keys.c:716
-msgid "Action"
-msgstr "פעולה"
-
-#: ../src/mm-keys.c:738
-msgid "Shortcut"
-msgstr "קיצור־דרך"
-
-#: ../src/mpdinteraction.c:107 ../src/playlist3.c:1710 ../src/playlist3.c:1723
-#: ../src/playlist3.c:1738 ../src/playlist3.c:1751
-msgid "Off"
-msgstr "מופסק"
-
-#: ../src/mpdinteraction.c:355
-msgid "Server Settings"
-msgstr "הגדרות השרת"
-
-#: ../src/mpdinteraction.c:385
-msgid "Connection"
-msgstr "חיבור"
-
-#: ../src/mpdinteraction.c:478
-msgid "Connecting"
-msgstr "מתחבר"
-
-#. Add all from album
-#: ../src/mpdinteraction.c:1485
-msgid "All from album"
-msgstr "הכול מהאלבום"
-
-#. Add all from artist
-#: ../src/mpdinteraction.c:1497
-msgid "All from artist"
-msgstr "הכול מהזמר"
-
-#. Add all from genre
-#: ../src/mpdinteraction.c:1507
-msgid "All from genre"
-msgstr "הכול מהסגנון"
-
-#. Add all from file
-#: ../src/mpdinteraction.c:1515
-msgid "All from same directory"
-msgstr "הכול מאותה התיקייה"
-
-#. Create sub menu
-#. Add
-#: ../src/mpdinteraction.c:1523
-msgid "Add more"
-msgstr "הוסף עוד"
-
-#: ../src/playlist3.c:632
-msgid "MPD database is updating"
-msgstr "מסד הנתונים של MPD מתעדכן"
-
-#: ../src/playlist3.c:793
-msgid "Connected"
-msgstr "מחובר"
-
-#: ../src/playlist3.c:802 ../src/playlist3.c:2274
-msgid "Not Connected"
-msgstr "לא מחובר"
-
-#: ../src/playlist3.c:815 ../src/playlist3.c:820 ../src/playlist3.c:1676
-msgid "GMPC"
-msgstr "GMPC"
-
-#: ../src/playlist3.c:815
-msgid "Connected to"
-msgstr "מחובר אל"
-
-#: ../src/playlist3.c:820
-msgid "Disconnected"
-msgstr "מנותק"
-
-#: ../src/playlist3.c:1709
-#, c-format
-msgid "Repeat: %s"
-msgstr "חזרה: %s"
-
-#: ../src/playlist3.c:1710 ../src/playlist3.c:1723 ../src/playlist3.c:1738
-#: ../src/playlist3.c:1751
-msgid "On"
-msgstr "פעיל"
-
-#: ../src/playlist3.c:1722
-#, c-format
-msgid "Random: %s"
-msgstr "אקראי: %s"
-
-#: ../src/playlist3.c:1823
-msgid "MPD Reported the following error"
-msgstr "MPD דיווח על השגיאה הבאה"
-
-#: ../src/playlist3.c:1956 ../src/playlist3.c:1962
-msgid "Profile"
-msgstr "פרופיל"
-
-#: ../src/playlist3.c:1957
-msgid "added"
-msgstr "נוסף"
-
-#: ../src/playlist3.c:1964
-msgid "changed hostname to:"
-msgstr "שם המארח שונה ל־:"
-
-#. Update DB
-#: ../src/playlist3.c:2072
-msgid "Update Database"
-msgstr "עדכון מסד הנתונים"
-
-#: ../src/playlist3.c:2190
-msgid "By"
-msgstr "על ידי"
-
-#: ../src/playlist3.c:2196
-msgid "From"
-msgstr "מ"
-
-#: ../src/playlist3.c:2267
-msgid "Not Playing"
-msgstr "לא מנגן"
-
-#: ../src/playlist3.c:2381
-msgid "Interface"
-msgstr "מנשק"
-
-#: ../src/playlist3-messages.c:26
-msgid "Info"
-msgstr "מידע"
-
-#: ../src/playlist3-messages.c:27
-msgid "Warning"
-msgstr "אזהרה"
-
-#: ../src/playlist3-messages.c:28
-msgid "Critical"
-msgstr "קריטי"
-
-#: ../src/playlist3-messages.c:251
-msgid "Time"
-msgstr "זמן"
-
-#: ../src/playlist3-messages.c:253
-msgid "Message"
-msgstr "הודעה"
-
-#: ../src/plugin.c:292
-msgid ""
-"One or more plugins failed to load, see help->messages for more information"
-msgstr "נכשלה הפעלת אחד או יותר התוספים שלך, עיין ב\"עזרה->הודעות למידע נוסף"
-
-#: ../src/preferences.c:160
-msgid "Plugins:"
-msgstr "תוספים:"
-
-#: ../src/preferences.c:331
-msgid "Enabled"
-msgstr "מופעל"
-
-#: ../src/preferences.c:334 ../src/gob/gmpc-mpddata-treeview.gob:76
-msgid "Name"
-msgstr "שם"
-
-#: ../src/preferences.c:336
-msgid "Function"
-msgstr "פונקציה"
-
-#. * Mpd version
-#: ../src/preferences.c:338 ../src/browsers/server-information.c:333
-msgid "Version"
-msgstr "גירסה"
-
-#: ../src/preferences.c:367
-msgid "Dummy"
-msgstr "דמה"
-
-#: ../src/preferences.c:370
-msgid "Browser Extension"
-msgstr "הרחבת דפדפן"
-
-#: ../src/preferences.c:373
-msgid "Metadata Provider"
-msgstr "ספק נתוני מטא"
-
-#: ../src/preferences.c:376
-msgid "Metadata Provider and Browser Extension"
-msgstr "ספק נתוני מטא והרחבת דפדפן"
-
-#: ../src/preferences.c:379
-msgid "Misc."
-msgstr "שונות"
-
-#: ../src/preferences.c:384 ../src/vala/gmpc-metadata-browser2.c:3551
-#: ../src/vala/gmpc-metadata-browser2.c:4088
-#: ../src/vala/gmpc-metadata-browser2.c:4094
-#: ../src/vala/gmpc-metadata-browser2.c:4286
-#: ../src/vala/gmpc-metadata-browser2.c:4745
-msgid "Unknown"
-msgstr "לא ידוע"
-
-#: ../src/url-fetcher.c:64 ../src/url-fetcher.c:89 ../src/url-fetcher.c:147
-#: ../src/url-fetcher.c:224
-#, c-format
-msgid "Added %i %s"
-msgstr "נוסף %i %s"
-
-#: ../src/url-fetcher.c:64 ../src/url-fetcher.c:89 ../src/url-fetcher.c:147
-#: ../src/url-fetcher.c:224
-msgid "stream"
-msgid_plural "streams"
-msgstr[0] "תזרים"
-msgstr[1] "תזרימים"
-
-#: ../src/url-fetcher.c:291 ../src/url-fetcher.c:323
-msgid "Added 1 stream"
-msgstr "נוסף תזרים 1"
-
-#. *
-#. * Setup the label
-#. 
-#: ../src/url-fetcher.c:461
-msgid "Enter an url"
-msgstr "הזן כתובת"
-
-#: ../src/tray-icon2.c:142
-msgid "Pla_ylist"
-msgstr "ר_שימת השמעה"
-
-#: ../src/tray-icon2.c:887
-msgid "Notification"
-msgstr "דיווחים"
-
-#. *
-#. * Append an introduction page
-#. 
-#: ../src/setup-assistant.c:111
-msgid ""
-"It is the first time you have launched gmpc.\n"
-"This assistant will help you connect gmpc to your mpd daemon."
-msgstr ""
-"זוהי הפעם הראשונה בה הפעלת את gmpc.\n"
-"תוכנית עזר זו תסייע לך לחבר את ה־gmpc שלך לסוכן ה־mpd."
-
-#: ../src/setup-assistant.c:113
-msgid "Welcome to GMPC"
-msgstr "ברוך הבא ל־GMPC"
-
-#: ../src/setup-assistant.c:132
-msgid "Setup connection"
-msgstr "הגדרת חיבור"
-
-#. *
-#. * End
-#. 
-#: ../src/setup-assistant.c:141
-msgid ""
-"Gmpc is now ready for use.\n"
-"Enjoy using gmpc."
-msgstr ""
-"Gmpc מוכן לשימוש כעת.\n"
-"תהנה מהשימוש ב־gmpc."
-
-#: ../src/setup-assistant.c:143
-msgid "Finish"
-msgstr "סיים"
-
-#: ../glade/aboutdialog.ui.h:1
-msgid "Copyright 2003-2007 Qball Cow"
-msgstr "כל הזכויות שמורות 2003-2007 Qball Cow"
-
-#: ../glade/aboutdialog.ui.h:2
-msgid "translator-credits"
-msgstr ""
-"Launchpad Contributions:\n"
-"  Yaron https://launchpad.net/~sh-yaron\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Yaron https://launchpad.net/~sh-yaron\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Yaron https://launchpad.net/~sh-yaron\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Yaron https://launchpad.net/~sh-yaron\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Yaron https://launchpad.net/~sh-yaron\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Yaron https://launchpad.net/~sh-yaron\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Yaron https://launchpad.net/~sh-yaron\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Yaron https://launchpad.net/~sh-yaron\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Yaron https://launchpad.net/~sh-yaron\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Yaron https://launchpad.net/~sh-yaron"
-
-#: ../glade/password-dialog.ui.h:1
-msgid "Enter your password for: '<hostname>'"
-msgstr "הזן את סיסמתך עבור: '<hostname>'"
-
-#: ../glade/password-dialog.ui.h:2
-msgid "Password"
-msgstr "סיסמה"
-
-#: ../glade/password-dialog.ui.h:3
-msgid "_Save password"
-msgstr "_שמור סיסמה"
-
-#: ../glade/preferences-connection.ui.h:1
-msgid "<b>Profile:</b>"
-msgstr "<b>פרופיל:</b>"
-
-#: ../glade/preferences-connection.ui.h:2
-msgid "Conn_ect"
-msgstr "ה_תחבר"
-
-#: ../glade/preferences-connection.ui.h:3
-msgid "Host:"
-msgstr "מארח:"
-
-#: ../glade/preferences-connection.ui.h:5
-#: ../src/browsers/playlist3-playlist-editor.c:456
-#: ../src/browsers/playlist3-playlist-editor.c:497
-msgid "Name:"
-msgstr "שם:"
-
-#: ../glade/preferences-connection.ui.h:6 ../glade/preferences-proxy.ui.h:3
-msgid "Password:"
-msgstr "סיסמה:"
-
-#: ../glade/preferences-connection.ui.h:7 ../glade/preferences-proxy.ui.h:4
-msgid "Port:"
-msgstr "פתחה:"
-
-#: ../glade/preferences-connection.ui.h:8
-msgid "Timeout (s):"
-msgstr "תפוגה (ש'):"
-
-#: ../glade/preferences-connection.ui.h:9
-msgid "_Autoconnect"
-msgstr "ה_תחברות אוטומטית"
-
-#: ../glade/preferences-connection.ui.h:11
-msgid "_Use Authentication"
-msgstr "השתמש ב_אימות"
-
-#: ../glade/preferences-connection.ui.h:12
-msgid "localhost"
-msgstr "localhost"
-
-#: ../glade/preferences-esf-dialog.ui.h:1
-msgid "<b>Enable Field:</b>"
-msgstr "<b>אפשר שדה:</b>"
-
-#: ../glade/preferences-esf-dialog.ui.h:2
-msgid "<b>Example:</b>"
-msgstr "<b>דוגמה:</b>"
-
-#: ../glade/preferences-esf-dialog.ui.h:3
-msgid "<span size=\"large\"><b>Format Rule:</b></span>"
-msgstr "<span size=\"large\"><b>כלל המבנה:</b></span>"
-
-#: ../glade/preferences-esf-dialog.ui.h:4
-msgid "A_lbum"
-msgstr "א_לבום"
-
-#: ../glade/preferences-esf-dialog.ui.h:5
-msgid "Edit Song Formatting"
-msgstr "עריכת מבנה השיר"
-
-#: ../glade/preferences-esf-dialog.ui.h:6
-msgid "T_rack"
-msgstr "_רצועה"
-
-#: ../glade/preferences-esf-dialog.ui.h:7
-msgid "_Artist"
-msgstr "_אמן"
-
-#: ../glade/preferences-esf-dialog.ui.h:8
-msgid "_Date"
-msgstr "_תאריך"
-
-#: ../glade/preferences-esf-dialog.ui.h:9
-msgid "_Stream name"
-msgstr "שם ה_תזרים"
-
-#: ../glade/preferences-esf-dialog.ui.h:10
-msgid "_Title"
-msgstr "_כותרת"
-
-#: ../glade/preferences-esf-dialog.ui.h:11
-msgid "example"
-msgstr "דוגמה"
-
-#: ../glade/preferences-playlist.ui.h:1
-msgid "<b>Main:</b>"
-msgstr "<b>ראשי:</b>"
-
-#: ../glade/preferences-playlist.ui.h:2
-msgid "<b>Playlist:</b>"
-msgstr "<b>רשימת השמעה:</b>"
-
-#: ../glade/preferences-playlist.ui.h:3
-msgid "Center playing song"
-msgstr "מרכז את השיר המתנגן"
-
-#: ../glade/preferences-playlist.ui.h:4
-msgid "Hide on close"
-msgstr "הסתר עם הסגירה"
-
-#: ../glade/preferences-playlist.ui.h:5
-msgid "Save position and size between sessions"
-msgstr "שמור את המיקום והגודל בין ההפעלות"
-
-#: ../glade/preferences-playlist.ui.h:7
-msgid "Show songlist tooltip"
-msgstr "הצג תיאורים ברשימת השירים"
-
-#: ../glade/preferences-playlist.ui.h:8
-msgid "Stop playing on exit"
-msgstr "הפסק לנגן עם היציאה"
-
-#: ../glade/preferences-playlist.ui.h:9
-msgid "Stylize album covers"
-msgstr "סגנן את עטיפות האלבומים"
-
-#: ../glade/preferences-plugins.ui.h:1
-msgid "<b>Loaded Plugins:</b>"
-msgstr "<b>תוספים שנטענו:</b>"
-
-#: ../glade/preferences-server.ui.h:1
-msgid "<b>Crossfade:</b>"
-msgstr "<b>עמעום מדורג:</b>"
-
-#: ../glade/preferences-server.ui.h:2
-msgid "<b>Output Devices:</b>"
-msgstr "<b>התקני הפלט:</b>"
-
-#: ../glade/preferences-server.ui.h:3
-msgid ""
-"<span size=\"small\"><i>You need to be connected\n"
-"in order to change these settings</i></span>"
-msgstr ""
-"<span size=\"small\"><i>עליך להיות מחובר\n"
-"כדי לשנות הגדרות אלו</i></span>"
-
-#: ../glade/preferences-server.ui.h:5
-msgid "Enable crossfade"
-msgstr "אפשר עמעום מדורג"
-
-#: ../glade/preferences-server.ui.h:6
-msgid "fade time (s):"
-msgstr "זמן העמעום (ש'):"
-
-#: ../glade/preferences-trayicon.ui.h:1
-msgid "<b>Inline messages</b>"
-msgstr "<b>הודעות פנימיות</b>"
-
-#: ../glade/preferences-trayicon.ui.h:2
-msgid "<b>Notification Area Icon</b>"
-msgstr "<b>הסמל באזור הדיווחים</b>"
-
-#: ../glade/preferences-trayicon.ui.h:3
-msgid "<b>PopUp</b>"
-msgstr "<b>חלונית מוקפצת</b>"
-
-#: ../glade/preferences-trayicon.ui.h:4
-msgid "Enable"
-msgstr "הפעל"
-
-#: ../glade/preferences-trayicon.ui.h:5
-msgid "Position:"
-msgstr "מיקום:"
-
-#: ../glade/preferences-trayicon.ui.h:7
-msgid "Show severity"
-msgstr "הצג מידת חומרה"
-
-#: ../glade/preferences-trayicon.ui.h:8
-msgid "Timeout:"
-msgstr "תפוגה:"
-
-#: ../glade/preferences-proxy.ui.h:2
-msgid "HTTP Proxy:"
-msgstr "מתווך HTTP:"
-
-#: ../glade/preferences-proxy.ui.h:5
-msgid "Use a proxy for internet connectivity"
-msgstr "השתמש במתווך להתקשרות אינטרנט"
-
-#: ../glade/preferences.ui.h:1
-msgid ""
-"<span size=\"x-large\"><b>Plugins</b></span>\n"
-"<i>None Selected</i>"
-msgstr ""
-"<span size=\"x-large\"><b>תוספים</b></span>\n"
-"<i>לא נבחרו</i>"
-
-#: ../glade/preferences.ui.h:3
-msgid "gmpc - Configuration"
-msgstr "gmpc - תצורה"
-
-#: ../glade/playlist-message-window.ui.h:1
-msgid "Messages"
-msgstr "הודעות"
-
-#: ../glade/playlist-save-dialog.ui.h:1
-msgid "<enter playlist name>"
-msgstr "<הזן את שם רשימת ההשמעה>"
-
-#: ../glade/playlist-save-dialog.ui.h:2
-msgid "<span size=\"x-small\"><i>Playlist already exists.</i></span>"
-msgstr "<span size=\"x-small\"><i>רשימת ההשמעה כבר קיימת.</i></span>"
-
-#: ../glade/playlist-save-dialog.ui.h:3
-msgid "Save Playlist"
-msgstr "שמירת רשימת השמעה"
-
-#: ../glade/playlist-save-dialog.ui.h:4
-msgid "name:"
-msgstr "שם:"
-
-#: ../src/browsers/playlist3-current-playlist-browser.c:155
-msgid "item"
-msgid_plural "items"
-msgstr[0] "פריט"
-msgstr[1] "פריטים"
-
-#: ../src/browsers/playlist3-current-playlist-browser.c:161
-msgid "(Estimation)"
-msgstr "(הערכה)"
-
-#: ../src/browsers/playlist3-current-playlist-browser.c:531
-msgid "Are you sure you want to clear the playlist?"
-msgstr "האם אתה בטוח שברצונך לנקות את רשימת ההשמעה?"
-
-#: ../src/browsers/playlist3-current-playlist-browser.c:648
-#: ../src/browsers/playlist3-current-playlist-browser.c:668
-#: ../src/browsers/playlist3-current-playlist-browser.c:710
-#: ../src/browsers/playlist3-current-playlist-browser.c:732
-msgid "Your mpd has a broken 'addid', pasting will fail."
-msgstr "ל־mpd שלך יש 'addid' פגום, ההדבקה תכשל."
-
-#. add the delete widget
-#: ../src/browsers/playlist3-current-playlist-browser.c:761
-msgid "Crop"
-msgstr "חיתוך"
-
-#. add the shuffle widget
-#: ../src/browsers/playlist3-current-playlist-browser.c:775
-msgid "Shuffle"
-msgstr "מעורב"
-
-#: ../src/browsers/playlist3-current-playlist-browser.c:908
-msgid "Add URL"
-msgstr "הוספת כתובת"
-
-#: ../src/browsers/playlist3-current-playlist-browser.c:997
-#, c-format
-msgid ""
-"<i>Playlist <b>\"%s\"</b> already exists\n"
-"Overwrite?</i>"
-msgstr ""
-"<i>רשימת ההשמעה <b>\"%s\"</b> כבר קיימת\n"
-"לשכתב?</i>"
-
-#: ../src/browsers/playlist3-current-playlist-browser.c:1021
-msgid "Failed to save the playlist file."
-msgstr "כשל בשמירת קובץ רשימת ההשמעה."
-
-#: ../src/browsers/playlist3-current-playlist-browser.c:1099
-#: ../src/browsers/playlist3-current-playlist-browser.c:1147
-msgid "Play Queue"
-msgstr "תור הנגינה"
-
-#: ../src/browsers/playlist3-file-browser.c:98
-#: ../src/browsers/playlist3-file-browser.c:335
-#: ../src/browsers/playlist3-file-browser.c:1172
-msgid "File Browser"
-msgstr "סייר הקבצים"
-
-#: ../src/browsers/playlist3-file-browser.c:164
-msgid "Directories"
-msgstr "תיקיות"
-
-#: ../src/browsers/playlist3-file-browser.c:246
-#, c-format
-msgid "Added folder '%s' recursively"
-msgstr "התיקייה '%s' נוספה ברקורסיביות"
-
-#. add the replace widget
-#. replace the replace widget
-#. add the replace widget
-#. replace
-#. add the replace widget
-#: ../src/browsers/playlist3-file-browser.c:598
-#: ../src/browsers/playlist3-file-browser.c:890
-#: ../src/browsers/playlist3-file-browser.c:922
-#: ../src/browsers/playlist3-find2-browser.c:730
-#: ../src/browsers/playlist3-playlist-editor.c:542
-#: ../src/browsers/playlist3-playlist-editor.c:607
-#: ../src/browsers/playlist3-tag2-browser.c:408
-#: ../src/browsers/playlist3-tag2-browser.c:1110
-msgid "Replace"
-msgstr "החלף"
-
-#. add the update widget
-#: ../src/browsers/playlist3-file-browser.c:623
-#: ../src/browsers/playlist3-file-browser.c:879
-msgid "Update"
-msgstr "עדכן"
-
-#: ../src/browsers/playlist3-file-browser.c:733
-msgid "Loaded playlist"
-msgstr "רשימת ההשמעה שנטענה"
-
-#: ../src/browsers/playlist3-file-browser.c:1004
-#: ../src/browsers/playlist3-playlist-editor.c:388
-msgid "Added"
-msgstr "נוסף"
-
-#: ../src/browsers/playlist3-file-browser.c:1006
-#: ../src/browsers/playlist3-playlist-editor.c:388
-msgid "song"
-msgid_plural "songs"
-msgstr[0] "שיר"
-msgstr[1] "שירים"
-
-#: ../src/browsers/playlist3-file-browser.c:1008
-msgid "directory"
-msgid_plural "directories"
-msgstr[0] "תיקייה"
-msgstr[1] "תיקיות"
-
-#: ../src/browsers/playlist3-file-browser.c:1010
-msgid "playlist"
-msgid_plural "playlists"
-msgstr[0] "רשימת השמעה"
-msgstr[1] "רשימות השמעה"
-
-#: ../src/browsers/playlist3-file-browser.c:1033
-#: ../src/browsers/playlist3-file-browser.c:1083
-msgid "Are you sure you want to clear the selected playlist?"
-msgstr "האם אתה בטוח שברצונך לרוקן את רשימת ההשמעה הנבחרת?"
-
-#: ../src/browsers/playlist3-find2-browser.c:346
-#: ../src/browsers/playlist3-find2-browser.c:795
-msgid "Search"
-msgstr "חיפוש"
-
-#: ../src/gob/gmpc-mpddata-treeview.gob:983
-msgid "Paste before"
-msgstr "הדבקה לפני"
-
-#: ../src/gob/gmpc-mpddata-treeview.gob:992
-msgid "Paste after"
-msgstr "הדבקה אחרי"
-
-#. * Edit column
-#: ../src/gob/gmpc-mpddata-treeview.gob:1024
-msgid "Edit Columns"
-msgstr "עריכת הטורים"
-
-#: ../src/vala/gmpc-metadata-browser2.c:862
-#: ../src/vala/gmpc-metadata-browser2.c:913
-#: ../src/vala/gmpc-metadata-browser2.c:931
-#: ../src/vala/gmpc-metadata-browser2.c:1084
-msgid "Unavailable"
-msgstr "לא זמין"
-
-#~ msgid "<b>Song Markup</b>"
-#~ msgstr "<b>סימון שירים</b>"
-
-#~ msgid "Edit _Browser Markup"
-#~ msgstr "עריכת _תגיות העיון"
-
-#~ msgid "/path/to/file_name.mp3"
-#~ msgstr "/path/to/file_name.mp3"
-
-#~ msgid "Jonny Singer"
-#~ msgstr "הזמר זמריר"
-
-#~ msgid "Sing or Swing you want"
-#~ msgstr "אתה מעוניין בשיר או בריקוד"
-
-#~ msgid "The kernel jazz"
-#~ msgstr "ג'אז הליבה"
-
-#~ msgid "_Server"
-#~ msgstr "_שרת"
-
-#~ msgid "01/24"
-#~ msgstr "01/24"
-
-#~ msgid "2 Feb 2006"
-#~ msgstr "2 בפברואר 2006"
-
-#~ msgid "MPD's Streaming server"
-#~ msgstr "שרת התזרים של MPD"
-
-#~ msgid "--version"
-#~ msgstr "--version"
-
-#~ msgid "--disable-plugins"
-#~ msgstr "--disable-plugins"
-
-#~ msgid "--import-old-db"
-#~ msgstr "--import-old-db"
-
-#~ msgid "--replace"
-#~ msgstr "--replace"
-
-#~ msgid "--quit"
-#~ msgstr "--quit"
-
-#~ msgid "--clean-cover-db"
-#~ msgstr "--clean-cover-db"
-
-#~ msgid "--start-hidden"
-#~ msgstr "--start-hidden"
-
-#~ msgid "--config="
-#~ msgstr "--config="
-
-#~ msgid "--help"
-#~ msgstr "--help"
-
-#~ msgid " Total time: "
-#~ msgstr " זמן כולל: "
-
-#~ msgid "View"
-#~ msgstr "הצג"
-
-#~ msgid "Fetching..."
-#~ msgstr "מאחזר..."
-
-#. Basic dialog with a close button
-#: ../glade/playlist3.glade.h:1 ../src/bug-information.c:239
-msgid "Bug information"
-msgstr ""
-
-#: ../glade/playlist3.glade.h:2
-msgid "Consume"
-msgstr ""
-
-#: ../glade/playlist3.glade.h:3
-msgid "Easy Command Help"
-msgstr ""
-
-#: ../glade/playlist3.glade.h:13
-msgid "Se_rver"
-msgstr ""
-
-#: ../glade/playlist3.glade.h:15
-msgid "Single mode"
-msgstr ""
-
-#: ../glade/playlist3.glade.h:25
-msgid "_Help"
-msgstr ""
-
-#: ../glade/playlist3.glade.h:30
-msgid "_Tools"
-msgstr ""
 
 #: ../src/main.c:279
 msgid "Start the program in full screen"
@@ -1164,6 +246,44 @@ msgstr ""
 msgid "Show trayicon notification"
 msgstr ""
 
+#: ../src/main.c:499
+msgid "Failed to load the configuration system."
+msgstr "כשל בטעינת מערכת התצורה."
+
+#: ../src/main.c:518
+msgid "Failed to load debug-log file."
+msgstr "כשל בטעינת קובץ רישום ניפוי השגיאות."
+
+#: ../src/main.c:646
+msgid "Failed to setup libmpd"
+msgstr "כשל בהגדרת libmpd"
+
+#: ../src/main.c:1066
+msgid "GMPC has insufficient permissions on the mpd server."
+msgstr "ל־GMPC אין די הרשאות בשרת ה־mpd."
+
+#: ../src/main.c:1092
+#, c-format
+msgid ""
+"Failed to set password on: '%s'\n"
+"Please try again"
+msgstr ""
+"כשל בהגדרת הסיסמה עבור: '%s'\n"
+"אנא נסה שוב"
+
+#: ../src/main.c:1094
+#, c-format
+msgid "Please enter your password for: '%s'"
+msgstr "אנא הזן את סיסמתך עבור: '%s'"
+
+#: ../src/main.c:1123 ../src/main.c:1144
+msgid "error code"
+msgstr "קוד שגיאה"
+
+#: ../src/main.c:1133
+msgid "Insufficient permission to connect to mpd. Check password"
+msgstr "ההרשאות להתחברות אל ה־mpd אינן מספקות. בדוק את הסיסמה"
+
 #: ../src/main.c:1168
 msgid "MPD versions before 0.13.0 are not supported"
 msgstr ""
@@ -1185,14 +305,133 @@ msgstr ""
 msgid "The following error(s) occurred:"
 msgstr ""
 
+#: ../src/main.c:1313
+msgid "Error Message"
+msgstr "הודעת שגיאה"
+
+#: ../src/metadata.c:293
+msgid ""
+"A new metadata plugin was added, gmpc has purged all failed hits from the "
+"cache"
+msgstr "נוסף תוסף נתוני מטא חדש, gmpc הסירה את כל הפניות שנכשלו מהמטמון"
+
+#: ../src/metadata.c:1390
+msgid "Metadata Handler"
+msgstr "מטפל בנתוני מטא"
+
 #: ../src/misc.c:39
 msgid "Total time"
 msgstr ""
+
+#: ../src/misc.c:56
+msgid "day"
+msgid_plural "days"
+msgstr[0] "יום"
+msgstr[1] "ימים"
+
+#: ../src/misc.c:59
+msgid "hour"
+msgid_plural "hours"
+msgstr[0] "שעה"
+msgstr[1] "שעות"
+
+#: ../src/misc.c:62
+msgid "minute"
+msgid_plural "minutes"
+msgstr[0] "דקה"
+msgstr[1] "דקות"
+
+#: ../src/misc.c:295
+msgid "Failed to execute"
+msgstr "כשל בהפעלה"
+
+#: ../src/mm-keys.c:73
+msgid "PlayPause"
+msgstr "נגן/השהה"
+
+#. * MM_STOP
+#: ../src/mm-keys.c:77
+msgid "Fast Forward"
+msgstr "הרץ קדימה"
+
+#. * MM_FASTFORWARD
+#: ../src/mm-keys.c:78
+msgid "Fast Backward"
+msgstr "הרץ אחורה"
+
+#. * MM_RANDOM
+#: ../src/mm-keys.c:81
+msgid "Raise window"
+msgstr "העלה חלון"
+
+#. * MM_RAISE
+#: ../src/mm-keys.c:82
+msgid "Hide window"
+msgstr "הסתר חלון"
+
+#. * MM_HIDE
+#: ../src/mm-keys.c:83
+msgid "Toggle window"
+msgstr "החלף חלון"
+
+#. * MM_TOGGLE_HIDDEN
+#: ../src/mm-keys.c:84
+msgid "Volume Up"
+msgstr "הגבר עוצמה"
+
+#. * MM_VOLUME_UP
+#: ../src/mm-keys.c:85
+msgid "Volume Down"
+msgstr "הנמך עוצמה"
+
+#. * MM_VOLUME_DOWN
+#: ../src/mm-keys.c:86
+msgid "Show song"
+msgstr "הצג שיר"
+
+#. * MM_SHOW_NOTIFICATION
+#: ../src/mm-keys.c:87
+msgid "Toggle Mute"
+msgstr "החלפת השתקה"
 
 #. * MM_TOGGLE_MUTE
 #: ../src/mm-keys.c:88
 msgid "Show easy command entry"
 msgstr ""
+
+#: ../src/mm-keys.c:367
+msgid ""
+"Could not grab the following multimedia keys:\n"
+"\n"
+msgstr ""
+"לא ניתן ללכוד את מקשי המולטימדיה הבאים:\n"
+"\n"
+
+#: ../src/mm-keys.c:382
+msgid ""
+"\n"
+"Ensure that your window manager (or other applications) have not already "
+"bound this key for some other function, then restart gmpc."
+msgstr ""
+"\n"
+"וודא כי מנהל החלונות שלך (או יישומים אחרים) לא איגדו את המקש הזה לטובת "
+"פונקציות אחרות, ואז הפעל את gmpc מחדש."
+
+#: ../src/mm-keys.c:391
+msgid ""
+"Duplicate mapping(s) detected\n"
+"\n"
+"Some duplicate multimedia key mappings were detected, and disabled.  Please "
+"revisit the preferences and ensure your settings are now correct."
+msgstr ""
+"זוהה מיפוי כפול\n"
+"\n"
+"זוהו כמה מקשי מולטימדיה כפולים, והם בוטלו. אנא בקשר שוב בהעדפות כדי לוודא "
+"שהגדרותיך נכונות כעת."
+
+#: ../src/mm-keys.c:570
+msgid "Multimedia Keys"
+msgstr "מקשי מולטימדיה"
 
 #: ../src/mm-keys.c:632
 #, c-format
@@ -1202,6 +441,31 @@ msgid ""
 "%s is already mapped to %s"
 msgstr ""
 
+#: ../src/mm-keys.c:661
+#, c-format
+msgid ""
+"Could not grab multimedia key:\n"
+"\n"
+"\t%s: %s\n"
+"\n"
+"Ensure that your window manager (or other applications) have not already "
+"bound this key for some other function, then restart gmpc."
+msgstr ""
+"לא ניתן ללכוד את מקש המולטימדיה:\n"
+"\n"
+"\t%s: %s\n"
+"\n"
+"וודא כי מנהל החלונות שלך (או יישומים אחרים) לא איגדו את המקש הזה לטובת "
+"פונקציות אחרות, ואז הפעל את gmpc מחדש."
+
+#: ../src/mm-keys.c:716
+msgid "Action"
+msgstr "פעולה"
+
+#: ../src/mm-keys.c:738
+msgid "Shortcut"
+msgstr "קיצור־דרך"
+
 #: ../src/mpdinteraction.c:91
 msgid "enable"
 msgstr ""
@@ -1209,6 +473,11 @@ msgstr ""
 #: ../src/mpdinteraction.c:94
 msgid "disable"
 msgstr ""
+
+#: ../src/mpdinteraction.c:107 ../src/playlist3.c:1710 ../src/playlist3.c:1723
+#: ../src/playlist3.c:1738 ../src/playlist3.c:1751
+msgid "Off"
+msgstr "מופסק"
 
 #: ../src/mpdinteraction.c:162
 msgid "Single: The used MPD server is to old and does not support this."
@@ -1428,9 +697,51 @@ msgstr ""
 msgid "Update the database"
 msgstr ""
 
+#: ../src/mpdinteraction.c:355
+msgid "Server Settings"
+msgstr "הגדרות השרת"
+
+#: ../src/mpdinteraction.c:385
+msgid "Connection"
+msgstr "חיבור"
+
+#: ../src/mpdinteraction.c:478
+msgid "Connecting"
+msgstr "מתחבר"
+
+#. Add all from album
+#: ../src/mpdinteraction.c:1485
+msgid "All from album"
+msgstr "הכול מהאלבום"
+
+#. Add all from artist
+#: ../src/mpdinteraction.c:1497
+msgid "All from artist"
+msgstr "הכול מהזמר"
+
+#. Add all from genre
+#: ../src/mpdinteraction.c:1507
+msgid "All from genre"
+msgstr "הכול מהסגנון"
+
+#. Add all from file
+#: ../src/mpdinteraction.c:1515
+msgid "All from same directory"
+msgstr "הכול מאותה התיקייה"
+
+#. Create sub menu
+#. Add
+#: ../src/mpdinteraction.c:1523
+msgid "Add more"
+msgstr "הוסף עוד"
+
 #: ../src/mpdinteraction.c:1533
 msgid "Set Rating"
 msgstr ""
+
+#: ../src/playlist3.c:632
+msgid "MPD database is updating"
+msgstr "מסד הנתונים של MPD מתעדכן"
 
 #: ../src/playlist3.c:642
 msgid "MPD is updating its database"
@@ -1440,11 +751,46 @@ msgstr ""
 msgid "MPD finished updating its database"
 msgstr ""
 
+#: ../src/playlist3.c:793
+msgid "Connected"
+msgstr "מחובר"
+
+#: ../src/playlist3.c:802 ../src/playlist3.c:2274
+msgid "Not Connected"
+msgstr "לא מחובר"
+
+#: ../src/playlist3.c:815 ../src/playlist3.c:820 ../src/playlist3.c:1676
+msgid "GMPC"
+msgstr "GMPC"
+
+#: ../src/playlist3.c:815
+msgid "Connected to"
+msgstr "מחובר אל"
+
+#: ../src/playlist3.c:820
+msgid "Disconnected"
+msgstr "מנותק"
+
 #: ../src/playlist3.c:887
 msgid ""
 "Failed to open the interface description file!\n"
 "Please reinstall gmpc\n"
 msgstr ""
+
+#: ../src/playlist3.c:1709
+#, c-format
+msgid "Repeat: %s"
+msgstr "חזרה: %s"
+
+#: ../src/playlist3.c:1710 ../src/playlist3.c:1723 ../src/playlist3.c:1738
+#: ../src/playlist3.c:1751
+msgid "On"
+msgstr "פעיל"
+
+#: ../src/playlist3.c:1722
+#, c-format
+msgid "Random: %s"
+msgstr "אקראי: %s"
 
 #: ../src/playlist3.c:1737
 #, c-format
@@ -1461,10 +807,47 @@ msgstr ""
 msgid "MPD Database refreshed at: %c"
 msgstr ""
 
+#: ../src/playlist3.c:1823
+msgid "MPD Reported the following error"
+msgstr "MPD דיווח על השגיאה הבאה"
+
+#: ../src/playlist3.c:1956 ../src/playlist3.c:1962
+msgid "Profile"
+msgstr "פרופיל"
+
+#: ../src/playlist3.c:1957
+msgid "added"
+msgstr "נוסף"
+
+#: ../src/playlist3.c:1964
+msgid "changed hostname to:"
+msgstr "שם המארח שונה ל־:"
+
+#. Update DB
+#: ../src/playlist3.c:2072
+msgid "Update Database"
+msgstr "עדכון מסד הנתונים"
+
 #. Server Information
 #: ../src/playlist3.c:2081 ../src/vala/gmpc-test-plugin.c:1016
 msgid "Information"
 msgstr ""
+
+#: ../src/playlist3.c:2190
+msgid "By"
+msgstr "על ידי"
+
+#: ../src/playlist3.c:2196
+msgid "From"
+msgstr "מ"
+
+#: ../src/playlist3.c:2267
+msgid "Not Playing"
+msgstr "לא מנגן"
+
+#: ../src/playlist3.c:2381
+msgid "Interface"
+msgstr "מנשק"
 
 #: ../src/playlist3.c:2658
 msgid "Repeat enabled"
@@ -1481,6 +864,26 @@ msgstr ""
 #: ../src/playlist3.c:2690
 msgid "Random disabled"
 msgstr ""
+
+#: ../src/playlist3-messages.c:26
+msgid "Info"
+msgstr "מידע"
+
+#: ../src/playlist3-messages.c:27
+msgid "Warning"
+msgstr "אזהרה"
+
+#: ../src/playlist3-messages.c:28
+msgid "Critical"
+msgstr "קריטי"
+
+#: ../src/playlist3-messages.c:251
+msgid "Time"
+msgstr "זמן"
+
+#: ../src/playlist3-messages.c:253
+msgid "Message"
+msgstr "הודעה"
 
 #: ../src/plugin.c:60 ../src/plugin.c:68 ../src/plugin.c:75 ../src/plugin.c:83
 #: ../src/plugin.c:89 ../src/plugin.c:97 ../src/plugin.c:103
@@ -1541,9 +944,80 @@ msgstr ""
 msgid "Plugin %s has wrong no plugin structure: %s"
 msgstr ""
 
+#: ../src/plugin.c:292
+msgid ""
+"One or more plugins failed to load, see help->messages for more information"
+msgstr "נכשלה הפעלת אחד או יותר התוספים שלך, עיין ב\"עזרה->הודעות למידע נוסף"
+
 #: ../src/preferences.c:98 ../src/preferences.c:205
 msgid "Plugins"
 msgstr ""
+
+#: ../src/preferences.c:160
+msgid "Plugins:"
+msgstr "תוספים:"
+
+#: ../src/preferences.c:331
+msgid "Enabled"
+msgstr "מופעל"
+
+#: ../src/preferences.c:334 ../src/gob/gmpc-mpddata-treeview.gob:76
+msgid "Name"
+msgstr "שם"
+
+#: ../src/preferences.c:336
+msgid "Function"
+msgstr "פונקציה"
+
+#. * Mpd version
+#: ../src/preferences.c:338 ../src/browsers/server-information.c:333
+msgid "Version"
+msgstr "גירסה"
+
+#: ../src/preferences.c:367
+msgid "Dummy"
+msgstr "דמה"
+
+#: ../src/preferences.c:370
+msgid "Browser Extension"
+msgstr "הרחבת דפדפן"
+
+#: ../src/preferences.c:373
+msgid "Metadata Provider"
+msgstr "ספק נתוני מטא"
+
+#: ../src/preferences.c:376
+msgid "Metadata Provider and Browser Extension"
+msgstr "ספק נתוני מטא והרחבת דפדפן"
+
+#: ../src/preferences.c:379
+msgid "Misc."
+msgstr "שונות"
+
+#: ../src/preferences.c:384 ../src/vala/gmpc-metadata-browser2.c:3551
+#: ../src/vala/gmpc-metadata-browser2.c:4088
+#: ../src/vala/gmpc-metadata-browser2.c:4094
+#: ../src/vala/gmpc-metadata-browser2.c:4286
+#: ../src/vala/gmpc-metadata-browser2.c:4745
+msgid "Unknown"
+msgstr "לא ידוע"
+
+#: ../src/url-fetcher.c:64 ../src/url-fetcher.c:89 ../src/url-fetcher.c:147
+#: ../src/url-fetcher.c:224
+#, c-format
+msgid "Added %i %s"
+msgstr "נוסף %i %s"
+
+#: ../src/url-fetcher.c:64 ../src/url-fetcher.c:89 ../src/url-fetcher.c:147
+#: ../src/url-fetcher.c:224
+msgid "stream"
+msgid_plural "streams"
+msgstr[0] "תזרים"
+msgstr[1] "תזרימים"
+
+#: ../src/url-fetcher.c:291 ../src/url-fetcher.c:323
+msgid "Added 1 stream"
+msgstr "נוסף תזרים 1"
 
 #: ../src/url-fetcher.c:404
 msgid "Failed to open local file"
@@ -1552,6 +1026,55 @@ msgstr ""
 #: ../src/url-fetcher.c:419
 msgid "Uri scheme not supported"
 msgstr ""
+
+#. *
+#. * Setup the label
+#. 
+#: ../src/url-fetcher.c:461
+msgid "Enter an url"
+msgstr "הזן כתובת"
+
+#: ../src/tray-icon2.c:142
+msgid "Pla_ylist"
+msgstr "ר_שימת השמעה"
+
+#: ../src/tray-icon2.c:887
+msgid "Notification"
+msgstr "דיווחים"
+
+#. *
+#. * Append an introduction page
+#. 
+#: ../src/setup-assistant.c:111
+msgid ""
+"It is the first time you have launched gmpc.\n"
+"This assistant will help you connect gmpc to your mpd daemon."
+msgstr ""
+"זוהי הפעם הראשונה בה הפעלת את gmpc.\n"
+"תוכנית עזר זו תסייע לך לחבר את ה־gmpc שלך לסוכן ה־mpd."
+
+#: ../src/setup-assistant.c:113
+msgid "Welcome to GMPC"
+msgstr "ברוך הבא ל־GMPC"
+
+#: ../src/setup-assistant.c:132
+msgid "Setup connection"
+msgstr "הגדרת חיבור"
+
+#. *
+#. * End
+#. 
+#: ../src/setup-assistant.c:141
+msgid ""
+"Gmpc is now ready for use.\n"
+"Enjoy using gmpc."
+msgstr ""
+"Gmpc מוכן לשימוש כעת.\n"
+"תהנה מהשימוש ב־gmpc."
+
+#: ../src/setup-assistant.c:143
+msgid "Finish"
+msgstr "סיים"
 
 #: ../src/smclient/eggdesktopfile.c:165
 #, c-format
@@ -1616,21 +1139,225 @@ msgstr ""
 msgid "Show session management options"
 msgstr ""
 
+#: ../glade/aboutdialog.ui.h:1
+msgid "Copyright 2003-2007 Qball Cow"
+msgstr "כל הזכויות שמורות 2003-2007 Qball Cow"
+
+#: ../glade/aboutdialog.ui.h:2
+msgid "translator-credits"
+msgstr ""
+"Launchpad Contributions:\n"
+"  Yaron https://launchpad.net/~sh-yaron"
+
+#: ../glade/password-dialog.ui.h:1
+msgid "Enter your password for: '<hostname>'"
+msgstr "הזן את סיסמתך עבור: '<hostname>'"
+
+#: ../glade/password-dialog.ui.h:2
+msgid "Password"
+msgstr "סיסמה"
+
+#: ../glade/password-dialog.ui.h:3
+msgid "_Save password"
+msgstr "_שמור סיסמה"
+
+#: ../glade/preferences-connection.ui.h:1
+msgid "<b>Profile:</b>"
+msgstr "<b>פרופיל:</b>"
+
+#: ../glade/preferences-connection.ui.h:2
+msgid "Conn_ect"
+msgstr "ה_תחבר"
+
+#: ../glade/preferences-connection.ui.h:3
+msgid "Host:"
+msgstr "מארח:"
+
 #: ../glade/preferences-connection.ui.h:4
 msgid "Music Directory:"
 msgstr ""
+
+#: ../glade/preferences-connection.ui.h:5
+#: ../src/browsers/playlist3-playlist-editor.c:456
+#: ../src/browsers/playlist3-playlist-editor.c:497
+msgid "Name:"
+msgstr "שם:"
+
+#: ../glade/preferences-connection.ui.h:6 ../glade/preferences-proxy.ui.h:3
+msgid "Password:"
+msgstr "סיסמה:"
+
+#: ../glade/preferences-connection.ui.h:7 ../glade/preferences-proxy.ui.h:4
+msgid "Port:"
+msgstr "פתחה:"
+
+#: ../glade/preferences-connection.ui.h:8
+msgid "Timeout (s):"
+msgstr "תפוגה (ש'):"
+
+#: ../glade/preferences-connection.ui.h:9
+msgid "_Autoconnect"
+msgstr "ה_תחברות אוטומטית"
+
+#: ../glade/preferences-connection.ui.h:11
+msgid "_Use Authentication"
+msgstr "השתמש ב_אימות"
+
+#: ../glade/preferences-connection.ui.h:12
+msgid "localhost"
+msgstr "localhost"
+
+#: ../glade/preferences-esf-dialog.ui.h:1
+msgid "<b>Enable Field:</b>"
+msgstr "<b>אפשר שדה:</b>"
+
+#: ../glade/preferences-esf-dialog.ui.h:2
+msgid "<b>Example:</b>"
+msgstr "<b>דוגמה:</b>"
+
+#: ../glade/preferences-esf-dialog.ui.h:3
+msgid "<span size=\"large\"><b>Format Rule:</b></span>"
+msgstr "<span size=\"large\"><b>כלל המבנה:</b></span>"
+
+#: ../glade/preferences-esf-dialog.ui.h:4
+msgid "A_lbum"
+msgstr "א_לבום"
+
+#: ../glade/preferences-esf-dialog.ui.h:5
+msgid "Edit Song Formatting"
+msgstr "עריכת מבנה השיר"
+
+#: ../glade/preferences-esf-dialog.ui.h:6
+msgid "T_rack"
+msgstr "_רצועה"
+
+#: ../glade/preferences-esf-dialog.ui.h:7
+msgid "_Artist"
+msgstr "_אמן"
+
+#: ../glade/preferences-esf-dialog.ui.h:8
+msgid "_Date"
+msgstr "_תאריך"
+
+#: ../glade/preferences-esf-dialog.ui.h:9
+msgid "_Stream name"
+msgstr "שם ה_תזרים"
+
+#: ../glade/preferences-esf-dialog.ui.h:10
+msgid "_Title"
+msgstr "_כותרת"
+
+#: ../glade/preferences-esf-dialog.ui.h:11
+msgid "example"
+msgstr "דוגמה"
+
+#: ../glade/preferences-playlist.ui.h:1
+msgid "<b>Main:</b>"
+msgstr "<b>ראשי:</b>"
+
+#: ../glade/preferences-playlist.ui.h:2
+msgid "<b>Playlist:</b>"
+msgstr "<b>רשימת השמעה:</b>"
+
+#: ../glade/preferences-playlist.ui.h:3
+msgid "Center playing song"
+msgstr "מרכז את השיר המתנגן"
+
+#: ../glade/preferences-playlist.ui.h:4
+msgid "Hide on close"
+msgstr "הסתר עם הסגירה"
+
+#: ../glade/preferences-playlist.ui.h:5
+msgid "Save position and size between sessions"
+msgstr "שמור את המיקום והגודל בין ההפעלות"
 
 #: ../glade/preferences-playlist.ui.h:6
 msgid "Show buttons instead of dropdown in collapsed view"
 msgstr ""
 
+#: ../glade/preferences-playlist.ui.h:7
+msgid "Show songlist tooltip"
+msgstr "הצג תיאורים ברשימת השירים"
+
+#: ../glade/preferences-playlist.ui.h:8
+msgid "Stop playing on exit"
+msgstr "הפסק לנגן עם היציאה"
+
+#: ../glade/preferences-playlist.ui.h:9
+msgid "Stylize album covers"
+msgstr "סגנן את עטיפות האלבומים"
+
+#: ../glade/preferences-plugins.ui.h:1
+msgid "<b>Loaded Plugins:</b>"
+msgstr "<b>תוספים שנטענו:</b>"
+
+#: ../glade/preferences-server.ui.h:1
+msgid "<b>Crossfade:</b>"
+msgstr "<b>עמעום מדורג:</b>"
+
+#: ../glade/preferences-server.ui.h:2
+msgid "<b>Output Devices:</b>"
+msgstr "<b>התקני הפלט:</b>"
+
+#: ../glade/preferences-server.ui.h:3
+msgid ""
+"<span size=\"small\"><i>You need to be connected\n"
+"in order to change these settings</i></span>"
+msgstr ""
+"<span size=\"small\"><i>עליך להיות מחובר\n"
+"כדי לשנות הגדרות אלו</i></span>"
+
+#: ../glade/preferences-server.ui.h:5
+msgid "Enable crossfade"
+msgstr "אפשר עמעום מדורג"
+
+#: ../glade/preferences-server.ui.h:6
+msgid "fade time (s):"
+msgstr "זמן העמעום (ש'):"
+
+#: ../glade/preferences-trayicon.ui.h:1
+msgid "<b>Inline messages</b>"
+msgstr "<b>הודעות פנימיות</b>"
+
+#: ../glade/preferences-trayicon.ui.h:2
+msgid "<b>Notification Area Icon</b>"
+msgstr "<b>הסמל באזור הדיווחים</b>"
+
+#: ../glade/preferences-trayicon.ui.h:3
+msgid "<b>PopUp</b>"
+msgstr "<b>חלונית מוקפצת</b>"
+
+#: ../glade/preferences-trayicon.ui.h:4
+msgid "Enable"
+msgstr "הפעל"
+
+#: ../glade/preferences-trayicon.ui.h:5
+msgid "Position:"
+msgstr "מיקום:"
+
 #: ../glade/preferences-trayicon.ui.h:6
 msgid "Show on song change"
 msgstr ""
 
+#: ../glade/preferences-trayicon.ui.h:7
+msgid "Show severity"
+msgstr "הצג מידת חומרה"
+
+#: ../glade/preferences-trayicon.ui.h:8
+msgid "Timeout:"
+msgstr "תפוגה:"
+
 #: ../glade/preferences-proxy.ui.h:1
 msgid "<b>Proxy settings</b>"
 msgstr ""
+
+#: ../glade/preferences-proxy.ui.h:2
+msgid "HTTP Proxy:"
+msgstr "מתווך HTTP:"
+
+#: ../glade/preferences-proxy.ui.h:5
+msgid "Use a proxy for internet connectivity"
+msgstr "השתמש במתווך להתקשרות אינטרנט"
 
 #: ../glade/preferences-proxy.ui.h:6
 msgid "Use authentication"
@@ -1643,6 +1370,48 @@ msgstr ""
 #: ../glade/preferences-mmkeys.ui.h:1
 msgid "To disable a keybinding edit it and press 'backspace'"
 msgstr ""
+
+#: ../glade/preferences.ui.h:1
+msgid ""
+"<span size=\"x-large\"><b>Plugins</b></span>\n"
+"<i>None Selected</i>"
+msgstr ""
+"<span size=\"x-large\"><b>תוספים</b></span>\n"
+"<i>לא נבחרו</i>"
+
+#: ../glade/preferences.ui.h:3
+msgid "gmpc - Configuration"
+msgstr "gmpc - תצורה"
+
+#: ../glade/playlist-message-window.ui.h:1
+msgid "Messages"
+msgstr "הודעות"
+
+#: ../glade/playlist-save-dialog.ui.h:1
+msgid "<enter playlist name>"
+msgstr "<הזן את שם רשימת ההשמעה>"
+
+#: ../glade/playlist-save-dialog.ui.h:2
+msgid "<span size=\"x-small\"><i>Playlist already exists.</i></span>"
+msgstr "<span size=\"x-small\"><i>רשימת ההשמעה כבר קיימת.</i></span>"
+
+#: ../glade/playlist-save-dialog.ui.h:3
+msgid "Save Playlist"
+msgstr "שמירת רשימת השמעה"
+
+#: ../glade/playlist-save-dialog.ui.h:4
+msgid "name:"
+msgstr "שם:"
+
+#: ../src/browsers/playlist3-current-playlist-browser.c:155
+msgid "item"
+msgid_plural "items"
+msgstr[0] "פריט"
+msgstr[1] "פריטים"
+
+#: ../src/browsers/playlist3-current-playlist-browser.c:161
+msgid "(Estimation)"
+msgstr "(הערכה)"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:210
 msgid "switch play queue"
@@ -1665,6 +1434,59 @@ msgstr ""
 msgid "Crop the playlist so it only contains the current song"
 msgstr ""
 
+#: ../src/browsers/playlist3-current-playlist-browser.c:531
+msgid "Are you sure you want to clear the playlist?"
+msgstr "האם אתה בטוח שברצונך לנקות את רשימת ההשמעה?"
+
+#: ../src/browsers/playlist3-current-playlist-browser.c:648
+#: ../src/browsers/playlist3-current-playlist-browser.c:668
+#: ../src/browsers/playlist3-current-playlist-browser.c:710
+#: ../src/browsers/playlist3-current-playlist-browser.c:732
+msgid "Your mpd has a broken 'addid', pasting will fail."
+msgstr "ל־mpd שלך יש 'addid' פגום, ההדבקה תכשל."
+
+#. add the delete widget
+#: ../src/browsers/playlist3-current-playlist-browser.c:761
+msgid "Crop"
+msgstr "חיתוך"
+
+#. add the shuffle widget
+#: ../src/browsers/playlist3-current-playlist-browser.c:775
+msgid "Shuffle"
+msgstr "מעורב"
+
+#: ../src/browsers/playlist3-current-playlist-browser.c:908
+msgid "Add URL"
+msgstr "הוספת כתובת"
+
+#: ../src/browsers/playlist3-current-playlist-browser.c:997
+#, c-format
+msgid ""
+"<i>Playlist <b>\"%s\"</b> already exists\n"
+"Overwrite?</i>"
+msgstr ""
+"<i>רשימת ההשמעה <b>\"%s\"</b> כבר קיימת\n"
+"לשכתב?</i>"
+
+#: ../src/browsers/playlist3-current-playlist-browser.c:1021
+msgid "Failed to save the playlist file."
+msgstr "כשל בשמירת קובץ רשימת ההשמעה."
+
+#: ../src/browsers/playlist3-current-playlist-browser.c:1099
+#: ../src/browsers/playlist3-current-playlist-browser.c:1147
+msgid "Play Queue"
+msgstr "תור הנגינה"
+
+#: ../src/browsers/playlist3-file-browser.c:98
+#: ../src/browsers/playlist3-file-browser.c:335
+#: ../src/browsers/playlist3-file-browser.c:1172
+msgid "File Browser"
+msgstr "סייר הקבצים"
+
+#: ../src/browsers/playlist3-file-browser.c:164
+msgid "Directories"
+msgstr "תיקיות"
+
 #: ../src/browsers/playlist3-file-browser.c:213
 msgid ""
 "It seems you have no music in your database.\n"
@@ -1672,6 +1494,66 @@ msgid ""
 "your mpd config file.\n"
 "Then update the database. (Server->Update Database)"
 msgstr ""
+
+#: ../src/browsers/playlist3-file-browser.c:246
+#, c-format
+msgid "Added folder '%s' recursively"
+msgstr "התיקייה '%s' נוספה ברקורסיביות"
+
+#. add the replace widget
+#. replace the replace widget
+#. add the replace widget
+#. replace
+#. add the replace widget
+#: ../src/browsers/playlist3-file-browser.c:598
+#: ../src/browsers/playlist3-file-browser.c:890
+#: ../src/browsers/playlist3-file-browser.c:922
+#: ../src/browsers/playlist3-find2-browser.c:730
+#: ../src/browsers/playlist3-playlist-editor.c:542
+#: ../src/browsers/playlist3-playlist-editor.c:607
+#: ../src/browsers/playlist3-tag2-browser.c:408
+#: ../src/browsers/playlist3-tag2-browser.c:1110
+msgid "Replace"
+msgstr "החלף"
+
+#. add the update widget
+#: ../src/browsers/playlist3-file-browser.c:623
+#: ../src/browsers/playlist3-file-browser.c:879
+msgid "Update"
+msgstr "עדכן"
+
+#: ../src/browsers/playlist3-file-browser.c:733
+msgid "Loaded playlist"
+msgstr "רשימת ההשמעה שנטענה"
+
+#: ../src/browsers/playlist3-file-browser.c:1004
+#: ../src/browsers/playlist3-playlist-editor.c:388
+msgid "Added"
+msgstr "נוסף"
+
+#: ../src/browsers/playlist3-file-browser.c:1006
+#: ../src/browsers/playlist3-playlist-editor.c:388
+msgid "song"
+msgid_plural "songs"
+msgstr[0] "שיר"
+msgstr[1] "שירים"
+
+#: ../src/browsers/playlist3-file-browser.c:1008
+msgid "directory"
+msgid_plural "directories"
+msgstr[0] "תיקייה"
+msgstr[1] "תיקיות"
+
+#: ../src/browsers/playlist3-file-browser.c:1010
+msgid "playlist"
+msgid_plural "playlists"
+msgstr[0] "רשימת השמעה"
+msgstr[1] "רשימות השמעה"
+
+#: ../src/browsers/playlist3-file-browser.c:1033
+#: ../src/browsers/playlist3-file-browser.c:1083
+msgid "Are you sure you want to clear the selected playlist?"
+msgstr "האם אתה בטוח שברצונך לרוקן את רשימת ההשמעה הנבחרת?"
 
 #: ../src/browsers/playlist3-find2-browser.c:102
 #: ../src/vala/gmpc-test-plugin.c:1104
@@ -1686,6 +1568,11 @@ msgstr ""
 #: ../src/browsers/playlist3-find2-browser.c:242
 msgid "Playlist"
 msgstr ""
+
+#: ../src/browsers/playlist3-find2-browser.c:346
+#: ../src/browsers/playlist3-find2-browser.c:795
+msgid "Search"
+msgstr "חיפוש"
 
 #: ../src/browsers/playlist3-find2-browser.c:436
 msgid "Search failed"
@@ -1936,6 +1823,19 @@ msgstr ""
 msgid "Tools"
 msgstr ""
 
+#: ../src/gob/gmpc-mpddata-treeview.gob:983
+msgid "Paste before"
+msgstr "הדבקה לפני"
+
+#: ../src/gob/gmpc-mpddata-treeview.gob:992
+msgid "Paste after"
+msgstr "הדבקה אחרי"
+
+#. * Edit column
+#: ../src/gob/gmpc-mpddata-treeview.gob:1024
+msgid "Edit Columns"
+msgstr "עריכת הטורים"
+
 #: ../src/gob/gmpc-profiles.gob:90
 msgid "Added profile"
 msgstr ""
@@ -2130,6 +2030,13 @@ msgstr ""
 msgid "_Replace"
 msgstr ""
 
+#: ../src/vala/gmpc-metadata-browser2.c:862
+#: ../src/vala/gmpc-metadata-browser2.c:913
+#: ../src/vala/gmpc-metadata-browser2.c:931
+#: ../src/vala/gmpc-metadata-browser2.c:1084
+msgid "Unavailable"
+msgstr "לא זמין"
+
 #: ../src/vala/gmpc-metadata-browser2.c:901
 msgid "Fetching .. "
 msgstr ""
@@ -2250,3 +2157,69 @@ msgstr ""
 #: ../src/vala/gmpc-metadata-browser2.c:5244
 msgid "Web links"
 msgstr ""
+
+#~ msgid "<b>Song Markup</b>"
+#~ msgstr "<b>סימון שירים</b>"
+
+#~ msgid "Edit _Browser Markup"
+#~ msgstr "עריכת _תגיות העיון"
+
+#~ msgid "/path/to/file_name.mp3"
+#~ msgstr "/path/to/file_name.mp3"
+
+#~ msgid "Jonny Singer"
+#~ msgstr "הזמר זמריר"
+
+#~ msgid "Sing or Swing you want"
+#~ msgstr "אתה מעוניין בשיר או בריקוד"
+
+#~ msgid "The kernel jazz"
+#~ msgstr "ג'אז הליבה"
+
+#~ msgid "_Server"
+#~ msgstr "_שרת"
+
+#~ msgid "01/24"
+#~ msgstr "01/24"
+
+#~ msgid "2 Feb 2006"
+#~ msgstr "2 בפברואר 2006"
+
+#~ msgid "MPD's Streaming server"
+#~ msgstr "שרת התזרים של MPD"
+
+#~ msgid "--version"
+#~ msgstr "--version"
+
+#~ msgid "--disable-plugins"
+#~ msgstr "--disable-plugins"
+
+#~ msgid "--import-old-db"
+#~ msgstr "--import-old-db"
+
+#~ msgid "--replace"
+#~ msgstr "--replace"
+
+#~ msgid "--quit"
+#~ msgstr "--quit"
+
+#~ msgid "--clean-cover-db"
+#~ msgstr "--clean-cover-db"
+
+#~ msgid "--start-hidden"
+#~ msgstr "--start-hidden"
+
+#~ msgid "--config="
+#~ msgstr "--config="
+
+#~ msgid "--help"
+#~ msgstr "--help"
+
+#~ msgid " Total time: "
+#~ msgstr " זמן כולל: "
+
+#~ msgid "View"
+#~ msgstr "הצג"
+
+#~ msgid "Fetching..."
+#~ msgstr "מאחזר..."
