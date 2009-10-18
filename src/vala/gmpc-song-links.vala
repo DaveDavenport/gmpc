@@ -1,7 +1,7 @@
 /* Gnome Music Player Client (GMPC)
  * Copyright (C) 2004-2009 Qball Cow <qball@sarine.nl>
  * Project homepage: http://gmpc.wikia.com/
- 
+
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -27,7 +27,8 @@ using Gmpc;
 
 private const bool use_transition_sl = Gmpc.use_transition;
 
-public class Gmpc.Song.Links: Gtk.Frame 
+static bool initialized = false;
+public class Gmpc.Song.Links: Gtk.Frame
 {
     private const string some_unique_name = Config.VERSION;
     public enum Type {
@@ -61,7 +62,7 @@ public class Gmpc.Song.Links: Gtk.Frame
         if(event.button == 3)
         {
             var menu = new Gtk.Menu();
-            var item = new Gtk.ImageMenuItem.with_label(_("Update list from internet")); 
+            var item = new Gtk.ImageMenuItem.with_label(_("Update list from internet"));
             item.set_image(new Gtk.Image.from_stock(Gtk.STOCK_REFRESH, Gtk.IconSize.MENU));
             item.activate += download;
             menu.append(item);
@@ -71,12 +72,17 @@ public class Gmpc.Song.Links: Gtk.Frame
         return false;
     }
 
+    static void open_uri_function(Gtk.LinkButton but, string uri)
+    {
+        Gmpc.open_uri(uri);
+    }
+
     public Links(Type type, MPD.Song song)
     {
         this.type = type;
         this.song = song;
         var event = new Gtk.EventBox();
-        var label = new Gtk.Label(""); 
+        var label = new Gtk.Label("");
         event.add(label);
         event.visible_window = false;
         this.label_widget = event;
@@ -85,6 +91,11 @@ public class Gmpc.Song.Links: Gtk.Frame
 
         event.button_press_event += button_press_event_callback;
         parse_uris();
+
+        if(!initialized) {
+            Gtk.LinkButton.set_uri_hook(open_uri_function);
+            initialized = true;
+        }
     }
 
     private void download_file(Gmpc.AsyncDownload.Handle handle, Gmpc.AsyncDownload.Status status)
@@ -97,7 +108,7 @@ public class Gmpc.Song.Links: Gtk.Frame
             return;
         }
         if(status == AsyncDownload.Status.DONE) {
-            var a = handle.get_data(); 
+            var a = handle.get_data();
             var path = Gmpc.user_path("weblinks.list");
             try{
                 GLib.FileUtils.set_contents(path, (string)a, (long)a.length);
@@ -109,7 +120,7 @@ public class Gmpc.Song.Links: Gtk.Frame
                 stdout.printf("Error: %s\n", e.message);
             }
         }
-        else 
+        else
         {
             var path = Gmpc.user_path("weblinks.list");
             /* set dummy file */
@@ -147,7 +158,7 @@ public class Gmpc.Song.Links: Gtk.Frame
         }
         try {
             file.load_from_file(path, GLib.KeyFileFlags.NONE);
-        } 
+        }
         catch  (Error e) {
             stdout.printf("Failed to load file: %s\n", path);
             return;
@@ -166,7 +177,7 @@ public class Gmpc.Song.Links: Gtk.Frame
             try{
                 string typestr = file.get_string(entry,"type");
                 string uri = file.get_string(entry, "url");
-                
+
                 Type type;
                 switch(typestr) {
                     case "artist":
