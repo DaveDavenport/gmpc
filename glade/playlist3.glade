@@ -603,7 +603,7 @@
             </child>
             <child>
               <widget class="GtkEventBox" id="error_event">
-              <property name="border_width">6</property>
+              <property name="border_width">0</property>
               <child>
                   <widget class="GtkHBox" id="hbox14">
                     <property name="visible">True</property>
