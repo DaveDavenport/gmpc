@@ -717,7 +717,7 @@ static void tray_icon2_status_changed(MpdObj *mi, ChangedStatusType what, void *
             new_checksum = mpd_song_checksum(song);
 			if(state == MPD_PLAYER_PLAY || state == MPD_PLAYER_PAUSE)
 			{
-                if(current_song_checksum == NULL || strcmp(current_song_checksum, new_checksum))
+                if(new_checksum == NULL || current_song_checksum == NULL || strcmp(current_song_checksum, new_checksum))
                     tray_icon2_create_tooltip();
             }
             if(current_song_checksum){
