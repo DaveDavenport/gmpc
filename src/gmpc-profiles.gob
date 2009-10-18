@@ -69,6 +69,13 @@ class Gmpc:Profiles from G:Object
   private int num_profiles = {0};
 
 
+    public 
+    int 
+    get_number_of_profiles(self)
+    {
+        return self->_priv->num_profiles;
+    }
+
     /* Connect on button press event */
     private 
     void
