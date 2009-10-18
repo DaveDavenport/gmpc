@@ -38,38 +38,9 @@ public class Gmpc.Song.Links: Gtk.Frame
     }
     private Type type = Type.ARTIST;
     private MPD.Song song = null;
-    private Gmpc.AsyncDownload.Handle handle = null;
 
     ~Links()
     {
-        if(this.handle != null)
-        {
-            this.handle.cancel();
-        }
-    }
-    private void download(Gtk.ImageMenuItem item)
-    {
-        var child = this.get_child();
-        if(child != null) child.destroy();
-        /* now try to download */
-        this.add(new Gtk.ProgressBar());
-        this.show_all();
-        this.handle = Gmpc.AsyncDownload.download("http://gmpc.wikia.com/index.php?title=GMPC_METADATA_WEBLINKLIST&action=raw",download_file);
-
-    }
-    private bool button_press_event_callback(Gtk.EventBox label, Gdk.EventButton event)
-    {
-        if(event.button == 3)
-        {
-            var menu = new Gtk.Menu();
-            var item = new Gtk.ImageMenuItem.with_label(_("Update list from internet"));
-            item.set_image(new Gtk.Image.from_stock(Gtk.STOCK_REFRESH, Gtk.IconSize.MENU));
-            item.activate += download;
-            menu.append(item);
-            menu.show_all();
-            menu.popup(null, null, null, event.button, event.time);
-        }
-        return false;
     }
 
     static void open_uri_function(Gtk.LinkButton but, string uri)
@@ -89,7 +60,6 @@ public class Gmpc.Song.Links: Gtk.Frame
         label.set_markup("<b>%s:</b>".printf(_("Web Links")));
         this.shadow = Gtk.ShadowType.NONE;
 
-        event.button_press_event += button_press_event_callback;
         parse_uris();
 
         if(!initialized) {
@@ -98,45 +68,6 @@ public class Gmpc.Song.Links: Gtk.Frame
         }
     }
 
-    private void download_file(Gmpc.AsyncDownload.Handle handle, Gmpc.AsyncDownload.Status status)
-    {
-        if(status == AsyncDownload.Status.PROGRESS) {
-            Gtk.ProgressBar pb = (Gtk.ProgressBar)this.get_child();
-            if(pb != null){
-                pb.pulse();
-            }
-            return;
-        }
-        if(status == AsyncDownload.Status.DONE) {
-            var a = handle.get_data();
-            var path = Gmpc.user_path("weblinks.list");
-            try{
-                GLib.FileUtils.set_contents(path, (string)a, (long)a.length);
-                this.parse_uris();
-                this.show_all();
-            }
-            catch(Error e)
-            {
-                stdout.printf("Error: %s\n", e.message);
-            }
-        }
-        else
-        {
-            var path = Gmpc.user_path("weblinks.list");
-            /* set dummy file */
-            try{
-                string a = " ";
-                GLib.FileUtils.set_contents(path, a, a.length);
-                this.parse_uris();
-                this.show_all();
-            }
-            catch(Error e)
-            {
-                stdout.printf("Error: %s\n", e.message);
-            }
-        }
-        this.handle = null;
-    }
     private void parse_uris()
     {
         var child = this.get_child();
@@ -149,10 +80,6 @@ public class Gmpc.Song.Links: Gtk.Frame
             path = Gmpc.data_path("weblinks.list");
             if(! FileUtils.test(path, FileTest.EXISTS))
             {
-                /* now try to download */
-                this.add(new Gtk.ProgressBar());
-                this.show_all();
-                this.handle = Gmpc.AsyncDownload.download("http://gmpc.wikia.com/index.php?title=GMPC_METADATA_WEBLINKLIST&action=raw",download_file);
                 return;
             }
         }
