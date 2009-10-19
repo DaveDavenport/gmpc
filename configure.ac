@@ -376,6 +376,10 @@ fi
 
 AM_PROG_VALAC([0.7.8])
 
+if test x${VALAC} = x""; then
+    exit 0;
+fi
+
 
 AC_ARG_ENABLE([shave],
             [  --disable-shave			Use shave output cleaner when building.],
