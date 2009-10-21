@@ -266,6 +266,22 @@ namespace Gmpc {
                 bitrate_label = null;
             }
 
+
+            private string get_extension(string path)
+            {
+                long length = path.length;
+                long i=length;
+                string retv = null;
+                for(;i>0 && (length-i) <8;i--){
+                    if(path[i] == '.') {
+                        stdout.printf("%li %s\n",length- i,path);
+                        retv = path.substring(i+1);
+                        stdout.printf("%s\n", retv);
+                        return retv;
+                    }
+                }
+                return retv;
+            }
             /** 
              * Show the page when playing 
              */
@@ -429,6 +445,27 @@ namespace Gmpc {
                                 ));
 
                     info_vbox.pack_start(box, false, false, 0); 
+                }
+                if(song.file != null)
+                {
+
+                    string extension = null;
+                    extension = get_extension(song.file);
+                    if(extension != null)
+                    {
+                        var box = new Gtk.HBox(false, 6);
+                        var image = new Gtk.Image.from_icon_name("gtk-info", Gtk.IconSize.MENU);
+                        box.pack_start(image, false, false, 0);
+
+                        var label = new Gtk.Label(song.title);
+                        label.set_ellipsize(Pango.EllipsizeMode.END);
+                        label.set_alignment(0.0f, 0.5f);
+                        box.pack_start(label, true, true, 0);
+                        label.set_markup(GLib.Markup.printf_escaped("<span color='%s' weight='bold'>%s:</span> %s",
+                                    this.item_color, _("Codec"), 
+                                    extension));
+                        info_vbox.pack_start(box, false, false, 0); 
+                    }
                 }
                 /* Time*/
                 if(song.time > 0) {
