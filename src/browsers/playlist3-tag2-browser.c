@@ -930,6 +930,7 @@ static void tag2_songlist_add_tag(tag_browser *browser,const gchar *name, int ty
     te->tool    = gmpc_mpd_data_treeview_tooltip_new(GTK_TREE_VIEW(te->tree), 0);
 	te->browser = browser;
 
+    gtk_tree_view_set_rules_hint(GTK_TREE_VIEW(te->tree), TRUE);
     if(te->type == MPD_TAG_ITEM_ARTIST ||te->type == MPD_TAG_ITEM_ALBUM_ARTIST) {
         te->tool->mtype = META_ARTIST_ART;
     } else if(te->type == MPD_TAG_ITEM_ALBUM ) {
