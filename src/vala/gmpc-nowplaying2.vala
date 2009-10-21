@@ -406,7 +406,8 @@ namespace Gmpc {
                     var label = new Gtk.Label(song.album);
                     var image = new Gtk.Image.from_icon_name("media-album", Gtk.IconSize.BUTTON);
                     box.pack_start(image, false, false, 0);
-                    label.set_markup(GLib.Markup.printf_escaped("<span size='x-large' weight='bold'>%s</span>", song.album));
+                    label.set_markup(GLib.Markup.printf_escaped("<span size='x-large' weight='bold'>%s %s</span>", song.album,
+                        (song.date != null)? "(%s)".printf(song.date):""));
                     label.set_ellipsize(Pango.EllipsizeMode.END);
                     label.set_alignment(0.0f, 0.5f);
                     box.pack_start(label, true, true, 0);
