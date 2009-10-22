@@ -274,6 +274,7 @@ int main(int argc, char **argv)
 	gboolean		fullscreen				= FALSE;
 	gchar			*config_path			= NULL;
 	gint			debug_level				= -1;
+	gchar			*profile_name			= NULL;
 	
 	GOptionEntry entries[] = 
 	{
@@ -301,7 +302,8 @@ int main(int argc, char **argv)
 			&show_bug_information, N_("Show bug information dialog"),				NULL},
 		{ "log-filter",		'f', 0,G_OPTION_ARG_CALLBACK, 
 			set_log_filter, N_("Shows all output from a certain log domain"),		"<Log domain>"},
-			
+		{ "profile",		'p', 0,G_OPTION_ARG_STRING, 
+			&profile_name , N_("Select a profile"),								"<Profile Name>"},
 
 		{NULL}
 	};
@@ -622,6 +624,20 @@ int main(int argc, char **argv)
 	/** Signals */
 
 	gmpc_profiles = gmpc_profiles_new();
+	if(profile_name) {
+		GList *iter, *items = gmpc_profiles_get_profiles_ids(gmpc_profiles);
+		for(iter = g_list_first(items); iter; iter = g_list_next(iter))
+		{
+			if(g_utf8_collate(profile_name, gmpc_profiles_get_name(gmpc_profiles, (const gchar *)iter->data)) == 0)
+			{
+				connection_set_current_profile((const gchar *)iter->data);
+				break;
+			}
+		}
+		g_list_foreach(items,(GFunc) g_free, NULL);
+		g_list_free(items);
+
+	}
 	TEC("Setting up gmpc idle,signals and profiles");
 	/**
      * Initialize the new metadata subsystem.
