@@ -87,6 +87,10 @@ public class  Gmpc.Plugin.DatabaseUpdateTracker : Gmpc.Plugin.Base {
                 start_updating();
             }
         }
+        else{
+            /* Remove icon on disconnect */
+            stop_updating();
+        }
     }
     private void status_changed(Connection gc, MPD.Server server, MPD.Status.Changed what)
     {
