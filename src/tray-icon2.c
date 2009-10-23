@@ -197,6 +197,7 @@ static int tray_icon2_button_scroll_event(gpointer tray, GdkEventScroll *event, 
     return TRUE;
 }
 /* hack to delay tooltip showup on tray-icon*/
+/*
 GTimeVal current = {0,0};
 static gboolean tray_icon2_tooltip_query(GtkStatusIcon *icon, 
         gint x, gint y, 
@@ -228,7 +229,7 @@ static gboolean tray_icon2_tooltip_query(GtkStatusIcon *icon,
     }
     return FALSE;
 }
-
+*/
 static void tray_icon2_init(void)
 {
 
@@ -248,7 +249,7 @@ static void tray_icon2_init(void)
 			g_signal_connect(G_OBJECT(tray_icon2_gsi), "button-press-event", G_CALLBACK(tray_icon2_button_press_event), NULL);
 			g_signal_connect(G_OBJECT(tray_icon2_gsi), "scroll-event", G_CALLBACK(tray_icon2_button_scroll_event), NULL);
 
-            g_signal_connect(G_OBJECT(tray_icon2_gsi), "query-tooltip", G_CALLBACK(tray_icon2_tooltip_query), NULL);
+        //    g_signal_connect(G_OBJECT(tray_icon2_gsi), "query-tooltip", G_CALLBACK(tray_icon2_tooltip_query), NULL);
 		}
         /* Make sure the icons are up2date */
         tray_icon2_connection_changed(connection, mpd_check_connected(connection), NULL);
