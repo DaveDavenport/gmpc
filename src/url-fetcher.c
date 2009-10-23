@@ -421,8 +421,8 @@ static int parse_uri(const char *uri, gpointer data)
 
 static void gufg_parse_callback(GmpcUrlFetchingGui *a, const gchar *url, void *user_data, GError **error)
 {
-	gmpc_url_fetching_gui_set_processing(a);
-	parse_uri(url, a);
+		gmpc_url_fetching_gui_set_processing(a);
+		parse_uri(url, a);
 }
 
 static gboolean gufg_validate_callback(GmpcUrlFetchingGui *a,const gchar *url)
@@ -430,14 +430,39 @@ static gboolean gufg_validate_callback(GmpcUrlFetchingGui *a,const gchar *url)
 	return (strlen(url) > 0 && (G_IS_DIR_SEPARATOR(url[0]) || url_validate_url(url)));
 }
 
+static gboolean gufg_validate_callback_0160(GmpcUrlFetchingGui *a, const gchar *url)
+{
+	return TRUE;
+}
+
+static void gufg_parse_callback_0160(GmpcUrlFetchingGui *a, const gchar *url, void *user_data, GError **error)
+{
+	printf("add url1: '%s'\n", url);
+	mpd_playlist_queue_load(connection,url);
+	mpd_playlist_queue_commit(connection);
+	gmpc_url_fetching_gui_set_completed(a);
+}
+
 void url_start(void)
 {
-	GtkWidget *a = gmpc_url_fetching_gui_new(gufg_parse_callback,NULL, gufg_validate_callback,NULL, g_object_unref);
+	if(mpd_server_check_version(connection, 0,16,0))
+	{
+		GtkWidget *a = gmpc_url_fetching_gui_new(gufg_parse_callback_0160,NULL, gufg_validate_callback_0160,NULL, g_object_unref);
+	}else{
+		GtkWidget *a = gmpc_url_fetching_gui_new(gufg_parse_callback,NULL, gufg_validate_callback,NULL, g_object_unref);
+	}
 }
 
 void url_start_real(const gchar * url)
 {
-	parse_uri(url, NULL);
+	if(mpd_server_check_version(connection, 0,16,0))
+	{
+	printf("add url2: '%s'\n", url);
+		mpd_playlist_queue_load(connection,url);
+		mpd_playlist_queue_commit(connection);
+	}else{
+		parse_uri(url, NULL);
+	}
 }
 
 /* vim: set noexpandtab ts=4 sw=4 sts=4 tw=120: */
