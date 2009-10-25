@@ -46,6 +46,7 @@ public class  Gmpc.Plugin.DatabaseUpdateTracker : Gmpc.Plugin.Base {
 
     private void start_updating()
     {
+        if(this.image != null) return;
         this.image = new Gtk.Image.from_icon_name("gtk-refresh", Gtk.IconSize.MENU); 
         this.image.show();
         this.image.set_tooltip_text(_("MPD is rescanning the database"));
