@@ -30,6 +30,10 @@
 #include "playlist3-playlist-editor.h"
 #include "gmpc-extras.h"
 
+
+static gboolean pl3_file_browser_is_field_supported(int tag);
+static MpdData * pl3_file_browser_is_search(int num_field , gchar *search_string, GError *error);
+
 static void pl3_file_browser_destroy(void);
 static void pl3_file_browser_add(GtkWidget *cat_tree);
 static void pl3_file_browser_unselected(GtkWidget *container);
@@ -92,6 +96,8 @@ gmpcPlBrowserPlugin file_browser_gbp = {
 	.selected       = pl3_file_browser_selected,
 	.unselected     = pl3_file_browser_unselected,
 	.add_go_menu    = pl3_file_browser_add_go_menu,
+    .integrate_search_field_supported = pl3_file_browser_is_field_supported,
+    .integrate_search   = pl3_file_browser_is_search
 };
 
 gmpcPlugin file_browser_plug = {
@@ -1314,4 +1320,37 @@ void pl3_file_browser_open_path(const gchar *path)
             g_strfreev(dirs);
         }
     }
+}
+
+
+static gboolean pl3_file_browser_is_field_supported(int tag)
+{
+    if(tag == MPD_TAG_NUM_OF_ITEM_TYPES) return TRUE; 
+    return mpd_server_tag_supported(connection, tag);
+}
+
+static MpdData * pl3_file_browser_is_search(int num_field , gchar *search_string, GError *error)
+{
+    MpdData *data_t = NULL;
+    printf("query: %s %i\n", search_string, num_field);
+    if(num_field == MPD_TAG_NUM_OF_ITEM_TYPES){
+        data_t = advanced_search(search_string, FALSE);
+    }else{
+        gchar ** splitted = tokenize_string(search_string);
+        int i =0;
+        gboolean found = FALSE;
+        for(i=0;splitted && splitted[i];i++) {
+            if(!found) {
+                mpd_database_search_start(connection, FALSE);
+                found = TRUE;
+            }
+            mpd_database_search_add_constraint(connection, num_field, splitted[i]);
+        }
+        if(splitted)
+            g_strfreev(splitted);
+        if(found) {
+            data_t = mpd_database_search_commit(connection);
+        }
+    }
+    return data_t;
 }
