@@ -127,7 +127,7 @@ namespace Gmpc {
             }
 
         }
-        public interface BrowserIntegrateSearchIface : Base {
+        public interface IntegrateSearchIface : Base {
             public virtual bool field_supported (MPD.Tag.Type tag)
             {
                 return true;

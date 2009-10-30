@@ -1240,13 +1240,13 @@ static void play_queue_plugin_tool_menu_iface_init (GmpcPluginToolMenuIfaceIface
 	iface->tool_menu_integration = pl3_current_playlist_tool_menu_integration;
 }
 /* Integrate Search */
-static gboolean play_queue_plugin_is_field_supported(GmpcPluginBrowserIntegrateSearchIface *obj, int tag)
+static gboolean play_queue_plugin_is_field_supported(GmpcPluginIntegrateSearchIface *obj, int tag)
 {
     if(tag == MPD_TAG_NUM_OF_ITEM_TYPES) return TRUE; 
     return mpd_server_tag_supported(connection, tag);
 }
 
-static MpdData * play_queue_plugin_is_search(GmpcPluginBrowserIntegrateSearchIface *obj, int num_field , gchar *search_string)
+static MpdData * play_queue_plugin_is_search(GmpcPluginIntegrateSearchIface *obj, int num_field , gchar *search_string)
 {
     MpdData *data_t = NULL;
     if(num_field == MPD_TAG_NUM_OF_ITEM_TYPES){
@@ -1271,7 +1271,7 @@ static MpdData * play_queue_plugin_is_search(GmpcPluginBrowserIntegrateSearchIfa
     return data_t;
 }
 
-static void play_queue_plugin_is_iface_init (GmpcPluginBrowserIntegrateSearchIfaceIface * iface) {
+static void play_queue_plugin_is_iface_init (GmpcPluginIntegrateSearchIfaceIface * iface) {
     iface->field_supported = play_queue_plugin_is_field_supported;
     iface->search = play_queue_plugin_is_search;
 }
@@ -1299,7 +1299,7 @@ GType play_queue_plugin_get_type(void) {
 
 		g_type_add_interface_static (play_queue_plugin_type_id, GMPC_PLUGIN_TYPE_BROWSER_IFACE, &iface_info);
 		g_type_add_interface_static (play_queue_plugin_type_id, GMPC_PLUGIN_TYPE_TOOL_MENU_IFACE, &iface_tm_info);
-		g_type_add_interface_static (play_queue_plugin_type_id, GMPC_PLUGIN_TYPE_BROWSER_INTEGRATE_SEARCH_IFACE, &iface_is_info);
+		g_type_add_interface_static (play_queue_plugin_type_id, GMPC_PLUGIN_TYPE_INTEGRATE_SEARCH_IFACE, &iface_is_info);
 	}
 	return play_queue_plugin_type_id;
 }

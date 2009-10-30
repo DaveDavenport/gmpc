@@ -594,7 +594,7 @@ int gmpc_plugin_browser_song_list_option_menu(gmpcPluginParent *plug, GmpcMpdDat
 gboolean gmpc_plugin_browser_has_integrate_search(gmpcPluginParent *plug)
 {
     if(plug->new){
-        return GMPC_PLUGIN_IS_BROWSER_INTEGRATE_SEARCH_IFACE(plug->new);
+        return GMPC_PLUGIN_IS_INTEGRATE_SEARCH_IFACE(plug->new);
     }
     if(gmpc_plugin_is_browser(plug))
     {
@@ -605,7 +605,7 @@ gboolean gmpc_plugin_browser_has_integrate_search(gmpcPluginParent *plug)
 MpdData *gmpc_plugin_browser_integrate_search(gmpcPluginParent *plug, const int search_field, const gchar * query, GError **error)
 {
     if(!gmpc_plugin_browser_has_integrate_search(plug)) return NULL;
-    if(plug->new) return gmpc_plugin_browser_integrate_search_iface_search(GMPC_PLUGIN_BROWSER_INTEGRATE_SEARCH_IFACE(plug->new), search_field, query);
+    if(plug->new) return gmpc_plugin_integrate_search_iface_search(GMPC_PLUGIN_INTEGRATE_SEARCH_IFACE(plug->new), search_field, query);
     return plug->old->browser->integrate_search(search_field,query,error); 
 }
 
@@ -613,7 +613,7 @@ gboolean gmpc_plugin_browser_integrate_search_field_supported(gmpcPluginParent *
 {
     if(!gmpc_plugin_browser_has_integrate_search(plug)) return FALSE;
     
-    if(plug->new) return gmpc_plugin_browser_integrate_search_iface_field_supported(GMPC_PLUGIN_BROWSER_INTEGRATE_SEARCH_IFACE(plug->new), search_field);
+    if(plug->new) return gmpc_plugin_integrate_search_iface_field_supported(GMPC_PLUGIN_INTEGRATE_SEARCH_IFACE(plug->new), search_field);
 
 	if(plug->old->browser->integrate_search_field_supported == NULL) return TRUE;
     return plug->old->browser->integrate_search_field_supported(search_field); 
