@@ -46,7 +46,7 @@ enum {
     PLAY_QUEUE_UID
 };
 /**
- * Private data structure 
+ * Private data structure
  */
 typedef struct _PlayQueuePluginPrivate {
     gulong status_changed_handler;
@@ -126,7 +126,7 @@ static void pl3_current_playlist_browser_init(PlayQueuePlugin *self);
 
 static void pl3_cp_current_song_changed(GmpcMpdDataModelPlaylist *model2,GtkTreePath *path, GtkTreeIter *iter,PlayQueuePlugin *self)
 {
-    GtkTreeModel *model; 
+    GtkTreeModel *model;
     if(self->priv->pl3_cp_tree == NULL) return;
     model = gtk_tree_view_get_model(GTK_TREE_VIEW(self->priv->pl3_cp_tree));
     if(GMPC_IS_MPDDATA_MODEL_PLAYLIST(model))
@@ -151,8 +151,8 @@ static void __real_pl3_total_playtime_changed(GmpcMpdDataModelPlaylist *model, u
          GString *tstring = g_string_new("");
 
          g_string_append_printf(tstring, "%lu %s",
-                 total_songs, 
-                 ngettext("item", "items", total_songs ) 
+                 total_songs,
+                 ngettext("item", "items", total_songs )
                  );
          if(string)
          {
@@ -186,7 +186,7 @@ static void pl3_current_playlist_browser_crop_current_song(PlayQueuePlugin *self
     mpd_Song *song = mpd_playlist_get_current_song(connection);
     if(song)
     {
-        int length = mpd_playlist_get_playlist_length(connection); 
+        int length = mpd_playlist_get_playlist_length(connection);
         /* Move to first place, this avoid possible "issues" */
         mpd_playlist_move_id(connection,song->id, 0);
         for(;length > 1; length--){
@@ -209,16 +209,16 @@ static void pl3_cp_init(PlayQueuePlugin *self)
     gmpc_easy_command_add_entry(gmpc_easy_command,
                     _("switch play queue"),"",
                     _("Switch to play queue"),
-                    (GmpcEasyCommandCallback *)pl3_current_playlist_browser_activate, self); 
+                    (GmpcEasyCommandCallback *)pl3_current_playlist_browser_activate, self);
     gmpc_easy_command_add_entry(gmpc_easy_command,
                     _("Clear play queue"),"",
                     _("Clear play queue"),
-                    (GmpcEasyCommandCallback *)pl3_current_playlist_browser_clear_playlist, self); 
+                    (GmpcEasyCommandCallback *)pl3_current_playlist_browser_clear_playlist, self);
 
     gmpc_easy_command_add_entry(gmpc_easy_command,
                     _("Crop current song"),"",
                     _("Crop the playlist so it only contains the current song"),
-                    (GmpcEasyCommandCallback *)pl3_current_playlist_browser_crop_current_song, self); 
+                    (GmpcEasyCommandCallback *)pl3_current_playlist_browser_crop_current_song, self);
 }
 void pl3_current_playlist_destroy(PlayQueuePlugin *self);
 
@@ -245,7 +245,7 @@ void pl3_current_playlist_destroy(PlayQueuePlugin *self)
 {
 	if(self->priv->pl3_cp_tree)
 	{
-        /* destroy the entry */ 
+        /* destroy the entry */
         if(self->priv->pl3_curb_tree_ref)
 		{
 			GtkTreeIter piter;
@@ -1239,7 +1239,42 @@ static void play_queue_browser_iface_init(GmpcPluginBrowserIfaceIface * iface) {
 static void play_queue_plugin_tool_menu_iface_init (GmpcPluginToolMenuIfaceIface * iface) {
 	iface->tool_menu_integration = pl3_current_playlist_tool_menu_integration;
 }
+/* Integrate Search */
+static gboolean play_queue_plugin_is_field_supported(GmpcPluginBrowserIntegrateSearchIface *obj, int tag)
+{
+    if(tag == MPD_TAG_NUM_OF_ITEM_TYPES) return TRUE; 
+    return mpd_server_tag_supported(connection, tag);
+}
 
+static MpdData * play_queue_plugin_is_search(GmpcPluginBrowserIntegrateSearchIface *obj, int num_field , gchar *search_string)
+{
+    MpdData *data_t = NULL;
+    if(num_field == MPD_TAG_NUM_OF_ITEM_TYPES){
+        data_t = advanced_search(search_string, TRUE);
+    }else{
+        gchar ** splitted = tokenize_string(search_string);
+        int i =0;
+        gboolean found = FALSE;
+        for(i=0;splitted && splitted[i];i++) {                                                        
+            if(!found) {
+                mpd_playlist_search_start(connection, FALSE);
+                found = TRUE;
+            }
+            mpd_playlist_search_add_constraint(connection, num_field, splitted[i]);
+        }
+        if(splitted)
+            g_strfreev(splitted);
+        if(found) {
+            data_t = mpd_playlist_search_commit(connection);
+        }
+    }
+    return data_t;
+}
+
+static void play_queue_plugin_is_iface_init (GmpcPluginBrowserIntegrateSearchIfaceIface * iface) {
+    iface->field_supported = play_queue_plugin_is_field_supported;
+    iface->search = play_queue_plugin_is_search;
+}
 
 GType play_queue_plugin_get_type(void) {
 	static GType play_queue_plugin_type_id = 0;
@@ -1250,16 +1285,21 @@ GType play_queue_plugin_get_type(void) {
 			.instance_size = sizeof(PlayQueuePlugin),
 			.n_preallocs = 0
 		};
-        static const GInterfaceInfo iface_info = { 
-            (GInterfaceInitFunc) play_queue_browser_iface_init, 
+        static const GInterfaceInfo iface_info = {
+            (GInterfaceInitFunc) play_queue_browser_iface_init,
             (GInterfaceFinalizeFunc) NULL, NULL};
-        static const GInterfaceInfo iface_tm_info = { 
-            (GInterfaceInitFunc) play_queue_plugin_tool_menu_iface_init, 
+        static const GInterfaceInfo iface_tm_info = {
+            (GInterfaceInitFunc) play_queue_plugin_tool_menu_iface_init,
+            (GInterfaceFinalizeFunc) NULL, NULL};
+
+        static const GInterfaceInfo iface_is_info = {
+            (GInterfaceInitFunc) play_queue_plugin_is_iface_init,
             (GInterfaceFinalizeFunc) NULL, NULL};
         play_queue_plugin_type_id = g_type_register_static(GMPC_PLUGIN_TYPE_BASE, "PlayQueuePlugin", &info, 0);
 
 		g_type_add_interface_static (play_queue_plugin_type_id, GMPC_PLUGIN_TYPE_BROWSER_IFACE, &iface_info);
 		g_type_add_interface_static (play_queue_plugin_type_id, GMPC_PLUGIN_TYPE_TOOL_MENU_IFACE, &iface_tm_info);
+		g_type_add_interface_static (play_queue_plugin_type_id, GMPC_PLUGIN_TYPE_BROWSER_INTEGRATE_SEARCH_IFACE, &iface_is_info);
 	}
 	return play_queue_plugin_type_id;
 }

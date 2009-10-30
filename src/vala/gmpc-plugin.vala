@@ -125,6 +125,14 @@ namespace Gmpc {
             {
                 return 0;
             }
+
+        }
+        public interface BrowserIntegrateSearchIface : Base {
+            public virtual bool field_supported (MPD.Tag.Type tag)
+            {
+                return true;
+            }
+            public abstract MPD.Data.Item ? search(MPD.Tag.Type tag, string search_query);
         }
         public interface PreferencesIface : Base {
             public abstract void preferences_pane_construct (Gtk.Container container);
