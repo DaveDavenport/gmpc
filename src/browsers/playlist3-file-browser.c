@@ -25,6 +25,7 @@
 #include "misc.h"
 #include "playlist3.h"
 #include "playlist3-file-browser.h"
+#include "advanced-search.h"
 #include "gmpc-mpddata-model.h"
 #include "gmpc-mpddata-treeview.h"
 #include "playlist3-playlist-editor.h"
@@ -101,7 +102,7 @@ gmpcPlBrowserPlugin file_browser_gbp = {
 };
 
 gmpcPlugin file_browser_plug = {
-	.name = 						N_("File Browser"),
+	.name = 						N_("Database"),
 	.version = 						{1,1,1},
 	.plugin_type = 					GMPC_PLUGIN_PL_BROWSER|GMPC_INTERNALL,
   	.destroy = 						pl3_file_browser_destroy,
@@ -338,7 +339,7 @@ static void pl3_file_browser_add(GtkWidget *cat_tree)
 	playlist3_insert_browser(&iter, pos);
 	gtk_list_store_set(GTK_LIST_STORE(pl3_tree), &iter, 
 			PL3_CAT_TYPE, file_browser_plug.id,
-			PL3_CAT_TITLE, _("File Browser"),
+			PL3_CAT_TITLE, _("Database"),
 			PL3_CAT_ICON_ID, "gtk-open",
 			-1);
 	/* add fantom child for lazy tree */
@@ -376,7 +377,7 @@ static int directory_sort_func(gpointer ppaa, gpointer ppbb, gpointer data)
     MpdData_real *a = *(MpdData_real **)ppaa;
     MpdData_real *b = *(MpdData_real **)ppbb;
     int val = 0;
-    if(a->type == MPD_DATA_TYPE_DIRECTORY & b->type == MPD_DATA_TYPE_DIRECTORY)
+    if((a->type == MPD_DATA_TYPE_DIRECTORY) & (b->type == MPD_DATA_TYPE_DIRECTORY))
     {
         if(a->directory && b->directory) {
             gchar *sa,*sb;
@@ -1196,7 +1197,7 @@ static int pl3_file_browser_add_go_menu(GtkWidget *menu)
     if(!pl3_file_browser_get_enabled())
         return 0;
 
-    item = gtk_image_menu_item_new_with_label(_("File Browser"));
+    item = gtk_image_menu_item_new_with_label(_("Database"));
     gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), 
             gtk_image_new_from_stock("gtk-open", GTK_ICON_SIZE_MENU));
     gtk_widget_add_accelerator(GTK_WIDGET(item), 
