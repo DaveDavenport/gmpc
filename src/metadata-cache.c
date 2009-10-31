@@ -581,15 +581,7 @@ void metadata_cache_init(void)
 	int ret;
 	unsigned i;
 	gboolean database_valid = FALSE;
-	gchar *url = gmpc_get_covers_path(NULL);
-	if(!g_file_test(url,G_FILE_TEST_IS_DIR)){
-		if(g_mkdir(url, 0700)<0){
-			g_log(MDC_LOG_DOMAIN, G_LOG_LEVEL_ERROR, "Cannot create directory %s\n", url);
-		}
-	}
-	q_free(url);
-
-	url = gmpc_get_covers_path("covers.sql");
+	gchar *url = gmpc_get_covers_path("covers.sql");
 	do{
 		ret = sqlite3_open(url, &metadata_db);
 		if (ret != SQLITE_OK)

@@ -140,7 +140,6 @@ void meta_data_destroy(void);
 MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData **met,MetaDataCallback callback, gpointer data);
 
 
-#define METADATA_DIR ".covers"
 gchar * gmpc_get_metadata_filename(MetaDataType  type, mpd_Song *song, char *extention);
 
 

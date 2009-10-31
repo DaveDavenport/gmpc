@@ -942,9 +942,10 @@ gchar * gmpc_get_metadata_filename(MetaDataType  type, mpd_Song *song, char *ext
 {
 	gchar *retv= NULL;
 	/* home dir */
-	const gchar *homedir = g_get_home_dir();
-	g_assert(song->artist != NULL);
+	gchar *homedir = NULL; 	g_assert(song->artist != NULL);
 	g_assert(type < META_QUERY_DATA_TYPES); 
+	homedir = g_get_user_cache_dir();
+
 	{
 		GError *error = NULL;
 		gchar *filename = NULL, *dirname = NULL;
@@ -980,7 +981,7 @@ gchar * gmpc_get_metadata_filename(MetaDataType  type, mpd_Song *song, char *ext
 			dirname = g_strdup("invalid");
 		}
 		dirname = strip_invalid_chars(dirname);
-		retv = g_build_path(G_DIR_SEPARATOR_S, homedir,METADATA_DIR, dirname,NULL);
+		retv = g_build_path(G_DIR_SEPARATOR_S, homedir,"gmpc","metadata", dirname,NULL);
 		if(g_file_test(retv, G_FILE_TEST_EXISTS) == FALSE) {
 			if(g_mkdir_with_parents(retv, 0755) < 0) {
 				g_error("Failed to create: %s\n", retv);
@@ -1016,10 +1017,11 @@ gchar * gmpc_get_metadata_filename(MetaDataType  type, mpd_Song *song, char *ext
 			g_free(temp);
 		}
 		filename = strip_invalid_chars(filename);
-		retv = g_build_path(G_DIR_SEPARATOR_S, homedir,METADATA_DIR, dirname,filename,NULL);
+		retv = g_build_path(G_DIR_SEPARATOR_S, homedir,"gmpc", "metadata", dirname,filename,NULL);
 		if(filename) g_free(filename);
 		if(dirname) g_free(dirname);
 	}
+	g_free(homedir);
 	return retv;
 }
 static void metadata_pref_priority_changed(GtkCellRenderer *renderer, char *path, char *new_text, GtkListStore *store)

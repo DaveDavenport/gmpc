@@ -163,15 +163,11 @@ void screenshot_add_border (GdkPixbuf **src)
  */
 gchar * gmpc_get_user_path(const gchar *filename)
 {
-	const gchar *homedir = g_get_home_dir();
+	const gchar *homedir = g_get_user_config_dir(); 
 	gchar *ret = NULL;
 
 	/* Build the path */
-#ifdef USE_CONFIG_DIR
-	ret = g_build_path(G_DIR_SEPARATOR_S, homedir,".config", "gmpc", filename,NULL);
-#else
-	ret = g_build_path(G_DIR_SEPARATOR_S, homedir, ".gmpc", filename,NULL);
-#endif
+	ret = g_build_path(G_DIR_SEPARATOR_S, homedir, "gmpc", filename,NULL);
 
 	return ret;
 }
@@ -185,15 +181,11 @@ gchar * gmpc_get_user_path(const gchar *filename)
  */
 gchar * gmpc_get_covers_path(const gchar *filename)
 {
-	const gchar *homedir = g_get_home_dir();
+	const gchar *homedir = g_get_user_cache_dir(); 
 	gchar *ret = NULL;
 
 	/* Build the path */
-#ifdef USE_CONFIG_DIR
-	ret = g_build_path(G_DIR_SEPARATOR_S, homedir,".config", "covers", filename,NULL);
-#else
-	ret = g_build_path(G_DIR_SEPARATOR_S, homedir, ".covers", filename,NULL);
-#endif
+	ret = g_build_path(G_DIR_SEPARATOR_S, homedir, "gmpc", "metadata", filename,NULL);
 	return ret;
 }
 

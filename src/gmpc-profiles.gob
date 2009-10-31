@@ -140,31 +140,27 @@ class Gmpc:Profiles from G:Object
    * */
   init(self)
   {
-    /**
-     * Get Profile
-     */
-    gchar *url = cfg_get_single_value_as_string(config, "connection", "profile-file");
-    if(!url)
-    {
-	  url = gmpc_get_user_path("profiles.cfg");
-      cfg_set_single_value_as_string(config, "connection", "profile-file",url);
-    }
-    self->_priv->profiles = cfg_open(url);
-    if(self->_priv->profiles == NULL)
-    {
+      gchar *url;
       /**
-       * Show gtk error message and quit 
+       * Get Profile
        */
-      debug_printf(DEBUG_ERROR,"Failed to save/load Profile file:\n%s\n",url);
-      abort();
-    }
-    g_free(url);
-    self_load_from_config(self);
-    if(self->_priv->num_profiles == 0)
-    {
-      self_add_default(self);
+      url = gmpc_get_user_path("profiles.cfg");
+      self->_priv->profiles = cfg_open(url);
+      if(self->_priv->profiles == NULL)
+      {
+          /**
+           * Show gtk error message and quit 
+           */
+          debug_printf(DEBUG_ERROR,"Failed to save/load Profile file:\n%s\n",url);
+          abort();
+      }
+      g_free(url);
       self_load_from_config(self);
-    }
+      if(self->_priv->num_profiles == 0)
+      {
+          self_add_default(self);
+          self_load_from_config(self);
+      }
   }
   /**
    * Add default values

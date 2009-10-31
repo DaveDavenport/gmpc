@@ -45,15 +45,6 @@
 #include "browsers/playlist3-tag2-browser.h"
 #include "browsers/playlist3-current-playlist-browser.h"
 
-/* vala */
-/*#include "vala/gmpc-easy-command.h"
-#include "vala/gmpc-test-plugin.h"
-#include "vala/gmpc-metadata-browser2.h"
-#include "vala/gmpc-metadata-prefetcher.h"
-#include "vala/gmpc-database-update-tracker.h"
-#include "vala/gmpc-paned-size-group.h"
-#include "vala/gmpc-nowplaying2.h"
-*/
 #include "gmpc-mpddata-model-playlist.h"
 #include "metadata-cache.h"
 #include "bug-information.h"
@@ -155,6 +146,7 @@ void send_password(void);
  * Set paths
  */
 static void create_gmpc_paths(void);
+static void move_old_gmpc_data(void);
 
 void print_version(void);
 
@@ -457,6 +449,7 @@ int main(int argc, char **argv)
      * Call create_gmpc_paths();
      * This function checks if the path needed path are available, if not, create them
      */
+	move_old_gmpc_data();
 	create_gmpc_paths();
 	TEC("Check version and create paths");
 
@@ -1347,15 +1340,53 @@ void show_error_message(const gchar * string, const int block)
 	}
 }
 
-static void create_gmpc_paths(void)
+
+static void move_old_gmpc_data(void)
 {
-	/**
-	 * Create needed directories for mpd.
-	 */
+	gchar *url;
+	gchar *old = g_get_home_dir();
+	gchar *path;
 
-	/** create path */
-	gchar *url = gmpc_get_user_path(NULL);
+	url =  gmpc_get_user_path(NULL);
+	if (!g_file_test(url, G_FILE_TEST_EXISTS)) {
+		path = g_build_filename(old, ".gmpc", NULL);
+		if(g_file_test(path, G_FILE_TEST_IS_DIR)) {
+			GDir *dir;
+			gchar *iter;
+			/* Create the directory */
+			create_gmpc_paths();
+			dir = g_dir_open(path, 0, NULL);
+			if(dir){
+				while((iter = g_dir_read_name(dir)) != NULL)
+				{
+					gchar *dest_path = g_build_filename(url, iter, NULL);
+					gchar *src_path = g_build_filename(path, iter, NULL);
+					printf("move %s %s\n", src_path, dest_path);
+					g_rename(src_path, dest_path);
+					g_free(src_path); g_free(dest_path);
+				}
+				g_dir_close(dir);
+			}
+		}
+		g_free(path);
+	}
+	g_free(url);
 
+	url =  gmpc_get_covers_path("covers.sql");
+	if (!g_file_test(url, G_FILE_TEST_EXISTS)) {
+		path = g_build_filename(old, ".covers","covers.sql", NULL);
+		if(g_file_test(path, G_FILE_TEST_EXISTS)) {
+			/* Create the directory */
+			create_gmpc_paths();
+			printf("move %s %s\n",path,url);
+			g_rename(path,url);
+		}
+		g_free(path);
+	}
+}
+
+static void create_directory(gchar *url)
+{
 	/**
 	 * Check if ~/.gmpc/ exists
 	 * If not try to create it.
@@ -1376,6 +1407,21 @@ static void create_gmpc_paths(void)
 	} else {
 		g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "%s exist and is directory", url);
 	}
+}
+
+static void create_gmpc_paths(void)
+{
+	/**
+	 * Create needed directories for mpd.
+	 */
+
+	/** create path */
+	gchar *url = gmpc_get_user_path(NULL);
+	create_directory(url);
+	q_free(url);
+
+	url = gmpc_get_covers_path(NULL);
+	create_directory(url);
 	/* Free the path */
 	q_free(url);
 }
