@@ -942,9 +942,9 @@ gchar * gmpc_get_metadata_filename(MetaDataType  type, mpd_Song *song, char *ext
 {
 	gchar *retv= NULL;
 	/* home dir */
-	gchar *homedir = NULL; 	g_assert(song->artist != NULL);
+	const gchar *homedir = g_get_user_cache_dir();
+	g_assert(song->artist != NULL);
 	g_assert(type < META_QUERY_DATA_TYPES); 
-	homedir = g_get_user_cache_dir();
 
 	{
 		GError *error = NULL;
@@ -1021,7 +1021,6 @@ gchar * gmpc_get_metadata_filename(MetaDataType  type, mpd_Song *song, char *ext
 		if(filename) g_free(filename);
 		if(dirname) g_free(dirname);
 	}
-	g_free(homedir);
 	return retv;
 }
 static void metadata_pref_priority_changed(GtkCellRenderer *renderer, char *path, char *new_text, GtkListStore *store)
