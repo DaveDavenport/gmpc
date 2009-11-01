@@ -1,21 +1,23 @@
 <?xml version="1.0"?>
-<!--*- mode: xml -*-->
 <interface>
+  <!-- interface-requires gtk+ 2.12 -->
+  <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkWindow" id="message_window">
     <property name="title" translatable="yes">Messages</property>
     <property name="default_width">650</property>
     <property name="default_height">150</property>
-    <signal handler="message_window_destroy" name="delete_event"/>
+    <signal name="delete_event" handler="message_window_destroy"/>
     <child>
-      <object class="GtkVBox" id="vbox8">
+      <object class="GtkVBox" id="main_hbox">
         <property name="visible">True</property>
+        <property name="orientation">vertical</property>
         <child>
           <object class="GtkScrolledWindow" id="scrolledwindow3">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
-            <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
-            <property name="shadow_type">GTK_SHADOW_ETCHED_IN</property>
+            <property name="hscrollbar_policy">automatic</property>
+            <property name="vscrollbar_policy">automatic</property>
+            <property name="shadow_type">etched-in</property>
             <child>
               <object class="GtkTreeView" id="message_tree">
                 <property name="visible">True</property>
@@ -24,8 +26,40 @@
               </object>
             </child>
           </object>
+          <packing>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkHBox" id="hbox1">
+            <property name="visible">True</property>
+            <child>
+              <object class="GtkButton" id="button1">
+                <property name="label" translatable="yes">_Copy to clipboard</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="image">copy_image</property>
+                <property name="use_underline">True</property>
+                <signal name="clicked" handler="copy_to_clipboard"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="pack_type">end</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="position">1</property>
+          </packing>
         </child>
       </object>
     </child>
+  </object>
+  <object class="GtkImage" id="copy_image">
+    <property name="visible">True</property>
+    <property name="stock">gtk-copy</property>
   </object>
 </interface>

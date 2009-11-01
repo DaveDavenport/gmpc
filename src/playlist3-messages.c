@@ -235,6 +235,51 @@ void message_window_destroy(GtkWidget *win,GdkEvent *event, GtkBuilder *message_
 	g_object_unref(message_xml);
 	message_xml = NULL;
 }
+void copy_to_clipboard(GtkButton *button, GtkBuilder *xml)
+{
+	GtkWidget *tree= (GtkWidget *) gtk_builder_get_object(xml, "message_tree");
+	GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(tree));
+	GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(tree));
+	GtkClipboard *gcb = NULL;
+	GList *list = NULL, *liter = NULL;
+	GString *str = g_string_new("");
+	printf("Copy to clipboard\n");
+	if(gtk_tree_selection_count_selected_rows(selection) == 0)
+	{
+		GtkTreeIter iter;
+		if(gtk_tree_model_get_iter_first(model, &iter)) {
+			do{
+				GtkTreePath *path = gtk_tree_model_get_path(model, &iter);
+				list = g_list_prepend(list, path);
+			}while(gtk_tree_model_iter_next(model, &iter));
+		}	
+		list = g_list_reverse(list);
+	}else{
+			list = gtk_tree_selection_get_selected_rows(selection, NULL);
+	}
+	for(liter = g_list_first(list); liter; liter = g_list_next(liter))
+	{
+		gchar *message = NULL;
+		GtkTreeIter iter;
+		if(gtk_tree_model_get_iter(model, &iter, liter->data))
+		{
+			gtk_tree_model_get(model,&iter,2, &message, -1);
+			str = g_string_append(str, message);
+			str = g_string_append(str, "\n");
+			g_free(message);
+		}
+	}
+
+	gcb = gtk_widget_get_clipboard(button, GDK_SELECTION_CLIPBOARD);
+	printf("Set clipboard: %s\n", str->str);
+	gtk_clipboard_set_text(gcb, str->str, str->len);
+	
+
+	g_list_foreach (list, gtk_tree_path_free, NULL);
+	g_list_free (list);
+	g_string_free(str, TRUE);
+}
+
 static void playlist3_message_window_open(Playlist3MessagePlugin *self)
 {
 	GtkBuilder *message_xml = NULL;
