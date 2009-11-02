@@ -8,7 +8,7 @@ CONF_VERSION=0
 
 bin_PROGRAMS=gmpc
 
-gmpc_VALAFLAGS=--pkg=gmodule-2.0 --pkg=config --pkg=gtk+-2.0 --pkg=gmpc --pkg=libmpd --vapidir=$(top_srcdir)/src/vala/ --basedir=$(top_builddir) -H gmpc-extras.h --library=gmpc-extras --use-header
+gmpc_VALAFLAGS=--pkg=gmodule-2.0 --pkg=config --pkg=gtk+-2.0 --pkg=gmpc --pkg=libmpd --vapidir=$(top_srcdir)/src/vala/ --basedir=$(top_builddir)/src/ -H gmpc-extras.h --library=gmpc-extras --use-header
 
 vala_SOURCES=\
     vala/gmpc.vapi\
