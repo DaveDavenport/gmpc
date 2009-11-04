@@ -1,22 +1,45 @@
 <?xml version="1.0"?>
-<!--*- mode: xml -*-->
 <interface>
+  <!-- interface-requires gtk+ 2.12 -->
+  <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkAdjustment" id="adjustment1">
-    <property name="upper">15</property>
-    <property name="lower">1</property>
-    <property name="page_increment">10</property>
-    <property name="step_increment">1</property>
-    <property name="page_size">0</property>
     <property name="value">5</property>
+    <property name="lower">1</property>
+    <property name="upper">15</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+  </object>
+  <object class="GtkListStore" id="liststore1">
+    <columns>
+      <!-- column-name mode_id -->
+      <column type="gint"/>
+      <!-- column-name Name -->
+      <column type="gchararray"/>
+    </columns>
+    <data>
+      <row>
+        <col id="0">0</col>
+        <col id="1" translatable="yes">Off</col>
+      </row>
+      <row>
+        <col id="0">1</col>
+        <col id="1" translatable="yes">Track</col>
+      </row>
+      <row>
+        <col id="0">2</col>
+        <col id="1" translatable="yes">Album</col>
+      </row>
+    </data>
   </object>
   <object class="GtkVBox" id="server-vbox">
     <property name="visible">True</property>
+    <property name="orientation">vertical</property>
     <property name="spacing">6</property>
     <child>
       <object class="GtkFrame" id="frame6">
         <property name="visible">True</property>
         <property name="label_xalign">0</property>
-        <property name="shadow_type">GTK_SHADOW_NONE</property>
+        <property name="shadow_type">none</property>
         <child>
           <object class="GtkTable" id="table10">
             <property name="visible">True</property>
@@ -27,17 +50,18 @@
             <property name="row_spacing">6</property>
             <child>
               <object class="GtkCheckButton" id="cb_fading">
+                <property name="label" translatable="yes">Enable crossfade</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="label" translatable="yes">Enable crossfade</property>
+                <property name="receives_default">False</property>
                 <property name="use_underline">True</property>
                 <property name="draw_indicator">True</property>
-                <signal handler="xfade_enable_toggled" name="toggled"/>
+                <signal name="toggled" handler="xfade_enable_toggled"/>
               </object>
               <packing>
                 <property name="right_attach">2</property>
                 <property name="x_options">GTK_FILL</property>
-                <property name="y_options"/>
+                <property name="y_options"></property>
               </packing>
             </child>
             <child>
@@ -50,7 +74,7 @@
                 <property name="top_attach">1</property>
                 <property name="bottom_attach">2</property>
                 <property name="x_options">GTK_FILL</property>
-                <property name="y_options"/>
+                <property name="y_options"></property>
               </packing>
             </child>
             <child>
@@ -61,7 +85,7 @@
                 <property name="climb_rate">1</property>
                 <property name="snap_to_ticks">True</property>
                 <property name="numeric">True</property>
-                <signal handler="xfade_time_changed" name="changed"/>
+                <signal name="changed" handler="xfade_time_changed"/>
               </object>
               <packing>
                 <property name="left_attach">1</property>
@@ -69,7 +93,7 @@
                 <property name="top_attach">1</property>
                 <property name="bottom_attach">2</property>
                 <property name="x_options">GTK_FILL</property>
-                <property name="y_options"/>
+                <property name="y_options"></property>
               </packing>
             </child>
           </object>
@@ -84,22 +108,60 @@
       </object>
       <packing>
         <property name="expand">False</property>
+        <property name="position">0</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkFrame" id="replay_gain_frame">
+        <property name="visible">True</property>
+        <property name="label_xalign">0</property>
+        <property name="shadow_type">none</property>
+        <child>
+          <object class="GtkAlignment" id="alignment1">
+            <property name="visible">True</property>
+            <property name="left_padding">12</property>
+            <child>
+              <object class="GtkComboBox" id="replay_gain_combo">
+                <property name="visible">True</property>
+                <property name="model">liststore1</property>
+                <signal name="changed" handler="server_pref_replaygain_changed"/>
+                <child>
+                  <object class="GtkCellRendererText" id="cellrenderertext1"/>
+                  <attributes>
+                    <attribute name="text">1</attribute>
+                  </attributes>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child type="label">
+          <object class="GtkLabel" id="label1">
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">&lt;b&gt;Replaygain&lt;/b&gt;</property>
+            <property name="use_markup">True</property>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="position">1</property>
       </packing>
     </child>
     <child>
       <object class="GtkFrame" id="frm_outputs">
         <property name="visible">True</property>
         <property name="label_xalign">0</property>
-        <property name="shadow_type">GTK_SHADOW_NONE</property>
+        <property name="shadow_type">none</property>
         <child>
           <object class="GtkScrolledWindow" id="scrolledwindow2">
             <property name="height_request">100</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="border_width">12</property>
-            <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
-            <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
-            <property name="shadow_type">GTK_SHADOW_IN</property>
+            <property name="hscrollbar_policy">automatic</property>
+            <property name="vscrollbar_policy">automatic</property>
+            <property name="shadow_type">in</property>
             <child>
               <object class="GtkTreeView" id="tv_outputs">
                 <property name="visible">True</property>
@@ -117,7 +179,7 @@
         </child>
       </object>
       <packing>
-        <property name="position">1</property>
+        <property name="position">2</property>
       </packing>
     </child>
     <child>
@@ -127,10 +189,11 @@
           <object class="GtkImage" id="image46">
             <property name="visible">True</property>
             <property name="stock">gtk-dialog-warning</property>
-            <property name="icon_size">3</property>
+            <property name="icon-size">3</property>
           </object>
           <packing>
             <property name="expand">False</property>
+            <property name="position">0</property>
           </packing>
         </child>
         <child>
@@ -150,7 +213,7 @@ in order to change these settings&lt;/i&gt;&lt;/span&gt;</property>
       </object>
       <packing>
         <property name="expand">False</property>
-        <property name="position">2</property>
+        <property name="position">3</property>
       </packing>
     </child>
   </object>

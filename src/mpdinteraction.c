@@ -854,6 +854,14 @@ void ServerStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userd
 	{
 		update_outputs_settings();
 	}
+	if(what&MPD_CST_REPLAYGAIN)
+	{
+		if(server_pref_xml)
+		{
+			gtk_combo_box_set_active(GTK_COMBO_BOX(gtk_builder_get_object(server_pref_xml, "replay_gain_combo")),
+					mpd_server_get_replaygain_mode(connection));
+		}
+	}
 }
 
 
@@ -868,16 +876,28 @@ static void server_pref_destroy(GtkWidget *container)
 		server_pref_xml = NULL;
 	}
 }
+void server_pref_replaygain_changed(GtkComboBox *combo, gpointer data)
+{
+	int cur = gtk_combo_box_get_active(combo);
+	if(cur != mpd_server_get_replaygain_mode(connection))
+	{
+		if(mpd_server_check_command_allowed(connection, "replay_gain_mode") == MPD_SERVER_COMMAND_ALLOWED){
+			mpd_server_set_replaygain_mode(connection, cur);
+		}
+	}
+
+}
 static void server_pref_construct(GtkWidget *container)
 {
 	gchar *path = gmpc_get_full_glade_path("preferences-server.ui");
-	server_pref_xml = gtk_builder_new();//glade_xml_new(path, "server-vbox",NULL);
+	server_pref_xml = gtk_builder_new();
 	gtk_builder_add_from_file(server_pref_xml, path, NULL);
 	q_free(path);
 
 	if(server_pref_xml)
 	{
 		GtkWidget *vbox =(GtkWidget *) gtk_builder_get_object(server_pref_xml, "server-vbox");
+		GtkWidget *frame = (GtkWidget *)gtk_builder_get_object(server_pref_xml, "replay_gain_frame");
 		create_outputs_tree();
 		update_outputs_settings();
 		if(!mpd_check_connected(connection))
@@ -889,6 +909,27 @@ static void server_pref_construct(GtkWidget *container)
 		{
 			gtk_widget_set_sensitive(vbox,TRUE);
 			gtk_widget_hide((GtkWidget *)gtk_builder_get_object(server_pref_xml, "hb_warning_mesg"));
+		}
+		switch(mpd_server_check_command_allowed(connection, "replay_gain_status")){
+			case MPD_SERVER_COMMAND_ALLOWED:
+			{
+				gtk_combo_box_set_active(GTK_COMBO_BOX(gtk_builder_get_object(server_pref_xml, "replay_gain_combo")),
+					mpd_server_get_replaygain_mode(connection));
+				switch(mpd_server_check_command_allowed(connection, "replay_gain_mode")){
+					case MPD_SERVER_COMMAND_ALLOWED:
+						break;
+					default:
+						gtk_widget_set_sensitive(frame, FALSE);
+						break;
+				}
+				break;
+			}
+			case MPD_SERVER_COMMAND_NOT_ALLOWED:
+				gtk_widget_set_sensitive(frame, FALSE);
+				break;
+			case MPD_SERVER_COMMAND_NOT_SUPPORTED:
+			default:
+				gtk_widget_hide(frame);
 		}
 
 		if(mpd_status_get_crossfade(connection) == 0)
