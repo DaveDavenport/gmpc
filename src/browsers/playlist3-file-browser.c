@@ -32,6 +32,8 @@
 #include "gmpc-extras.h"
 
 
+static void pl3_file_browser_plugin_init(void);
+
 static gboolean pl3_file_browser_is_field_supported(int tag);
 static MpdData * pl3_file_browser_is_search(int num_field , gchar *search_string, GError *error);
 
@@ -105,6 +107,7 @@ gmpcPlugin file_browser_plug = {
 	.name = 						N_("Database"),
 	.version = 						{1,1,1},
 	.plugin_type = 					GMPC_PLUGIN_PL_BROWSER|GMPC_INTERNALL,
+    .init =                         pl3_file_browser_plugin_init,
   	.destroy = 						pl3_file_browser_destroy,
 	.browser = 						&file_browser_gbp,
 	.mpd_status_changed = 			pl3_file_browser_status_changed,
@@ -1354,4 +1357,18 @@ static MpdData * pl3_file_browser_is_search(int num_field , gchar *search_string
         }
     }
     return data_t;
+}
+
+void pl3_find2_ec_database(gpointer user_data, const char *param)
+{
+    pl3_find2_select_plugin_id(file_browser_plug.id);
+    pl3_find2_do_search_any(param);
+}
+
+static void pl3_file_browser_plugin_init(void)
+{
+    gmpc_easy_command_add_entry(gmpc_easy_command, 
+                _("search database"), ".*",
+                _("Search database <query>"),
+                (GmpcEasyCommandCallback *)pl3_find2_ec_database, NULL);
 }

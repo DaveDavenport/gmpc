@@ -23,4 +23,6 @@
 extern gmpcPlugin find2_browser_plug;
 
 void pl3_find2_ec_database(gpointer user_data, const char *param);
+void pl3_find2_select_plugin_id(int id);
+void pl3_find2_do_search_any(const char *param);
 #endif

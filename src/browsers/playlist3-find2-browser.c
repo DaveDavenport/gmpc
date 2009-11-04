@@ -44,7 +44,6 @@ static int pl3_find2_browser_playlist_key_press(GtkWidget *, GdkEventKey *);
 static void pl3_find2_browser_add_selected(void);
 static gboolean pl3_find2_browser_button_release_event(GtkWidget *but, GdkEventButton *event);
 static void pl3_find2_browser_connection_changed(MpdObj *mi, int connect, gpointer data);
-static int pl3_find2_browser_key_press_event(GtkWidget *mw, GdkEventKey *event, int type);
 static gboolean pl3_find2_entry_key_press_event(GtkWidget *entry, GdkEventKey *event, gpointer data);
 static void pl3_find2_browser_status_changed(MpdObj *mi,ChangedStatusType what, void *data);
 
@@ -751,34 +750,24 @@ static void pl3_find2_browser_connection_changed(MpdObj *mi, int connect, gpoint
     }
 }
 
-/**
- * Handle program-global key events
- */
-static int pl3_find2_browser_key_press_event(GtkWidget *mw, GdkEventKey *event, int type)
+void pl3_find2_select_plugin_id(int id)
 {
-    if(event->state&GDK_CONTROL_MASK && event->keyval == GDK_j )
-    {
-        GtkTreeIter iter;
-        GtkTreeModel *model;
-        pl3_find2_browser_activate();
-        model = gtk_combo_box_get_model(GTK_COMBO_BOX(search_combo));        
-        gtk_combo_box_set_active(GTK_COMBO_BOX(pl3_find2_curpl), 1);
-        if(gtk_tree_model_get_iter_first(model, &iter)){
-            int found = 1;
-            do{
-                int field;
-                gtk_tree_model_get(model, &iter,0, &field, -1); 
-                if(field == QUERY_ENTRY){
-                    gtk_combo_box_set_active_iter(GTK_COMBO_BOX(search_combo), &iter); 
-                    found = 0;
-                }
-            }while(gtk_tree_model_iter_next(model, &iter) && found);
-        }
-        gtk_widget_grab_focus(search_entry);
-        return TRUE;
+    GtkTreeIter iter;
+    GtkTreeModel *model;
+    pl3_find2_browser_activate();
+    model = gtk_combo_box_get_model(GTK_COMBO_BOX(pl3_find2_curpl));        
+    if(gtk_tree_model_get_iter_first(model, &iter)){
+        int found = 1;
+        do{
+            gmpcPluginParent *plug;
+            gtk_tree_model_get(model, &iter,2, &plug, -1); 
+            if(plug != NULL  && gmpc_plugin_get_id(plug) == id){ 
+                gtk_combo_box_set_active_iter(GTK_COMBO_BOX(pl3_find2_curpl), &iter);
+                found = 0;
+            }
+        }while(gtk_tree_model_iter_next(model, &iter) && found);
     }
-
-    return FALSE;
+    gtk_widget_grab_focus(search_entry);
 }
 
 static gboolean pl3_find2_entry_key_press_event(GtkWidget *entry, GdkEventKey *event, gpointer data)
@@ -847,38 +836,11 @@ static void pl3_find2_save_myself(void)
 }
 /* Easy command integration */
 
-void pl3_find2_ec_database(gpointer user_data, const char *param)
+void pl3_find2_do_search_any(const char *param)
 {
     GtkTreeIter iter;
     GtkTreeModel *model;
-    pl3_find2_browser_activate();
-
     model  = gtk_combo_box_get_model(GTK_COMBO_BOX(search_combo));
-    gtk_combo_box_set_active(GTK_COMBO_BOX(pl3_find2_curpl), 0);
-
-    if(gtk_tree_model_get_iter_first(model, &iter)){
-        int found = 1;
-        do{
-            int field;
-            gtk_tree_model_get(model, &iter,0, &field, -1); 
-            if(field == QUERY_ENTRY){
-                gtk_combo_box_set_active_iter(GTK_COMBO_BOX(search_combo), &iter); 
-                found = 0;
-            }
-        }while(gtk_tree_model_iter_next(model, &iter) && found);
-    }
-    gtk_entry_set_text(GTK_ENTRY(search_entry), param);
-    gtk_widget_activate(search_entry);
-}
-static void pl3_find2_ec_playlist(gpointer user_data, const char *param)
-{
-    GtkTreeIter iter;
-    GtkTreeModel *model;
-    pl3_find2_browser_activate();
-
-    model  = gtk_combo_box_get_model(GTK_COMBO_BOX(search_combo));
-    gtk_combo_box_set_active(GTK_COMBO_BOX(pl3_find2_curpl), 1);
-
     if(gtk_tree_model_get_iter_first(model, &iter)){
         int found = 1;
         do{
@@ -899,16 +861,6 @@ static void pl3_find2_plugin_init(void)
                 _("switch search"),"",
                 _("Switch to the search browser"),
                 (GmpcEasyCommandCallback *)pl3_find2_browser_activate, NULL); 
-
-    gmpc_easy_command_add_entry(gmpc_easy_command, 
-                _("search database"), ".*",
-                _("Search database <query>"),
-                (GmpcEasyCommandCallback *)pl3_find2_ec_database , NULL);
-    gmpc_easy_command_add_entry(gmpc_easy_command,
-                _("search playlist"), ".*",
-                _("Search playlist <query>"),
-                (GmpcEasyCommandCallback *)pl3_find2_ec_playlist, NULL);
-
 }
 /**
  * Plugin structure
@@ -918,7 +870,6 @@ gmpcPlBrowserPlugin find2_browser_gbp = {
 	.selected = pl3_find2_browser_selected,
 	.unselected = pl3_find2_browser_unselected,
 	.add_go_menu = pl3_find2_browser_add_go_menu,
-	.key_press_event = pl3_find2_browser_key_press_event
 };
 
 gmpcPlugin find2_browser_plug = {

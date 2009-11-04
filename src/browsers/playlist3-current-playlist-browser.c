@@ -27,6 +27,7 @@
 #include "misc.h"
 #include "playlist3.h"
 #include "playlist3-current-playlist-browser.h"
+#include "playlist3-find2-browser.h"
 #include "gmpc-mpddata-model.h"
 #include "gmpc-mpddata-model-playlist.h"
 #include "gmpc-mpddata-treeview.h"
@@ -198,10 +199,14 @@ static void pl3_current_playlist_browser_crop_current_song(PlayQueuePlugin *self
         mpd_playlist_queue_commit(connection);
     }
 }
+static void pl3_cp_ec_playlist(PlayQueuePlugin *self, const gchar *param)
+{
+    pl3_find2_select_plugin_id(GMPC_PLUGIN_BASE(self)->id);
+    pl3_find2_do_search_any(param);
+}
+
 static void pl3_cp_init(PlayQueuePlugin *self)
 {
-
-//    pl3_current_playlist_browser_init(self);
     g_signal_connect(G_OBJECT(playlist), "current_song_changed", G_CALLBACK(pl3_cp_current_song_changed), self);
     g_signal_connect(G_OBJECT(playlist), "total_playtime_changed", G_CALLBACK(pl3_total_playtime_changed), self);
 
@@ -219,6 +224,11 @@ static void pl3_cp_init(PlayQueuePlugin *self)
                     _("Crop current song"),"",
                     _("Crop the playlist so it only contains the current song"),
                     (GmpcEasyCommandCallback *)pl3_current_playlist_browser_crop_current_song, self);
+
+    gmpc_easy_command_add_entry(gmpc_easy_command,
+            _("search playlist"), ".*",
+            _("Search playlist <query>"),
+                (GmpcEasyCommandCallback *)pl3_cp_ec_playlist, self);
 }
 void pl3_current_playlist_destroy(PlayQueuePlugin *self);
 
@@ -1091,7 +1101,10 @@ static void pl3_current_playlist_browser_activate(PlayQueuePlugin *self)
     gtk_widget_grab_focus(self->priv->pl3_cp_tree);
 }
 
-
+static void pl3_current_playlist_do_playlist_search(GmpcPluginBase *self)
+{
+    pl3_find2_select_plugin_id(self->id);
+}
 static int pl3_current_playlist_browser_add_go_menu(GmpcPluginBrowserIface *obj, GtkMenu *menu)
 {
     GtkWidget *item = NULL;
@@ -1103,7 +1116,15 @@ static int pl3_current_playlist_browser_add_go_menu(GmpcPluginBrowserIface *obj,
     gtk_widget_add_accelerator(GTK_WIDGET(item), "activate", gtk_menu_get_accel_group(GTK_MENU(menu)), GDK_F1, 0, GTK_ACCEL_VISIBLE);
     g_signal_connect_swapped(G_OBJECT(item), "activate", 
             G_CALLBACK(pl3_current_playlist_browser_activate), obj);
-    return 1;
+
+    item = gtk_image_menu_item_new_with_label(_("Search Playlist"));
+    gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), 
+            gtk_image_new_from_icon_name("gtk-find", GTK_ICON_SIZE_MENU));
+    gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+    gtk_widget_add_accelerator(GTK_WIDGET(item), "activate", gtk_menu_get_accel_group(GTK_MENU(menu)), GDK_j, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+    g_signal_connect_swapped(G_OBJECT(item), "activate", 
+            G_CALLBACK(pl3_current_playlist_do_playlist_search), obj);
+    return 2;
 }
 
 static void pl3_current_playlist_connection_changed(GmpcConnection *conn, MpdObj *mi, int connect,PlayQueuePlugin *self)
