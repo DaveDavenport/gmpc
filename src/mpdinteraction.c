@@ -570,6 +570,14 @@ void repeat_toggle(void)
 {
 	mpd_player_set_repeat(connection, !mpd_player_get_repeat(connection));
 }
+void repeat_single_toggle(void)
+{
+	mpd_player_set_single(connection, !mpd_player_get_single(connection));
+}
+void consume_toggle(void)
+{
+	mpd_player_set_consume(connection, !mpd_player_get_consume(connection));
+}
 void random_toggle(void)
 {
 	mpd_player_set_random(connection, !mpd_player_get_random(connection));

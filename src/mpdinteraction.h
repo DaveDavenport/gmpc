@@ -27,6 +27,8 @@ void random_pl(GtkToggleButton *tb);
 void repeat_pl(GtkToggleButton *tb);
 void random_toggle(void);
 void repeat_toggle(void);
+void repeat_single_toggle(void);
+void consume_toggle(void);
 
 int  seek_ns(int n);
 int  seek_ps(int n);

@@ -10,5 +10,7 @@ dist_icons_DATA = \
 		playlist-browser.png\
 		media-tag.png\
         media-audiofile.png\
+        media-consume.png\
+        media-repeat-single.png\
 		tag-browser.png
 

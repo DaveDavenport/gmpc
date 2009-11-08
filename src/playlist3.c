@@ -145,6 +145,8 @@ static GtkWidget *volume_button = NULL;
 
 static void main_window_update_status_icons(void);
 static GtkWidget *si_repeat = NULL;
+static GtkWidget *si_consume = NULL;
+static GtkWidget *si_repeat_single = NULL;
 static GtkWidget *si_random = NULL;
 
 /* Get the type of the selected row..
@@ -1223,6 +1225,21 @@ void create_playlist3(void)
 	gtk_widget_show_all(si_repeat);
 	main_window_add_status_icon(si_repeat);
 
+
+	si_repeat_single = gtk_event_box_new();
+	g_signal_connect(G_OBJECT(si_repeat_single), "button-release-event", G_CALLBACK(repeat_single_toggle), NULL);
+	gtk_container_add(GTK_CONTAINER(si_repeat_single), 
+			gtk_image_new_from_icon_name("media-repeat-single", GTK_ICON_SIZE_MENU));
+	gtk_widget_show_all(si_repeat_single);
+	main_window_add_status_icon(si_repeat_single);
+
+	si_consume = gtk_event_box_new();
+	g_signal_connect(G_OBJECT(si_consume), "button-release-event", G_CALLBACK(consume_toggle), NULL);
+	gtk_container_add(GTK_CONTAINER(si_consume), 
+			gtk_image_new_from_icon_name("media-consume", GTK_ICON_SIZE_MENU));
+	gtk_widget_show_all(si_consume);
+	main_window_add_status_icon(si_consume);
+
 	si_random = gtk_event_box_new();
 	g_signal_connect(G_OBJECT(si_random), "button-release-event", G_CALLBACK(random_toggle), NULL);
 	gtk_container_add(GTK_CONTAINER(si_random), 
@@ -1755,7 +1772,7 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
 											(pl3_xml, "menu_random")), mpd_player_get_random(connection));
 		}
 	}
-	if(what&(MPD_CST_RANDOM|MPD_CST_REPEAT)) {
+	if(what&(MPD_CST_RANDOM|MPD_CST_REPEAT|MPD_CST_SINGLE_MODE|MPD_CST_CONSUME_MODE)) {
 		main_window_update_status_icons();
 	}
 	if (what & MPD_CST_SINGLE_MODE) {
@@ -2656,6 +2673,28 @@ void easy_command_help_window(void)
 
 static void main_window_update_status_icons(void)
 {
+	if(si_repeat_single)
+	{
+		GtkWidget *image = gtk_bin_get_child(GTK_BIN(si_repeat_single));
+		if(mpd_check_connected(connection) && mpd_player_get_single(connection)){
+			gtk_widget_set_sensitive(GTK_WIDGET(image), TRUE);
+			gtk_widget_set_tooltip_text(si_repeat_single, _("Single Mode enabled"));
+		}else{
+			gtk_widget_set_sensitive(GTK_WIDGET(image), FALSE);
+			gtk_widget_set_tooltip_text(si_repeat_single, _("Single Mode disabled"));
+		}
+	}
+	if(si_consume)
+	{
+		GtkWidget *image = gtk_bin_get_child(GTK_BIN(si_consume));
+		if(mpd_check_connected(connection) && mpd_player_get_consume(connection)){
+			gtk_widget_set_sensitive(GTK_WIDGET(image), TRUE);
+			gtk_widget_set_tooltip_text(si_consume, _("Consume Mode enabled"));
+		}else{
+			gtk_widget_set_sensitive(GTK_WIDGET(image), FALSE);
+			gtk_widget_set_tooltip_text(si_consume, _("Consume Mode disabled"));
+		}
+	}
 	if(si_repeat)
 	{
 		GtkWidget *image = gtk_bin_get_child(GTK_BIN(si_repeat));
