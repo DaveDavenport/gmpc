@@ -983,6 +983,12 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             this.browser_box.pack_start(box, true, true, 0);
 
             this.artist_filter_entry = new Gtk.Entry();
+/*
+            this.artist_filter_entry.set_icon_from_stock(Gtk.EntryIconPosition.SECONDARY, "gtk-clear");
+            this.artist_filter_entry.icon_press.connect((source, pos, event)=>{
+                if(pos == Gtk.EntryIconPosition.SECONDARY) source.set_text("");
+            });
+*/
             this.artist_filter_entry.set_no_show_all(true);
             this.artist_filter_entry.changed += browser_artist_entry_changed;
 
@@ -1029,6 +1035,12 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             this.browser_box.pack_start(box, true, true, 0);
 
             this.album_filter_entry = new Gtk.Entry();
+/*
+            this.album_filter_entry.set_icon_from_stock(Gtk.EntryIconPosition.SECONDARY, "gtk-clear");
+            this.album_filter_entry.icon_press.connect((source, pos, event)=>{
+                if(pos == Gtk.EntryIconPosition.SECONDARY) source.set_text("");
+            });
+*/
             this.album_filter_entry.set_no_show_all(true);
             this.album_filter_entry.changed += browser_album_entry_changed;
             box.pack_start(this.album_filter_entry, false, false, 0);
