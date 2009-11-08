@@ -132,22 +132,6 @@ AC_SUBST(GTK_REQUIRED)
 # User params 
 ##
 
-# Config dir support
-AC_ARG_ENABLE(configdir,
-        [  --enable-configdir		Use .config instead of .gmpc or .covers.],
-        [ case "${enableval}" in
-            yes)    enable_configdir=yes;;
-             no)    enable_configdir=no;;
-              *)    AC_MSG_ERROR([bad value ${enableval} for --enable-configdir]);;
-          esac],
-        [enable_configdir=no])
-
-if test x${enable_configdir} = xyes; then
-	AC_DEFINE(USE_CONFIG_DIR,1, [Use Config Dir])
-fi
-
-
-
 # Maintainer mode
 AC_ARG_ENABLE([timing],
               [--enable-timing Print timing debug output.],
@@ -460,11 +444,6 @@ if test x${enable_mmkeys} = xyes; then
 	echo "Multimedia keys support is:       enabled"
 else
 	echo "Multimedia keys support is:       disabled"
-fi
-if test x${enable_configdir} = xyes; then
-	echo "Use ~/.config/ for config files:  enabled"
-else
-	echo "Use ~/.config/ for config files:  disabled"
 fi
 if test "x$system_libsexy" = "xtrue"; then 
 	echo "Use system libsexy:               enabled"
