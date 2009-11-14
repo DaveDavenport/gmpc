@@ -783,6 +783,24 @@ int main(int argc, char **argv)
     /* Set window debug, this is used for developers to visualize redraws */
 	g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Create main window\n");
 	gdk_window_set_debug_updates(do_debug_updates);
+
+	if( (revision != NULL && revision[0] != '\0') && cfg_get_single_value_as_int_with_default(config, "Default", "help-question", 0) == 0)
+	{
+		GtkWidget * dialog = gtk_message_dialog_new_with_markup(NULL, 
+				GTK_DIALOG_MODAL,
+				GTK_MESSAGE_QUESTION,GTK_BUTTONS_CLOSE,
+				_("The GMPC  team is looking for help maintaining and developing GMPC\n"
+				  "Help is needed with the following:\n"
+				  "* Maintaining and updating the website.\n"
+				  "* User support\n"
+				  "* Maintaining plugins\n"
+				  "* With maintaining GMPC itself\n"
+				  "If you are interested in helping out, please join our irc channel (#gmpc on irc.freenode.net)\n"
+				  "\nThanks,\n<i>Qball Cow</i>"));
+		gtk_dialog_run(GTK_DIALOG(dialog));
+		gtk_widget_destroy(dialog);
+		cfg_set_single_value_as_int(config, "Default", "help-question", 1);
+	}
 	/**
      * Create the main window
      */
