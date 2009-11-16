@@ -217,6 +217,7 @@ gmpcPluginParent * 	plugin_get_from_id(int id);
 char  *         gmpc_get_full_glade_path(const char *filename);
 gchar * 		gmpc_get_covers_path(const gchar *filename);
 gchar * 		gmpc_get_user_path(const gchar *filename);
+gchar *         gmpc_get_cache_directory(const gchar *filename);
 void 			playlist3_insert_browser(GtkTreeIter *iter, gint position);
 
 

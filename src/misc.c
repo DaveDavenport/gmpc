@@ -189,6 +189,15 @@ gchar * gmpc_get_covers_path(const gchar *filename)
 	return ret;
 }
 
+gchar * gmpc_get_cache_directory(const gchar *filename)
+{
+	const gchar *homedir = g_get_user_cache_dir(); 
+	gchar *ret = NULL;
+
+	/* Build the path */
+	ret = g_build_path(G_DIR_SEPARATOR_S, homedir, "gmpc", filename,NULL);
+	return ret;
+}
 /**
  * Get's the full path to an image,
  * While this is compile time on linux, windows
