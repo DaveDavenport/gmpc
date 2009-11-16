@@ -232,35 +232,38 @@ override (G:Object)
                     int i=0;
                     MpdData_real *list_iter =(MpdData_real *) mpd_data_get_first(GMPC_MPDDATA_MODEL(self)->_priv->data);
                     MpdData_real *data_iter =(MpdData_real *) mpd_data_get_first(data);
-                    while(data_iter)
+                    while(data_iter && list_iter)
                     {
                         GtkTreeIter iter;
                         GtkTreePath *path = gtk_tree_path_new(); 
                         /* get the right entry */
-                        for(;i!= data_iter->song->pos;i++)
+                        for(;list_iter != NULL && i!= data_iter->song->pos;i++)
                             list_iter = list_iter->next;
 
-                        if(list_iter->song)
+                        if(list_iter)
                         {
-                            self->_priv->loaded_songs--;
-                            if(list_iter->song->time > 0)
+                            if(list_iter->song)
                             {
-                                self->_priv->total_time -= list_iter->song->time;
-                                self_total_playtime_changed(self, self->_priv->loaded_songs, self->_priv->total_time);
+                                self->_priv->loaded_songs--;
+                                if(list_iter->song->time > 0)
+                                {
+                                    self->_priv->total_time -= list_iter->song->time;
+                                    self_total_playtime_changed(self, self->_priv->loaded_songs, self->_priv->total_time);
+                                }
                             }
+
+                            if(list_iter->song)
+                                mpd_freeSong(list_iter->song);
+                            list_iter->song = NULL;
+
+                            iter.stamp = GMPC_MPDDATA_MODEL(self)->_priv->stamp;
+                            iter.user_data = NULL; 
+                            iter.user_data2 =  GINT_TO_POINTER(i);
+                            gtk_tree_path_append_index(path, i);
+                            gtk_tree_model_row_changed(GTK_TREE_MODEL(self), path, &iter);
+
+
                         }
-
-                        if(list_iter->song)
-                            mpd_freeSong(list_iter->song);
-                        list_iter->song = NULL;
-
-                        iter.stamp = GMPC_MPDDATA_MODEL(self)->_priv->stamp;
-                        iter.user_data = NULL; 
-                        iter.user_data2 =  GINT_TO_POINTER(i);
-                        gtk_tree_path_append_index(path, i);
-                        gtk_tree_model_row_changed(GTK_TREE_MODEL(self), path, &iter);
-
-                      
                         gtk_tree_path_free(path);
                         data_iter = data_iter->next;
                     }
