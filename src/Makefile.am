@@ -8,7 +8,7 @@ CONF_VERSION=0
 
 bin_PROGRAMS=gmpc
 
-gmpc_VALAFLAGS=--pkg=gmodule-2.0 --pkg=config --pkg=gtk+-2.0 --pkg=gmpc --pkg=libmpd --vapidir=$(top_srcdir)/src/vala/ --basedir=$(top_builddir)/src/ -H gmpc-extras.h --library=gmpc-extras --use-header
+gmpc_VALAFLAGS=--pkg=gmodule-2.0 --pkg=config --pkg=gtk+-2.0 --pkg=gmpc --pkg=libmpd --vapidir=$(top_srcdir)/src/vapi/ --basedir=$(top_builddir)/src/ -H gmpc-extras.h --library=gmpc-extras --use-header
 
 vala_SOURCES=\
     vala/gmpc.vapi\
@@ -18,16 +18,16 @@ vala_SOURCES=\
 
 gmpc_SOURCES=\
     vala/gmpc-connection.vala\
-    vala/gmpc-progress.vala\
+    Widgets/gmpc-progress.vala\
     vala/gmpc-easy-command.vala\
     vala/gmpc-favorites.vala\
-    vala/gmpc-image.vala\
+    Widgets/gmpc-image.vala\
     vala/gmpc-liststore-sort.vala\
-    vala/gmpc_menu_item_rating.vala\
-    vala/gmpc-metadata-browser2.vala\
+    Widgets/gmpc-menu-item-rating.vala\
+    browsers/gmpc-metadata-browser2.vala\
     vala/gmpc-metadata-prefetcher.vala\
     vala/gmpc-mpddata-treeview-tooltip.vala\
-    vala/gmpc-nowplaying2.vala\
+    browsers/gmpc-nowplaying2.vala\
     vala/gmpc-plugin.vala\
     vala/gmpc-rating.vala\
     vala/gmpc-song-links.vala\
