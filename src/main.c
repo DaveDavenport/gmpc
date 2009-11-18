@@ -687,14 +687,15 @@ int main(int argc, char **argv)
 	pl3_messages = playlist3_message_plugin_new();
 
 
-    playlist = (GtkTreeModel *)gmpc_mpddata_model_playlist_new(gmpcconn,connection);
+	playlist = (GtkTreeModel *)gmpc_mpddata_model_playlist_new(gmpcconn,connection);
 	g_object_ref_sink(playlist);
-    gmpc_mpddata_model_disable_image(GMPC_MPDDATA_MODEL(playlist));
-	/** current playlist */
-	plugin_add_new((GmpcPluginBase *)play_queue_plugin_new("current-pl"), 0,NULL);
+	gmpc_mpddata_model_disable_image(GMPC_MPDDATA_MODEL(playlist));
 
 	/** file browser */
 	plugin_add(&file_browser_plug, 0, NULL);
+	/** current playlist */
+	plugin_add_new((GmpcPluginBase *)play_queue_plugin_new("current-pl"), 0,NULL);
+
 	/** Find Browser */
 	plugin_add(&find2_browser_plug, 0, NULL);
 	/* this shows the connection preferences */
