@@ -160,14 +160,6 @@ static void bug_information_generate_message(GtkTextBuffer *buffer)
 #endif
 
 
-    gtk_text_buffer_insert_with_tags(buffer, &iter, "\nUse ~/.config/ dir:\t", -1, bold_tag, NULL);
-#ifdef USE_CONFIG_DIR
-    gtk_text_buffer_insert(buffer, &iter,"Enabled",-1);
-#else
-    gtk_text_buffer_insert(buffer, &iter,"Disabled",-1);
-#endif
-
-
     /** Plugins */
     if(num_plugins > 0)
     {
