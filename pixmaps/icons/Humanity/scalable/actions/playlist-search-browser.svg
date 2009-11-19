@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Generator: Adobe Illustrator 9.0, SVG Export Plug-In  -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   height="256"
+   id="svg3467"
+   inkscape:version="0.47pre4 r22446"
+   sodipodi:docname="search.svg"
+   sodipodi:version="0.32"
+   space="preserve"
+   viewBox="0 0 204.8 204.8"
+   width="256"
+   version="1.1">
+  <metadata
+     id="metadata3">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:title />
+        <dc:description>Stylized hand-glass originally intended as searching icon.</dc:description>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>icon</rdf:li>
+            <rdf:li>magnifier</rdf:li>
+            <rdf:li>stylized</rdf:li>
+            <rdf:li>tool</rdf:li>
+            <rdf:li>hand-glass</rdf:li>
+            <rdf:li>searching</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+        <dc:publisher>
+          <cc:Agent
+             rdf:about="http://www.openclipart.org/">
+            <dc:title>Martin Koz  k &lt;martin.kozak@openoffice.cz&gt;</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Martin Koz  k &lt;martin.kozak *at* openoffice -dot- cz&gt;</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title>Martin Koz  k &lt;martin.kozak@openoffice.cz&gt;</dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <dc:date>2005-08-10</dc:date>
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <cc:license
+           rdf:resource="http://web.resource.org/cc/PublicDomain" />
+        <dc:language>en</dc:language>
+      </cc:Work>
+      <cc:License
+         rdf:about="http://web.resource.org/cc/PublicDomain">
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/Reproduction" />
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/Distribution" />
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/DerivativeWorks" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs3477">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 283.11768 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="614.04724 : 283.11768 : 1"
+       inkscape:persp3d-origin="307.02362 : 188.74512 : 1"
+       id="perspective11" />
+  </defs>
+  <sodipodi:namedview
+     bordercolor="#666666"
+     borderopacity="1.0"
+     id="base"
+     inkscape:current-layer="svg3467"
+     inkscape:cx="128"
+     inkscape:cy="283.11768"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:window-height="996"
+     inkscape:window-width="1680"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:zoom="1.2432993"
+     pagecolor="#ffffff"
+     showgrid="false"
+     inkscape:window-maximized="1" />
+  <g
+     id="Vrstva_x0020_1"
+     style="fill:#606060;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-miterlimit:4"
+     transform="matrix(0.39621374,0,0,0.39621374,6.0990643,14.681793)">
+    <g
+       id="g3470"
+       style="fill:#606060;fill-opacity:1;fill-rule:evenodd;stroke:none">
+      <path
+         d="m 328.0874,256.78027 c -5.59179,8.17188 -13.28027,17.08008 -22.1914,25.29688 -9.68555,8.93164 -20.24414,16.55078 -27.4336,20.46387 L 441.58838,452.98828 491.23779,407.20508 328.0874,256.78027 z"
+         id="path3472"
+         style="fill:#606060;fill-opacity:1" />
+      <path
+         d="m 283.82959,45.058106 c -65.17578,-60.077637 -169.79102,-60.077637 -234.966309,0 -65.150879,60.100584 -65.150879,156.570314 0,216.671384 65.175289,60.10059 169.790529,60.10059 234.966309,0 65.17578,-60.10107 65.17578,-156.5708 0,-216.671385 z m -34.19824,31.535156 c -46.2041,-42.606934 -120.39063,-42.606934 -166.570315,0 -46.20459,42.583498 -46.20459,110.994138 0,153.601078 46.179685,42.60644 120.366215,42.60644 166.570315,0 46.20508,-42.60694 46.20508,-111.01758 0,-153.601078 z"
+         id="path3474"
+         style="fill:#606060;fill-opacity:1" />
+    </g>
+  </g>
+</svg>
