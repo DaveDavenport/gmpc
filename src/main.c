@@ -1363,7 +1363,7 @@ void show_error_message(const gchar * string, const int block)
 static void move_old_gmpc_data(void)
 {
 	gchar *url;
-	gchar *old = g_get_home_dir();
+	const gchar *old = g_get_home_dir();
 	gchar *path;
 
 	url =  gmpc_get_user_path(NULL);
@@ -1371,7 +1371,7 @@ static void move_old_gmpc_data(void)
 		path = g_build_filename(old, ".gmpc", NULL);
 		if(g_file_test(path, G_FILE_TEST_IS_DIR)) {
 			GDir *dir;
-			gchar *iter;
+			const gchar *iter;
 			/* Create the directory */
 			create_gmpc_paths();
 			dir = g_dir_open(path, 0, NULL);
