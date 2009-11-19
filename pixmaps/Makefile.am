@@ -4,7 +4,6 @@ dist_appicon_DATA =	\
 	media-artist.png\
 	gmpc-no-cover.png\
 	media-album.png\
-	mpdBrowser_case.png\
 	gmpc-loading-cover.png
 
 
