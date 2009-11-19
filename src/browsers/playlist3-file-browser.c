@@ -25,6 +25,7 @@
 #include "misc.h"
 #include "playlist3.h"
 #include "playlist3-file-browser.h"
+#include "playlist3-find2-browser.h"
 #include "advanced-search.h"
 #include "gmpc-mpddata-model.h"
 #include "gmpc-mpddata-treeview.h"
@@ -35,7 +36,7 @@
 static void pl3_file_browser_plugin_init(void);
 
 static gboolean pl3_file_browser_is_field_supported(int tag);
-static MpdData * pl3_file_browser_is_search(int num_field , gchar *search_string, GError *error);
+static MpdData * pl3_file_browser_is_search(const int num_field ,const gchar *search_string, GError **error);
 
 static void pl3_file_browser_destroy(void);
 static void pl3_file_browser_add(GtkWidget *cat_tree);
@@ -1333,7 +1334,7 @@ static gboolean pl3_file_browser_is_field_supported(int tag)
     return mpd_server_tag_supported(connection, tag);
 }
 
-static MpdData * pl3_file_browser_is_search(int num_field , gchar *search_string, GError *error)
+static MpdData * pl3_file_browser_is_search(const int num_field , const gchar *search_string, GError **error)
 {
     MpdData *data_t = NULL;
     printf("query: %s %i\n", search_string, num_field);
