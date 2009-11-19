@@ -5,18 +5,19 @@ context = status
 iconsdir = $(themedir)/$(size)/$(context)
 
 dist_icons_DATA = \
-		emblem-favorite.svg\
-		audio-volume-high.svg\
-		audio-volume-low.svg\
-		audio-volume-medium.svg\
-		audio-volume-muted.svg\
-		gmpc-tray.svg\
-		gmpc-tray-disconnected.svg\
-		gmpc-tray-play.svg\
-		gmpc-tray-pause.svg\
-		stylized-cover.svg\
-		stylized-no-cover.svg\
-		stylized-fetching-cover.svg\
-		fetching-artist.svg\
-		frame-artist.svg\
-		no-artist.svg
+                  audio-volume-high.svg\
+                  audio-volume-low.svg\
+                  audio-volume-medium.svg\
+                  audio-volume-muted.svg\
+                  emblem-favorite.svg\
+                  fetching-artist.svg\
+                  frame-artist.svg\
+                  gmpc-tray-disconnected.svg\
+                  gmpc-tray-pause.svg\
+                  gmpc-tray-play.svg\
+                  gmpc-tray.svg\
+                  no-artist.svg\
+                  stylized-cover.svg\
+                  stylized-fetching-cover.svg\
+                  stylized-no-cover.svg
+

@@ -6,7 +6,6 @@ iconsdir = $(themedir)/$(size)/$(context)
 
 dist_icons_DATA = \
                   albumview.png\
-                  consume.png\
                   Database.png\
                   dynamic.png\
                   gmpc.png\
