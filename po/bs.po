@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-10-18 11:39+0200\n"
+"POT-Creation-Date: 2009-11-19 09:41+0100\n"
 "PO-Revision-Date: 2009-05-13 15:54+0000\n"
 "Last-Translator: kenan3008 <Unknown>\n"
 "Language-Team: Bosnian <bs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
+"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Launchpad-Export-Date: 2009-11-16 23:32+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
@@ -23,13 +23,14 @@ msgstr ""
 msgid "A gnome frontend for the mpd daemon"
 msgstr "Gnome frontend za mpd daemon"
 
-#: ../data/gmpc.desktop.in.h:2 ../src/main.c:345 ../src/tray-icon2.c:592
-#: ../src/vala/gmpc-nowplaying2.c:1473 ../src/vala/gmpc-nowplaying2.c:1475
+#: ../data/gmpc.desktop.in.h:2 ../src/main.c:339 ../src/tray-icon2.c:593
+#: ../src/browsers/gmpc-nowplaying2.c:1574
+#: ../src/browsers/gmpc-nowplaying2.c:1576
 msgid "Gnome Music Player Client"
 msgstr "Gnome muzički player klijent"
 
 #. Basic dialog with a close button
-#: ../glade/playlist3.glade.h:1 ../src/bug-information.c:239
+#: ../glade/playlist3.glade.h:1 ../src/bug-information.c:231
 msgid "Bug information"
 msgstr "Informacije o grešci"
 
@@ -50,7 +51,7 @@ msgid "Mute"
 msgstr "Ugasi zvuk"
 
 #. * MM_PLAYPAUSE
-#: ../glade/playlist3.glade.h:6 ../src/mm-keys.c:74 ../src/tray-icon2.c:580
+#: ../glade/playlist3.glade.h:6 ../src/mm-keys.c:74 ../src/tray-icon2.c:581
 msgid "Next"
 msgstr "Dalje"
 
@@ -162,103 +163,123 @@ msgstr "gmpc - Uređivanje liste"
 msgid "Proxy"
 msgstr "Proxy"
 
-#: ../src/main.c:281
+#: ../src/main.c:274
 msgid "Start the program in full screen"
 msgstr ""
 
-#: ../src/main.c:283
+#: ../src/main.c:276
 msgid "Show program version and revision"
 msgstr ""
 
-#: ../src/main.c:285
+#: ../src/main.c:278
 msgid "Quits the running gmpc"
 msgstr ""
 
-#: ../src/main.c:287
+#: ../src/main.c:280
 msgid "Replace the running gmpc"
 msgstr ""
 
-#: ../src/main.c:289
+#: ../src/main.c:282
 msgid "Don't load the plugins"
 msgstr ""
 
-#: ../src/main.c:291
+#: ../src/main.c:284
 msgid "Load alternative config file"
 msgstr ""
 
-#: ../src/main.c:293
+#: ../src/main.c:286
 msgid "Set the debug level"
 msgstr ""
 
-#: ../src/main.c:295
+#: ../src/main.c:288
 msgid "Start gmpc hidden to tray"
 msgstr ""
 
-#: ../src/main.c:297
+#: ../src/main.c:290
 msgid "Remove all failed hits from metadata cache"
 msgstr ""
 
-#: ../src/main.c:299
+#: ../src/main.c:292
 msgid "Show redraw events in GTK+"
 msgstr ""
 
-#: ../src/main.c:301
+#: ../src/main.c:294
 msgid "Show bug information dialog"
 msgstr ""
 
-#: ../src/main.c:303
+#: ../src/main.c:296
 msgid "Shows all output from a certain log domain"
 msgstr ""
 
-#: ../src/main.c:441
+#: ../src/main.c:298
+#, fuzzy
+msgid "Select a profile"
+msgstr "Odaberite datoteku"
+
+#: ../src/main.c:435
 msgid "quit"
 msgstr "izađi"
 
-#: ../src/main.c:442
+#: ../src/main.c:436
 msgid "Quit gmpc"
 msgstr "Izađi iz gmpc"
 
-#: ../src/main.c:443
+#: ../src/main.c:437
 msgid "hide"
 msgstr "sakrij"
 
-#: ../src/main.c:444
+#: ../src/main.c:438
 msgid "Hide gmpc"
 msgstr "Sakrij gmpc"
 
-#: ../src/main.c:445
+#: ../src/main.c:439
 msgid "show"
 msgstr "prikaži"
 
-#: ../src/main.c:446
+#: ../src/main.c:440
 msgid "Show gmpc"
 msgstr "Prikaži gmpc"
 
-#: ../src/main.c:447
+#: ../src/main.c:441
 msgid "show notification"
 msgstr "prikaži obavještenja"
 
-#: ../src/main.c:448
+#: ../src/main.c:442
 msgid "Show trayicon notification"
 msgstr "Prikaži ikonu obavještenja u trayu"
 
-#: ../src/main.c:502
+#: ../src/main.c:497
 msgid "Failed to load the configuration system."
 msgstr "Učitavanje konfiguracije sistema nije uspjelo."
 
-#: ../src/main.c:521
+#: ../src/main.c:516
 msgid "Failed to load debug-log file."
 msgstr "Učitavanje log datoteke za debagovanje nije uspjelo."
 
-#: ../src/main.c:649
+#: ../src/main.c:658
 msgid "Failed to setup libmpd"
 msgstr "Postavljanje libmpd-a nije uspjelo"
 
-#: ../src/main.c:1071
+#: ../src/main.c:793
+msgid ""
+"The GMPC  team is looking for help maintaining and developing GMPC\n"
+"Help is needed with the following:\n"
+"* Maintaining and updating the website.\n"
+"* User support\n"
+"* Maintaining plugins\n"
+"* With maintaining GMPC itself\n"
+"If you are interested in helping out, please join our irc channel (#gmpc on "
+"irc.freenode.net)\n"
+"\n"
+"Thanks,\n"
+"<i>Qball Cow</i>"
+msgstr ""
+
+#: ../src/main.c:1099
 msgid "GMPC has insufficient permissions on the mpd server."
 msgstr "GMPC nema potrebne dozvole na mpd serveru."
 
-#: ../src/main.c:1097
+#: ../src/main.c:1125
 #, c-format
 msgid ""
 "Failed to set password on: '%s'\n"
@@ -267,41 +288,41 @@ msgstr ""
 "Postavljanje šifre nije uspjelo na: '%s'\n"
 "Molimo pokušajte ponovo"
 
-#: ../src/main.c:1099
+#: ../src/main.c:1127
 #, c-format
 msgid "Please enter your password for: '%s'"
 msgstr "Molimo unesite vašu šifru za: '%s'"
 
-#: ../src/main.c:1128 ../src/main.c:1149
+#: ../src/main.c:1156 ../src/main.c:1177
 msgid "error code"
 msgstr "greška broj"
 
-#: ../src/main.c:1138
+#: ../src/main.c:1166
 msgid "Insufficient permission to connect to mpd. Check password"
 msgstr "Nemate dozvolu da se povežete na mpd. Provjerite šifru"
 
-#: ../src/main.c:1173
+#: ../src/main.c:1201
 msgid "MPD versions before 0.13.0 are not supported"
 msgstr "MPD verzije prije 0.13.0 nisu podržane"
 
-#: ../src/main.c:1241
+#: ../src/main.c:1269
 msgid "Connected to mpd"
 msgstr "Povezan sa mpd"
 
-#: ../src/main.c:1243
+#: ../src/main.c:1271
 msgid "Disconnected from mpd"
 msgstr "Prekinuta veza sa mpd"
 
-#: ../src/main.c:1277
+#: ../src/main.c:1305
 msgid "Error occurred during operation"
 msgstr "Došlo je do greške u toku operacije"
 
 #. Create label
-#: ../src/main.c:1301
+#: ../src/main.c:1329
 msgid "The following error(s) occurred:"
 msgstr "Desile su se sljedeće greške:"
 
-#: ../src/main.c:1318
+#: ../src/main.c:1346
 msgid "Error Message"
 msgstr "Poruka o grešci"
 
@@ -313,7 +334,7 @@ msgstr ""
 "Novi dodataka za meta podatke je uključen, gmpc je otklonio sve neuspjele "
 "pokušaje iz keša"
 
-#: ../src/metadata.c:1399
+#: ../src/metadata.c:1400
 msgid "Metadata Handler"
 msgstr "Rukovatelj meta podataka"
 
@@ -342,7 +363,7 @@ msgstr[0] "minuta"
 msgstr[1] "minute"
 msgstr[2] "minuta"
 
-#: ../src/misc.c:295
+#: ../src/misc.c:296
 msgid "Failed to execute"
 msgstr "Nije izvršeno"
 
@@ -474,8 +495,9 @@ msgstr ""
 msgid "disable"
 msgstr ""
 
-#: ../src/mpdinteraction.c:107 ../src/playlist3.c:1687 ../src/playlist3.c:1700
-#: ../src/playlist3.c:1715 ../src/playlist3.c:1728
+#: ../src/mpdinteraction.c:107 ../src/playlist3.c:1753 ../src/playlist3.c:1766
+#: ../src/playlist3.c:1781 ../src/playlist3.c:1794
+#: ../glade/preferences-server.ui.h:8
 msgid "Off"
 msgstr "Isključeno"
 
@@ -710,56 +732,57 @@ msgid "Connecting"
 msgstr "Povezivanje"
 
 #. Add all from album
-#: ../src/mpdinteraction.c:1485
+#: ../src/mpdinteraction.c:1534
 msgid "All from album"
 msgstr "Sve iz albuma"
 
 #. Add all from artist
-#: ../src/mpdinteraction.c:1497
+#: ../src/mpdinteraction.c:1546
 msgid "All from artist"
 msgstr "Sve od umjetnika"
 
 #. Add all from genre
-#: ../src/mpdinteraction.c:1507
+#: ../src/mpdinteraction.c:1556
 msgid "All from genre"
 msgstr "Sve iz žanra"
 
 #. Add all from file
-#: ../src/mpdinteraction.c:1515
+#: ../src/mpdinteraction.c:1564
 msgid "All from same directory"
 msgstr "Sve iz istog direktorija"
 
 #. Create sub menu
 #. Add
-#: ../src/mpdinteraction.c:1523
+#: ../src/mpdinteraction.c:1572
 msgid "Add more"
 msgstr "Dodaj još"
 
-#: ../src/mpdinteraction.c:1533
+#: ../src/mpdinteraction.c:1582
 msgid "Set Rating"
 msgstr "Postavi ocjenu"
 
-#: ../src/playlist3.c:768
+#: ../src/playlist3.c:770
 msgid "Connected"
 msgstr "Spojen"
 
-#: ../src/playlist3.c:777 ../src/playlist3.c:2239
+#: ../src/playlist3.c:779 ../src/playlist3.c:2307
 msgid "Not Connected"
 msgstr "Nije spojen"
 
-#: ../src/playlist3.c:790 ../src/playlist3.c:795 ../src/playlist3.c:1653
+#: ../src/playlist3.c:795 ../src/playlist3.c:800 ../src/playlist3.c:809
+#: ../src/playlist3.c:814 ../src/playlist3.c:1713 ../src/playlist3.c:1719
 msgid "GMPC"
 msgstr "GMPC"
 
-#: ../src/playlist3.c:790
+#: ../src/playlist3.c:795 ../src/playlist3.c:800
 msgid "Connected to"
 msgstr "Spojen na"
 
-#: ../src/playlist3.c:795
+#: ../src/playlist3.c:809 ../src/playlist3.c:814
 msgid "Disconnected"
 msgstr "Isključeno"
 
-#: ../src/playlist3.c:862
+#: ../src/playlist3.c:881
 msgid ""
 "Failed to open the interface description file!\n"
 "Please reinstall gmpc\n"
@@ -769,91 +792,107 @@ msgstr ""
 
 #. *
 #. * Set paused in Window string
-#. 
-#: ../src/playlist3.c:1624 ../src/playlist3.c:1629
+#.
+#: ../src/playlist3.c:1669 ../src/playlist3.c:1674
 msgid "paused"
 msgstr ""
 
-#: ../src/playlist3.c:1686
+#: ../src/playlist3.c:1752
 #, c-format
 msgid "Repeat: %s"
 msgstr "Ponavljaj: %s"
 
-#: ../src/playlist3.c:1687 ../src/playlist3.c:1700 ../src/playlist3.c:1715
-#: ../src/playlist3.c:1728
+#: ../src/playlist3.c:1753 ../src/playlist3.c:1766 ../src/playlist3.c:1781
+#: ../src/playlist3.c:1794
 msgid "On"
 msgstr "Uključeno"
 
-#: ../src/playlist3.c:1699
+#: ../src/playlist3.c:1765
 #, c-format
 msgid "Random: %s"
 msgstr "Slučajno: %s"
 
-#: ../src/playlist3.c:1714
+#: ../src/playlist3.c:1780
 #, c-format
 msgid "Single mode: %s"
 msgstr ""
 
-#: ../src/playlist3.c:1727
+#: ../src/playlist3.c:1793
 #, c-format
 msgid "Consume: %s"
 msgstr ""
 
-#: ../src/playlist3.c:1788
+#: ../src/playlist3.c:1854
 msgid "MPD Reported the following error"
 msgstr "MPD je prijavio sljedeću grešku"
 
-#: ../src/playlist3.c:1921 ../src/playlist3.c:1927
+#: ../src/playlist3.c:1987 ../src/playlist3.c:1993
 msgid "Profile"
 msgstr "Profil"
 
-#: ../src/playlist3.c:1922
+#: ../src/playlist3.c:1988
 msgid "added"
 msgstr "dodano"
 
-#: ../src/playlist3.c:1929
+#: ../src/playlist3.c:1995
 msgid "changed hostname to:"
 msgstr "promijenio ime hosta u:"
 
 #. Update DB
-#: ../src/playlist3.c:2037
+#: ../src/playlist3.c:2105
 msgid "Update Database"
 msgstr "Nadopuni bazu"
 
 #. Server Information
-#: ../src/playlist3.c:2046 ../src/vala/gmpc-test-plugin.c:919
+#: ../src/playlist3.c:2114 ../src/vala/gmpc-test-plugin.c:919
 msgid "Information"
 msgstr "Informacije"
 
-#: ../src/playlist3.c:2155
+#: ../src/playlist3.c:2223
 msgid "By"
 msgstr "Od"
 
-#: ../src/playlist3.c:2161
+#: ../src/playlist3.c:2229
 msgid "From"
 msgstr "Od"
 
-#: ../src/playlist3.c:2232
+#: ../src/playlist3.c:2300
 msgid "Not Playing"
 msgstr "Ne svira"
 
-#: ../src/playlist3.c:2346
+#: ../src/playlist3.c:2414
 msgid "Interface"
 msgstr "Interfejs"
 
-#: ../src/playlist3.c:2613
+#: ../src/playlist3.c:2681
+msgid "Single Mode enabled"
+msgstr ""
+
+#: ../src/playlist3.c:2684
+msgid "Single Mode disabled"
+msgstr ""
+
+#: ../src/playlist3.c:2692
+msgid "Consume Mode enabled"
+msgstr ""
+
+#: ../src/playlist3.c:2695
+msgid "Consume Mode disabled"
+msgstr ""
+
+#: ../src/playlist3.c:2703
 msgid "Repeat enabled"
 msgstr ""
 
-#: ../src/playlist3.c:2616
+#: ../src/playlist3.c:2706
 msgid "Repeat disabled"
 msgstr ""
 
-#: ../src/playlist3.c:2624
+#: ../src/playlist3.c:2714
 msgid "Random enabled"
 msgstr ""
 
-#: ../src/playlist3.c:2627
+#: ../src/playlist3.c:2717
 msgid "Random disabled"
 msgstr ""
 
@@ -869,11 +908,11 @@ msgstr "Upozorenje"
 msgid "Critical"
 msgstr "Kritično"
 
-#: ../src/playlist3-messages.c:261
+#: ../src/playlist3-messages.c:306
 msgid "Time"
 msgstr "Vrijeme"
 
-#: ../src/playlist3-messages.c:263
+#: ../src/playlist3-messages.c:308
 msgid "Message"
 msgstr "Poruka"
 
@@ -992,11 +1031,11 @@ msgstr "Pružatelj usluga meta podataka i ekstenzija pretraživača"
 msgid "Misc."
 msgstr "Razno"
 
-#: ../src/preferences.c:391 ../src/vala/gmpc-metadata-browser2.c:2718
-#: ../src/vala/gmpc-metadata-browser2.c:3189
-#: ../src/vala/gmpc-metadata-browser2.c:3195
-#: ../src/vala/gmpc-metadata-browser2.c:3344
-#: ../src/vala/gmpc-metadata-browser2.c:3740
+#: ../src/preferences.c:391 ../src/browsers/gmpc-metadata-browser2.c:2721
+#: ../src/browsers/gmpc-metadata-browser2.c:3192
+#: ../src/browsers/gmpc-metadata-browser2.c:3198
+#: ../src/browsers/gmpc-metadata-browser2.c:3347
+#: ../src/browsers/gmpc-metadata-browser2.c:3743
 msgid "Unknown"
 msgstr "Nepoznato"
 
@@ -1030,13 +1069,13 @@ msgstr ""
 msgid "Pla_ylist"
 msgstr "Lis_ta"
 
-#: ../src/tray-icon2.c:890
+#: ../src/tray-icon2.c:891
 msgid "Notification"
 msgstr "Obavijest"
 
 #. *
 #. * Append an introduction page
-#. 
+#.
 #: ../src/setup-assistant.c:111
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -1055,7 +1094,7 @@ msgstr "Veza instalacije"
 
 #. *
 #. * End
-#. 
+#.
 #: ../src/setup-assistant.c:141
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1292,6 +1331,11 @@ msgid "<b>Output Devices:</b>"
 msgstr "<b>Izlazni uređaji:</b>"
 
 #: ../glade/preferences-server.ui.h:3
+#, fuzzy
+msgid "<b>Replaygain</b>"
+msgstr "<b>Glavni:</b>"
+
+#: ../glade/preferences-server.ui.h:4
 msgid ""
 "<span size=\"small\"><i>You need to be connected\n"
 "in order to change these settings</i></span>"
@@ -1299,11 +1343,26 @@ msgstr ""
 "<span size=\"small\"><i>Morate biti spojeni\n"
 "da biste mogli mijenjati ove postavke</i></span>"
 
-#: ../glade/preferences-server.ui.h:5
+#: ../glade/preferences-server.ui.h:6
+#: ../src/browsers/gmpc-metadata-browser2.c:2103
+#: ../src/browsers/gmpc-metadata-browser2.c:2781
+#: ../src/gmpc-mpddata-treeview.gob:71 ../src/gmpc-mpddata-treeview.gob:650
+#: ../src/vala/gmpc-test-plugin.c:963
+msgid "Album"
+msgstr "Album"
+
+#: ../glade/preferences-server.ui.h:7
 msgid "Enable crossfade"
 msgstr "Uključi prenos između pjesama"
 
-#: ../glade/preferences-server.ui.h:6
+#: ../glade/preferences-server.ui.h:9
+#: ../src/browsers/gmpc-metadata-browser2.c:2122
+#: ../src/browsers/gmpc-metadata-browser2.c:2784
+#: ../src/gmpc-mpddata-treeview.gob:75
+msgid "Track"
+msgstr "Pjesma"
+
+#: ../glade/preferences-server.ui.h:10
 msgid "fade time (s):"
 msgstr "prenosno vrijeme (s):"
 
@@ -1379,6 +1438,10 @@ msgstr "gmpc - Postavke"
 msgid "Messages"
 msgstr "Poruke"
 
+#: ../glade/playlist-message-window.ui.h:2
+msgid "_Copy to clipboard"
+msgstr ""
+
 #: ../glade/playlist-save-dialog.ui.h:1
 msgid "<enter playlist name>"
 msgstr "<unesite ime liste>"
@@ -1407,64 +1470,72 @@ msgstr ""
 msgid "gtk-close"
 msgstr ""
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:155
+#: ../src/browsers/playlist3-current-playlist-browser.c:156
 msgid "item"
 msgid_plural "items"
 msgstr[0] "stavka"
 msgstr[1] "stavke"
 msgstr[2] "stavki"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:161
+#: ../src/browsers/playlist3-current-playlist-browser.c:162
 msgid "(Estimation)"
 msgstr "(Procjena)"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:210
+#: ../src/browsers/playlist3-current-playlist-browser.c:215
 msgid "switch play queue"
 msgstr "Prebaci listu čekanja za reprodukciju"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:211
+#: ../src/browsers/playlist3-current-playlist-browser.c:216
 msgid "Switch to play queue"
 msgstr "Prebaci na listu čekanja za reprodukciju"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:214
-#: ../src/browsers/playlist3-current-playlist-browser.c:215
+#: ../src/browsers/playlist3-current-playlist-browser.c:219
+#: ../src/browsers/playlist3-current-playlist-browser.c:220
 msgid "Clear play queue"
 msgstr "Očisti listu čekanja za reprodukciju"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:219
+#: ../src/browsers/playlist3-current-playlist-browser.c:224
 msgid "Crop current song"
 msgstr ""
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:220
+#: ../src/browsers/playlist3-current-playlist-browser.c:225
 msgid "Crop the playlist so it only contains the current song"
 msgstr ""
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:531
+#: ../src/browsers/playlist3-current-playlist-browser.c:229
+msgid "search playlist"
+msgstr "pretraži listu pjesama"
+
+#: ../src/browsers/playlist3-current-playlist-browser.c:230
+msgid "Search playlist <query>"
+msgstr "Pretraži listu pjesama <query>"
+
+#: ../src/browsers/playlist3-current-playlist-browser.c:541
 msgid "Are you sure you want to clear the playlist?"
 msgstr "Jeste li sigurno da želite očistiti listu?"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:648
-#: ../src/browsers/playlist3-current-playlist-browser.c:668
-#: ../src/browsers/playlist3-current-playlist-browser.c:710
-#: ../src/browsers/playlist3-current-playlist-browser.c:732
+#: ../src/browsers/playlist3-current-playlist-browser.c:658
+#: ../src/browsers/playlist3-current-playlist-browser.c:678
+#: ../src/browsers/playlist3-current-playlist-browser.c:720
+#: ../src/browsers/playlist3-current-playlist-browser.c:742
 msgid "Your mpd has a broken 'addid', pasting will fail."
 msgstr "Vaš mpd ima neispravan \"addid\", ubacivanje neće uspjeti."
 
 #. add the delete widget
-#: ../src/browsers/playlist3-current-playlist-browser.c:761
+#: ../src/browsers/playlist3-current-playlist-browser.c:771
 msgid "Crop"
 msgstr "Izreži"
 
 #. add the shuffle widget
-#: ../src/browsers/playlist3-current-playlist-browser.c:775
+#: ../src/browsers/playlist3-current-playlist-browser.c:785
 msgid "Shuffle"
 msgstr "Izmiješano"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:908
+#: ../src/browsers/playlist3-current-playlist-browser.c:918
 msgid "Add URL"
 msgstr "Dodaj URL"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:997
+#: ../src/browsers/playlist3-current-playlist-browser.c:1007
 #, c-format
 msgid ""
 "<i>Playlist <b>\"%s\"</b> already exists\n"
@@ -1473,26 +1544,32 @@ msgstr ""
 "<i>Lista<b>\"%s\"</b> već postoji\n"
 "Prebriši?</i>"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:1021
+#: ../src/browsers/playlist3-current-playlist-browser.c:1031
 msgid "Failed to save the playlist file."
 msgstr "Snimanje datoteke sa listom pjesama nije uspjelo."
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:1099
-#: ../src/browsers/playlist3-current-playlist-browser.c:1147
+#: ../src/browsers/playlist3-current-playlist-browser.c:1112
+#: ../src/browsers/playlist3-current-playlist-browser.c:1168
 msgid "Play Queue"
 msgstr "Sviraj iz liste za čekanje"
 
-#: ../src/browsers/playlist3-file-browser.c:98
-#: ../src/browsers/playlist3-file-browser.c:335
-#: ../src/browsers/playlist3-file-browser.c:1193
-msgid "File Browser"
-msgstr "Pretraživač datoteka"
+#: ../src/browsers/playlist3-current-playlist-browser.c:1120
+#, fuzzy
+msgid "Search Playlist"
+msgstr "pretraži listu pjesama"
 
-#: ../src/browsers/playlist3-file-browser.c:164
+#: ../src/browsers/playlist3-file-browser.c:107
+#: ../src/browsers/playlist3-file-browser.c:345
+#: ../src/browsers/playlist3-file-browser.c:1203
+#: ../src/browsers/server-information.c:342
+msgid "Database"
+msgstr "Baza podataka"
+
+#: ../src/browsers/playlist3-file-browser.c:174
 msgid "Directories"
 msgstr "Direktoriji"
 
-#: ../src/browsers/playlist3-file-browser.c:213
+#: ../src/browsers/playlist3-file-browser.c:223
 msgid ""
 "It seems you have no music in your database.\n"
 "To add music, copy the music to your <i>music_directory</i> as specified in "
@@ -1504,7 +1581,7 @@ msgstr ""
 "predloženo u vašoj mpd konfiguracijskoj datoteci.\n"
 "Zatim osvježite bazu. (Server -> Osvježi bazu)"
 
-#: ../src/browsers/playlist3-file-browser.c:246
+#: ../src/browsers/playlist3-file-browser.c:256
 #, c-format
 msgid "Added folder '%s' recursively"
 msgstr "Dodan direktorij '%s' rekurzivno"
@@ -1514,33 +1591,33 @@ msgstr "Dodan direktorij '%s' rekurzivno"
 #. add the replace widget
 #. replace
 #. add the replace widget
-#: ../src/browsers/playlist3-file-browser.c:619
-#: ../src/browsers/playlist3-file-browser.c:911
-#: ../src/browsers/playlist3-file-browser.c:943
-#: ../src/browsers/playlist3-find2-browser.c:730
+#: ../src/browsers/playlist3-file-browser.c:629
+#: ../src/browsers/playlist3-file-browser.c:921
+#: ../src/browsers/playlist3-file-browser.c:953
+#: ../src/browsers/playlist3-find2-browser.c:661
 #: ../src/browsers/playlist3-playlist-editor.c:578
 #: ../src/browsers/playlist3-playlist-editor.c:643
 #: ../src/browsers/playlist3-tag2-browser.c:406
-#: ../src/browsers/playlist3-tag2-browser.c:1108
+#: ../src/browsers/playlist3-tag2-browser.c:1109
 msgid "Replace"
 msgstr "Zamijeni"
 
 #. add the update widget
-#: ../src/browsers/playlist3-file-browser.c:644
-#: ../src/browsers/playlist3-file-browser.c:900
+#: ../src/browsers/playlist3-file-browser.c:654
+#: ../src/browsers/playlist3-file-browser.c:910
 msgid "Update"
 msgstr "Ažuriraj"
 
-#: ../src/browsers/playlist3-file-browser.c:754
+#: ../src/browsers/playlist3-file-browser.c:764
 msgid "Loaded playlist"
 msgstr "Učitana lista"
 
-#: ../src/browsers/playlist3-file-browser.c:1025
+#: ../src/browsers/playlist3-file-browser.c:1035
 #: ../src/browsers/playlist3-playlist-editor.c:424
 msgid "Added"
 msgstr "Dodano"
 
-#: ../src/browsers/playlist3-file-browser.c:1027
+#: ../src/browsers/playlist3-file-browser.c:1037
 #: ../src/browsers/playlist3-playlist-editor.c:424
 msgid "song"
 msgid_plural "songs"
@@ -1548,77 +1625,60 @@ msgstr[0] "pjesma"
 msgstr[1] "pjesme"
 msgstr[2] "pjesama"
 
-#: ../src/browsers/playlist3-file-browser.c:1029
+#: ../src/browsers/playlist3-file-browser.c:1039
 msgid "directory"
 msgid_plural "directories"
 msgstr[0] "direktorij"
 msgstr[1] "direktorija"
 msgstr[2] "direktorija"
 
-#: ../src/browsers/playlist3-file-browser.c:1031
+#: ../src/browsers/playlist3-file-browser.c:1041
 msgid "playlist"
 msgid_plural "playlists"
 msgstr[0] "lista pjesama"
 msgstr[1] "liste pjesama"
 msgstr[2] "listi pjesama"
 
-#: ../src/browsers/playlist3-file-browser.c:1054
-#: ../src/browsers/playlist3-file-browser.c:1104
+#: ../src/browsers/playlist3-file-browser.c:1064
+#: ../src/browsers/playlist3-file-browser.c:1114
 msgid "Are you sure you want to clear the selected playlist?"
 msgstr "Jeste li sigurni da želite očistiti izabranu listu pjesama?"
 
-#: ../src/browsers/playlist3-find2-browser.c:102
+#: ../src/browsers/playlist3-file-browser.c:1371
+msgid "search database"
+msgstr "baza pretrage"
+
+#: ../src/browsers/playlist3-file-browser.c:1372
+msgid "Search database <query>"
+msgstr "Pretraži bazu <query>"
+
+#: ../src/browsers/playlist3-find2-browser.c:87
 #: ../src/vala/gmpc-test-plugin.c:991
 msgid "Query"
 msgstr "Upit"
 
-#: ../src/browsers/playlist3-find2-browser.c:241
-#: ../src/browsers/server-information.c:342
-msgid "Database"
-msgstr "Baza podataka"
-
-#: ../src/browsers/playlist3-find2-browser.c:242
-msgid "Playlist"
-msgstr "Lista pjesama"
-
-#: ../src/browsers/playlist3-find2-browser.c:346
-#: ../src/browsers/playlist3-find2-browser.c:796
+#: ../src/browsers/playlist3-find2-browser.c:327
+#: ../src/browsers/playlist3-find2-browser.c:727
 msgid "Search"
 msgstr "Pretraga"
 
-#: ../src/browsers/playlist3-find2-browser.c:436
+#: ../src/browsers/playlist3-find2-browser.c:368
 msgid "Search failed"
 msgstr "Pretraga nije uspjela"
 
-#: ../src/browsers/playlist3-find2-browser.c:722
+#: ../src/browsers/playlist3-find2-browser.c:653
 msgid "Add all"
 msgstr "Dodaj sve"
 
-#: ../src/browsers/playlist3-find2-browser.c:967
+#: ../src/browsers/playlist3-find2-browser.c:861
 msgid "switch search"
 msgstr "Pretraga prebacivanja"
 
-#: ../src/browsers/playlist3-find2-browser.c:968
+#: ../src/browsers/playlist3-find2-browser.c:862
 msgid "Switch to the search browser"
 msgstr "Prebaci na preglednik pretrage"
 
-#: ../src/browsers/playlist3-find2-browser.c:972
-msgid "search database"
-msgstr "baza pretrage"
-
-#: ../src/browsers/playlist3-find2-browser.c:973
-msgid "Search database <query>"
-msgstr "Pretraži bazu <query>"
-
-#: ../src/browsers/playlist3-find2-browser.c:976
-msgid "search playlist"
-msgstr "pretraži listu pjesama"
-
-#: ../src/browsers/playlist3-find2-browser.c:977
-msgid "Search playlist <query>"
-msgstr "Pretraži listu pjesama <query>"
-
-#: ../src/browsers/playlist3-find2-browser.c:993
+#: ../src/browsers/playlist3-find2-browser.c:876
 msgid "Search Browser"
 msgstr "Pretara preglednika"
 
@@ -1672,7 +1732,7 @@ msgstr "Dodaj trenutnu pjesmu u omiljene"
 msgid "Tag based browser"
 msgstr "Pretraživač zasnovan na tagovima"
 
-#: ../src/browsers/playlist3-tag2-browser.c:1882
+#: ../src/browsers/playlist3-tag2-browser.c:1883
 msgid "Reset browser"
 msgstr "Resetuj pretraživač"
 
@@ -1729,74 +1789,249 @@ msgstr "Tip tagova"
 msgid "Tag statistics"
 msgstr "Statiske o tagu"
 
-#: ../src/gmpc-mpddata-treeview.gob:69
-msgid "Markup"
-msgstr "Označavanje"
+#: ../src/browsers/gmpc-nowplaying2.c:301
+#: ../src/browsers/gmpc-nowplaying2.c:1078
+msgid "Format"
+msgstr ""
 
+#: ../src/browsers/gmpc-nowplaying2.c:301
+#: ../src/browsers/gmpc-nowplaying2.c:1078
+msgid "Channel"
+msgstr ""
+
+#: ../src/browsers/gmpc-nowplaying2.c:301
+#: ../src/browsers/gmpc-nowplaying2.c:1078
+msgid "kHz"
+msgstr "kHz"
+
+#: ../src/browsers/gmpc-nowplaying2.c:301
+#: ../src/browsers/gmpc-nowplaying2.c:1078
+msgid "kbps"
+msgstr ""
+
+#: ../src/browsers/gmpc-nowplaying2.c:1054
+#: ../src/browsers/gmpc-metadata-browser2.c:2788
+#: ../src/gmpc-mpddata-treeview.gob:74 ../src/gmpc-mpddata-treeview.gob:662
+msgid "Genre"
+msgstr "Žanr"
+
+#: ../src/browsers/gmpc-nowplaying2.c:1101
+#, fuzzy
+msgid "Codec"
+msgstr "_Spoji"
+
+#: ../src/browsers/gmpc-nowplaying2.c:1121
+msgid "Length"
+msgstr ""
+
+#: ../src/browsers/gmpc-nowplaying2.c:1150
+msgid "Track number"
+msgstr ""
+
+#: ../src/browsers/gmpc-nowplaying2.c:1215
+#: ../src/browsers/gmpc-nowplaying2.c:1217
+#: ../src/browsers/gmpc-metadata-browser2.c:2867
+#: ../src/browsers/gmpc-metadata-browser2.c:4189
+msgid "Guitar Tabs"
+msgstr ""
+
+#: ../src/browsers/gmpc-nowplaying2.c:1241
+#: ../src/browsers/gmpc-nowplaying2.c:1243
+#: ../src/browsers/gmpc-metadata-browser2.c:2881
+#: ../src/browsers/gmpc-metadata-browser2.c:4193
+msgid "Similar Songs"
+msgstr ""
+
+#: ../src/browsers/gmpc-nowplaying2.c:1276
+#: ../src/browsers/gmpc-nowplaying2.c:1278
+#: ../src/browsers/gmpc-metadata-browser2.c:4181
+msgid "Similar Artist"
+msgstr ""
+
+#: ../src/browsers/gmpc-nowplaying2.c:1298
+#: ../src/browsers/gmpc-nowplaying2.c:1300 ../src/vala/gmpc-song-links.c:116
+msgid "Web Links"
+msgstr ""
+
+#: ../src/browsers/gmpc-nowplaying2.c:1360
+msgid "Other albums by"
+msgstr ""
+
+#: ../src/browsers/gmpc-nowplaying2.c:1463
+msgid "No Album"
+msgstr ""
+
+#: ../src/browsers/gmpc-nowplaying2.c:1645
+msgid "Now Playing"
+msgstr ""
+
+#: ../src/browsers/gmpc-metadata-browser2.c:558
+#: ../src/browsers/gmpc-metadata-browser2.c:1534
+#: ../src/browsers/gmpc-metadata-browser2.c:1730
+#: ../src/browsers/gmpc-metadata-browser2.c:1874
+#: ../src/browsers/gmpc-metadata-browser2.c:2835
+#: ../src/browsers/gmpc-metadata-browser2.c:3092
+#: ../src/browsers/gmpc-metadata-browser2.c:3256
+#: ../src/browsers/gmpc-metadata-browser2.c:3390
+msgid "_Replace"
+msgstr ""
+
+#: ../src/browsers/gmpc-metadata-browser2.c:669
+#: ../src/browsers/gmpc-metadata-browser2.c:713
+#: ../src/browsers/gmpc-metadata-browser2.c:727
+#: ../src/browsers/gmpc-metadata-browser2.c:849
+msgid "Unavailable"
+msgstr "Nedostupno"
+
+#: ../src/browsers/gmpc-metadata-browser2.c:704
+msgid "Fetching .. "
+msgstr ""
+
+#: ../src/browsers/gmpc-metadata-browser2.c:855
+msgid "Fetching"
+msgstr ""
+
+#: ../src/browsers/gmpc-metadata-browser2.c:1138
+#: ../src/browsers/gmpc-metadata-browser2.c:1240
+msgid "(less)"
+msgstr ""
+
+#: ../src/browsers/gmpc-metadata-browser2.c:1145
+#: ../src/browsers/gmpc-metadata-browser2.c:1238
+msgid "(more)"
+msgstr ""
+
+#: ../src/browsers/gmpc-metadata-browser2.c:1344
+msgid "Metadata Browser"
+msgstr "Pretraživač meta podataka"
+
+#: ../src/browsers/gmpc-metadata-browser2.c:2059
+#: ../src/browsers/gmpc-metadata-browser2.c:2763
+#: ../src/browsers/gmpc-metadata-browser2.c:3231
 #: ../src/gmpc-mpddata-treeview.gob:70 ../src/gmpc-mpddata-treeview.gob:636
 #: ../src/vala/gmpc-test-plugin.c:951
-#: ../src/vala/gmpc-metadata-browser2.c:2058
-#: ../src/vala/gmpc-metadata-browser2.c:2760
-#: ../src/vala/gmpc-metadata-browser2.c:3228
 msgid "Artist"
 msgstr "Umjetnik"
 
-#: ../src/gmpc-mpddata-treeview.gob:71 ../src/gmpc-mpddata-treeview.gob:650
-#: ../src/vala/gmpc-test-plugin.c:963
-#: ../src/vala/gmpc-metadata-browser2.c:2101
-#: ../src/vala/gmpc-metadata-browser2.c:2778
-msgid "Album"
-msgstr "Album"
+#: ../src/browsers/gmpc-metadata-browser2.c:2096
+msgid "Year"
+msgstr ""
 
+#: ../src/browsers/gmpc-metadata-browser2.c:2130
+#: ../src/browsers/gmpc-metadata-browser2.c:3245
+#: ../src/browsers/gmpc-metadata-browser2.c:3279
+#: ../src/browsers/gmpc-metadata-browser2.c:3379
+msgid "Songs"
+msgstr "Pjesme"
+
+#: ../src/browsers/gmpc-metadata-browser2.c:2748
+msgid "Search songs with similar title"
+msgstr ""
+
+#: ../src/browsers/gmpc-metadata-browser2.c:2749
 #: ../src/gmpc-mpddata-treeview.gob:72 ../src/gmpc-mpddata-treeview.gob:623
 #: ../src/vala/gmpc-test-plugin.c:978
-#: ../src/vala/gmpc-metadata-browser2.c:2746
 msgid "Title"
 msgstr "Naslov"
+
+#: ../src/browsers/gmpc-metadata-browser2.c:2766
+msgid "Album artist"
+msgstr "Album umjetnika"
+
+#: ../src/browsers/gmpc-metadata-browser2.c:2785
+#: ../src/gmpc-mpddata-treeview.gob:79 ../src/gmpc-mpddata-treeview.gob:674
+msgid "Date"
+msgstr "Datum"
+
+#: ../src/browsers/gmpc-metadata-browser2.c:2786
+#: ../src/gmpc-mpddata-treeview.gob:78
+msgid "Performer"
+msgstr "Izvođač"
+
+#: ../src/browsers/gmpc-metadata-browser2.c:2787
+#: ../src/gmpc-mpddata-treeview.gob:81
+msgid "Disc"
+msgstr "Disk"
+
+#: ../src/browsers/gmpc-metadata-browser2.c:2798
+msgid "Open path to song in file browser"
+msgstr ""
+
+#: ../src/browsers/gmpc-metadata-browser2.c:2799
+msgid "Path"
+msgstr "Putanja"
+
+#: ../src/browsers/gmpc-metadata-browser2.c:2806
+msgid "Favored"
+msgstr ""
+
+#: ../src/browsers/gmpc-metadata-browser2.c:2813
+msgid "Rating"
+msgstr "Ocjena"
+
+#: ../src/browsers/gmpc-metadata-browser2.c:2816
+#: ../src/gmpc-mpddata-treeview.gob:82
+msgid "Comment"
+msgstr "Komentar"
+
+#: ../src/browsers/gmpc-metadata-browser2.c:2853
+#: ../src/browsers/gmpc-metadata-browser2.c:4185
+msgid "Lyrics"
+msgstr "Tekst pjesme"
+
+#: ../src/browsers/gmpc-metadata-browser2.c:3237
+#: ../src/browsers/gmpc-metadata-browser2.c:3371
+msgid "Genres"
+msgstr ""
+
+#: ../src/browsers/gmpc-metadata-browser2.c:3241
+#: ../src/browsers/gmpc-metadata-browser2.c:3375
+msgid "Dates"
+msgstr ""
+
+#: ../src/browsers/gmpc-metadata-browser2.c:3249
+#: ../src/browsers/gmpc-metadata-browser2.c:3383
+msgid "Playtime"
+msgstr "Vrijeme sviranja"
+
+#: ../src/browsers/gmpc-metadata-browser2.c:3271
+#: ../src/browsers/gmpc-metadata-browser2.c:4177
+msgid "Album information"
+msgstr "Informacije o albumu"
+
+#: ../src/browsers/gmpc-metadata-browser2.c:3405
+#: ../src/browsers/gmpc-metadata-browser2.c:4173
+msgid "Artist information"
+msgstr "Informacije o umjetniku"
+
+#: ../src/browsers/gmpc-metadata-browser2.c:3416
+#: ../src/browsers/gmpc-metadata-browser2.c:3418
+msgid "Similar artist"
+msgstr ""
+
+#: ../src/browsers/gmpc-metadata-browser2.c:4170
+msgid "Enable/disable metadata options"
+msgstr ""
+
+#: ../src/browsers/gmpc-metadata-browser2.c:4197
+msgid "Web links"
+msgstr ""
+
+#: ../src/gmpc-mpddata-treeview.gob:69
+msgid "Markup"
+msgstr "Označavanje"
 
 #: ../src/gmpc-mpddata-treeview.gob:73
 msgid "File"
 msgstr "Datoteka"
 
-#: ../src/gmpc-mpddata-treeview.gob:74 ../src/gmpc-mpddata-treeview.gob:662
-#: ../src/vala/gmpc-metadata-browser2.c:2785
-#: ../src/vala/gmpc-nowplaying2.c:979
-msgid "Genre"
-msgstr "Žanr"
-
-#: ../src/gmpc-mpddata-treeview.gob:75
-#: ../src/vala/gmpc-metadata-browser2.c:2119
-#: ../src/vala/gmpc-metadata-browser2.c:2781
-msgid "Track"
-msgstr "Pjesma"
-
 #: ../src/gmpc-mpddata-treeview.gob:77
 msgid "Composer"
 msgstr "Kompozitor"
 
-#: ../src/gmpc-mpddata-treeview.gob:78
-#: ../src/vala/gmpc-metadata-browser2.c:2783
-msgid "Performer"
-msgstr "Izvođač"
-
-#: ../src/gmpc-mpddata-treeview.gob:79 ../src/gmpc-mpddata-treeview.gob:674
-#: ../src/vala/gmpc-metadata-browser2.c:2782
-msgid "Date"
-msgstr "Datum"
-
 #: ../src/gmpc-mpddata-treeview.gob:80 ../src/gmpc-mpddata-treeview.gob:686
 msgid "Duration"
 msgstr "Trajanje"
-
-#: ../src/gmpc-mpddata-treeview.gob:81
-#: ../src/vala/gmpc-metadata-browser2.c:2784
-msgid "Disc"
-msgstr "Disk"
-
-#: ../src/gmpc-mpddata-treeview.gob:82
-#: ../src/vala/gmpc-metadata-browser2.c:2813
-msgid "Comment"
-msgstr "Komentar"
 
 #: ../src/gmpc-mpddata-treeview.gob:83
 msgid "Icon Id"
@@ -1836,24 +2071,24 @@ msgstr "Ubaci poslije"
 msgid "Edit Columns"
 msgstr "Uredi kolone"
 
-#: ../src/gmpc-profiles.gob:93
+#: ../src/gmpc-profiles.gob:100
 msgid "Added profile"
 msgstr "Dodan profil"
 
 #. Generate removal message before the actual profile is destroyed
-#: ../src/gmpc-profiles.gob:424
+#: ../src/gmpc-profiles.gob:427
 msgid "Removed profile"
 msgstr "Uklonjen profil"
 
-#: ../src/gmpc-meta-text-view.gob:98 ../src/gmpc-metaimage.gob:832
+#: ../src/gmpc-meta-text-view.gob:98 ../src/gmpc-metaimage.gob:839
 msgid "Refetch"
 msgstr "Ponovo dobavi"
 
-#: ../src/gmpc-meta-text-view.gob:103 ../src/gmpc-metaimage.gob:837
+#: ../src/gmpc-meta-text-view.gob:103 ../src/gmpc-metaimage.gob:844
 msgid "Select file"
 msgstr "Odaberite datoteku"
 
-#: ../src/gmpc-meta-text-view.gob:112 ../src/gmpc-metaimage.gob:846
+#: ../src/gmpc-meta-text-view.gob:112 ../src/gmpc-metaimage.gob:853
 #: ../src/vala/gmpc-test-plugin.c:1270
 msgid "Metadata selector"
 msgstr ""
@@ -1886,7 +2121,7 @@ msgstr "Dobavljam informacije o albumu"
 msgid "Not Available"
 msgstr "Nije dostupan"
 
-#: ../src/gmpc-meta-text-view.gob:448 ../src/gmpc-metaimage.gob:883
+#: ../src/gmpc-meta-text-view.gob:448 ../src/gmpc-metaimage.gob:890
 msgid "Select File"
 msgstr "Označi datoteku"
 
@@ -1894,11 +2129,11 @@ msgstr "Označi datoteku"
 msgid "Text Document"
 msgstr "Tekstualni dokument"
 
-#: ../src/gmpc-meta-text-view.gob:457 ../src/gmpc-metaimage.gob:893
+#: ../src/gmpc-meta-text-view.gob:457 ../src/gmpc-metaimage.gob:900
 msgid "All"
 msgstr "Sve"
 
-#: ../src/gmpc-metaimage.gob:888
+#: ../src/gmpc-metaimage.gob:895
 msgid "Images"
 msgstr "Slike"
 
@@ -1910,23 +2145,13 @@ msgstr "nije dostupno"
 msgid "Loading"
 msgstr "Učitavam"
 
-#: ../src/vala/gmpc_menu_item_rating.c:87
-msgid "Rating:"
-msgstr "Ocjena:"
-
-#: ../src/vala/gmpc-song-links.c:129
-msgid "Update list from internet"
-msgstr "Osvježi listu sa internete"
-
-#: ../src/vala/gmpc-song-links.c:169 ../src/vala/gmpc-nowplaying2.c:1197
-#: ../src/vala/gmpc-nowplaying2.c:1199
-msgid "Web Links"
+#: ../src/vala/gmpc-database-update-tracker.c:96
+msgid "MPD is rescanning the database"
 msgstr ""
 
-#: ../src/vala/gmpc-song-links.c:575
-#, c-format
-msgid "Lookup %s on %s"
-msgstr "Potraga za %s na %s"
+#: ../src/vala/gmpc-database-update-tracker.c:146
+msgid "MPD Database has been updated at:"
+msgstr ""
 
 #: ../src/vala/gmpc-easy-command.c:91
 msgid "Gmpc Easy Command"
@@ -1957,6 +2182,11 @@ msgstr ""
 #: ../src/vala/gmpc-easy-command.c:636
 msgid "Get a list of available commands"
 msgstr ""
+
+#: ../src/vala/gmpc-song-links.c:418
+#, c-format
+msgid "Lookup %s on %s"
+msgstr "Potraga za %s na %s"
 
 #: ../src/vala/gmpc-test-plugin.c:133 ../src/vala/gmpc-test-plugin.c:174
 msgid "Uri"
@@ -2014,184 +2244,18 @@ msgstr ""
 msgid "Guitar Tab"
 msgstr ""
 
-#: ../src/vala/gmpc-metadata-browser2.c:558
-#: ../src/vala/gmpc-metadata-browser2.c:1534
-#: ../src/vala/gmpc-metadata-browser2.c:1730
-#: ../src/vala/gmpc-metadata-browser2.c:1874
-#: ../src/vala/gmpc-metadata-browser2.c:2832
-#: ../src/vala/gmpc-metadata-browser2.c:3089
-#: ../src/vala/gmpc-metadata-browser2.c:3253
-#: ../src/vala/gmpc-metadata-browser2.c:3387
-msgid "_Replace"
-msgstr ""
+#: ../src/Widgets/gmpc-menu-item-rating.c:87
+msgid "Rating:"
+msgstr "Ocjena:"
 
-#: ../src/vala/gmpc-metadata-browser2.c:669
-#: ../src/vala/gmpc-metadata-browser2.c:713
-#: ../src/vala/gmpc-metadata-browser2.c:727
-#: ../src/vala/gmpc-metadata-browser2.c:849
-msgid "Unavailable"
-msgstr "Nedostupno"
+#~ msgid "File Browser"
+#~ msgstr "Pretraživač datoteka"
 
-#: ../src/vala/gmpc-metadata-browser2.c:704
-msgid "Fetching .. "
-msgstr ""
+#~ msgid "Playlist"
+#~ msgstr "Lista pjesama"
 
-#: ../src/vala/gmpc-metadata-browser2.c:855
-msgid "Fetching"
-msgstr ""
-
-#: ../src/vala/gmpc-metadata-browser2.c:1138
-#: ../src/vala/gmpc-metadata-browser2.c:1240
-msgid "(less)"
-msgstr ""
-
-#: ../src/vala/gmpc-metadata-browser2.c:1145
-#: ../src/vala/gmpc-metadata-browser2.c:1238
-msgid "(more)"
-msgstr ""
-
-#: ../src/vala/gmpc-metadata-browser2.c:1344
-msgid "Metadata Browser"
-msgstr "Pretraživač meta podataka"
-
-#: ../src/vala/gmpc-metadata-browser2.c:2094
-msgid "Year"
-msgstr ""
-
-#: ../src/vala/gmpc-metadata-browser2.c:2127
-#: ../src/vala/gmpc-metadata-browser2.c:3242
-#: ../src/vala/gmpc-metadata-browser2.c:3276
-#: ../src/vala/gmpc-metadata-browser2.c:3376
-msgid "Songs"
-msgstr "Pjesme"
-
-#: ../src/vala/gmpc-metadata-browser2.c:2745
-msgid "Search songs with similar title"
-msgstr ""
-
-#: ../src/vala/gmpc-metadata-browser2.c:2763
-msgid "Album artist"
-msgstr "Album umjetnika"
-
-#: ../src/vala/gmpc-metadata-browser2.c:2795
-msgid "Open path to song in file browser"
-msgstr ""
-
-#: ../src/vala/gmpc-metadata-browser2.c:2796
-msgid "Path"
-msgstr "Putanja"
-
-#: ../src/vala/gmpc-metadata-browser2.c:2803
-msgid "Favored"
-msgstr ""
-
-#: ../src/vala/gmpc-metadata-browser2.c:2810
-msgid "Rating"
-msgstr "Ocjena"
-
-#: ../src/vala/gmpc-metadata-browser2.c:2850
-#: ../src/vala/gmpc-metadata-browser2.c:4182
-msgid "Lyrics"
-msgstr "Tekst pjesme"
-
-#: ../src/vala/gmpc-metadata-browser2.c:2864
-#: ../src/vala/gmpc-metadata-browser2.c:4186
-#: ../src/vala/gmpc-nowplaying2.c:1114 ../src/vala/gmpc-nowplaying2.c:1116
-msgid "Guitar Tabs"
-msgstr ""
-
-#: ../src/vala/gmpc-metadata-browser2.c:2878
-#: ../src/vala/gmpc-metadata-browser2.c:4190
-#: ../src/vala/gmpc-nowplaying2.c:1140 ../src/vala/gmpc-nowplaying2.c:1142
-msgid "Similar Songs"
-msgstr ""
-
-#: ../src/vala/gmpc-metadata-browser2.c:3234
-#: ../src/vala/gmpc-metadata-browser2.c:3368
-msgid "Genres"
-msgstr ""
-
-#: ../src/vala/gmpc-metadata-browser2.c:3238
-#: ../src/vala/gmpc-metadata-browser2.c:3372
-msgid "Dates"
-msgstr ""
-
-#: ../src/vala/gmpc-metadata-browser2.c:3246
-#: ../src/vala/gmpc-metadata-browser2.c:3380
-msgid "Playtime"
-msgstr "Vrijeme sviranja"
-
-#: ../src/vala/gmpc-metadata-browser2.c:3268
-#: ../src/vala/gmpc-metadata-browser2.c:4174
-msgid "Album information"
-msgstr "Informacije o albumu"
-
-#: ../src/vala/gmpc-metadata-browser2.c:3402
-#: ../src/vala/gmpc-metadata-browser2.c:4170
-msgid "Artist information"
-msgstr "Informacije o umjetniku"
-
-#: ../src/vala/gmpc-metadata-browser2.c:3413
-#: ../src/vala/gmpc-metadata-browser2.c:3415
-msgid "Similar artist"
-msgstr ""
-
-#: ../src/vala/gmpc-metadata-browser2.c:4167
-msgid "Enable/disable metadata options"
-msgstr ""
-
-#: ../src/vala/gmpc-metadata-browser2.c:4178
-#: ../src/vala/gmpc-nowplaying2.c:1175 ../src/vala/gmpc-nowplaying2.c:1177
-msgid "Similar Artist"
-msgstr ""
-
-#: ../src/vala/gmpc-metadata-browser2.c:4194
-msgid "Web links"
-msgstr ""
-
-#: ../src/vala/gmpc-database-update-tracker.c:93
-msgid "MPD is rescanning the database"
-msgstr ""
-
-#: ../src/vala/gmpc-database-update-tracker.c:143
-msgid "MPD Database has been updated at:"
-msgstr ""
-
-#: ../src/vala/gmpc-nowplaying2.c:300 ../src/vala/gmpc-nowplaying2.c:1003
-msgid "Format"
-msgstr ""
-
-#: ../src/vala/gmpc-nowplaying2.c:300 ../src/vala/gmpc-nowplaying2.c:1003
-msgid "Channel"
-msgstr ""
-
-#: ../src/vala/gmpc-nowplaying2.c:300 ../src/vala/gmpc-nowplaying2.c:1003
-msgid "kHz"
-msgstr "kHz"
-
-#: ../src/vala/gmpc-nowplaying2.c:300 ../src/vala/gmpc-nowplaying2.c:1003
-msgid "kbps"
-msgstr ""
-
-#: ../src/vala/gmpc-nowplaying2.c:1020
-msgid "Length"
-msgstr ""
-
-#: ../src/vala/gmpc-nowplaying2.c:1049
-msgid "Track number"
-msgstr ""
-
-#: ../src/vala/gmpc-nowplaying2.c:1259
-msgid "Other albums by"
-msgstr ""
-
-#: ../src/vala/gmpc-nowplaying2.c:1362
-msgid "No Album"
-msgstr ""
-
-#: ../src/vala/gmpc-nowplaying2.c:1544
-msgid "Now Playing"
-msgstr ""
+#~ msgid "Update list from internet"
+#~ msgstr "Osvježi listu sa internete"
 
 #~ msgid "MPD database is updating."
 #~ msgstr "MPD baza podataka se nadopunjuje."
@@ -2247,7 +2311,6 @@ msgstr ""
 #~ msgid "MPD database is updating"
 #~ msgstr "MPD baza se nadopunjuje"
 
-#, c-format
 #~ msgid "MPD Database refreshed at: %c"
 #~ msgstr "MPD baza osvježena u: %c"
 
@@ -2302,7 +2365,6 @@ msgstr ""
 #~ msgid "Find Artist:"
 #~ msgstr "Nađi umjetnika:"
 
-#, c-format
 #~ msgid "Only the first %i result displayed, please refine your search query"
 #~ msgstr ""
 #~ "Samo je prvi %i rezultat prikazana, molimo prepravite vaš upit za pretragu"
@@ -2355,7 +2417,6 @@ msgstr ""
 #~ msgid "MPD's Streaming server"
 #~ msgstr "Server protoka za MPD"
 
-#, c-format
 #~ msgid ""
 #~ "Gnome Music Player Client\n"
 #~ "Options:\n"
@@ -2387,13 +2448,13 @@ msgstr ""
 #~ "\t\t\t\t\t2 Poruke o greškama + Poruke upozorenja\n"
 #~ "\t\t\t\t\t3 Sve poruke\n"
 #~ "\t--version\t\tŠtampaj verziju i dobij reviziju\n"
-#~ "\t--config=<file>\t\tPostavi putanju za konfiguracijsku datoteku, početno  "
-#~ "~/.gmpc/gmpc.cfg\n"
+#~ "\t--config=<file>\t\tPostavi putanju za konfiguracijsku datoteku, "
+#~ "početno  ~/.gmpc/gmpc.cfg\n"
 #~ "\t--clean-cover-db\tOčisti datoteku sa naslovnicama.\n"
 #~ "\t--disable-plugins\tNe učitavaj nijedan dodataka.\n"
 #~ "\t--replace\t\tZamijeni pokrenutu sesiju sa trenutnom\n"
-#~ "\t--quit\t\t\tZatvori pokrenutu gmpc sesiju. Radi samo ukoliko su višestruke "
-#~ "instance isključene.\n"
+#~ "\t--quit\t\t\tZatvori pokrenutu gmpc sesiju. Radi samo ukoliko su "
+#~ "višestruke instance isključene.\n"
 
 #~ msgid "second"
 #~ msgid_plural "seconds"
