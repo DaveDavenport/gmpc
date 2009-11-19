@@ -50,6 +50,8 @@ typedef struct _Playlist3MessagePluginPrivate {
 } _Playlist3MessagePluginPrivate;
 
 
+void copy_to_clipboard(GtkButton *button, GtkBuilder *xml);
+
 static void playlist3_message_destroy(Playlist3MessagePlugin *self)
 {
 	g_io_channel_flush(self->priv->log_file, NULL);
@@ -270,12 +272,12 @@ void copy_to_clipboard(GtkButton *button, GtkBuilder *xml)
 		}
 	}
 
-	gcb = gtk_widget_get_clipboard(button, GDK_SELECTION_CLIPBOARD);
+	gcb = gtk_widget_get_clipboard(GTK_WIDGET(button), GDK_SELECTION_CLIPBOARD);
 	printf("Set clipboard: %s\n", str->str);
 	gtk_clipboard_set_text(gcb, str->str, str->len);
 	
 
-	g_list_foreach (list, gtk_tree_path_free, NULL);
+	g_list_foreach (list, (GFunc)gtk_tree_path_free, NULL);
 	g_list_free (list);
 	g_string_free(str, TRUE);
 }
