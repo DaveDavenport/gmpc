@@ -268,12 +268,6 @@ static gboolean url_validate_url(const gchar * text)
 /**
  * Handle user input
  */
-static void url_entry_changed(GtkEntry * entry, GtkWidget * add_button)
-{
-	const gchar *text = gtk_entry_get_text(entry);
-	gtk_widget_set_sensitive(add_button, url_validate_url(text));
-}
-
 static int url_check_binary(const char *data, const int size)
 {
 	int binary = FALSE;
@@ -363,13 +357,13 @@ static void url_fetcher_download_callback(const GEADAsyncHandler * handle, const
  * Parsing uri
  */
 
-static int parse_uri(const char *uri, gpointer data)
+static void parse_uri(const char *uri, gpointer data)
 {
 	gchar *scheme;	
 	/* Check NULL */
 	if(uri == NULL) {
 		gmpc_url_fetching_gui_set_completed(data);
-		return;
+		return ;
 	}
 	/* Check local path */
 	scheme = g_uri_parse_scheme(uri);
@@ -416,26 +410,26 @@ static int parse_uri(const char *uri, gpointer data)
 	if(scheme) 
 		g_free(scheme);
 	/* Dialog needs to be kept running */
-	return FALSE;
+	return;
 }
 
-static void gufg_parse_callback(GmpcUrlFetchingGui *a, const gchar *url, void *user_data, GError **error)
+static void gufg_parse_callback(GmpcUrlFetchingGui *a, const gchar *url, void *user_data)
 {
 		gmpc_url_fetching_gui_set_processing(a);
 		parse_uri(url, a);
 }
 
-static gboolean gufg_validate_callback(GmpcUrlFetchingGui *a,const gchar *url)
+static gboolean gufg_validate_callback(GmpcUrlFetchingGui *a,const gchar *url, void *user_data)
 {
 	return (strlen(url) > 0 && (G_IS_DIR_SEPARATOR(url[0]) || url_validate_url(url)));
 }
 
-static gboolean gufg_validate_callback_0160(GmpcUrlFetchingGui *a, const gchar *url)
+static gboolean gufg_validate_callback_0160(GmpcUrlFetchingGui *a, const gchar *url, void *user_data)
 {
 	return TRUE;
 }
 
-static void gufg_parse_callback_0160(GmpcUrlFetchingGui *a, const gchar *url, void *user_data, GError **error)
+static void gufg_parse_callback_0160(GmpcUrlFetchingGui *a, const gchar *url, void *user_data)
 {
 	printf("add url1: '%s'\n", url);
 	mpd_playlist_queue_load(connection,url);
@@ -447,9 +441,9 @@ void url_start(void)
 {
 	if(mpd_server_check_version(connection, 0,16,0))
 	{
-		GtkWidget *a = gmpc_url_fetching_gui_new(gufg_parse_callback_0160,NULL, gufg_validate_callback_0160,NULL, g_object_unref);
+		gmpc_url_fetching_gui_new(gufg_parse_callback_0160,NULL, gufg_validate_callback_0160,NULL, g_object_unref);
 	}else{
-		GtkWidget *a = gmpc_url_fetching_gui_new(gufg_parse_callback,NULL, gufg_validate_callback,NULL, g_object_unref);
+		gmpc_url_fetching_gui_new(gufg_parse_callback,NULL, gufg_validate_callback,NULL, g_object_unref);
 	}
 }
 
