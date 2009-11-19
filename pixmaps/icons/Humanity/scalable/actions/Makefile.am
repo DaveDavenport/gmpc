@@ -19,5 +19,4 @@ media-playlist.svg\
 media-tag.svg\
 playlist-browser.svg\
 playlist-search-browser.svg\
-shout.svg\
 tag-browser.svg

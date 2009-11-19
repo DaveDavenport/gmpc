@@ -19,5 +19,4 @@ dist_icons_DATA = \
                   media-tag.png\
                   playlist-browser.png\
                   playlist-search-browser.png\
-                  shout.png\
                   tag-browser.png
