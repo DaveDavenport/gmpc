@@ -41,6 +41,7 @@ static void server_pref_destroy(GtkWidget *);
 static void connection_pref_construct(GtkWidget *container);
 static void connection_pref_destroy(GtkWidget *container);
 
+void server_pref_replaygain_changed(GtkComboBox *combo, gpointer data);
 static void ServerStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userdata);
 
 static GtkBuilder *server_pref_xml = NULL;
@@ -886,7 +887,7 @@ static void server_pref_destroy(GtkWidget *container)
 }
 void server_pref_replaygain_changed(GtkComboBox *combo, gpointer data)
 {
-	int cur = gtk_combo_box_get_active(combo);
+	unsigned int cur = gtk_combo_box_get_active(combo);
 	if(cur != mpd_server_get_replaygain_mode(connection))
 	{
 		if(mpd_server_check_command_allowed(connection, "replay_gain_mode") == MPD_SERVER_COMMAND_ALLOWED){
