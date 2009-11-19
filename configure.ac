@@ -43,6 +43,7 @@ AC_PREREQ(2.59)
 # Remove the check for c++ and fortran compiler
 m4_defun([_LT_AC_LANG_CXX_CONFIG], [:])
 m4_defun([_LT_AC_LANG_F77_CONFIG], [:])
+AC_REPLACE_FUNCS(strndup)
 
 
 #intltool, libtool. Check for CC compiler

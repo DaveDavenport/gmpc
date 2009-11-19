@@ -20,6 +20,7 @@
 requires 2.0.0
 
 %ht{
+#include <config.h>
 #include <gtk/gtk.h>
 #include <libmpd/libmpd.h>
 #include <libmpd/libmpd-internal.h>
