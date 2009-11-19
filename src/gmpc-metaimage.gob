@@ -834,7 +834,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 			GtkWidget *menu = gtk_menu_new();
 			GtkWidget *item = NULL; 
 
-            self_menu_populate_client(self,menu);
+            self_menu_populate_client(self,GTK_MENU(menu));
 
 			item = gtk_image_menu_item_new_with_label(_("Refetch"));
 			gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), gtk_image_new_from_stock(GTK_STOCK_REFRESH, GTK_ICON_SIZE_MENU));
