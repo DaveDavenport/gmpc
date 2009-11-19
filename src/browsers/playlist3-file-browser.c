@@ -1203,7 +1203,7 @@ static int pl3_file_browser_add_go_menu(GtkWidget *menu)
 
     item = gtk_image_menu_item_new_with_label(_("Database"));
     gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item), 
-            gtk_image_new_from_stock("gtk-open", GTK_ICON_SIZE_MENU));
+            gtk_image_new_from_icon_name("gmpc-database", GTK_ICON_SIZE_MENU));
     gtk_widget_add_accelerator(GTK_WIDGET(item), 
             "activate",
             gtk_menu_get_accel_group(GTK_MENU(menu)), 
