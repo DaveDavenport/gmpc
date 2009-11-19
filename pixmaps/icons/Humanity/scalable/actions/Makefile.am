@@ -6,7 +6,7 @@ iconsdir = $(themedir)/$(size)/$(context)
 
 dist_icons_DATA =\
 albumview.svg\
-Database.svg\
+gmpc-database.svg\
 dynamic.svg\
 gmpc-serve.svg\
 gmpc.svg\
