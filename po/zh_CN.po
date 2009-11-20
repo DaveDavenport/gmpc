@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-11-19 09:41+0100\n"
+"POT-Creation-Date: 2009-11-20 13:57+0100\n"
 "PO-Revision-Date: 2009-10-30 02:01+0000\n"
 "Last-Translator: Qianqian Fang <fangqq@gmail.com>\n"
 "Language-Team: Simplified Chinese <zh_CN@li.org>\n"
@@ -45,7 +45,7 @@ msgstr "简单的命令帮助"
 msgid "Getting help"
 msgstr "获取帮助"
 
-#: ../glade/playlist3.glade.h:5 ../src/mpdinteraction.c:321
+#: ../glade/playlist3.glade.h:5 ../src/mpdinteraction.c:322
 msgid "Mute"
 msgstr "静音"
 
@@ -323,13 +323,13 @@ msgstr "发生了下面的错误 :"
 msgid "Error Message"
 msgstr "错误讯息"
 
-#: ../src/metadata.c:293
+#: ../src/MetaData/metadata.c:293
 msgid ""
 "A new metadata plugin was added, gmpc has purged all failed hits from the "
 "cache"
 msgstr "已经添加了一个新的元数据插件，gmpc 已经从缓存中清理了所有命中失败的项"
 
-#: ../src/metadata.c:1400
+#: ../src/MetaData/metadata.c:1400
 msgid "Metadata Handler"
 msgstr "元数据处理器"
 
@@ -462,277 +462,277 @@ msgstr "操作"
 msgid "Shortcut"
 msgstr "快捷键"
 
-#: ../src/mpdinteraction.c:91
+#: ../src/mpdinteraction.c:92
 msgid "enable"
 msgstr "启用"
 
-#: ../src/mpdinteraction.c:94
+#: ../src/mpdinteraction.c:95
 msgid "disable"
 msgstr "禁用"
 
-#: ../src/mpdinteraction.c:107 ../src/playlist3.c:1753 ../src/playlist3.c:1766
+#: ../src/mpdinteraction.c:108 ../src/playlist3.c:1753 ../src/playlist3.c:1766
 #: ../src/playlist3.c:1781 ../src/playlist3.c:1794
 #: ../glade/preferences-server.ui.h:8
 msgid "Off"
 msgstr "关闭"
 
-#: ../src/mpdinteraction.c:162
+#: ../src/mpdinteraction.c:163
 msgid "Single: The used MPD server is to old and does not support this."
 msgstr ""
 
-#: ../src/mpdinteraction.c:164
+#: ../src/mpdinteraction.c:165
 msgid "Single: You have insufficient permission to use this option."
 msgstr ""
 
-#: ../src/mpdinteraction.c:181
+#: ../src/mpdinteraction.c:182
 msgid "Consume: The used MPD server is to old and does not support this."
 msgstr ""
 
-#: ../src/mpdinteraction.c:183
+#: ../src/mpdinteraction.c:184
 msgid "Consume: You have insufficient permission to use this option."
 msgstr ""
 
-#: ../src/mpdinteraction.c:268
+#: ../src/mpdinteraction.c:269
 msgid ""
 "Stop after current song: The used MPD server is to old and does not support "
 "this."
 msgstr "当前歌曲后停止：所用的 MPD 服务器太旧，不支持。"
 
-#: ../src/mpdinteraction.c:270
+#: ../src/mpdinteraction.c:271
 msgid "Stop after current song: You have insufficient permission."
 msgstr "当前歌曲后停止: 您没有足够的权限"
 
-#: ../src/mpdinteraction.c:272
+#: ../src/mpdinteraction.c:273
 msgid "Playback will be stopped after the current playing song."
 msgstr "会在当前播放的歌曲之后停止回放。"
 
-#: ../src/mpdinteraction.c:282
+#: ../src/mpdinteraction.c:283
 msgid ""
 "Repeat current song: The used MPD server is to old and does not support this."
 msgstr "重复当前歌曲：所用的 MPD 服务器太旧，不支持。"
 
-#: ../src/mpdinteraction.c:284
+#: ../src/mpdinteraction.c:285
 msgid "Repeat current song: You have insufficient permission."
 msgstr "重复播放当前歌曲: 您没有足够的权限"
 
-#: ../src/mpdinteraction.c:286
+#: ../src/mpdinteraction.c:287
 msgid "The current song will be forever repeated."
 msgstr "当前歌曲会一直重复播放"
 
-#: ../src/mpdinteraction.c:296
+#: ../src/mpdinteraction.c:297
 msgid ""
 "Update database: The used MPD server is to old and does not support this."
 msgstr "更新数据库：所用的 MPD 服务器太旧，不支持。"
 
-#: ../src/mpdinteraction.c:298
+#: ../src/mpdinteraction.c:299
 msgid "Update database: You have insufficient permission."
 msgstr "更新数据库: 您没有足够的权限"
 
 #. Player control
 #. basic playlist commands
-#: ../src/mpdinteraction.c:307 ../src/mpdinteraction.c:328
+#: ../src/mpdinteraction.c:308 ../src/mpdinteraction.c:329
 msgid "play"
 msgstr "播放"
 
-#: ../src/mpdinteraction.c:307
+#: ../src/mpdinteraction.c:308
 msgid "start playback"
 msgstr "开始回放"
 
-#: ../src/mpdinteraction.c:308
+#: ../src/mpdinteraction.c:309
 msgid "pause"
 msgstr "暂停"
 
-#: ../src/mpdinteraction.c:308
+#: ../src/mpdinteraction.c:309
 msgid "pause playback"
 msgstr "暂停回放"
 
-#: ../src/mpdinteraction.c:309
+#: ../src/mpdinteraction.c:310
 msgid "next"
 msgstr "下一个"
 
-#: ../src/mpdinteraction.c:309
+#: ../src/mpdinteraction.c:310
 msgid "next song"
 msgstr "下一曲"
 
-#: ../src/mpdinteraction.c:310
+#: ../src/mpdinteraction.c:311
 msgid "prev"
 msgstr "前一个"
 
-#: ../src/mpdinteraction.c:310
+#: ../src/mpdinteraction.c:311
 msgid "previous song"
 msgstr "上一曲"
 
-#: ../src/mpdinteraction.c:311
+#: ../src/mpdinteraction.c:312
 msgid "stop"
 msgstr "停止"
 
-#: ../src/mpdinteraction.c:311
+#: ../src/mpdinteraction.c:312
 msgid "stop playback"
 msgstr "停止播放"
 
-#: ../src/mpdinteraction.c:313
+#: ../src/mpdinteraction.c:314
 msgid "random"
 msgstr "随机"
 
-#: ../src/mpdinteraction.c:313
+#: ../src/mpdinteraction.c:314
 msgid "Random (on|off)"
 msgstr "随机播放 (开|关)"
 
-#: ../src/mpdinteraction.c:314
+#: ../src/mpdinteraction.c:315
 msgid "repeat"
 msgstr "重复"
 
-#: ../src/mpdinteraction.c:314
+#: ../src/mpdinteraction.c:315
 msgid "Repeat (on|off)"
 msgstr "重复播放 (开|关)"
 
-#: ../src/mpdinteraction.c:316
+#: ../src/mpdinteraction.c:317
 msgid "single"
 msgstr ""
 
-#: ../src/mpdinteraction.c:316
+#: ../src/mpdinteraction.c:317
 msgid "Single (on|off)"
 msgstr ""
 
-#: ../src/mpdinteraction.c:317
+#: ../src/mpdinteraction.c:318
 msgid "consume"
 msgstr ""
 
-#: ../src/mpdinteraction.c:317
+#: ../src/mpdinteraction.c:318
 msgid "Consume (on|off)"
 msgstr ""
 
 #. volume commands
-#: ../src/mpdinteraction.c:320
+#: ../src/mpdinteraction.c:321
 msgid "volume"
 msgstr "音量"
 
-#: ../src/mpdinteraction.c:320
+#: ../src/mpdinteraction.c:321
 msgid "Volume (+-)<level>"
 msgstr ""
 
-#: ../src/mpdinteraction.c:321
+#: ../src/mpdinteraction.c:322
 msgid "mute"
 msgstr "静音"
 
-#: ../src/mpdinteraction.c:323
+#: ../src/mpdinteraction.c:324
 msgid "crossfade"
 msgstr "淡入淡出"
 
-#: ../src/mpdinteraction.c:323
+#: ../src/mpdinteraction.c:324
 msgctxt "Regex for matching crossfade, translate off"
 msgid "([0-9]+|Off)"
 msgstr "([0-9]+|Off)"
 
-#: ../src/mpdinteraction.c:323
+#: ../src/mpdinteraction.c:324
 msgid "Set Crossfade <seconds>"
 msgstr "设置淡入淡出 <秒>"
 
-#: ../src/mpdinteraction.c:325
+#: ../src/mpdinteraction.c:326
 msgid "output"
 msgstr "输出"
 
-#: ../src/mpdinteraction.c:325
+#: ../src/mpdinteraction.c:326
 msgctxt "Regex for matching output"
 msgid "[0-9]+ (Enable|Disable)"
 msgstr ""
 
-#: ../src/mpdinteraction.c:326
+#: ../src/mpdinteraction.c:327
 msgid "output X enable or disable"
 msgstr "启用/禁用 X 输出"
 
-#: ../src/mpdinteraction.c:328
+#: ../src/mpdinteraction.c:329
 msgid "Play <query>"
 msgstr ""
 
-#: ../src/mpdinteraction.c:329
+#: ../src/mpdinteraction.c:330
 msgid "add"
 msgstr "添加"
 
-#: ../src/mpdinteraction.c:329
+#: ../src/mpdinteraction.c:330
 msgid "Add <query>"
 msgstr ""
 
-#: ../src/mpdinteraction.c:330
+#: ../src/mpdinteraction.c:331
 msgid "replace"
 msgstr "替换"
 
-#: ../src/mpdinteraction.c:330
+#: ../src/mpdinteraction.c:331
 msgid "Replace <query>"
 msgstr ""
 
 #. Basic seek commands
-#: ../src/mpdinteraction.c:333
+#: ../src/mpdinteraction.c:334
 msgid "seek"
 msgstr "搜寻"
 
-#: ../src/mpdinteraction.c:333
+#: ../src/mpdinteraction.c:334
 msgid "Seek within the current song"
 msgstr "在当前歌曲中搜寻"
 
-#: ../src/mpdinteraction.c:336
+#: ../src/mpdinteraction.c:337
 msgid "stop after current song"
 msgstr "当前歌曲后停止"
 
-#: ../src/mpdinteraction.c:338
+#: ../src/mpdinteraction.c:339
 msgid "Stop playback after the current song"
 msgstr "在当前歌曲后停止回放"
 
-#: ../src/mpdinteraction.c:342
+#: ../src/mpdinteraction.c:343
 msgid "repeat current song"
 msgstr "重复当前歌曲"
 
-#: ../src/mpdinteraction.c:344
+#: ../src/mpdinteraction.c:345
 msgid "Repeat the current song"
 msgstr "重复当前歌曲"
 
-#: ../src/mpdinteraction.c:348
+#: ../src/mpdinteraction.c:349
 msgid "update database"
 msgstr "更新数据库"
 
-#: ../src/mpdinteraction.c:350
+#: ../src/mpdinteraction.c:351
 msgid "Update the database"
 msgstr "更新数据库"
 
-#: ../src/mpdinteraction.c:355
+#: ../src/mpdinteraction.c:356
 msgid "Server Settings"
 msgstr "服务器设置"
 
-#: ../src/mpdinteraction.c:385
+#: ../src/mpdinteraction.c:386
 msgid "Connection"
 msgstr "连接"
 
-#: ../src/mpdinteraction.c:478
+#: ../src/mpdinteraction.c:479
 msgid "Connecting"
 msgstr "正在连接"
 
 #. Add all from album
-#: ../src/mpdinteraction.c:1534
+#: ../src/mpdinteraction.c:1535
 msgid "All from album"
 msgstr "此专辑的所有歌曲"
 
 #. Add all from artist
-#: ../src/mpdinteraction.c:1546
+#: ../src/mpdinteraction.c:1547
 msgid "All from artist"
 msgstr "此艺术家的所有歌曲"
 
 #. Add all from genre
-#: ../src/mpdinteraction.c:1556
+#: ../src/mpdinteraction.c:1557
 msgid "All from genre"
 msgstr "此流派的所有歌曲"
 
 #. Add all from file
-#: ../src/mpdinteraction.c:1564
+#: ../src/mpdinteraction.c:1565
 msgid "All from same directory"
 msgstr "此歌曲相同目录下的所有歌曲"
 
 #. Create sub menu
 #. Add
-#: ../src/mpdinteraction.c:1572
+#: ../src/mpdinteraction.c:1573
 msgid "Add more"
 msgstr "添加更多"
 
-#: ../src/mpdinteraction.c:1582
+#: ../src/mpdinteraction.c:1583
 msgid "Set Rating"
 msgstr "评分"
 
@@ -886,11 +886,11 @@ msgstr "警告"
 msgid "Critical"
 msgstr "严重"
 
-#: ../src/playlist3-messages.c:306
+#: ../src/playlist3-messages.c:308
 msgid "Time"
 msgstr "时间"
 
-#: ../src/playlist3-messages.c:308
+#: ../src/playlist3-messages.c:310
 msgid "Message"
 msgstr "消息"
 
@@ -1028,15 +1028,15 @@ msgid_plural "streams"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/url-fetcher.c:291 ../src/url-fetcher.c:323
+#: ../src/url-fetcher.c:285 ../src/url-fetcher.c:317
 msgid "Added 1 stream"
 msgstr ""
 
-#: ../src/url-fetcher.c:394
+#: ../src/url-fetcher.c:388
 msgid "Failed to open local file"
 msgstr "打开本地文件失败"
 
-#: ../src/url-fetcher.c:411
+#: ../src/url-fetcher.c:405
 msgid "Uri scheme not supported"
 msgstr ""
 
@@ -1534,18 +1534,18 @@ msgstr "播放队列"
 msgid "Search Playlist"
 msgstr "搜索播放列表"
 
-#: ../src/browsers/playlist3-file-browser.c:107
-#: ../src/browsers/playlist3-file-browser.c:345
-#: ../src/browsers/playlist3-file-browser.c:1203
+#: ../src/browsers/playlist3-file-browser.c:108
+#: ../src/browsers/playlist3-file-browser.c:346
+#: ../src/browsers/playlist3-file-browser.c:1204
 #: ../src/browsers/server-information.c:342
 msgid "Database"
 msgstr "数据库"
 
-#: ../src/browsers/playlist3-file-browser.c:174
+#: ../src/browsers/playlist3-file-browser.c:175
 msgid "Directories"
 msgstr "目录"
 
-#: ../src/browsers/playlist3-file-browser.c:223
+#: ../src/browsers/playlist3-file-browser.c:224
 msgid ""
 "It seems you have no music in your database.\n"
 "To add music, copy the music to your <i>music_directory</i> as specified in "
@@ -1553,7 +1553,7 @@ msgid ""
 "Then update the database. (Server->Update Database)"
 msgstr ""
 
-#: ../src/browsers/playlist3-file-browser.c:256
+#: ../src/browsers/playlist3-file-browser.c:257
 #, c-format
 msgid "Added folder '%s' recursively"
 msgstr "已递归地添加了文件夹 '%s'"
@@ -1563,9 +1563,9 @@ msgstr "已递归地添加了文件夹 '%s'"
 #. add the replace widget
 #. replace
 #. add the replace widget
-#: ../src/browsers/playlist3-file-browser.c:629
-#: ../src/browsers/playlist3-file-browser.c:921
-#: ../src/browsers/playlist3-file-browser.c:953
+#: ../src/browsers/playlist3-file-browser.c:630
+#: ../src/browsers/playlist3-file-browser.c:922
+#: ../src/browsers/playlist3-file-browser.c:954
 #: ../src/browsers/playlist3-find2-browser.c:661
 #: ../src/browsers/playlist3-playlist-editor.c:578
 #: ../src/browsers/playlist3-playlist-editor.c:643
@@ -1575,46 +1575,46 @@ msgid "Replace"
 msgstr "替换"
 
 #. add the update widget
-#: ../src/browsers/playlist3-file-browser.c:654
-#: ../src/browsers/playlist3-file-browser.c:910
+#: ../src/browsers/playlist3-file-browser.c:655
+#: ../src/browsers/playlist3-file-browser.c:911
 msgid "Update"
 msgstr "更新"
 
-#: ../src/browsers/playlist3-file-browser.c:764
+#: ../src/browsers/playlist3-file-browser.c:765
 msgid "Loaded playlist"
 msgstr "播放列表已加载"
 
-#: ../src/browsers/playlist3-file-browser.c:1035
+#: ../src/browsers/playlist3-file-browser.c:1036
 #: ../src/browsers/playlist3-playlist-editor.c:424
 msgid "Added"
 msgstr "已添加"
 
-#: ../src/browsers/playlist3-file-browser.c:1037
+#: ../src/browsers/playlist3-file-browser.c:1038
 #: ../src/browsers/playlist3-playlist-editor.c:424
 msgid "song"
 msgid_plural "songs"
 msgstr[0] "歌曲"
 
-#: ../src/browsers/playlist3-file-browser.c:1039
+#: ../src/browsers/playlist3-file-browser.c:1040
 msgid "directory"
 msgid_plural "directories"
 msgstr[0] "目录"
 
-#: ../src/browsers/playlist3-file-browser.c:1041
+#: ../src/browsers/playlist3-file-browser.c:1042
 msgid "playlist"
 msgid_plural "playlists"
 msgstr[0] "播放列表"
 
-#: ../src/browsers/playlist3-file-browser.c:1064
-#: ../src/browsers/playlist3-file-browser.c:1114
+#: ../src/browsers/playlist3-file-browser.c:1065
+#: ../src/browsers/playlist3-file-browser.c:1115
 msgid "Are you sure you want to clear the selected playlist?"
 msgstr "是否确定清空选中的播放列表？"
 
-#: ../src/browsers/playlist3-file-browser.c:1371
+#: ../src/browsers/playlist3-file-browser.c:1372
 msgid "search database"
 msgstr "搜索数据库"
 
-#: ../src/browsers/playlist3-file-browser.c:1372
+#: ../src/browsers/playlist3-file-browser.c:1373
 msgid "Search database <query>"
 msgstr ""
 

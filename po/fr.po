@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc 0.15.5.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-11-19 09:41+0100\n"
+"POT-Creation-Date: 2009-11-20 13:55+0100\n"
 "PO-Revision-Date: 2009-10-02 00:30+0000\n"
 "Last-Translator: Pascal Lemazurier <pascal.lemazurier@gmail.com>\n"
 "Language-Team: French <fr@li.org>\n"
@@ -46,7 +46,7 @@ msgstr "Aide commandes simples"
 msgid "Getting help"
 msgstr "Obtenir de l'aide"
 
-#: ../glade/playlist3.glade.h:5 ../src/mpdinteraction.c:321
+#: ../glade/playlist3.glade.h:5 ../src/mpdinteraction.c:322
 msgid "Mute"
 msgstr "Muet"
 
@@ -327,7 +327,7 @@ msgstr "L'erreur suivante(s) a eu lieu:"
 msgid "Error Message"
 msgstr "Message d'erreur"
 
-#: ../src/metadata.c:293
+#: ../src/MetaData/metadata.c:293
 msgid ""
 "A new metadata plugin was added, gmpc has purged all failed hits from the "
 "cache"
@@ -335,7 +335,7 @@ msgstr ""
 "Un nouveau greffon de méta-données a été ajouté, gmpc a purgé du cache "
 "toutes les requêtes échouées"
 
-#: ../src/metadata.c:1400
+#: ../src/MetaData/metadata.c:1400
 msgid "Metadata Handler"
 msgstr "Gestionnaire de méta-données"
 
@@ -490,37 +490,37 @@ msgstr "Action"
 msgid "Shortcut"
 msgstr "Raccourci"
 
-#: ../src/mpdinteraction.c:91
+#: ../src/mpdinteraction.c:92
 msgid "enable"
 msgstr "activer"
 
-#: ../src/mpdinteraction.c:94
+#: ../src/mpdinteraction.c:95
 msgid "disable"
 msgstr "désactiver"
 
-#: ../src/mpdinteraction.c:107 ../src/playlist3.c:1753 ../src/playlist3.c:1766
+#: ../src/mpdinteraction.c:108 ../src/playlist3.c:1753 ../src/playlist3.c:1766
 #: ../src/playlist3.c:1781 ../src/playlist3.c:1794
 #: ../glade/preferences-server.ui.h:8
 msgid "Off"
 msgstr "Off"
 
-#: ../src/mpdinteraction.c:162
+#: ../src/mpdinteraction.c:163
 msgid "Single: The used MPD server is to old and does not support this."
 msgstr ""
 
-#: ../src/mpdinteraction.c:164
+#: ../src/mpdinteraction.c:165
 msgid "Single: You have insufficient permission to use this option."
 msgstr "Vous n'avez pas les droits suffisants pour utiliser cette option."
 
-#: ../src/mpdinteraction.c:181
+#: ../src/mpdinteraction.c:182
 msgid "Consume: The used MPD server is to old and does not support this."
 msgstr ""
 
-#: ../src/mpdinteraction.c:183
+#: ../src/mpdinteraction.c:184
 msgid "Consume: You have insufficient permission to use this option."
 msgstr ""
 
-#: ../src/mpdinteraction.c:268
+#: ../src/mpdinteraction.c:269
 msgid ""
 "Stop after current song: The used MPD server is to old and does not support "
 "this."
@@ -528,245 +528,245 @@ msgstr ""
 "Arrêter après le titre actuel: Le serveur MPD est trop vieux et ne supporte "
 "pas ceci."
 
-#: ../src/mpdinteraction.c:270
+#: ../src/mpdinteraction.c:271
 msgid "Stop after current song: You have insufficient permission."
 msgstr "Arrêter après le titre actuel: Vous n'avez pas assez de permissions"
 
-#: ../src/mpdinteraction.c:272
+#: ../src/mpdinteraction.c:273
 msgid "Playback will be stopped after the current playing song."
 msgstr "La lecture sera arrêtée après le titre actuel"
 
-#: ../src/mpdinteraction.c:282
+#: ../src/mpdinteraction.c:283
 msgid ""
 "Repeat current song: The used MPD server is to old and does not support this."
 msgstr ""
 "Répéter le titre actuel: Le serveur MPD est trop vieux et ne supporte pas "
 "ceci."
 
-#: ../src/mpdinteraction.c:284
+#: ../src/mpdinteraction.c:285
 msgid "Repeat current song: You have insufficient permission."
 msgstr "Répéter le titre actuel: Vous n'avez pas assez de permissions"
 
-#: ../src/mpdinteraction.c:286
+#: ../src/mpdinteraction.c:287
 msgid "The current song will be forever repeated."
 msgstr "Le titre actuel sera répété indéfiniment"
 
-#: ../src/mpdinteraction.c:296
+#: ../src/mpdinteraction.c:297
 msgid ""
 "Update database: The used MPD server is to old and does not support this."
 msgstr ""
 "Mise à jour de la base de données : le serveur MPD utilisé est trop vieux et "
 "ne supporte pas cela."
 
-#: ../src/mpdinteraction.c:298
+#: ../src/mpdinteraction.c:299
 msgid "Update database: You have insufficient permission."
 msgstr "Mettre à jour la base de données : Vous n'avez pas assez de privilèges"
 
 #. Player control
 #. basic playlist commands
-#: ../src/mpdinteraction.c:307 ../src/mpdinteraction.c:328
+#: ../src/mpdinteraction.c:308 ../src/mpdinteraction.c:329
 msgid "play"
 msgstr "Lecture"
 
-#: ../src/mpdinteraction.c:307
+#: ../src/mpdinteraction.c:308
 msgid "start playback"
 msgstr "Lecture"
 
-#: ../src/mpdinteraction.c:308
+#: ../src/mpdinteraction.c:309
 msgid "pause"
 msgstr "Pause"
 
-#: ../src/mpdinteraction.c:308
+#: ../src/mpdinteraction.c:309
 msgid "pause playback"
 msgstr "Pause"
 
-#: ../src/mpdinteraction.c:309
+#: ../src/mpdinteraction.c:310
 msgid "next"
 msgstr "Suivant"
 
-#: ../src/mpdinteraction.c:309
+#: ../src/mpdinteraction.c:310
 msgid "next song"
 msgstr "Titre suivant"
 
-#: ../src/mpdinteraction.c:310
+#: ../src/mpdinteraction.c:311
 msgid "prev"
 msgstr "précédent"
 
-#: ../src/mpdinteraction.c:310
+#: ../src/mpdinteraction.c:311
 msgid "previous song"
 msgstr "Titre précédent"
 
-#: ../src/mpdinteraction.c:311
+#: ../src/mpdinteraction.c:312
 msgid "stop"
 msgstr "Arrêter"
 
-#: ../src/mpdinteraction.c:311
+#: ../src/mpdinteraction.c:312
 msgid "stop playback"
 msgstr "Arrêter"
 
-#: ../src/mpdinteraction.c:313
+#: ../src/mpdinteraction.c:314
 msgid "random"
 msgstr "Lecture aléatoire"
 
-#: ../src/mpdinteraction.c:313
+#: ../src/mpdinteraction.c:314
 msgid "Random (on|off)"
 msgstr "Mode aléatoire (activé|désactivé)"
 
-#: ../src/mpdinteraction.c:314
+#: ../src/mpdinteraction.c:315
 msgid "repeat"
 msgstr "Répéter"
 
-#: ../src/mpdinteraction.c:314
+#: ../src/mpdinteraction.c:315
 msgid "Repeat (on|off)"
 msgstr "Répeter (activé|désactivé)"
 
-#: ../src/mpdinteraction.c:316
+#: ../src/mpdinteraction.c:317
 msgid "single"
 msgstr ""
 
-#: ../src/mpdinteraction.c:316
+#: ../src/mpdinteraction.c:317
 msgid "Single (on|off)"
 msgstr ""
 
-#: ../src/mpdinteraction.c:317
+#: ../src/mpdinteraction.c:318
 msgid "consume"
 msgstr ""
 
-#: ../src/mpdinteraction.c:317
+#: ../src/mpdinteraction.c:318
 msgid "Consume (on|off)"
 msgstr ""
 
 #. volume commands
-#: ../src/mpdinteraction.c:320
+#: ../src/mpdinteraction.c:321
 msgid "volume"
 msgstr "Volume"
 
-#: ../src/mpdinteraction.c:320
+#: ../src/mpdinteraction.c:321
 msgid "Volume (+-)<level>"
 msgstr "Volume (+-)<niveau>"
 
-#: ../src/mpdinteraction.c:321
+#: ../src/mpdinteraction.c:322
 msgid "mute"
 msgstr "Muet"
 
-#: ../src/mpdinteraction.c:323
+#: ../src/mpdinteraction.c:324
 msgid "crossfade"
 msgstr "Fondu Enchainé"
 
-#: ../src/mpdinteraction.c:323
+#: ../src/mpdinteraction.c:324
 msgctxt "Regex for matching crossfade, translate off"
 msgid "([0-9]+|Off)"
 msgstr "([0-9]+|Off)"
 
-#: ../src/mpdinteraction.c:323
+#: ../src/mpdinteraction.c:324
 msgid "Set Crossfade <seconds>"
 msgstr "Définir le Fondu Enchainé <secondes>"
 
-#: ../src/mpdinteraction.c:325
+#: ../src/mpdinteraction.c:326
 msgid "output"
 msgstr "sortie"
 
-#: ../src/mpdinteraction.c:325
+#: ../src/mpdinteraction.c:326
 msgctxt "Regex for matching output"
 msgid "[0-9]+ (Enable|Disable)"
 msgstr "[0-9]+ (Activer|Désactiver)"
 
-#: ../src/mpdinteraction.c:326
+#: ../src/mpdinteraction.c:327
 msgid "output X enable or disable"
 msgstr "Sortie X activer ou désactiver"
 
-#: ../src/mpdinteraction.c:328
+#: ../src/mpdinteraction.c:329
 msgid "Play <query>"
 msgstr "Lire <requête>"
 
-#: ../src/mpdinteraction.c:329
+#: ../src/mpdinteraction.c:330
 msgid "add"
 msgstr "Ajouter"
 
-#: ../src/mpdinteraction.c:329
+#: ../src/mpdinteraction.c:330
 msgid "Add <query>"
 msgstr "Ajoutter <requête>"
 
-#: ../src/mpdinteraction.c:330
+#: ../src/mpdinteraction.c:331
 msgid "replace"
 msgstr "Remplacer"
 
-#: ../src/mpdinteraction.c:330
+#: ../src/mpdinteraction.c:331
 msgid "Replace <query>"
 msgstr "Remplacer <requête>"
 
 #. Basic seek commands
-#: ../src/mpdinteraction.c:333
+#: ../src/mpdinteraction.c:334
 msgid "seek"
 msgstr "rechercher"
 
-#: ../src/mpdinteraction.c:333
+#: ../src/mpdinteraction.c:334
 msgid "Seek within the current song"
 msgstr "rechercher dans la chanson actuelle"
 
-#: ../src/mpdinteraction.c:336
+#: ../src/mpdinteraction.c:337
 msgid "stop after current song"
 msgstr "Arrêter après le titre actuel"
 
-#: ../src/mpdinteraction.c:338
+#: ../src/mpdinteraction.c:339
 msgid "Stop playback after the current song"
 msgstr "Arrêter la lecture après le titre actuel"
 
-#: ../src/mpdinteraction.c:342
+#: ../src/mpdinteraction.c:343
 msgid "repeat current song"
 msgstr "répéter le titre actuel"
 
-#: ../src/mpdinteraction.c:344
+#: ../src/mpdinteraction.c:345
 msgid "Repeat the current song"
 msgstr "Répéter le titre actuel"
 
-#: ../src/mpdinteraction.c:348
+#: ../src/mpdinteraction.c:349
 msgid "update database"
 msgstr "mettre à jour la base de données"
 
-#: ../src/mpdinteraction.c:350
+#: ../src/mpdinteraction.c:351
 msgid "Update the database"
 msgstr "Mettre à jour la base de données"
 
-#: ../src/mpdinteraction.c:355
+#: ../src/mpdinteraction.c:356
 msgid "Server Settings"
 msgstr "Paramètres du serveur"
 
-#: ../src/mpdinteraction.c:385
+#: ../src/mpdinteraction.c:386
 msgid "Connection"
 msgstr "Connexion"
 
-#: ../src/mpdinteraction.c:478
+#: ../src/mpdinteraction.c:479
 msgid "Connecting"
 msgstr "Connexion en cours"
 
 #. Add all from album
-#: ../src/mpdinteraction.c:1534
+#: ../src/mpdinteraction.c:1535
 msgid "All from album"
 msgstr "Tout cet album"
 
 #. Add all from artist
-#: ../src/mpdinteraction.c:1546
+#: ../src/mpdinteraction.c:1547
 msgid "All from artist"
 msgstr "Tout cet artiste"
 
 #. Add all from genre
-#: ../src/mpdinteraction.c:1556
+#: ../src/mpdinteraction.c:1557
 msgid "All from genre"
 msgstr "Tout ce genre"
 
 #. Add all from file
-#: ../src/mpdinteraction.c:1564
+#: ../src/mpdinteraction.c:1565
 msgid "All from same directory"
 msgstr "Tout le répertoire"
 
 #. Create sub menu
 #. Add
-#: ../src/mpdinteraction.c:1572
+#: ../src/mpdinteraction.c:1573
 msgid "Add more"
 msgstr "Ajouter"
 
-#: ../src/mpdinteraction.c:1582
+#: ../src/mpdinteraction.c:1583
 msgid "Set Rating"
 msgstr "Evaluer"
 
@@ -919,11 +919,11 @@ msgstr "Attention"
 msgid "Critical"
 msgstr "Critique"
 
-#: ../src/playlist3-messages.c:306
+#: ../src/playlist3-messages.c:308
 msgid "Time"
 msgstr "Temps"
 
-#: ../src/playlist3-messages.c:308
+#: ../src/playlist3-messages.c:310
 msgid "Message"
 msgstr "Message"
 
@@ -1063,15 +1063,15 @@ msgid_plural "streams"
 msgstr[0] "flux"
 msgstr[1] "flux"
 
-#: ../src/url-fetcher.c:291 ../src/url-fetcher.c:323
+#: ../src/url-fetcher.c:285 ../src/url-fetcher.c:317
 msgid "Added 1 stream"
 msgstr "Ajouter 1 flux"
 
-#: ../src/url-fetcher.c:394
+#: ../src/url-fetcher.c:388
 msgid "Failed to open local file"
 msgstr "Échec à l'ouverture du fichier local"
 
-#: ../src/url-fetcher.c:411
+#: ../src/url-fetcher.c:405
 msgid "Uri scheme not supported"
 msgstr "Type d'uri non supporté"
 
@@ -1590,18 +1590,18 @@ msgstr "Liste de lecture"
 msgid "Search Playlist"
 msgstr "Recherche liste d'écoute"
 
-#: ../src/browsers/playlist3-file-browser.c:107
-#: ../src/browsers/playlist3-file-browser.c:345
-#: ../src/browsers/playlist3-file-browser.c:1203
+#: ../src/browsers/playlist3-file-browser.c:108
+#: ../src/browsers/playlist3-file-browser.c:346
+#: ../src/browsers/playlist3-file-browser.c:1204
 #: ../src/browsers/server-information.c:342
 msgid "Database"
 msgstr "Base de données"
 
-#: ../src/browsers/playlist3-file-browser.c:174
+#: ../src/browsers/playlist3-file-browser.c:175
 msgid "Directories"
 msgstr "Répertoires"
 
-#: ../src/browsers/playlist3-file-browser.c:223
+#: ../src/browsers/playlist3-file-browser.c:224
 msgid ""
 "It seems you have no music in your database.\n"
 "To add music, copy the music to your <i>music_directory</i> as specified in "
@@ -1614,7 +1614,7 @@ msgstr ""
 "Puis, mettez à jour votre base de données. (Serveur->Mettre à jour la base "
 "de données)"
 
-#: ../src/browsers/playlist3-file-browser.c:256
+#: ../src/browsers/playlist3-file-browser.c:257
 #, c-format
 msgid "Added folder '%s' recursively"
 msgstr "Répertoire '%s' ajouté récursivement"
@@ -1624,9 +1624,9 @@ msgstr "Répertoire '%s' ajouté récursivement"
 #. add the replace widget
 #. replace
 #. add the replace widget
-#: ../src/browsers/playlist3-file-browser.c:629
-#: ../src/browsers/playlist3-file-browser.c:921
-#: ../src/browsers/playlist3-file-browser.c:953
+#: ../src/browsers/playlist3-file-browser.c:630
+#: ../src/browsers/playlist3-file-browser.c:922
+#: ../src/browsers/playlist3-file-browser.c:954
 #: ../src/browsers/playlist3-find2-browser.c:661
 #: ../src/browsers/playlist3-playlist-editor.c:578
 #: ../src/browsers/playlist3-playlist-editor.c:643
@@ -1636,49 +1636,49 @@ msgid "Replace"
 msgstr "Remplacer"
 
 #. add the update widget
-#: ../src/browsers/playlist3-file-browser.c:654
-#: ../src/browsers/playlist3-file-browser.c:910
+#: ../src/browsers/playlist3-file-browser.c:655
+#: ../src/browsers/playlist3-file-browser.c:911
 msgid "Update"
 msgstr "Mettre à jour"
 
-#: ../src/browsers/playlist3-file-browser.c:764
+#: ../src/browsers/playlist3-file-browser.c:765
 msgid "Loaded playlist"
 msgstr "Liste de lecture chargée"
 
-#: ../src/browsers/playlist3-file-browser.c:1035
+#: ../src/browsers/playlist3-file-browser.c:1036
 #: ../src/browsers/playlist3-playlist-editor.c:424
 msgid "Added"
 msgstr "Ajouté"
 
-#: ../src/browsers/playlist3-file-browser.c:1037
+#: ../src/browsers/playlist3-file-browser.c:1038
 #: ../src/browsers/playlist3-playlist-editor.c:424
 msgid "song"
 msgid_plural "songs"
 msgstr[0] "morceau"
 msgstr[1] "morceaux"
 
-#: ../src/browsers/playlist3-file-browser.c:1039
+#: ../src/browsers/playlist3-file-browser.c:1040
 msgid "directory"
 msgid_plural "directories"
 msgstr[0] "répertoire"
 msgstr[1] "répertoires"
 
-#: ../src/browsers/playlist3-file-browser.c:1041
+#: ../src/browsers/playlist3-file-browser.c:1042
 msgid "playlist"
 msgid_plural "playlists"
 msgstr[0] "liste de lecture"
 msgstr[1] "listes de lecture"
 
-#: ../src/browsers/playlist3-file-browser.c:1064
-#: ../src/browsers/playlist3-file-browser.c:1114
+#: ../src/browsers/playlist3-file-browser.c:1065
+#: ../src/browsers/playlist3-file-browser.c:1115
 msgid "Are you sure you want to clear the selected playlist?"
 msgstr "Êtes vous sûr de vouloir vider la liste de lecture sélectionnée ?"
 
-#: ../src/browsers/playlist3-file-browser.c:1371
+#: ../src/browsers/playlist3-file-browser.c:1372
 msgid "search database"
 msgstr "Recherche base de données"
 
-#: ../src/browsers/playlist3-file-browser.c:1372
+#: ../src/browsers/playlist3-file-browser.c:1373
 msgid "Search database <query>"
 msgstr "Rechercher <query> dans la base de données"
 

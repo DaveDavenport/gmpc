@@ -5,7 +5,7 @@ glade/playlist3.glade
 src/config1.c
 src/gmpc_easy_download.c
 src/main.c
-src/metadata.c
+src/MetaData/metadata.c
 src/misc.c
 src/mm-keys.c
 src/mpdinteraction.c
