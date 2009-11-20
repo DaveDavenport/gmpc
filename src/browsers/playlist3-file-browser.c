@@ -583,17 +583,16 @@ static void pl3_file_browser_fill_tree(GtkWidget *tree,GtkTreeIter *iter, GtkTre
 	GTimer *tim = g_timer_new();
 	data = mpd_database_get_directory(connection, path);
         data = misc_sort_mpddata(data,(GCompareDataFunc)directory_sort_func,NULL); 
-	g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Elapsed time soring before adding: %f\n",
+	g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Elapsed time sorting before adding: %f\n",
 			g_timer_elapsed(tim, NULL));
-	g_timer_destroy(tim);
         while (data != NULL)
         {
             if (data->type == MPD_DATA_TYPE_DIRECTORY)
             {
                 gchar *basename =
                     g_path_get_basename (data->directory);
-                gtk_tree_store_append (pl3_fb_dir_store, &child, iter);
-                gtk_tree_store_set (pl3_fb_dir_store, &child,
+		gtk_tree_store_append (pl3_fb_dir_store, &child, iter);
+		gtk_tree_store_set (pl3_fb_dir_store, &child,
                         PL3_FB_ICON, "gtk-open",
                         PL3_FB_NAME, basename,
                         PL3_FB_PATH, data->directory,
@@ -605,6 +604,10 @@ static void pl3_file_browser_fill_tree(GtkWidget *tree,GtkTreeIter *iter, GtkTre
             }
             data = mpd_data_get_next(data);
         }
+
+	g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Elapsed time sorting after adding: %f\n",
+			g_timer_elapsed(tim, NULL));
+	g_timer_destroy(tim);
         if(gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_fb_dir_store), &child, iter))
         {
             gtk_tree_store_remove(pl3_fb_dir_store, &child);
