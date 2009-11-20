@@ -45,8 +45,8 @@ gmpc_SOURCES=\
 	playlist3-messages.c\
 	mm-keys.c\
 	config1.c\
-	metadata.c\
-    metadata-cache.c\
+	MetaData/metadata.c\
+	MetaData/metadata-cache.c\
 	gmpc_easy_download.c\
 	setup-assistant.c\
 	url-fetcher.c\
@@ -97,7 +97,9 @@ INCLUDES=\
 	-I$(top_srcdir)/src/egg\
 	-I$(top_builddir)/src/egg\
 	-I$(top_srcdir)/src/vala\
-	-I$(top_builddir)/src/vala
+	-I$(top_builddir)/src/vala\
+	-I$(top_srcdir)/src/MetaData/\
+	-I$(top_builddir)/src/MetaData/
 
 
 
@@ -177,7 +179,7 @@ gmpcinclude_HEADERS = \
         gmpc-extras.h\
         playlist3-messages.h\
 		gmpc-version.h\
-		metadata.h
+		MetaData/metadata.h
 
 gmpcincludedir =$(includedir)/gmpc/
 
@@ -196,8 +198,8 @@ EXTRA_DIST=\
         gtktransition.h\
         plugin-internal.h\
 		setup-assistant.h\
-		metadata.h\
-        metadata-cache.h\
+		MetaData/metadata.h\
+		MetaData/metadata-cache.h\
 		egg/eggcolumnchooserdialog.h\
 		egg/eggcolumnmodel.h\
 		revision.h\
