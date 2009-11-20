@@ -5,6 +5,7 @@ context = actions
 iconsdir = $(themedir)/$(size)/$(context)
 
 dist_icons_DATA = \
+                  gmpc-metabrowser.png\
                   albumview.png\
                   media-consume.png\
                   gmpc-database.png\
