@@ -1261,13 +1261,13 @@ static void play_queue_plugin_tool_menu_iface_init (GmpcPluginToolMenuIfaceIface
 	iface->tool_menu_integration = pl3_current_playlist_tool_menu_integration;
 }
 /* Integrate Search */
-static gboolean play_queue_plugin_is_field_supported(GmpcPluginIntegrateSearchIface *obj, int tag)
+static gboolean play_queue_plugin_is_field_supported(GmpcPluginIntegrateSearchIface *obj, mpd_TagItems tag)
 {
     if(tag == MPD_TAG_NUM_OF_ITEM_TYPES) return TRUE; 
     return mpd_server_tag_supported(connection, tag);
 }
 
-static MpdData * play_queue_plugin_is_search(GmpcPluginIntegrateSearchIface *obj, int num_field , gchar *search_string)
+static MpdData * play_queue_plugin_is_search(GmpcPluginIntegrateSearchIface *obj, mpd_TagItems num_field , const gchar *search_string)
 {
     MpdData *data_t = NULL;
     if(num_field == MPD_TAG_NUM_OF_ITEM_TYPES){

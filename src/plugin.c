@@ -42,10 +42,10 @@ gmpcPluginParent * plugin_get_from_id(int id)
 	return plugins[pos];
 }
 
-static inline GQuark
+static GQuark
 plugin_quark(void)
 {
-	return g_quark_from_static_string("tagedit_plugin");
+	return g_quark_from_static_string("gmpc_plugin");
 }
 
 int plugin_get_pos(int id)
