@@ -671,7 +671,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         if(this.get_enabled())
         {
             var item = new Gtk.ImageMenuItem.with_mnemonic(_(this.get_name()));
-            item.set_image(new Gtk.Image.from_stock("gtk-info", Gtk.IconSize.MENU));
+            item.set_image(new Gtk.Image.from_stock("gmpc-metabrowser", Gtk.IconSize.MENU));
             item.activate += select_metadata_browser;
             item.add_accelerator("activate", menu.get_accel_group(),0xffc1,0, Gtk.AccelFlags.VISIBLE);
             menu.append(item);
@@ -2060,7 +2060,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         Gtk.TreeModel model = tree.get_model();
         Gtk.TreeIter iter;
         Gmpc.Browser.insert(out iter, config.get_int_with_default(this.get_name(), "position", 100));
-        store.set(iter, 0, this.id, 1, _(this.get_name()), 3, "gtk-info"); 
+        store.set(iter, 0, this.id, 1, _(this.get_name()), 3, "gmpc-metabrowser"); 
         /* Create a row reference */
         this.rref = new Gtk.TreeRowReference(model,  model.get_path(iter));
     }
