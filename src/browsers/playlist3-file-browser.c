@@ -32,6 +32,7 @@
 #include "playlist3-playlist-editor.h"
 #include "gmpc-extras.h"
 
+#define LOG_DOMAIN "FileBrowser"
 
 static void pl3_file_browser_plugin_init(void);
 
@@ -168,22 +169,22 @@ static void pl3_file_browser_init(void)
     sw = gtk_scrolled_window_new(NULL, NULL);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw), GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC);
 	gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(sw), GTK_SHADOW_ETCHED_IN);
-    pl3_fb_dir_tree = tree = gtk_tree_view_new_with_model (GTK_TREE_MODEL(pl3_fb_dir_store));
-    gtk_tree_view_set_enable_tree_lines(GTK_TREE_VIEW(tree), TRUE);
-    gtk_tree_view_set_rules_hint(GTK_TREE_VIEW(tree), TRUE);
+	pl3_fb_dir_tree = tree = gtk_tree_view_new_with_model (GTK_TREE_MODEL(pl3_fb_dir_store));
+	gtk_tree_view_set_enable_tree_lines(GTK_TREE_VIEW(tree), TRUE);
+	gtk_tree_view_set_rules_hint(GTK_TREE_VIEW(tree), TRUE);
 	column = gtk_tree_view_column_new();
 	gtk_tree_view_column_set_title(column, _("Directories"));
 	renderer = gtk_cell_renderer_pixbuf_new();
 	gtk_tree_view_column_pack_start(column, renderer, FALSE);
-    gtk_tree_view_set_fixed_height_mode(GTK_TREE_VIEW(tree), TRUE);
-    gtk_tree_view_column_add_attribute(column, renderer, "icon-name",PL3_FB_ICON);
-    gtk_tree_view_column_set_sizing(column , GTK_TREE_VIEW_COLUMN_FIXED);
+	gtk_tree_view_column_add_attribute(column, renderer, "icon-name",PL3_FB_ICON);
+	gtk_tree_view_column_set_sizing(column , GTK_TREE_VIEW_COLUMN_FIXED);
 	renderer = gtk_cell_renderer_text_new();
 	gtk_tree_view_column_pack_start(column, renderer, TRUE);
 	gtk_tree_view_column_add_attribute(column, renderer, "text", PL3_FB_NAME);
 	gtk_tree_view_insert_column(GTK_TREE_VIEW(tree),column, -1);
 
-    gtk_tree_view_set_search_column(GTK_TREE_VIEW(pl3_fb_dir_tree), PL3_FB_NAME);
+	gtk_tree_view_set_fixed_height_mode(GTK_TREE_VIEW(tree), TRUE);
+	gtk_tree_view_set_search_column(GTK_TREE_VIEW(pl3_fb_dir_tree), PL3_FB_NAME);
 	/* set the search column */
 	gtk_tree_view_set_search_column(GTK_TREE_VIEW(tree), PL3_FB_NAME);
 
@@ -380,8 +381,8 @@ static int directory_sort_func(gpointer ppaa, gpointer ppbb, gpointer data)
 {
     MpdData_real *a = *(MpdData_real **)ppaa;
     MpdData_real *b = *(MpdData_real **)ppbb;
-    int val = 0;
-    if((a->type == MPD_DATA_TYPE_DIRECTORY) & (b->type == MPD_DATA_TYPE_DIRECTORY))
+    int val = -1;
+    if((a->type == MPD_DATA_TYPE_DIRECTORY) && (b->type == MPD_DATA_TYPE_DIRECTORY))
     {
         if(a->directory && b->directory) {
             gchar *sa,*sb;
@@ -405,9 +406,8 @@ static void pl3_file_browser_reupdate_folder(GtkTreeIter *iter)
 	{
 		GtkTreeIter child, child2,child3;
 		data = mpd_database_get_directory(connection,path);
-
-        data = misc_sort_mpddata(data,(GCompareDataFunc)directory_sort_func,NULL); 
-        g_free(path);
+		data = misc_sort_mpddata(data,(GCompareDataFunc)directory_sort_func,NULL); 
+		g_free(path);
 		if(gtk_tree_model_iter_children(model, &child, iter))
 		{
 			gchar *test_path = NULL;
@@ -539,7 +539,6 @@ static void pl3_file_browser_view_folder(GtkTreeSelection *selection, gpointer u
 	if(strcmp("media-playlist",icon))
 	{
 		data = mpd_database_get_directory(connection, path);
-        data = misc_sort_mpddata(data,(GCompareDataFunc)directory_sort_func,NULL); 
 	}
 	else{
 		debug_printf(DEBUG_INFO,"View Playlist\n");
@@ -571,7 +570,6 @@ static void pl3_file_browser_collapse_row(GtkTreeView *tree, GtkTreeIter *iter, 
     /* add phantom child */
     gtk_tree_store_append(pl3_fb_dir_store, &child, iter);
 }
-
 static void pl3_file_browser_fill_tree(GtkWidget *tree,GtkTreeIter *iter, GtkTreePath *tpath, gpointer user_data)
 {
     char *path;
@@ -582,8 +580,12 @@ static void pl3_file_browser_fill_tree(GtkWidget *tree,GtkTreeIter *iter, GtkTre
     gtk_tree_store_set(pl3_fb_dir_store, iter, PL3_FB_OPEN, TRUE, -1);
     if(open == FALSE)
     {
-        data = mpd_database_get_directory(connection, path);
+	GTimer *tim = g_timer_new();
+	data = mpd_database_get_directory(connection, path);
         data = misc_sort_mpddata(data,(GCompareDataFunc)directory_sort_func,NULL); 
+	g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Elapsed time soring before adding: %f\n",
+			g_timer_elapsed(tim, NULL));
+	g_timer_destroy(tim);
         while (data != NULL)
         {
             if (data->type == MPD_DATA_TYPE_DIRECTORY)
