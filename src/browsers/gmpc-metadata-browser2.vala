@@ -671,7 +671,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         if(this.get_enabled())
         {
             var item = new Gtk.ImageMenuItem.with_mnemonic(_(this.get_name()));
-            item.set_image(new Gtk.Image.from_stock("gmpc-metabrowser", Gtk.IconSize.MENU));
+            item.set_image(new Gtk.Image.from_icon_name("gmpc-metabrowser", Gtk.IconSize.MENU));
             item.activate += select_metadata_browser;
             item.add_accelerator("activate", menu.get_accel_group(),0xffc1,0, Gtk.AccelFlags.VISIBLE);
             menu.append(item);
