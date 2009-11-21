@@ -20,7 +20,7 @@
    viewBox="0 0 24.569416 24.569416"
    width="256"
    version="1.1"
-   inkscape:export-filename="/home/zeltak/ThemeDB/Workshop/Gmpc/Humanity Icon theme/png/db tango/gmpc-metabrowser.png"
+   inkscape:export-filename="/home/zeltak/ThemeDB/Workshop/Gmpc/Humanity Icon theme/png/db tango/blue metadata/gmpc-metabrowser_g.png"
    inkscape:export-xdpi="45"
    inkscape:export-ydpi="45">
   <metadata
@@ -78,11 +78,11 @@
      borderopacity="1.0"
      id="base"
      inkscape:current-layer="svg2"
-     inkscape:cx="-79.684164"
-     inkscape:cy="139.01685"
+     inkscape:cx="81.617814"
+     inkscape:cy="140.06922"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:window-height="996"
+     inkscape:window-height="994"
      inkscape:window-width="1680"
      inkscape:window-x="0"
      inkscape:window-y="0"
@@ -308,7 +308,7 @@
   </defs>
   <path
      sodipodi:type="arc"
-     style="fill:#ff6600;fill-opacity:1;stroke:none"
+     style="fill:#a5b34f;fill-opacity:0.94117647;stroke:none"
      id="path2820"
      sodipodi:cx="2.0170603"
      sodipodi:cy="3.2616172"
