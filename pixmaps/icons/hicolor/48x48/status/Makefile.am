@@ -8,10 +8,6 @@ dist_icons_DATA = \
 		stylized-cover.png\
 		frame-artist.png\
 		fetching-artist.png\
-		gmpc-tray.png\
-		gmpc-tray-disconnected.png\
-		gmpc-tray-pause.png\
-		gmpc-tray-play.png\
 		no-artist.png\
         media-track-length.png\
         media-album.png\

@@ -10,10 +10,6 @@ dist_icons_DATA = \
 		audio-volume-low.png\
 		audio-volume-medium.png\
 		audio-volume-muted.png\
-		gmpc-tray.png\
-		gmpc-tray-disconnected.png\
-		gmpc-tray-pause.png\
-		gmpc-tray-play.png\
         media-track-length.png\
         media-album.png\
         media-format.png\
