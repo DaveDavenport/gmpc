@@ -10,7 +10,6 @@ dynamic.svg\
 gmpc-database.svg\
 gmpc-metabrowser.svg\
 gmpc-serve.svg\
-gtk-edit.svg\
 info.svg\
 media-audiofile.svg\
 media-consume.svg\

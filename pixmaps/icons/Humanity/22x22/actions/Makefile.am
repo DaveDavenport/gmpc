@@ -10,7 +10,6 @@ dynamic.png\
 gmpc-database.png\
 gmpc-metabrowser.png\
 gmpc-serve.png\
-gtk-edit.png\
 info.png\
 media-audiofile.png\
 media-consume.png\
