@@ -447,12 +447,15 @@ pixmaps/icons/Humanity/48x48/status/Makefile
 pixmaps/icons/Humanity/64x64/Makefile
 pixmaps/icons/Humanity/64x64/apps/Makefile
 pixmaps/icons/Humanity/64x64/status/Makefile
+pixmaps/icons/Humanity/64x64/actions/Makefile
 pixmaps/icons/Humanity/72x72/Makefile
 pixmaps/icons/Humanity/72x72/apps/Makefile
 pixmaps/icons/Humanity/72x72/status/Makefile
+pixmaps/icons/Humanity/72x72/actions/Makefile
 pixmaps/icons/Humanity/96x96/Makefile
 pixmaps/icons/Humanity/96x96/apps/Makefile
 pixmaps/icons/Humanity/96x96/status/Makefile
+pixmaps/icons/Humanity/96x96/actions/Makefile
 pixmaps/icons/Humanity/128x128/Makefile
 pixmaps/icons/Humanity/128x128/apps/Makefile
 pixmaps/icons/Humanity/128x128/status/Makefile

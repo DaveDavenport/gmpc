@@ -10,9 +10,9 @@ dist_icons_DATA = \
                   media-consume.png\
                   gmpc-database.png\
                   dynamic.png\
-                  gmpc.png\
                   gmpc-serve.png\
                   info.png\
+                  media-repeat-single.png\
                   media-audiofile.png\
                   media-playlist.png\
                   media-playlist-repeat.png\

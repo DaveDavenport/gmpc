@@ -9,7 +9,6 @@ dist_icons_DATA = \
                   albumview.png\
                   gmpc-database.png\
                   dynamic.png\
-                  gmpc.png\
                   gmpc-serve.png\
                   info.png\
                   media-audiofile.png\
@@ -21,4 +20,5 @@ dist_icons_DATA = \
                   media-tag.png\
                   playlist-browser.png\
                   playlist-search-browser.png\
+                  gtk-edit.png\
                   tag-browser.png

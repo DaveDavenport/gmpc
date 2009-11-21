@@ -19,16 +19,13 @@
    style="fill-rule:evenodd"
    viewBox="0 0 24.569416 24.569416"
    width="256"
-   version="1.1"
-   inkscape:export-filename="/home/zeltak/ThemeDB/Workshop/Gmpc/Humanity Icon theme/png/db tango/gmpc-metabrowser/gmpc-metabrowser.png"
-   inkscape:export-xdpi="45"
-   inkscape:export-ydpi="45">
+   version="1.1">
   <metadata
      id="metadata3">
     <rdf:RDF>
       <cc:Work
          rdf:about="">
-        <dc:title></dc:title>
+        <dc:title />
         <dc:description />
         <dc:subject>
           <rdf:Bag>
@@ -79,7 +76,7 @@
      id="base"
      inkscape:current-layer="svg2"
      inkscape:cx="-79.684164"
-     inkscape:cy="140.42002"
+     inkscape:cy="141.82319"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:window-height="996"
