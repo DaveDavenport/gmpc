@@ -15,8 +15,6 @@ dist_icons_DATA = \
                   media-repeat-single.png\
                   media-audiofile.png\
                   media-playlist.png\
-                  media-playlist-repeat.png\
-                  media-playlist-shuffle.png\
                   media-tag.png\
                   playlist-browser.png\
                   playlist-search-browser.png\

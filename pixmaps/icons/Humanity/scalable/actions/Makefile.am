@@ -13,8 +13,6 @@ gmpc-serve.svg\
 info.svg\
 media-audiofile.svg\
 media-consume.svg\
-media-playlist-repeat.svg\
-media-playlist-shuffle.svg\
 media-playlist.svg\
 media-repeat-single.svg\
 media-tag.svg\

@@ -21,6 +21,8 @@ dist_icons_DATA = \
                   media-genre.png\
                   media-num-tracks.png\
                   media-track-length.png\
+                  stock_repeat.png\
+                  stock_shuffle.png\
                   no-artist.png\
                   stylized-cover.png\
                   stylized-fetching-cover.png\

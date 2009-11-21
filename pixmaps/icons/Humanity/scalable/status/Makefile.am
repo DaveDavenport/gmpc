@@ -17,6 +17,8 @@ dist_icons_DATA = \
                   gmpc-tray-play.svg\
                   gmpc-tray.svg\
                   no-artist.svg\
+                  stock_repeat.svg\
+                  stock_shuffle.svg\
                   stylized-cover.svg\
                   stylized-fetching-cover.svg\
                   stylized-no-cover.svg

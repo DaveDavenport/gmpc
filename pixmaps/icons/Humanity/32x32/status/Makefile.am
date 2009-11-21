@@ -22,6 +22,8 @@ media-genre.png\
 media-num-tracks.png\
 media-track-length.png\
 no-artist.png\
+stock_repeat.png\
+stock_shuffle.png\
 rating.png\
 stylized-cover.png\
 stylized-fetching-cover.png\

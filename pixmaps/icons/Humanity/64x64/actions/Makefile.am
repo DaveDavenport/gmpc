@@ -13,8 +13,6 @@ gmpc-serve.png\
 media-audiofile.png\
 media-consume.png\
 media-playlist.png\
-media-playlist-repeat.png\
-media-playlist-shuffle.png\
 media-repeat-single.png\
 media-tag.png\
 playlist-browser.png\
