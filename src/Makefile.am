@@ -10,7 +10,7 @@ bin_PROGRAMS=gmpc
 
 gmpc_VALAFLAGS=--pkg=gmodule-2.0 --pkg=config --pkg=gtk+-2.0 --pkg=gmpc --pkg=libmpd --vapidir=$(top_srcdir)/src/vapi/ --basedir=$(top_builddir)/src/ -H gmpc-extras.h --library=gmpc-extras --use-header
 
-vala_SOURCES=\
+VALA_VAPI_FILES=\
     vapi/gmpc.vapi\
     vapi/libmpd.vapi\
     vapi/config.vapi
@@ -35,6 +35,7 @@ gmpc_SOURCES=\
     vala/gmpc-database-update-tracker.vala\
     vala/gmpc-test-plugin.vala\
     vala/gmpc-paned-size-group.vala\
+    Providers/music-tree.vala\
 	main.c\
 	plugin.c\
 	mpdinteraction.c\
@@ -208,7 +209,7 @@ EXTRA_DIST=\
 		gmpc-version.h.in\
 		bug-information.h\
         gmpc-win32.rc\
-        $(vala_SOURCES)\
+        $(VALA_VAPI_FILES)\
         $(gmpc_GOBFILES)
 
 DISTCLEANFILES=\

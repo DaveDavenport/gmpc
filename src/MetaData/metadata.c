@@ -60,6 +60,8 @@ typedef struct {
 	MetaData *met;
 	/* The index of the plugin being queried */
 	int index;
+	int do_rename;
+	int rename_done;
 	/* List with temporary result from plugin index */
 	GList *list;
 	/* The current position in the list */
@@ -700,6 +702,24 @@ static gboolean process_itterate(void)
 			return FALSE;
 		}
 	}
+	/* A hack to also query non modified named. Only used with rename option enabled */
+	if(d->do_rename && d->result == META_DATA_FETCHING )
+	{
+		mpd_Song *song = d->edited;
+		d->edited = d->song;
+		d->song = song;
+		d->do_rename = FALSE;
+		d->index = 0;
+		d->rename_done = TRUE;
+		return TRUE;
+	}
+	/* revert changes */
+	if(d->rename_done)
+	{
+		mpd_Song *song = d->edited;
+		d->edited = d->song;
+		d->song = song;
+	}
 	/**
 	 * If nothing found, set unavailable
 	 */
@@ -888,6 +908,8 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData *
 	mtd->data = data;
 	/* start at the first plugin */
 	mtd->index = 0;
+	mtd->do_rename = cfg_get_single_value_as_int_with_default(config, "metadata", "rename", FALSE);
+	mtd->rename_done = FALSE;
 	/* Set that we are fetching */
 	mtd->result = META_DATA_FETCHING;
 	/* set result NULL */

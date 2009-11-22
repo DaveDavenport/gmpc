@@ -172,7 +172,7 @@ void plugin_add(gmpcPlugin *plug, int plugin, GError **error)
 	plugins[num_plugins-1] = parent;
 	plugins[num_plugins] = NULL;
 	
-	if(plug->plugin_type&GMPC_PLUGIN_META_DATA)
+	if(gmpc_plugin_is_metadata(parent))//plug->plugin_type&GMPC_PLUGIN_META_DATA)
 	{
 		meta_data_add_plugin(parent);
 	}
@@ -723,7 +723,7 @@ void gmpc_plugin_metadata_query_metadata_list(gmpcPluginParent *plug, mpd_Song *
     {
         if(plug->new)
         {
-            gmpc_plugin_meta_data_iface_get_data(GMPC_PLUGIN_META_DATA_IFACE(plug->new), song, type, callback, data);
+            gmpc_plugin_meta_data_iface_get_metadata(GMPC_PLUGIN_META_DATA_IFACE(plug->new), song, type, callback, data);
             return;
         }
         if(plug->old->metadata->get_metadata)

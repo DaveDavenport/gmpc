@@ -320,7 +320,7 @@ class Gmpc:Profiles from G:Object
    * get music directory 
    */
   public 
-  gchar *                                 
+  const gchar *                                 
   get_music_directory(self, const gchar *id (check null))
   {
     Profile *prof = self_get_profile(self, id);

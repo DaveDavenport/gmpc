@@ -340,6 +340,7 @@ namespace Gmpc {
             public string? get_current_id();
             public void set_db_update_time(string id, int value);
             public int get_db_update_time(string id);
+            public weak string? get_music_directory(string id); 
 
     }
 }

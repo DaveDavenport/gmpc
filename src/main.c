@@ -49,7 +49,6 @@
 #include "metadata-cache.h"
 #include "bug-information.h"
 
-
 #define LOG_DOMAIN "Gmpc"
 /**
  * Get revision
@@ -695,6 +694,7 @@ int main(int argc, char **argv)
 	plugin_add(&file_browser_plug, 0, NULL);
 	/** current playlist */
 	plugin_add_new((GmpcPluginBase *)play_queue_plugin_new("current-pl"), 0,NULL);
+	plugin_add_new((GmpcPluginBase *)gmpc_provider_music_tree_new(),0,NULL);
 
 	/** Find Browser */
 	plugin_add(&find2_browser_plug, 0, NULL);
