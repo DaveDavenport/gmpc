@@ -83,3 +83,6 @@ src/vala/gmpc-url-fetching-gui.c
 src/Widgets/gmpc-image.c
 src/Widgets/gmpc-progress.c
 src/Widgets/gmpc-menu-item-rating.c
+
+#Providers
+src/Providers/music-tree.c
