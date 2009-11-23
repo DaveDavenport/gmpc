@@ -18,14 +18,13 @@
 */
 
 /**
- * This plugin consists of 3 parts
- * Metadata2 plugin: Implements metadata 2 browser.
- * Now Playing plugin: Reusing the metadata 2 browser it implements a now playing browser.
- * Custom widget, there are some custom widgets used by the metadata 2 browser
- *  * Similar songs.
- *  * Similar artist.
- *  * More. (expands, collapses a sub widget
+ * This does a most-effort fetch off album and artist art.
+ * For album art it looks in the folder the music file is in,
+ * Then in the parent directory if it directory is named CD or DISC.
+ * It looks for jpg, png, jpeg, gif.
  * 
+ * For artist art it looks for artist.jpg and $artist.jpg in the directory the music is in 
+ * the parent and the parent of the parent.
  */
 using Config;
 using Gtk;
@@ -55,9 +54,9 @@ public class Gmpc.Provider.MusicTree : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIfa
         this.plugin_type = 8+32;
         /* Todo get list from gdk? */
         try {
-        image_filename = new GLib.Regex(".*\\.(png|jpg|jpeg|gif)$", 
-            GLib.RegexCompileFlags.CASELESS|GLib.RegexCompileFlags.DOTALL, 0);
-        }catch( Error e) {
+			image_filename = new GLib.Regex(".*\\.(png|jpg|jpeg|gif)$", 
+					GLib.RegexCompileFlags.CASELESS|GLib.RegexCompileFlags.DOTALL, 0);
+		}catch( Error e) {
             log("Gmpc.Plugin.MusicTreeProvider", GLib.LogLevelFlags.LEVEL_ERROR, 
                     "Failed to create regex: %s", e.message);
         }
@@ -125,7 +124,7 @@ public class Gmpc.Provider.MusicTree : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIfa
                 this.get_album_cover(directory, song, callback);
                 return; 
             case Gmpc.MetaData.Type.ARTIST_ART:
-                /* A request for an album cover came in. */
+                /* A request for artist art came in. */
                 this.get_artist_art(directory, song, callback);
                 return; 
             default:
@@ -265,10 +264,10 @@ public class Gmpc.Provider.MusicTree : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIfa
         /* Try parent, if this fails */
         if(list.length() == 0)
         {
-            var pdir = dir.get_parent();
             if(GLib.Regex.match_simple("(DISC|CD) [0-9]*", path, GLib.RegexCompileFlags.CASELESS,0))
             { 
-                path = pdir.get_path();
+				var pdir = dir.get_parent();
+				path = pdir.get_path();
                 log("Gmpc.Plugin.MusicTreeProvider", GLib.LogLevelFlags.LEVEL_DEBUG, 
                         "Nothing found, trying parent: %s", path);
                 try {
