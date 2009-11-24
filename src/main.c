@@ -141,8 +141,7 @@ void send_password(void);
  */
 static void create_gmpc_paths(void);
 static void move_old_gmpc_data(void);
-
-void print_version(void);
+static void print_version(void);
 
 #ifndef WIN32
 #include "bacon/bacon-message-connection.h"
@@ -484,9 +483,9 @@ int main(int argc, char **argv)
 
 	/** test if config opened correct  */
 	if (config == NULL) {
-	/**
-         * Show gtk error message and quit
-         */
+		/**
+		 * Show gtk error message and quit
+		 */
 		g_log(LOG_DOMAIN, G_LOG_LEVEL_ERROR, "Failed to save/load configuration:\n%s\n", url);
 		show_error_message(_("Failed to load the configuration system."));
 		/* this is an error so bail out correctly */
@@ -494,13 +493,13 @@ int main(int argc, char **argv)
 	}
 	TEC("Opening config file: %s", url);
 	/**
-     * cleanup
-     */
+	 * cleanup
+	 */
 	q_free(url);
 
 	/**
-     * If requested, output debug info to file
-     */
+	 * If requested, output debug info to file
+	 */
 	if (cfg_get_single_value_as_int_with_default(config, "Default", "Debug-log", FALSE)) {
 		url = gmpc_get_user_path("debug-info.log");
 		if (url) {
@@ -627,22 +626,21 @@ int main(int argc, char **argv)
 	}
 	TEC("Setting up gmpc idle,signals and profiles");
 	/**
-     * Initialize the new metadata subsystem.
-     * (Will spawn a new thread, so have to be after the init threading
-     */
+	 * Initialize the new metadata subsystem.
+	 */
 	meta_data_init();
 
 	TEC("Initializing metadata system");
 
 	/**
-     * stock icons
-     */
+	 * stock icons
+	 */
 	g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Loading stock icons");
 	init_stock_icons();
 	TEC("Init stock icons");
 	/**
-     * Create connection object
-     */
+	 * Create connection object
+	 */
 	connection = mpd_new_default();
 	if (connection == NULL) {
 	/**
@@ -719,7 +717,6 @@ int main(int argc, char **argv)
 	plugin_add_new(GMPC_PLUGIN_BASE(gmpc_test_plugin_new()), 0, NULL);
 	metadata_browser = gmpc_metadata_browser_new();
 	plugin_add_new(GMPC_PLUGIN_BASE(metadata_browser), 0, NULL);
-//	plugin_add_new(GMPC_PLUGIN_BASE(gmpc_now_playing_new()), 0, NULL);
 	plugin_add_new(GMPC_PLUGIN_BASE(gmpc_plugin_metadata_prefetcher_new()), 0,NULL);
 	plugin_add_new(GMPC_PLUGIN_BASE(gmpc_plugin_database_update_tracker_new()), 0,NULL);
 	plugin_add_new(GMPC_PLUGIN_BASE(gmpc_plugin_mockup_new()), 0,NULL);
@@ -742,7 +739,7 @@ int main(int argc, char **argv)
 		plugin_load_dir(url);
 		q_free(url);
 #endif
-
+		/* Load plugin from $PLUGIN_DIR if set */
 		if(g_getenv("PLUGIN_DIR") != NULL) {
 			gchar *path = g_build_filename(g_getenv("PLUGIN_DIR"),NULL);
 			if (path && g_file_test(path, G_FILE_TEST_IS_DIR)) {
@@ -780,7 +777,7 @@ int main(int argc, char **argv)
 	g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Create main window\n");
 	gdk_window_set_debug_updates(do_debug_updates);
 
-	if( (revision != NULL && revision[0] != '\0') && cfg_get_single_value_as_int_with_default(config, "Default", "help-question", 0) == 0)
+	if( (revision != NULL && revision[0] != '\0') && cfg_get_single_value_as_int_with_default(config, "Default", "help-question", 0) == 0 && cfg_get_single_value_as_int_with_default(config, "Default", "first-run", 1)) 
 	{
 		GtkWidget * dialog = gtk_message_dialog_new_with_markup(NULL, 
 				GTK_DIALOG_MODAL,
@@ -830,11 +827,11 @@ int main(int argc, char **argv)
 	 * get the status every 1/2 second should be enough, but it's configurable.
 	 */
 	g_timeout_add(cfg_get_single_value_as_int_with_default(config,
-														   "connection",
-														   "mpd-update-speed",
-														   500), (GSourceFunc) update_mpd_status, NULL);
+				"connection",
+				"mpd-update-speed",
+				500), (GSourceFunc) update_mpd_status, NULL);
 	/**
-     * create the autoconnect timeout, if autoconnect enable, it will check every 5 seconds
+	 * create the autoconnect timeout, if autoconnect enable, it will check every 5 seconds
      * if you are still connected, and reconnects you if not.
      */
 	autoconnect_timeout = g_timeout_add_seconds(5, (GSourceFunc) autoconnect_callback, NULL);
@@ -922,7 +919,6 @@ int main(int argc, char **argv)
 		gmpc_plugin_destroy(plugins[i]);
 	}
 
-	//playlist3_message_destroy();
 	playlist3_destroy();
 
 	g_object_unref(playlist);
@@ -1051,6 +1047,7 @@ void GmpcStatusChangedCallback(MpdObj * mi, ChangedStatusType what, void *userda
 static void gmpc_status_changed_callback_real(GmpcConnection * conn, MpdObj * mi, ChangedStatusType what, gpointer data)
 {
 	int i;
+	/* When permission changes, update the advanced search regex */
 	if(what&MPD_CST_PERMISSION){
 		advanced_search_update_taglist();
 	}
@@ -1060,7 +1057,6 @@ static void gmpc_status_changed_callback_real(GmpcConnection * conn, MpdObj * mi
 	for (i = 0; i < num_plugins; i++) {
 		gmpc_plugin_status_changed(plugins[i], mi, what);
 	}
-
 }
 
 /*******************************
@@ -1073,10 +1069,7 @@ static void password_dialog_response(GtkWidget * dialog, gint response, gpointer
 	gchar *path;
 	switch (response) {
 	case 0:
-	{
-
 		return;
-	}
 	case GTK_RESPONSE_OK:
 		{
 			path = (char *)
@@ -1097,7 +1090,7 @@ static void password_dialog_response(GtkWidget * dialog, gint response, gpointer
 		break;
 	}
 	gtk_widget_destroy((GtkWidget *)
-					   gtk_builder_get_object(xml_password_window, "password-dialog"));
+			gtk_builder_get_object(xml_password_window, "password-dialog"));
 	g_object_unref(xml_password_window);
 	xml_password_window = NULL;
 }
@@ -1109,25 +1102,27 @@ static void password_dialog(int failed)
 	if (xml_password_window)
 		return;
 	path = gmpc_get_full_glade_path("password-dialog.ui");
-	xml_password_window = gtk_builder_new();	//glade_xml_new(path, "password-dialog",NULL);
+	xml_password_window = gtk_builder_new();
 	gtk_builder_add_from_file(xml_password_window, path, NULL);
 	gtk_window_set_transient_for(GTK_WINDOW
-								 (gtk_builder_get_object(xml_password_window, "password-dialog")), GTK_WINDOW(pl3_win));
+			(gtk_builder_get_object(xml_password_window, "password-dialog")), GTK_WINDOW(pl3_win));
 	q_free(path);
 	if (!xml_password_window)
 		return;
 	if (failed) {
-		path = g_strdup_printf(_("Failed to set password on: '%s'\nPlease try again"), mpd_get_hostname(connection));
+		path = g_strdup_printf(_("Failed to set password on: '%s'\nPlease try again"),
+				mpd_get_hostname(connection));
 	} else {
-		path = g_strdup_printf(_("Please enter your password for: '%s'"), mpd_get_hostname(connection));
+		path = g_strdup_printf(_("Please enter your password for: '%s'"),
+				mpd_get_hostname(connection));
 	}
 	gtk_label_set_text(GTK_LABEL(gtk_builder_get_object(xml_password_window, "pass_label")), path);
 	q_free(path);
 
 	g_signal_connect(G_OBJECT
-					 (gtk_builder_get_object
-					  (xml_password_window, "password-dialog")), "response",
-					 G_CALLBACK(password_dialog_response), xml_password_window);
+			(gtk_builder_get_object
+			 (xml_password_window, "password-dialog")), "response",
+			G_CALLBACK(password_dialog_response), xml_password_window);
 }
 
 void send_password(void)
@@ -1158,7 +1153,7 @@ static int error_callback(MpdObj * mi, int error_id, char *error_msg, gpointer d
 		if (setup_assistant_is_running()
 			&& (error_id == MPD_ACK_ERROR_PERMISSION || error_id == MPD_ACK_ERROR_PASSWORD)) {
 			gchar *str = g_markup_printf_escaped("<b>%s</b>",
-												 _("Insufficient permission to connect to mpd. Check password"));
+					_("Insufficient permission to connect to mpd. Check password"));
 			setup_assistant_set_error(str);
 			q_free(str);
 			return TRUE;
@@ -1169,8 +1164,8 @@ static int error_callback(MpdObj * mi, int error_id, char *error_msg, gpointer d
 			password_dialog(FALSE);
 		} else {
 			gchar *str = g_markup_printf_escaped("<b>%s %i: %s</b>",
-												 _("error code"), error_id,
-												 error_msg);
+					_("error code"), error_id,
+					error_msg);
 			playlist3_show_error_message(str, ERROR_CRITICAL);
 			g_free(str);
 		}
@@ -1208,27 +1203,16 @@ static void connection_changed(MpdObj * mi, int connected, gpointer data)
 		autoconnect_timeout = 0;
 		autoconnect_backoff = 0;
 	}
-	/**
-     * send password, first thing we do, if connected
-     */
-	/*
-	if (connected) {
-		if (connection_use_auth()) {
-			mpd_send_password(connection);
-		}
-		advanced_search_update_taglist();
-	}
-*/
 	if(connected){
 		advanced_search_update_taglist();
 	}
 	/**
-     * force an update of status, to check password
-     */
+	 * force an update of status, to check password
+	 */
 	if (connected) {
 		mpd_status_update(mi);
 		if (connected != mpd_check_connected(mi)) {
-			g_log(LOG_DOMAIN, G_LOG_LEVEL_ERROR, "State differs, exit");
+			g_log(LOG_DOMAIN, G_LOG_LEVEL_WARNING,"State differs, exit");
 			/* Probly disconnected when getting status..   exiting */
 			return;
 		}
@@ -1374,7 +1358,7 @@ static void create_gmpc_paths(void)
 	q_free(url);
 }
 
-void print_version(void)
+static void print_version(void)
 {
 	printf(BOLD "%s\n", ("Gnome Music Player Client"));
 

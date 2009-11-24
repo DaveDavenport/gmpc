@@ -68,8 +68,6 @@ int plugin_get_pos(int id);
 
 void show_error_message(const gchar *string);
 
-/** Handle status changed */
-void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userdata);
 
 /**
  * Metadata 
@@ -109,6 +107,9 @@ void mpd_interaction_update_supported_tags(void);
 gboolean pl3_window_is_fullscreen(void);
 /* easy download */
 void gmpc_easy_async_quit(void);
+
+/**Hack Handle status changed */
+void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userdata);
 
 #ifdef DEBUG_TIMING
 /* Tic Tac system */
