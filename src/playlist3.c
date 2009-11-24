@@ -877,11 +877,7 @@ void create_playlist3(void)
 	 * Check if the file is loaded, if not then show an error message and abort the program
 	 */
 	if (pl3_xml == NULL) {
-		char *errormsg = g_strdup_printf("%s: '%s'",
-										 _("Failed to open the interface description file!\nPlease reinstall gmpc\n"),
-										 path);
 		debug_printf(DEBUG_ERROR, "Failed to open playlist3.glade.\n");
-		show_error_message(errormsg, TRUE);
 		abort();
 	}
 

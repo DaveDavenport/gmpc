@@ -66,7 +66,7 @@ void plugin_add(gmpcPlugin *plug, int plugin, GError **error);
 void plugin_add_new(GmpcPluginBase *plug, int plugin, GError **error);
 int plugin_get_pos(int id);
 
-void show_error_message(const gchar *string,const int block);
+void show_error_message(const gchar *string);
 
 /** Handle status changed */
 void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userdata);
