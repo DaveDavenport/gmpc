@@ -237,7 +237,7 @@ void pl3_tool_menu_update(void);
 
 /***/
 
-char *connection_get_music_directory(void);
+const char *connection_get_music_directory(void);
 /* glue */
 
 void info2_fill_song_view(mpd_Song *song);

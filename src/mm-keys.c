@@ -636,7 +636,7 @@ accel_edited_callback (GtkCellRendererText *cell,
 					"%s is already mapped to %s"),
 					keysym, _(keynames[i]) );
 			q_free (keysym);
-			show_error_message (message, TRUE);
+			playlist3_show_error_message(message, ERROR_CRITICAL);
 			q_free (message);
 			
 			/* Clear the duplicate entry */
@@ -666,7 +666,7 @@ accel_edited_callback (GtkCellRendererText *cell,
 			"Ensure that your window manager (or other applications) have not already bound this key for some other function, then restart gmpc."),
 			_(keynames[key]), keysym );
 		q_free (keysym);
-		show_error_message (message, TRUE);
+		playlist3_show_error_message(message, ERROR_CRITICAL);
 		q_free (message);
 	}
 }

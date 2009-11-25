@@ -1223,6 +1223,7 @@ void connection_profiles_changed(GtkComboBox *combo, gpointer data)
 	if(gtk_combo_box_get_active_iter(combo,&iter))
 	{
 		char *value= NULL, *uid = NULL, *string;
+		const gchar *md;
 		gtk_tree_model_get(GTK_TREE_MODEL(store), &iter, 0, &uid, 1,&value, -1);
 
 
@@ -1260,9 +1261,9 @@ void connection_profiles_changed(GtkComboBox *combo, gpointer data)
 		/**
 		 * Set music directory
 		 */
-		string = gmpc_profiles_get_music_directory(gmpc_profiles, uid);
+		md = gmpc_profiles_get_music_directory(gmpc_profiles, uid);
 		gtk_entry_set_text(GTK_ENTRY((GtkWidget *) gtk_builder_get_object(xml, "music_directory")),
-				string?string:"");
+				md?md:"");
 		/**
 		 * Only enable the rmeove button when there is more then 1 profile
 		 */
@@ -1477,10 +1478,10 @@ char *connection_get_password(void)
 	g_free(profile);
 	return retv;
 }
-char *connection_get_music_directory(void)
+const char *connection_get_music_directory(void)
 {
 	gchar *profile = gmpc_profiles_get_current(gmpc_profiles);
-	gchar *retv  = gmpc_profiles_get_music_directory(gmpc_profiles, profile);
+	const gchar *retv  = gmpc_profiles_get_music_directory(gmpc_profiles, profile);
 	g_free(profile);
 	return retv;
 }
