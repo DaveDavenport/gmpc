@@ -5,7 +5,6 @@ context = actions
 iconsdir = $(themedir)/$(size)/$(context)
 
 dist_icons_DATA =\
-albumview.svg\
 dynamic.svg\
 gmpc-database.svg\
 gmpc-metabrowser.svg\
