@@ -395,6 +395,12 @@ static int directory_sort_func(gpointer ppaa, gpointer ppbb, gpointer data)
     }
     return val;
 }
+/* Reverse sort function, needed for prepending instead of appending */
+static int directory_sort_func_inv(gpointer a, gpointer b, gpointer d)
+{
+  return - directory_sort_func (a, b, d);
+}
+
 static void pl3_file_browser_reupdate_folder(GtkTreeIter *iter)
 {
 	MpdData *data = NULL;
@@ -574,7 +580,7 @@ static void pl3_file_browser_fill_tree(GtkWidget *tree,GtkTreeIter *iter, GtkTre
 {
     char *path;
     MpdData *data = NULL;
-    GtkTreeIter child,child2;
+    GtkTreeIter child,child2, dummy;
     gboolean open;
     gtk_tree_model_get(GTK_TREE_MODEL(pl3_fb_dir_store),iter, PL3_FB_PATH, &path, PL3_FB_OPEN, &open,-1);
     gtk_tree_store_set(pl3_fb_dir_store, iter, PL3_FB_OPEN, TRUE, -1);
@@ -582,37 +588,42 @@ static void pl3_file_browser_fill_tree(GtkWidget *tree,GtkTreeIter *iter, GtkTre
     {
         GTimer *tim = g_timer_new();
         data = mpd_database_get_directory(connection, path);
-        data = misc_sort_mpddata(data,(GCompareDataFunc)directory_sort_func,NULL); 
+        /* Do a reverse sort, because adding it to the gtk view by prepending is faster
+         * then appending */
+        data = misc_sort_mpddata(data,(GCompareDataFunc)directory_sort_func_inv,NULL);
         g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Elapsed time sorting before adding: %f\n",
                 g_timer_elapsed(tim, NULL));
-        while (data != NULL)
-        {
-            if (data->type == MPD_DATA_TYPE_DIRECTORY)
-            {
-                gchar *basename =
-                    g_path_get_basename (data->directory);
-                gtk_tree_store_append (pl3_fb_dir_store, &child, iter);
-                gtk_tree_store_set (pl3_fb_dir_store, &child,
-                        PL3_FB_ICON, "gtk-open",
-                        PL3_FB_NAME, basename,
-                        PL3_FB_PATH, data->directory,
-                        PL3_FB_OPEN, FALSE,
-                        -1);
-                gtk_tree_store_append(pl3_fb_dir_store, &child2, &child);
 
-                q_free (basename);
+        if(gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_fb_dir_store), &dummy, iter))
+        {
+            while (data != NULL)
+            {
+                if (data->type == MPD_DATA_TYPE_DIRECTORY)
+                {
+                    gchar *basename = g_path_get_basename (data->directory);
+                    gtk_tree_store_prepend(pl3_fb_dir_store, &child, iter);
+                    gtk_tree_store_set (pl3_fb_dir_store, &child,
+                            PL3_FB_ICON, "gtk-open",
+                            PL3_FB_NAME, basename,
+                            PL3_FB_PATH, data->directory,
+                            PL3_FB_OPEN, FALSE,
+                            -1);
+                    gtk_tree_store_append(pl3_fb_dir_store, &child2, &child);
+
+                    q_free (basename);
+                }
+                data = mpd_data_get_next(data);
             }
-            data = mpd_data_get_next(data);
+
+            gtk_tree_store_remove(pl3_fb_dir_store, &dummy);
         }
 
         g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Elapsed time sorting after adding: %f\n",
                 g_timer_elapsed(tim, NULL));
         g_timer_destroy(tim);
-        if(gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_fb_dir_store), &child, iter))
-        {
-            gtk_tree_store_remove(pl3_fb_dir_store, &child);
-        }
+
     }
+
     q_free(path);
 }
 
@@ -640,8 +651,8 @@ static int pl3_file_browser_cat_popup(GtkWidget *wid, GdkEventButton *event, gpo
         g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_file_browser_replace_folder), NULL);
 
         {
-            GtkTreeView *tree = GTK_TREE_VIEW(pl3_fb_dir_tree); 
-            GtkTreeModel *model = (GtkTreeModel *)pl3_fb_dir_store; 
+            GtkTreeView *tree = GTK_TREE_VIEW(pl3_fb_dir_tree);
+            GtkTreeModel *model = (GtkTreeModel *)pl3_fb_dir_store;
             GtkTreeSelection *selection  = gtk_tree_view_get_selection(tree);
             GtkTreeIter iter;
             if(gtk_tree_selection_get_selected(selection, &model, &iter))
