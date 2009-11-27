@@ -164,6 +164,11 @@ static void tray_icon2_embedded_changed(GtkStatusIcon *icon,GParamSpec *arg1, gp
         create_playlist3();
     }
 }
+static void tray_icon2_size_changed(GtkStatusIcon *icon,GParamSpec *arg1, gpointer data)
+{
+    int size = gtk_status_icon_get_size(icon);
+    printf("Status icon size: %i\n", size);
+}
 /**
  * Initialize the tray icon 
  */
@@ -244,6 +249,7 @@ static void tray_icon2_init(void)
 		g_signal_connect(G_OBJECT(tray_icon2_gsi), "popup-menu", G_CALLBACK(tray_icon2_populate_menu), NULL);
 		g_signal_connect(G_OBJECT(tray_icon2_gsi), "activate", G_CALLBACK(tray_icon2_activate), NULL);
 		g_signal_connect(G_OBJECT(tray_icon2_gsi), "notify::embedded", G_CALLBACK(tray_icon2_embedded_changed), NULL);
+		g_signal_connect(G_OBJECT(tray_icon2_gsi), "notify::size", G_CALLBACK(tray_icon2_size_changed), NULL);
 		if(gtk_check_version(2, 15, 0) == NULL)
 		{
 			g_signal_connect(G_OBJECT(tray_icon2_gsi), "button-press-event", G_CALLBACK(tray_icon2_button_press_event), NULL);

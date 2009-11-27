@@ -436,6 +436,11 @@ pixmaps/icons/Humanity/22x22/Makefile
 pixmaps/icons/Humanity/22x22/actions/Makefile
 pixmaps/icons/Humanity/22x22/status/Makefile
 pixmaps/icons/Humanity/22x22/apps/Makefile
+pixmaps/icons/Humanity/24x24/Makefile
+pixmaps/icons/Humanity/24x24/actions/Makefile
+pixmaps/icons/Humanity/24x24/status/Makefile
+pixmaps/icons/Humanity/24x24/categories/Makefile
+pixmaps/icons/Humanity/24x24/apps/Makefile
 pixmaps/icons/Humanity/32x32/Makefile
 pixmaps/icons/Humanity/32x32/actions/Makefile
 pixmaps/icons/Humanity/32x32/status/Makefile
