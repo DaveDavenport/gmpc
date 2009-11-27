@@ -1222,6 +1222,14 @@ void create_playlist3(void)
 	main_window_add_status_icon(si_repeat);
 
 
+
+	si_random = gtk_event_box_new();
+	g_signal_connect(G_OBJECT(si_random), "button-release-event", G_CALLBACK(random_toggle), NULL);
+	gtk_container_add(GTK_CONTAINER(si_random), 
+		gtk_image_new_from_icon_name("stock_shuffle", GTK_ICON_SIZE_MENU));
+	gtk_widget_show_all(si_random);
+	main_window_add_status_icon(si_random);
+
 	si_repeat_single = gtk_event_box_new();
 	g_signal_connect(G_OBJECT(si_repeat_single), "button-release-event", G_CALLBACK(repeat_single_toggle), NULL);
 	gtk_container_add(GTK_CONTAINER(si_repeat_single), 
@@ -1235,13 +1243,6 @@ void create_playlist3(void)
 			gtk_image_new_from_icon_name("media-consume", GTK_ICON_SIZE_MENU));
 	gtk_widget_show_all(si_consume);
 	main_window_add_status_icon(si_consume);
-
-	si_random = gtk_event_box_new();
-	g_signal_connect(G_OBJECT(si_random), "button-release-event", G_CALLBACK(random_toggle), NULL);
-	gtk_container_add(GTK_CONTAINER(si_random), 
-		gtk_image_new_from_icon_name("stock_shuffle", GTK_ICON_SIZE_MENU));
-	gtk_widget_show_all(si_random);
-	main_window_add_status_icon(si_random);
 
 	/* Listen for icon changed 
 	g_object_connect(gtk_icon_theme_get_default(), "changed",
