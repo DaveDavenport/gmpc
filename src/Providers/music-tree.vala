@@ -264,7 +264,7 @@ public class Gmpc.Provider.MusicTree : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIfa
         /* Try parent, if this fails */
         if(list.length() == 0)
         {
-            if(GLib.Regex.match_simple("(DISC|CD) [0-9]*", path, GLib.RegexCompileFlags.CASELESS,0))
+            if(GLib.Regex.match_simple("(DISC|CD)[ 0-9]*$", path, GLib.RegexCompileFlags.CASELESS,0))
             { 
 				var pdir = dir.get_parent();
 				path = pdir.get_path();
