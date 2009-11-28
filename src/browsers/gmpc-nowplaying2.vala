@@ -274,9 +274,7 @@ namespace Gmpc {
                 string retv = null;
                 for(;i>0 && (length-i) <8;i--){
                     if(path[i] == '.') {
-                        stdout.printf("%li %s\n",length- i,path);
                         retv = path.substring(i+1);
-                        stdout.printf("%s\n", retv);
                         return retv;
                     }
                 }

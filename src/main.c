@@ -957,6 +957,7 @@ int main(int argc, char **argv)
      */
 	mpd_free(connection);
 
+	initGenericErrorDefaultFunc((xmlGenericErrorFunc *)NULL);
 	xmlCleanupParser();
 	/* cleanup */
 	gmpc_mpddata_treeview_cleanup();
