@@ -339,6 +339,7 @@ namespace Gmpc {
                     ali.add(fav_button);
                     box.pack_start(ali, false, false, 0); 
                     var label = new Gtk.Label(song.title);
+                    label.selectable = true;
                     label.set_markup(GLib.Markup.printf_escaped("<span color='%s' size='%i' weight='bold'>%s</span>", 
                                 this.title_color,Pango.SCALE*20 ,song.title));
                     label.set_ellipsize(Pango.EllipsizeMode.END);
@@ -356,6 +357,7 @@ namespace Gmpc {
                     }
                 }else if (song.name!= null) {
                     var label = new Gtk.Label(song.name);
+                    label.selectable = true;
                     label.set_markup(GLib.Markup.printf_escaped("<span color='%s' size='%i' weight='bold'>%s</span>",this.
                                 title_color, Pango.SCALE*20, song.name));
                     label.set_ellipsize(Pango.EllipsizeMode.END);
@@ -365,6 +367,7 @@ namespace Gmpc {
                 else if (song.file != null){
                     var filename = GLib.Path.get_basename(song.file);
                     var label = new Gtk.Label(song.name);
+                    label.selectable = true;
                     try {
                     var regex = new GLib.Regex ("\\.[0-9a-zA-Z]*$");
                         filename = regex.replace_literal (filename, -1, 0, "");
@@ -390,6 +393,7 @@ namespace Gmpc {
                 if(song.artist != null) {
                     var box = new Gtk.HBox(false, 6);
                     var label = new Gtk.Label(song.artist);
+                    label.selectable = true;
                     var image = new Gtk.Image.from_icon_name("media-artist", Gtk.IconSize.BUTTON);
                     box.pack_start(image, false, false, 0);
                     label.set_markup(GLib.Markup.printf_escaped("<span size='xx-large' weight='bold'>%s</span>", song.artist));
@@ -402,6 +406,7 @@ namespace Gmpc {
                 if(song.album != null) {
                     var box = new Gtk.HBox(false, 6);
                     var label = new Gtk.Label(song.album);
+                    label.selectable = true;
                     var image = new Gtk.Image.from_icon_name("media-album", Gtk.IconSize.BUTTON);
                     box.pack_start(image, false, false, 0);
                     label.set_markup(GLib.Markup.printf_escaped("<span size='x-large' weight='bold'>%s %s</span>", song.album,
@@ -415,6 +420,7 @@ namespace Gmpc {
                 if(song.genre != null) {
                     var box = new Gtk.HBox(false, 6);
                     var label = new Gtk.Label(song.title);
+                    label.selectable = true;
                     var image = new Gtk.Image.from_icon_name("media-genre", Gtk.IconSize.MENU);
                     box.pack_start(image, false, false, 0);
                     label.set_markup(GLib.Markup.printf_escaped("<span color='%s' weight='bold'>%s:</span> %s",this.item_color,_("Genre"), song.genre));
@@ -431,6 +437,7 @@ namespace Gmpc {
                     box.pack_start(image, false, false, 0);
 
                     bitrate_label = new Gtk.Label(song.title);
+                    bitrate_label.selectable = true;
                     bitrate_label.set_ellipsize(Pango.EllipsizeMode.END);
                     bitrate_label.set_alignment(0.0f, 0.5f);
 
@@ -457,6 +464,7 @@ namespace Gmpc {
                         box.pack_start(image, false, false, 0);
 
                         var label = new Gtk.Label(song.title);
+                    label.selectable = true;
                         label.set_ellipsize(Pango.EllipsizeMode.END);
                         label.set_alignment(0.0f, 0.5f);
                         box.pack_start(label, true, true, 0);
@@ -472,6 +480,7 @@ namespace Gmpc {
                     var image = new Gtk.Image.from_icon_name("media-track-length", Gtk.IconSize.MENU);
                     box.pack_start(image, false, false, 0);
                     var label = new Gtk.Label("");
+                    label.selectable = true;
                     label.set_ellipsize(Pango.EllipsizeMode.END);
                     label.set_markup(GLib.Markup.printf_escaped("<span color='%s' weight='bold'>%s:</span> %s",this.item_color,_("Length"), 
                                 Gmpc.Misc.format_time((ulong) song.time, "")));
@@ -485,6 +494,7 @@ namespace Gmpc {
                     var image = new Gtk.Image.from_icon_name("media-num-tracks", Gtk.IconSize.MENU);
                     box.pack_start(image, false, false, 0);
                     var label = new Gtk.Label("");
+                    label.selectable = true;
                     label.set_ellipsize(Pango.EllipsizeMode.END);
                     label.set_markup(GLib.Markup.printf_escaped("<span color='%s' weight='bold'>%s:</span> %s %s",this.item_color, _("Track number"), 
                                 song.track,
@@ -692,6 +702,7 @@ namespace Gmpc {
                     bottom_hbox.pack_start(ali, false, false, 0);
 
                     var label = new Gtk.Label(song.artist);
+                    label.selectable = true;
                     label.set_size_request(240, -1);
                     label.set_markup(GLib.Markup.printf_escaped("<span size='x-large' weight='bold' color='%s'>%s</span><span size='x-large' weight='bold'> %s</span>",this.item_color,_("Other albums by"), song.artist));
                     label.set_line_wrap_mode(Pango.WrapMode.WORD_CHAR);
@@ -744,6 +755,7 @@ namespace Gmpc {
                             but_hbox.pack_start(image, false, false, 0);
 
                             var but_label = new Gtk.Label(iter.song.album);
+                            but_label.selectable = true;
                             but_label.set_alignment(0.0f, 0.5f);
                             var strlabel = "";
                             if(iter.song.date != null && iter.song.date.length > 0) strlabel += "%s: ".printf(iter.song.date);
