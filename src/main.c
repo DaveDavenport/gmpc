@@ -213,6 +213,17 @@ static void bacon_on_message_received(const char *message, gpointer data)
 #endif
 
 static GLogLevelFlags global_log_level = G_LOG_LEVEL_MESSAGE;
+
+
+
+static void xml_error_func(void * ctx, const char * msg,...)
+{
+	va_list ap;
+	va_start(ap, msg);
+	g_logv("LibXML", G_LOG_LEVEL_DEBUG, msg,ap);
+	va_end(ap);
+}
+
 static void gmpc_log_func(const gchar *log_domain, GLogLevelFlags log_level, const gchar *message, gpointer user_data)
 {
 	if(log_level <= global_log_level)
@@ -237,6 +248,7 @@ static gboolean hide_on_start(void)
 }
 int main(int argc, char **argv)
 {
+	static xmlGenericErrorFunc handler = (xmlGenericErrorFunc)xml_error_func;
 	int i;
 
 #ifdef WIN32
@@ -385,6 +397,7 @@ int main(int argc, char **argv)
      */
 	xmlInitParser();
 
+	initGenericErrorDefaultFunc(&handler);
 	/**
      * Check if threading is supported, if so, start it.
      * Don't fail here, stuff like can cause that it is allready initialized.
