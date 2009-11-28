@@ -1012,10 +1012,13 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             sw.add(tree_artist);
             /* setup the columns */ 
             var column = new Gtk.TreeViewColumn();
-            var prenderer = new Gtk.CellRendererPixbuf();
-            prenderer.set("height", this.model_artist.icon_size);
-            column.pack_start(prenderer, false);
-            column.add_attribute(prenderer, "pixbuf",27); 
+            if(config.get_int_with_default("tag2-plugin", "show-image-column", 1) == 1)
+            {
+                var prenderer = new Gtk.CellRendererPixbuf();
+                prenderer.set("height", this.model_artist.icon_size);
+                column.pack_start(prenderer, false);
+                column.add_attribute(prenderer, "pixbuf",27); 
+            }
             var trenderer = new Gtk.CellRendererText();
             column.pack_start(trenderer, true);
             column.add_attribute(trenderer, "text", 7);
@@ -1062,10 +1065,13 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             sw.add(tree_album);
             /* setup the columns */ 
             column = new Gtk.TreeViewColumn();
-            prenderer = new Gtk.CellRendererPixbuf();
-            prenderer.set("height", this.model_albums.icon_size);
-            column.pack_start(prenderer, false);
-            column.add_attribute(prenderer, "pixbuf",27); 
+            if(config.get_int_with_default("tag2-plugin", "show-image-column", 1) == 1)
+            {
+                var prenderer = new Gtk.CellRendererPixbuf();
+                prenderer.set("height", this.model_albums.icon_size);
+                column.pack_start(prenderer, false);
+                column.add_attribute(prenderer, "pixbuf",27); 
+            }
             this.tree_album.append_column(column);
 
             column = new Gtk.TreeViewColumn();
@@ -1099,9 +1105,13 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             sw.add(tree_songs);
             /* setup the columns */ 
             column = new Gtk.TreeViewColumn();
-            prenderer = new Gtk.CellRendererPixbuf();
-            column.pack_start(prenderer, false);
-            column.add_attribute(prenderer, "icon-name",23); 
+
+            if(config.get_int_with_default("tag2-plugin", "show-image-column", 1) == 1)
+            {
+                var prenderer = new Gtk.CellRendererPixbuf();
+                column.pack_start(prenderer, false);
+                column.add_attribute(prenderer, "icon-name",23); 
+            }
             trenderer = new Gtk.CellRendererText();
             column.pack_start(trenderer, false);
             column.add_attribute(trenderer, "text", 10);
