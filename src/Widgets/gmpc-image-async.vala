@@ -21,16 +21,39 @@ using GLib;
 using Gtk;
 using Gdk;
 
-public class Gmpc.MetaImageAsync : Gtk.Image
+public class Gmpc.PixbufLoaderAsync : GLib.Object
 {
     private weak GLib.Cancellable? pcancel = null; 
     public string uri = null;
+    public Gdk.Pixbuf pixbuf {set;get;default=null;}
+    private Gtk.TreeRowReference rref = null;
 
-    construct {
-        this.add_events(Gdk.EventMask.BUTTON_PRESS_MASK|Gdk.EventMask.BUTTON_RELEASE_MASK);
+
+    signal void pixbuf_update(Gdk.Pixbuf? pixbuf);
+
+    public void set_rref(Gtk.TreeRowReference rreference)
+    {
+        this.rref = rreference;
     }
 
-    ~MetaImageAsync() {
+    private void call_row_changed()
+    {
+        if(rref != null) {
+            var model = rref.get_model();
+            var path = rref.get_path();
+            Gtk.TreeIter iter;
+            if(model.get_iter(out iter, path))
+            {
+                model.row_changed(path, iter);
+            }
+        }
+    }
+
+    construct {
+    }
+
+    ~PixbufLoaderAsync() {
+        warning("Cancel the image loading");
         if(this.pcancel != null) pcancel.cancel();
     }
 
@@ -100,7 +123,10 @@ public class Gmpc.MetaImageAsync : Gtk.Image
         loader.area_prepared.connect((source) => {
                 var apix = loader.get_pixbuf();
                 var afinal = this.modify_pixbuf(apix, size,border);
-                this.set_from_pixbuf(afinal);
+                
+                pixbuf = afinal;
+                pixbuf_update(pixbuf);
+                call_row_changed();
                 });
         try{
             var stream = yield file.read_async(0, cancel);
@@ -113,13 +139,11 @@ public class Gmpc.MetaImageAsync : Gtk.Image
                           Gmpc.Fix.write_loader(loader,(string)data, result);
                       }catch ( Error erro) {
                           warning("Error trying to fetch image: %s", erro.message);
-                          this.clear();
                       }
                   }while(!cancel.is_cancelled() && result > 0);
             }      
         }catch ( Error e) {
             warning("Error trying to fetch image: %s", e.message);
-            this.clear();
         }
         try {
             loader.close();
@@ -130,31 +154,49 @@ public class Gmpc.MetaImageAsync : Gtk.Image
         if(cancel.is_cancelled())
         {
             warning("Cancelled loading of image");
-            this.clear();
             cancel.reset();
             return;
         }
 
         var pix = loader.get_pixbuf();
         var final = this.modify_pixbuf(pix, size,border);
-        this.set_from_pixbuf(final);
-        cancel = null;
+        pixbuf = final;
+        pixbuf_update(pixbuf);
+        call_row_changed();
+    }
+}
+
+public class Gmpc.MetaImageAsync : Gtk.Image
+{
+    private Gmpc.PixbufLoaderAsync? loader = null;
+    public string uri = null;
+
+    construct {
     }
 
+    ~MetaImageAsync() {
+        this.loader = null;
+    }
+
+    public new void set_from_file(string uri, int size, bool border)
+    {
+        if(this.loader != null) loader = null;;
+        loader = new PixbufLoaderAsync(); 
+        loader.pixbuf_update.connect((source, pixbuf)=>{
+                this.set_from_pixbuf(pixbuf);
+                });
+        loader.set_from_file(uri, size, border);
+    }
     public void clear_now()
     {
-        if(this.pcancel != null)
-            this.pcancel.cancel();
-        pcancel = null;
+        this.loader = null;
         this.uri = null;
         this.clear();
     }
 
     public void set_pixbuf(Gdk.Pixbuf pb)
     {
-        if(this.pcancel != null)
-            this.pcancel.cancel();
-        pcancel = null;
+        this.loader = null;
         this.uri = null;
         this.set_from_pixbuf(pb);
     }
