@@ -394,7 +394,7 @@ namespace Gmpc {
                     var box = new Gtk.HBox(false, 6);
                     var label = new Gtk.Label(song.artist);
                     label.selectable = true;
-                    var image = new Gtk.Image.from_icon_name("media-artist", Gtk.IconSize.BUTTON);
+                    var image = new Gtk.Image.from_icon_name("media-artist", Gtk.IconSize.MENU);
                     box.pack_start(image, false, false, 0);
                     label.set_markup(GLib.Markup.printf_escaped("<span size='xx-large' weight='bold'>%s</span>", song.artist));
                     label.set_ellipsize(Pango.EllipsizeMode.END);
@@ -407,7 +407,7 @@ namespace Gmpc {
                     var box = new Gtk.HBox(false, 6);
                     var label = new Gtk.Label(song.album);
                     label.selectable = true;
-                    var image = new Gtk.Image.from_icon_name("media-album", Gtk.IconSize.BUTTON);
+                    var image = new Gtk.Image.from_icon_name("media-album", Gtk.IconSize.MENU);
                     box.pack_start(image, false, false, 0);
                     label.set_markup(GLib.Markup.printf_escaped("<span size='x-large' weight='bold'>%s %s</span>", song.album,
                         (song.date != null)? "(%s)".printf(song.date):""));
