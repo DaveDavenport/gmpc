@@ -16,6 +16,8 @@ dist_icons_DATA = \
                   gmpc-tray-pause.png\
                   gmpc-tray-play.png\
                   gmpc-tray.png\
+                  media-artist.png\
+                  media-codec.png\
                   media-album.png\
                   media-format.png\
                   media-genre.png\
