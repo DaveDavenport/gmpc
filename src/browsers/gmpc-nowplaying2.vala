@@ -460,7 +460,7 @@ namespace Gmpc {
                     if(extension != null)
                     {
                         var box = new Gtk.HBox(false, 6);
-                        var image = new Gtk.Image.from_icon_name("gtk-info", Gtk.IconSize.MENU);
+                        var image = new Gtk.Image.from_icon_name("media-codec", Gtk.IconSize.MENU);
                         box.pack_start(image, false, false, 0);
 
                         var label = new Gtk.Label(song.title);

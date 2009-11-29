@@ -11,6 +11,7 @@ dist_icons_DATA = \
 		audio-volume-medium.png\
 		audio-volume-muted.png\
         media-track-length.png\
+        media-codec.png\
         media-album.png\
         media-format.png\
         media-genre.png\
