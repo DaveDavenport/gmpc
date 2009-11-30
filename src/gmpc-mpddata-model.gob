@@ -79,7 +79,7 @@ requires 2.0.0
     public	GType types[MPDDATA_MODEL_N_COLUMNS]; 
     private MpdData *data 	= NULL;
     public gint num_rows = 0;
-    private GdkPixbuf **images = NULL;
+    private GmpcPixbufLoaderAsync **images = NULL;
     private gchar *req_artist = {NULL} destroywith g_free;
     public gint icon_size = {cfg_get_single_value_as_int_with_default(config, "gmpc-mpddata-model", "icon-size", 32)};
 
@@ -318,6 +318,10 @@ end:
                     GtkTreeIter iter;
 
                     g_assert(self->_priv->use_images == TRUE);
+                    if(self->_priv->images[n] == NULL){
+                        self->_priv->images[n]= gmpc_pixbuf_loader_async_new();
+                        gmpc_pixbuf_loader_async_set_rref(GMPC_PIXBUF_LOADER_ASYNC(self->_priv->images[n]), ref);
+                    }
 
                     gtk_tree_model_get_iter(model, &iter, path);
                     n = GPOINTER_TO_INT(iter.user_data2) ;
@@ -328,20 +332,25 @@ end:
                         if(met->content_type == META_DATA_CONTENT_URI)
                         {
                             const gchar *coverpath = meta_data_get_uri(met);
-                            pb = gdk_pixbuf_new_from_file_at_size(coverpath,self->icon_size,self->icon_size,NULL);
-                            screenshot_add_border(&pb);
+//                            pb = gdk_pixbuf_new_from_file_at_size(coverpath,self->icon_size,self->icon_size,NULL);
+  //                          screenshot_add_border(&pb);
+
+                            MpdData_real *data = iter.user_data;	
+                            gmpc_pixbuf_loader_async_set_from_file(GMPC_PIXBUF_LOADER_ASYNC(self->_priv->images[n]), coverpath, self->icon_size, (data->tag_type == MPD_TAG_ITEM_ALBUM));
                         }else{
                             pb = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gmpc-no-cover", self->icon_size, 0,NULL);
+                            gmpc_pixbuf_loader_async_set_pixbuf(self->_priv->images[n], pb);
+                            g_object_unref(pb);
                         }
-                        if(self->_priv->images[n]) g_object_unref(self->_priv->images[n]); 
-                        self->_priv->images[n] = pb;
+                        //if(self->_priv->images[n]) g_object_unref(self->_priv->images[n]); 
                     }
                     else   if(ret == META_DATA_UNAVAILABLE)
                     {
                         GdkPixbuf *pb2;
                         pb2 = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gmpc-no-cover", self->icon_size, 0,NULL);
-                        if(self->_priv->images[n]) g_object_unref(self->_priv->images[n]); 
-                        self->_priv->images[n] = pb2;
+                        //if(self->_priv->images[n]) g_object_unref(self->_priv->images[n]); 
+                        gmpc_pixbuf_loader_async_set_pixbuf(self->_priv->images[n], pb2);
+                        g_object_unref(pb2);
                     }
                     gtk_tree_model_row_changed(model,path, &iter);
                     gtk_tree_path_free(path);
@@ -408,60 +417,61 @@ end:
                 {
                     if(self->_priv->images[n] == NULL)
                     {
+                        GtkTreePath *path;
+                        GtkTreeRowReference *ref;
+                        path = gtk_tree_model_get_path(GTK_TREE_MODEL(self), iter);
+                        ref = gtk_tree_row_reference_new(GTK_TREE_MODEL(self),path);
+
+                        self->_priv->images[n]= gmpc_pixbuf_loader_async_new();
+                        gmpc_pixbuf_loader_async_set_rref(GMPC_PIXBUF_LOADER_ASYNC(self->_priv->images[n]), ref);
                         if(data->type == MPD_DATA_TYPE_TAG && (data->tag_type == MPD_TAG_ITEM_ARTIST || data->tag_type == MPD_TAG_ITEM_ALBUM_ARTIST) )
                         {
                             mpd_Song *song;
-                            GtkTreePath *path;
-                            GtkTreeRowReference *ref;
-                            self->_priv->images[n] = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gmpc-loading-cover", self->icon_size, 0,NULL);
+                            GdkPixbuf *pb = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gmpc-loading-cover", self->icon_size, 0,NULL);
+                            gmpc_pixbuf_loader_async_set_pixbuf(self->_priv->images[n], pb);
+                            g_object_unref(pb);
                             song = mpd_newSong();
                             song->artist = g_strdup(data->tag);
                             song->album = NULL; 
-                            path = gtk_tree_model_get_path(GTK_TREE_MODEL(self), iter);
-                            ref = gtk_tree_row_reference_new(GTK_TREE_MODEL(self),path);
                             gmpc_meta_watcher_get_meta_path_callback(gmw,song, META_ARTIST_ART, (MetaDataCallback)self_cover_art_fetched, (gpointer)ref);
                             mpd_freeSong(song);	
-                            gtk_tree_path_free(path);
                         }
 
                         else if(data->type == MPD_DATA_TYPE_TAG && data->tag_type == MPD_TAG_ITEM_ALBUM && self->_priv->req_artist)
                         {
                             mpd_Song *song;
-                            GtkTreePath *path;
-                            GtkTreeRowReference *ref;
-                            self->_priv->images[n] = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gmpc-loading-cover", self->icon_size, 0,NULL);
+                            GdkPixbuf *pb = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gmpc-loading-cover", self->icon_size, 0,NULL);
+                            gmpc_pixbuf_loader_async_set_pixbuf(self->_priv->images[n],pb); 
+                            g_object_unref(pb);
                             song = mpd_newSong();
                             song->artist = g_strdup(self->_priv->req_artist); 
                             song->albumartist = g_strdup(self->_priv->req_artist); 
                             song->album = g_strdup(data->tag);
-                            path = gtk_tree_model_get_path(GTK_TREE_MODEL(self), iter);
-                            ref = gtk_tree_row_reference_new(GTK_TREE_MODEL(self),path);
                             gmpc_meta_watcher_get_meta_path_callback(gmw,song, META_ALBUM_ART, (MetaDataCallback)self_cover_art_fetched, ref);
                             mpd_freeSong(song);	
-                            gtk_tree_path_free(path);
                         }
                         else if(data->type == MPD_DATA_TYPE_SONG&& data->song && data->song->album && (data->song->artist || self->_priv->req_artist)) 
                         {
                             mpd_Song *song;
-                            GtkTreePath *path;
-                            GtkTreeRowReference *ref;
-                            self->_priv->images[n] = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gmpc-loading-cover", self->icon_size, 0,NULL);
+                            GdkPixbuf *pb = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gmpc-loading-cover", self->icon_size, 0,NULL);
+                            gmpc_pixbuf_loader_async_set_pixbuf(self->_priv->images[n],pb);
+                            g_object_unref(pb);
                             song = mpd_newSong();
                             song->artist = g_strdup((data->song->artist)?data->song->artist:self->_priv->req_artist); 
                             song->albumartist = g_strdup((data->song->albumartist)?data->song->albumartist:self->_priv->req_artist); 
                             song->album = g_strdup(data->song->album);
-                            path = gtk_tree_model_get_path(GTK_TREE_MODEL(self), iter);
-                            ref = gtk_tree_row_reference_new(GTK_TREE_MODEL(self),path);
                             gmpc_meta_watcher_get_meta_path_callback(gmw,song, META_ALBUM_ART, (MetaDataCallback)self_cover_art_fetched, ref);
                             mpd_freeSong(song);	
-                            gtk_tree_path_free(path);
                         }
                         else 
                         {
-                            self->_priv->images[n] = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gmpc-no-cover", self->icon_size, 0,NULL);
+                            GdkPixbuf *pb = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gmpc-no-cover", self->icon_size, 0,NULL);
+                            gmpc_pixbuf_loader_async_set_pixbuf(self->_priv->images[n],pb);
+                            g_object_unref(pb);
                         }
+                        gtk_tree_path_free(path);
                     }
-                    g_value_set_object(value, self->_priv->images[n]);
+                    g_value_set_object(value, gmpc_pixbuf_loader_async_get_pixbuf(self->_priv->images[n]));
                 }else{
                     g_value_set_object(value,NULL); 
                 }

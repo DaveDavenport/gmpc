@@ -21,7 +21,7 @@ gmpc_SOURCES=\
     Widgets/gmpc-progress.vala\
     vala/gmpc-easy-command.vala\
     vala/gmpc-favorites.vala\
-    Widgets/gmpc-image.vala\
+    Widgets/gmpc-image-async.vala\
     vala/gmpc-liststore-sort.vala\
     Widgets/gmpc-menu-item-rating.vala\
     browsers/gmpc-metadata-browser2.vala\

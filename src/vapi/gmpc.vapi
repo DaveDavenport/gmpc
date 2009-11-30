@@ -343,4 +343,12 @@ namespace Gmpc {
             public weak string? get_music_directory(string id); 
 
     }
+
+    namespace Fix{
+        [CCode (cname="gdk_pixbuf_loader_write", cheader_filename="gdk-pixbuf/gdk-pixdata.h")]
+            public void write_loader(Gdk.PixbufLoader loader, string data, size_t size) throws GLib.Error;
+
+        [CCode (cname="screenshot_add_border", cheader_filename="misc.h")]
+            public void add_border(ref Gdk.Pixbuf image);
+    }
 }
