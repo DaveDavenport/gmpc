@@ -288,7 +288,8 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
     private void size_changed(Gdk.Rectangle alloc)
     {
 		int t_column = alloc.width/button_width;
-		if(t_column != columns )
+        t_column = (t_column < 1)?1:t_column;
+        if(t_column != columns )
 		{
 			var list = this.get_children();
 			foreach(Gtk.Widget child in list) {
@@ -2019,7 +2020,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             label.set_markup("<span weight='bold'>%s</span>".printf(_("Similar artist")));
             label.set_alignment(0.0f, 0.0f);
             vbox.pack_start(label, false, false, 0);
-            ali = new Gtk.Alignment(0.0f, 0.0f, 0.0f, 0.0f);
+            ali = new Gtk.Alignment(0.0f, 0.0f, 1.0f, 0.0f);
             var similar_artist = new Gmpc.Widget.SimilarArtist(server, song); 
             ali.add(similar_artist);
             vbox.pack_start(ali, false, false, 0);
