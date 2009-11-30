@@ -603,7 +603,6 @@ static void pl3_file_browser_fill_tree(GtkWidget *tree,GtkTreeIter *iter, GtkTre
                 if (data->type == MPD_DATA_TYPE_DIRECTORY)
                 {
                     gchar *basename = g_path_get_basename (data->directory);
-                    printf("basename: '%s'-%s\n", basename,data->directory);
                     gtk_tree_store_prepend(pl3_fb_dir_store, &child, iter);
                     gtk_tree_store_set (pl3_fb_dir_store, &child,
                             PL3_FB_ICON, "gtk-open",
@@ -1356,7 +1355,6 @@ static gboolean pl3_file_browser_is_field_supported(int tag)
 static MpdData * pl3_file_browser_is_search(const int num_field , const gchar *search_string, GError **error)
 {
     MpdData *data_t = NULL;
-    printf("query: %s %i\n", search_string, num_field);
     if(num_field == MPD_TAG_NUM_OF_ITEM_TYPES){
         data_t = advanced_search(search_string, FALSE);
     }else{
