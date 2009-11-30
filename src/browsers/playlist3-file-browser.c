@@ -382,7 +382,9 @@ static int directory_sort_func(gpointer ppaa, gpointer ppbb, gpointer data)
     MpdData_real *a = *(MpdData_real **)ppaa;
     MpdData_real *b = *(MpdData_real **)ppbb;
     int val = 0;
-    if((a && b) && (a->type == MPD_DATA_TYPE_DIRECTORY) && (b->type == MPD_DATA_TYPE_DIRECTORY))
+    if(!(a && b)) return val;
+    if(a->type != b->type) return a->type - b->type;
+    if((a->type == MPD_DATA_TYPE_DIRECTORY) && (b->type == MPD_DATA_TYPE_DIRECTORY))
     {
         if(a->directory && b->directory) {
             gchar *sa,*sb;
@@ -601,6 +603,7 @@ static void pl3_file_browser_fill_tree(GtkWidget *tree,GtkTreeIter *iter, GtkTre
                 if (data->type == MPD_DATA_TYPE_DIRECTORY)
                 {
                     gchar *basename = g_path_get_basename (data->directory);
+                    printf("basename: '%s'-%s\n", basename,data->directory);
                     gtk_tree_store_prepend(pl3_fb_dir_store, &child, iter);
                     gtk_tree_store_set (pl3_fb_dir_store, &child,
                             PL3_FB_ICON, "gtk-open",
