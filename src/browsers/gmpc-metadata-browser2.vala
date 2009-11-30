@@ -283,6 +283,35 @@ public class Gmpc.Widget.SimilarSongs : Gtk.Alignment{
 
 public class Gmpc.Widget.SimilarArtist : Gtk.Table {
     private MPD.Song song = null;
+    private int columns = 1;
+    private int button_width = 200;
+    private void size_changed(Gdk.Rectangle alloc)
+    {
+		int t_column = alloc.width/button_width;
+		if(t_column != columns )
+		{
+			var list = this.get_children();
+			foreach(Gtk.Widget child in list) {
+				child.ref();
+				this.remove(child);
+			}
+
+			columns = t_column;
+			int i = 0;
+
+			this.resize(list.length()/columns+1, columns);
+			foreach(Gtk.Widget item in list)
+			{
+				this.attach(item, 
+						i%columns,i%columns+1,i/columns,i/columns+1,
+						Gtk.AttachOptions.EXPAND|Gtk.AttachOptions.FILL,
+						Gtk.AttachOptions.SHRINK, 0,0);
+				i++;
+			}
+			this.show_all();
+		}
+
+    } 
 
     /**
      * Handle signals from the metadata object.
@@ -387,7 +416,8 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
             i=0;
             this.hide();
             uint llength = in_db_list.length();
-            int columns = 3;
+            columns = this.allocation.width/button_width;
+	    columns = (columns < 1)?1:columns;
             this.resize(llength/columns+1, columns);
             foreach(Gtk.Widget item in in_db_list)
             {
@@ -422,7 +452,7 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
         event.app_paintable = true;
         event.set_visible_window(true);
         event.expose_event.connect(Gmpc.Misc.misc_header_expose_event);
-        event.set_size_request(200,60);
+        event.set_size_request(button_width-20,60);
 
         var image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ARTIST_ART, 48);
         var song = new MPD.Song();
@@ -464,6 +494,7 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
         this.set_col_spacings(6);
 
         metawatcher.data_changed += metadata_changed;
+	this.size_allocate.connect(size_changed);
 
         Gmpc.MetaData.Result gm_result = metawatcher.query(song, Gmpc.MetaData.Type.ARTIST_SIMILAR,out item);
         if(gm_result == Gmpc.MetaData.Result.AVAILABLE)
