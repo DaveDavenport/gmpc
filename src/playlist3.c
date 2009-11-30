@@ -2189,11 +2189,6 @@ static void playlist3_header_artist(void)
 	}
 }
 
-static gboolean playlist3_header_artist_tooltip(GtkWidget * label, gint x,
-												gint y, gboolean keyboard_mode, GtkTooltip * tip, gpointer data)
-{
-	return TRUE;
-}
 
 static void playlist3_header_album(void)
 {
@@ -2239,21 +2234,6 @@ void playlist3_new_header(void)
 		g_signal_connect(G_OBJECT(header_labels[0]), "clicked", G_CALLBACK(playlist3_header_song), NULL);
 		g_signal_connect(G_OBJECT(header_labels[2]), "clicked", G_CALLBACK(playlist3_header_artist), NULL);
 		g_signal_connect(G_OBJECT(header_labels[4]), "clicked", G_CALLBACK(playlist3_header_album), NULL);
-		/* Create tooltip */
-		{
-			GtkWidget *win, *item = (GtkWidget *) gmpc_metaimage_new_size(META_ARTIST_ART, 200);
-			gmpc_metaimage_set_squared(GMPC_METAIMAGE(item), FALSE);
-			gmpc_metaimage_set_connection(GMPC_METAIMAGE(item), connection);
-			gmpc_metaimage_set_hide_on_na(GMPC_METAIMAGE(item), TRUE);
-			win = gtk_window_new(GTK_WINDOW_POPUP);
-			gtk_window_set_resizable(GTK_WINDOW(win), FALSE);
-			gtk_container_add(GTK_CONTAINER(win), item);
-			gtk_widget_set_has_tooltip(GTK_WIDGET(header_labels[2]), TRUE);
-			gtk_widget_show_all(item);
-			gtk_widget_set_tooltip_window(GTK_WIDGET(header_labels[2]), GTK_WINDOW(win));
-			g_signal_connect(G_OBJECT(header_labels[2]), "query-tooltip",
-							 G_CALLBACK(playlist3_header_artist_tooltip), NULL);
-		}
 		gtk_box_pack_start(GTK_BOX(hbox10), vbox, TRUE, TRUE, 0);
 		gtk_widget_show_all(hbox10);
 	}
