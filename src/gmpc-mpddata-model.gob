@@ -318,13 +318,15 @@ end:
                     GtkTreeIter iter;
 
                     g_assert(self->_priv->use_images == TRUE);
+                    
+                    gtk_tree_model_get_iter(model, &iter, path);
+                    n = GPOINTER_TO_INT(iter.user_data2) ;
+
                     if(self->_priv->images[n] == NULL){
                         self->_priv->images[n]= gmpc_pixbuf_loader_async_new();
                         gmpc_pixbuf_loader_async_set_rref(GMPC_PIXBUF_LOADER_ASYNC(self->_priv->images[n]), ref);
                     }
 
-                    gtk_tree_model_get_iter(model, &iter, path);
-                    n = GPOINTER_TO_INT(iter.user_data2) ;
                     if(ret == META_DATA_AVAILABLE)
                     {
                         
@@ -332,9 +334,6 @@ end:
                         if(met->content_type == META_DATA_CONTENT_URI)
                         {
                             const gchar *coverpath = meta_data_get_uri(met);
-//                            pb = gdk_pixbuf_new_from_file_at_size(coverpath,self->icon_size,self->icon_size,NULL);
-  //                          screenshot_add_border(&pb);
-
                             MpdData_real *data = iter.user_data;	
                             gmpc_pixbuf_loader_async_set_from_file(GMPC_PIXBUF_LOADER_ASYNC(self->_priv->images[n]), coverpath, self->icon_size, (data->tag_type == MPD_TAG_ITEM_ALBUM));
                         }else{
@@ -342,13 +341,11 @@ end:
                             gmpc_pixbuf_loader_async_set_pixbuf(self->_priv->images[n], pb);
                             g_object_unref(pb);
                         }
-                        //if(self->_priv->images[n]) g_object_unref(self->_priv->images[n]); 
                     }
                     else   if(ret == META_DATA_UNAVAILABLE)
                     {
                         GdkPixbuf *pb2;
                         pb2 = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gmpc-no-cover", self->icon_size, 0,NULL);
-                        //if(self->_priv->images[n]) g_object_unref(self->_priv->images[n]); 
                         gmpc_pixbuf_loader_async_set_pixbuf(self->_priv->images[n], pb2);
                         g_object_unref(pb2);
                     }
