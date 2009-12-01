@@ -179,7 +179,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
         gtk_window_set_resizable(GTK_WINDOW(win), FALSE);
         gtk_widget_modify_bg(win, GTK_STATE_NORMAL, &(GTK_WIDGET(self)->style->black));
         gtk_container_set_border_width(GTK_CONTAINER(win), 6);
-        gtk_container_add(GTK_CONTAINER(win), gmpc_meta_image_async_new());
+        gtk_container_add(GTK_CONTAINER(win), GTK_WIDGET(gmpc_meta_image_async_new()));
 
         gtk_widget_set_tooltip_window(GTK_WIDGET(self), GTK_WINDOW(win));
         g_signal_connect(G_OBJECT(self), "query-tooltip", G_CALLBACK(self_tooltip_query), win);
@@ -191,7 +191,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
         {
             if(self->_priv->image_url)
             {
-                gint width,height;
                 GtkWidget *image = gtk_bin_get_child(GTK_BIN(win));
                 if(GMPC_META_IMAGE_ASYNC(image)->uri == NULL || strcmp(GMPC_META_IMAGE_ASYNC(image)->uri, self->_priv->image_url) != 0)
                     gmpc_meta_image_async_set_from_file(GMPC_META_IMAGE_ASYNC(image), self->_priv->image_url, 350, FALSE); 
@@ -643,10 +642,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
         void
         set_cover_from_path(self, const gchar *path)
         {
-            int width = 0; 
-            int height = 0;
-            GdkPixbuf *pb = NULL;
-
             self->_priv->state = STATE_IMAGE;
             
             if(self->_priv->image_url)
