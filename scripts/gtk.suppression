@@ -226,6 +226,7 @@
    fun:FcPatternObjectAddWithBinding
    fun:FcPatternObjectAdd
    fun:FcFontRenderPrepare
+   fun:FcDefaultSubstitute
    fun:pango_fc_font_map_load_fontset
    fun:pango_font_map_load_fontset
 }

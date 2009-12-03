@@ -21,101 +21,6 @@ using GLib;
 using Gtk;
 using Gdk;
 
-public Gmpc.PixbufCache pbc = null;
-public class Gmpc.PixbufCacheData : GLib.Object{
-    public weak Gdk.Pixbuf pb = null;
-    public uint timeout = 0;
-    public bool unused = false;
-}
-public class Gmpc.PixbufCache : GLib.Object
-{
-    public GLib.HashTable<string, Gmpc.PixbufCacheData> hash = new GLib.HashTable<string, Gmpc.PixbufCacheData>.full(string.hash, GLib.str_equal, g_free, GLib.Object.unref);
-
-
-
-    public Gdk.Pixbuf? get_pixbuf(string uri, int size)
-    {
-        var key = "%i:%s".printf(size, uri); 
-        var pb = hash.lookup(key);
-        if(pb == null) return null;
-        stdout.printf("Cache hit!\n");
-        if(pb.timeout > 0) GLib.Source.remove(pb.timeout);
-        pb.timeout = 0;
-        pb.unused = false;
-        return pb.pb;
-    }
-/*
-    static bool unreffed_pixbuf_timeout(Gdk.Pixbuf pb)
-    {
-        string url = (string)pb.get_data("url");
-        stdout.printf("removing: %s \n", (string)url);
-        pbc.hash.remove((string)url);
-        pb.remove_toggle_ref(unreffed_pixbuf);
-        stdout.printf("Cache size: %u\n", pbc.hash.size());
-    }*/
-    static void unreffed_pixbuf(GLib.Object data, bool last_ref)
-    {
-        weak Gdk.Pixbuf pb = (Gdk.Pixbuf)data;
-        stdout.printf("Pixbuf is now unused %i\n", (int)last_ref);
-        if(last_ref)
-        {
-            string url = (string)pb.get_data("url");
-            stdout.printf("marking: %s\n", url);
-            var a = pbc.hash.lookup(url);
-            if(a != null)
-            {
-                a.unused =true;
-                pbc.set_cleanup_timeout();
-            }
-        }
-    }
-
-    private uint timeout = 0;
-    public void set_cleanup_timeout()
-    {
-        if(this.timeout > 0 ) {
-            GLib.Source.remove(this.timeout);
-        }
-        this.timeout = GLib.Timeout.add_seconds(15, remove_old_items);
-        stdout.printf("set timeout\n");
-    }
-    private bool remove_old_items()
-    {
-        stdout.printf("Remove old items\n");
-        List<string> items = null;
-        HashTableIter<string, Gmpc.PixbufCacheData> iter = HashTableIter<string, Gmpc.PixbufCacheData>(this.hash);
-        {
-            string url = null;
-            Gmpc.PixbufCacheData data;
-            while(iter.next(out url, out data)){
-                if(data.unused) {
-                    data.pb.remove_toggle_ref(unreffed_pixbuf);
-                    items.prepend(url);
-                }
-            }
-        }
-        foreach(string url in items){
-            stdout.printf("removing:%s\n", url);
-            hash.remove(url);
-            stdout.printf("Cache size: %u\n", hash.size());
-        }
-
-        this.timeout = 0;
-        return false;
-    }
-    public void append(string uri, Gdk.Pixbuf buf, int size)
-    {
-        string url = "%i:%s".printf(size, uri); 
-        buf.set_data_full("url", (void *)url.dup(), g_free); 
-        buf.add_toggle_ref(unreffed_pixbuf);
-        var a = new Gmpc.PixbufCacheData();
-        a.pb = buf;
-        hash.insert(url, a);
-        stdout.printf("Cache size: %u\n", hash.size());
-    }
-
-}
-
 public class Gmpc.PixbufLoaderAsync : GLib.Object
 {
     private weak GLib.Cancellable? pcancel = null; 
@@ -145,7 +50,6 @@ public class Gmpc.PixbufLoaderAsync : GLib.Object
     }
 
     construct {
-    if(pbc == null) pbc = new Gmpc.PixbufCache();
 	stdout.printf("Create the image loading\n" );
     }
 
@@ -191,7 +95,8 @@ public class Gmpc.PixbufLoaderAsync : GLib.Object
         }
         
         Gmpc.Fix.add_border(pix);
-        return pix;
+        /* used to try to track leak */
+        return pix.copy();
     }
 
 
@@ -202,16 +107,9 @@ public class Gmpc.PixbufLoaderAsync : GLib.Object
         this.pcancel = null;
         this.uri = uri;
 
-        Gdk.Pixbuf pb = pbc.get_pixbuf(this.uri, size);
-        if(pb != null) {
-            pixbuf = pb;
-            pixbuf_update(pixbuf);
-            call_row_changed();
-        }else{
-            GLib.Cancellable cancel= new GLib.Cancellable();
-            this.pcancel = cancel;
-            this.load_from_file_async(uri, size, cancel, border);
-        }
+        GLib.Cancellable cancel= new GLib.Cancellable();
+        this.pcancel = cancel;
+        this.load_from_file_async(uri, size, cancel, border);
     }
 
     private async void load_from_file_async(string uri, int size, GLib.Cancellable cancel, bool border)
@@ -266,8 +164,7 @@ public class Gmpc.PixbufLoaderAsync : GLib.Object
 
         Gdk.Pixbuf pix = loader.get_pixbuf();
         var final = this.modify_pixbuf(pix, size,border);
-        pixbuf = final;
-        pbc.append(this.uri, this.pixbuf, size);
+        this.pixbuf = final;
         pixbuf_update(pixbuf);
         call_row_changed();
         this.pcancel = null;
