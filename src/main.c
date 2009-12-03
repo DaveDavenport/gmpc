@@ -693,7 +693,6 @@ int main(int argc, char **argv)
 
 
 	playlist = (GtkTreeModel *)gmpc_mpddata_model_playlist_new(gmpcconn,connection);
-	g_object_ref_sink(playlist);
 	gmpc_mpddata_model_disable_image(GMPC_MPDDATA_MODEL(playlist));
 
 	/** file browser */
