@@ -349,6 +349,6 @@ namespace Gmpc {
             public void write_loader(Gdk.PixbufLoader loader, string data, size_t size) throws GLib.Error;
 
         [CCode (cname="screenshot_add_border", cheader_filename="misc.h")]
-            public void add_border(ref Gdk.Pixbuf image);
+            public void add_border(Gdk.Pixbuf image);
     }
 }

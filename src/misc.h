@@ -39,7 +39,7 @@ void mpd_song_markup_escaped(char *buffer, int size, char *markup, mpd_Song *son
  * this draws a 1 pixel border around a pixbuf.
  * It doesn't work for all color depths (I think)
  */
-void screenshot_add_border (GdkPixbuf **src);
+void screenshot_add_border (GdkPixbuf *src);
 
 void open_uri(const gchar *uri);
 int *split_version(const char *uri);

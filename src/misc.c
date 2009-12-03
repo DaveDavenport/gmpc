@@ -119,9 +119,9 @@ void mpd_song_markup_escaped(char *buffer, int size, char *markup, mpd_Song *son
  * Code copied from gnome-screenshot
  */
 
-void screenshot_add_border (GdkPixbuf **src)
+void screenshot_add_border (GdkPixbuf *src)
 {
-    GdkPixbuf *pb = *src;
+    GdkPixbuf *pb = src;
     int x,y,width,height;
     int pixel;
     int n_channels = 0;

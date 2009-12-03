@@ -1,7 +1,7 @@
 /* Gnome Music Player Client (GMPC)
  * Copyright (C) 2004-2009 Qball Cow <qball@sarine.nl>
  * Project homepage: http://gmpc.wikia.com/
- 
+
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -116,6 +116,7 @@ override (G:Object)
 							g_source_remove(self->_priv->update_timeout);
 							self->_priv->update_timeout  = 0;
 						}
+            printf("Unref playlist\n");
             PARENT_HANDLER(obj);
         }
     public
