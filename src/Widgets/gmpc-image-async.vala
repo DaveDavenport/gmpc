@@ -50,10 +50,11 @@ public class Gmpc.PixbufLoaderAsync : GLib.Object
     }
 
     construct {
+	stdout.printf("Create the image loading\n" );
     }
 
     ~PixbufLoaderAsync() {
-        warning("Cancel the image loading");
+        warning("Free the image loading");
         if(this.pcancel != null) pcancel.cancel();
     }
 
@@ -112,7 +113,7 @@ public class Gmpc.PixbufLoaderAsync : GLib.Object
     {
         GLib.File file = GLib.File.new_for_path(uri);
         size_t result = 0;
-        var loader = new Gdk.PixbufLoader();
+        Gdk.PixbufLoader loader = new Gdk.PixbufLoader();
         loader.size_prepared.connect((source, width, height) => {
             double dsize = (double)size;
             int nwidth = (height > width)? (int)((dsize/height)*width): size;
@@ -163,6 +164,8 @@ public class Gmpc.PixbufLoaderAsync : GLib.Object
         pixbuf = final;
         pixbuf_update(pixbuf);
         call_row_changed();
+	this.pcancel = null;
+	loader = null;
     }
 }
 
@@ -175,12 +178,11 @@ public class Gmpc.MetaImageAsync : Gtk.Image
     }
 
     ~MetaImageAsync() {
-        this.loader = null;
+	stdout.printf("Freeing metaimageasync\n");
     }
 
     public new void set_from_file(string uri, int size, bool border)
     {
-        if(this.loader != null) loader = null;;
         loader = new PixbufLoaderAsync(); 
         loader.pixbuf_update.connect((source, pixbuf)=>{
                 this.set_from_pixbuf(pixbuf);
