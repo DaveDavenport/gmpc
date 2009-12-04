@@ -10,6 +10,7 @@ dist_icons_DATA = \
 		audio-volume-low.png\
 		audio-volume-medium.png\
 		audio-volume-muted.png\
+	media-artist.png\
         media-track-length.png\
         media-codec.png\
         media-album.png\

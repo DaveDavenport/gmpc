@@ -16,6 +16,7 @@ dist_icons_DATA = \
 		stock_repeat.png\
 		stock_shuffle.png\
 		gmpc-tray.png\
+	media-artist.png\
         media-codec.png\
         media-track-length.png\
         media-album.png\

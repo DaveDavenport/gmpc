@@ -11,6 +11,7 @@ dist_icons_DATA = \
 		no-artist.png\
 		fetching-artist.png\
 		frame-artist.png\
+	media-artist.png\
         media-track-length.png\
         media-album.png\
         media-format.png\
