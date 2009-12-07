@@ -61,7 +61,7 @@ public class Gmpc.PixbufLoaderAsync : GLib.Object
     private Gdk.Pixbuf? modify_pixbuf(Gdk.Pixbuf? pix, int size,bool casing) 
     {
         if(pix == null) return null;
-        if(casing)
+        if(casing && config.get_int_with_default("metaimage", "addcase", 1) == 1)
         {
             int width = pix.width;
             int height = pix.height;
