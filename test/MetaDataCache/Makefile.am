@@ -13,6 +13,8 @@ mtc_test_CFLAGS = @CFLAGS@\
         -DGLADE_PATH="\"\""\
 		-I$(top_srcdir)/src/gob\
 		-I$(top_srcdir)/src/vala\
+		-I$(top_srcdir)/src/Widgets\
+		-I$(top_srcdir)/src/MetaData\
 		-I$(top_srcdir)/src
 
 mtc_test_LDADD = @LIBS@\
@@ -27,12 +29,12 @@ mtc_test_SOURCES = \
 
 nodist_mtc_test_SOURCES = \        
 		$(top_srcdir)/src/config1.c\
-		$(top_srcdir)/src/metadata.c\
+		$(top_srcdir)/src/MetaData/metadata.c\
 		$(top_srcdir)/src/plugin.c\
 		$(top_srcdir)/src/misc.c\
         $(top_srcdir)/src/gmpc_easy_download.c\
         $(top_srcdir)/src/gmpc-meta-watcher.c\
         $(top_srcdir)/src/vala/gmpc-plugin.c\
-		$(top_srcdir)/src/metadata-cache.c
+		$(top_srcdir)/src/MetaData/metadata-cache.c
 
 endif

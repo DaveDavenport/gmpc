@@ -10,6 +10,7 @@ gmpc_easy_download_CFLAGS = @CFLAGS@\
 		-I$(top_srcdir)/src\
 		-I$(top_srcdir)/src/vala\
 		-I$(top_srcdir)/src/gob\
+		-I$(top_srcdir)/src/MetaData\
 		-DPIXMAP_PATH=\""$(pkgdatadir)/icons/"\" \
 		-DGLADE_PATH=\""$(pkgdatadir)"\" 
 

@@ -2,8 +2,7 @@
 #include <stdlib.h>
 #include <glib.h>
 #include <libmpd/libmpd.h>
-#include "gmpc-meta-watcher.h"
-#include "gmpc-connection.h"
+#include "gmpc-extras.h"
 #include "metadata.h"
 #include "metadata-cache.h"
 

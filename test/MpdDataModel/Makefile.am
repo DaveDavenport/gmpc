@@ -8,6 +8,7 @@ mpd_data_model_CFLAGS = @CFLAGS@\
 		@gtk_CFLAGS@\
 		-I$(top_srcdir)/src\
 		-I$(top_srcdir)/src/vala\
+        -I$(top_srcdir)/src/MetaData\
 		-DPIXMAP_PATH=\""$(pkgdatadir)/icons/"\" \
 		-DGLADE_PATH=\""$(pkgdatadir)"\" 
 
@@ -21,6 +22,7 @@ mpd_data_model_SOURCES = \
 
 nodist_mpd_data_model_SOURCES = \        
 		$(top_srcdir)/src/misc.c\
-		$(top_srcdir)/src/gmpc-mpddata-model.c
+		$(top_srcdir)/src/gmpc-mpddata-model.c\
+        $(top_srcdir)/src/Widgets/gmpc-image-async.c
 
 endif
