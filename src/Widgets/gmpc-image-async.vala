@@ -171,11 +171,14 @@ public class Gmpc.PixbufLoaderAsync : GLib.Object
         }
 
         Gdk.Pixbuf pix = loader.get_pixbuf();
-        var final = this.modify_pixbuf(pix, size,border);
+        /* Maybe another thread allready fetched it in the mean time, we want to use that... */
+        var final = Gmpc.PixbufCache.lookup_icon(size, uri);
+        if(final == null)
+        {
+            final = this.modify_pixbuf(pix, size,border);
+            Gmpc.PixbufCache.add_icon(size,uri, final);
+        }
         this.pixbuf = final;
-
-        Gmpc.PixbufCache.add_icon(size,uri, this.pixbuf);
-
         pixbuf_update(pixbuf);
         call_row_changed();
         this.pcancel = null;

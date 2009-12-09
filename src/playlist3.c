@@ -44,7 +44,7 @@
 #include "playlist3-keybindings.h"
 
 #define ALBUM_SIZE_SMALL 48
-#define ALBUM_SIZE_LARGE 72
+#define ALBUM_SIZE_LARGE 80
 /* Drag and drop Target table */
 static GtkTargetEntry target_table[] = {
 	{(gchar *) "x-url/http", 0, 0},
