@@ -356,7 +356,7 @@ namespace Gmpc {
         [CCode (cname="pixbuf_cache_lookup_icon")]
             public Gdk.Pixbuf? lookup_icon(int size, string url);
         [CCode (cname="pixbuf_cache_add_icon")]
-        public void add_icon(int size, string url, Gdk.Pixbuf pb);
+            public void add_icon(int size, string url, Gdk.Pixbuf pb);
 
     }
 }
