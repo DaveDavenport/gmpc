@@ -27,18 +27,22 @@
 
 #define LOG_DOMAIN "PixbufCache"
 
+/* The hash table looking up the entries */
 static GHashTable *pb_cache = NULL;
+
+/* The structure holding the cache entry */
 typedef struct {
     const gchar *key;
     GdkPixbuf *pb;
-
 } DCE;
 
+/* Creates a new cache entry */
 static DCE * create_cache_entry()
 {
     return g_slice_new(DCE);
 }
 
+/* Called when the pixbuf looses it last entry */
 static void pixbuf_cache_entry_toggle_ref(const gchar *key, GdkPixbuf *pb, gboolean is_last_ref)
 {
     g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Toggle Reference called: %i:%s", is_last_ref,key);
@@ -48,6 +52,7 @@ static void pixbuf_cache_entry_toggle_ref(const gchar *key, GdkPixbuf *pb, gbool
 
     }
 }
+/* Destroy cache entry */
 static void destroy_cache_entry(DCE *entry)
 {
     g_return_if_fail(entry != NULL);
