@@ -17,6 +17,7 @@ VALA_VAPI_FILES=\
 
 
 gmpc_SOURCES=\
+    Widgets/pixbuf-cache.c\
     vala/gmpc-connection.vala\
     Widgets/gmpc-progress.vala\
     vala/gmpc-easy-command.vala\
@@ -209,6 +210,7 @@ EXTRA_DIST=\
 		gmpc-version.h.in\
 		bug-information.h\
         gmpc-win32.rc\
+        Widgets/pixbuf-cache.h\
         $(VALA_VAPI_FILES)\
         $(gmpc_GOBFILES)
 

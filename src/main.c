@@ -49,6 +49,8 @@
 #include "metadata-cache.h"
 #include "bug-information.h"
 
+#include "Widgets/pixbuf-cache.h"
+
 #define LOG_DOMAIN "Gmpc"
 /**
  * Get revision
@@ -642,6 +644,7 @@ int main(int argc, char **argv)
 	 * Initialize the new metadata subsystem.
 	 */
 	meta_data_init();
+	pixbuf_cache_create();
 
 	TEC("Initializing metadata system");
 
@@ -947,6 +950,8 @@ int main(int argc, char **argv)
 	g_object_unref(gmpc_profiles);
 	g_object_unref(gmpcconn);
 
+
+	pixbuf_cache_destroy();
 	/**
 	 * This now gets destroyed with the plugins
 	 */

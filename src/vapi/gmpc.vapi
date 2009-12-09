@@ -351,4 +351,12 @@ namespace Gmpc {
         [CCode (cname="screenshot_add_border", cheader_filename="misc.h")]
             public void add_border(Gdk.Pixbuf image);
     }
+    [CCode (cheader_filename="Widgets/pixbuf-cache.h")]
+    namespace PixbufCache {
+        [CCode (cname="pixbuf_cache_lookup_icon")]
+            public Gdk.Pixbuf? lookup_icon(int size, string url);
+        [CCode (cname="pixbuf_cache_add_icon")]
+        public void add_icon(int size, string url, Gdk.Pixbuf pb);
+
+    }
 }

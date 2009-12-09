@@ -106,7 +106,15 @@ public class Gmpc.PixbufLoaderAsync : GLib.Object
             this.pcancel.cancel();
         this.pcancel = null;
         this.uri = uri;
-
+        
+        var pb = Gmpc.PixbufCache.lookup_icon(size, uri);
+        if(pb != null)
+        {
+            this.pixbuf = pb;
+            pixbuf_update(pixbuf);
+            call_row_changed();
+            return;
+        }
         GLib.Cancellable cancel= new GLib.Cancellable();
         this.pcancel = cancel;
         this.load_from_file_async(uri, size, cancel, border);
@@ -165,6 +173,9 @@ public class Gmpc.PixbufLoaderAsync : GLib.Object
         Gdk.Pixbuf pix = loader.get_pixbuf();
         var final = this.modify_pixbuf(pix, size,border);
         this.pixbuf = final;
+
+        Gmpc.PixbufCache.add_icon(size,uri, this.pixbuf);
+
         pixbuf_update(pixbuf);
         call_row_changed();
         this.pcancel = null;
