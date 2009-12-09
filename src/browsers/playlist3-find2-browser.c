@@ -635,7 +635,7 @@ static gboolean pl3_find2_browser_button_release_event(GtkWidget *but, GdkEventB
     {
       GtkWidget *item;
       GtkWidget *menu = gtk_menu_new();
-
+/*
 			if(gtk_tree_selection_count_selected_rows(gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_find2_tree))) == 1)	
 			{
 				item = gtk_image_menu_item_new_from_stock(GTK_STOCK_MEDIA_PLAY,NULL);
@@ -643,7 +643,7 @@ static gboolean pl3_find2_browser_button_release_event(GtkWidget *but, GdkEventB
 				g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_find2_activate_row), pl3_find2_tree);
 			}
 
-
+*/
       item = gtk_image_menu_item_new_from_stock(GTK_STOCK_ADD,NULL);
       gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
       g_signal_connect(G_OBJECT(item), "activate",
