@@ -614,7 +614,9 @@ end:
                         /* If there is a song available use that, else use the filename */
                         if(song->title) {
                             g_value_set_string(value, song->title);
-                        } else {
+                        } else if (song->name) {
+                            g_value_set_string(value, song->name);
+                        }else {
                             /* Use the markup stuff, this makes sure it gets processed equaly */
                             gchar buffer[1024];
                             mpd_song_markup(buffer, 1024, "%shortfile%", song);
