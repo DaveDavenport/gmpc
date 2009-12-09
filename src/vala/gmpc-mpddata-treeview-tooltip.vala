@@ -90,7 +90,7 @@ public class Gmpc.MpdData.Treeview.Tooltip : Gtk.Window  {
         return true;
     }
 
-    private void metadata_changed(MetaWatcher gmw, MPD.Song song, Gmpc.MetaData.Type type, Gmpc.MetaData.Result result, Gmpc.MetaData.Item? met)
+    private void metadata_changed(MetaWatcher gmw2, MPD.Song song, Gmpc.MetaData.Type type, Gmpc.MetaData.Result result, Gmpc.MetaData.Item? met)
     {
         if(type != this.mtype) return;
         
@@ -113,9 +113,12 @@ public class Gmpc.MpdData.Treeview.Tooltip : Gtk.Window  {
             }
         }
     }
+
+    construct{
+        this.type = Gtk.WindowType.POPUP;
+    }
     public
     Tooltip(Gtk.TreeView pw, Gmpc.MetaData.Type type){
-        this.type = Gtk.WindowType.POPUP;
         this.resizable = false;
         this.par_widget = pw;
         /*Set up all needed for tooltip */
