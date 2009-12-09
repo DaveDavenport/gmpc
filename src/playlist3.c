@@ -558,13 +558,22 @@ gboolean pl3_close(void)
 {
 	/* only save when window is PLAYLIST_SMALL or NO ZOOM */
 	if (pl3_xml != NULL) {
-		gtk_window_get_position(GTK_WINDOW(playlist3_get_window()), &pl3_wsize.x, &pl3_wsize.y);
+		GtkWidget *window = playlist3_get_window();
+		int maximized = FALSE;
+		if(window->window)
+		{
+			GdkWindowState state = gdk_window_get_state(window->window);
+			maximized = ((state&GDK_WINDOW_STATE_MAXIMIZED) > 0);
+		}
+		cfg_set_single_value_as_int(config, "playlist", "maximized", maximized);
+
+		gtk_window_get_position(GTK_WINDOW(window), &pl3_wsize.x, &pl3_wsize.y);
 
 		cfg_set_single_value_as_int(config, "playlist", "xpos", pl3_wsize.x);
 		cfg_set_single_value_as_int(config, "playlist", "ypos", pl3_wsize.y);
 
 		if (pl3_zoom <= PLAYLIST_SMALL) {
-			gtk_window_get_size(GTK_WINDOW(playlist3_get_window()), &pl3_wsize.width, &pl3_wsize.height);
+			gtk_window_get_size(GTK_WINDOW(window), &pl3_wsize.width, &pl3_wsize.height);
 			debug_printf(DEBUG_INFO, "pl3_close: save size: %i %i\n", pl3_wsize.width, pl3_wsize.height);
 			cfg_set_single_value_as_int(config, "playlist", "width", pl3_wsize.width);
 			cfg_set_single_value_as_int(config, "playlist", "height", pl3_wsize.height);
@@ -603,6 +612,14 @@ int pl3_hide(void)
 		return 1;
 	}
 	if (pl3_xml != NULL && !pl3_hidden) {
+		GtkWidget *window = playlist3_get_window();
+		int maximized = FALSE;
+		if(window->window)
+		{
+			GdkWindowState state = gdk_window_get_state(window->window);
+			maximized = ((state&GDK_WINDOW_STATE_MAXIMIZED) > 0);
+		}
+		cfg_set_single_value_as_int(config, "playlist", "maximized", maximized);
 		/** Save position
 		*/
 		gtk_window_get_position(GTK_WINDOW(pl3_win), &pl3_wsize.x, &pl3_wsize.y);
@@ -1075,6 +1092,7 @@ void create_playlist3(void)
 
 	/* restore the window's position and size, if the user wants this. */
 	if (cfg_get_single_value_as_int_with_default(config, "playlist", "savepossize", 0)) {
+		int maximized = cfg_get_single_value_as_int_with_default(config, "playlist", "maximized", 0);
 		/* Load values from config file */
 		pl3_wsize.x = cfg_get_single_value_as_int_with_default(config, "playlist", "xpos", 0);
 		pl3_wsize.y = cfg_get_single_value_as_int_with_default(config, "playlist", "ypos", 0);
@@ -1096,6 +1114,7 @@ void create_playlist3(void)
 								   (glade_xml_get_widget(pl3_xml, "hpaned1")),
 								   cfg_get_single_value_as_int(config, "playlist", "pane-pos"));
 		}
+		if(maximized)gtk_window_maximize(GTK_WINDOW(playlist3_get_window()));
 		/**
 		 * restore zoom level
 		 */
