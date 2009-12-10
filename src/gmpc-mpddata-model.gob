@@ -81,6 +81,7 @@ requires 2.0.0
     public gint num_rows = 0;
     private GmpcPixbufLoaderAsync **images = NULL;
     private gchar *req_artist = {NULL} destroywith g_free;
+    private GdkPixbuf *blank = {NULL} destroywith g_object_unref;
     public gint icon_size = {cfg_get_single_value_as_int_with_default(config, "gmpc-mpddata-model", "icon-size", 32)};
 
     /* sorting */
@@ -133,6 +134,10 @@ requires 2.0.0
         self->types[MPDDATA_MODEL_ROW_TYPE] = G_TYPE_INT;
         self->types[MPDDATA_MODEL_USERDATA] = G_TYPE_POINTER;
         self->types[MPDDATA_MODEL_META_DATA] = GDK_TYPE_PIXBUF;
+
+
+        self->_priv->blank = gdk_pixbuf_new(GDK_COLORSPACE_RGB, TRUE, 8, self->icon_size, self->icon_size);
+        gdk_pixbuf_fill(self->_priv->blank, 0x00000000);
     }
     class_init(klass);
 
@@ -451,17 +456,22 @@ end:
                         }
                         else if(data->type == MPD_DATA_TYPE_SONG&& data->song && data->song->album && (data->song->artist || self->_priv->req_artist)) 
                         {
-                            mpd_Song *song;
-                            GdkPixbuf *pb = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gmpc-loading-cover", self->icon_size, 0,NULL);
-                            gmpc_pixbuf_loader_async_set_pixbuf(self->_priv->images[n],pb);
-                            g_object_unref(pb);
-                            song = mpd_newSong();
-                            song->artist = g_strdup((data->song->artist)?data->song->artist:self->_priv->req_artist); 
-                            song->albumartist = g_strdup((data->song->albumartist)?data->song->albumartist:self->_priv->req_artist); 
-                            song->album = g_strdup(data->song->album);
-                            printf("query: %s\n", song->artist);
-                            gmpc_meta_watcher_get_meta_path_callback(gmw,song, META_ALBUM_ART, (MetaDataCallback)self_cover_art_fetched, ref);
-                            mpd_freeSong(song);	
+                            if(data->prev && data->prev->type == MPD_DATA_TYPE_SONG && data->prev->song->album && g_utf8_collate(data->song->album, data->prev->song->album) ==0)
+                            {
+                                gmpc_pixbuf_loader_async_set_pixbuf(self->_priv->images[n],self->_priv->blank);
+                            }else{
+                                mpd_Song *song;
+                                GdkPixbuf *pb = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gmpc-loading-cover", self->icon_size, 0,NULL);
+                                gmpc_pixbuf_loader_async_set_pixbuf(self->_priv->images[n],pb);
+                                g_object_unref(pb);
+                                song = mpd_newSong();
+                                song->artist = g_strdup((data->song->artist)?data->song->artist:self->_priv->req_artist); 
+                                song->albumartist = g_strdup((data->song->albumartist)?data->song->albumartist:self->_priv->req_artist); 
+                                song->album = g_strdup(data->song->album);
+                                printf("query: %s\n", song->artist);
+                                gmpc_meta_watcher_get_meta_path_callback(gmw,song, META_ALBUM_ART, (MetaDataCallback)self_cover_art_fetched, ref);
+                                mpd_freeSong(song);	
+                            }
                         }
                         else 
                         {
