@@ -696,7 +696,7 @@ int main(int argc, char **argv)
 
 
 	playlist = (GtkTreeModel *)gmpc_mpddata_model_playlist_new(gmpcconn,connection);
-	//gmpc_mpddata_model_disable_image(GMPC_MPDDATA_MODEL(playlist));
+	gmpc_mpddata_model_disable_image(GMPC_MPDDATA_MODEL(playlist));
 
 	/** file browser */
 	plugin_add(&file_browser_plug, 0, NULL);
