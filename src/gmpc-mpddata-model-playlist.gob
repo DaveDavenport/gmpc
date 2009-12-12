@@ -156,7 +156,7 @@ override (G:Object)
 
 
             }
-            else //if(old_length == 0)
+            else if(old_length == 0)
             {
                 int  i;
                 for(i = new_length; i > 0; i--)
@@ -167,19 +167,17 @@ override (G:Object)
                 }
                 gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(self), mpd_data_get_first(data));
             }
-            /*
-            return;
-//            else
+            else
             {
                 data = mpd_playlist_get_changes_posid(mi, self->_priv->playlist_id);
-*/                /* if the new length is shorter then the old, remove rows at the end */
-  /*              if(new_length < old_length)
+                /* if the new length is shorter then the old, remove rows at the end */
+                if(new_length < old_length)
                 {
                     int i;
                     MpdData_real *odata = (MpdData_real *)mpd_data_get_first(GMPC_MPDDATA_MODEL(self)->_priv->data);
                     while(odata->next)odata = odata->next;
-    */                /* data should be last */
-/*
+                    /* data should be last */
+
                     for(i=old_length-1;i>=new_length;i--)
                     {
                         GtkTreePath *path = gtk_tree_path_new(); 
@@ -201,36 +199,36 @@ override (G:Object)
                        GMPC_MPDDATA_MODEL(self)->num_rows--;
                     }
                 }
-  */              /* if it's longer, append rows */
-    /*            else if ( new_length > old_length)
+                /* if it's longer, append rows */
+                else if ( new_length > old_length)
                 {
                     int i;
                     MpdData_real *odata = (MpdData_real *)mpd_data_get_first(GMPC_MPDDATA_MODEL(self)->_priv->data);
-      */              /* get the last element */
-        /*            while(odata->next) odata = odata->next;
+                    /* get the last element */
+                    while(odata->next) odata = odata->next;
                     for(i=old_length; i< new_length;i++)
                     {
                        GtkTreePath *path = gtk_tree_path_new(); 
                        GtkTreeIter iter;
-*/                       /* Append node */
-  /*                     odata = (MpdData_real *)mpd_new_data_struct_append((MpdData *)odata);
+                       /* Append node */
+                       odata = (MpdData_real *)mpd_new_data_struct_append((MpdData *)odata);
                        odata->type = MPD_DATA_TYPE_SONG;
                        odata->song = NULL;
-*/                        /* Create iter */
-  /*                     iter.stamp = GMPC_MPDDATA_MODEL(self)->_priv->stamp;
+                        /* Create iter */
+                       iter.stamp = GMPC_MPDDATA_MODEL(self)->_priv->stamp;
                        iter.user_data = NULL; 
                        iter.user_data2 =  GINT_TO_POINTER(GMPC_MPDDATA_MODEL(self)->num_rows);
-       */                /* show the path */
-      /*                 gtk_tree_path_append_index(path, i);
-          */              /* insert it */
-            /*           gtk_tree_model_row_inserted(GTK_TREE_MODEL(self), path, &iter);
+                       /* show the path */
+                       gtk_tree_path_append_index(path, i);
+                        /* insert it */
+                       gtk_tree_model_row_inserted(GTK_TREE_MODEL(self), path, &iter);
                        gtk_tree_path_free(path);
                        GMPC_MPDDATA_MODEL(self)->num_rows++;
 
                     }
                 }
-              */  /* Now mark the changed rows */
-                /*if(data)
+                /* Now mark the changed rows */
+                if(data)
                 {
                     int i=0;
                     MpdData_real *list_iter =(MpdData_real *) mpd_data_get_first(GMPC_MPDDATA_MODEL(self)->_priv->data);
@@ -239,8 +237,8 @@ override (G:Object)
                     {
                         GtkTreeIter iter;
                         GtkTreePath *path = gtk_tree_path_new(); 
-                  */      /* get the right entry */
-                    /*    for(;list_iter != NULL && i!= data_iter->song->pos;i++)
+                       /* get the right entry */
+                        for(;list_iter != NULL && i!= data_iter->song->pos;i++)
                             list_iter = list_iter->next;
 
                         if(list_iter)
@@ -273,7 +271,6 @@ override (G:Object)
                     mpd_data_free(data);
                 }
             }
-            */
             if(GMPC_MPDDATA_MODEL(self)->num_rows != new_length)
             {
                 debug_printf(DEBUG_ERROR, "Playlist out of sync: %i-%i \n",GMPC_MPDDATA_MODEL(self)->num_rows,new_length);
