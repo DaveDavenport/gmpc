@@ -636,7 +636,7 @@ namespace Gmpc {
                     similar_artist.show();
                     i++;
                 }
-                if(config.get_int_with_default("MetaData", "show-show-links",1) == 1)
+                if(config.get_int_with_default("MetaData", "show-web-links",1) == 1)
                 {
 
                     var song_links = new Gmpc.Song.Links(Gmpc.Song.Links.Type.SONG,song);
