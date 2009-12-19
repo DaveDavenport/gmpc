@@ -23,6 +23,7 @@ mpd_data_model_SOURCES = \
 nodist_mpd_data_model_SOURCES = \        
 		$(top_srcdir)/src/misc.c\
 		$(top_srcdir)/src/gmpc-mpddata-model.c\
-        $(top_srcdir)/src/Widgets/gmpc-image-async.c
+        $(top_srcdir)/src/Widgets/gmpc-image-async.c\
+        $(top_srcdir)/src/Widgets/pixbuf-cache.c
 
 endif
