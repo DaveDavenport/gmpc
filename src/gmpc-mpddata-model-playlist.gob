@@ -296,6 +296,8 @@ override (G:Object)
             }
             if(i >= 0)
             {
+                /* Needs to be set before updating */
+                self->_priv->old_highlight = i;
                 /* get the right entry */
                 path = gtk_tree_path_new(); 
                 iter.stamp = GMPC_MPDDATA_MODEL(self)->_priv->stamp;
@@ -305,7 +307,6 @@ override (G:Object)
                 gtk_tree_model_row_changed(GTK_TREE_MODEL(self), path, &iter);
                 self_current_song_changed(self, path, &iter);
                 gtk_tree_path_free(path);
-                self->_priv->old_highlight = i;
             }
         }
 
