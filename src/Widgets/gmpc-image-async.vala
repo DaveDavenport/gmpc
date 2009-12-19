@@ -200,6 +200,7 @@ public class Gmpc.MetaImageAsync : Gtk.Image
 
     public new void set_from_file(string uri, int size, bool border)
     {
+        this.uri = uri;
         loader = new PixbufLoaderAsync(); 
         loader.pixbuf_update.connect((source, pixbuf)=>{
                 this.set_from_pixbuf(pixbuf);
