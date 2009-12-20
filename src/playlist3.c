@@ -973,6 +973,13 @@ void create_playlist3(void)
 	column = gtk_tree_view_column_new();
 	gtk_tree_view_column_pack_start(column, renderer, FALSE);
 	g_object_set(G_OBJECT(renderer),  "stock-size", GTK_ICON_SIZE_DND, NULL);
+	{
+		int w,h;
+		if(gtk_icon_size_lookup(GTK_ICON_SIZE_DND, &w, &h))
+		{
+			g_object_set(G_OBJECT(renderer),  "height",h,  NULL);
+		}
+	}
 	gtk_tree_view_column_set_attributes(column, renderer, "icon-name", PL3_CAT_ICON_ID, NULL);
 
 	renderer = gtk_cell_renderer_text_new();
