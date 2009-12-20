@@ -1618,7 +1618,23 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             label.set_alignment(0.0f, 0.5f);
             this.add_entry(info_box, _("Track"),null,label, out i, "media-num-tracks");
         }
+       /* Player controls */
+        var control_hbox = new Gtk.HBox (false, 6);
 
+        var abutton = new Gtk.Button.from_stock("gtk-add");
+        abutton.set_relief(Gtk.ReliefStyle.NONE);
+        abutton.clicked += add_selected_song;
+        control_hbox.pack_start(abutton, false, false,0);
+
+        abutton = new Gtk.Button.with_mnemonic(_("_Replace"));
+        abutton.set_image(new Gtk.Image.from_stock("gtk-redo", Gtk.IconSize.BUTTON));
+        abutton.set_relief(Gtk.ReliefStyle.NONE);
+        abutton.clicked += replace_selected_song;
+        control_hbox.pack_start(abutton, false, false,0);
+
+
+        info_box.attach(control_hbox, 0,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
+        i++;
 
         hbox.pack_start(info_box, true, true, 0);
         vbox.pack_start(hbox, false, false, 0);
