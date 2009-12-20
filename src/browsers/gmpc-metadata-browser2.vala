@@ -52,13 +52,6 @@ public class Gmpc.Widget.SimilarSongs : Gtk.Alignment{
     {
         this.song = song;
         this.set(0.0f, 0.0f, 1.0f, 0.0f);
-/*
-        this.song = song;
-        var label  = new Gtk.Label(_("Similar songs"));
-        label.set_markup("<b>%s</b>".printf(_("Similar songs")));
-        this.set_label_widget(label);
-        label.show();
-        */
     }
     private void add_clicked(Gtk.ImageMenuItem item)
     {
@@ -623,12 +616,24 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
     /* Stores the location in the cat_tree */
     private Gtk.TreeRowReference rref = null;
 
+    private string title_color = config.get_string_with_default("Now Playing", "title-color", "#4d90dd");
+    private string item_color = config.get_string_with_default("Now Playing", "item-color", "#304ab8");
+    private bool theme_colors = (bool) config.get_int_with_default("Now Playing", "use-theme-color",1); 
+    private Gdk.Color background;
+    private Gdk.Color foreground;
+
     construct {
         /* Set the plugin as an internal one and of type pl_browser */
         this.plugin_type = 2|8; 
 
         gmpcconn.connection_changed += con_changed;
         gmpcconn.status_changed += status_changed;
+
+
+        var background = config.get_string_with_default("Now Playing", "background-color", "#000");
+        var foreground = config.get_string_with_default("Now Playing", "foreground-color", "#FFF");
+        Gdk.Color.parse(background,out this.background);
+        Gdk.Color.parse(foreground,out this.foreground);
     }
 
     public const int[] version =  {0,0,0};
@@ -716,11 +721,18 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
     /**
      * This builds the browser
      */
-     private void browser_bg_style_changed(Gtk.ScrolledWindow bg,Gtk.Style? style)
+     private void browser_bg_style_changed(Gtk.Container bg,Gtk.Style? style)
      {
-        this.metadata_box.modify_bg(Gtk.StateType.NORMAL,this.metadata_sw.style.base[Gtk.StateType.NORMAL]);
+         this.metadata_box.modify_bg(Gtk.StateType.NORMAL,this.metadata_sw.style.base[Gtk.StateType.NORMAL]);
+
+         debug("Change style signal");
+         if(this.theme_colors) {
+             this.title_color = this.paned.style.text[Gtk.StateType.PRELIGHT].to_string();
+             this.item_color = this.paned.style.text[Gtk.StateType.PRELIGHT].to_string();
+         }
+         this.change_color_style(this.metadata_sw);
      }
-     /* This hack makes clicking a selected row again, unselect it */
+    /* This hack makes clicking a selected row again, unselect it */
      private bool browser_button_press_event(Gtk.TreeView tree, Gdk.EventButton event)
      {
         Gtk.TreePath path= null;
@@ -1007,6 +1019,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         {
             this.paned = new Gtk.HPaned();
             paned_size_group.add_paned(this.paned); 
+            this.paned.style_set += browser_bg_style_changed;
             /* Bow with browsers */
             this.browser_box = new Gtk.VBox(true, 6);
             this.paned.add1(this.browser_box);
@@ -1167,7 +1180,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             /* The right view */
             this.metadata_sw = new Gtk.ScrolledWindow(null, null);
             this.metadata_sw.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC);
-            this.metadata_sw.style_set += browser_bg_style_changed;
+//            this.metadata_sw.style_set += browser_bg_style_changed;
             this.metadata_box = new Gtk.EventBox();
             this.metadata_box.set_visible_window(true);
             this.metadata_sw.add_with_viewport(this.metadata_box);
@@ -1426,15 +1439,22 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
       * then increments i 
       */
 
-     private void add_entry(Gtk.Table table, string entry_label, string? value,Gtk.Widget? extra,  out int i)
+     private void add_entry(Gtk.Table table, string entry_label, string? value,Gtk.Widget? extra,  out int i, string ? image = null)
      {
          int j=0;
          if(value == null && extra == null) return;
+         var box = new Gtk.HBox(false, 6);
          var label = new Gtk.Label("");
          label.set_selectable(true);
          label.set_alignment(0.0f, 0.0f);
          label.set_markup(Markup.printf_escaped("<b>%s:</b>",entry_label));
-         table.attach(label, j,(j+1),i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
+         if(image != null)
+         {
+             var wimage = new Gtk.Image.from_icon_name(image, Gtk.IconSize.MENU);
+             box.pack_start(wimage, false, false, 0);
+         }
+         box.pack_start(label, true, true, 0);
+         table.attach(box, j,(j+1),i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
          j++;
 
          if(value != null)
@@ -1470,198 +1490,318 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         var vbox = new Gtk.VBox (false,6);
         vbox.border_width = 8;
 
-        var box = history_buttons();
-        var label = new Gtk.Label("");
-        label.set_selectable(true);
-        if(song.title != null) {
-            label.set_markup(Markup.printf_escaped("<span size='xx-large' weight='bold'>%s</span>",song.title));
-        }else {
-            label.set_markup(Markup.printf_escaped("<span size='xx-large' weight='bold'>%s</span>",_("Unknown")));
-        }
-        label.set_alignment(0.0f, 0.5f);
-        box.pack_start(label, true, true, 0);
-        vbox.pack_start(box, false, false, 0);
-
+        var hist_box = history_buttons();
+        vbox.pack_start(hist_box, false, false, 0);
+        /* Start building the gui */
         /* Artist image */
         var hbox = new Gtk.HBox(false, 6);
+        /* Album image */
         var ali = new Gtk.Alignment(0f,0f,0f,0f);
-        var artist_image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ALBUM_ART, 250);
+        var album_image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ALBUM_ART, 200);
+        album_image.set_scale_up(true);
+        album_image.set_squared(false);
+        ali.add(album_image);
+        album_image.update_from_song(song);
+        hbox.pack_start(ali, false, false, 0);
+
+        /* Artist image */
+        ali = new Gtk.Alignment(1f,0f,0f,0f);
+        var artist_image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ARTIST_ART, 200);
+        artist_image.set_scale_up(true);
         artist_image.set_squared(false);
         artist_image.update_from_song(song);
         ali.add(artist_image);
-        hbox.pack_start(ali, false, false, 0);
-        /* Artist information */
+        hbox.pack_end(ali, false, false, 0);
+
+
+        /* Information box */
         var info_box = new Gtk.Table (4,2,false);
         info_box.set_row_spacings(3);
         info_box.set_col_spacings(8);
         hbox.pack_start(info_box, false, false, 0);
         int i=0;
+        /* Title */ 
+        if(song.title != null) {
 
-        if(song.title != null)
-        {
-            /* Button to search for song with same title */
-            var button = new Gtk.Button();
-            button.add(new Gtk.Image.from_stock("gtk-find", Gtk.IconSize.MENU));
-            button.set_relief(Gtk.ReliefStyle.NONE);
-            button.set_data_full("query", (void *)"title=(%s)".printf(song.title), (GLib.DestroyNotify) g_free);
-            button.clicked += metadata_find_query;
-            button.set_tooltip_text(_("Search songs with similar title"));
-
-            this.add_entry(info_box, _("Title"), song.title, button, out i);
-        }
-        /* Artist label */
-        if(song.artist != null) {
-            Gtk.Button button = null;
-            button = new Gtk.Button();
-            button.add(new Gtk.Image.from_icon_name("media-artist", Gtk.IconSize.MENU));
-            button.set_relief(Gtk.ReliefStyle.NONE);
-            button.set_data_full("artist", (void *)"%s".printf(song.artist), (GLib.DestroyNotify) g_free);
-            button.clicked.connect(artist_button_clicked);
-            this.add_entry(info_box, _("Artist"), song.artist, button, out i);
-        }
-        /* AlbumArtist label */
-        this.add_entry(info_box, _("Album artist"), song.albumartist, null, out i);
-
-        /* Album */
-
-        if(song.album != null) {
-            Gtk.Button button = null;
-            if(song.artist != null)
-            {
-                button = new Gtk.Button();
-                button.add(new Gtk.Image.from_icon_name("media-album", Gtk.IconSize.MENU));
-                button.set_relief(Gtk.ReliefStyle.NONE);
-                button.set_data_full("artist", (void *)"%s".printf(song.artist), (GLib.DestroyNotify) g_free);
-                button.set_data_full("album", (void *)"%s".printf(song.album), (GLib.DestroyNotify) g_free);
-                button.clicked.connect(album_button_clicked);
-            }
-            this.add_entry(info_box, _("Album"), song.album, button, out i);
-        }
-
-        /* track */
-        this.add_entry(info_box, _("Track"), song.track, null, out i);
-
-        /* date */
-        this.add_entry(info_box, _("Date"), song.date, null, out i);
-        /* performer */
-        this.add_entry(info_box, _("Performer"), song.performer, null, out i);
-        /* disc */
-        this.add_entry(info_box, _("Disc"), song.disc, null, out i);
-
-        /* Genre */
-        this.add_entry(info_box, _("Genre"), song.genre, null, out i);
-
-        /* Path */
-        if(song.file != null) {
-            var dbutton = new Gtk.Button();
-            dbutton.set_relief(Gtk.ReliefStyle.NONE);
-            dbutton.add(new Gtk.Image.from_stock("gtk-open", Gtk.IconSize.MENU));
-            dbutton.set_data_full("path", (void *)GLib.Path.get_dirname(song.file), (GLib.DestroyNotify) g_free);
-            dbutton.clicked += metadata_button_open_file_browser_path;
-            dbutton.set_tooltip_text(_("Open path to song in file browser"));
-
-            this.add_entry(info_box, _("Path"), song.file, dbutton, out i);
-        }
-
-        /* Favored button */
-        var fav_button = new Gmpc.Favorites.Button();
-        fav_button.set_song(song);
-        ali = new Gtk.Alignment(0.0f, 0.5f,0f,0f);
-        ali.add(fav_button);
-        this.add_entry(info_box, _("Favored"), null, ali, out i);
-
-        if(MPD.Sticker.supported(server))
-        {
-            /* Favored button */
-            var rating_button = new Gmpc.Rating(server, song);
+            var box = new Gtk.HBox(false, 6);
+            var fav_button = new Gmpc.Favorites.Button();
+            fav_button.set_song(song);
             ali = new Gtk.Alignment(0.0f, 0.5f,0f,0f);
-            ali.add(rating_button);
-            this.add_entry(info_box, _("Rating"), null, ali, out i);
+            ali.add(fav_button);
+            box.pack_start(ali, false, false, 0); 
+            var label = new Gtk.Label(song.title);
+            label.selectable = true;
+            label.set_markup(GLib.Markup.printf_escaped("<span color='%s' size='%i' weight='bold'>%s</span>", 
+                        this.title_color,Pango.SCALE*20 ,song.title));
+            label.set_ellipsize(Pango.EllipsizeMode.END);
+            label.set_alignment(0.0f, 0.5f);
+            box.pack_start(label, true, true, 0); 
+            hist_box.pack_start(box, true, true, 0); 
+
+            if(MPD.Sticker.supported(server))
+            {
+                var rating_button = new Gmpc.Rating(server, song);
+                ali = new Gtk.Alignment(0.0f, 0.5f,0f,0f);
+                ali.add(rating_button);
+                //hist_box.pack_start(ali, false, false, 0); 
+                this.add_entry(info_box, _("Rating"), null,ali,out i, "rating");
+            }
+        }else if (song.name!= null) {
+            var label = new Gtk.Label(song.name);
+            label.selectable = true;
+            label.set_markup(GLib.Markup.printf_escaped("<span color='%s' size='%i' weight='bold'>%s</span>",this.
+                        title_color, Pango.SCALE*20, song.name));
+            label.set_ellipsize(Pango.EllipsizeMode.END);
+            label.set_alignment(0.0f, 0.5f);
+            hist_box.pack_start(label, true, true, 0); 
         }
+        else if (song.file != null){
+            var filename = GLib.Path.get_basename(song.file);
+            var label = new Gtk.Label(song.name);
+            label.selectable = true;
+            try {
+                var regex = new GLib.Regex ("\\.[0-9a-zA-Z]*$");
+                filename = regex.replace_literal (filename, -1, 0, "");
+            } catch (GLib.RegexError e) {
+                stdout.printf("%s", e.message);
+                GLib.assert_not_reached ();
+            }
+            try {
+                var regex = new GLib.Regex ("_");
+                filename = regex.replace_literal (filename, -1, 0, " ");
+            } catch (GLib.RegexError e) {
+                stdout.printf("%s", e.message);
+                GLib.assert_not_reached ();
+            }
+            label.set_markup(GLib.Markup.printf_escaped("<span color='%s' size='%i' weight='bold'>%s</span>",this.
+                        title_color, Pango.SCALE*20, filename));
+            label.set_ellipsize(Pango.EllipsizeMode.END);
+            label.set_alignment(0.0f, 0.5f);
+            hist_box.pack_start(label, true, true, 0); 
+        }
+        /* Artist */
+        if(song.artist != null) {
+            this.add_entry(info_box, _("Artist"), song.artist, null,out i, "media-artist");
+        }
+        /* Album */
+        if(song.album != null) {
+            this.add_entry(info_box, _("Album"), song.album,null, out i, "media-album");
+        }
+        /* Genre */
+        if(song.genre != null) {
+            this.add_entry(info_box, _("Genre"), song.genre,null, out i, "media-genre");
 
-
-        /* Comment */
-        this.add_entry(info_box, _("Comment"), song.comment, null, out i);
-
-        vbox.pack_start(hbox , false, false, 0);
-        /* Player controls */
-        if(show_controls)
+        }
+        if(song.file != null)
         {
-            var button = new Gtk.Button.from_stock("gtk-media-play");
-            button.set_relief(Gtk.ReliefStyle.NONE);
-            button.set_data_full("song", song.copy(), (GLib.DestroyNotify) MPD.Song.free);
-            button.clicked += play_song;
-            hbox = new Gtk.HBox (false, 6);
-            hbox.pack_start(button, false, false,0);
 
-            button = new Gtk.Button.from_stock("gtk-add");
-            button.set_relief(Gtk.ReliefStyle.NONE);
-            button.set_data_full("song", song.copy(), (GLib.DestroyNotify) MPD.Song.free);
-            button.clicked += add_song;
-            hbox.pack_start(button, false, false,0);
-
-            button = new Gtk.Button.with_mnemonic(_("_Replace"));
-            button.set_image(new Gtk.Image.from_stock("gtk-redo", Gtk.IconSize.BUTTON));
-            button.set_relief(Gtk.ReliefStyle.NONE);
-            button.set_data_full("song", song.copy(), (GLib.DestroyNotify) MPD.Song.free);
-            button.clicked += replace_song;
-            hbox.pack_start(button, false, false,0);
-
-            info_box.attach(hbox, 0,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
-            i++;
+            string extension = null;
+            extension = get_extension(song.file);
+            if(extension != null)
+            {
+                this.add_entry(info_box, _("Codec"), extension,null, out i, "media-codec");
+            }
+        }
+        /* Time*/
+        if(song.time > 0) {
+            this.add_entry(info_box, _("Length"),Gmpc.Misc.format_time((ulong) song.time, ""),null, out i, "media-track-length");
         }
 
+        if(song.track != null) {
+            var label = new Gtk.Label("");
+            label.selectable = true;
+            label.set_ellipsize(Pango.EllipsizeMode.END);
+            label.set_markup(GLib.Markup.printf_escaped("%s %s",
+                        song.track,
+                        (song.disc != null)? "[%s]".printf(song.disc):""
+                        ));
+            label.set_alignment(0.0f, 0.5f);
+            this.add_entry(info_box, _("Track"),null,label, out i, "media-num-tracks");
+        }
+
+
+        hbox.pack_start(info_box, true, true, 0);
+        vbox.pack_start(hbox, false, false, 0);
+
+        /* Separator */
+        var sep = new Gtk.HSeparator();
+        sep.set_size_request(-1, 4);
+        vbox.pack_start(sep, false, false, 0);
+
+        var hboxje = new Gtk.HBox(false, 6);
+
+        /* Notebook where all the metadata items are kept, Override the tabs by a radiobutton list. */
+        var notebook = new Gtk.Notebook();
+        notebook.set_show_border(false);
+        notebook.set_show_tabs(false);
 
         /* Lyrics */
+        i = 0;
+        weak SList<weak Gtk.RadioButton> group  = null;
         if(config.get_int_with_default("MetaData", "show-lyrics",1) == 1)
         {
+            var alib = new Gtk.Alignment(0f,0f,1f,0f);
             var text_view = new Gmpc.MetaData.TextView(Gmpc.MetaData.Type.SONG_TXT);
             text_view.set_left_margin(8);
-            var frame = new Gmpc.Widget.More("lyrics-view",Markup.printf_escaped("<b>%s:</b>", _("Lyrics")),text_view);
             text_view.query_from_song(song);
 
-            vbox.pack_start(frame, false, false, 0);
+            alib.add(text_view);
+            notebook.append_page(alib, new Gtk.Label("Lyrics"));
+            var button = new Gtk.RadioButton.with_label(group,("Lyrics"));
+            group = button.get_group();
+            hboxje.pack_start(button, false, false, 0);
+            var j = i;
+            button.clicked.connect((source) => {
+                    debug("notebook page %i clicked", j);
+                    notebook.set_current_page(j);
+                    });
+            i++;
+
+            alib.show();
         }
 
-        /* Guitar Tab */
-
+        /* Guitar Tabs */
         if(config.get_int_with_default("MetaData", "show-guitar-tabs",1) == 1)
         {
+            var alib = new Gtk.Alignment(0f,0f,1f,0f);
             var text_view = new Gmpc.MetaData.TextView(Gmpc.MetaData.Type.SONG_GUITAR_TAB);
             text_view.use_monospace = true;
             text_view.set_left_margin(8);
-            var frame = new Gmpc.Widget.More("guitar-tabs-view", Markup.printf_escaped("<b>%s:</b>", _("Guitar Tabs")),text_view);
-            text_view.query_from_song(song);
+            var text_view_queried = false;
 
-            vbox.pack_start(frame, false, false, 0);
+            alib.add(text_view);
+            notebook.append_page(alib, new Gtk.Label(_("Guitar Tabs")));
+            var button = new Gtk.RadioButton.with_label(group,_("Guitar Tabs"));
+            group = button.get_group();
+            hboxje.pack_start(button, false, false, 0);
+            var j = i;
+            /* Only query the guitar-tab when opened or first notebook page*/
+            button.clicked.connect((source) => {
+                    debug("notebook page %i clicked", j);
+                    notebook.set_current_page(j);
+                    if(!text_view_queried){
+                    text_view.query_from_song(song);
+                    text_view_queried = true;
+                    this.change_color_style(text_view);
+                    }
+                    });
+            if(i == 0){
+                text_view.query_from_song(song);
+                text_view_queried = true;
+            }
+            alib.show();
+            i++;
         }
+        /* Similar songs */
 
         if(config.get_int_with_default("MetaData", "show-similar-songs",1) == 1)
         {
-            var simsong_showed = false;
-            var label2 = new Gtk.Expander(Markup.printf_escaped("<b>%s</b>", _("Similar Songs")));
-            label2.set_use_markup(true);
-            vbox.pack_start(label2, false, false, 0);
+            var similar_songs_queried = false;
+            var similar_songs_box = new Gtk.Alignment(0f,0f,0f,0f);
 
-            label2.activate.connect((source) => {
-                if(!simsong_showed) {
-                    debug("Update\n");
+            notebook.append_page(similar_songs_box, new Gtk.Label(_("Similar Songs")));
+
+            var button = new Gtk.RadioButton.with_label(group,_("Similar Songs"));
+            group = button.get_group();
+            hboxje.pack_start(button, false, false, 0);
+
+            var j = i;
+            /* Only query when opened or first notebook page*/
+            button.clicked.connect((source) => {
+                    debug("notebook page %i clicked", j);
+                    notebook.set_current_page(j);
+                    if(!similar_songs_queried){
                     var similar_songs = new Gmpc.Widget.SimilarSongs(song);
-                    label2.add(similar_songs);
                     similar_songs.update();
-                    simsong_showed = true;
-                }
-            });
-            label2.show();
+                    similar_songs_queried = true;
+                    similar_songs_box.add(similar_songs);
+                    this.change_color_style(similar_songs_box);
+                    similar_songs_box.show_all();
+                    }
+                    });
+            if(i == 0){
+                var similar_songs = new Gmpc.Widget.SimilarSongs(song);
+                similar_songs.update();
+                similar_songs_queried = true;
+                similar_songs_box.add(similar_songs);
+                similar_songs_box.show_all();
+            }
+            similar_songs_box.show();
+            i++;
         }
 
+        if(config.get_int_with_default("MetaData", "show-similar-artist",1) == 1 && song.artist != null)
+        {
+            var similar_artist = new Gmpc.Widget.SimilarArtist(Gmpc.server,song);
 
-        /* Show web links */
+            notebook.append_page(similar_artist, new Gtk.Label(_("Similar Artist")));
+
+            var button = new Gtk.RadioButton.with_label(group,_("Similar Artist"));
+            group = button.get_group();
+            hboxje.pack_start(button, false, false, 0);
+
+            var j = i;
+            button.clicked.connect((source) => {
+                    debug("notebook page %i clicked", j);
+                    notebook.set_current_page(j);
+                    });
+            similar_artist.show();
+            i++;
+        }
         if(config.get_int_with_default("MetaData", "show-web-links",1) == 1)
         {
+
             var song_links = new Gmpc.Song.Links(Gmpc.Song.Links.Type.SONG,song);
-            vbox.pack_start(song_links,false, false, 0);
+            notebook.append_page(song_links, new Gtk.Label(_("Web Links")));
+            var button = new Gtk.RadioButton.with_label(group,_("Web Links"));
+            group = button.get_group();
+            hboxje.pack_start(button, false, false, 0);
+            var j = i;
+            button.clicked.connect((source) => {
+                    debug("notebook page %i clicked", j);
+                    notebook.set_current_page(j);
+                    });
+            song_links.show();
+            i++;
         }
+        /* Track changed pages */
+        notebook.notify["page"].connect((source,spec) => {
+                var page = notebook.get_current_page();
+                config.set_int("NowPlaying", "last-page", (int)page);
+
+                });
+        /* Restore right page */
+        if(i > 0){
+            var page = config.get_int_with_default("NowPlaying", "last-page", 0);
+            if(page > i)
+            {
+                notebook.set_current_page(0);
+            }else{
+                /* The list is in reversed order, compensate for that. */
+                var w = group.nth_data(i-page-1);
+                w.set_active(true);
+                notebook.set_current_page(page);
+            }
+        }
+
+        ali = new Gtk.Alignment(0.0f, 0.5f,0f,0f);
+        ali.add(hboxje);
+
+        /* Create pane in 2. */
+        var bottom_hbox = new Gtk.HBox(false, 6);
+        /* left pane */
+        var metadata_vbox = new Gtk.VBox(false, 6);
+        metadata_vbox.pack_start(ali, false, false, 0);
+        sep = new Gtk.HSeparator();
+        sep.set_size_request(-1, 1);
+        metadata_vbox.pack_start(sep, false, false, 0);
+        metadata_vbox.pack_start(notebook, false, false, 0);
+
+        bottom_hbox.pack_start(metadata_vbox, true, true, 0);
+
+        vbox.pack_start(bottom_hbox, true, true, 0);
+
+        /* show it */
         return vbox;
     }
     private void metadata_button_open_file_browser_path(Gtk.Button button)
@@ -1833,20 +1973,14 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         int i=0;
         /* Artist label */
         if(song.artist != null) {
-            Gtk.Button button = null;
-            button = new Gtk.Button();
-            button.add(new Gtk.Image.from_icon_name("media-artist", Gtk.IconSize.MENU));
-            button.set_relief(Gtk.ReliefStyle.NONE);
-            button.set_data_full("artist", (void *)"%s".printf(song.artist), (GLib.DestroyNotify) g_free);
-            button.clicked.connect(artist_button_clicked);
-            this.add_entry(info_box, _("Artist"), song.artist, button, out i);
+            this.add_entry(info_box, _("Artist"), song.artist, null, out i, "media-artist");
         }
 
         /* Genres of songs */ 
         var pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ALBUM_GENRES_SONGS, song);
         pt_label.set_alignment(0.0f, 0.5f);
         pt_label.set_line_wrap(true);
-        this.add_entry(info_box, _("Genres"), null, pt_label, out i);
+        this.add_entry(info_box, _("Genres"), null, pt_label, out i, "media-genre");
 
         /* Dates of songs */ 
         pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ALBUM_DATES_SONGS, song);
@@ -1857,12 +1991,12 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ALBUM_NUM_SONGS, song);
         pt_label.set_line_wrap(true);
         pt_label.set_alignment(0.0f, 0.5f);
-        this.add_entry(info_box, _("Songs"), null, pt_label, out i);
+        this.add_entry(info_box, _("Songs"), null, pt_label, out i, "media-num-tracks");
         /* Total playtime */
         pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ALBUM_PLAYTIME_SONGS, song);
         pt_label.set_line_wrap(true);
         pt_label.set_alignment(0.0f, 0.5f);
-        this.add_entry(info_box, _("Playtime"), null, pt_label, out i);
+        this.add_entry(info_box, _("Playtime"), null, pt_label, out i, "media-track-length");
 
         vbox.pack_start(hbox , false, false, 0);
 
@@ -1884,40 +2018,121 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         info_box.attach(hbox, 0,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
         i++;
 
+        /* Separator */
+        var sep = new Gtk.HSeparator();
+        sep.set_size_request(-1, 4);
+        vbox.pack_start(sep, false, false, 0);
+
+        var hboxje = new Gtk.HBox(false, 6);
+
+        /* Notebook where all the metadata items are kept, Override the tabs by a radiobutton list. */
+        var notebook = new Gtk.Notebook();
+        notebook.set_show_border(false);
+        notebook.set_show_tabs(false);
+
+        /* Lyrics */
+        i = 0;
+        weak SList<weak Gtk.RadioButton> group  = null;
         /* Album information */
         if(config.get_int_with_default("MetaData", "show-album-information",1) == 1)
         {
+            var alib = new Gtk.Alignment(0f,0f,1f,0f);
             var text_view = new Gmpc.MetaData.TextView(Gmpc.MetaData.Type.ALBUM_TXT);
             text_view.set_left_margin(8);
-            var frame = new Gmpc.Widget.More("album-information-view", Markup.printf_escaped("<b>%s:</b>", _("Album information")),text_view);
             text_view.query_from_song(song);
 
-            vbox.pack_start(frame, false, false, 0);
+            alib.add(text_view);
+            notebook.append_page(alib, new Gtk.Label(_("Album information")));
+            var rbutton = new Gtk.RadioButton.with_label(group,_("Album information"));
+            group = rbutton.get_group();
+            hboxje.pack_start(rbutton, false, false, 0);
+            var j = i;
+            rbutton.clicked.connect((source) => {
+                    debug("notebook page %i clicked", j);
+                    notebook.set_current_page(j);
+                    });
+            i++;
+
+            alib.show();
         }
 
-        /* Song list. Show songs in album  */
-        label = new Gtk.Label("");
-        label.set_selectable(true);
-        label.set_markup("<b>%s</b>".printf(_("Songs")));
-        label.set_alignment(0.0f, 0.5f);
-        vbox.pack_start(label, false, false, 0);
+        {
+            var sw = new Gtk.ScrolledWindow(null, null);
+            sw.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.NEVER);
+            sw.set_shadow_type(Gtk.ShadowType.ETCHED_IN);
+            var song_tree = new Gmpc.MpdData.TreeView("album-songs", true, this.model_songs);
+            song_tree.enable_click_fix();
+            song_tree.button_release_event += album_song_tree_button_press_event;
+            song_tree.row_activated += album_song_tree_row_activated;
+            sw.add(song_tree);
+            var alib = new Gtk.Alignment(0f,0f,1f,0f);
 
-        var sw = new Gtk.ScrolledWindow(null, null);
-        sw.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.NEVER);
-        sw.set_shadow_type(Gtk.ShadowType.ETCHED_IN);
-        var song_tree = new Gmpc.MpdData.TreeView("album-songs", true, this.model_songs);
-        song_tree.enable_click_fix();
-        song_tree.button_release_event += album_song_tree_button_press_event;
-        song_tree.row_activated += album_song_tree_row_activated;
-        sw.add(song_tree);
-        vbox.pack_start(sw, false, false, 0);
+            alib.add(sw);
+            notebook.append_page(alib, new Gtk.Label(_("Song list")));
+            var rbutton = new Gtk.RadioButton.with_label(group,_("Song list"));
+            group = rbutton.get_group();
+            hboxje.pack_start(rbutton, false, false, 0);
+            var j = i;
+            rbutton.clicked.connect((source) => {
+                    debug("notebook page %i clicked", j);
+                    notebook.set_current_page(j);
+                    });
 
+            alib.show();
+            i++;
+        }
         /* Show web links */
         if(config.get_int_with_default("MetaData", "show-web-links",1) == 1)
         {
             var song_links = new Gmpc.Song.Links(Gmpc.Song.Links.Type.ALBUM,song);
-            vbox.pack_start(song_links,false, false, 0);
+            notebook.append_page(song_links, new Gtk.Label(_("Web Links")));
+            var rbutton = new Gtk.RadioButton.with_label(group,_("Web Links"));
+            group = rbutton.get_group();
+            hboxje.pack_start(rbutton, false, false, 0);
+            var j = i;
+            rbutton.clicked.connect((source) => {
+                    debug("notebook page %i clicked", j);
+                    notebook.set_current_page(j);
+                    });
+            song_links.show();
+            i++;
         }
+        /* Track changed pages */
+        notebook.notify["page"].connect((source,spec) => {
+                var page = notebook.get_current_page();
+                config.set_int("MetaData", "album-last-page", (int)page);
+
+                });
+        /* Restore right page */
+        if(i > 0){
+            var page = config.get_int_with_default("MetaData", "album-last-page", 0);
+            if(page > i)
+            {
+                notebook.set_current_page(0);
+            }else{
+                /* The list is in reversed order, compensate for that. */
+                var w = group.nth_data(i-page-1);
+                w.set_active(true);
+                notebook.set_current_page(page);
+            }
+        }
+
+        ali = new Gtk.Alignment(0.0f, 0.5f,0f,0f);
+        ali.add(hboxje);
+
+        /* Create pane in 2. */
+        var bottom_hbox = new Gtk.HBox(false, 6);
+        /* left pane */
+        var metadata_vbox = new Gtk.VBox(false, 6);
+        metadata_vbox.pack_start(ali, false, false, 0);
+        sep = new Gtk.HSeparator();
+        sep.set_size_request(-1, 1);
+        metadata_vbox.pack_start(sep, false, false, 0);
+        metadata_vbox.pack_start(notebook, false, false, 0);
+        bottom_hbox.pack_start(metadata_vbox, true, true, 0);
+
+
+        vbox.pack_start(bottom_hbox, true, true, 0);
         /**
          * Add it to the view
          */
@@ -1938,6 +2153,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
     private void metadata_box_show_artist(string artist)
     {
         var vbox = new Gtk.VBox (false,6);
+        var i = 0;
         vbox.border_width = 8;
 
         var box = history_buttons();
@@ -1963,13 +2179,12 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         info_box.set_row_spacings(3);
         info_box.set_col_spacings(8);
         hbox.pack_start(info_box, false, false, 0);
-        int i=0;
 
         /* Genres of songs */ 
         var pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ARTIST_GENRES_SONGS, song);
         pt_label.set_alignment(0.0f, 0.5f);
         pt_label.set_line_wrap(true);
-        this.add_entry(info_box, _("Genres"), null, pt_label, out i);
+        this.add_entry(info_box, _("Genres"), null, pt_label, out i, "media-genre");
         /* Dates of songs */ 
         pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ARTIST_DATES_SONGS, song);
         pt_label.set_line_wrap(true);
@@ -1979,12 +2194,12 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ARTIST_NUM_SONGS, song);
         pt_label.set_line_wrap(true);
         pt_label.set_alignment(0.0f, 0.5f);
-        this.add_entry(info_box, _("Songs"), null, pt_label, out i);
+        this.add_entry(info_box, _("Songs"), null, pt_label, out i, "media-num-tracks");
         /* Total playtime */
         pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ARTIST_PLAYTIME_SONGS, song);
         pt_label.set_line_wrap(true);
         pt_label.set_alignment(0.0f, 0.5f);
-        this.add_entry(info_box, _("Playtime"), null, pt_label, out i);
+        this.add_entry(info_box, _("Playtime"), null, pt_label, out i, "media-track-length");
 
         vbox.pack_start(hbox , false, false, 0);
         /* Player controls */
@@ -2001,40 +2216,218 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         button.clicked += replace_selected_song;
         hbox.pack_start(button, false, false,0);
 
-
         info_box.attach(hbox, 0,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
         i++;
 
+
+        var hboxje = new Gtk.HBox(false, 6);
+        /* Separator */
+        var sep = new Gtk.HSeparator();
+        sep.set_size_request(-1, 4);
+        vbox.pack_start(sep, false, false, 0);
+
+
+        /* Notebook where all the metadata items are kept, Override the tabs by a radiobutton list. */
+        var notebook = new Gtk.Notebook();
+        notebook.set_show_border(false);
+        notebook.set_show_tabs(false);
+
+        i = 0;
+        weak SList<weak Gtk.RadioButton> group  = null;
         /* Artist information */
         if(config.get_int_with_default("MetaData", "show-artist-information",1) == 1)
         {
+            var alib = new Gtk.Alignment(0f,0f,1f,0f);
             var text_view = new Gmpc.MetaData.TextView(Gmpc.MetaData.Type.ARTIST_TXT);
             text_view.set_left_margin(8);
-            var frame = new Gmpc.Widget.More("artist-information-view", Markup.printf_escaped("<b>%s:</b>", _("Artist information")),text_view);
             text_view.query_from_song(song);
-            vbox.pack_start(frame, false, false, 0);
+
+            alib.add(text_view);
+            notebook.append_page(alib, new Gtk.Label(_("Artist information")));
+            var button_sai = new Gtk.RadioButton.with_label(group,_("Artist information"));
+            group = button_sai.get_group();
+            hboxje.pack_start(button_sai, false, false, 0);
+
+            var j = i;
+            button_sai.clicked.connect((source) => {
+                    debug("notebook page %i clicked", j);
+                    notebook.set_current_page(j);
+                    });
+            i++;
+
+            alib.show();
         }
         
         /* Show similar artist */
         if(config.get_int_with_default("MetaData", "show-similar-artist",1) == 1)
         {
-            label = new Gtk.Label(_("Similar artist"));
-            label.set_selectable(true);
-            label.set_markup("<span weight='bold'>%s</span>".printf(_("Similar artist")));
-            label.set_alignment(0.0f, 0.0f);
-            vbox.pack_start(label, false, false, 0);
-            ali = new Gtk.Alignment(0.0f, 0.0f, 1.0f, 0.0f);
-            var similar_artist = new Gmpc.Widget.SimilarArtist(server, song); 
-            ali.add(similar_artist);
-            vbox.pack_start(ali, false, false, 0);
+            var similar_artist = new Gmpc.Widget.SimilarArtist(Gmpc.server,song);
+
+            notebook.append_page(similar_artist, new Gtk.Label(_("Similar Artist")));
+
+            var button_sa = new Gtk.RadioButton.with_label(group,_("Similar Artist"));
+            group = button_sa.get_group();
+            hboxje.pack_start(button_sa, false, false, 0);
+
+            var j = i;
+            button_sa.clicked.connect((source) => {
+                    debug("notebook page %i clicked", j);
+                    notebook.set_current_page(j);
+                    });
+            similar_artist.show();
+            i++;
         }
 
         /* Show web links */
         if(config.get_int_with_default("MetaData", "show-web-links",1) == 1)
         {
             var song_links = new Gmpc.Song.Links(Gmpc.Song.Links.Type.ARTIST,song);
-            vbox.pack_start(song_links,false, false, 0);
+            notebook.append_page(song_links, new Gtk.Label(_("Web Links")));
+            var button_sl = new Gtk.RadioButton.with_label(group,_("Web Links"));
+            group = button_sl.get_group();
+            hboxje.pack_start(button_sl, false, false, 0);
+            var j = i;
+            button_sl.clicked.connect((source) => {
+                    debug("notebook page %i clicked", j);
+                    notebook.set_current_page(j);
+                    });
+            song_links.show();
+            i++;
         }
+
+        /* Track changed pages */
+        notebook.notify["page"].connect((source,spec) => {
+                var page = notebook.get_current_page();
+                config.set_int("MetaData", "artist-last-page", (int)page);
+
+                });
+        /* Restore right page */
+        if(i > 0){
+            var page = config.get_int_with_default("MetaData", "artist-last-page", 0);
+            if(page > i)
+            {
+                notebook.set_current_page(0);
+            }else{
+                /* The list is in reversed order, compensate for that. */
+                var w = group.nth_data(i-page-1);
+                w.set_active(true);
+                notebook.set_current_page(page);
+            }
+        }
+
+
+        ali = new Gtk.Alignment(0.0f, 0.5f,0f,0f);
+        ali.add(hboxje);
+
+        /* Create pane in 2. */
+        var bottom_hbox = new Gtk.HBox(false, 6);
+        /* left pane */
+        var metadata_vbox = new Gtk.VBox(false, 6);
+        metadata_vbox.pack_start(ali, false, false, 0);
+        sep = new Gtk.HSeparator();
+        sep.set_size_request(-1, 1);
+        metadata_vbox.pack_start(sep, false, false, 0);
+        metadata_vbox.pack_start(notebook, false, false, 0);
+
+        bottom_hbox.pack_start(metadata_vbox, true, true, 0);
+        /* Create album list */
+        if( song.artist != null)
+        {
+            var sep2 = new Gtk.VSeparator();
+            sep2.set_size_request(-1, 4);
+            bottom_hbox.pack_start(sep2, false, false, 0);
+            int albums =0;
+            /* Create album list */
+            ali = new Gtk.Alignment(0.0f, 0.0f, 0.0f, 0.0f);
+            var album_hbox = new Gtk.VBox(false, 6);
+            album_hbox.set_size_request(250, -1);
+            ali.add(album_hbox);
+            bottom_hbox.pack_start(ali, false, false, 0);
+
+            label = new Gtk.Label(song.artist);
+            label.selectable = true;
+            label.set_size_request(240, -1);
+            label.set_markup(GLib.Markup.printf_escaped("<span size='x-large' weight='bold' color='%s'>%s</span><span size='x-large' weight='bold'> %s</span>",this.item_color,_("Albums by"), song.artist));
+            label.set_line_wrap_mode(Pango.WrapMode.WORD_CHAR);
+            label.set_line_wrap(true);
+            label.set_alignment(0.0f, 0.5f);
+            album_hbox.pack_start(label, false, false,0);
+
+            MPD.Database.search_field_start(server, MPD.Tag.Type.ALBUM);
+            MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, song.artist);
+            MPD.Data.Item list = null;
+            var data = MPD.Database.search_commit(server);
+            if(data != null){
+                weak MPD.Data.Item iter = data.get_first();
+                do{
+                    if(iter.tag == song.album){
+                        iter = iter.next(false); 
+                        continue;
+                    }
+                    list.append_new();
+                    list.type = MPD.Data.Type.SONG;
+                    list.song = new MPD.Song();
+                    list.song.artist = song.artist;
+                    list.song.album  = iter.tag;
+                    MPD.Database.search_field_start(server,MPD.Tag.Type.DATE);
+                    MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, song.artist);
+                    MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM, iter.tag);
+                    var ydata = MPD.Database.search_commit(server);
+                    if(ydata != null) {
+                        list.song.date = ydata.tag;
+                    }
+                    iter = iter.next(false);
+                }while(iter != null);
+            }
+
+            list.sort_album_disc_track();
+            if(list != null) {
+                weak MPD.Data.Item iter = list.get_first();
+                do{
+                    button = new Gtk.Button();
+                    button.set_relief(Gtk.ReliefStyle.NONE);
+                    var but_hbox = new Gtk.HBox(false, 6);
+                    button.add(but_hbox);
+                    var image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ALBUM_ART, 48);
+                    var but_song = iter.song; 
+                    //                            but_song.artist = song.artist;
+                    //                          but_song.album = iter.tag;
+                    image.set_squared(true);
+                    image.update_from_song_delayed(but_song);
+
+                    but_hbox.pack_start(image, false, false, 0);
+
+                    var but_label = new Gtk.Label(iter.song.album);
+                    but_label.selectable = true;
+                    but_label.set_alignment(0.0f, 0.5f);
+                    var strlabel = "";
+                    if(iter.song.date != null && iter.song.date.length > 0) strlabel += "%s: ".printf(iter.song.date);
+                    if(iter.song.album != null) strlabel+= iter.song.album;
+                    else strlabel += _("No Album");
+                    but_label.set_markup(GLib.Markup.printf_escaped("<b>%s</b>",strlabel)); 
+                    but_label.set_ellipsize(Pango.EllipsizeMode.END);
+                    but_hbox.pack_start(but_label, true, true, 0);
+
+                    album_hbox.pack_start(button, false, false,0);
+
+                    button.clicked.connect((source) => {
+                            Gmpc.Browser.Metadata.show_album(song.artist, but_song.album);
+                            });
+                    albums++;
+
+                    iter = iter.next(false);
+                }while(iter!= null);
+            }
+
+            if(albums == 0) {
+                album_hbox.destroy();
+                sep2.destroy();
+            }
+        }
+
+        vbox.pack_start(bottom_hbox, true, true, 0);
+
+
         /**
          * Add it to the view
          */
@@ -2070,6 +2463,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
 
             var view = metadata_box_show_song(song,true);
             this.metadata_box.add(view);
+            this.change_color_style(this.metadata_sw);
             this.metadata_box.show_all();
         }else if(album != null && artist != null) {
             /** Add item to history */
@@ -2081,6 +2475,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             history_add(item);
 
             metadata_box_show_album(artist,album);
+            this.change_color_style(this.metadata_sw);
         }else if (artist != null) {
             /** Add item to history */
             var item = Hitem();
@@ -2090,6 +2485,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             history_add(item);
 
             metadata_box_show_artist(artist);
+            this.change_color_style(this.metadata_sw);
         }
 
         this.update_timeout = 0;
@@ -2424,6 +2820,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
 
         var view = metadata_box_show_song(song,true);
         this.metadata_box.add(view);
+        this.change_color_style(this.metadata_sw);
         this.metadata_box.show_all();
     }
     public 
@@ -2517,5 +2914,49 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         {
             container.remove(child);
         }
+     }
+     private void change_color_style(Gtk.Widget bg)
+     {
+         debug("change style");
+         if(bg is Gtk.Separator || bg is Gtk.Notebook || bg is Gtk.CheckButton){
+             /* Do nothing */
+         }else{
+             if(theme_colors)
+             {
+                 bg.modify_bg(Gtk.StateType.NORMAL,this.paned.style.base[Gtk.StateType.NORMAL]);
+                 /*bg.modify_base(Gtk.StateType.NORMAL,this.paned.style.mid[Gtk.StateType.NORMAL]);/*
+                 //                        bg.modify_text(Gtk.StateType.NORMAL,this.paned.style.text[Gtk.StateType.NORMAL]);
+                 bg.modify_fg(Gtk.StateType.NORMAL,this.paned.style.text[Gtk.StateType.NORMAL]);
+                 bg.modify_text(Gtk.StateType.ACTIVE,this.paned.style.light[Gtk.StateType.NORMAL]);
+                 bg.modify_fg(Gtk.StateType.ACTIVE,this.paned.style.light[Gtk.StateType.NORMAL]);*/
+             }else{
+                 bg.modify_bg(Gtk.StateType.NORMAL,this.background);
+                 bg.modify_base(Gtk.StateType.NORMAL,this.background);
+                 bg.modify_text(Gtk.StateType.NORMAL,this.foreground);
+                 bg.modify_fg(Gtk.StateType.NORMAL,this.foreground);
+                 bg.modify_text(Gtk.StateType.ACTIVE,this.foreground);
+                 bg.modify_fg(Gtk.StateType.ACTIVE,this.foreground);
+             }
+         }
+         /* Recurse into children, if the widget can hold children (so is a container */
+         if(bg is Gtk.Container){
+             foreach(Gtk.Widget child in ((Gtk.Container)bg).get_children())
+             {
+                 change_color_style(child);
+             }
+         }
+     }
+     private string get_extension(string path)
+     {
+         long length = path.length;
+         long i=length;
+         string retv = null;
+         for(;i>0 && (length-i) <8;i--){
+             if(path[i] == '.') {
+                 retv = path.substring(i+1);
+                 return retv;
+             }
+         }
+         return retv;
      }
 }

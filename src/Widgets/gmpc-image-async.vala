@@ -54,7 +54,7 @@ public class Gmpc.PixbufLoaderAsync : GLib.Object
     }
 
     ~PixbufLoaderAsync() {
-        warning("Free the image loading");
+        debug("Free the image loading");
         if(this.pcancel != null) pcancel.cancel();
     }
 
@@ -165,7 +165,7 @@ public class Gmpc.PixbufLoaderAsync : GLib.Object
 
         if(cancel.is_cancelled())
         {
-            warning("Cancelled loading of image");
+            debug("Cancelled loading of image");
             cancel.reset();
             return;
         }
