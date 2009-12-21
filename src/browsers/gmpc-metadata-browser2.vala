@@ -498,119 +498,6 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
     }
 }
 
-/**
- * The "More" Widget. This collapses it child and adds a more/less button.
- * Using the unique_id it stores the state for the next time.
- */
-public class Gmpc.Widget.More : Gtk.Frame {
-    private Gtk.Alignment ali = null;
-    private int expand_state = 0;
-    private Gtk.Button expand_button = null;
-    private int max_height = 100;
-    private Gtk.EventBox eventbox = null;
-    private Gtk.Widget pchild = null;
-
-    /**
-     * Expand/collaps the view
-     */
-    private void expand(Gtk.Button but)
-    {
-        if(this.expand_state == 0) {
-            but.set_label(_("(less)"));
-            but.set_image(new Gtk.Image.from_stock("gtk-remove", Gtk.IconSize.MENU));
-            this.ali.set_size_request(-1, -1);
-            this.expand_state = 1;
-        }else{
-            but.set_label(_("(more)"));
-
-            but.set_image(new Gtk.Image.from_stock("gtk-add", Gtk.IconSize.MENU));
-            this.ali.set_size_request(-1, this.max_height);
-            this.expand_state = 0;
-        }
-
-    }
-    /* if hte size of the child is small enough to fit in the 
-     * small mode don't show the more/less button */
-    private void size_changed(Gtk.Widget child, Gdk.Rectangle alloc)
-    {
-        if(alloc.height < (this.max_height-12)){
-            this.ali.set_size_request(-1,-1);
-            this.expand_button.hide();
-        }else{
-            if(this.expand_state == 0)
-                this.ali.set_size_request(-1, this.max_height);
-            this.expand_button.show();
-        }
-    }
-
-    private void bg_style_changed(Gtk.Widget frame,Gtk.Style? style)
-    {
-        this.pchild.modify_bg(Gtk.StateType.NORMAL,this.parent.style.mid[Gtk.StateType.NORMAL]);
-        this.pchild.modify_base(Gtk.StateType.NORMAL,this.parent.style.mid[Gtk.StateType.NORMAL]);
-
-        this.eventbox.modify_bg(Gtk.StateType.NORMAL,this.parent.style.dark[Gtk.StateType.NORMAL]);
-        this.eventbox.modify_base(Gtk.StateType.NORMAL,this.parent.style.dark[Gtk.StateType.NORMAL]);
-    }
-
-    private string unique_id = null;
-    /* Store the state on destroy */
-    ~More()
-    {
-        if(this.unique_id != null)  {
-            config.set_int("MoreWidget", unique_id,this.expand_state);
-        }
-    }
-    /** 
-     * @param unique_id  a string used to store/restore state. 
-     * @parem markup     a string using following PangoMarkup to show in the label.
-     * @param child      a Gtk.Widget that packs into it as child.
-     * 
-     * @returns a Gmpc.Widget.More object.
-     */
-    public More(string unique_id, string markup,Gtk.Widget child)
-    {
-        this.unique_id = unique_id;
-        this.set_shadow_type(Gtk.ShadowType.NONE);
-        
-        this.pchild = child;
-        
-        this.ali = new Gtk.Alignment(0f,0f,1f,0f); ali.set_padding(1,1,1,1);
-        this.eventbox = new Gtk.EventBox();
-        this.eventbox.set_visible_window(true);
-        this.add(eventbox);
-        this.eventbox.add(ali);
-
-        /* restore state */
-        if(config.get_int_with_default("MoreWidget", unique_id,0) == 1){
-            this.expand_state = 1;
-            this.ali.set_size_request(-1, -1);
-        }
-        else 
-            this.ali.set_size_request(-1, this.max_height);
-        this.ali.add(child);
-
-        this.style_set += bg_style_changed;
-
-        var hbox = new Gtk.HBox(false, 6);
-        var label= new Gtk.Label("");
-        label.set_selectable(true);
-        label.set_markup(markup);
-        hbox.pack_start(label, false, false,0);
-        this.expand_button = new Gtk.Button.with_label((this.expand_state == 0)?_("(more)"):_("(less)"));
-
-        this.expand_button.set_image(new Gtk.Image.from_stock((this.expand_state == 0)?"gtk-add":"gtk-remove", Gtk.IconSize.MENU));
-        this.expand_button.set_relief(Gtk.ReliefStyle.NONE);
-        this.expand_button.clicked+=expand;
-        hbox.pack_start(this.expand_button, false, false,0);
-        
-        this.set_label_widget(hbox);
-        child.size_allocate += size_changed;
-
-
-    }
-}
-
-
 public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface, Gmpc.Plugin.PreferencesIface {
     private int block_update = 0;
     /* Stores the location in the cat_tree */
@@ -1618,6 +1505,10 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             label.set_alignment(0.0f, 0.5f);
             this.add_entry(info_box, _("Track"),null,label, out i, "media-num-tracks");
         }
+
+
+        info_box.attach(new Gtk.HSeparator(), 0,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
+        i++;
        /* Player controls */
         var control_hbox = new Gtk.HBox (false, 6);
 
@@ -1635,6 +1526,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
 
         info_box.attach(control_hbox, 0,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
         i++;
+
 
         hbox.pack_start(info_box, true, true, 0);
         vbox.pack_start(hbox, false, false, 0);
@@ -2016,6 +1908,8 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
 
         vbox.pack_start(hbox , false, false, 0);
 
+        info_box.attach(new Gtk.HSeparator(), 0,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
+        i++;
         /* Player controls */
         hbox = new Gtk.HBox (false, 6);
 
@@ -2033,6 +1927,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
 
         info_box.attach(hbox, 0,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
         i++;
+
 
         /* Separator */
         var sep = new Gtk.HSeparator();
@@ -2218,6 +2113,10 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         this.add_entry(info_box, _("Playtime"), null, pt_label, out i, "media-track-length");
 
         vbox.pack_start(hbox , false, false, 0);
+
+
+        info_box.attach(new Gtk.HSeparator(), 0,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
+        i++;
         /* Player controls */
         hbox = new Gtk.HBox (false, 6);
 
