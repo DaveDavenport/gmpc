@@ -1675,12 +1675,12 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         /* Track changed pages */
         notebook.notify["page"].connect((source,spec) => {
                 var page = notebook.get_current_page();
-                config.set_int("NowPlaying", "last-page", (int)page);
+                config.set_int("MetaData", "song-last-page", (int)page);
 
                 });
         /* Restore right page */
         if(i > 0){
-            var page = config.get_int_with_default("NowPlaying", "last-page", 0);
+            var page = config.get_int_with_default("MetaData", "song-last-page", 0);
             if(page > i)
             {
                 notebook.set_current_page(0);
@@ -2048,6 +2048,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
          * Add it to the view
          */
         this.metadata_box.add(vbox);
+        this.change_color_style(this.metadata_sw);
         this.metadata_sw.show_all();
     }
     /**
@@ -2347,6 +2348,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
          * Add it to the view
          */
         this.metadata_box.add(vbox);
+        this.change_color_style(this.metadata_sw);
         this.metadata_box.show_all();
     }
 
@@ -2390,7 +2392,6 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             history_add(item);
 
             metadata_box_show_album(artist,album);
-            this.change_color_style(this.metadata_sw);
         }else if (artist != null) {
             /** Add item to history */
             var item = Hitem();
@@ -2400,7 +2401,6 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             history_add(item);
 
             metadata_box_show_artist(artist);
-            this.change_color_style(this.metadata_sw);
         }
 
         this.update_timeout = 0;
