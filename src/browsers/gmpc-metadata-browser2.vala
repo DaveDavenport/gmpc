@@ -1405,7 +1405,6 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         var info_box = new Gtk.Table (4,2,false);
         info_box.set_row_spacings(3);
         info_box.set_col_spacings(8);
-        hbox.pack_start(info_box, false, false, 0);
         int i=0;
         /* Title */ 
         if(song.title != null) {
