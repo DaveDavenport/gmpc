@@ -52,7 +52,7 @@ static gboolean pixbuf_cache_timeout_passed(void)
     gchar *key;
     DCE *e;
     GList *liter, *list = NULL;
-
+    g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Pixbuf cache timeout passed\n");
     g_hash_table_iter_init (&iter,pb_cache );
     while (g_hash_table_iter_next (&iter, (gpointer)&key, (gpointer)&e))
     {
@@ -80,6 +80,7 @@ static void pixbuf_cache_entry_toggle_ref(const gchar *key, GdkPixbuf *pb, gbool
         DCE *e = g_hash_table_lookup(pb_cache, key);
         if(e) e->in_use = FALSE;
         if(timeout > 0) g_source_remove(timeout);
+        g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "set 10 seconds timeout\n");
         timeout = g_timeout_add_seconds(10, (GSourceFunc)pixbuf_cache_timeout_passed, NULL);
     }
 }
