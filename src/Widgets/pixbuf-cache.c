@@ -80,7 +80,7 @@ static void pixbuf_cache_entry_toggle_ref(const gchar *key, GdkPixbuf *pb, gbool
         DCE *e = g_hash_table_lookup(pb_cache, key);
         if(e) e->in_use = FALSE;
         if(timeout > 0) g_source_remove(timeout);
-        timeout = g_timeout_add_seconds(30, (GSourceFunc)pixbuf_cache_timeout_passed, NULL);
+        timeout = g_timeout_add_seconds(10, (GSourceFunc)pixbuf_cache_timeout_passed, NULL);
     }
 }
 /* Destroy cache entry */
