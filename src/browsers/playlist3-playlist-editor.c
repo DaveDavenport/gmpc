@@ -163,15 +163,13 @@ void playlist_editor_browser_add(GtkWidget *cat_tree)
 static MpdData *__playlist_editor_async_function(MpdObj *mi, gpointer function_data)
 {
     MpdData* data = mpd_database_get_playlist_content(mi, (gchar *)function_data); 
-    printf("Got result: %p for %s\n", data, (gchar *)function_data);
-    gtk_widget_set_sensitive(playlist_editor_browser, TRUE);
     g_free(function_data);
     return data;
 }
 static void __playlist_editor_async_callback(MpdData *data, gpointer callback_data)
 {
-    printf("Got data: %p\n", data);
     gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(playlist_editor_list_store), data);		
+    gtk_widget_set_sensitive(playlist_editor_browser, TRUE);
 }
 
 static void playlist_editor_browser_playlist_editor_selected(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer userdata)
