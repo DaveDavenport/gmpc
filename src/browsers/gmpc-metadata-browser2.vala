@@ -1476,7 +1476,10 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         /* Genre */
         if(song.genre != null) {
             this.add_entry(info_box, _("Genre"), song.genre,null, out i, "media-genre");
-
+        }
+        /* Genre */
+        if(song.date != null) {
+            this.add_entry(info_box, _("Date"), song.date,null, out i, "media-date");
         }
         if(song.file != null)
         {
@@ -1893,7 +1896,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ALBUM_DATES_SONGS, song);
         pt_label.set_line_wrap(true);
         pt_label.set_alignment(0.0f, 0.5f);
-        this.add_entry(info_box, _("Dates"), null, pt_label, out i);
+        this.add_entry(info_box, _("Dates"), null, pt_label, out i,"media-date");
         /* Total number of songs */ 
         pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ALBUM_NUM_SONGS, song);
         pt_label.set_line_wrap(true);
@@ -2100,7 +2103,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ARTIST_DATES_SONGS, song);
         pt_label.set_line_wrap(true);
         pt_label.set_alignment(0.0f, 0.5f);
-        this.add_entry(info_box, _("Dates"), null, pt_label, out i);
+        this.add_entry(info_box, _("Dates"), null, pt_label, out i,"media-date");
         /* Total number of songs */ 
         pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ARTIST_NUM_SONGS, song);
         pt_label.set_line_wrap(true);
