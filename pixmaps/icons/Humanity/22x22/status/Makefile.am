@@ -16,7 +16,8 @@ gmpc-tray-disconnected.png\
 gmpc-tray-pause.png\
 gmpc-tray-play.png\
 gmpc-tray.png\
-media-artist.png\
+    media-date.png\
+    media-artist.png\
 media-codec.png\
 media-album.png\
 media-format.png\

@@ -16,7 +16,8 @@ gmpc-tray-disconnected.svg\
 gmpc-tray-pause.svg\
 gmpc-tray-play.svg\
 gmpc-tray.svg\
-media-album.svg\
+    media-date.svg\
+    media-album.svg\
 media-artist.svg\
 media-codec.svg\
 media-format.svg\
