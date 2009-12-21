@@ -2850,6 +2850,8 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
                  bg.modify_fg(Gtk.StateType.NORMAL,this.foreground);
                  bg.modify_text(Gtk.StateType.ACTIVE,this.foreground);
                  bg.modify_fg(Gtk.StateType.ACTIVE,this.foreground);
+                 bg.modify_bg(Gtk.StateType.INSENSITIVE,this.background);
+                 bg.modify_base(Gtk.StateType.INSENSITIVE,this.background);
              }
          }
          /* Recurse into children, if the widget can hold children (so is a container */
