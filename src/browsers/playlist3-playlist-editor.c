@@ -29,6 +29,7 @@
 #include "gmpc-mpddata-model-sort.h"
 #include "gmpc-extras.h"
 #include "browsers/playlist3-playlist-editor.h"
+#include "Widgets/mpd-async-request.h"
 
 #define DEFAULT_MARKUP_BROWSER 	"[%name%: &[%artist% - ]%title%]|%name%|[%artist% - ]%title%|%shortfile%|"
 
@@ -159,7 +160,19 @@ void playlist_editor_browser_add(GtkWidget *cat_tree)
 
 }
 
-
+static MpdData *__playlist_editor_async_function(MpdObj *mi, gpointer function_data)
+{
+    MpdData* data = mpd_database_get_playlist_content(mi, (gchar *)function_data); 
+    printf("Got result: %p for %s\n", data, (gchar *)function_data);
+    gtk_widget_set_sensitive(playlist_editor_browser, TRUE);
+    g_free(function_data);
+    return data;
+}
+static void __playlist_editor_async_callback(MpdData *data, gpointer callback_data)
+{
+    printf("Got data: %p\n", data);
+    gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(playlist_editor_list_store), data);		
+}
 
 static void playlist_editor_browser_playlist_editor_selected(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer userdata)
 {
@@ -167,10 +180,10 @@ static void playlist_editor_browser_playlist_editor_selected(GtkTreeModel *model
     MpdData *data ;
     gtk_tree_model_get(GTK_TREE_MODEL(playlist_editor_store), iter, PL_NAME, &pl_path, -1);
     if(pl_path){
-        data = mpd_database_get_playlist_content(connection, pl_path); 
-        gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(playlist_editor_list_store), data);		
+        gtk_widget_set_sensitive(playlist_editor_browser, FALSE);
+        gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(playlist_editor_list_store), NULL);		
         gmpc_mpddata_model_sort_set_playlist(GMPC_MPDDATA_MODEL_SORT(playlist_editor_list_store), pl_path);
-
+        mpd_async_request(__playlist_editor_async_callback,NULL, __playlist_editor_async_function, g_strdup(pl_path));
         if(old_playlist) g_free(old_playlist);
         old_playlist =pl_path;
     }

@@ -23,6 +23,7 @@ gmpc_SOURCES=\
     vala/gmpc-easy-command.vala\
     vala/gmpc-favorites.vala\
     Widgets/gmpc-image-async.vala\
+    Widgets/mpd-async-request.c\
     vala/gmpc-liststore-sort.vala\
     Widgets/gmpc-menu-item-rating.vala\
     browsers/gmpc-metadata-browser2.vala\
@@ -177,6 +178,7 @@ gmpcinclude_HEADERS = \
 		config1.h	\
 		misc.h\
 		mpdinteraction.h\
+        Widgets/mpd-async-request.h\
 		gmpc_easy_download.h\
         gmpc-extras.h\
         playlist3-messages.h\
@@ -191,6 +193,7 @@ EXTRA_DIST=\
 		main.h\
 		mm-keys.h\
 		misc.h\
+        Widgets/mpd-async-request.h\
 		config-defaults.h\
 		browsers/playlist3-tag2-browser.h\
 		browsers/playlist3-file-browser.h\
