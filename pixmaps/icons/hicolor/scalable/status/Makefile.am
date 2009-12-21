@@ -19,6 +19,7 @@ dist_icons_DATA = \
 		stylized-fetching-cover.svg\
 		fetching-artist.svg\
 		frame-artist.svg\
+        media-date.svg\
         media-album.svg\
         media-codec.svg\
         media-artist.svg\
