@@ -658,7 +658,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
             if(self->squared) {
                 gtk_widget_set_size_request(GTK_WIDGET(self), self->size, self->size);
             }
-
+           
             return;
 		}
 

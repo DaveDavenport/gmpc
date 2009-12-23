@@ -116,7 +116,6 @@ override (G:Object)
 							g_source_remove(self->_priv->update_timeout);
 							self->_priv->update_timeout  = 0;
 						}
-            printf("Unref playlist\n");
             PARENT_HANDLER(obj);
         }
     public

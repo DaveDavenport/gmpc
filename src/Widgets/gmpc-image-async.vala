@@ -21,6 +21,8 @@ using GLib;
 using Gtk;
 using Gdk;
 
+const string LOG_DOMAIN = "ImageAsync";
+
 public class Gmpc.PixbufLoaderAsync : GLib.Object
 {
     private weak GLib.Cancellable? pcancel = null; 
@@ -50,11 +52,11 @@ public class Gmpc.PixbufLoaderAsync : GLib.Object
     }
 
     construct {
-	stdout.printf("Create the image loading\n" );
+        GLib.log(LOG_DOMAIN,GLib.LogLevelFlags.LEVEL_DEBUG,"Create the image loading\n" );
     }
 
     ~PixbufLoaderAsync() {
-        debug("Free the image loading");
+        GLib.log(LOG_DOMAIN,GLib.LogLevelFlags.LEVEL_DEBUG,"Free the image loading");
         if(this.pcancel != null) pcancel.cancel();
     }
 
@@ -165,7 +167,7 @@ public class Gmpc.PixbufLoaderAsync : GLib.Object
 
         if(cancel.is_cancelled())
         {
-            debug("Cancelled loading of image");
+            GLib.log(LOG_DOMAIN,GLib.LogLevelFlags.LEVEL_DEBUG,"Cancelled loading of image");
             cancel.reset();
             return;
         }
@@ -195,7 +197,7 @@ public class Gmpc.MetaImageAsync : Gtk.Image
     }
 
     ~MetaImageAsync() {
-	stdout.printf("Freeing metaimageasync\n");
+	GLib.log(LOG_DOMAIN,GLib.LogLevelFlags.LEVEL_DEBUG,"Freeing metaimageasync\n");
     }
 
     public new void set_from_file(string uri, int size, bool border)
