@@ -67,7 +67,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
     private void add_entry_image(string? provider, string uri,Gdk.PixbufFormat? format, Gdk.Pixbuf pb)
     {
         string a;
-        a = Markup.printf_escaped("<b>%s</b>: %s",_("Uri"),uri);
+        a = "";// Markup.printf_escaped("<b>%s</b>: %s",_("Uri"),uri);
         if(provider != null) {
             a+= Markup.printf_escaped("\n<b>%s</b>:  %s",_("Provider"), provider);
         }
@@ -94,6 +94,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
 
         var hbox = new Gtk.HBox(false, 6);
         var label = new Gtk.Label("");
+        label.set_ellipsize(Pango.EllipsizeMode.MIDDLE);
         label.set_markup(a);
         label.set_line_wrap(true);
         label.set_alignment(0.0f, 0.5f);
@@ -123,13 +124,14 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
     private void add_entry_text(string? provider, string uri,string text) 
     {
         string a;
-        a = "<b>%s</b>: %s".printf(_("Uri"),uri);
+        a = "";// "<b>%s</b>: %s".printf(_("Uri"),uri);
         if(provider != null) {
             a+="\n<b>%s</b>:  %s".printf(_("Provider"), provider);
         }
         var hbox = new Gtk.HBox(false, 6);
         var label = new Gtk.Label("");
         label.set_markup(a);
+        label.set_ellipsize(Pango.EllipsizeMode.MIDDLE);
         label.set_line_wrap(true);
         label.set_alignment(0.0f, 0.0f);
         label.set_size_request(280,-1);
