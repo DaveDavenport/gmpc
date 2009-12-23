@@ -55,7 +55,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
         int width = config.get_int_with_default(
                 "Metadata Selector" , "window_width", 480);
 
-        this.set_default_size(width,height);
+        this.resize(width,height);
         this.set_border_width(8);
         /* Connect to allocation changes so I can store new size */
         this.size_allocate.connect((source, alloc) => {
