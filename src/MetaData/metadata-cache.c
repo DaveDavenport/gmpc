@@ -552,6 +552,15 @@ void meta_data_set_cache_real(mpd_Song *song, MetaDataResult result, MetaData *m
 }
 void meta_data_set_cache(mpd_Song *song, MetaDataResult result, MetaData *met)
 {
+	if(met->type == META_ARTIST_ART || met->type == META_ALBUM_ART) {
+		MetaData *m= NULL;
+		MetaDataResult r = meta_data_get_from_cache(song, met->type, &m);
+		if(meta_data_is_uri(m)) {
+			const gchar *uri = meta_data_get_uri(m);
+			pixbuf_cache_invalidate_pixbuf_entry(uri);
+		}	
+		meta_data_free(m);
+	}
 	mpd_Song *edited = rewrite_mpd_song(song, met->type);
 	meta_data_set_cache_real(edited, result, met);
 	if(edited->artist)

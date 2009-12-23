@@ -25,13 +25,10 @@ private const bool use_transition_tp = Gmpc.use_transition;
 
 public class Gmpc.MetaData.EditWindow : Gtk.Window {
     private const string some_unique_name = Config.VERSION;
-    private Gtk.ListStore model = null;
-    private Gtk.TreeView tree = null;
-    private GLib.List<weak Gmpc.AsyncDownload.Handle> downloads = null;
-
     private MPD.Song song = null;
     private Gmpc.MetaData.Type query_type = Gmpc.MetaData.Type.ALBUM_ART;
 
+    private GLib.List<weak Gmpc.AsyncDownload.Handle> downloads = null;
     /** fetching handles */
     private void *handle = null;
     private void *handle2 = null;
@@ -46,7 +43,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
     private Gtk.ComboBox combo = null;
     private Gtk.ProgressBar bar = null;
     
-    private Gtk.TreeViewColumn column = null;
+    private Gtk.VBox itemslist = new Gtk.VBox(false, 6);
 
     construct {
         this.type = Gtk.WindowType.TOPLEVEL;
@@ -69,7 +66,6 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
 
     private void add_entry_image(string? provider, string uri,Gdk.PixbufFormat? format, Gdk.Pixbuf pb)
     {
-        Gtk.TreeIter iter;
         string a;
         a = Markup.printf_escaped("<b>%s</b>: %s",_("Uri"),uri);
         if(provider != null) {
@@ -94,21 +90,72 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
             new_w = 150;
             new_h = (int)((150.0/(double)pb.width)*pb.height);
         }
-        this.model.append(out iter);
-        this.model.set(iter, 0, pb.scale_simple(new_w,new_h,Gdk.InterpType.BILINEAR),1, uri,2,a, -1);
+
+
+        var hbox = new Gtk.HBox(false, 6);
+        var label = new Gtk.Label("");
+        label.set_markup(a);
+        label.set_line_wrap(true);
+        label.set_alignment(0.0f, 0.5f);
+
+        var image = new Gtk.Image.from_pixbuf(pb.scale_simple(new_w,new_h,Gdk.InterpType.BILINEAR));
+        image.set_size_request(180,-1);
+        hbox.pack_start(image, false, true, 0);
+        hbox.pack_start(label, true, true, 0);
+
+        
+        var ali = new Gtk.Alignment(0f,0f,0f,0f);
+        var button = new Gtk.Button.with_label(_("Set"));
+        button.set_data_full("path",(void *)uri.dup(),(GLib.DestroyNotify)g_free);
+        ali.add(button);
+        hbox.pack_start(ali, false, true, 0);
+        button.clicked.connect(set_metadata);
+
+        hbox.show_all();
+        this.itemslist.pack_start(hbox,false, true, 0);
+        var sep = new Gtk.HSeparator();
+        sep.set_size_request(-1, 4);
+        sep.show();
+        this.itemslist.pack_start(sep, false, true, 0);
+
     }
 
     private void add_entry_text(string? provider, string uri,string text) 
     {
-        Gtk.TreeIter iter;
         string a;
         a = "<b>%s</b>: %s".printf(_("Uri"),uri);
         if(provider != null) {
             a+="\n<b>%s</b>:  %s".printf(_("Provider"), provider);
         }
-        this.model.append(out iter);
-        this.model.set(iter, 3,text,1, uri,2,a, -1);
+        var hbox = new Gtk.HBox(false, 6);
+        var label = new Gtk.Label("");
+        label.set_markup(a);
+        label.set_line_wrap(true);
+        label.set_alignment(0.0f, 0.0f);
+        label.set_size_request(280,-1);
+        hbox.pack_start(label, false, true, 0);
+        
+        var text_label = new Gtk.Label(text); 
+        text_label.set_ellipsize(Pango.EllipsizeMode.END);
+        text_label.set_alignment(0.0f, 0.0f);
+        text_label.set_size_request(180,-1);
+        hbox.pack_start(text_label, true, true, 0);
+
+        var ali = new Gtk.Alignment(0f,0f,0f,0f);
+        var button = new Gtk.Button.with_label(_("Set"));
+        button.set_data_full("lyrics",(void *)text.dup(),(GLib.DestroyNotify)g_free);
+        ali.add(button);
+        hbox.pack_start(ali, false, true, 0);
+        button.clicked.connect(set_metadata);
+
+        hbox.show_all();
+        this.itemslist.pack_start(hbox,false, true, 0);
+        var sep = new Gtk.HSeparator();
+        sep.set_size_request(-1, 4);
+        sep.show();
+        this.itemslist.pack_start(sep, false, true, 0);
     }
+
     public void image_downloaded(Gmpc.AsyncDownload.Handle handle, Gmpc.AsyncDownload.Status status)
     {
         if(status == Gmpc.AsyncDownload.Status.PROGRESS) return;
@@ -279,60 +326,54 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
     private void
     set_metadata(Gtk.Button button)
     {
-        Gtk.TreeIter iter;
-        var sel = this.tree.get_selection();
         string path = null;
-        Gtk.TreeModel model;
-        if(sel.get_selected(out model,out iter))
+        if(this.query_type == Gmpc.MetaData.Type.ALBUM_ART || this.query_type == Gmpc.MetaData.Type.ARTIST_ART)
         {
-            this.model.get(iter,1,out path);
-
-            if(this.query_type == Gmpc.MetaData.Type.ALBUM_ART || this.query_type == Gmpc.MetaData.Type.ARTIST_ART)
+            path = (string)button.get_data("path");
+            if(path[0]  == '/')
             {
-                if(path[0]  == '/')
-                {
-                    var met = new MetaData.Item();
-                    met.type = this.query_type;
-                    met.plugin_name = "User set";
-                    met.content_type = MetaData.ContentType.URI;
-                    met.set_uri(path);
-                    Gmpc.MetaData.set_metadata(this.song, Gmpc.MetaData.Result.AVAILABLE, met); 
+                var met = new MetaData.Item();
+                met.type = this.query_type;
+                met.plugin_name = "User set";
+                met.content_type = MetaData.ContentType.URI;
+                met.set_uri(path);
+                Gmpc.MetaData.set_metadata(this.song, Gmpc.MetaData.Result.AVAILABLE, met); 
 
-                    var met_false = new MetaData.Item();
-                    met_false.type = this.query_type;
-                    met_false.plugin_name = "User set";
-                    met_false.content_type = MetaData.ContentType.EMPTY;
-                    metawatcher.data_changed(this.song, this.query_type, Gmpc.MetaData.Result.UNAVAILABLE, met_false);  
-                    metawatcher.data_changed(this.song, this.query_type, Gmpc.MetaData.Result.AVAILABLE, met);  
-                }else{
-                    var h = Gmpc.AsyncDownload.download(path, store_image); 
-                    if(h!=null)
-                        this.downloads.append(h);
-                }
+                var met_false = new MetaData.Item();
+                met_false.type = this.query_type;
+                met_false.plugin_name = "User set";
+                met_false.content_type = MetaData.ContentType.EMPTY;
+                metawatcher.data_changed(this.song, this.query_type, Gmpc.MetaData.Result.UNAVAILABLE, met_false);  
+                metawatcher.data_changed(this.song, this.query_type, Gmpc.MetaData.Result.AVAILABLE, met);  
             }else{
-                string lyric;
-                this.model.get(iter,3,out lyric);
-                var file = Gmpc.MetaData.get_metadata_filename(this.query_type, this.song,null); 
-                try {
-                    GLib.FileUtils.set_contents(file,lyric, -1); 
-                    var met = new MetaData.Item();
-                    met.type = this.query_type;
-                    met.plugin_name = "User set";
-                    met.content_type = MetaData.ContentType.URI;
-                    met.set_uri(file);
-                    Gmpc.MetaData.set_metadata(this.song, Gmpc.MetaData.Result.AVAILABLE, met); 
+                var h = Gmpc.AsyncDownload.download(path, store_image); 
+                if(h!=null)
+                    this.downloads.append(h);
+            }
+        }else{
+            string lyric;
 
-                    var met_false = new MetaData.Item();
-                    met_false.type = this.query_type;
-                    met_false.plugin_name = "User set";
-                    met_false.content_type = MetaData.ContentType.EMPTY;
-                    metawatcher.data_changed(this.song, this.query_type, Gmpc.MetaData.Result.UNAVAILABLE, met_false);  
-                    metawatcher.data_changed(this.song, this.query_type, Gmpc.MetaData.Result.AVAILABLE, met);  
-                }catch (Error e) {
+            lyric = (string)button.get_data("lyrics");
+            var file = Gmpc.MetaData.get_metadata_filename(this.query_type, this.song,null); 
+            try {
+                GLib.FileUtils.set_contents(file,lyric, -1); 
+                var met = new MetaData.Item();
+                met.type = this.query_type;
+                met.plugin_name = "User set";
+                met.content_type = MetaData.ContentType.URI;
+                met.set_uri(file);
+                Gmpc.MetaData.set_metadata(this.song, Gmpc.MetaData.Result.AVAILABLE, met); 
 
-                }
+                var met_false = new MetaData.Item();
+                met_false.type = this.query_type;
+                met_false.plugin_name = "User set";
+                met_false.content_type = MetaData.ContentType.EMPTY;
+                metawatcher.data_changed(this.song, this.query_type, Gmpc.MetaData.Result.UNAVAILABLE, met_false);  
+                metawatcher.data_changed(this.song, this.query_type, Gmpc.MetaData.Result.AVAILABLE, met);  
+            }catch (Error e) {
 
             }
+
 
         }
     }
@@ -342,11 +383,18 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
     {
         this.destroy();
     }
+    private void clear_itemslist()
+    {
+        foreach(Gtk.Widget client in this.itemslist.get_children())
+        {
+           client.destroy();
+        }
 
+    }
     public void refresh_query(Gtk.Button button) 
     {
+        clear_itemslist();
         GLib.log("MetadataSelector", GLib.LogLevelFlags.LEVEL_DEBUG, "Query metadata");
-        this.model.clear();
         MPD.Song ss = this.song;
         ss.artist = this.artist_entry.get_text();
         ss.album = this.album_entry.get_text();
@@ -364,19 +412,13 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
     }
     private void combo_box_changed(Gtk.ComboBox comb)
     {
+        clear_itemslist();
         int active = comb.active;
-        this.model.clear();
         this.title_entry.sensitive = false;
         this.album_entry.sensitive = false;
         this.artist_entry.sensitive = false;
         this.refresh.sensitive = false;
         this.warning_label.hide();
-        if(this.column != null)
-        {
-            this.tree.remove_column(this.column);
-            this.column.destroy();
-            this.column = null;
-        }
         if(active == 0)
         {
            this.query_type = Gmpc.MetaData.Type.ARTIST_ART;  
@@ -436,33 +478,6 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
            }
            else this.warning_label.show();
         }
-
-
-        if(active <2 )
-        {
-            var renderer = new Gtk.CellRendererPixbuf();
-            this.column = new Gtk.TreeViewColumn();
-            column.resizable = true;
-            this.column.pack_start(renderer,false);
-            renderer.set("xalign",0.0f);
-            renderer.set("yalign",0.0f);
-            this.tree.append_column(this.column);
-            this.column.set_title(_("Cover"));
-            this.column.add_attribute(renderer, "pixbuf", 0);
-        }
-        else 
-        {
-            var renderer = new Gtk.CellRendererText();
-            this.column = new Gtk.TreeViewColumn();
-            column.resizable = true;
-            this.column.pack_start(renderer,false);
-            this.tree.append_column(this.column);
-
-            renderer.set("wrap-mode",Pango.WrapMode.WORD);
-            renderer.set("wrap-width",300);
-            this.column.set_title(_("Lyric"));
-            this.column.add_attribute(renderer, "text", 3);
-        }
     }
 
     public
@@ -482,31 +497,11 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
         this.pbox.no_show_all = true;
         this.pbox.hide();
 
-        this.model = new Gtk.ListStore(4,typeof(Gdk.Pixbuf), typeof(string),typeof(string),typeof(string));
         var sw = new Gtk.ScrolledWindow(null, null);
-        var iv = new Gtk.TreeView();
 
-        this.tree = iv;
         sw.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC);
         sw.set_shadow_type(Gtk.ShadowType.ETCHED_IN);
-        iv.set_model(this.model);
-        this.tree.rules_hint = true;
         
-
-        var rendererpb = new Gtk.CellRendererText();
-        var column = new Gtk.TreeViewColumn();
-        column.resizable = true;
-        column.min_width = 250;
-        rendererpb.set("xalign",0.0f);
-        rendererpb.set("yalign",0.0f);
-        rendererpb.set("ellipsize", Pango.EllipsizeMode.END);
-        column.pack_start(rendererpb,true);
-        iv.append_column(column);
-        column.set_title(_("Information"));
-        column.add_attribute(rendererpb, "markup", 2);
-        
-
-
 
         /* Button */
         var hbox = new Gtk.HBox(false, 6);
@@ -514,11 +509,6 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
         var button = new Gtk.Button.from_stock("gtk-quit");
         button.clicked += destroy_popup;
         hbox.pack_end(button, false, false, 0);
-
-        button = new Gtk.Button.with_mnemonic("_Set");
-        button.clicked += set_metadata;
-        hbox.pack_end(button, false, false, 0);
-
         vbox.pack_end(hbox, false, false,0);
 
         /** Change */
@@ -530,60 +520,72 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
 
         var group = new Gtk.SizeGroup(Gtk.SizeGroupMode.HORIZONTAL);
         var qhbox = new Gtk.HBox(false, 6);
-        var label = new Gtk.Label("Type");
+        Gtk.Label label = null;
 
-        group.add_widget(label);
-        qhbox.pack_start(label, false,false,0);
+        var list = new Gtk.ListStore(2,typeof(string), typeof(string),-1);
+        list.insert_with_values(null, -1, 0, "media-artist",    1, _("Artist art"));
+        list.insert_with_values(null, -1, 0, "media-album",     1, _("Album art"));
+        list.insert_with_values(null, -1, 0, "gtk-dnd",         1, _("Song lyrics"));
+        list.insert_with_values(null, -1, 0, "media-album",     1, _("Album Info"));
+        list.insert_with_values(null, -1, 0, "media-artist",    1, _("Artist Biography"));
+        list.insert_with_values(null, -1, 0, "media-album",     1, _("Guitar Tab"));
 
-        this.combo = new Gtk.ComboBox.text(); 
-        qhbox.pack_start(this.combo, false,false,0);
-        this.combo.append_text(_("Artist art"));
-        this.combo.append_text(_("Album art"));
-        this.combo.append_text(_("Song Lyrics"));
-        this.combo.append_text(_("Album Info"));
-        this.combo.append_text(_("Artist Biography"));
-        this.combo.append_text(_("Guitar Tab"));
+        this.combo = new Gtk.ComboBox.with_model(list); 
+       
+        Gtk.CellRenderer renderer = new Gtk.CellRendererPixbuf();
+        this.combo.pack_start(renderer,false);
+        this.combo.add_attribute(renderer, "icon-name", 0);
+        renderer = new Gtk.CellRendererText();
+        this.combo.pack_start(renderer,true);
+        this.combo.add_attribute(renderer, "text", 1);
 
+        qhbox.pack_start(this.combo, true,true,0);
         this.combo.changed += combo_box_changed;
 
         vbox.pack_start(qhbox, false, false, 0);
        
         
         qhbox = new Gtk.HBox(false, 6);
+
         label = new Gtk.Label(_("Artist"));
+        label.set_alignment(0.0f, 0.5f);
         group.add_widget(label);
         qhbox.pack_start(label, false, false, 0);
+        var image =  new Gtk.Image.from_icon_name("media-artist", Gtk.IconSize.BUTTON);
+        qhbox.pack_start(image, false, false, 0);
+
         this.artist_entry = new Gtk.Entry();
         this.artist_entry.set_text(song.artist);
         qhbox.pack_start(this.artist_entry, true, true, 0);
-
         vbox.pack_start(qhbox, false, false, 0);
        
-//        if(type == Gmpc.MetaData.Type.ALBUM_ART)
-        {
-            qhbox = new Gtk.HBox(false, 6);
-            label = new Gtk.Label(_("Album"));
-            group.add_widget(label);
-            qhbox.pack_start(label, false, false, 0);
-            this.album_entry = new Gtk.Entry();
-            if(song.album != null)
-                this.album_entry.set_text(song.album);
-            qhbox.pack_start(this.album_entry, true, true, 0);
+        qhbox = new Gtk.HBox(false, 6);
+        label = new Gtk.Label(_("Album"));
+        label.set_alignment(0.0f, 0.5f);
+        group.add_widget(label);
+        qhbox.pack_start(label, false, false, 0);
+        image =  new Gtk.Image.from_icon_name("media-album", Gtk.IconSize.BUTTON);
+        qhbox.pack_start(image, false, false, 0);
+        this.album_entry = new Gtk.Entry();
+        if(song.album != null)
+            this.album_entry.set_text(song.album);
+        qhbox.pack_start(this.album_entry, true, true, 0);
+        vbox.pack_start(qhbox, false, false, 0);
 
-            vbox.pack_start(qhbox, false, false, 0);
-        }
-        {
-            qhbox = new Gtk.HBox(false, 6);
-            label = new Gtk.Label(_("Title"));
-            group.add_widget(label);
-            qhbox.pack_start(label, false, false, 0);
-            this.title_entry = new Gtk.Entry();
-            if(song.title != null)
-                this.title_entry.set_text(song.title);
-            qhbox.pack_start(this.title_entry, true, true, 0);
+        qhbox = new Gtk.HBox(false, 6);
+        label = new Gtk.Label(_("Title"));
+        label.set_alignment(0.0f, 0.5f);
+        group.add_widget(label);
+        qhbox.pack_start(label, false, false, 0);
+        image =  new Gtk.Image.from_icon_name("media-title", Gtk.IconSize.BUTTON);
+        qhbox.pack_start(image, false, false, 0);
+        this.title_entry = new Gtk.Entry();
+        if(song.title != null)
+            this.title_entry.set_text(song.title);
+        qhbox.pack_start(this.title_entry, true, true, 0);
 
-            vbox.pack_start(qhbox, false, false, 0);
-        }
+        vbox.pack_start(qhbox, false, false, 0);
+
         if(type != Gmpc.MetaData.Type.ALBUM_ART)
             this.album_entry.sensitive = false;
 
@@ -599,7 +601,18 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
         vbox.pack_start(sw, true, true,0);
         this.add(vbox);
         this.hide_on_delete();
-        sw.add(iv);
+        //sw.add(iv);
+        var ilevent = new Gtk.EventBox();
+        this.itemslist.border_width = 8;
+        ilevent.visible_window = true;
+        ilevent.modify_bg(Gtk.StateType.NORMAL,this.style.base[Gtk.StateType.NORMAL]);
+        this.style_set.connect((source, old) => {
+                this.itemslist.get_parent().modify_bg(Gtk.StateType.NORMAL,this.style.base[Gtk.StateType.NORMAL]);
+        });
+    //            ilevent.modify_bg(Gtk.StateType.NORMAL,this.style.base[Gtk.StateType.NORMAL]);
+     //           });
+        ilevent.add(itemslist);
+        sw.add_with_viewport(ilevent);
         this.show_all();
 
         if(type == Gmpc.MetaData.Type.ARTIST_ART)  this.combo.set_active(0);
@@ -682,12 +695,12 @@ public class  Gmpc.TestPlugin : Gmpc.Plugin.Base,Gmpc.Plugin.ToolMenuIface, Gmpc
      ********************************************************************************/
     private void menu_activate_tree(Gtk.MenuItem item)
     {
+        Gtk.TreeIter iter;
         Gtk.TreeView tv = (Gtk.TreeView)item.get_data("treeview");
         Gtk.TreeModel model = tv.get_model();
         var selection = tv.get_selection();
         foreach(weak Gtk.TreePath path in selection.get_selected_rows(out model))
         {
-            Gtk.TreeIter iter;
             if(model.get_iter(out iter, path))
             {
                 weak MPD.Song song = null;

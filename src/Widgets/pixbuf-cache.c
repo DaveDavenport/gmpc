@@ -97,6 +97,31 @@ static void destroy_cache_entry(DCE *entry)
 
 
 
+void pixbuf_cache_invalidate_pixbuf_entry(gchar *url)
+{
+    gchar *key;
+    DCE *e;
+    GList *liter,*list= NULL;
+    GHashTableIter iter;
+    g_hash_table_iter_init (&iter,pb_cache );
+    while (g_hash_table_iter_next (&iter, (gpointer)&key, (gpointer)&e))
+    {
+        int i;
+        int length = strlen(key);
+        for(i=0; i< length && key[i] != ':'; i++);
+        if(key[i] == ':'){
+            if(g_utf8_collate(&key[i+1],url) == 0) {
+                g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Invalidate :%s", e->key);
+                list = g_list_prepend(list,(gpointer) e->key);
+            }
+        }
+    }
+    for(liter = g_list_first(list); liter; liter= g_list_next(liter))
+    {
+        g_hash_table_remove(pb_cache, (gchar *)liter->data);
+    }
+    g_list_free(list);
+}
 void pixbuf_cache_create(void)
 {
     g_assert(pb_cache == NULL);
