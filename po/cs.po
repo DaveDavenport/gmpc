@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-12-23 15:42+0100\n"
+"POT-Creation-Date: 2009-12-23 15:44+0100\n"
 "PO-Revision-Date: 2009-05-13 15:55+0000\n"
 "Last-Translator: Vojtěch Látal <vojtech@latal.name>\n"
 "Language-Team: Czech <cs@li.org>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2009-11-16 23:32+0000\n"
+"X-Launchpad-Export-Date: 2009-12-23 17:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -211,9 +211,8 @@ msgid "Shows all output from a certain log domain"
 msgstr ""
 
 #: ../src/main.c:305
-#, fuzzy
 msgid "Select a profile"
-msgstr "Vyberte soubor"
+msgstr ""
 
 #: ../src/main.c:443
 msgid "quit"
@@ -774,7 +773,7 @@ msgstr "Odpojen"
 
 #. *
 #. * Set paused in Window string
-#.
+#. 
 #: ../src/playlist3.c:1692 ../src/playlist3.c:1697
 msgid "paused"
 msgstr ""
@@ -1056,7 +1055,7 @@ msgstr "Oznámení"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:111
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -1075,7 +1074,7 @@ msgstr "Nastavení připojení"
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:141
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1313,9 +1312,8 @@ msgid "<b>Output Devices:</b>"
 msgstr "<b>Výstupní zařízení:</b>"
 
 #: ../glade/preferences-server.ui.h:3
-#, fuzzy
 msgid "<b>Replaygain</b>"
-msgstr "<b>Hlavní:</b>"
+msgstr ""
 
 #: ../glade/preferences-server.ui.h:4
 msgid ""
@@ -1537,9 +1535,8 @@ msgid "Play Queue"
 msgstr "Fronta"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:1120
-#, fuzzy
 msgid "Search Playlist"
-msgstr "Uložit seznam skladeb"
+msgstr ""
 
 #: ../src/browsers/playlist3-file-browser.c:109
 #: ../src/browsers/playlist3-file-browser.c:347
@@ -1796,9 +1793,8 @@ msgstr "Žánr"
 
 #: ../src/browsers/gmpc-nowplaying2.c:1107
 #: ../src/browsers/gmpc-metadata-browser2.c:3100
-#, fuzzy
 msgid "Codec"
-msgstr "_Připojit"
+msgstr ""
 
 #: ../src/browsers/gmpc-nowplaying2.c:1128
 #: ../src/browsers/gmpc-metadata-browser2.c:3106
@@ -1940,9 +1936,8 @@ msgstr "Informace o albu"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:3864
 #: ../src/browsers/gmpc-metadata-browser2.c:3866
-#, fuzzy
 msgid "Song list"
-msgstr "Skladby"
+msgstr ""
 
 #: ../src/browsers/gmpc-metadata-browser2.c:4219
 #: ../src/browsers/gmpc-metadata-browser2.c:4221
@@ -1951,9 +1946,8 @@ msgid "Artist information"
 msgstr "Informace o interpretovi"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:4322
-#, fuzzy
 msgid "Albums by"
-msgstr "Alba"
+msgstr ""
 
 #: ../src/browsers/gmpc-metadata-browser2.c:5197
 msgid "Enable/disable metadata options"
@@ -2216,15 +2210,8 @@ msgid "Rating:"
 msgstr ""
 
 #: ../src/Providers/music-tree.c:182
-#, fuzzy
 msgid "Music Tree Provider"
-msgstr "Poskytovatel metadat"
-
-#~ msgid "Error Message"
-#~ msgstr "Chybová zpráva"
-
-#~ msgid "File Browser"
-#~ msgstr "Prohlížeč souborů"
+msgstr ""
 
 #~ msgid "MPD database is updating."
 #~ msgstr "Databáze MPD se právě aktualizuje."
@@ -2277,18 +2264,24 @@ msgstr "Poskytovatel metadat"
 #~ msgid " Total time: "
 #~ msgstr " Celkový čas: "
 
+#~ msgid "Error Message"
+#~ msgstr "Chybová zpráva"
+
 #~ msgid "MPD database is updating"
 #~ msgstr "Probíhá aktualizace databáze MPD"
 
 #~ msgid "Enter an url"
 #~ msgstr "Zadejte url"
 
+#~ msgid "File Browser"
+#~ msgstr "Prohlížeč souborů"
+
 #~ msgid "View"
 #~ msgstr "Zobrazení"
 
+#, c-format
 #~ msgid "Only the first %i result displayed, please refine your search query"
-#~ msgstr ""
-#~ "Zobrazeno je pouze prvních %i výsledků. Zkuste prosím zlepšit dotaz."
+#~ msgstr "Zobrazeno je pouze prvních %i výsledků. Zkuste prosím zlepšit dotaz."
 
 #~ msgid "kbit/sec"
 #~ msgstr "kbit/sec"
@@ -2323,6 +2316,7 @@ msgstr "Poskytovatel metadat"
 #~ msgid "MPD finished updating its database"
 #~ msgstr "MPD úspěšně ukončilo aktualizaci databáze"
 
+#, c-format
 #~ msgid "MPD Database refreshed at: %c"
 #~ msgstr "Databáze MPD aktualizována v: %c"
 
@@ -2359,6 +2353,9 @@ msgstr "Poskytovatel metadat"
 #~ msgid "Similar Artists"
 #~ msgstr "Podobní interpreti"
 
+#~ msgid "Albums"
+#~ msgstr "Alba"
+
 #~ msgid "bits"
 #~ msgstr "bitů"
 
@@ -2377,6 +2374,7 @@ msgstr "Poskytovatel metadat"
 #~ msgid "Edit _Browser Markup"
 #~ msgstr "Úp_rava pravidla pro název"
 
+#, c-format
 #~ msgid ""
 #~ "Gnome Music Player Client\n"
 #~ "Options:\n"

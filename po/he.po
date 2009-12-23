@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-12-23 15:42+0100\n"
+"POT-Creation-Date: 2009-12-23 15:44+0100\n"
 "PO-Revision-Date: 2009-05-13 15:57+0000\n"
 "Last-Translator: Yaron <sh.yaron@gmail.com>\n"
 "Language-Team: Hebrew <he@li.org>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-11-16 23:32+0000\n"
+"X-Launchpad-Export-Date: 2009-12-23 17:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -765,7 +765,7 @@ msgstr "מנותק"
 
 #. *
 #. * Set paused in Window string
-#.
+#. 
 #: ../src/playlist3.c:1692 ../src/playlist3.c:1697
 msgid "paused"
 msgstr ""
@@ -1044,7 +1044,7 @@ msgstr "דיווחים"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:111
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -1063,7 +1063,7 @@ msgstr "הגדרת חיבור"
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:141
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1300,9 +1300,8 @@ msgid "<b>Output Devices:</b>"
 msgstr "<b>התקני הפלט:</b>"
 
 #: ../glade/preferences-server.ui.h:3
-#, fuzzy
 msgid "<b>Replaygain</b>"
-msgstr "<b>ראשי:</b>"
+msgstr ""
 
 #: ../glade/preferences-server.ui.h:4
 msgid ""
@@ -1522,9 +1521,8 @@ msgid "Play Queue"
 msgstr "תור הנגינה"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:1120
-#, fuzzy
 msgid "Search Playlist"
-msgstr "שמירת רשימת השמעה"
+msgstr ""
 
 #: ../src/browsers/playlist3-file-browser.c:109
 #: ../src/browsers/playlist3-file-browser.c:347
@@ -1778,9 +1776,8 @@ msgstr ""
 
 #: ../src/browsers/gmpc-nowplaying2.c:1107
 #: ../src/browsers/gmpc-metadata-browser2.c:3100
-#, fuzzy
 msgid "Codec"
-msgstr "ה_תחבר"
+msgstr ""
 
 #: ../src/browsers/gmpc-nowplaying2.c:1128
 #: ../src/browsers/gmpc-metadata-browser2.c:3106
@@ -1932,9 +1929,8 @@ msgid "Artist information"
 msgstr ""
 
 #: ../src/browsers/gmpc-metadata-browser2.c:4322
-#, fuzzy
 msgid "Albums by"
-msgstr "א_לבום"
+msgstr ""
 
 #: ../src/browsers/gmpc-metadata-browser2.c:5197
 msgid "Enable/disable metadata options"
@@ -2197,15 +2193,8 @@ msgid "Rating:"
 msgstr ""
 
 #: ../src/Providers/music-tree.c:182
-#, fuzzy
 msgid "Music Tree Provider"
-msgstr "ספק נתוני מטא"
-
-#~ msgid "Error Message"
-#~ msgstr "הודעת שגיאה"
-
-#~ msgid "File Browser"
-#~ msgstr "סייר הקבצים"
+msgstr ""
 
 #~ msgid "<b>Song Markup</b>"
 #~ msgstr "<b>סימון שירים</b>"
@@ -2270,11 +2259,17 @@ msgstr "ספק נתוני מטא"
 #~ msgid " Total time: "
 #~ msgstr " זמן כולל: "
 
+#~ msgid "Error Message"
+#~ msgstr "הודעת שגיאה"
+
 #~ msgid "MPD database is updating"
 #~ msgstr "מסד הנתונים של MPD מתעדכן"
 
 #~ msgid "Enter an url"
 #~ msgstr "הזן כתובת"
+
+#~ msgid "File Browser"
+#~ msgstr "סייר הקבצים"
 
 #~ msgid "View"
 #~ msgstr "הצג"

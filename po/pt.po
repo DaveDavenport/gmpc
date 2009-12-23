@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-12-23 15:42+0100\n"
-"PO-Revision-Date: 2009-05-13 16:09+0000\n"
-"Last-Translator: Diogo Lavareda <diogolavareda9@hotmail.com>\n"
+"POT-Creation-Date: 2009-12-23 15:44+0100\n"
+"PO-Revision-Date: 2009-12-07 12:52+0000\n"
+"Last-Translator: Carlos Manuel <Unknown>\n"
 "Language-Team: Portuguese <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-11-16 23:32+0000\n"
+"X-Launchpad-Export-Date: 2009-12-23 17:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -108,7 +108,7 @@ msgstr "_Ligar"
 
 #: ../glade/playlist3.glade.h:19
 msgid "_Control"
-msgstr ""
+msgstr "_Controlo"
 
 #: ../glade/playlist3.glade.h:20 ../glade/preferences-connection.ui.h:10
 msgid "_Disconnect"
@@ -211,9 +211,8 @@ msgid "Shows all output from a certain log domain"
 msgstr ""
 
 #: ../src/main.c:305
-#, fuzzy
 msgid "Select a profile"
-msgstr "Seleccionar ficheiro"
+msgstr ""
 
 #: ../src/main.c:443
 msgid "quit"
@@ -237,7 +236,7 @@ msgstr "mostrar"
 
 #: ../src/main.c:448
 msgid "Show gmpc"
-msgstr ""
+msgstr "Mostrar gmpc"
 
 #: ../src/main.c:449
 msgid "show notification"
@@ -751,7 +750,7 @@ msgstr "Desligado"
 
 #. *
 #. * Set paused in Window string
-#.
+#. 
 #: ../src/playlist3.c:1692 ../src/playlist3.c:1697
 msgid "paused"
 msgstr ""
@@ -1032,12 +1031,14 @@ msgstr "Notificação"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:111
 msgid ""
 "It is the first time you have launched gmpc.\n"
 "This assistant will help you connect gmpc to your mpd daemon."
 msgstr ""
+"Esta é a primeira vez que executa o gmpc.\n"
+"O assistente irá ajudá-lo a ligar o gmpc ao seu gestor do mdp."
 
 #: ../src/setup-assistant.c:113
 msgid "Welcome to GMPC"
@@ -1049,7 +1050,7 @@ msgstr "Configurar ligação"
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:141
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1133,6 +1134,7 @@ msgstr "Copyright 2003-2007 Qball Cow"
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
+"  Carlos Manuel https://launchpad.net/~crolidge\n"
 "  Diogo Lavareda https://launchpad.net/~diogolavareda\n"
 "  Pulsar https://launchpad.net/~gamma-pulsar\n"
 "  Qball Cow https://launchpad.net/~qball-qballcow\n"
@@ -1289,9 +1291,8 @@ msgid "<b>Output Devices:</b>"
 msgstr "<b>Dispositivos de saida:</b>"
 
 #: ../glade/preferences-server.ui.h:3
-#, fuzzy
 msgid "<b>Replaygain</b>"
-msgstr "<b>Principal:</b>"
+msgstr ""
 
 #: ../glade/preferences-server.ui.h:4
 msgid ""
@@ -1406,7 +1407,8 @@ msgstr "<introduza o nome da lista de reprodução>"
 
 #: ../glade/playlist-save-dialog.ui.h:2
 msgid "<span size=\"x-small\"><i>Playlist already exists.</i></span>"
-msgstr "<span size=\"x-small\"><i>A lista de reprodução já existe.</i></span>"
+msgstr ""
+"<span size=\"x-small\"><i>A lista de reprodução já existe.</i></span>"
 
 #: ../glade/playlist-save-dialog.ui.h:3
 msgid "Save Playlist"
@@ -1511,9 +1513,8 @@ msgid "Play Queue"
 msgstr "Reproduzir fila"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:1120
-#, fuzzy
 msgid "Search Playlist"
-msgstr "procurar lista de reprodução"
+msgstr ""
 
 #: ../src/browsers/playlist3-file-browser.c:109
 #: ../src/browsers/playlist3-file-browser.c:347
@@ -1767,9 +1768,8 @@ msgstr "Género"
 
 #: ../src/browsers/gmpc-nowplaying2.c:1107
 #: ../src/browsers/gmpc-metadata-browser2.c:3100
-#, fuzzy
 msgid "Codec"
-msgstr "_Ligar"
+msgstr ""
 
 #: ../src/browsers/gmpc-nowplaying2.c:1128
 #: ../src/browsers/gmpc-metadata-browser2.c:3106
@@ -1901,7 +1901,7 @@ msgstr ""
 #: ../src/browsers/gmpc-metadata-browser2.c:3789
 #: ../src/browsers/gmpc-metadata-browser2.c:4178
 msgid "Playtime"
-msgstr ""
+msgstr "Tempo de Reprodução"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:3830
 #: ../src/browsers/gmpc-metadata-browser2.c:3832
@@ -1911,9 +1911,8 @@ msgstr "Informação do Album"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:3864
 #: ../src/browsers/gmpc-metadata-browser2.c:3866
-#, fuzzy
 msgid "Song list"
-msgstr "Músicas"
+msgstr ""
 
 #: ../src/browsers/gmpc-metadata-browser2.c:4219
 #: ../src/browsers/gmpc-metadata-browser2.c:4221
@@ -1922,9 +1921,8 @@ msgid "Artist information"
 msgstr "Informação do artista"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:4322
-#, fuzzy
 msgid "Albums by"
-msgstr "Albums"
+msgstr ""
 
 #: ../src/browsers/gmpc-metadata-browser2.c:5197
 msgid "Enable/disable metadata options"
@@ -2190,24 +2188,6 @@ msgstr "Classificar:"
 msgid "Music Tree Provider"
 msgstr ""
 
-#~ msgid "Error occurred during operation"
-#~ msgstr "Ocurreram erros durante a operação"
-
-#~ msgid "The following error(s) occurred:"
-#~ msgstr "Ocorreram os seguintes erros:"
-
-#~ msgid "Error Message"
-#~ msgstr "Mensagem de erro"
-
-#~ msgid "Path"
-#~ msgstr "Endereço"
-
-#~ msgid "Playlist"
-#~ msgstr "Lista de reprodução"
-
-#~ msgid "Update list from internet"
-#~ msgstr "Actualizar lista a partir da internet"
-
 #~ msgid "MPD database is updating."
 #~ msgstr "A base de dados MPD está a actualizar."
 
@@ -2226,8 +2206,17 @@ msgstr ""
 #~ msgid "2 Feb 2006"
 #~ msgstr "2 Feb 2006"
 
+#~ msgid "Error occurred during operation"
+#~ msgstr "Ocurreram erros durante a operação"
+
+#~ msgid "The following error(s) occurred:"
+#~ msgstr "Ocorreram os seguintes erros:"
+
 #~ msgid " Total time: "
 #~ msgstr " Tempo total: "
+
+#~ msgid "Error Message"
+#~ msgstr "Mensagem de erro"
 
 #~ msgid "second"
 #~ msgid_plural "seconds"
@@ -2243,11 +2232,15 @@ msgstr ""
 #~ msgid "MPD database is updating"
 #~ msgstr "A base de dados MPD está a actualizar"
 
+#, c-format
 #~ msgid "MPD Database refreshed at: %c"
 #~ msgstr "Base de dados MPD actualizada em: %c"
 
 #~ msgid "Enter an url"
 #~ msgstr "Introduza um URL"
+
+#~ msgid "Playlist"
+#~ msgstr "Lista de reprodução"
 
 #~ msgid "View"
 #~ msgstr "Ver"
@@ -2257,6 +2250,9 @@ msgstr ""
 
 #~ msgid "Bitrate"
 #~ msgstr "Bitrate"
+
+#~ msgid "Path"
+#~ msgstr "Endereço"
 
 #~ msgid "Songs with same title"
 #~ msgstr "Músicas com o mesmo título"
@@ -2291,6 +2287,9 @@ msgstr ""
 
 #~ msgid "Similar Artists"
 #~ msgstr "Artistas Similares"
+
+#~ msgid "Albums"
+#~ msgstr "Albums"
 
 #~ msgid "Album info:"
 #~ msgstr "Informação do Album"
@@ -2327,6 +2326,9 @@ msgstr ""
 
 #~ msgid "Orientation"
 #~ msgstr "Orientação"
+
+#~ msgid "Update list from internet"
+#~ msgstr "Actualizar lista a partir da internet"
 
 #~ msgid "Links"
 #~ msgstr "Links"

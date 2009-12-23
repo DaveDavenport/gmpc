@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-12-23 15:42+0100\n"
-"PO-Revision-Date: 2009-10-31 17:25+0000\n"
+"POT-Creation-Date: 2009-12-23 15:44+0100\n"
+"PO-Revision-Date: 2009-11-24 19:43+0000\n"
 "Last-Translator: Polesz <polesz@nedudu.hu>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-11-16 23:32+0000\n"
+"X-Launchpad-Export-Date: 2009-12-23 17:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -211,9 +211,8 @@ msgid "Shows all output from a certain log domain"
 msgstr "Megmutatja az összes kimenetet egy domain naplójából"
 
 #: ../src/main.c:305
-#, fuzzy
 msgid "Select a profile"
-msgstr "Válassz egy fájlt"
+msgstr "Válasszon egy profilt"
 
 #: ../src/main.c:443
 msgid "quit"
@@ -273,10 +272,22 @@ msgid ""
 "Thanks,\n"
 "<i>Qball Cow</i>"
 msgstr ""
+"A GMPC csapat segítséget kér a GMPC fenntartásához és fejlesztéséhez\n"
+"A következő segítségekre van szükségünk:\n"
+"* A honlap karbantartása és frissítése.\n"
+"* Felhasználók támogatása\n"
+"* Modulok fejlesztése\n"
+"* A GMPC fejlesztése\n"
+"Ha segíteni szeretne kérjük csatlakozzon hozzánk IRC csatornánkon (# gmpc on "
+"irc.freenode.net)\n"
+"\n"
+"Köszönjük,\n"
+"<i>Qball Cow</ i>"
 
 #: ../src/main.c:1105
 msgid "GMPC has insufficient permissions on the mpd server."
-msgstr "A GMPC nem rendelkezik az mpd szerveren a szükséges jogosultságokkal."
+msgstr ""
+"A GMPC nem rendelkezik az mpd szerveren a szükséges jogosultságokkal."
 
 #: ../src/main.c:1131
 #, c-format
@@ -524,7 +535,8 @@ msgstr "Lejátszás megállítása a jelenleg lejátszott dal után."
 #: ../src/mpdinteraction.c:283
 msgid ""
 "Repeat current song: The used MPD server is to old and does not support this."
-msgstr "Jelenlegi dal ismétlése: Az MPD szerver túl régi és nem támogatja ezt."
+msgstr ""
+"Jelenlegi dal ismétlése: Az MPD szerver túl régi és nem támogatja ezt."
 
 #: ../src/mpdinteraction.c:285
 msgid "Repeat current song: You have insufficient permission."
@@ -774,7 +786,7 @@ msgstr "Bontva"
 
 #. *
 #. * Set paused in Window string
-#.
+#. 
 #: ../src/playlist3.c:1692 ../src/playlist3.c:1697
 msgid "paused"
 msgstr "szüneteltetve"
@@ -847,23 +859,20 @@ msgid "Interface"
 msgstr "Felület"
 
 #: ../src/playlist3.c:2684
-#, fuzzy
 msgid "Single Mode enabled"
-msgstr "Egyszerű mód"
+msgstr ""
 
 #: ../src/playlist3.c:2687
-#, fuzzy
 msgid "Single Mode disabled"
-msgstr "Egyszerű mód: %s"
+msgstr ""
 
 #: ../src/playlist3.c:2695
 msgid "Consume Mode enabled"
 msgstr ""
 
 #: ../src/playlist3.c:2698
-#, fuzzy
 msgid "Consume Mode disabled"
-msgstr "Ismétlés letiltása"
+msgstr ""
 
 #: ../src/playlist3.c:2706
 msgid "Repeat enabled"
@@ -1058,7 +1067,7 @@ msgstr "Értesítés"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:111
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -1077,7 +1086,7 @@ msgstr "Kapcsolat beállítása"
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:141
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1118,7 +1127,8 @@ msgstr "Ismeretlen indítási paraméter: %d"
 #: ../src/smclient/eggdesktopfile.c:1373
 #, c-format
 msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
-msgstr "Nem adhatók dokumentum-URI címek egy 'Type=Link' asztali bejegyzésnek"
+msgstr ""
+"Nem adhatók dokumentum-URI címek egy 'Type=Link' asztali bejegyzésnek"
 
 #: ../src/smclient/eggdesktopfile.c:1392
 #, c-format
@@ -1317,9 +1327,8 @@ msgid "<b>Output Devices:</b>"
 msgstr "<b>Kimeneti eszközök:</b>"
 
 #: ../glade/preferences-server.ui.h:3
-#, fuzzy
 msgid "<b>Replaygain</b>"
-msgstr "<b>Fő:</b>"
+msgstr ""
 
 #: ../glade/preferences-server.ui.h:4
 msgid ""
@@ -1427,7 +1436,7 @@ msgstr "Üzenetek"
 
 #: ../glade/playlist-message-window.ui.h:2
 msgid "_Copy to clipboard"
-msgstr ""
+msgstr "_Másolás a vágólapra"
 
 #: ../glade/playlist-save-dialog.ui.h:1
 msgid "<enter playlist name>"
@@ -1541,9 +1550,8 @@ msgid "Play Queue"
 msgstr "Lejátszási sor"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:1120
-#, fuzzy
 msgid "Search Playlist"
-msgstr "lejátszólista keresés"
+msgstr "Keresés a lejátszólistában"
 
 #: ../src/browsers/playlist3-file-browser.c:109
 #: ../src/browsers/playlist3-file-browser.c:347
@@ -1801,9 +1809,8 @@ msgstr "Műfaj"
 
 #: ../src/browsers/gmpc-nowplaying2.c:1107
 #: ../src/browsers/gmpc-metadata-browser2.c:3100
-#, fuzzy
 msgid "Codec"
-msgstr "Kap_csolódás"
+msgstr "Kodek"
 
 #: ../src/browsers/gmpc-nowplaying2.c:1128
 #: ../src/browsers/gmpc-metadata-browser2.c:3106
@@ -1945,9 +1952,8 @@ msgstr "Album információ"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:3864
 #: ../src/browsers/gmpc-metadata-browser2.c:3866
-#, fuzzy
 msgid "Song list"
-msgstr "Dalok"
+msgstr ""
 
 #: ../src/browsers/gmpc-metadata-browser2.c:4219
 #: ../src/browsers/gmpc-metadata-browser2.c:4221
@@ -1956,9 +1962,8 @@ msgid "Artist information"
 msgstr "Előadó információ"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:4322
-#, fuzzy
 msgid "Albums by"
-msgstr "Albumok"
+msgstr ""
 
 #: ../src/browsers/gmpc-metadata-browser2.c:5197
 msgid "Enable/disable metadata options"
@@ -2224,58 +2229,8 @@ msgid "Rating:"
 msgstr "Értékelés:"
 
 #: ../src/Providers/music-tree.c:182
-#, fuzzy
 msgid "Music Tree Provider"
-msgstr "Metaadatszolgáltató"
-
-#~ msgid "Error occurred during operation"
-#~ msgstr "Hiba történt a művelet közben"
-
-#~ msgid "The following error(s) occurred:"
-#~ msgstr "A következő hiba történt:"
-
-#~ msgid "Error Message"
-#~ msgstr "Hibaüzenet"
-
-#~ msgid ""
-#~ "Failed to open the interface description file!\n"
-#~ "Please reinstall gmpc\n"
-#~ msgstr ""
-#~ "A kezelőfelület leíró fájl megnyitása sikertelen!\n"
-#~ "Kérem telepítse újra a gmpc-t\n"
-
-#~ msgid "(less)"
-#~ msgstr "(kevesebb)"
-
-#~ msgid "(more)"
-#~ msgstr "(további)"
-
-#~ msgid "Search songs with similar title"
-#~ msgstr "Dalok keresése hasonló cím alapján"
-
-#~ msgid "Album artist"
-#~ msgstr "Album előadó"
-
-#~ msgid "Open path to song in file browser"
-#~ msgstr "A dal helyének megnyitása a fájlböngészőben"
-
-#~ msgid "Path"
-#~ msgstr "Elérési út"
-
-#~ msgid "Favored"
-#~ msgstr "Kedvenc"
-
-#~ msgid "Similar artist"
-#~ msgstr "Hasonló előadók"
-
-#~ msgid "File Browser"
-#~ msgstr "Fájlböngésző"
-
-#~ msgid "Playlist"
-#~ msgstr "Lejátszólista"
-
-#~ msgid "Update list from internet"
-#~ msgstr "Lista frissítése az internetről"
+msgstr ""
 
 #~ msgid "MPD database is updating."
 #~ msgstr "MPD adatbázis frissítve."
@@ -2325,6 +2280,9 @@ msgstr "Metaadatszolgáltató"
 #~ msgid " Total time: "
 #~ msgstr " Teljes idő: "
 
+#~ msgid "Error Message"
+#~ msgstr "Hibaüzenet"
+
 #~ msgid "Album info:"
 #~ msgstr "Album infó:"
 
@@ -2344,6 +2302,7 @@ msgstr "Metaadatszolgáltató"
 #~ msgstr[0] "Műfaj:"
 #~ msgstr[1] "Műfajok:"
 
+#, c-format
 #~ msgid "Only the first %i result displayed, please refine your search query"
 #~ msgstr ""
 #~ "Csak az első %i találatot mutatom, kérem pontosítsa a keresési kifejezést"
@@ -2362,6 +2321,9 @@ msgstr "Metaadatszolgáltató"
 
 #~ msgid "View"
 #~ msgstr "Nézet"
+
+#~ msgid "File Browser"
+#~ msgstr "Fájlböngésző"
 
 #~ msgid "The kernel jazz"
 #~ msgstr "The kernel jazz"
@@ -2383,6 +2345,9 @@ msgstr "Metaadatszolgáltató"
 
 #~ msgid "Audio format"
 #~ msgstr "Audio formátum"
+
+#~ msgid "Albums"
+#~ msgstr "Albumok"
 
 #~ msgid "Links"
 #~ msgstr "Linkek"

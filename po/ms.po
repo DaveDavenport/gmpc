@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-12-23 15:42+0100\n"
+"POT-Creation-Date: 2009-12-23 15:44+0100\n"
 "PO-Revision-Date: 2009-05-13 15:59+0000\n"
 "Last-Translator: Qball Cow <qball@qballcow.nl>\n"
 "Language-Team: Malay <ms@li.org>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-11-16 23:32+0000\n"
+"X-Launchpad-Export-Date: 2009-12-23 17:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -211,9 +211,8 @@ msgid "Shows all output from a certain log domain"
 msgstr ""
 
 #: ../src/main.c:305
-#, fuzzy
 msgid "Select a profile"
-msgstr "Pilih fail"
+msgstr ""
 
 #: ../src/main.c:443
 msgid "quit"
@@ -298,7 +297,8 @@ msgstr "kod kesalahan"
 
 #: ../src/main.c:1174
 msgid "Insufficient permission to connect to mpd. Check password"
-msgstr "kebenaran tidak mencukupi untuk menyambung ke mpd. Periksa kata laluan"
+msgstr ""
+"kebenaran tidak mencukupi untuk menyambung ke mpd. Periksa kata laluan"
 
 #: ../src/main.c:1209
 msgid "MPD versions before 0.13.0 are not supported"
@@ -772,7 +772,7 @@ msgstr "Diputuskan"
 
 #. *
 #. * Set paused in Window string
-#.
+#. 
 #: ../src/playlist3.c:1692 ../src/playlist3.c:1697
 msgid "paused"
 msgstr ""
@@ -1053,7 +1053,7 @@ msgstr "Pemberitahuan"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:111
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -1072,7 +1072,7 @@ msgstr "Sediakan sambungan"
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:141
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1310,9 +1310,8 @@ msgid "<b>Output Devices:</b>"
 msgstr "<b>Alatan Output:</b>"
 
 #: ../glade/preferences-server.ui.h:3
-#, fuzzy
 msgid "<b>Replaygain</b>"
-msgstr "<b>Utama:</b>"
+msgstr ""
 
 #: ../glade/preferences-server.ui.h:4
 msgid ""
@@ -1532,9 +1531,8 @@ msgid "Play Queue"
 msgstr "Baris Gilir Main"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:1120
-#, fuzzy
 msgid "Search Playlist"
-msgstr "geladah senarai main"
+msgstr ""
 
 #: ../src/browsers/playlist3-file-browser.c:109
 #: ../src/browsers/playlist3-file-browser.c:347
@@ -1792,9 +1790,8 @@ msgstr "Genre"
 
 #: ../src/browsers/gmpc-nowplaying2.c:1107
 #: ../src/browsers/gmpc-metadata-browser2.c:3100
-#, fuzzy
 msgid "Codec"
-msgstr "_Sambung"
+msgstr ""
 
 #: ../src/browsers/gmpc-nowplaying2.c:1128
 #: ../src/browsers/gmpc-metadata-browser2.c:3106
@@ -1936,9 +1933,8 @@ msgstr "Informasi mengenai Album"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:3864
 #: ../src/browsers/gmpc-metadata-browser2.c:3866
-#, fuzzy
 msgid "Song list"
-msgstr "Lagu"
+msgstr ""
 
 #: ../src/browsers/gmpc-metadata-browser2.c:4219
 #: ../src/browsers/gmpc-metadata-browser2.c:4221
@@ -1947,9 +1943,8 @@ msgid "Artist information"
 msgstr "Informasi mengenai Artis"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:4322
-#, fuzzy
 msgid "Albums by"
-msgstr "Album"
+msgstr ""
 
 #: ../src/browsers/gmpc-metadata-browser2.c:5197
 msgid "Enable/disable metadata options"
@@ -2212,31 +2207,8 @@ msgid "Rating:"
 msgstr "Penilaian:"
 
 #: ../src/Providers/music-tree.c:182
-#, fuzzy
 msgid "Music Tree Provider"
-msgstr "Pembekal Metadata"
-
-#~ msgid "Error Message"
-#~ msgstr "Mesej Kesalahan"
-
-#~ msgid ""
-#~ "Failed to open the interface description file!\n"
-#~ "Please reinstall gmpc\n"
-#~ msgstr ""
-#~ "Gagal membuka fail deskripsi interface!\n"
-#~ "Sila pasang balik gmpc\n"
-
-#~ msgid "Album artist"
-#~ msgstr "Artis album"
-
-#~ msgid "File Browser"
-#~ msgstr "Pelayar Fail"
-
-#~ msgid "Playlist"
-#~ msgstr "Senarai main"
-
-#~ msgid "Update list from internet"
-#~ msgstr "Kemaskini fail daripada internet"
+msgstr ""
 
 #~ msgid "MPD database is updating."
 #~ msgstr "Database MPD sedang dikemaskini."
@@ -2283,6 +2255,7 @@ msgstr "Pembekal Metadata"
 #~ msgid "--quit"
 #~ msgstr "--quit"
 
+#, c-format
 #~ msgid ""
 #~ "Gnome Music Player Client\n"
 #~ "Options:\n"
@@ -2317,8 +2290,8 @@ msgstr "Pembekal Metadata"
 #~ "\t--clean-cover-db\tBersihkan fail cover.\n"
 #~ "\t--disable-plugins\tJangan muat apa-apa plugins.\n"
 #~ "\t--replace\t\tGantikan sesi yang sedang dijalankan dengan yang ini\n"
-#~ "\t--quit\t\t\tHentikan sesi gmpc yang sedang berjalan. Hanya befungsi "
-#~ "jika multiple-instances ditidak bolehkan.\n"
+#~ "\t--quit\t\t\tHentikan sesi gmpc yang sedang berjalan. Hanya befungsi jika "
+#~ "multiple-instances ditidak bolehkan.\n"
 
 #~ msgid "--disable-plugins"
 #~ msgstr "--disable-plugins"
@@ -2331,6 +2304,9 @@ msgstr "Pembekal Metadata"
 
 #~ msgid "--debug-updates"
 #~ msgstr "--debug-updates"
+
+#~ msgid "Error Message"
+#~ msgstr "Mesej Kesalahan"
 
 #~ msgid " Total time: "
 #~ msgstr " Masa keseluruhan: "
@@ -2349,6 +2325,14 @@ msgstr "Pembekal Metadata"
 #~ msgid "MPD database is updating"
 #~ msgstr "database MPD sedang dikemaskini"
 
+#~ msgid ""
+#~ "Failed to open the interface description file!\n"
+#~ "Please reinstall gmpc\n"
+#~ msgstr ""
+#~ "Gagal membuka fail deskripsi interface!\n"
+#~ "Sila pasang balik gmpc\n"
+
+#, c-format
 #~ msgid "MPD Database refreshed at: %c"
 #~ msgstr "Database MPD diperbaharui pada: %c"
 
@@ -2360,6 +2344,12 @@ msgstr "Pembekal Metadata"
 
 #~ msgid "Edit _Browser Markup"
 #~ msgstr "Edit _Pelayar Web Markup"
+
+#~ msgid "File Browser"
+#~ msgstr "Pelayar Fail"
+
+#~ msgid "Playlist"
+#~ msgstr "Senarai main"
 
 #~ msgid "View"
 #~ msgstr "Lihat"
@@ -2401,6 +2391,7 @@ msgstr "Pembekal Metadata"
 #~ msgid "Find Artist:"
 #~ msgstr "Cari Artis:"
 
+#, c-format
 #~ msgid "Only the first %i result displayed, please refine your search query"
 #~ msgstr ""
 #~ "Hanya hasil %i pertama ditunjukkan, sila meneliti carian pertanyaan anda"
@@ -2408,8 +2399,14 @@ msgstr "Pembekal Metadata"
 #~ msgid "Similar Artists"
 #~ msgstr "Artis serupa"
 
+#~ msgid "Albums"
+#~ msgstr "Album"
+
 #~ msgid "Album info:"
 #~ msgstr "Info Album:"
+
+#~ msgid "Album artist"
+#~ msgstr "Artis album"
 
 #~ msgid "kbit/sec"
 #~ msgstr "kbit/saat"
@@ -2455,6 +2452,9 @@ msgstr "Pembekal Metadata"
 
 #~ msgid "The orientation of the tray."
 #~ msgstr "Orientasi bagi dulang."
+
+#~ msgid "Update list from internet"
+#~ msgstr "Kemaskini fail daripada internet"
 
 #~ msgid "Links"
 #~ msgstr "Link"

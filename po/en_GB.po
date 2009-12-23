@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-12-23 15:42+0100\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2009-12-23 15:44+0100\n"
 "PO-Revision-Date: 2009-10-18 19:50+0000\n"
 "Last-Translator: Floris Douw <Unknown>\n"
 "Language-Team: English (United Kingdom) <en_GB@li.org>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-11-16 23:32+0000\n"
+"X-Launchpad-Export-Date: 2009-12-23 17:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -774,7 +774,7 @@ msgstr ""
 
 #. *
 #. * Set paused in Window string
-#.
+#. 
 #: ../src/playlist3.c:1692 ../src/playlist3.c:1697
 msgid "paused"
 msgstr ""
@@ -847,14 +847,12 @@ msgid "Interface"
 msgstr ""
 
 #: ../src/playlist3.c:2684
-#, fuzzy
 msgid "Single Mode enabled"
-msgstr "Single mode"
+msgstr ""
 
 #: ../src/playlist3.c:2687
-#, fuzzy
 msgid "Single Mode disabled"
-msgstr "Single mode"
+msgstr ""
 
 #: ../src/playlist3.c:2695
 msgid "Consume Mode enabled"
@@ -1055,7 +1053,7 @@ msgstr ""
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:111
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -1072,7 +1070,7 @@ msgstr ""
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:141
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1777,9 +1775,8 @@ msgstr ""
 
 #: ../src/browsers/gmpc-nowplaying2.c:1107
 #: ../src/browsers/gmpc-metadata-browser2.c:3100
-#, fuzzy
 msgid "Codec"
-msgstr "_Connect"
+msgstr ""
 
 #: ../src/browsers/gmpc-nowplaying2.c:1128
 #: ../src/browsers/gmpc-metadata-browser2.c:3106
@@ -2197,12 +2194,3 @@ msgstr ""
 #: ../src/Providers/music-tree.c:182
 msgid "Music Tree Provider"
 msgstr ""
-
-#~ msgid "Error occurred during operation"
-#~ msgstr "Error occurred during operation"
-
-#~ msgid "The following error(s) occurred:"
-#~ msgstr "The following error(s) occurred:"
-
-#~ msgid "Error Message"
-#~ msgstr "Error Message"

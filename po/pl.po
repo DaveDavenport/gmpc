@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-12-23 15:42+0100\n"
-"PO-Revision-Date: 2009-11-10 06:52+0000\n"
-"Last-Translator: Piotr Beling <qwak82@gmail.com>\n"
+"POT-Creation-Date: 2009-12-23 15:44+0100\n"
+"PO-Revision-Date: 2009-12-20 03:19+0000\n"
+"Last-Translator: mazdac <mazdac@gmail.com>\n"
 "Language-Team: pl_PL <mazdac@gmail.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2009-11-16 23:32+0000\n"
+"X-Launchpad-Export-Date: 2009-12-23 17:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Country: Poland\n"
 
@@ -213,9 +213,8 @@ msgid "Shows all output from a certain log domain"
 msgstr "Wyświetl dane wyjściowe z określonej kategorii zdarzeń"
 
 #: ../src/main.c:305
-#, fuzzy
 msgid "Select a profile"
-msgstr "Wybierz plik"
+msgstr "Wybierz profil"
 
 #: ../src/main.c:443
 msgid "quit"
@@ -275,6 +274,17 @@ msgid ""
 "Thanks,\n"
 "<i>Qball Cow</i>"
 msgstr ""
+"Zespół GMPC poszukuje chętnych do opiekowania się i rozwijaniem projekty\n"
+"Potrzebujemy pomocy w:\n"
+"* Zarządzaniu i aktualizacją strony www projektu\n"
+"* Wsparciu użytkowników\n"
+"* Zarządzaniu wtyczkami\n"
+"* Zarządzaniu samym GMPC\n"
+"Jeżeli jesteś zainteresowany, prosimy o kontakt na irc (kanał #gmpc na "
+"serwerze irc.freenode.net)\n"
+"\n"
+"Dzięki\n"
+"<i>Qball Cow</i>"
 
 #: ../src/main.c:1105
 msgid "GMPC has insufficient permissions on the mpd server."
@@ -789,10 +799,10 @@ msgstr "Rozłączony"
 
 #. *
 #. * Set paused in Window string
-#.
+#. 
 #: ../src/playlist3.c:1692 ../src/playlist3.c:1697
 msgid "paused"
-msgstr ""
+msgstr "wstrzymano"
 
 #: ../src/playlist3.c:1775
 #, c-format
@@ -862,23 +872,20 @@ msgid "Interface"
 msgstr "Interfejs"
 
 #: ../src/playlist3.c:2684
-#, fuzzy
 msgid "Single Mode enabled"
-msgstr "Tryb pojedynczego utworu"
+msgstr "Tryb pojedńczy włączony"
 
 #: ../src/playlist3.c:2687
-#, fuzzy
 msgid "Single Mode disabled"
-msgstr "Tryb pojedynczy: %s"
+msgstr "Tryb pojedyńczy wyłączony"
 
 #: ../src/playlist3.c:2695
 msgid "Consume Mode enabled"
-msgstr ""
+msgstr "Tryb zjadania włączony"
 
 #: ../src/playlist3.c:2698
-#, fuzzy
 msgid "Consume Mode disabled"
-msgstr "Powtarzanie wyłączone"
+msgstr "Tryb zjadania wyłączony"
 
 #: ../src/playlist3.c:2706
 msgid "Repeat enabled"
@@ -1074,7 +1081,7 @@ msgstr "Powiadamianie"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:111
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -1093,7 +1100,7 @@ msgstr "Ustawienia połączenia"
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:141
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1337,9 +1344,8 @@ msgid "<b>Output Devices:</b>"
 msgstr "<b>Urządzenia wyjściowe:</b>"
 
 #: ../glade/preferences-server.ui.h:3
-#, fuzzy
 msgid "<b>Replaygain</b>"
-msgstr "<b>Główne:</b>"
+msgstr "<b>Replaygain</b>"
 
 #: ../glade/preferences-server.ui.h:4
 msgid ""
@@ -1446,7 +1452,7 @@ msgstr "Wiadomości"
 
 #: ../glade/playlist-message-window.ui.h:2
 msgid "_Copy to clipboard"
-msgstr ""
+msgstr "S_kopiuj do schowka"
 
 #: ../glade/playlist-save-dialog.ui.h:1
 msgid "<enter playlist name>"
@@ -1470,11 +1476,11 @@ msgstr "Podaj URL:"
 
 #: ../glade/gmpc-add-url.ui.h:2
 msgid "gtk-add"
-msgstr ""
+msgstr "gtk-add"
 
 #: ../glade/gmpc-add-url.ui.h:3
 msgid "gtk-close"
-msgstr ""
+msgstr "gtk-close"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:156
 msgid "item"
@@ -1562,9 +1568,8 @@ msgid "Play Queue"
 msgstr "Bieżąca lista odtwarzania"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:1120
-#, fuzzy
 msgid "Search Playlist"
-msgstr "przeszukaj listę odtwarzania"
+msgstr "Przeszukaj listę odtwarzania"
 
 #: ../src/browsers/playlist3-file-browser.c:109
 #: ../src/browsers/playlist3-file-browser.c:347
@@ -1800,7 +1805,7 @@ msgstr "Statystyki znaczników"
 #: ../src/browsers/gmpc-nowplaying2.c:301
 #: ../src/browsers/gmpc-nowplaying2.c:1083
 msgid "Format"
-msgstr ""
+msgstr "Format"
 
 #: ../src/browsers/gmpc-nowplaying2.c:301
 #: ../src/browsers/gmpc-nowplaying2.c:1083
@@ -1825,9 +1830,8 @@ msgstr "Gatunek"
 
 #: ../src/browsers/gmpc-nowplaying2.c:1107
 #: ../src/browsers/gmpc-metadata-browser2.c:3100
-#, fuzzy
 msgid "Codec"
-msgstr "_Połącz"
+msgstr "Kodek"
 
 #: ../src/browsers/gmpc-nowplaying2.c:1128
 #: ../src/browsers/gmpc-metadata-browser2.c:3106
@@ -1836,7 +1840,7 @@ msgstr "Długość"
 
 #: ../src/browsers/gmpc-nowplaying2.c:1158
 msgid "Track number"
-msgstr ""
+msgstr "Numer ścieżki"
 
 #: ../src/browsers/gmpc-nowplaying2.c:1223
 #: ../src/browsers/gmpc-nowplaying2.c:1225
@@ -1878,7 +1882,7 @@ msgstr "Link WWW"
 
 #: ../src/browsers/gmpc-nowplaying2.c:1369
 msgid "Other albums by"
-msgstr ""
+msgstr "Inne albumy"
 
 #: ../src/browsers/gmpc-nowplaying2.c:1473
 #: ../src/browsers/gmpc-metadata-browser2.c:4426
@@ -1969,9 +1973,8 @@ msgstr "Informacje o albumie"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:3864
 #: ../src/browsers/gmpc-metadata-browser2.c:3866
-#, fuzzy
 msgid "Song list"
-msgstr "Utwory"
+msgstr ""
 
 #: ../src/browsers/gmpc-metadata-browser2.c:4219
 #: ../src/browsers/gmpc-metadata-browser2.c:4221
@@ -1980,9 +1983,8 @@ msgid "Artist information"
 msgstr "Informacje o wykonawcy"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:4322
-#, fuzzy
 msgid "Albums by"
-msgstr "Albumy"
+msgstr ""
 
 #: ../src/browsers/gmpc-metadata-browser2.c:5197
 msgid "Enable/disable metadata options"
@@ -2147,7 +2149,7 @@ msgstr "MPD skanuje ponownie bazę danych"
 
 #: ../src/vala/gmpc-database-update-tracker.c:146
 msgid "MPD Database has been updated at:"
-msgstr ""
+msgstr "Baza danych została zaktualizowana"
 
 #: ../src/vala/gmpc-easy-command.c:91
 msgid "Gmpc Easy Command"
@@ -2247,58 +2249,8 @@ msgid "Rating:"
 msgstr "Oceny:"
 
 #: ../src/Providers/music-tree.c:182
-#, fuzzy
 msgid "Music Tree Provider"
-msgstr "Dostawca metadanych"
-
-#~ msgid "Error occurred during operation"
-#~ msgstr "Podczas operacji wystąpił błąd"
-
-#~ msgid "The following error(s) occurred:"
-#~ msgstr "Wystąpiły następujące błędy:"
-
-#~ msgid "Error Message"
-#~ msgstr "Wiadomość o błędzie"
-
-#~ msgid ""
-#~ "Failed to open the interface description file!\n"
-#~ "Please reinstall gmpc\n"
-#~ msgstr ""
-#~ "Otworzenie pliku opisu interfejsu nie powiodło się!\n"
-#~ "Proszę przeinstalować GMPC\n"
-
-#~ msgid "(less)"
-#~ msgstr "(mniej)"
-
-#~ msgid "(more)"
-#~ msgstr "(więcej)"
-
-#~ msgid "Search songs with similar title"
-#~ msgstr "Wyszukaj utwory z podobnym tytułem"
-
-#~ msgid "Album artist"
-#~ msgstr "Wykonawca albumu"
-
-#~ msgid "Open path to song in file browser"
-#~ msgstr "Otwórz ścieżkę do utworu w manadżerze plików"
-
-#~ msgid "Path"
-#~ msgstr "Ścieżka"
-
-#~ msgid "Favored"
-#~ msgstr "Ulubiony"
-
-#~ msgid "Similar artist"
-#~ msgstr "Podobni wykonawcy"
-
-#~ msgid "File Browser"
-#~ msgstr "Przeglądarka plików"
-
-#~ msgid "Playlist"
-#~ msgstr "Lista odtwarzania"
-
-#~ msgid "Update list from internet"
-#~ msgstr "Aktualizuj listę przez internet"
+msgstr ""
 
 #~ msgid "<b>Song Markup</b>"
 #~ msgstr "<b>Schemat dla utworów</b>"
@@ -2348,8 +2300,14 @@ msgstr "Dostawca metadanych"
 #~ msgid "--help"
 #~ msgstr "--help"
 
+#~ msgid "Error Message"
+#~ msgstr "Wiadomość o błędzie"
+
 #~ msgid "Enter an url"
 #~ msgstr "Wprowadź url"
+
+#~ msgid "File Browser"
+#~ msgstr "Przeglądarka plików"
 
 #~ msgid "View"
 #~ msgstr "Przeglądaj"
@@ -2387,6 +2345,7 @@ msgstr "Dostawca metadanych"
 #~ msgid " Total time: "
 #~ msgstr " całkowity czas: "
 
+#, c-format
 #~ msgid "Only the first %i result displayed, please refine your search query"
 #~ msgstr "Wyświetlon tylko %i pierwszych wyników, sprecyzuj swoje zapytanie"
 
@@ -2408,6 +2367,12 @@ msgstr "Dostawca metadanych"
 #~ msgid "Show Current Song"
 #~ msgstr "Wyświetl bieżący utwór"
 
+#~ msgid "Error occurred during operation"
+#~ msgstr "Podczas operacji wystąpił błąd"
+
+#~ msgid "The following error(s) occurred:"
+#~ msgstr "Wystąpiły następujące błędy:"
+
 #~ msgid "second"
 #~ msgid_plural "seconds"
 #~ msgstr[0] "sekunda"
@@ -2420,6 +2385,14 @@ msgstr "Dostawca metadanych"
 #~ msgid "MPD finished updating its database"
 #~ msgstr "MPD zaktualizował swoją bazę danych"
 
+#~ msgid ""
+#~ "Failed to open the interface description file!\n"
+#~ "Please reinstall gmpc\n"
+#~ msgstr ""
+#~ "Otworzenie pliku opisu interfejsu nie powiodło się!\n"
+#~ "Proszę przeinstalować GMPC\n"
+
+#, c-format
 #~ msgid "MPD Database refreshed at: %c"
 #~ msgstr "Baza danych MPD odświeżona: %c"
 
@@ -2429,8 +2402,17 @@ msgstr "Dostawca metadanych"
 #~ msgid "plugin with same name allready exists"
 #~ msgstr "wtyczka z taką samą nazwą już istnieje"
 
+#~ msgid "Playlist"
+#~ msgstr "Lista odtwarzania"
+
 #~ msgid "Collection"
 #~ msgstr "Kolekcja"
+
+#~ msgid "Path"
+#~ msgstr "Ścieżka"
+
+#~ msgid "Favored"
+#~ msgstr "Ulubiony"
 
 #~ msgid "Bitrate"
 #~ msgstr "Gęstość bitowa"
@@ -2447,8 +2429,14 @@ msgstr "Dostawca metadanych"
 #~ msgid "Invalid search"
 #~ msgstr "Wyszukiwanie nie powiodło się"
 
+#~ msgid "Albums"
+#~ msgstr "Albumy"
+
 #~ msgid "Similar Artists"
 #~ msgstr "Podobni wykonawcy"
+
+#~ msgid "Album artist"
+#~ msgstr "Wykonawca albumu"
 
 #~ msgid "Tracks"
 #~ msgstr "Ścieżki"
@@ -2489,9 +2477,13 @@ msgstr "Dostawca metadanych"
 #~ msgid "Failed to store metadata file in"
 #~ msgstr "Nie powiodło się zapisywanie pliku metadanych w"
 
+#~ msgid "Update list from internet"
+#~ msgstr "Aktualizuj listę przez internet"
+
 #~ msgid "Links"
 #~ msgstr "Łącza"
 
+#, c-format
 #~ msgid ""
 #~ "Gnome Music Player Client\n"
 #~ "Options:\n"
@@ -2515,8 +2507,7 @@ msgstr "Dostawca metadanych"
 #~ "Opcje:\n"
 #~ "\t--start-hidden\t\tUruchom ukryty\n"
 #~ "\t--help\t\t\tWyświetl ten komunikat.\n"
-#~ "\t--debug-level=<pozioml>\tKaż GMPC wyświetlać informacje do "
-#~ "odpluskwiania\n"
+#~ "\t--debug-level=<pozioml>\tKaż GMPC wyświetlać informacje do odpluskwiania\n"
 #~ "\t\t\t\tPoziomy:\n"
 #~ "\t\t\t\t\t0 Nic nie wyświetlaj\n"
 #~ "\t\t\t\t\t1 Tylko błędy\n"
@@ -2528,5 +2519,5 @@ msgstr "Dostawca metadanych"
 #~ "\t--clean-cover-db\tOczyść bazę danych okładek\n"
 #~ "\t--disable-plugins\tNie ładuj wtyczek\n"
 #~ "\t--replace\t\tZastąp uruchomioną instancję\n"
-#~ "\t--quit\t\t\tZakończ uruchomioną instancję. Działa tylko gdy obsługa "
-#~ "wielu instancji jest wyłączona.\n"
+#~ "\t--quit\t\t\tZakończ uruchomioną instancję. Działa tylko gdy obsługa wielu "
+#~ "instancji jest wyłączona.\n"

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-12-23 15:42+0100\n"
-"PO-Revision-Date: 2009-10-14 20:45+0000\n"
-"Last-Translator: Yiğitcan Aksarı <Unknown>\n"
+"POT-Creation-Date: 2009-12-23 15:44+0100\n"
+"PO-Revision-Date: 2009-11-25 08:14+0000\n"
+"Last-Translator: Mustafa Yılmaz <apshalasha@gmail.com>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2009-11-16 23:32+0000\n"
+"X-Launchpad-Export-Date: 2009-12-23 17:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -211,9 +211,8 @@ msgid "Shows all output from a certain log domain"
 msgstr ""
 
 #: ../src/main.c:305
-#, fuzzy
 msgid "Select a profile"
-msgstr "Dosya Seç"
+msgstr ""
 
 #: ../src/main.c:443
 msgid "quit"
@@ -767,7 +766,7 @@ msgstr "Bağlantı Kesildi"
 
 #. *
 #. * Set paused in Window string
-#.
+#. 
 #: ../src/playlist3.c:1692 ../src/playlist3.c:1697
 msgid "paused"
 msgstr ""
@@ -840,23 +839,20 @@ msgid "Interface"
 msgstr "Arayüz"
 
 #: ../src/playlist3.c:2684
-#, fuzzy
 msgid "Single Mode enabled"
-msgstr "Tekil kip"
+msgstr ""
 
 #: ../src/playlist3.c:2687
-#, fuzzy
 msgid "Single Mode disabled"
-msgstr "Tekil kip"
+msgstr ""
 
 #: ../src/playlist3.c:2695
 msgid "Consume Mode enabled"
 msgstr ""
 
 #: ../src/playlist3.c:2698
-#, fuzzy
 msgid "Consume Mode disabled"
-msgstr "Tekrarlama etkisizleştirildi"
+msgstr ""
 
 #: ../src/playlist3.c:2706
 msgid "Repeat enabled"
@@ -1050,7 +1046,7 @@ msgstr "Bildiri"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:111
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -1069,7 +1065,7 @@ msgstr ""
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:141
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1156,6 +1152,7 @@ msgstr ""
 "  Ekrem Kocadere https://launchpad.net/~ekocadere\n"
 "  Qball Cow https://launchpad.net/~qball-qballcow\n"
 "  XceptN https://launchpad.net/~oyuksel153\n"
+"  adnc https://launchpad.net/~akif-dinc\n"
 "  aylincan https://launchpad.net/~sevencan83\n"
 "  keenblade https://launchpad.net/~keenblade\n"
 "  zeugma https://launchpad.net/~sunder67"
@@ -1311,9 +1308,8 @@ msgid "<b>Output Devices:</b>"
 msgstr "<b>Çıkış Aygıtları:</b>"
 
 #: ../glade/preferences-server.ui.h:3
-#, fuzzy
 msgid "<b>Replaygain</b>"
-msgstr "<b>Ana:</b>"
+msgstr ""
 
 #: ../glade/preferences-server.ui.h:4
 msgid ""
@@ -1528,9 +1524,8 @@ msgid "Play Queue"
 msgstr "Çalma Kuyruğu"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:1120
-#, fuzzy
 msgid "Search Playlist"
-msgstr "çalma listesinde ara"
+msgstr ""
 
 #: ../src/browsers/playlist3-file-browser.c:109
 #: ../src/browsers/playlist3-file-browser.c:347
@@ -1781,9 +1776,8 @@ msgstr "Tarz"
 
 #: ../src/browsers/gmpc-nowplaying2.c:1107
 #: ../src/browsers/gmpc-metadata-browser2.c:3100
-#, fuzzy
 msgid "Codec"
-msgstr "_Bağlan"
+msgstr ""
 
 #: ../src/browsers/gmpc-nowplaying2.c:1128
 #: ../src/browsers/gmpc-metadata-browser2.c:3106
@@ -1925,9 +1919,8 @@ msgstr "Albüm bilgisi"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:3864
 #: ../src/browsers/gmpc-metadata-browser2.c:3866
-#, fuzzy
 msgid "Song list"
-msgstr "Şarkılar"
+msgstr ""
 
 #: ../src/browsers/gmpc-metadata-browser2.c:4219
 #: ../src/browsers/gmpc-metadata-browser2.c:4221
@@ -1936,9 +1929,8 @@ msgid "Artist information"
 msgstr "Sanatçı bilgisi"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:4322
-#, fuzzy
 msgid "Albums by"
-msgstr "Albümler"
+msgstr ""
 
 #: ../src/browsers/gmpc-metadata-browser2.c:5197
 msgid "Enable/disable metadata options"
@@ -2186,11 +2178,11 @@ msgstr ""
 
 #: ../src/vala/gmpc-test-plugin.c:945
 msgid "Album Info"
-msgstr ""
+msgstr "Albüm Bilgileri"
 
 #: ../src/vala/gmpc-test-plugin.c:946
 msgid "Artist Biography"
-msgstr ""
+msgstr "Sanatci Biyografisi"
 
 #: ../src/vala/gmpc-test-plugin.c:947
 msgid "Guitar Tab"
@@ -2201,34 +2193,8 @@ msgid "Rating:"
 msgstr ""
 
 #: ../src/Providers/music-tree.c:182
-#, fuzzy
 msgid "Music Tree Provider"
-msgstr "Üstveri Sağlayıcısı"
-
-#~ msgid "Error Message"
-#~ msgstr "Hata Mesajı"
-
-#~ msgid ""
-#~ "Failed to open the interface description file!\n"
-#~ "Please reinstall gmpc\n"
-#~ msgstr ""
-#~ "Arayüz tanımlama dosyası açılamadı!\n"
-#~ "Lütfen gmpc' yi tekrar yükleyin\n"
-
-#~ msgid "Album artist"
-#~ msgstr "Albüm sanatçısı"
-
-#~ msgid "Path"
-#~ msgstr "Yol"
-
-#~ msgid "File Browser"
-#~ msgstr "Dosya Gezgini"
-
-#~ msgid "Playlist"
-#~ msgstr "Çalma Listesi"
-
-#~ msgid "Update list from internet"
-#~ msgstr "Listeyi internetten güncelle"
+msgstr ""
 
 #~ msgid "_Server"
 #~ msgstr "_Sunucu"
@@ -2245,6 +2211,12 @@ msgstr "Üstveri Sağlayıcısı"
 #~ msgid " Total time: "
 #~ msgstr " Toplam süre "
 
+#~ msgid "Error Message"
+#~ msgstr "Hata Mesajı"
+
+#~ msgid "File Browser"
+#~ msgstr "Dosya Gezgini"
+
 #~ msgid "Collection"
 #~ msgstr "Arşiv"
 
@@ -2259,6 +2231,9 @@ msgstr "Üstveri Sağlayıcısı"
 
 #~ msgid "Tracks"
 #~ msgstr "Parçalar"
+
+#~ msgid "Albums"
+#~ msgstr "Albümler"
 
 #~ msgid "Album info:"
 #~ msgstr "Albüm bilgisi:"
@@ -2279,6 +2254,13 @@ msgstr "Üstveri Sağlayıcısı"
 #~ msgid "MPD database is updating."
 #~ msgstr "MPD veritabanı güncelleniyor."
 
+#~ msgid ""
+#~ "Failed to open the interface description file!\n"
+#~ "Please reinstall gmpc\n"
+#~ msgstr ""
+#~ "Arayüz tanımlama dosyası açılamadı!\n"
+#~ "Lütfen gmpc' yi tekrar yükleyin\n"
+
 #~ msgid "MPD finished updating its database"
 #~ msgstr "MPD veritabanını güncellemeyi bitirdi"
 
@@ -2293,6 +2275,9 @@ msgstr "Üstveri Sağlayıcısı"
 
 #~ msgid "Audio format"
 #~ msgstr "Ses formatı"
+
+#~ msgid "Album artist"
+#~ msgstr "Albüm sanatçısı"
 
 #~ msgid "Invalid search"
 #~ msgstr "geçersiz arama"
@@ -2328,6 +2313,13 @@ msgstr "Üstveri Sağlayıcısı"
 #~ msgid "show current album"
 #~ msgstr "geçerli albümü göster"
 
+#~ msgid "Update list from internet"
+#~ msgstr "Listeyi internetten güncelle"
+
+#~ msgid "Playlist"
+#~ msgstr "Çalma Listesi"
+
+#, c-format
 #~ msgid "Only the first %i result displayed, please refine your search query"
 #~ msgstr ""
 #~ "Sadece ilk %i sonuç görüntüllendi, lütfen arama sorgunuzu gözden geçirin"
@@ -2347,6 +2339,9 @@ msgstr "Üstveri Sağlayıcısı"
 
 #~ msgid "channels"
 #~ msgstr "kanallar"
+
+#~ msgid "Path"
+#~ msgstr "Yol"
 
 #~ msgid "Switch to the metadata browser"
 #~ msgstr "Üstveri tarayıcısına geç"

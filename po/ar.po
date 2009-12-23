@@ -6,9 +6,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-12-23 15:42+0100\n"
-"PO-Revision-Date: 2009-10-02 14:05+0000\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2009-12-23 15:44+0100\n"
+"PO-Revision-Date: 2009-12-03 23:20+0000\n"
 "Last-Translator: الـشـبـح <the-ghost@live.com>\n"
 "Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n % 100 >= "
 "3 && n % 100 <= 10 ? 3 : n % 100 >= 11 && n % 100 <= 99 ? 4 : 5;\n"
-"X-Launchpad-Export-Date: 2009-11-16 23:32+0000\n"
+"X-Launchpad-Export-Date: 2009-12-23 17:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -759,7 +759,7 @@ msgstr ""
 
 #. *
 #. * Set paused in Window string
-#.
+#. 
 #: ../src/playlist3.c:1692 ../src/playlist3.c:1697
 msgid "paused"
 msgstr ""
@@ -832,14 +832,12 @@ msgid "Interface"
 msgstr ""
 
 #: ../src/playlist3.c:2684
-#, fuzzy
 msgid "Single Mode enabled"
-msgstr "النمط الاحادي"
+msgstr ""
 
 #: ../src/playlist3.c:2687
-#, fuzzy
 msgid "Single Mode disabled"
-msgstr "النمط الاحادي"
+msgstr ""
 
 #: ../src/playlist3.c:2695
 msgid "Consume Mode enabled"
@@ -1040,7 +1038,7 @@ msgstr ""
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:111
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -1057,7 +1055,7 @@ msgstr ""
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:141
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1764,9 +1762,8 @@ msgstr ""
 
 #: ../src/browsers/gmpc-nowplaying2.c:1107
 #: ../src/browsers/gmpc-metadata-browser2.c:3100
-#, fuzzy
 msgid "Codec"
-msgstr "_اتصل"
+msgstr ""
 
 #: ../src/browsers/gmpc-nowplaying2.c:1128
 #: ../src/browsers/gmpc-metadata-browser2.c:3106
@@ -2184,12 +2181,3 @@ msgstr ""
 #: ../src/Providers/music-tree.c:182
 msgid "Music Tree Provider"
 msgstr ""
-
-#~ msgid "Error occurred during operation"
-#~ msgstr "حدث خلل أثناء العملية"
-
-#~ msgid "The following error(s) occurred:"
-#~ msgstr "الخطأ\\أخطاء التالية حدثت:"
-
-#~ msgid "Error Message"
-#~ msgstr "رسالة خطأ"

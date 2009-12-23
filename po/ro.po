@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-12-23 15:42+0100\n"
+"POT-Creation-Date: 2009-12-23 15:44+0100\n"
 "PO-Revision-Date: 2009-10-24 21:27+0000\n"
 "Last-Translator: Licaon <Unknown>\n"
 "Language-Team: Romanian <ro@li.org>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n == 1 ? 0: (((n % 100 > 19) || ((n % 100 "
 "== 0) && (n != 0))) ? 2: 1));\n"
-"X-Launchpad-Export-Date: 2009-11-16 23:32+0000\n"
+"X-Launchpad-Export-Date: 2009-12-23 17:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -212,9 +212,8 @@ msgid "Shows all output from a certain log domain"
 msgstr "Arată toate ieşirile notate in jurnal dintr-un anume domeniu"
 
 #: ../src/main.c:305
-#, fuzzy
 msgid "Select a profile"
-msgstr "Selectează fișierul"
+msgstr ""
 
 #: ../src/main.c:443
 msgid "quit"
@@ -780,7 +779,7 @@ msgstr "Deconectat"
 
 #. *
 #. * Set paused in Window string
-#.
+#. 
 #: ../src/playlist3.c:1692 ../src/playlist3.c:1697
 msgid "paused"
 msgstr "pauză"
@@ -853,23 +852,20 @@ msgid "Interface"
 msgstr "Interfață"
 
 #: ../src/playlist3.c:2684
-#, fuzzy
 msgid "Single Mode enabled"
-msgstr "Mod singular"
+msgstr ""
 
 #: ../src/playlist3.c:2687
-#, fuzzy
 msgid "Single Mode disabled"
-msgstr "Mod Singular: %s"
+msgstr ""
 
 #: ../src/playlist3.c:2695
 msgid "Consume Mode enabled"
 msgstr ""
 
 #: ../src/playlist3.c:2698
-#, fuzzy
 msgid "Consume Mode disabled"
-msgstr "Repetare dezactivată"
+msgstr ""
 
 #: ../src/playlist3.c:2706
 msgid "Repeat enabled"
@@ -1065,7 +1061,7 @@ msgstr "Notificare"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:111
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -1084,7 +1080,7 @@ msgstr "Setare conexiune"
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:141
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1326,9 +1322,8 @@ msgid "<b>Output Devices:</b>"
 msgstr "<b>Dispozitive de ieșire:</b>"
 
 #: ../glade/preferences-server.ui.h:3
-#, fuzzy
 msgid "<b>Replaygain</b>"
-msgstr "<b>General:</b>"
+msgstr ""
 
 #: ../glade/preferences-server.ui.h:4
 msgid ""
@@ -1550,9 +1545,8 @@ msgid "Play Queue"
 msgstr "Coadă de redare"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:1120
-#, fuzzy
 msgid "Search Playlist"
-msgstr "caută în lista de redare"
+msgstr ""
 
 #: ../src/browsers/playlist3-file-browser.c:109
 #: ../src/browsers/playlist3-file-browser.c:347
@@ -1573,8 +1567,8 @@ msgid ""
 "Then update the database. (Server->Update Database)"
 msgstr ""
 "Aparent nu aveţi melodii în baza de date.\n"
-"Pentru a adăuga melodii, copiaţi melodiile in directorul <i>music_directory</"
-"i> specificat in fişierul de configurare mpd.\n"
+"Pentru a adăuga melodii, copiaţi melodiile in directorul "
+"<i>music_directory</i> specificat in fişierul de configurare mpd.\n"
 "Apoi actualizaţi baza de date. (Server->Actualizare baza de date)"
 
 #: ../src/browsers/playlist3-file-browser.c:258
@@ -1813,9 +1807,8 @@ msgstr "Gen"
 
 #: ../src/browsers/gmpc-nowplaying2.c:1107
 #: ../src/browsers/gmpc-metadata-browser2.c:3100
-#, fuzzy
 msgid "Codec"
-msgstr "_Conectare"
+msgstr ""
 
 #: ../src/browsers/gmpc-nowplaying2.c:1128
 #: ../src/browsers/gmpc-metadata-browser2.c:3106
@@ -1957,9 +1950,8 @@ msgstr "Informaţii album"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:3864
 #: ../src/browsers/gmpc-metadata-browser2.c:3866
-#, fuzzy
 msgid "Song list"
-msgstr "Melodii"
+msgstr ""
 
 #: ../src/browsers/gmpc-metadata-browser2.c:4219
 #: ../src/browsers/gmpc-metadata-browser2.c:4221
@@ -1968,9 +1960,8 @@ msgid "Artist information"
 msgstr "Informaţii artist"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:4322
-#, fuzzy
 msgid "Albums by"
-msgstr "Albume"
+msgstr ""
 
 #: ../src/browsers/gmpc-metadata-browser2.c:5197
 msgid "Enable/disable metadata options"
@@ -2235,58 +2226,8 @@ msgid "Rating:"
 msgstr "Notare:"
 
 #: ../src/Providers/music-tree.c:182
-#, fuzzy
 msgid "Music Tree Provider"
-msgstr "Furnizor de metadate"
-
-#~ msgid "Error occurred during operation"
-#~ msgstr "O eroare a survenit în timpul operaţiunii"
-
-#~ msgid "The following error(s) occurred:"
-#~ msgstr "Următoarele erori au survenit"
-
-#~ msgid "Error Message"
-#~ msgstr "Mesaj de eroare"
-
-#~ msgid ""
-#~ "Failed to open the interface description file!\n"
-#~ "Please reinstall gmpc\n"
-#~ msgstr ""
-#~ "Fişierul de descriere al interfeţei nu a putut fi deschis!\n"
-#~ "Vă rugăm reinstalaţi gmpc\n"
-
-#~ msgid "(less)"
-#~ msgstr "(mai puţin)"
-
-#~ msgid "(more)"
-#~ msgstr "(mai mult)"
-
-#~ msgid "Search songs with similar title"
-#~ msgstr "Caută melodii cu titlu similar"
-
-#~ msgid "Album artist"
-#~ msgstr "Artist album"
-
-#~ msgid "Open path to song in file browser"
-#~ msgstr "Deschide calea către melodie în managerul de fişiere"
-
-#~ msgid "Path"
-#~ msgstr "Cale"
-
-#~ msgid "Favored"
-#~ msgstr "Favorită"
-
-#~ msgid "Similar artist"
-#~ msgstr "Artist similar"
-
-#~ msgid "File Browser"
-#~ msgstr "Navigator de fișiere"
-
-#~ msgid "Playlist"
-#~ msgstr "Lista redare"
-
-#~ msgid "Update list from internet"
-#~ msgstr "Actualizează lista de pe Internet"
+msgstr ""
 
 #~ msgid "<b>Song Markup</b>"
 #~ msgstr "<b>Marcare melodie</b>"
@@ -2324,6 +2265,9 @@ msgstr "Furnizor de metadate"
 #~ msgid "--clean-cover-db"
 #~ msgstr "--clean-cover-db"
 
+#~ msgid "Error Message"
+#~ msgstr "Mesaj de eroare"
+
 #~ msgid " Total time: "
 #~ msgstr " Timp total: "
 
@@ -2332,6 +2276,9 @@ msgstr "Furnizor de metadate"
 
 #~ msgid "Enter an url"
 #~ msgstr "Introduceți o adresă"
+
+#~ msgid "File Browser"
+#~ msgstr "Navigator de fișiere"
 
 #~ msgid "View"
 #~ msgstr "Vizualizează"
@@ -2351,6 +2298,7 @@ msgstr "Furnizor de metadate"
 #~ msgstr[1] "<b>Genuri: </b>"
 #~ msgstr[2] "<b>Genuri: </b>"
 
+#, c-format
 #~ msgid "Only the first %i result displayed, please refine your search query"
 #~ msgstr ""
 #~ "Se afișează doar primele %i rezultate, vă rugăm să rafinați termenii de "
@@ -2392,14 +2340,31 @@ msgstr "Furnizor de metadate"
 #~ msgid "Fetching..."
 #~ msgstr "Preiau..."
 
+#~ msgid "Error occurred during operation"
+#~ msgstr "O eroare a survenit în timpul operaţiunii"
+
+#~ msgid "The following error(s) occurred:"
+#~ msgstr "Următoarele erori au survenit"
+
+#~ msgid ""
+#~ "Failed to open the interface description file!\n"
+#~ "Please reinstall gmpc\n"
+#~ msgstr ""
+#~ "Fişierul de descriere al interfeţei nu a putut fi deschis!\n"
+#~ "Vă rugăm reinstalaţi gmpc\n"
+
 #~ msgid "MPD finished updating its database"
 #~ msgstr "MPD a terminat actualizarea bazei de date"
 
+#, c-format
 #~ msgid "MPD Database refreshed at: %c"
 #~ msgstr "Baza de data MPD a fost reactualizată la: %c"
 
 #~ msgid "MPD is updating its database"
 #~ msgstr "MPD îşi actualizează baza de date"
+
+#~ msgid "Playlist"
+#~ msgstr "Lista redare"
 
 #~ msgid "Invalid search"
 #~ msgstr "Căutare invalidă"
@@ -2419,6 +2384,12 @@ msgstr "Furnizor de metadate"
 #~ msgid "Similar songs"
 #~ msgstr "Melodii similare"
 
+#~ msgid "Path"
+#~ msgstr "Cale"
+
+#~ msgid "Album artist"
+#~ msgstr "Artist album"
+
 #~ msgid "bits"
 #~ msgstr "biţi"
 
@@ -2430,6 +2401,9 @@ msgstr "Furnizor de metadate"
 
 #~ msgid "Similar Artists"
 #~ msgstr "Artişti similari"
+
+#~ msgid "Albums"
+#~ msgstr "Albume"
 
 #~ msgid "Show the current album information"
 #~ msgstr "Arată informaţii despre albumul curent"
@@ -2448,6 +2422,9 @@ msgstr "Furnizor de metadate"
 
 #~ msgid "show current song"
 #~ msgstr "arată melodia curentă"
+
+#~ msgid "Update list from internet"
+#~ msgstr "Actualizează lista de pe Internet"
 
 #~ msgid "Links"
 #~ msgstr "Legături"

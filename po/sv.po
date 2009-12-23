@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-12-23 15:42+0100\n"
+"POT-Creation-Date: 2009-12-23 15:44+0100\n"
 "PO-Revision-Date: 2009-05-13 16:10+0000\n"
 "Last-Translator: Qball Cow <qball@qballcow.nl>\n"
 "Language-Team: Swedish <sv@li.org>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-11-16 23:32+0000\n"
+"X-Launchpad-Export-Date: 2009-12-23 17:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -211,9 +211,8 @@ msgid "Shows all output from a certain log domain"
 msgstr ""
 
 #: ../src/main.c:305
-#, fuzzy
 msgid "Select a profile"
-msgstr "Välj fil"
+msgstr ""
 
 #: ../src/main.c:443
 msgid "quit"
@@ -763,7 +762,7 @@ msgstr "Frånkopplad"
 
 #. *
 #. * Set paused in Window string
-#.
+#. 
 #: ../src/playlist3.c:1692 ../src/playlist3.c:1697
 msgid "paused"
 msgstr ""
@@ -1044,7 +1043,7 @@ msgstr "Rapport"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:111
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -1063,7 +1062,7 @@ msgstr "inrättar förbindelse"
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:141
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1304,9 +1303,8 @@ msgid "<b>Output Devices:</b>"
 msgstr "<b>Utgångsenhet:</b>"
 
 #: ../glade/preferences-server.ui.h:3
-#, fuzzy
 msgid "<b>Replaygain</b>"
-msgstr "<b>Spelningslista</b>"
+msgstr ""
 
 #: ../glade/preferences-server.ui.h:4
 msgid ""
@@ -1526,9 +1524,8 @@ msgid "Play Queue"
 msgstr "Spela upp kö"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:1120
-#, fuzzy
 msgid "Search Playlist"
-msgstr "Sök spellista"
+msgstr ""
 
 #: ../src/browsers/playlist3-file-browser.c:109
 #: ../src/browsers/playlist3-file-browser.c:347
@@ -1786,9 +1783,8 @@ msgstr "Genre"
 
 #: ../src/browsers/gmpc-nowplaying2.c:1107
 #: ../src/browsers/gmpc-metadata-browser2.c:3100
-#, fuzzy
 msgid "Codec"
-msgstr "_Anslut"
+msgstr ""
 
 #: ../src/browsers/gmpc-nowplaying2.c:1128
 #: ../src/browsers/gmpc-metadata-browser2.c:3106
@@ -1930,9 +1926,8 @@ msgstr "Album information"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:3864
 #: ../src/browsers/gmpc-metadata-browser2.c:3866
-#, fuzzy
 msgid "Song list"
-msgstr "Låtar"
+msgstr ""
 
 #: ../src/browsers/gmpc-metadata-browser2.c:4219
 #: ../src/browsers/gmpc-metadata-browser2.c:4221
@@ -1941,9 +1936,8 @@ msgid "Artist information"
 msgstr "Artist information"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:4322
-#, fuzzy
 msgid "Albums by"
-msgstr "Album"
+msgstr ""
 
 #: ../src/browsers/gmpc-metadata-browser2.c:5197
 msgid "Enable/disable metadata options"
@@ -2209,31 +2203,6 @@ msgstr ""
 msgid "Music Tree Provider"
 msgstr ""
 
-#~ msgid "Error occurred during operation"
-#~ msgstr "Ett fel uppstod under körningen."
-
-#~ msgid "The following error(s) occurred:"
-#~ msgstr "Följande fel inträffade:"
-
-#~ msgid "Error Message"
-#~ msgstr "Felmeddelande"
-
-#~ msgid ""
-#~ "Failed to open the interface description file!\n"
-#~ "Please reinstall gmpc\n"
-#~ msgstr ""
-#~ "Det gick inte att öppna gränssnittsbeskrivningen\n"
-#~ "Ominstallera gmpc\n"
-
-#~ msgid "File Browser"
-#~ msgstr "Filbläddrare"
-
-#~ msgid "Playlist"
-#~ msgstr "Spellista"
-
-#~ msgid "Update list from internet"
-#~ msgstr "Uppdatera lista från internet"
-
 #~ msgid "MPD database is updating."
 #~ msgstr "MPD databasen uppdateras"
 
@@ -2264,6 +2233,9 @@ msgstr ""
 #~ msgid "--help"
 #~ msgstr "--hjälp"
 
+#~ msgid "Error Message"
+#~ msgstr "Felmeddelande"
+
 #~ msgid "MPD is updating its database"
 #~ msgstr "MPD uppdaterar sin databas"
 
@@ -2275,6 +2247,9 @@ msgstr ""
 
 #~ msgid "Enter an url"
 #~ msgstr "Mata in en url"
+
+#~ msgid "File Browser"
+#~ msgstr "Filbläddrare"
 
 #~ msgid "View"
 #~ msgstr "Visa"
@@ -2314,6 +2289,9 @@ msgstr ""
 #~ msgid "Similar Artists"
 #~ msgstr "Liknande Artister"
 
+#~ msgid "Albums"
+#~ msgstr "Album"
+
 #~ msgid "Album info:"
 #~ msgstr "Album info:"
 
@@ -2325,10 +2303,11 @@ msgstr ""
 #~ msgstr[0] "<b>Genre: </b>"
 #~ msgstr[1] "<b>Genrer: </b>"
 
+#, c-format
 #~ msgid "Only the first %i result displayed, please refine your search query"
 #~ msgstr ""
-#~ "Endast de första %i resultaten visas. Definiera om din sökfråga för "
-#~ "bättre resultat"
+#~ "Endast de första %i resultaten visas. Definiera om din sökfråga för bättre "
+#~ "resultat"
 
 #~ msgid "01/24"
 #~ msgstr "01/24"
@@ -2342,8 +2321,25 @@ msgstr ""
 #~ msgid "--clean-cover-db"
 #~ msgstr "--rensa-cover-db"
 
+#~ msgid "Error occurred during operation"
+#~ msgstr "Ett fel uppstod under körningen."
+
+#~ msgid "The following error(s) occurred:"
+#~ msgstr "Följande fel inträffade:"
+
+#~ msgid ""
+#~ "Failed to open the interface description file!\n"
+#~ "Please reinstall gmpc\n"
+#~ msgstr ""
+#~ "Det gick inte att öppna gränssnittsbeskrivningen\n"
+#~ "Ominstallera gmpc\n"
+
+#, c-format
 #~ msgid "MPD Database refreshed at: %c"
 #~ msgstr "MPD Databasen uppdateras på:%c"
+
+#~ msgid "Playlist"
+#~ msgstr "Spellista"
 
 #~ msgid "Invalid search"
 #~ msgstr "Ogiltig sökning"
@@ -2368,3 +2364,6 @@ msgstr ""
 
 #~ msgid "Show the current album information"
 #~ msgstr "Visa den aktuella album informationen"
+
+#~ msgid "Update list from internet"
+#~ msgstr "Uppdatera lista från internet"

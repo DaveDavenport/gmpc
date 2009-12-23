@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-12-23 15:42+0100\n"
-"PO-Revision-Date: 2009-10-30 02:01+0000\n"
-"Last-Translator: Qianqian Fang <fangqq@gmail.com>\n"
+"POT-Creation-Date: 2009-12-23 15:44+0100\n"
+"PO-Revision-Date: 2009-12-05 09:12+0000\n"
+"Last-Translator: Harris <huangchengzhi@gmail.com>\n"
 "Language-Team: Simplified Chinese <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2009-11-16 23:32+0000\n"
+"X-Launchpad-Export-Date: 2009-12-23 17:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -211,9 +211,8 @@ msgid "Shows all output from a certain log domain"
 msgstr ""
 
 #: ../src/main.c:305
-#, fuzzy
 msgid "Select a profile"
-msgstr "选择文件"
+msgstr "选择一个配置"
 
 #: ../src/main.c:443
 msgid "quit"
@@ -284,6 +283,8 @@ msgid ""
 "Failed to set password on: '%s'\n"
 "Please try again"
 msgstr ""
+"设置密码失败:'%s'\n"
+"请重试"
 
 #: ../src/main.c:1134
 #, c-format
@@ -409,6 +410,8 @@ msgid ""
 "Ensure that your window manager (or other applications) have not already "
 "bound this key for some other function, then restart gmpc."
 msgstr ""
+"\n"
+"确定窗口管理器(或其他程序)没有绑定这个快捷键,然后重新启动gmpc."
 
 #: ../src/mm-keys.c:394
 msgid ""
@@ -596,7 +599,7 @@ msgstr "音量"
 
 #: ../src/mpdinteraction.c:321
 msgid "Volume (+-)<level>"
-msgstr ""
+msgstr "音量 (+-)"
 
 #: ../src/mpdinteraction.c:322
 msgid "mute"
@@ -630,7 +633,7 @@ msgstr "启用/禁用 X 输出"
 
 #: ../src/mpdinteraction.c:329
 msgid "Play <query>"
-msgstr ""
+msgstr "播放 <query>"
 
 #: ../src/mpdinteraction.c:330
 msgid "add"
@@ -746,10 +749,10 @@ msgstr "断开连接"
 
 #. *
 #. * Set paused in Window string
-#.
+#. 
 #: ../src/playlist3.c:1692 ../src/playlist3.c:1697
 msgid "paused"
-msgstr ""
+msgstr "已暂停"
 
 #: ../src/playlist3.c:1775
 #, c-format
@@ -819,23 +822,20 @@ msgid "Interface"
 msgstr "界面"
 
 #: ../src/playlist3.c:2684
-#, fuzzy
 msgid "Single Mode enabled"
-msgstr "单曲模式"
+msgstr ""
 
 #: ../src/playlist3.c:2687
-#, fuzzy
 msgid "Single Mode disabled"
-msgstr "单曲模式: %s"
+msgstr ""
 
 #: ../src/playlist3.c:2695
 msgid "Consume Mode enabled"
 msgstr ""
 
 #: ../src/playlist3.c:2698
-#, fuzzy
 msgid "Consume Mode disabled"
-msgstr "重复播放已禁用"
+msgstr ""
 
 #: ../src/playlist3.c:2706
 msgid "Repeat enabled"
@@ -939,7 +939,7 @@ msgstr "一个或数个插件加载失败，更多信息请查看 帮助->消息
 
 #: ../src/preferences.c:84
 msgid "Plugin version"
-msgstr ""
+msgstr "插件版本"
 
 #: ../src/preferences.c:105 ../src/preferences.c:212
 msgid "Plugins"
@@ -1003,12 +1003,11 @@ msgstr "%i %s 已添加"
 #: ../src/url-fetcher.c:225
 msgid "stream"
 msgid_plural "streams"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "媒体流"
 
 #: ../src/url-fetcher.c:285 ../src/url-fetcher.c:317
 msgid "Added 1 stream"
-msgstr ""
+msgstr "添加了 1 条媒体流"
 
 #: ../src/url-fetcher.c:388
 msgid "Failed to open local file"
@@ -1028,7 +1027,7 @@ msgstr "提示"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:111
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -1045,7 +1044,7 @@ msgstr "连接设置"
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:141
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1128,6 +1127,7 @@ msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
 "  Aron Xu https://launchpad.net/~happyaron\n"
+"  Harris https://launchpad.net/~huangchengzhi\n"
 "  Jonathan Ye https://launchpad.net/~microjo\n"
 "  Qball Cow https://launchpad.net/~qball-qballcow\n"
 "  yuane https://launchpad.net/~yuane\n"
@@ -1211,7 +1211,7 @@ msgstr "专辑(_L)"
 
 #: ../glade/preferences-esf-dialog.ui.h:5
 msgid "Edit Song Formatting"
-msgstr ""
+msgstr "更改音乐格式"
 
 #: ../glade/preferences-esf-dialog.ui.h:6
 msgid "T_rack"
@@ -1227,7 +1227,7 @@ msgstr "日期(_D)"
 
 #: ../glade/preferences-esf-dialog.ui.h:9
 msgid "_Stream name"
-msgstr ""
+msgstr "媒体流名称(_S)"
 
 #: ../glade/preferences-esf-dialog.ui.h:10
 msgid "_Title"
@@ -1286,9 +1286,8 @@ msgid "<b>Output Devices:</b>"
 msgstr "<b>输出设备：</b>"
 
 #: ../glade/preferences-server.ui.h:3
-#, fuzzy
 msgid "<b>Replaygain</b>"
-msgstr "<b>播放列表：</b>"
+msgstr ""
 
 #: ../glade/preferences-server.ui.h:4
 msgid ""
@@ -1343,7 +1342,7 @@ msgstr "位置："
 
 #: ../glade/preferences-trayicon.ui.h:6
 msgid "Show on song change"
-msgstr ""
+msgstr "歌曲改变是显示"
 
 #: ../glade/preferences-trayicon.ui.h:7
 msgid "Show severity"
@@ -1355,7 +1354,7 @@ msgstr "超时："
 
 #: ../glade/preferences-proxy.ui.h:1
 msgid "<b>Proxy settings</b>"
-msgstr ""
+msgstr "<b>代理设置</b>"
 
 #: ../glade/preferences-proxy.ui.h:2
 msgid "HTTP Proxy:"
@@ -1415,7 +1414,7 @@ msgstr "名称："
 
 #: ../glade/gmpc-add-url.ui.h:1
 msgid "Enter URL:"
-msgstr ""
+msgstr "输入 URL"
 
 #: ../glade/gmpc-add-url.ui.h:2
 msgid "gtk-add"
@@ -1508,9 +1507,8 @@ msgid "Play Queue"
 msgstr "播放队列"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:1120
-#, fuzzy
 msgid "Search Playlist"
-msgstr "搜索播放列表"
+msgstr ""
 
 #: ../src/browsers/playlist3-file-browser.c:109
 #: ../src/browsers/playlist3-file-browser.c:347
@@ -1638,7 +1636,7 @@ msgstr "播放列表编辑器"
 #: ../src/vala/gmpc-favorites.c:124 ../src/vala/gmpc-favorites.c:139
 #: ../src/vala/gmpc-favorites.c:175 ../src/vala/gmpc-favorites.c:185
 msgid "Favorites"
-msgstr ""
+msgstr "收藏夹"
 
 #: ../src/browsers/playlist3-playlist-editor.c:498
 msgid "New playlist"
@@ -1665,12 +1663,12 @@ msgstr "添加到播放列表"
 
 #: ../src/browsers/playlist3-playlist-editor.c:1066
 msgid "Added playing song to favorites list."
-msgstr ""
+msgstr "当前歌曲已放入收藏夹"
 
 #. *
 #: ../src/browsers/playlist3-playlist-editor.c:1086
 msgid "Add Current Song to favorites"
-msgstr ""
+msgstr "添加当前歌曲到收藏夹"
 
 #: ../src/browsers/playlist3-tag2-browser.c:103
 msgid "Tag based browser"
@@ -1693,7 +1691,7 @@ msgstr "服务器"
 
 #: ../src/browsers/server-information.c:335
 msgid "Uptime"
-msgstr ""
+msgstr "运行时间"
 
 #: ../src/browsers/server-information.c:336
 msgid "Time Playing"
@@ -1761,9 +1759,8 @@ msgstr "流派"
 
 #: ../src/browsers/gmpc-nowplaying2.c:1107
 #: ../src/browsers/gmpc-metadata-browser2.c:3100
-#, fuzzy
 msgid "Codec"
-msgstr "连接"
+msgstr ""
 
 #: ../src/browsers/gmpc-nowplaying2.c:1128
 #: ../src/browsers/gmpc-metadata-browser2.c:3106
@@ -1772,7 +1769,7 @@ msgstr ""
 
 #: ../src/browsers/gmpc-nowplaying2.c:1158
 msgid "Track number"
-msgstr ""
+msgstr "音轨号"
 
 #: ../src/browsers/gmpc-nowplaying2.c:1223
 #: ../src/browsers/gmpc-nowplaying2.c:1225
@@ -1788,7 +1785,7 @@ msgstr ""
 #: ../src/browsers/gmpc-metadata-browser2.c:3228
 #: ../src/browsers/gmpc-metadata-browser2.c:5220
 msgid "Similar Songs"
-msgstr ""
+msgstr "相似歌曲"
 
 #: ../src/browsers/gmpc-nowplaying2.c:1284
 #: ../src/browsers/gmpc-nowplaying2.c:1286
@@ -1798,7 +1795,7 @@ msgstr ""
 #: ../src/browsers/gmpc-metadata-browser2.c:4244
 #: ../src/browsers/gmpc-metadata-browser2.c:5208
 msgid "Similar Artist"
-msgstr ""
+msgstr "相似作者"
 
 #: ../src/browsers/gmpc-nowplaying2.c:1306
 #: ../src/browsers/gmpc-nowplaying2.c:1308
@@ -1823,7 +1820,7 @@ msgstr ""
 
 #: ../src/browsers/gmpc-nowplaying2.c:1655
 msgid "Now Playing"
-msgstr ""
+msgstr "播放中"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:693
 #: ../src/browsers/gmpc-metadata-browser2.c:1565
@@ -1849,7 +1846,7 @@ msgstr ""
 
 #: ../src/browsers/gmpc-metadata-browser2.c:1042
 msgid "Fetching"
-msgstr ""
+msgstr "正在获取"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:1365
 msgid "Metadata Browser"
@@ -1905,9 +1902,8 @@ msgstr "专辑介绍"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:3864
 #: ../src/browsers/gmpc-metadata-browser2.c:3866
-#, fuzzy
 msgid "Song list"
-msgstr "歌曲"
+msgstr ""
 
 #: ../src/browsers/gmpc-metadata-browser2.c:4219
 #: ../src/browsers/gmpc-metadata-browser2.c:4221
@@ -1916,9 +1912,8 @@ msgid "Artist information"
 msgstr "艺术家简介"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:4322
-#, fuzzy
 msgid "Albums by"
-msgstr "专辑"
+msgstr ""
 
 #: ../src/browsers/gmpc-metadata-browser2.c:5197
 msgid "Enable/disable metadata options"
@@ -2142,7 +2137,7 @@ msgstr ""
 
 #: ../src/vala/gmpc-test-plugin.c:813
 msgid "Cover"
-msgstr ""
+msgstr "封面"
 
 #: ../src/vala/gmpc-test-plugin.c:826
 msgid "Lyric"
@@ -2178,43 +2173,11 @@ msgstr ""
 
 #: ../src/Widgets/gmpc-menu-item-rating.c:87
 msgid "Rating:"
-msgstr ""
+msgstr "评级："
 
 #: ../src/Providers/music-tree.c:182
-#, fuzzy
 msgid "Music Tree Provider"
-msgstr "元数据提供者"
-
-#~ msgid "Error occurred during operation"
-#~ msgstr "操作时发生了错误"
-
-#~ msgid "The following error(s) occurred:"
-#~ msgstr "发生了下面的错误 :"
-
-#~ msgid "Error Message"
-#~ msgstr "错误讯息"
-
-#~ msgid ""
-#~ "Failed to open the interface description file!\n"
-#~ "Please reinstall gmpc\n"
-#~ msgstr ""
-#~ "打开界面描述文件失败！\n"
-#~ "请重新安装 gmpc\n"
-
-#~ msgid "Album artist"
-#~ msgstr "专辑艺术家"
-
-#~ msgid "Path"
-#~ msgstr "路径"
-
-#~ msgid "File Browser"
-#~ msgstr "文件浏览器"
-
-#~ msgid "Playlist"
-#~ msgstr "播放列表"
-
-#~ msgid "Update list from internet"
-#~ msgstr "从互联网更新列表"
+msgstr ""
 
 #~ msgid "_Server"
 #~ msgstr "服务器(_S)"
@@ -2236,6 +2199,7 @@ msgstr "元数据提供者"
 #~ msgid_plural "<b>Dates: </b>"
 #~ msgstr[0] "<b>日期：</b>"
 
+#, c-format
 #~ msgid "Only the first %i result displayed, please refine your search query"
 #~ msgstr "仅显示前 %i 个结果，请改进你的搜索条件"
 
@@ -2247,6 +2211,9 @@ msgstr "元数据提供者"
 
 #~ msgid "Fetching..."
 #~ msgstr "正在获取..."
+
+#~ msgid "Albums"
+#~ msgstr "专辑"
 
 #~ msgid "Tracks"
 #~ msgstr "音轨"
@@ -2284,6 +2251,9 @@ msgstr "元数据提供者"
 #~ msgid "/path/to/file_name.mp3"
 #~ msgstr "/path/to/file_name.mp3"
 
+#~ msgid "Error Message"
+#~ msgstr "错误讯息"
+
 #~ msgid "second"
 #~ msgid_plural "seconds"
 #~ msgstr[0] "秒"
@@ -2291,6 +2261,7 @@ msgstr "元数据提供者"
 #~ msgid " Total time: "
 #~ msgstr " 总计时间： "
 
+#, c-format
 #~ msgid ""
 #~ "Gnome Music Player Client\n"
 #~ "Options:\n"
@@ -2325,12 +2296,18 @@ msgstr "元数据提供者"
 #~ "\t--clean-cover-db\t清理专辑封面数据文件.\n"
 #~ "\t--disable-plugins\t不加载插件.\n"
 #~ "\t--replace\t\t替换当前运行的会话\n"
-#~ "\t--quit\t\t\t退出当前运行的 gmpc 会话. 仅在禁止 multiple-instances 选项时"
-#~ "有效.\n"
+#~ "\t--quit\t\t\t退出当前运行的 gmpc 会话. 仅在禁止 multiple-instances 选项时有效.\n"
+
+#~ msgid "Error occurred during operation"
+#~ msgstr "操作时发生了错误"
+
+#~ msgid "The following error(s) occurred:"
+#~ msgstr "发生了下面的错误 :"
 
 #~ msgid "MPD finished updating its database"
 #~ msgstr "MPD 数据库更新完成"
 
+#, c-format
 #~ msgid "MPD Database refreshed at: %c"
 #~ msgstr "MPD 数据库刷新于: %c"
 

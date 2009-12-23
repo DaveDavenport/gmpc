@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc 0.15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-12-23 15:42+0100\n"
-"PO-Revision-Date: 2009-08-10 13:32+0000\n"
-"Last-Translator: Minasss <francesco.pischedda@gmail.com>\n"
+"POT-Creation-Date: 2009-12-23 15:44+0100\n"
+"PO-Revision-Date: 2009-12-20 17:11+0000\n"
+"Last-Translator: Giuseppe Terrasi <giuseppeterrasi@gmail.com>\n"
 "Language-Team: Italian\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=iso-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-11-16 23:32+0000\n"
+"X-Launchpad-Export-Date: 2009-12-23 17:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -35,7 +35,7 @@ msgstr "Informazione Bug"
 
 #: ../glade/playlist3.glade.h:2
 msgid "Consume"
-msgstr ""
+msgstr "Consumo"
 
 #: ../glade/playlist3.glade.h:3
 msgid "Easy Command Help"
@@ -79,7 +79,7 @@ msgstr "Ripeti"
 
 #: ../glade/playlist3.glade.h:12
 msgid "Se_rver"
-msgstr ""
+msgstr "Se_rver"
 
 #: ../glade/playlist3.glade.h:13
 msgid "Show Messages"
@@ -164,7 +164,7 @@ msgstr "Proxy"
 
 #: ../src/main.c:281
 msgid "Start the program in full screen"
-msgstr ""
+msgstr "Avvia il programma a schermo intero"
 
 #: ../src/main.c:283
 msgid "Show program version and revision"
@@ -200,7 +200,7 @@ msgstr ""
 
 #: ../src/main.c:299
 msgid "Show redraw events in GTK+"
-msgstr ""
+msgstr "Mostra gli eventi \"redraw\" in GTK+"
 
 #: ../src/main.c:301
 msgid "Show bug information dialog"
@@ -211,9 +211,8 @@ msgid "Shows all output from a certain log domain"
 msgstr ""
 
 #: ../src/main.c:305
-#, fuzzy
 msgid "Select a profile"
-msgstr "Seleziona file"
+msgstr "Seleziona un profilo"
 
 #: ../src/main.c:443
 msgid "quit"
@@ -320,7 +319,7 @@ msgstr ""
 
 #: ../src/MetaData/metadata.c:1422
 msgid "Metadata Handler"
-msgstr ""
+msgstr "Gestore Metadati"
 
 #: ../src/misc.c:39
 msgid "Total time"
@@ -512,7 +511,7 @@ msgstr ""
 
 #: ../src/mpdinteraction.c:273
 msgid "Playback will be stopped after the current playing song."
-msgstr ""
+msgstr "La riproduzine verrà interrotta dopo il brano corrente."
 
 #: ../src/mpdinteraction.c:283
 msgid ""
@@ -544,7 +543,7 @@ msgstr "play"
 
 #: ../src/mpdinteraction.c:308
 msgid "start playback"
-msgstr ""
+msgstr "Avvia riproduzione"
 
 #: ../src/mpdinteraction.c:309
 msgid "pause"
@@ -552,7 +551,7 @@ msgstr "pause"
 
 #: ../src/mpdinteraction.c:309
 msgid "pause playback"
-msgstr ""
+msgstr "Pausa"
 
 #: ../src/mpdinteraction.c:310
 msgid "next"
@@ -767,7 +766,7 @@ msgstr "Disconnesso"
 
 #. *
 #. * Set paused in Window string
-#.
+#. 
 #: ../src/playlist3.c:1692 ../src/playlist3.c:1697
 msgid "paused"
 msgstr ""
@@ -840,23 +839,20 @@ msgid "Interface"
 msgstr "Interfaccia"
 
 #: ../src/playlist3.c:2684
-#, fuzzy
 msgid "Single Mode enabled"
-msgstr "Riproduzione casuale abilitata"
+msgstr ""
 
 #: ../src/playlist3.c:2687
-#, fuzzy
 msgid "Single Mode disabled"
-msgstr "Riproduzione casuale disabilitata"
+msgstr ""
 
 #: ../src/playlist3.c:2695
 msgid "Consume Mode enabled"
 msgstr ""
 
 #: ../src/playlist3.c:2698
-#, fuzzy
 msgid "Consume Mode disabled"
-msgstr "Riproduzione casuale disabilitata"
+msgstr ""
 
 #: ../src/playlist3.c:2706
 msgid "Repeat enabled"
@@ -1051,7 +1047,7 @@ msgstr "Notifica"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:111
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -1070,7 +1066,7 @@ msgstr "Impostazione connessione"
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:141
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1160,6 +1156,7 @@ msgstr ""
 "  Ardaking https://launchpad.net/~ardaking\n"
 "  Corrado Gizzi https://launchpad.net/~corradogizzi\n"
 "  Elfo404 https://launchpad.net/~elfo\n"
+"  Giuseppe Terrasi https://launchpad.net/~giuseppeterrasi\n"
 "  Minasss https://launchpad.net/~francesco-pischedda\n"
 "  Nikopol https://launchpad.net/~aegnor-isilra\n"
 "  Qball Cow https://launchpad.net/~qball-qballcow\n"
@@ -1317,9 +1314,8 @@ msgid "<b>Output Devices:</b>"
 msgstr "<b>Dispositivi di output:</b>"
 
 #: ../glade/preferences-server.ui.h:3
-#, fuzzy
 msgid "<b>Replaygain</b>"
-msgstr "<b>Principale:</b>"
+msgstr ""
 
 #: ../glade/preferences-server.ui.h:4
 msgid ""
@@ -1539,9 +1535,8 @@ msgid "Play Queue"
 msgstr "Coda di riproduzione"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:1120
-#, fuzzy
 msgid "Search Playlist"
-msgstr "Cerca playlist"
+msgstr ""
 
 #: ../src/browsers/playlist3-file-browser.c:109
 #: ../src/browsers/playlist3-file-browser.c:347
@@ -1795,9 +1790,8 @@ msgstr "Genere"
 
 #: ../src/browsers/gmpc-nowplaying2.c:1107
 #: ../src/browsers/gmpc-metadata-browser2.c:3100
-#, fuzzy
 msgid "Codec"
-msgstr "_Connetti"
+msgstr ""
 
 #: ../src/browsers/gmpc-nowplaying2.c:1128
 #: ../src/browsers/gmpc-metadata-browser2.c:3106
@@ -1939,9 +1933,8 @@ msgstr "Informazioni album"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:3864
 #: ../src/browsers/gmpc-metadata-browser2.c:3866
-#, fuzzy
 msgid "Song list"
-msgstr "Canzoni"
+msgstr ""
 
 #: ../src/browsers/gmpc-metadata-browser2.c:4219
 #: ../src/browsers/gmpc-metadata-browser2.c:4221
@@ -1950,9 +1943,8 @@ msgid "Artist information"
 msgstr "Informazioni artista"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:4322
-#, fuzzy
 msgid "Albums by"
-msgstr "Album"
+msgstr ""
 
 #: ../src/browsers/gmpc-metadata-browser2.c:5197
 msgid "Enable/disable metadata options"
@@ -2215,36 +2207,8 @@ msgid "Rating:"
 msgstr "Voto:"
 
 #: ../src/Providers/music-tree.c:182
-#, fuzzy
 msgid "Music Tree Provider"
-msgstr "Fornitore di metadati"
-
-#~ msgid "Error occurred during operation"
-#~ msgstr "Un errore si è presentato durante l'operazione"
-
-#~ msgid "Error Message"
-#~ msgstr "Messaggio d'errore"
-
-#~ msgid "Search songs with similar title"
-#~ msgstr "Cerca canzoni con un titolo simile"
-
-#~ msgid "Album artist"
-#~ msgstr "Album artista"
-
-#~ msgid "Path"
-#~ msgstr "Percorso"
-
-#~ msgid "Favored"
-#~ msgstr "Favorito"
-
-#~ msgid "Similar artist"
-#~ msgstr "Artisti simili"
-
-#~ msgid "File Browser"
-#~ msgstr "Browser dei files"
-
-#~ msgid "Update list from internet"
-#~ msgstr "Aggiorna lista da Internet"
+msgstr ""
 
 #~ msgid "<b>Song Markup</b>"
 #~ msgstr "<b>Marcatura canzone:</b>"
@@ -2303,6 +2267,9 @@ msgstr "Fornitore di metadati"
 #~ msgid "--help"
 #~ msgstr "--help"
 
+#~ msgid "Error Message"
+#~ msgstr "Messaggio d'errore"
+
 #~ msgid " Total time: "
 #~ msgstr " Tempo totale: "
 
@@ -2311,6 +2278,9 @@ msgstr "Fornitore di metadati"
 
 #~ msgid "Enter an url"
 #~ msgstr "Inserisci un url"
+
+#~ msgid "File Browser"
+#~ msgstr "Browser dei files"
 
 #~ msgid "View"
 #~ msgstr "Visualizza"
@@ -2349,10 +2319,12 @@ msgstr "Fornitore di metadati"
 #~ msgid "Similar songs"
 #~ msgstr "Canzoni simili"
 
+#, c-format
 #~ msgid "Only the first %i result displayed, please refine your search query"
 #~ msgstr ""
 #~ "Solo il primo %i risultato visualizzato, prego ridefinisci la tua ricerca"
 
+#, c-format
 #~ msgid "MPD Database refreshed at: %c"
 #~ msgstr "Database MPD aggiornato al: %c"
 
@@ -2382,3 +2354,6 @@ msgstr "Fornitore di metadati"
 
 #~ msgid "Tracks"
 #~ msgstr "Tracce"
+
+#~ msgid "Albums"
+#~ msgstr "Album"

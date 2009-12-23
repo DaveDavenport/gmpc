@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-12-23 15:42+0100\n"
+"POT-Creation-Date: 2009-12-23 15:44+0100\n"
 "PO-Revision-Date: 2009-05-13 15:54+0000\n"
 "Last-Translator: kenan3008 <Unknown>\n"
 "Language-Team: Bosnian <bs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
-"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2009-11-16 23:32+0000\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Launchpad-Export-Date: 2009-12-23 17:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -212,9 +212,8 @@ msgid "Shows all output from a certain log domain"
 msgstr ""
 
 #: ../src/main.c:305
-#, fuzzy
 msgid "Select a profile"
-msgstr "Odaberite datoteku"
+msgstr ""
 
 #: ../src/main.c:443
 msgid "quit"
@@ -771,7 +770,7 @@ msgstr "Isključeno"
 
 #. *
 #. * Set paused in Window string
-#.
+#. 
 #: ../src/playlist3.c:1692 ../src/playlist3.c:1697
 msgid "paused"
 msgstr ""
@@ -1053,7 +1052,7 @@ msgstr "Obavijest"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:111
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -1072,7 +1071,7 @@ msgstr "Veza instalacije"
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:141
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1309,9 +1308,8 @@ msgid "<b>Output Devices:</b>"
 msgstr "<b>Izlazni uređaji:</b>"
 
 #: ../glade/preferences-server.ui.h:3
-#, fuzzy
 msgid "<b>Replaygain</b>"
-msgstr "<b>Glavni:</b>"
+msgstr ""
 
 #: ../glade/preferences-server.ui.h:4
 msgid ""
@@ -1532,9 +1530,8 @@ msgid "Play Queue"
 msgstr "Sviraj iz liste za čekanje"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:1120
-#, fuzzy
 msgid "Search Playlist"
-msgstr "pretraži listu pjesama"
+msgstr ""
 
 #: ../src/browsers/playlist3-file-browser.c:109
 #: ../src/browsers/playlist3-file-browser.c:347
@@ -1795,9 +1792,8 @@ msgstr "Žanr"
 
 #: ../src/browsers/gmpc-nowplaying2.c:1107
 #: ../src/browsers/gmpc-metadata-browser2.c:3100
-#, fuzzy
 msgid "Codec"
-msgstr "_Spoji"
+msgstr ""
 
 #: ../src/browsers/gmpc-nowplaying2.c:1128
 #: ../src/browsers/gmpc-metadata-browser2.c:3106
@@ -1939,9 +1935,8 @@ msgstr "Informacije o albumu"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:3864
 #: ../src/browsers/gmpc-metadata-browser2.c:3866
-#, fuzzy
 msgid "Song list"
-msgstr "Pjesme"
+msgstr ""
 
 #: ../src/browsers/gmpc-metadata-browser2.c:4219
 #: ../src/browsers/gmpc-metadata-browser2.c:4221
@@ -1950,9 +1945,8 @@ msgid "Artist information"
 msgstr "Informacije o umjetniku"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:4322
-#, fuzzy
 msgid "Albums by"
-msgstr "Albumi"
+msgstr ""
 
 #: ../src/browsers/gmpc-metadata-browser2.c:5197
 msgid "Enable/disable metadata options"
@@ -2215,40 +2209,8 @@ msgid "Rating:"
 msgstr "Ocjena:"
 
 #: ../src/Providers/music-tree.c:182
-#, fuzzy
 msgid "Music Tree Provider"
-msgstr "Pružatelj usluga meta podataka"
-
-#~ msgid "Error occurred during operation"
-#~ msgstr "Došlo je do greške u toku operacije"
-
-#~ msgid "The following error(s) occurred:"
-#~ msgstr "Desile su se sljedeće greške:"
-
-#~ msgid "Error Message"
-#~ msgstr "Poruka o grešci"
-
-#~ msgid ""
-#~ "Failed to open the interface description file!\n"
-#~ "Please reinstall gmpc\n"
-#~ msgstr ""
-#~ "Datoteku sa opisom interfejsa nije moguće otvoriti!\n"
-#~ "Molimo da ponovo snimite gmpc\n"
-
-#~ msgid "Album artist"
-#~ msgstr "Album umjetnika"
-
-#~ msgid "Path"
-#~ msgstr "Putanja"
-
-#~ msgid "File Browser"
-#~ msgstr "Pretraživač datoteka"
-
-#~ msgid "Playlist"
-#~ msgstr "Lista pjesama"
-
-#~ msgid "Update list from internet"
-#~ msgstr "Osvježi listu sa internete"
+msgstr ""
 
 #~ msgid "MPD database is updating."
 #~ msgstr "MPD baza podataka se nadopunjuje."
@@ -2292,6 +2254,9 @@ msgstr "Pružatelj usluga meta podataka"
 #~ msgid "--help"
 #~ msgstr "--pomoć"
 
+#~ msgid "Error Message"
+#~ msgstr "Poruka o grešci"
+
 #~ msgid " Total time: "
 #~ msgstr " Ukupno vrijeme: "
 
@@ -2304,6 +2269,7 @@ msgstr "Pružatelj usluga meta podataka"
 #~ msgid "MPD database is updating"
 #~ msgstr "MPD baza se nadopunjuje"
 
+#, c-format
 #~ msgid "MPD Database refreshed at: %c"
 #~ msgstr "MPD baza osvježena u: %c"
 
@@ -2312,6 +2278,12 @@ msgstr "Pružatelj usluga meta podataka"
 
 #~ msgid "<b>Song Markup</b>"
 #~ msgstr "<b>Označavanje pjesme</b>"
+
+#~ msgid "File Browser"
+#~ msgstr "Pretraživač datoteka"
+
+#~ msgid "Playlist"
+#~ msgstr "Lista pjesama"
 
 #~ msgid "View"
 #~ msgstr "Prikaz"
@@ -2358,9 +2330,13 @@ msgstr "Pružatelj usluga meta podataka"
 #~ msgid "Find Artist:"
 #~ msgstr "Nađi umjetnika:"
 
+#, c-format
 #~ msgid "Only the first %i result displayed, please refine your search query"
 #~ msgstr ""
 #~ "Samo je prvi %i rezultat prikazana, molimo prepravite vaš upit za pretragu"
+
+#~ msgid "Album artist"
+#~ msgstr "Album umjetnika"
 
 #~ msgid "kbit/sec"
 #~ msgstr "kbit/sek"
@@ -2373,6 +2349,9 @@ msgstr "Pružatelj usluga meta podataka"
 
 #~ msgid "Similar Artists"
 #~ msgstr "Slični umjetnici"
+
+#~ msgid "Albums"
+#~ msgstr "Albumi"
 
 #~ msgid "Show Current Song"
 #~ msgstr "Pokaži trenutnu pjesmu"
@@ -2407,6 +2386,7 @@ msgstr "Pružatelj usluga meta podataka"
 #~ msgid "MPD's Streaming server"
 #~ msgstr "Server protoka za MPD"
 
+#, c-format
 #~ msgid ""
 #~ "Gnome Music Player Client\n"
 #~ "Options:\n"
@@ -2438,19 +2418,26 @@ msgstr "Pružatelj usluga meta podataka"
 #~ "\t\t\t\t\t2 Poruke o greškama + Poruke upozorenja\n"
 #~ "\t\t\t\t\t3 Sve poruke\n"
 #~ "\t--version\t\tŠtampaj verziju i dobij reviziju\n"
-#~ "\t--config=<file>\t\tPostavi putanju za konfiguracijsku datoteku, "
-#~ "početno  ~/.gmpc/gmpc.cfg\n"
+#~ "\t--config=<file>\t\tPostavi putanju za konfiguracijsku datoteku, početno  "
+#~ "~/.gmpc/gmpc.cfg\n"
 #~ "\t--clean-cover-db\tOčisti datoteku sa naslovnicama.\n"
 #~ "\t--disable-plugins\tNe učitavaj nijedan dodataka.\n"
 #~ "\t--replace\t\tZamijeni pokrenutu sesiju sa trenutnom\n"
-#~ "\t--quit\t\t\tZatvori pokrenutu gmpc sesiju. Radi samo ukoliko su "
-#~ "višestruke instance isključene.\n"
+#~ "\t--quit\t\t\tZatvori pokrenutu gmpc sesiju. Radi samo ukoliko su višestruke "
+#~ "instance isključene.\n"
 
 #~ msgid "second"
 #~ msgid_plural "seconds"
 #~ msgstr[0] "sekunda"
 #~ msgstr[1] "sekunde"
 #~ msgstr[2] "sekundi"
+
+#~ msgid ""
+#~ "Failed to open the interface description file!\n"
+#~ "Please reinstall gmpc\n"
+#~ msgstr ""
+#~ "Datoteku sa opisom interfejsa nije moguće otvoriti!\n"
+#~ "Molimo da ponovo snimite gmpc\n"
 
 #~ msgid "show current artist"
 #~ msgstr "Prikaži trenutnog pjevača"
@@ -2470,8 +2457,20 @@ msgstr "Pružatelj usluga meta podataka"
 #~ msgid "switch metadata browser"
 #~ msgstr "Prebaci preglegnik meta podataka"
 
+#~ msgid "Update list from internet"
+#~ msgstr "Osvježi listu sa internete"
+
 #~ msgid "Show the current album information"
 #~ msgstr "Prikaži informacije o trenutnom albumu"
 
 #~ msgid "show current album"
 #~ msgstr "prikaži trenutni album"
+
+#~ msgid "Error occurred during operation"
+#~ msgstr "Došlo je do greške u toku operacije"
+
+#~ msgid "The following error(s) occurred:"
+#~ msgstr "Desile su se sljedeće greške:"
+
+#~ msgid "Path"
+#~ msgstr "Putanja"

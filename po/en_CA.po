@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-12-23 15:42+0100\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2009-12-23 15:44+0100\n"
 "PO-Revision-Date: 2009-09-25 11:14+0000\n"
 "Last-Translator: Itai Molenaar <imolenaar28@gmail.com>\n"
 "Language-Team: English (Canada) <en_CA@li.org>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-11-16 23:32+0000\n"
+"X-Launchpad-Export-Date: 2009-12-23 17:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -489,7 +489,8 @@ msgstr "Off"
 
 #: ../src/mpdinteraction.c:163
 msgid "Single: The used MPD server is to old and does not support this."
-msgstr "Single: The specified MPD server is to old and does not support this."
+msgstr ""
+"Single: The specified MPD server is to old and does not support this."
 
 #: ../src/mpdinteraction.c:165
 msgid "Single: You have insufficient permission to use this option."
@@ -497,7 +498,8 @@ msgstr "Single: You have insufficient permission to use this option."
 
 #: ../src/mpdinteraction.c:182
 msgid "Consume: The used MPD server is to old and does not support this."
-msgstr "Consume: The specified MPD server is to old and does not support this."
+msgstr ""
+"Consume: The specified MPD server is to old and does not support this."
 
 #: ../src/mpdinteraction.c:184
 msgid "Consume: You have insufficient permission to use this option."
@@ -776,7 +778,7 @@ msgstr "Disconnected"
 
 #. *
 #. * Set paused in Window string
-#.
+#. 
 #: ../src/playlist3.c:1692 ../src/playlist3.c:1697
 msgid "paused"
 msgstr ""
@@ -849,23 +851,20 @@ msgid "Interface"
 msgstr "Interface"
 
 #: ../src/playlist3.c:2684
-#, fuzzy
 msgid "Single Mode enabled"
-msgstr "Single mode"
+msgstr ""
 
 #: ../src/playlist3.c:2687
-#, fuzzy
 msgid "Single Mode disabled"
-msgstr "Single mode: %s"
+msgstr ""
 
 #: ../src/playlist3.c:2695
 msgid "Consume Mode enabled"
 msgstr ""
 
 #: ../src/playlist3.c:2698
-#, fuzzy
 msgid "Consume Mode disabled"
-msgstr "Repeat disabled"
+msgstr ""
 
 #: ../src/playlist3.c:2706
 msgid "Repeat enabled"
@@ -1059,7 +1058,7 @@ msgstr "Notification"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:111
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -1076,7 +1075,7 @@ msgstr "Setup connection"
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:141
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1526,9 +1525,8 @@ msgid "Play Queue"
 msgstr ""
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:1120
-#, fuzzy
 msgid "Search Playlist"
-msgstr "Pla_ylist"
+msgstr ""
 
 #: ../src/browsers/playlist3-file-browser.c:109
 #: ../src/browsers/playlist3-file-browser.c:347
@@ -1782,9 +1780,8 @@ msgstr ""
 
 #: ../src/browsers/gmpc-nowplaying2.c:1107
 #: ../src/browsers/gmpc-metadata-browser2.c:3100
-#, fuzzy
 msgid "Codec"
-msgstr "_Connect"
+msgstr ""
 
 #: ../src/browsers/gmpc-nowplaying2.c:1128
 #: ../src/browsers/gmpc-metadata-browser2.c:3106
@@ -2200,22 +2197,5 @@ msgid "Rating:"
 msgstr ""
 
 #: ../src/Providers/music-tree.c:182
-#, fuzzy
 msgid "Music Tree Provider"
-msgstr "Metadata Provider"
-
-#~ msgid "Error occurred during operation"
-#~ msgstr "Error occurred during operation"
-
-#~ msgid "The following error(s) occurred:"
-#~ msgstr "The following error(s) occurred:"
-
-#~ msgid "Error Message"
-#~ msgstr "Error Message"
-
-#~ msgid ""
-#~ "Failed to open the interface description file!\n"
-#~ "Please reinstall gmpc\n"
-#~ msgstr ""
-#~ "Failed to open the interface description file!\n"
-#~ "Please reinstall gmpc\n"
+msgstr ""

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-12-23 15:42+0100\n"
+"POT-Creation-Date: 2009-12-23 15:44+0100\n"
 "PO-Revision-Date: 2009-11-04 12:45+0000\n"
 "Last-Translator: Yentl <y.v.t@scarlet.be>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-11-16 23:32+0000\n"
+"X-Launchpad-Export-Date: 2009-12-23 17:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -211,9 +211,8 @@ msgid "Shows all output from a certain log domain"
 msgstr "Geef alle output weer van een bepaald log domein"
 
 #: ../src/main.c:305
-#, fuzzy
 msgid "Select a profile"
-msgstr "Profiel verwijderd"
+msgstr ""
 
 #: ../src/main.c:443
 msgid "quit"
@@ -500,7 +499,8 @@ msgstr "Single: Je hebt onvoldoende machtigingen om deze optie te gebruiken."
 
 #: ../src/mpdinteraction.c:182
 msgid "Consume: The used MPD server is to old and does not support this."
-msgstr "Verbruiken: De gebruikte MPD server is te oud en ondersteunt dit niet."
+msgstr ""
+"Verbruiken: De gebruikte MPD server is te oud en ondersteunt dit niet."
 
 #: ../src/mpdinteraction.c:184
 msgid "Consume: You have insufficient permission to use this option."
@@ -779,7 +779,7 @@ msgstr "Niet verbonden"
 
 #. *
 #. * Set paused in Window string
-#.
+#. 
 #: ../src/playlist3.c:1692 ../src/playlist3.c:1697
 msgid "paused"
 msgstr ""
@@ -852,14 +852,12 @@ msgid "Interface"
 msgstr "Interface"
 
 #: ../src/playlist3.c:2684
-#, fuzzy
 msgid "Single Mode enabled"
-msgstr "Single modus"
+msgstr ""
 
 #: ../src/playlist3.c:2687
-#, fuzzy
 msgid "Single Mode disabled"
-msgstr "Single modus"
+msgstr ""
 
 #: ../src/playlist3.c:2695
 msgid "Consume Mode enabled"
@@ -1062,7 +1060,7 @@ msgstr "Melding"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:111
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -1081,7 +1079,7 @@ msgstr "Connectie opzetten"
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:141
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1322,9 +1320,8 @@ msgid "<b>Output Devices:</b>"
 msgstr "<b>Output apparaten:</b>"
 
 #: ../glade/preferences-server.ui.h:3
-#, fuzzy
 msgid "<b>Replaygain</b>"
-msgstr "<b>Afspeellijst:</b>"
+msgstr ""
 
 #: ../glade/preferences-server.ui.h:4
 msgid ""
@@ -1545,9 +1542,8 @@ msgid "Play Queue"
 msgstr "Wachtrij"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:1120
-#, fuzzy
 msgid "Search Playlist"
-msgstr "Afspeellijsto opslaan"
+msgstr ""
 
 #: ../src/browsers/playlist3-file-browser.c:109
 #: ../src/browsers/playlist3-file-browser.c:347
@@ -1805,9 +1801,8 @@ msgstr "Genre"
 
 #: ../src/browsers/gmpc-nowplaying2.c:1107
 #: ../src/browsers/gmpc-metadata-browser2.c:3100
-#, fuzzy
 msgid "Codec"
-msgstr "Ver_binden"
+msgstr ""
 
 #: ../src/browsers/gmpc-nowplaying2.c:1128
 #: ../src/browsers/gmpc-metadata-browser2.c:3106
@@ -1959,9 +1954,8 @@ msgid "Artist information"
 msgstr ""
 
 #: ../src/browsers/gmpc-metadata-browser2.c:4322
-#, fuzzy
 msgid "Albums by"
-msgstr "Album"
+msgstr ""
 
 #: ../src/browsers/gmpc-metadata-browser2.c:5197
 msgid "Enable/disable metadata options"
@@ -2224,28 +2218,8 @@ msgid "Rating:"
 msgstr ""
 
 #: ../src/Providers/music-tree.c:182
-#, fuzzy
 msgid "Music Tree Provider"
-msgstr "Metadataleverancier"
-
-#~ msgid "Error occurred during operation"
-#~ msgstr "Fout opgetreden tijdens operatie"
-
-#~ msgid "The following error(s) occurred:"
-#~ msgstr "De volgende fout(en) kwamen voor:"
-
-#~ msgid "Error Message"
-#~ msgstr "Foutmelding"
-
-#~ msgid ""
-#~ "Failed to open the interface description file!\n"
-#~ "Please reinstall gmpc\n"
-#~ msgstr ""
-#~ "Kon het interfacebeschrijvingsbestand niet openen!\n"
-#~ "Herinstalleer gmpc aub\n"
-
-#~ msgid "File Browser"
-#~ msgstr "Bestandsbrowser"
+msgstr ""
 
 #~ msgid "<b>Song Markup</b>"
 #~ msgstr "<b>Nummer opmaak</b>"
@@ -2261,6 +2235,9 @@ msgstr "Metadataleverancier"
 
 #~ msgid " Total time: "
 #~ msgstr " Totale afspeeltijd: "
+
+#~ msgid "File Browser"
+#~ msgstr "Bestandsbrowser"
 
 #~ msgid "Sing or Swing you want"
 #~ msgstr "Zing en dans wat je wil"

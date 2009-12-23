@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-12-23 15:42+0100\n"
+"POT-Creation-Date: 2009-12-23 15:44+0100\n"
 "PO-Revision-Date: 2009-05-13 16:01+0000\n"
 "Last-Translator: Qball Cow <qball@qballcow.nl>\n"
 "Language-Team: Nepali <ne@li.org>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-11-16 23:32+0000\n"
+"X-Launchpad-Export-Date: 2009-12-23 17:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -211,9 +211,8 @@ msgid "Shows all output from a certain log domain"
 msgstr ""
 
 #: ../src/main.c:305
-#, fuzzy
 msgid "Select a profile"
-msgstr "फाइल छान्नुहोस्"
+msgstr ""
 
 #: ../src/main.c:443
 msgid "quit"
@@ -749,7 +748,7 @@ msgstr ""
 
 #. *
 #. * Set paused in Window string
-#.
+#. 
 #: ../src/playlist3.c:1692 ../src/playlist3.c:1697
 msgid "paused"
 msgstr ""
@@ -1028,7 +1027,7 @@ msgstr ""
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:111
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -1045,7 +1044,7 @@ msgstr ""
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:141
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1751,9 +1750,8 @@ msgstr ""
 
 #: ../src/browsers/gmpc-nowplaying2.c:1107
 #: ../src/browsers/gmpc-metadata-browser2.c:3100
-#, fuzzy
 msgid "Codec"
-msgstr "_जडान गर्नुहोस्"
+msgstr ""
 
 #: ../src/browsers/gmpc-nowplaying2.c:1128
 #: ../src/browsers/gmpc-metadata-browser2.c:3106
@@ -2172,12 +2170,6 @@ msgstr "स्तर निर्धारण :"
 msgid "Music Tree Provider"
 msgstr ""
 
-#~ msgid "Error Message"
-#~ msgstr "त्रुटी सन्देश"
-
-#~ msgid "Update list from internet"
-#~ msgstr "सुची इन्टरनेटबाट अद्यावधी गर्नुहोस्"
-
 #~ msgid "_Server"
 #~ msgstr "॒_सर्भर"
 
@@ -2229,6 +2221,9 @@ msgstr ""
 #~ msgid "MPD database is updating."
 #~ msgstr "MPD डाटाबेस अध्यावधीक हुदैछ"
 
+#~ msgid "Error Message"
+#~ msgstr "त्रुटी सन्देश"
+
 #~ msgid " Total time: "
 #~ msgstr " कुल :समय "
 
@@ -2236,6 +2231,9 @@ msgstr ""
 #~ msgid_plural "seconds"
 #~ msgstr[0] "सेकेन्ड"
 #~ msgstr[1] "सेकेन्डहरू"
+
+#~ msgid "Update list from internet"
+#~ msgstr "सुची इन्टरनेटबाट अद्यावधी गर्नुहोस्"
 
 #~ msgid "Links"
 #~ msgstr "लिङ्कहरु"

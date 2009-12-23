@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-12-23 15:42+0100\n"
+"POT-Creation-Date: 2009-12-23 15:44+0100\n"
 "PO-Revision-Date: 2009-05-13 15:54+0000\n"
 "Last-Translator: Pavlin Grucov <pavlin.grucov@gmail.com>\n"
 "Language-Team: Bulgarian <bg@li.org>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-11-16 23:32+0000\n"
+"X-Launchpad-Export-Date: 2009-12-23 17:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -211,9 +211,8 @@ msgid "Shows all output from a certain log domain"
 msgstr ""
 
 #: ../src/main.c:305
-#, fuzzy
 msgid "Select a profile"
-msgstr "Избор на файл"
+msgstr ""
 
 #: ../src/main.c:443
 msgid "quit"
@@ -769,7 +768,7 @@ msgstr "Прекъсване на връзката"
 
 #. *
 #. * Set paused in Window string
-#.
+#. 
 #: ../src/playlist3.c:1692 ../src/playlist3.c:1697
 msgid "paused"
 msgstr ""
@@ -1050,7 +1049,7 @@ msgstr "Известяване"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:111
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -1069,7 +1068,7 @@ msgstr "Настройка на свързване"
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:141
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1309,9 +1308,8 @@ msgid "<b>Output Devices:</b>"
 msgstr "<b>Изходни устройства:</b>"
 
 #: ../glade/preferences-server.ui.h:3
-#, fuzzy
 msgid "<b>Replaygain</b>"
-msgstr "<b>Main:</b>"
+msgstr ""
 
 #: ../glade/preferences-server.ui.h:4
 msgid ""
@@ -1531,9 +1529,8 @@ msgid "Play Queue"
 msgstr "Опашка"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:1120
-#, fuzzy
 msgid "Search Playlist"
-msgstr "Запазване на списък с песни"
+msgstr ""
 
 #: ../src/browsers/playlist3-file-browser.c:109
 #: ../src/browsers/playlist3-file-browser.c:347
@@ -1787,9 +1784,8 @@ msgstr "Жанр"
 
 #: ../src/browsers/gmpc-nowplaying2.c:1107
 #: ../src/browsers/gmpc-metadata-browser2.c:3100
-#, fuzzy
 msgid "Codec"
-msgstr "_Свързване..."
+msgstr ""
 
 #: ../src/browsers/gmpc-nowplaying2.c:1128
 #: ../src/browsers/gmpc-metadata-browser2.c:3106
@@ -1931,9 +1927,8 @@ msgstr "Информация за албум"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:3864
 #: ../src/browsers/gmpc-metadata-browser2.c:3866
-#, fuzzy
 msgid "Song list"
-msgstr "Песни"
+msgstr ""
 
 #: ../src/browsers/gmpc-metadata-browser2.c:4219
 #: ../src/browsers/gmpc-metadata-browser2.c:4221
@@ -1942,9 +1937,8 @@ msgid "Artist information"
 msgstr "Информация за изпълнител"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:4322
-#, fuzzy
 msgid "Albums by"
-msgstr "Албуми"
+msgstr ""
 
 #: ../src/browsers/gmpc-metadata-browser2.c:5197
 msgid "Enable/disable metadata options"
@@ -2207,21 +2201,8 @@ msgid "Rating:"
 msgstr ""
 
 #: ../src/Providers/music-tree.c:182
-#, fuzzy
 msgid "Music Tree Provider"
-msgstr "Доставчик на данни"
-
-#~ msgid "Error occurred during operation"
-#~ msgstr "Появи се грешка по време на операцията"
-
-#~ msgid "The following error(s) occurred:"
-#~ msgstr "Появи се следната грешка(и)"
-
-#~ msgid "Error Message"
-#~ msgstr "Съобщение за грешка"
-
-#~ msgid "File Browser"
-#~ msgstr "Файлов браузър"
+msgstr ""
 
 #~ msgid "MPD database is updating."
 #~ msgstr "Обновяване на MPD база данни"
@@ -2238,9 +2219,13 @@ msgstr "Доставчик на данни"
 #~ msgid "2 Feb 2006"
 #~ msgstr "2 Фев 2006"
 
+#~ msgid "Error Message"
+#~ msgstr "Съобщение за грешка"
+
 #~ msgid "Sing or Swing you want"
 #~ msgstr "Sing or Swing you want"
 
+#, c-format
 #~ msgid ""
 #~ "Gnome Music Player Client\n"
 #~ "Options:\n"
@@ -2269,13 +2254,13 @@ msgstr "Доставчик на данни"
 #~ "\t\t\t\t\t2 Съобщения за грешка + Предупреждения\n"
 #~ "\t\t\t\t\t3 Показвай всичко\n"
 #~ "\t--version\t\tПокажи версия и git revision\n"
-#~ "\t--config=<file>\t\tПосочи път до конфигурационен файл, по подразбиране "
-#~ "се използва ~/.gmpc/gmpc.cfg\n"
+#~ "\t--config=<file>\t\tПосочи път до конфигурационен файл, по подразбиране се "
+#~ "използва ~/.gmpc/gmpc.cfg\n"
 #~ "\t--clean-cover-db\tИзтрий файл с обложки.\n"
 #~ "\t--disable-plugins\tНе зареждай плъгини (добавки).\n"
 #~ "\t--replace\t\tСтатирай нова сесия и затвори вече стартираната.\n"
-#~ "\t--quit\t\t\tСпри стартираната сесия. Работи само, ако е излючена "
-#~ "опцията за стартиране на много сесии.\n"
+#~ "\t--quit\t\t\tСпри стартираната сесия. Работи само, ако е излючена опцията "
+#~ "за стартиране на много сесии.\n"
 
 #~ msgid " Total time: "
 #~ msgstr " Общо време: "
@@ -2289,11 +2274,15 @@ msgstr "Доставчик на данни"
 #~ msgid "MPD database is updating"
 #~ msgstr "Базата на MPD се обновява"
 
+#, c-format
 #~ msgid "MPD Database refreshed at: %c"
 #~ msgstr "Базата с данни на MPD беше обновена на: %c"
 
 #~ msgid "Enter an url"
 #~ msgstr "Въведете URL"
+
+#~ msgid "File Browser"
+#~ msgstr "Файлов браузър"
 
 #~ msgid "View"
 #~ msgstr "Преглед"
@@ -2338,6 +2327,7 @@ msgstr "Доставчик на данни"
 #~ msgstr[0] "<b>Дата: </b>"
 #~ msgstr[1] "<b>Дати: </b>"
 
+#, c-format
 #~ msgid "Only the first %i result displayed, please refine your search query"
 #~ msgstr ""
 #~ "Само първият %i резутат е показан, посочете по точно условие за търсене."
@@ -2347,6 +2337,9 @@ msgstr "Доставчик на данни"
 
 #~ msgid "Similar Artists"
 #~ msgstr "Подобни изпълнители"
+
+#~ msgid "Albums"
+#~ msgstr "Албуми"
 
 #~ msgid "Album info:"
 #~ msgstr "Информация за албум:"
@@ -2409,3 +2402,9 @@ msgstr "Доставчик на данни"
 #~ msgid_plural "seconds"
 #~ msgstr[0] "секунда"
 #~ msgstr[1] "секунди"
+
+#~ msgid "Error occurred during operation"
+#~ msgstr "Появи се грешка по време на операцията"
+
+#~ msgid "The following error(s) occurred:"
+#~ msgstr "Появи се следната грешка(и)"

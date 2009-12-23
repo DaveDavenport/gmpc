@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-12-23 15:42+0100\n"
+"POT-Creation-Date: 2009-12-23 15:44+0100\n"
 "PO-Revision-Date: 2009-10-18 11:20+0000\n"
 "Last-Translator: Sigurd Gartmann <sigurdga-launchpad@sigurdga.no>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-11-16 23:32+0000\n"
+"X-Launchpad-Export-Date: 2009-12-23 17:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -211,9 +211,8 @@ msgid "Shows all output from a certain log domain"
 msgstr ""
 
 #: ../src/main.c:305
-#, fuzzy
 msgid "Select a profile"
-msgstr "Velg en fil"
+msgstr ""
 
 #: ../src/main.c:443
 msgid "quit"
@@ -771,7 +770,7 @@ msgstr "Frakoblet"
 
 #. *
 #. * Set paused in Window string
-#.
+#. 
 #: ../src/playlist3.c:1692 ../src/playlist3.c:1697
 msgid "paused"
 msgstr ""
@@ -1051,7 +1050,7 @@ msgstr "Påminnelse"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:111
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -1070,7 +1069,7 @@ msgstr ""
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:141
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1311,9 +1310,8 @@ msgid "<b>Output Devices:</b>"
 msgstr "<b>Utgangs Enheter:</b>"
 
 #: ../glade/preferences-server.ui.h:3
-#, fuzzy
 msgid "<b>Replaygain</b>"
-msgstr "<b>Hoved:</b>"
+msgstr ""
 
 #: ../glade/preferences-server.ui.h:4
 msgid ""
@@ -1533,9 +1531,8 @@ msgid "Play Queue"
 msgstr "Spill av kø"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:1120
-#, fuzzy
 msgid "Search Playlist"
-msgstr "Lagre Spilleliste"
+msgstr ""
 
 #: ../src/browsers/playlist3-file-browser.c:109
 #: ../src/browsers/playlist3-file-browser.c:347
@@ -1789,9 +1786,8 @@ msgstr "Sjanger"
 
 #: ../src/browsers/gmpc-nowplaying2.c:1107
 #: ../src/browsers/gmpc-metadata-browser2.c:3100
-#, fuzzy
 msgid "Codec"
-msgstr "_Tilkoble"
+msgstr ""
 
 #: ../src/browsers/gmpc-nowplaying2.c:1128
 #: ../src/browsers/gmpc-metadata-browser2.c:3106
@@ -1933,9 +1929,8 @@ msgstr "Album informasjon"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:3864
 #: ../src/browsers/gmpc-metadata-browser2.c:3866
-#, fuzzy
 msgid "Song list"
-msgstr "Sanger"
+msgstr ""
 
 #: ../src/browsers/gmpc-metadata-browser2.c:4219
 #: ../src/browsers/gmpc-metadata-browser2.c:4221
@@ -1944,9 +1939,8 @@ msgid "Artist information"
 msgstr "Artist informasjon"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:4322
-#, fuzzy
 msgid "Albums by"
-msgstr "Albumer"
+msgstr ""
 
 #: ../src/browsers/gmpc-metadata-browser2.c:5197
 msgid "Enable/disable metadata options"
@@ -2209,24 +2203,8 @@ msgid "Rating:"
 msgstr ""
 
 #: ../src/Providers/music-tree.c:182
-#, fuzzy
 msgid "Music Tree Provider"
-msgstr "Metadata Utgiver"
-
-#~ msgid "Error occurred during operation"
-#~ msgstr "Feil oppstod under handling"
-
-#~ msgid "The following error(s) occurred:"
-#~ msgstr "Følgende feil oppstod:"
-
-#~ msgid "Error Message"
-#~ msgstr "Feil Melding"
-
-#~ msgid "File Browser"
-#~ msgstr "Fil Utforsker"
-
-#~ msgid "Playlist"
-#~ msgstr "Spilleliste"
+msgstr ""
 
 #~ msgid "<b>Song Markup</b>"
 #~ msgstr "<b>Sang Markering</b>"
@@ -2273,11 +2251,17 @@ msgstr "Metadata Utgiver"
 #~ msgid "--help"
 #~ msgstr "--hjelp"
 
+#~ msgid "Error Message"
+#~ msgstr "Feil Melding"
+
 #~ msgid " Total time: "
 #~ msgstr " Total tid: "
 
 #~ msgid "Enter an url"
 #~ msgstr "Fyll inn enn lenke"
+
+#~ msgid "File Browser"
+#~ msgstr "Fil Utforsker"
 
 #~ msgid "Artist info:"
 #~ msgstr "Artist info:"
@@ -2335,6 +2319,7 @@ msgstr "Metadata Utgiver"
 #~ msgstr[0] "<b>Dato: </b>"
 #~ msgstr[1] "<b>Datoer: </b>"
 
+#, c-format
 #~ msgid "Only the first %i result displayed, please refine your search query"
 #~ msgstr ""
 #~ "Bare det første %i resultatet er synelig, Venligst endre på  Søket ditt"
@@ -2354,6 +2339,9 @@ msgstr "Metadata Utgiver"
 #~ msgid "Similar Artists"
 #~ msgstr "Lignende Artister"
 
+#~ msgid "Albums"
+#~ msgstr "Albumer"
+
 #~ msgid "Show Current Song"
 #~ msgstr "Vis den aktuelle sangen"
 
@@ -2361,3 +2349,6 @@ msgstr "Metadata Utgiver"
 #~ msgid_plural "seconds"
 #~ msgstr[0] "sekund"
 #~ msgstr[1] "sekunder"
+
+#~ msgid "Playlist"
+#~ msgstr "Spilleliste"
