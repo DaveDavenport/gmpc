@@ -640,6 +640,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         string text = entry.get_text();
         if(text.size() > 0) {
             entry.show();
+            entry.grab_focus();
         }else{
             entry.hide();
             this.tree_artist.grab_focus();
@@ -841,6 +842,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         string text = entry.get_text();
         if(text.size() > 0) {
             entry.show();
+            entry.grab_focus();
         }else{
             entry.hide();
             this.tree_album.grab_focus();
@@ -939,6 +941,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             this.tree_artist.rules_hint = true;
             new Gmpc.MpdData.Treeview.Tooltip(this.tree_artist, Gmpc.MetaData.Type.ARTIST_ART);
 
+            this.tree_artist.set_enable_search(false);
             this.tree_artist.button_press_event+=browser_button_press_event;
             this.tree_artist.button_release_event+=artist_browser_button_release_event;
             this.tree_artist.key_press_event += browser_artist_key_press_event;
@@ -958,7 +961,6 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             this.tree_artist.append_column(column);
             column.set_title(_("Artist"));
             this.tree_artist.get_selection().changed += browser_artist_changed;
-            this.tree_artist.set_search_column(7);
 
             /* set fixed height mode */
             column.sizing = Gtk.TreeViewColumnSizing.FIXED;
@@ -990,6 +992,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             this.model_filter_album.set_visible_func(visible_func_album);
             this.tree_album = new Gtk.TreeView.with_model(this.model_filter_album);
             this.tree_album.rules_hint = true;
+            this.tree_album.set_enable_search(false);
             new Gmpc.MpdData.Treeview.Tooltip(this.tree_album, Gmpc.MetaData.Type.ALBUM_ART);
 
             this.tree_album.button_press_event+=browser_button_press_event;
@@ -1019,7 +1022,6 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             column.pack_start(trenderer, true);
             column.add_attribute(trenderer, "text", 6);
             this.tree_album.append_column(column);
-            this.tree_album.set_search_column(6);
             column.set_title(_("Album"));
 
 
