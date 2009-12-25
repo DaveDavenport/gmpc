@@ -171,7 +171,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
                 try{
                     var load = new Gdk.PixbufLoader();
                     try {
-                        load.write(data);
+                        load.write(data, data.length);
                     }catch (Error e) {
                         stdout.printf("Failed to load file: %s::%s\n",e.message,handle.get_uri());
                     }

@@ -359,7 +359,7 @@ if test x${GOB2} = x""; then
 	exit 0;
 fi
 
-AM_PROG_VALAC([0.7.8])
+AM_PROG_VALAC([0.7.9])
 
 if test x${VALAC} = x""; then
     exit 0;
