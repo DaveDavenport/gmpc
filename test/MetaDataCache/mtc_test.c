@@ -68,3 +68,7 @@ int main(int argc, char **argv)
     current = now;
     return EXIT_SUCCESS;
 }
+
+void pixbuf_cache_invalidate_pixbuf_entry(const gchar *url)
+{
+}
