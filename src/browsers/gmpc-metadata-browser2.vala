@@ -1174,7 +1174,14 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
                     MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM, iter.tag);
                     var ydata = MPD.Database.search_commit(server);
                     if(ydata != null) {
-                        list.song.date = ydata.tag;
+                        weak MPD.Data.Item yi = ydata.get_first();
+                        while(list.song.date == null && yi != null)
+                        {
+                            if(yi.tag != null && yi.tag.length > 0) {
+                                list.song.date = yi.tag;
+                            }
+                            yi = yi.next(false);
+                        }
                     }
                     iter = iter.next(false);
                 }while(iter!= null);
@@ -2294,7 +2301,14 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
                     MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM, iter.tag);
                     var ydata = MPD.Database.search_commit(server);
                     if(ydata != null) {
-                        list.song.date = ydata.tag;
+                        weak MPD.Data.Item yi = ydata.get_first();
+                        while(list.song.date == null && yi != null)
+                        {
+                            if(yi.tag != null && yi.tag.length > 0) {
+                                list.song.date = yi.tag;
+                            }
+                            yi = yi.next(false);
+                        }
                     }
                     iter = iter.next(false);
                 }while(iter != null);
