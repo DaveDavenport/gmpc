@@ -1,5 +1,5 @@
 themedir = $(pkgdatadir)/icons/hicolor
-size = 128x128 
+size = 128x128
 context = categories
 
 iconsdir = $(themedir)/$(size)/$(context)
