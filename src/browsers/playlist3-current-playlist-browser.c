@@ -253,35 +253,32 @@ static void pl3_current_playlist_column_changed(GtkTreeView *tree)
 
 void pl3_current_playlist_destroy(PlayQueuePlugin *self)
 {
-	if(self->priv->pl3_cp_tree)
-	{
-        /* destroy the entry */
-        if(self->priv->pl3_curb_tree_ref)
-		{
-			GtkTreeIter piter;
-			GtkTreePath *path;
-			path = gtk_tree_row_reference_get_path(self->priv->pl3_curb_tree_ref);
-			if(path)
-			{
-				if(gtk_tree_model_get_iter(GTK_TREE_MODEL(gtk_tree_row_reference_get_model(self->priv->pl3_curb_tree_ref)), &piter,path))
-				{
-					gtk_list_store_remove(GTK_LIST_STORE(gtk_tree_row_reference_get_model(self->priv->pl3_curb_tree_ref)), &piter);
-				}
-				gtk_tree_path_free(path);
-			}
-			gtk_tree_row_reference_free(self->priv->pl3_curb_tree_ref);
-			self->priv->pl3_curb_tree_ref = NULL;
-		}
-		/* destroy the browser */
-		if(self->priv->pl3_cp_vbox)
-		{
-			/* remove the signal handler so when the widget is destroyed, the numbering of the labels are not changed again */
-			g_signal_handlers_disconnect_by_func(G_OBJECT(self->priv->pl3_cp_tree), G_CALLBACK(pl3_current_playlist_column_changed), NULL);
-			g_object_unref(self->priv->pl3_cp_vbox);
-			self->priv->pl3_cp_vbox = NULL;
-		}
-		self->priv->pl3_cp_tree =  NULL;
-	}
+    /* destroy the entry */
+    if(self->priv->pl3_curb_tree_ref)
+    {
+        GtkTreeIter piter;
+        GtkTreePath *path;
+        path = gtk_tree_row_reference_get_path(self->priv->pl3_curb_tree_ref);
+        if(path)
+        {
+            if(gtk_tree_model_get_iter(GTK_TREE_MODEL(gtk_tree_row_reference_get_model(self->priv->pl3_curb_tree_ref)), &piter,path))
+            {
+                gtk_list_store_remove(GTK_LIST_STORE(gtk_tree_row_reference_get_model(self->priv->pl3_curb_tree_ref)), &piter);
+            }
+            gtk_tree_path_free(path);
+        }
+        gtk_tree_row_reference_free(self->priv->pl3_curb_tree_ref);
+        self->priv->pl3_curb_tree_ref = NULL;
+    }
+    /* destroy the browser */
+    if(self->priv->pl3_cp_vbox)
+    {
+        /* remove the signal handler so when the widget is destroyed, the numbering of the labels are not changed again */
+        g_signal_handlers_disconnect_by_func(G_OBJECT(self->priv->pl3_cp_tree), G_CALLBACK(pl3_current_playlist_column_changed), NULL);
+        g_object_unref(self->priv->pl3_cp_vbox);
+        self->priv->pl3_cp_vbox = NULL;
+    }
+    self->priv->pl3_cp_tree =  NULL;
 }
 
 
@@ -429,7 +426,7 @@ static void pl3_current_playlist_browser_init(PlayQueuePlugin *self)
 
 	/* set initial state */
     self->priv->pl3_cp_tree = tree;
-	g_object_ref(G_OBJECT(self->priv->pl3_cp_vbox));
+	g_object_ref_sink(G_OBJECT(self->priv->pl3_cp_vbox));
 }
 
 static void pl3_current_playlist_browser_select_current_song(PlayQueuePlugin *self)
@@ -1221,7 +1218,7 @@ static GObject *play_queue_plugin_constructor(GType type, guint n_construct_prop
 	GMPC_PLUGIN_BASE(self)->plugin_type = GMPC_PLUGIN_PL_BROWSER|GMPC_INTERNALL;
 	pl3_cp_init(self);
 
-	return G_OBJECT(self);
+    return G_OBJECT(self);
 }
 /**
  * Base GmpcPluginBase class
