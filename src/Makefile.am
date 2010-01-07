@@ -115,6 +115,7 @@ LIBS= \
 	@libglade_LIBS@\
 	@gthread_LIBS@\
 	@libsoup_LIBS@\
+	@libgio_LIBS@\
 	@SPIFF_LIBS@\
 	@libxspf_LIBS@\
     @sqlite3_LIBS@
@@ -145,6 +146,7 @@ AM_CFLAGS = @CFLAGS@\
 	@libglade_CFLAGS@\
 	@gthread_CFLAGS@\
 	@libsoup_CFLAGS@\
+	@libgio_CFLAGS@\
     @sqlite3_CFLAGS@\
 	@EXTRA_CFLAGS@\
 	-DPACKAGE_LIB_DIR=\""$(pkglibdir)"\"\

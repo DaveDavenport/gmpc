@@ -216,6 +216,11 @@ PKG_CHECK_MODULES([libsoup], libsoup-2.4)
 AC_SUBST(libsoup_LIBS)
 AC_SUBST(libsoup_CFLAGS)
 
+#libgio
+PKG_CHECK_MODULES([libgio], gio-2.0)
+AC_SUBST(libgio_LIBS)
+AC_SUBST(libgio_CFLAGS)
+
 
 #sqlite3
 PKG_CHECK_MODULES([sqlite3], sqlite3)

@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <strings.h>
+#include <gio/gio.h>
 #include "main.h"
 #include "mpd-async-request.h"
 
