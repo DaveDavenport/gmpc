@@ -97,6 +97,12 @@ class Gmpc:MpdData:Model:Playlist from Gmpc:MpdData:Model
 		}
 
 override (G:Object)
+        void
+        dispose (G:Object *obj)
+        {
+            gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(obj), NULL);
+        }
+override (G:Object)
         void 
         finalize (G:Object *obj)
         {
@@ -111,11 +117,11 @@ override (G:Object)
                 g_signal_handler_disconnect(G_OBJECT(gmpcconn),self->_priv->connection_changed);
                 self->_priv->connection_changed = 0;
             }
-						if(self->_priv->update_timeout > 0)
-						{
-							g_source_remove(self->_priv->update_timeout);
-							self->_priv->update_timeout  = 0;
-						}
+            if(self->_priv->update_timeout > 0)
+            {
+                g_source_remove(self->_priv->update_timeout);
+                self->_priv->update_timeout  = 0;
+            }
             PARENT_HANDLER(obj);
         }
     public

@@ -340,7 +340,6 @@ end:
                         {
                             const gchar *coverpath = meta_data_get_uri(met);
                             MpdData_real *data = iter.user_data;	
-                            printf("row set image: %s\n", coverpath);
                             gmpc_pixbuf_loader_async_set_from_file(GMPC_PIXBUF_LOADER_ASYNC(self->_priv->images[n]),
                                     coverpath, self->icon_size, ((data->type == MPD_DATA_TYPE_TAG && data->tag_type == MPD_TAG_ITEM_ALBUM) || (data->type == MPD_DATA_TYPE_SONG)));
                         }else{
@@ -468,7 +467,6 @@ end:
                                 song->artist = g_strdup((data->song->artist)?data->song->artist:self->_priv->req_artist); 
                                 song->albumartist = g_strdup((data->song->albumartist)?data->song->albumartist:self->_priv->req_artist); 
                                 song->album = g_strdup(data->song->album);
-                                printf("query: %s\n", song->artist);
                                 gmpc_meta_watcher_get_meta_path_callback(gmw,song, META_ALBUM_ART, (MetaDataCallback)self_cover_art_fetched, ref);
                                 mpd_freeSong(song);	
                             }
@@ -816,8 +814,9 @@ end:
             /**
              * Free if there is a list and set it to NULL 
              */
-            if(self->_priv->data)
-                mpd_data_free(self->_priv->data);
+            if(self->_priv->data){
+                mpd_data_free(mpd_data_get_first(self->_priv->data));
+            }
             self->_priv->data = NULL;
 
             if(self->num_rows != 0)
