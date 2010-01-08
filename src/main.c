@@ -1333,6 +1333,7 @@ static void move_old_gmpc_data(void)
 		}
 		g_free(path);
 	}
+	g_free(url);
 }
 
 static void create_directory(gchar *url)

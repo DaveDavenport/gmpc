@@ -1705,6 +1705,7 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
 							id),buffer);
 							gtk_window_set_title(GTK_WINDOW(pl3_win), string);
 							g_free(id);
+							g_free(string);
 						}
 					}
 					else
@@ -1737,6 +1738,7 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
 									id),_("GMPC"));
 						gtk_window_set_title(GTK_WINDOW(pl3_win),string); 
 						g_free(id);
+						g_free(string);
 					}
 				}
 				else

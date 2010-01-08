@@ -235,7 +235,7 @@ static void pl3_file_browser_init(void)
 	debug_printf(DEBUG_INFO,"initialized current playlist treeview\n");
     gtk_widget_show(vbox);
     gtk_widget_show(pl3_fb_vbox);
-	g_object_ref(G_OBJECT(pl3_fb_vbox));
+	g_object_ref_sink(G_OBJECT(pl3_fb_vbox));
 }
 
 static void pl3_file_browser_add_folder(void)

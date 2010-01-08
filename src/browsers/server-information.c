@@ -438,7 +438,7 @@ static void serverstats_init(void)
     gtk_widget_show(serverstats_vbox);	
     gtk_widget_show(serverstats_event);	
     gtk_widget_show(serverstats_sw);	
-    g_object_ref(serverstats_sw);
+    g_object_ref_sink(serverstats_sw);
 }
 
 static guint timeout_source = 0;

@@ -290,7 +290,7 @@ static void pl3_find2_browser_init(void)
     gtk_box_pack_start(GTK_BOX(pl3_find2_vbox), hbox, FALSE,TRUE,0);
 
     gtk_widget_show_all(pl3_find2_vbox);
-    g_object_ref(G_OBJECT(pl3_find2_vbox));
+    g_object_ref_sink(G_OBJECT(pl3_find2_vbox));
 }
 
 static void pl3_find2_browser_selected(GtkWidget *container)

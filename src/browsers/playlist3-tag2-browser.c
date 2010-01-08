@@ -1236,7 +1236,7 @@ static void tag2_init_browser(tag_browser *browser) {
 	/* Create an extra reference to the paned window containing everything, this way
 	 * I can add/remove it from gmpc's container withouth it being destroyed by gtk
 	 */
-	g_object_ref(browser->tag2_vbox);
+	g_object_ref_sink(browser->tag2_vbox);
 	/* show everything */
 	gtk_widget_show_all(browser->tag2_vbox);
 

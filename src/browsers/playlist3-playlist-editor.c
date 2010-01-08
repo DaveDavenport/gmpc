@@ -938,7 +938,7 @@ static void playlist_editor_browser_init(void)
 
     g_signal_connect(G_OBJECT(tree), "button-release-event", G_CALLBACK(playlist_editor_key_released), NULL);
     g_signal_connect(G_OBJECT(tree), "key-press-event", G_CALLBACK(playlist_editor_key_pressed), NULL);
-    g_object_ref(playlist_editor_browser);
+    g_object_ref_sink(playlist_editor_browser);
 
     gtk_widget_show_all(playlist_editor_browser);
 }
