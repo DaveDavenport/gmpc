@@ -60,7 +60,7 @@ namespace Gmpc {
            [CCode (cname="meta_data_set_uri")]
            public void set_uri(string uri);
            /* add accessors? */
-           [CCode (cname="meta_data_get_image")]
+           [CCode (cname="meta_data_get_raw")]
            public weak uchar[] get_raw();
 
            [CCode (cname="meta_data_get_text")]

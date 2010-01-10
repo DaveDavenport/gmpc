@@ -593,6 +593,17 @@ static void result_itterate(GList *list, gpointer user_data)
 				return;
 			}
 		}
+	}else if (meta_data_is_raw(md))
+	{
+		gchar *filename = gmpc_get_metadata_filename(d->type&(~META_QUERY_NO_CACHE), d->edited, NULL);
+		g_file_set_contents(filename, md->content, md->size, NULL);
+		g_free(md->content);
+		md->size = -1;
+		md->content_type = META_DATA_CONTENT_URI;
+		md->content = filename;
+		d->result = META_DATA_AVAILABLE;
+		d->met = md;
+		d->iter->data= NULL;
 	}else {
 		/* if it is not something to download, set the result as final */
 		d->result = META_DATA_AVAILABLE;

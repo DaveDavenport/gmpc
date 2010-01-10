@@ -230,29 +230,45 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
 
             if(this.query_type == Gmpc.MetaData.Type.ALBUM_ART || this.query_type == Gmpc.MetaData.Type.ARTIST_ART)
             {
-                weak string uri = md.get_uri();
                 if(md.content_type == Gmpc.MetaData.ContentType.URI)
                 {
-                    if(uri[0] == '/'){
-                        try{
-                            Gdk.Pixbuf pb = new Gdk.Pixbuf.from_file(uri);
-                            if(pb != null)
-                            {
-                                int w,h;
-                                add_entry_image(plugin_name, uri,Gdk.Pixbuf.get_file_info(uri,out w, out h), pb);
+                    weak string uri = md.get_uri();
+                    if(md.content_type == Gmpc.MetaData.ContentType.URI)
+                    {
+                        if(uri[0] == '/'){
+                            try{
+                                Gdk.Pixbuf pb = new Gdk.Pixbuf.from_file(uri);
+                                if(pb != null)
+                                {
+                                    int w,h;
+                                    add_entry_image(plugin_name, uri,Gdk.Pixbuf.get_file_info(uri,out w, out h), pb);
                                 }
-                        }catch(Error e)
-                        {
+                            }catch(Error e)
+                            {
 
+                            }
+                        }else{
+                            var h =  Gmpc.AsyncDownload.download(uri, image_downloaded); 
+                            if(h!=null)
+                            {
+                                h.set_user_data(md.plugin_name);
+                                this.downloads.append(h);
+                            } 
                         }
-                    }else{
-                        var h =  Gmpc.AsyncDownload.download(uri, image_downloaded); 
-                        if(h!=null)
-                        {
-                            h.set_user_data(md.plugin_name);
-                            this.downloads.append(h);
-                        } 
                     }
+                }else if (md.content_type == Gmpc.MetaData.ContentType.RAW){
+                  var data = md.get_raw();  
+                    var load = new Gdk.PixbufLoader();
+                    try {
+                        load.write(data, data.length);
+                    }catch (Error e) {
+                        stdout.printf("Failed to load raw data: %s\n",e.message);
+                    }
+                    load.close();
+
+                    Gdk.Pixbuf pb = load.get_pixbuf();
+                    if(pb!= null)
+                        this.add_entry_image(plugin_name,"embedded",load.get_format(),pb);
                 }
             }else{
 
