@@ -64,7 +64,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
         });
     }
 
-    private void add_entry_image(string? provider, string uri,Gdk.PixbufFormat? format, Gdk.Pixbuf pb)
+    private void add_entry_image(string? provider, string uri,Gdk.PixbufFormat? format, Gdk.Pixbuf pb, bool is_raw = false)
     {
         string a;
         a = "";// Markup.printf_escaped("<b>%s</b>: %s",_("Uri"),uri);
@@ -107,7 +107,11 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
         
         var ali = new Gtk.Alignment(0f,0f,0f,0f);
         var button = new Gtk.Button.with_label(_("Set"));
-        button.set_data_full("path",(void *)uri.dup(),(GLib.DestroyNotify)g_free);
+        if(!is_raw) {
+            button.set_data_full("path",(void *)uri.dup(),(GLib.DestroyNotify)g_free);
+        }else{
+            button.set_data_full("data",(void *)uri.dup(),(GLib.DestroyNotify)g_free);
+        }
         ali.add(button);
         hbox.pack_start(ali, false, true, 0);
         button.clicked.connect(set_metadata);
@@ -267,8 +271,10 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
                     load.close();
 
                     Gdk.Pixbuf pb = load.get_pixbuf();
-                    if(pb!= null)
-                        this.add_entry_image(plugin_name,"embedded",load.get_format(),pb);
+                    if(pb!= null){
+                        var base16 = GLib.Base64.encode(data); 
+                        this.add_entry_image(plugin_name,base16,load.get_format(),pb,true);
+                    }
                 }
             }else{
 
@@ -348,25 +354,54 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
         if(this.query_type == Gmpc.MetaData.Type.ALBUM_ART || this.query_type == Gmpc.MetaData.Type.ARTIST_ART)
         {
             path = (string)button.get_data("path");
-            if(path[0]  == '/')
+            if(path != null)
             {
-                var met = new MetaData.Item();
-                met.type = this.query_type;
-                met.plugin_name = "User set";
-                met.content_type = MetaData.ContentType.URI;
-                met.set_uri(path);
-                Gmpc.MetaData.set_metadata(this.song, Gmpc.MetaData.Result.AVAILABLE, met); 
+                if(path[0]  == '/')
+                {
+                    var met = new MetaData.Item();
+                    met.type = this.query_type;
+                    met.plugin_name = "User set";
+                    met.content_type = MetaData.ContentType.URI;
+                    met.set_uri(path);
+                    Gmpc.MetaData.set_metadata(this.song, Gmpc.MetaData.Result.AVAILABLE, met); 
 
-                var met_false = new MetaData.Item();
-                met_false.type = this.query_type;
-                met_false.plugin_name = "User set";
-                met_false.content_type = MetaData.ContentType.EMPTY;
-                metawatcher.data_changed(this.song, this.query_type, Gmpc.MetaData.Result.UNAVAILABLE, met_false);  
-                metawatcher.data_changed(this.song, this.query_type, Gmpc.MetaData.Result.AVAILABLE, met);  
+                    var met_false = new MetaData.Item();
+                    met_false.type = this.query_type;
+                    met_false.plugin_name = "User set";
+                    met_false.content_type = MetaData.ContentType.EMPTY;
+                    metawatcher.data_changed(this.song, this.query_type, Gmpc.MetaData.Result.UNAVAILABLE, met_false);  
+                    metawatcher.data_changed(this.song, this.query_type, Gmpc.MetaData.Result.AVAILABLE, met);  
+                }else{
+                    var h = Gmpc.AsyncDownload.download(path, store_image); 
+                    if(h!=null)
+                        this.downloads.append(h);
+                }
             }else{
-                var h = Gmpc.AsyncDownload.download(path, store_image); 
-                if(h!=null)
-                    this.downloads.append(h);
+                string base64 =(string)button.get_data("data");
+                if(base64 != null) {
+                    string filename = Gmpc.MetaData.get_metadata_filename(this.query_type,this.song, null); 
+                    size_t len;
+                    uchar[] data = GLib.Base64.decode(base64, out len);
+                    try{
+                    GLib.FileUtils.set_contents(filename, (string)data, (ssize_t)len);
+
+                    var met = new MetaData.Item();
+                    met.type = this.query_type;
+                    met.plugin_name = "User set";
+                    met.content_type = MetaData.ContentType.URI;
+                    met.set_uri(filename);
+                    Gmpc.MetaData.set_metadata(this.song, Gmpc.MetaData.Result.AVAILABLE, met); 
+
+                    var met_false = new MetaData.Item();
+                    met_false.type = this.query_type;
+                    met_false.plugin_name = "User set";
+                    met_false.content_type = MetaData.ContentType.EMPTY;
+                    metawatcher.data_changed(this.song, this.query_type, Gmpc.MetaData.Result.UNAVAILABLE, met_false);  
+                    metawatcher.data_changed(this.song, this.query_type, Gmpc.MetaData.Result.AVAILABLE, met);  
+                    }catch (Error e) {
+
+                    }
+                }
             }
         }else{
             string lyric;
