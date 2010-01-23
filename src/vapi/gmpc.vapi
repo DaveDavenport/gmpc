@@ -65,6 +65,8 @@ namespace Gmpc {
 
            [CCode (cname="meta_data_get_text")]
            public weak string  get_text();
+           [CCode (cname="meta_data_get_text_from_html")]
+           public string get_text_from_html();
            /* same as get_text */
 
            [CCode (cname="meta_data_get_uri")]

@@ -111,6 +111,8 @@ void meta_data_set_uri(MetaData *data, const gchar *uri);
 /* TEXT */
 gboolean meta_data_is_text(const MetaData *data);
 const gchar * meta_data_get_text(const MetaData *data);
+
+gchar *meta_data_get_text_from_html(const MetaData *data);
 /* HTML */
 gboolean meta_data_is_html(const MetaData *data);
 const gchar * meta_data_get_html(const MetaData *data);

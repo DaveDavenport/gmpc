@@ -284,6 +284,12 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
                     add_entry_text(plugin_name, "n/a", uri);
                 }
                 else 
+                if(md.content_type == Gmpc.MetaData.ContentType.HTML)
+                {
+                    string uri = md.get_text_from_html();
+                    add_entry_text(plugin_name, "n/a", uri);
+                }
+                else
                 if(md.content_type == Gmpc.MetaData.ContentType.URI)
                 {
                     weak string uri = md.get_uri();

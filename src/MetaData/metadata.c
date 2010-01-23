@@ -1390,6 +1390,391 @@ const gchar * meta_data_get_html(const MetaData *data)
 	g_assert(meta_data_is_html(data));
 	return (const gchar *)data->content;
 }
+
+
+/**
+ * Convert a html encoded token (like &amp; and &#030;
+ * to the corresponding unichar.
+ *
+ * On early falire (i.e. empty string) returns 0.
+ * If the encoding is wrong, it returns the unicode error value 0xFFFC.
+ */
+static gunichar htmlname2unichar( const gchar* htmlname, gint len )
+{
+        // * can be optimized by sorting
+        // * and checking str(n)cmp results
+        static struct _TT {
+                const gchar *str;
+                gint utf8;
+        }
+        html2utf8_table[] = {
+                { "quot", 34 },
+                { "amp", 38 },
+                { "lt", 60 },
+                { "gt", 62 },
+                { "nbsp", 160 },
+                { "iexcl", 161 },
+                { "cent", 162 },
+                { "pound", 163 },
+                { "curren", 164 },
+                { "yen", 165 },
+                { "brvbar", 166 },
+                { "sect", 167 },
+                { "uml", 168 },
+                { "copy", 169 },
+                { "ordf", 170 },
+                { "laquo", 171 },
+                { "not", 172 },
+                { "shy", 173 },
+                { "reg", 174 },
+                { "macr", 175 },
+                { "deg", 176 },
+                { "plusmn", 177 },
+                { "sup2", 178 },
+                { "sup3", 179 },
+                { "acute", 180 },
+                { "micro", 181 },
+                { "para", 182 },
+                { "middot", 183 },
+                { "cedil", 184 },
+                { "sup1", 185 },
+                { "ordm", 186 },
+                { "raquo", 187 },
+                { "frac14", 188 },
+                { "frac12", 189 },
+                { "frac34", 190 },
+                { "iquest", 191 },
+                { "Agrave", 192 },
+                { "Aacute", 193 },
+                { "Acirc", 194 },
+                { "Atilde", 195 },
+                { "Auml", 196 },
+                { "Aring", 197 },
+                { "AElig", 198 },
+                { "Ccedil", 199 },
+                { "Egrave", 200 },
+                { "Eacute", 201 },
+                { "Ecirc", 202 },
+                { "Euml", 203 },
+                { "Igrave", 204 },
+                { "Iacute", 205 },
+                { "Icirc", 206 },
+                { "Iuml", 207 },
+                { "ETH", 208 },
+                { "Ntilde", 209 },
+                { "Ograve", 210 },
+                { "Oacute", 211 },
+                { "Ocirc", 212 },
+                { "Otilde", 213 },
+                { "Ouml", 214 },
+                { "times", 215 },
+                { "Oslash", 216 },
+                { "Ugrave", 217 },
+                { "Uacute", 218 },
+                { "Ucirc", 219 },
+                { "Uuml", 220 },
+                { "Yacute", 221 },
+                { "THORN", 222 },
+                { "szlig", 223 },
+                { "agrave", 224 },
+                { "aacute", 225 },
+                { "acirc", 226 },
+                { "atilde", 227 },
+                { "auml", 228 },
+                { "aring", 229 },
+                { "aelig", 230 },
+                { "ccedil", 231 },
+                { "egrave", 232 },
+                { "eacute", 233 },
+                { "ecirc", 234 },
+                { "euml", 235 },
+                { "igrave", 236 },
+                { "iacute", 237 },
+                { "icirc", 238 },
+                { "iuml", 239 },
+                { "eth", 240 },
+                { "ntilde", 241 },
+                { "ograve", 242 },
+                { "oacute", 243 },
+                { "ocirc", 244 },
+                { "otilde", 245 },
+                { "ouml", 246 },
+                { "divide", 247 },
+                { "oslash", 248 },
+                { "ugrave", 249 },
+                { "uacute", 250 },
+                { "ucirc", 251 },
+                { "uuml", 252 },
+                { "yacute", 253 },
+                { "thorn", 254 },
+                { "yuml", 255 },
+                { "Alpha", 913 },
+                { "alpha", 945 },
+                { "Beta", 914 },
+                { "beta", 946 },
+                { "Gamma", 915 },
+                { "gamma", 947 },
+                { "Delta", 916 },
+                { "delta", 948 },
+                { "Epsilon", 917 },
+                { "epsilon", 949 },
+                { "Zeta", 918 },
+                { "zeta", 950 },
+                { "Eta", 919 },
+                { "eta", 951 },
+                { "Theta", 920 },
+                { "theta", 952 },
+                { "Iota", 921 },
+                { "iota", 953 },
+                { "Kappa", 922 },
+                { "kappa", 954 },
+                { "Lambda", 923 },
+                { "lambda", 955 },
+                { "Mu", 924 },
+                { "mu", 956 },
+                { "Nu", 925 },
+                { "nu", 957 },
+                { "Xi", 926 },
+                { "xi", 958 },
+                { "Omicron", 927 },
+                { "omicron", 959 },
+                { "Pi", 928 },
+                { "pi", 960 },
+                { "Rho", 929 },
+                { "rho", 961 },
+                { "Sigma", 931 },
+                { "sigmaf", 962 },
+                { "sigma", 963 },
+                { "Tau", 932 },
+                { "tau", 964 },
+                { "Upsilon", 933 },
+                { "upsilon", 965 },
+                { "Phi", 934 },
+                { "phi", 966 },
+                { "Chi", 935 },
+                { "chi", 967 },
+                { "Psi", 936 },
+                { "psi", 968 },
+                { "Omega", 937 },
+                { "omega", 969 },
+                { "thetasym", 977 },
+                { "upsih", 978 },
+                { "piv", 982 },
+                { "forall", 8704 },
+                { "part", 8706 },
+                { "exist", 8707 },
+                { "empty", 8709 },
+                { "nabla", 8711 },
+                { "isin", 8712 },
+                { "notin", 8713 },
+                { "ni", 8715 },
+                { "prod", 8719 },
+                { "sum", 8721 },
+                { "minus", 8722 },
+                { "lowast", 8727 },
+                { "radic", 8730 },
+                { "prop", 8733 },
+                { "infin", 8734 },
+                { "ang", 8736 },
+                { "and", 8869 },
+                { "or", 8870 },
+                { "cap", 8745 },
+                { "cup", 8746 },
+                { "int", 8747 },
+                { "there4", 8756 },
+                { "sim", 8764 },
+                { "cong", 8773 },
+                { "asymp", 8776 },
+                { "ne", 8800 },
+                { "equiv", 8801 },
+                { "le", 8804 },
+                { "ge", 8805 },
+                { "sub", 8834 },
+                { "sup", 8835 },
+                { "nsub", 8836 },
+                { "sube", 8838 },
+                { "supe", 8839 },
+                { "oplus", 8853 },
+                { "otimes", 8855 },
+                { "perp", 8869 },
+                { "sdot", 8901 },
+                { "loz", 9674 },
+                { "lceil", 8968 },
+                { "rceil", 8969 },
+                { "lfloor", 8970 },
+                { "rfloor", 8971 },
+                { "lang", 9001 },
+                { "rang", 9002 },
+                { "larr", 8592 },
+                { "uarr", 8593 },
+                { "rarr", 8594 },
+                { "darr", 8595 },
+                { "harr", 8596 },
+                { "crarr", 8629 },
+                { "lArr", 8656 },
+                { "uArr", 8657 },
+                { "rArr", 8658 },
+                { "dArr", 8659 },
+                { "hArr", 8660 },
+                { "bull", 8226 },
+                { "hellip", 8230 },
+                { "prime", 8242 },
+                { "oline", 8254 },
+                { "frasl", 8260 },
+                { "weierp", 8472 },
+                { "image", 8465 },
+                { "real", 8476 },
+                { "trade", 8482 },
+                { "euro", 8364 },
+                { "alefsym", 8501 },
+                { "spades", 9824 },
+                { "clubs", 9827 },
+                { "hearts", 9829 },
+                { "diams", 9830 },
+                { "ensp", 8194 },
+                { "emsp", 8195 },
+                { "thinsp", 8201 },
+                { "zwnj", 8204 },
+                { "zwj", 8205 },
+                { "lrm", 8206 },
+                { "rlm", 8207 },
+                { "ndash", 8211 },
+                { "mdash", 8212 },
+                { "lsquo", 8216 },
+                { "rsquo", 8217 },
+                { "sbquo", 8218 },
+                { "ldquo", 8220 },
+                { "rdquo", 8221 },
+                { "bdquo", 8222 },
+                { "dagger", 8224 },
+                { "Dagger", 8225 },
+                { "permil", 8240 },
+                { "lsaquo", 8249 },
+                { "rsaquo", 8250 },
+                { NULL, 0 }
+        };
+        gint i;
+
+        g_return_val_if_fail( NULL != htmlname, 0 );
+
+        if( '\0' == *htmlname )
+                return 0;
+
+        if( '#' == *htmlname ) {
+                const gchar *iter = htmlname;
+                gunichar c = 0;
+                if( 0 > len )
+                        i = 7;
+                else
+                        i = len - 1;
+                iter++;
+                while( isdigit( *iter ) && ( 0 <= i ) ) {
+                        c = c * 10 + (*iter - '0');
+                        iter++;
+                        i--;
+                }
+
+                if( 0 >= len ) {
+                        if( '\0' == *iter )
+                                return c;
+                }
+                else if( 0 == i )
+                        return c;
+
+                return 0;
+
+        }
+
+        if( 0 > len ) {
+                for( i = 0; NULL != html2utf8_table[ i ].str; i++ )
+                        if( 0 == strcmp( htmlname, html2utf8_table[ i ].str ) )
+                                return html2utf8_table[ i ].utf8;
+        }
+        else if( 0 < len ) {
+                for( i = 0; NULL != html2utf8_table[ i ].str; i++ )
+                        if( 0 == strncmp( htmlname, html2utf8_table[ i ].str, len ) )
+                                return html2utf8_table[ i ].utf8;
+        }
+
+        return 0xFFFC;
+}
+
+/**
+ * Convert a string containing HTML encoded unichars to valid UTF-8.
+ */
+static gchar *htmlstr2utf8( const gchar* str )
+{
+        const gchar *amp_pos, *colon_pos, *copy_pos;
+        gunichar uni = 0;
+        GString *result;
+        gsize len;
+
+        if( NULL == str )
+                return NULL;
+
+        result = g_string_new( NULL );
+        colon_pos = str;
+        copy_pos = colon_pos;
+
+        do {
+                amp_pos = strchr( colon_pos, '&' );
+                if( NULL == amp_pos )
+                        break;
+                colon_pos = amp_pos;
+
+                len = 0;
+                while( (';' != *colon_pos)
+                        && ('\0' != *colon_pos) )
+                {
+                        colon_pos++;
+                        len++;
+                }
+
+                if( (9 > len) && (2 < len) ) {
+                        uni = htmlname2unichar( amp_pos + 1, colon_pos - amp_pos - 1 );
+                        if( (0 != uni) && (TRUE == g_unichar_validate( uni )) ) {
+                                g_string_append_len( result, copy_pos, amp_pos - copy_pos );
+                                colon_pos++;
+                                copy_pos = colon_pos;
+                                g_string_append_unichar( result, uni );
+                        }
+                }
+                amp_pos = colon_pos;
+        }
+        while( NULL != amp_pos );
+
+        if( NULL != copy_pos )
+                g_string_append( result, copy_pos );
+
+        return g_string_free( result, FALSE );
+}
+
+static gchar * strip_tags(gchar *html)
+{
+	gsize i = 0,j=0;
+	unsigned depth = 0;
+	while(html[i] != '\0') {
+		if(html[i] == '<') depth++;
+		else if(html[i] == '>') depth--;	
+		else if(depth == 0) {
+			html[j] = html[i];
+			j++;
+		}
+		i++;
+	}
+	html[j] = '\0';
+	return html;
+}
+
+gchar * meta_data_get_text_from_html(const MetaData *data)
+{
+	gchar *retv;
+	g_assert(meta_data_is_html(data));
+	retv = htmlstr2utf8((gchar *)data->content);
+	/* need to strip tags */
+	retv = strip_tags(retv);
+	return retv;
+}
 gboolean meta_data_is_raw(const MetaData *data)
 {
 	return data->content_type == META_DATA_CONTENT_RAW;
