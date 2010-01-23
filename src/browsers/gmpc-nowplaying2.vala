@@ -654,6 +654,39 @@ namespace Gmpc {
                     song_links.show();
                     i++;
                 }
+                if(config.get_int_with_default("MetaData", "show-artist-information",1) == 1)
+                {
+                    var alib = new Gtk.Alignment(0f,0f,1f,0f);
+                    var text_view = new Gmpc.MetaData.TextView(Gmpc.MetaData.Type.ARTIST_TXT);
+                    text_view.force_ro = true;
+                    text_view.use_monospace = false;
+                    text_view.set_left_margin(8);
+                    var text_view_queried = false;
+
+                    alib.add(text_view);
+                    notebook.append_page(alib, new Gtk.Label(_("Artist information")));
+                    var button = new Gtk.RadioButton.with_label(group,_("Artist information"));
+                    group = button.get_group();
+                    hboxje.pack_start(button, false, false, 0);
+                    var j = i;
+                    /* Only query the guitar-tab when opened or first notebook page*/
+                    button.clicked.connect((source) => {
+                            debug("notebook page %i clicked", j);
+                            notebook.set_current_page(j);
+                            if(!text_view_queried){
+                            text_view.query_from_song(song);
+                            text_view_queried = true;
+                            this.change_color_style(text_view);
+                            }
+                            });
+                    if(i == 0){
+                        text_view.query_from_song(song);
+                        text_view_queried = true;
+                    }
+                    alib.show();
+                    i++;
+                }
+
                 /* Track changed pages */
                 notebook.notify["page"].connect((source,spec) => {
                         var page = notebook.get_current_page();
