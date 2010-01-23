@@ -377,6 +377,21 @@ static gboolean tray_icon2_tooltip_button_press_event(GtkWidget *box, GdkEventBu
     return TRUE;
 }
 
+static gboolean popup_enter_notify_event(GtkWidget *event, GdkEventCrossing *eventc, gpointer data)
+{
+    if(tray_icon2_tooltip_timeout)
+    {
+        g_source_remove(tray_icon2_tooltip_timeout);
+    }
+    tray_icon2_tooltip_timeout = 0; 
+    return FALSE;
+}
+static gboolean popup_leave_notify_event(GtkWidget *event, GdkEventCrossing *eventc, gpointer data)
+{
+    int tooltip_timeout = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "tooltip-timeout", 5);
+    tray_icon2_tooltip_timeout = g_timeout_add_seconds(tooltip_timeout, (GSourceFunc)tray_icon2_tooltip_destroy, NULL);
+    return FALSE;
+}
 
 static void tray_icon2_create_tooltip_real(int position)
 {
@@ -494,6 +509,10 @@ static void tray_icon2_create_tooltip_real(int position)
     gtk_widget_modify_bg(GTK_WIDGET(event), GTK_STATE_NORMAL, &(pl3_win->style->bg[GTK_STATE_SELECTED]));
     gtk_container_add(GTK_CONTAINER(event), coverimg);
 	gtk_box_pack_start(GTK_BOX(hbox), event, FALSE,TRUE,0);
+
+
+    g_signal_connect(G_OBJECT(tray_icon2_tooltip), "enter-notify-event",  G_CALLBACK(popup_enter_notify_event), NULL);
+    g_signal_connect(G_OBJECT(tray_icon2_tooltip), "leave-notify-event",  G_CALLBACK(popup_leave_notify_event), NULL);
 	/**
 	 * 2
 	 * 
