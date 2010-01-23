@@ -134,10 +134,11 @@ namespace Gmpc {
                     {
                         if(bitrate_label != null)
                         {
+                            var channels = MPD.Status.get_channels(Gmpc.server);
                             debug("bitrate changed");
                             var bitrate = MPD.Status.get_bitrate(Gmpc.server); 
                             bitrate_label.set_markup(GLib.Markup.printf_escaped("<span color='%s' weight='bold'>%s:</span> %i %s, %.1f %s, %i %s",this.item_color, _("Format"), 
-                                        MPD.Status.get_channels(Gmpc.server), _("Channel"),
+                                        channels , GLib.ngettext(N_("Channel"),N_("Channels"), channels),
                                         MPD.Status.get_samplerate(Gmpc.server)/1000.0, _("kHz"), 
                                         bitrate, _("kbps")
                                         ));
@@ -444,8 +445,9 @@ namespace Gmpc {
                     box.pack_start(bitrate_label, true, true, 0);
 
                     var bitrate = MPD.Status.get_bitrate(Gmpc.server); 
+                    var channels = MPD.Status.get_channels(Gmpc.server);
                     bitrate_label.set_markup(GLib.Markup.printf_escaped("<span color='%s' weight='bold'>%s:</span> %i %s, %.1f %s, %i %s",this.item_color, _("Format"), 
-                                MPD.Status.get_channels(Gmpc.server), _("Channel"),
+                                channels , GLib.ngettext(N_("Channel"),N_("Channels"), channels),
                                 MPD.Status.get_samplerate(Gmpc.server)/1000.0, _("kHz"), 
                                 bitrate, _("kbps")
                                 ));
