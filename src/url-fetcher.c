@@ -431,10 +431,19 @@ static gboolean gufg_validate_callback_0160(GmpcUrlFetchingGui *a, const gchar *
 
 static void gufg_parse_callback_0160(GmpcUrlFetchingGui *a, const gchar *url, void *user_data)
 {
-	printf("add url1: '%s'\n", url);
-	mpd_playlist_queue_load(connection,url);
-	mpd_playlist_queue_commit(connection);
-	gmpc_url_fetching_gui_set_completed(a);
+	if(mpd_server_check_version(connection, 0,16,0))
+	{
+		if(mpd_playlist_load(connection,url) == MPD_PLAYLIST_LOAD_FAILED) {
+			gmpc_url_fetching_gui_set_processing(a);
+			parse_uri(url, a);
+			return;
+		}
+		gmpc_url_fetching_gui_set_completed(a);
+	}
+	else{
+		gmpc_url_fetching_gui_set_processing(a);
+		parse_uri(url, a);
+	}
 }
 
 void url_start(void)
@@ -452,8 +461,10 @@ void url_start_real(const gchar * url)
 	if(mpd_server_check_version(connection, 0,16,0))
 	{
 	printf("add url2: '%s'\n", url);
-		mpd_playlist_queue_load(connection,url);
-		mpd_playlist_queue_commit(connection);
+		if(mpd_playlist_load(connection,url) == MPD_PLAYLIST_LOAD_FAILED) {
+			parse_uri(url, NULL);
+			return;
+		}
 	}else{
 		parse_uri(url, NULL);
 	}
