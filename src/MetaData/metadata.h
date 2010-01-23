@@ -147,5 +147,6 @@ gchar * gmpc_get_metadata_filename(MetaDataType  type, mpd_Song *song, char *ext
 gpointer metadata_get_list(mpd_Song  *song, MetaDataType type, void (*callback)(gpointer handle, const gchar *plugin_name, GList *list, gpointer data), gpointer data);
 
 void metadata_get_list_cancel(gpointer data);
+mpd_Song *rewrite_mpd_song(mpd_Song *tsong, MetaDataType type);
 
 #endif

@@ -765,6 +765,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		gmpc_meta_watcher_data_changed(gmw, self->_priv->song, self->image_type, META_DATA_UNAVAILABLE, NULL);
         meta_data_free(met);
 	}
+
     private void
     select_metadata_editor(self)
     {

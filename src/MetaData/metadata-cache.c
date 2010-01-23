@@ -552,6 +552,7 @@ void meta_data_set_cache_real(mpd_Song *song, MetaDataResult result, MetaData *m
 }
 void meta_data_set_cache(mpd_Song *song, MetaDataResult result, MetaData *met)
 {
+	mpd_Song *edited = rewrite_mpd_song(song, met->type);
 	if(met->type == META_ARTIST_ART || met->type == META_ALBUM_ART) {
 		MetaData *m= NULL;
 		MetaDataResult r = meta_data_get_from_cache(song, met->type, &m);
@@ -561,11 +562,10 @@ void meta_data_set_cache(mpd_Song *song, MetaDataResult result, MetaData *met)
 		}	
 		meta_data_free(m);
 	}
-	mpd_Song *edited = rewrite_mpd_song(song, met->type);
 	meta_data_set_cache_real(edited, result, met);
 	if(edited->artist)
 	{
-		if(strcmp(edited->artist, "Various Artists")!=0)
+		if(strcmp(edited->artist, song->artist)!=0)
 			meta_data_set_cache_real(song, result, met);
 	}
 	mpd_freeSong(edited);

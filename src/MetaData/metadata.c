@@ -71,7 +71,6 @@ typedef struct {
 gboolean meta_compare_func(meta_thread_data *mt1, meta_thread_data *mt2);
 static gboolean meta_data_handle_results(void);
 
-mpd_Song *rewrite_mpd_song(mpd_Song *tsong, MetaDataType type);
 
 /*
    static gboolean meta_data_handler_data_match(meta_thread_data *data, gpointer data2);
@@ -749,9 +748,9 @@ static gboolean process_itterate(void)
 	 * Store result (or lack off) 
 	 **/
 	meta_data_set_cache_real(d->edited, d->result, d->met);
-	if(d->edited->artist)
+	if(d->edited->artist && d->song->artist)
 	{
-		if(strcmp(d->edited->artist, "Various Artists")!=0)
+		if(strcmp(d->edited->artist, d->song->artist)!=0)
 			meta_data_set_cache_real(d->song, /*d->type&META_QUERY_DATA_TYPES,*/ d->result, d->met);
 	}
 	/**

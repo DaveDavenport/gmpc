@@ -163,6 +163,9 @@ public class Gmpc.PixbufLoaderAsync : GLib.Object
             loader.close();
         }catch (Error err) {
             warning("Error trying to parse image: %s", err.message);
+            pixbuf_update(null);
+            /* Failed to load the image */
+            return;
         }
 
         if(cancel.is_cancelled())
@@ -216,10 +219,14 @@ public class Gmpc.MetaImageAsync : Gtk.Image
         this.clear();
     }
 
-    public void set_pixbuf(Gdk.Pixbuf pb)
+    public void set_pixbuf(Gdk.Pixbuf? pb)
     {
         this.loader = null;
         this.uri = null;
-        this.set_from_pixbuf(pb);
+        if(pb != null) {
+            this.set_from_pixbuf(pb);
+        }else{
+            this.clear();
+        }
     }
 }
