@@ -776,6 +776,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 	void
 	select_file(self)
 	{
+        gchar *p;
 		mpd_Song *song = mpd_songDup(self->_priv->song);
 		MetaDataType type = self->image_type;
 		GtkFileFilter *gff = gtk_file_filter_new();
@@ -794,7 +795,13 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(fcd), gff);   
 
 		gtk_widget_show_all(fcd);
-		switch(gtk_dialog_run(GTK_DIALOG(fcd)))
+             
+        p = cfg_get_single_value_as_string(config, "MetaData", "image-file-chooser"); 
+        if(p) {
+            gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(fcd), p);
+            g_free(p);
+        }
+        switch(gtk_dialog_run(GTK_DIALOG(fcd)))
 		{
 			case GTK_RESPONSE_ACCEPT:
 				{	
@@ -807,7 +814,9 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                     met->size = -1;
 					meta_data_set_cache(song,META_DATA_AVAILABLE, met); 
 					gmpc_meta_watcher_data_changed(gmw, song, type, META_DATA_AVAILABLE, met);
+                    cfg_set_single_value_as_string(config, "MetaData", "image-file-chooser", filename); 
                     meta_data_free(met);
+
 				}
 			default:
 				break;

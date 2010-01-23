@@ -429,6 +429,7 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 	void
 	select_file(self)
 	{
+        gchar *p;
 		mpd_Song *song = mpd_songDup(self->_priv->song);
 		MetaDataType type = self->_priv->type;
 		GtkFileFilter *gff = gtk_file_filter_new();
@@ -445,6 +446,11 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 		gtk_file_filter_add_pattern(gff, "*");
 		gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(fcd), gff);   
 
+        p = cfg_get_single_value_as_string(config, "MetaData", "text-file-chooser"); 
+        if(p) {
+            gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(fcd), p);
+            g_free(p);
+        }
 		gtk_widget_show_all(fcd);
 		switch(gtk_dialog_run(GTK_DIALOG(fcd)))
 		{
@@ -457,6 +463,7 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
                     met->content_type = META_DATA_CONTENT_URI;
                     met->content = filename; met->size =-1;
 					meta_data_set_cache(song, META_DATA_AVAILABLE, met); 
+                    cfg_set_single_value_as_string(config, "MetaData", "text-file-chooser", filename); 
 					gmpc_meta_watcher_data_changed(gmw, song, type, META_DATA_AVAILABLE, met);
 
                     meta_data_free(met);
