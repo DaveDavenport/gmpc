@@ -431,19 +431,12 @@ static gboolean gufg_validate_callback_0160(GmpcUrlFetchingGui *a, const gchar *
 
 static void gufg_parse_callback_0160(GmpcUrlFetchingGui *a, const gchar *url, void *user_data)
 {
-	if(mpd_server_check_version(connection, 0,16,0))
-	{
-		if(mpd_playlist_load(connection,url) == MPD_PLAYLIST_LOAD_FAILED) {
-			gmpc_url_fetching_gui_set_processing(a);
-			parse_uri(url, a);
-			return;
-		}
-		gmpc_url_fetching_gui_set_completed(a);
-	}
-	else{
+	if(mpd_playlist_load(connection,url) == MPD_PLAYLIST_LOAD_FAILED) {
 		gmpc_url_fetching_gui_set_processing(a);
 		parse_uri(url, a);
+		return;
 	}
+	gmpc_url_fetching_gui_set_completed(a);
 }
 
 void url_start(void)
