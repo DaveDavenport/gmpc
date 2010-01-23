@@ -182,6 +182,28 @@ namespace Gmpc.Favorites{
                 favorites.set_favorite(this.song.file, !this.fstate);
                 this.fstate = !this.fstate;
             }
+            else if (event.button == 3 && this.song != null) {
+                var menu = new Gtk.Menu();
+                MPD.Data.Item ? item = MPD.Database.get_playlist_list(server);
+                while(item != null)
+                {
+                    string pp = item.playlist.path;
+                    var entry = new Gtk.ImageMenuItem.with_label(pp);
+                    if(pp == _("Favorites")) {
+                        entry.set_image(new Gtk.Image.from_icon_name("emblem-favorite", Gtk.IconSize.MENU));
+                    }else{
+                        entry.set_image(new Gtk.Image.from_icon_name("media-playlist", Gtk.IconSize.MENU));
+                    }
+                    entry.activate.connect((source) => {
+                            MPD.Database.playlist_list_add(server,pp, this.song.file);
+                            });
+                    menu.append(entry);
+                    item.next_free();
+                }
+                menu.show_all();
+                menu.popup(null, null, null, event.button, event.time);
+
+            }
             return false;
         }
 

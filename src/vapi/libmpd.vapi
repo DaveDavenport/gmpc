@@ -19,8 +19,8 @@ namespace MPD {
 
 
     [CCode (cname = "mpd_Song",
-    free_function = "mpd_freeSong", 
-    copy_function = "mpd_songDup", 
+    free_function = "mpd_freeSong",
+    copy_function = "mpd_songDup",
     cheader_filename = "libmpd/libmpdclient.h,libmpd/libmpd.h")]
     [Compact]
     [Immutable]
@@ -123,6 +123,19 @@ namespace MPD {
                 PLAYLIST,
                 OUTPUT_DEV
             }
+    [CCode (cname = "mpd_PlaylistFile",
+    free_function = "mpd_freePlaylistFile",
+    copy_function = "mpd_playlistFileDup",
+    cheader_filename = "libmpd/libmpdclient.h,libmpd/libmpd.h")]
+    [Compact]
+    [Immutable]
+    public class Playlist{
+        [CCode (cname="mpd_newPlaylistFile")]
+        public Playlist();
+
+        public string *path;
+        public string *mtime;
+    }
 
             [CCode (cname = "MpdData",
                 free_function = "mpd_data_free", 
@@ -133,6 +146,7 @@ namespace MPD {
                 public Data.Type type;
                 public MPD.Song  song;
                 public string tag;
+                public Playlist playlist;
               
                 [CCode (cname="mpd_data_get_next")]
                 [ReturnsModifiedPointer ()]
@@ -193,6 +207,8 @@ namespace MPD {
 
     namespace Database {
         public MPD.Data.Item? get_playlist_content(MPD.Server server, string playlist_name); 
+        [CCode (cname="mpd_database_playlist_list")]
+        public MPD.Data.Item? get_playlist_list(MPD.Server server);
         public void playlist_list_add(MPD.Server server, string playlist_name, string path);
         public void playlist_list_delete(MPD.Server server, string playlist_name, int pos);
 
