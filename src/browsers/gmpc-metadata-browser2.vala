@@ -1977,8 +1977,57 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
 
             alib.show();
         }
-
         {
+            Gmpc.MpdData.Model songs = new Gmpc.MpdData.Model();
+            var sw = new Gtk.ScrolledWindow(null, null);
+            sw.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.NEVER);
+            sw.set_shadow_type(Gtk.ShadowType.ETCHED_IN);
+            string albumartist = null;
+            if(Gmpc.server.tag_supported(MPD.Tag.Type.ALBUM_ARTIST))
+            {
+                MPD.Database.search_field_start(server, MPD.Tag.Type.ALBUM_ARTIST);
+                MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM, album);
+                MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, artist);
+                var ydata = MPD.Database.search_commit(server);
+                if(ydata != null)
+                {
+                    if(ydata.tag.length > 0)
+                        albumartist = ydata.tag;
+                }
+            } 
+            MPD.Database.search_start(server,true);
+            if(albumartist != null&& albumartist.length > 0)
+                MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM_ARTIST, albumartist);
+            else
+                MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, artist);
+
+            if(album != null)
+                MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM, album);
+            var data = MPD.Database.search_commit(server);
+            data.sort_album_disc_track();
+            songs.set_mpd_data((owned)data);
+            var song_tree = new Gmpc.MpdData.TreeView("metadata-artist-songs", true,songs); 
+            song_tree.enable_click_fix();
+            song_tree.button_release_event += album_song_tree_button_press_event;
+            song_tree.row_activated += album_song_tree_row_activated;
+            sw.add(song_tree);
+            var alib = new Gtk.Alignment(0f,0f,1f,0f);
+
+            alib.add(sw);
+            notebook.append_page(alib, new Gtk.Label(_("Song list")));
+            var rbutton = new Gtk.RadioButton.with_label(group,_("Song list"));
+            group = rbutton.get_group();
+            hboxje.pack_start(rbutton, false, false, 0);
+            var j = i;
+            rbutton.clicked.connect((source) => {
+                    debug("notebook page %i clicked", j);
+                    notebook.set_current_page(j);
+                    });
+
+            alib.show();
+            i++;
+        }
+        /*{
             var sw = new Gtk.ScrolledWindow(null, null);
             sw.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.NEVER);
             sw.set_shadow_type(Gtk.ShadowType.ETCHED_IN);
@@ -2003,6 +2052,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             alib.show();
             i++;
         }
+        */
         /* Show web links */
         if(config.get_int_with_default("MetaData", "show-web-links",1) == 1)
         {
@@ -2205,6 +2255,37 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             i++;
         }
 
+        {
+            Gmpc.MpdData.Model songs = new Gmpc.MpdData.Model();
+            var sw = new Gtk.ScrolledWindow(null, null);
+            sw.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.NEVER);
+            sw.set_shadow_type(Gtk.ShadowType.ETCHED_IN);
+            MPD.Database.search_start(server,true);
+            MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, artist);
+            var data = MPD.Database.search_commit(server);
+            data.sort_album_disc_track();
+            songs.set_mpd_data((owned)data);
+            var song_tree = new Gmpc.MpdData.TreeView("metadata-artist-songs", true,songs); 
+            song_tree.enable_click_fix();
+            song_tree.button_release_event += album_song_tree_button_press_event;
+            song_tree.row_activated += album_song_tree_row_activated;
+            sw.add(song_tree);
+            var alib = new Gtk.Alignment(0f,0f,1f,0f);
+
+            alib.add(sw);
+            notebook.append_page(alib, new Gtk.Label(_("Song list")));
+            var rbutton = new Gtk.RadioButton.with_label(group,_("Song list"));
+            group = rbutton.get_group();
+            hboxje.pack_start(rbutton, false, false, 0);
+            var j = i;
+            rbutton.clicked.connect((source) => {
+                    debug("notebook page %i clicked", j);
+                    notebook.set_current_page(j);
+                    });
+
+            alib.show();
+            i++;
+        }
         /* Show web links */
         if(config.get_int_with_default("MetaData", "show-web-links",1) == 1)
         {
