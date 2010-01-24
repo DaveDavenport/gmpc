@@ -793,7 +793,7 @@ namespace Gmpc {
                             but_label.selectable = true;
                             but_label.set_alignment(0.0f, 0.5f);
                             var strlabel = "";
-                            if(iter.song.date != null && iter.song.date.length > 0) strlabel += "%s: ".printf(iter.song.date);
+                            if(iter.song.date != null && iter.song.date.length > 0) strlabel += "%s\n".printf(iter.song.date);
                             if(iter.song.album != null) strlabel+= iter.song.album;
                             else strlabel += _("No Album");
                             but_label.set_markup(GLib.Markup.printf_escaped("<b>%s</b>",strlabel)); 
