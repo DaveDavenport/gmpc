@@ -360,7 +360,8 @@ static void pl3_find2_browser_search(void)
         {
             GError *error = NULL;
             MpdData *data_t = NULL;
-            const gchar *name = gtk_entry_get_text(GTK_ENTRY(search_entry));
+            const gchar *real_name = gtk_entry_get_text(GTK_ENTRY(search_entry));
+            gchar *name = g_strstrip(g_strdup(real_name));
             gtk_tree_model_get(GTK_TREE_MODEL(pl3_find2_combo_store),&cc_iter , 0, &num_field, -1);
             if(plug)
                 data_t = gmpc_plugin_browser_integrate_search(plug,num_field, name,&error); 
@@ -391,6 +392,7 @@ static void pl3_find2_browser_search(void)
                     gtk_list_store_insert_with_values(pl3_find2_autocomplete, &iter,-1, 0,name,-1);
                 }					
             }
+            g_free(name);
         }
     }
     gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_find2_tree), GTK_TREE_MODEL(pl3_find2_store2));
@@ -770,12 +772,30 @@ void pl3_find2_select_plugin_id(int id)
     gtk_widget_grab_focus(search_entry);
 }
 
+static guint entry_timeout = 0;
+
+static gboolean do_entry_changed_search(GtkEntry *entry)
+{
+    pl3_find2_browser_search();
+    entry_timeout = 0;
+    return FALSE;
+}
+
 static gboolean pl3_find2_entry_key_press_event(GtkWidget *entry, GdkEventKey *event, gpointer data)
 {
 	if(event->keyval == GDK_Escape)
 		gtk_entry_set_text(GTK_ENTRY(entry), "");
+    
+    if(entry_timeout > 0) {
+        g_source_remove(entry_timeout);
+        entry_timeout = 0;
+    }
+    if(cfg_get_single_value_as_int_with_default(config, "general", "search-as-you-type", 0) == 1)
+    {
+        entry_timeout = g_timeout_add(250, (GSourceFunc)do_entry_changed_search, entry);
+    }
 
-	return FALSE;
+    return FALSE;
 }
 
 static void pl3_find2_browser_destroy(void)

@@ -80,6 +80,18 @@
                     <property name="position">4</property>
                   </packing>
                 </child>
+                <child>
+                  <object class="GtkCheckButton" id="ck_search_as_you_type">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="label" translatable="yes">Enable search as you type. (Might be slow)</property>
+                    <property name="draw_indicator">True</property>
+                    <signal handler="ck_search_as_you_type" name="toggled"/>
+                  </object>
+                  <packing>
+                    <property name="position">4</property>
+                  </packing>
+                </child>
               </object>
             </child>
           </object>

@@ -139,6 +139,7 @@ static GtkBuilder *playlist_pref_xml = NULL;
 
 static GtkWidget *volume_button = NULL;
 
+void ck_search_as_you_type(GtkToggleButton * but);
 /**
  * Status icons
  */
@@ -1358,6 +1359,11 @@ G_MODULE_EXPORT void ck_show_tabbed_heading_enable_cb(GtkToggleButton * but)
 	}
 	cfg_set_single_value_as_int(config, "playlist", "button-heading", bool1);
 }
+G_MODULE_EXPORT void ck_search_as_you_type(GtkToggleButton * but)
+{
+	int bool1 = gtk_toggle_button_get_active(but);
+	cfg_set_single_value_as_int(config, "general", "search-as-you-type", bool1);
+}
 
 static void playlist_pref_destroy(GtkWidget * container)
 {
@@ -1416,6 +1422,10 @@ void playlist_pref_construct(GtkWidget * container)
 									 (config, "playlist", "button-heading", FALSE)
 			);
 
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON
+									 (gtk_builder_get_object
+									  (playlist_pref_xml, "ck_search_as_you_type")),
+									 cfg_get_single_value_as_int_with_default(config, "general", "search-as-you-type", 0));
 		gtk_container_add(GTK_CONTAINER(container), vbox);
 		gtk_builder_connect_signals(playlist_pref_xml, NULL);
 	}

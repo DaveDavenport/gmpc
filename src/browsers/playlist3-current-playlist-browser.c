@@ -346,9 +346,15 @@ static gboolean mod_fill_entry_key_press_event(GtkWidget *entry, GdkEventKey *ev
 
 static void  mod_fill_entry_changed(GtkWidget *entry, PlayQueuePlugin *self)
 {
-    if(self->priv->quick_search_timeout != 0)
+    if(self->priv->quick_search_timeout != 0){
         g_source_remove(self->priv->quick_search_timeout);
-    self->priv->quick_search_timeout = g_timeout_add(250, (GSourceFunc)mod_fill_do_entry_changed, self);
+        self->priv->quick_search_timeout = 0;
+    }
+
+    if(cfg_get_single_value_as_int_with_default(config, "general", "search-as-you-type", 0) == 1)
+    {
+        self->priv->quick_search_timeout = g_timeout_add(250, (GSourceFunc)mod_fill_do_entry_changed, self);
+    }
     gtk_widget_show(entry);
 }
 static void mod_fill_entry_activate(GtkWidget *entry, PlayQueuePlugin *self)
