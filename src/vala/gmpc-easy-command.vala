@@ -138,17 +138,22 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 	}
 
 	private void activate(Gtk.Entry entry) {
-		weak Gtk.TreeModel model = this.store;
 		string value_unsplit = entry.get_text();
+		this.do_query(value_unsplit);
+	}
+	public void do_query(string value_unsplit) {
+		weak Gtk.TreeModel model = this.store;
 		Gtk.TreeIter iter;
 		if (value_unsplit.length == 0) {
-			this.window.destroy();
-			this.window = null;
+			if(this.window != null) {
+				this.window.destroy();
+				this.window = null;
+			}
 			return;
 		}
 		foreach(string value in value_unsplit.split(";")) {
-            bool found = false;
-            /* ToDo: Make this nicer... maybe some fancy parsing */
+			bool found = false;
+			/* ToDo: Make this nicer... maybe some fancy parsing */
 			if (model.get_iter_first(out iter)) {
 				do {
 					string name, pattern, test;
@@ -169,39 +174,41 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 					}
 				} while (model.iter_next(ref iter) && !found);
 			}
-            /* If now exact match is found, use the partial matching that is
-             * also used by the completion popup.
-             * First, partial, match is taken.
-             */
-            if(!found) {
-                if (model.get_iter_first(out iter)) {
-                    do {
-                        string name, pattern, test;
-                        Callback callback = null;
-                        void *data;
-                        model.get(iter, 1, out name, 2, out pattern, 3, out callback, 4, out data);
+			/* If now exact match is found, use the partial matching that is
+			 * also used by the completion popup.
+			 * First, partial, match is taken.
+			 */
+			if(!found) {
+				if (model.get_iter_first(out iter)) {
+					do {
+						string name, pattern, test;
+						Callback callback = null;
+						void *data;
+						model.get(iter, 1, out name, 2, out pattern, 3, out callback, 4, out data);
 
-                        test = "^%s.*".printf(value.strip());
-                        if (GLib.Regex.match_simple(test, name,GLib.RegexCompileFlags.CASELESS, 0)) {
-                            string param;
-                            if (value.length > name.length)
-                                param = value.substring(name.length, -1);
-                            else
-                                param = "";
-                            var param_str = param.strip();
-                            callback(data, param_str);
-                            found = true;
-                        }
-                    } while (model.iter_next(ref iter) && !found);
-                }
-            }
-            /* If we still cannot match it, give a message */
-            if (!found)
-                Gmpc.Messages.show("Unknown command: '%s'".printf(value.strip()), Gmpc.Messages.Level.INFO);
+						test = "^%s.*".printf(value.strip());
+						if (GLib.Regex.match_simple(test, name,GLib.RegexCompileFlags.CASELESS, 0)) {
+							string param;
+							if (value.length > name.length)
+								param = value.substring(name.length, -1);
+							else
+								param = "";
+							var param_str = param.strip();
+							callback(data, param_str);
+							found = true;
+						}
+					} while (model.iter_next(ref iter) && !found);
+				}
+			}
+			/* If we still cannot match it, give a message */
+			if (!found)
+				Gmpc.Messages.show("Unknown command: '%s'".printf(value.strip()), Gmpc.Messages.Level.INFO);
 		}
 
-		window.destroy();
-		window = null;
+		if(this.window != null) {
+			this.window.destroy();
+			this.window = null;
+		}
 	}
 	private bool key_press_event(Gtk.Entry widget, Gdk.EventKey event) {
 		/* Escape */

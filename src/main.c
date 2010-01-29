@@ -203,6 +203,9 @@ static void bacon_on_message_received(const char *message, gpointer data)
          */
 		else if (strncmp(message, "STREAM ", 7) == 0) {
 			url_start_real(&message[7]);
+		}
+		else if (strncmp(message, "EASYCOMMAND", strlen("EASYCOMMAND")) == 0) {
+			gmpc_easy_command_do_query(gmpc_easy_command, (&message[strlen("EASYCOMMAND")]));
 		} else {
 			create_playlist3();
 		}

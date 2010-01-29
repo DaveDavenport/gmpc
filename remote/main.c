@@ -47,6 +47,7 @@ int main ( int argc, char **argv )
     gboolean show_view = FALSE;
     gboolean spawn = FALSE;
     gchar *stream = NULL;
+    gchar *easycommand = NULL;
 
     GOptionEntry entries[] = {
         {
@@ -81,6 +82,10 @@ int main ( int argc, char **argv )
 
             "stream",     's', 0, G_OPTION_ARG_STRING, &stream,
             "Give the running gmpc a stream to play", NULL
+        },
+        {
+            "easycommand",     'e', 0, G_OPTION_ARG_STRING, &easycommand,
+            "Give the running gmpc a easycommand to play", NULL
         },
         {
 
@@ -159,6 +164,13 @@ int main ( int argc, char **argv )
             {
                 gchar *str = g_strdup_printf("STREAM %s", stream);
                 printf("Send stream: %s\n", stream);
+                bacon_message_connection_send(bacon_connection, str);
+                g_free(str);
+            }
+            if(easycommand)
+            {
+                gchar *str = g_strdup_printf("EASYCOMMAND %s", easycommand);
+                printf("Send easycommand: %s\n", easycommand);
                 bacon_message_connection_send(bacon_connection, str);
                 g_free(str);
             }
