@@ -42,6 +42,9 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
     private Gtk.Button refresh = null;
     private Gtk.ComboBox combo = null;
     private Gtk.ProgressBar bar = null;
+
+    private Gtk.ScrolledWindow sw = null;
+    private Gtk.EventBox ilevent = null;
     
     private Gtk.VBox itemslist = new Gtk.VBox(false, 6);
 
@@ -198,6 +201,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
         {
             this.pbox.hide();
             this.refresh.sensitive = true;
+            this.ilevent.sensitive = true;
             this.combo.sensitive = true;
         }
 
@@ -213,6 +217,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
                 {
                     this.pbox.hide();
                     this.refresh.sensitive = true;
+                    this.ilevent.sensitive = true;
                     this.combo.sensitive = true;
                 }
             }
@@ -225,6 +230,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
                 {
                     this.pbox.hide();
                     this.combo.sensitive = true;
+                    this.ilevent.sensitive = true;
                     this.refresh.sensitive = true;
                 }
             }
@@ -268,7 +274,11 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
                     }catch (Error e) {
                         stdout.printf("Failed to load raw data: %s\n",e.message);
                     }
-                    load.close();
+                    try {
+                        load.close();
+                    }catch (Error e) {
+                        stdout.printf("Failed to close loader: %s\n",e.message);
+                    }
 
                     Gdk.Pixbuf pb = load.get_pixbuf();
                     if(pb!= null){
@@ -463,6 +473,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
             this.pbox.show();
             this.refresh.sensitive = false;
             this.combo.sensitive = false;
+            this.ilevent.sensitive = false;
             GLib.log("MetadataSelector", GLib.LogLevelFlags.LEVEL_DEBUG,"Start metdata get_list query");
             this.handle = Gmpc.MetaData.get_list(ss, this.query_type, callback);
             GLib.log("MetadataSelector", GLib.LogLevelFlags.LEVEL_DEBUG,"Wait");
@@ -556,7 +567,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
         this.pbox.no_show_all = true;
         this.pbox.hide();
 
-        var sw = new Gtk.ScrolledWindow(null, null);
+        sw = new Gtk.ScrolledWindow(null, null);
 
         sw.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC);
         sw.set_shadow_type(Gtk.ShadowType.ETCHED_IN);
@@ -661,7 +672,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
         this.add(vbox);
         this.hide_on_delete();
         //sw.add(iv);
-        var ilevent = new Gtk.EventBox();
+        ilevent = new Gtk.EventBox();
         this.itemslist.border_width = 8;
         ilevent.visible_window = true;
         ilevent.modify_bg(Gtk.StateType.NORMAL,this.style.base[Gtk.StateType.NORMAL]);
