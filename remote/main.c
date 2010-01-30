@@ -85,7 +85,7 @@ int main ( int argc, char **argv )
         },
         {
             "easycommand",     'e', 0, G_OPTION_ARG_STRING, &easycommand,
-            "Give the running gmpc a easycommand to play", NULL
+            "Send an easy command query to the running gmpc.", NULL
         },
         {
 

@@ -294,11 +294,12 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 			window.app_paintable = true;
 			window.expose_event += popup_expose_handler;
 
+/*			Disable this as often gmpc is moved and bring to top, not desirable..
 			if (!Gmpc.Playlist.is_hidden()) {
 				window.set_transient_for(Gmpc.Playlist.get_window());
 				window.position = Gtk.WindowPosition.CENTER_ON_PARENT;
 			}
-
+*/
 			/* setup entry */
 			entry.set_completion(this.completion);
 			entry.activate += this.activate;
