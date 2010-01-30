@@ -392,30 +392,52 @@ namespace Gmpc {
                 }
                 /* Artist */
                 if(song.artist != null) {
+                    var event = new Gtk.EventBox();
                     var box = new Gtk.HBox(false, 6);
                     var label = new Gtk.Label(song.artist);
                     label.selectable = true;
                     var image = new Gtk.Image.from_icon_name("media-artist", Gtk.IconSize.MENU);
-                    box.pack_start(image, false, false, 0);
+                    event.add(image);
+                    box.pack_start(event, false, false, 0);
                     label.set_markup(GLib.Markup.printf_escaped("<span size='xx-large' weight='bold'>%s</span>", song.artist));
                     label.set_ellipsize(Pango.EllipsizeMode.END);
                     label.set_alignment(0.0f, 0.5f);
                     box.pack_start(label, true, true, 0);
                     info_vbox.pack_start(box, false, false, 0); 
+
+                    event.set_data_full("artist",(void *)"%s".printf(song.artist), (GLib.DestroyNotify) g_free);
+                    event.button_press_event.connect((widget, event) => {
+                        string artist = (string)widget.get_data("artist");
+                        Gmpc.Browser.Metadata.show_artist(artist);
+                    });
                 }
                 /* Album */
                 if(song.album != null) {
+                    var event = new Gtk.EventBox();
                     var box = new Gtk.HBox(false, 6);
                     var label = new Gtk.Label(song.album);
                     label.selectable = true;
                     var image = new Gtk.Image.from_icon_name("media-album", Gtk.IconSize.MENU);
-                    box.pack_start(image, false, false, 0);
+                    event.add(image);
+                    box.pack_start(event, false, false, 0);
                     label.set_markup(GLib.Markup.printf_escaped("<span size='x-large' weight='bold'>%s %s</span>", song.album,
                         (song.date != null)? "(%s)".printf(song.date):""));
                     label.set_ellipsize(Pango.EllipsizeMode.END);
                     label.set_alignment(0.0f, 0.5f);
                     box.pack_start(label, true, true, 0);
                     info_vbox.pack_start(box, false, false, 0); 
+
+
+
+                    event.set_data_full("artist",(void *)"%s".printf(song.artist), (GLib.DestroyNotify) g_free);
+                    event.set_data_full("album",(void *)"%s".printf(song.album), (GLib.DestroyNotify) g_free);
+                    event.button_press_event.connect((widget, event) => {
+                        string artist = (string)widget.get_data("artist");
+                        string album = (string)widget.get_data("album");
+                        if(artist != null && album != null) {
+                            Gmpc.Browser.Metadata.show_album(artist,album);
+                            }
+                            });
                 }
                 /* Genre */
                 if(song.genre != null) {
