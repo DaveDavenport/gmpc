@@ -2006,7 +2006,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             var data = MPD.Database.search_commit(server);
             data.sort_album_disc_track();
             songs.set_mpd_data((owned)data);
-            var song_tree = new Gmpc.MpdData.TreeView("metadata-artist-songs", true,songs); 
+            var song_tree = new Gmpc.MpdData.TreeView("metadata-album-songs", true,songs); 
             song_tree.enable_click_fix();
             song_tree.button_release_event += album_song_tree_button_press_event;
             song_tree.row_activated += album_song_tree_row_activated;
