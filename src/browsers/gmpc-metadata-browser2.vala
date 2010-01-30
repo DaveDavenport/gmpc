@@ -1246,32 +1246,6 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
      * Metadata box
      */
 
-     private void play_song(Gtk.Button button)
-     {
-        MPD.Song? song = (MPD.Song )button.get_data("song"); 
-        if(song != null){
-            Gmpc.MpdInteraction.play_path(song.file);
-        }
-     }
-
-     private void add_song(Gtk.Button button)
-     {
-        MPD.Song? song = (MPD.Song )button.get_data("song"); 
-        if(song != null){
-            MPD.PlayQueue.add_song(server,song.file);
-            return;
-        }
-     }
-     private void replace_song(Gtk.Button button)
-     {
-         MPD.Song? song = (MPD.Song )button.get_data("song"); 
-         if(song != null){
-             MPD.PlayQueue.clear(server);
-             MPD.PlayQueue.add_song(server,song.file);
-             MPD.Player.play(server);
-             return;
-         }
-     }
      private void add_selected_song(Gtk.Button button)
      {
         string artist = browser_get_selected_artist(); 
@@ -1369,18 +1343,6 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
          }
          i++;
      }
-     /* jump buttons */
-    private void artist_button_clicked(Gtk.Button button)
-    {
-        string artist = (string)button.get_data("artist");
-        Gmpc.Browser.Metadata.show_artist(artist);
-    }
-    private void album_button_clicked(Gtk.Button button)
-    {
-        string artist = (string)button.get_data("artist");
-        string album = (string)button.get_data("album");
-        Gmpc.Browser.Metadata.show_album(artist,album);
-    }
     public Gtk.Widget metadata_box_show_song(MPD.Song song, bool show_controls)
     {
         var vbox = new Gtk.VBox (false,6);
@@ -1722,23 +1684,6 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
 
         /* show it */
         return vbox;
-    }
-    private void metadata_button_open_file_browser_path(Gtk.Button button)
-    {
-        string path = (string?)button.get_data("path");
-        if(path != null)
-        {
-            Gmpc.Browser.File.open_path(path);
-        }
-    }
-    private void metadata_find_query(Gtk.Button button)
-    {
-        string path = (string?)button.get_data("query");
-        if(path != null)
-        {
-            Gmpc.Browser.Find.query_database(null, path);
-        }
-
     }
     private void album_song_tree_row_activated(Gtk.TreeView tree, Gtk.TreePath path, Gtk.TreeViewColumn column)
     {
