@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-12-23 15:44+0100\n"
+"POT-Creation-Date: 2010-01-23 17:28+0100\n"
 "PO-Revision-Date: 2009-12-05 09:12+0000\n"
 "Last-Translator: Harris <huangchengzhi@gmail.com>\n"
 "Language-Team: Simplified Chinese <zh_CN@li.org>\n"
@@ -15,16 +15,16 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2009-12-23 17:40+0000\n"
+"X-Launchpad-Export-Date: 2010-02-04 20:12+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
 msgid "A gnome frontend for the mpd daemon"
 msgstr "一个 mpd 守护进程的 gnome 前端"
 
-#: ../data/gmpc.desktop.in.h:2 ../src/main.c:346 ../src/tray-icon2.c:593
-#: ../src/browsers/gmpc-nowplaying2.c:1584
-#: ../src/browsers/gmpc-nowplaying2.c:1586
+#: ../data/gmpc.desktop.in.h:2 ../src/main.c:346 ../src/playlist3.c:1944
+#: ../src/tray-icon2.c:593 ../src/browsers/gmpc-nowplaying2.c:1588
+#: ../src/browsers/gmpc-nowplaying2.c:1590
 msgid "Gnome Music Player Client"
 msgstr "Gnome 音乐播放器客户端"
 
@@ -311,13 +311,13 @@ msgstr "已连接到 mpd"
 msgid "Disconnected from mpd"
 msgstr "已从 mpd 断开连接"
 
-#: ../src/MetaData/metadata.c:295
+#: ../src/MetaData/metadata.c:294
 msgid ""
 "A new metadata plugin was added, gmpc has purged all failed hits from the "
 "cache"
 msgstr "已经添加了一个新的元数据插件，gmpc 已经从缓存中清理了所有命中失败的项"
 
-#: ../src/MetaData/metadata.c:1422
+#: ../src/MetaData/metadata.c:1432
 msgid "Metadata Handler"
 msgstr "元数据处理器"
 
@@ -460,8 +460,8 @@ msgstr "启用"
 msgid "disable"
 msgstr "禁用"
 
-#: ../src/mpdinteraction.c:108 ../src/playlist3.c:1776 ../src/playlist3.c:1789
-#: ../src/playlist3.c:1804 ../src/playlist3.c:1817
+#: ../src/mpdinteraction.c:108 ../src/playlist3.c:1779 ../src/playlist3.c:1792
+#: ../src/playlist3.c:1807 ../src/playlist3.c:1820
 #: ../glade/preferences-server.ui.h:8
 msgid "Off"
 msgstr "关闭"
@@ -730,12 +730,12 @@ msgstr "评分"
 msgid "Connected"
 msgstr "已连接"
 
-#: ../src/playlist3.c:796 ../src/playlist3.c:2310
+#: ../src/playlist3.c:796 ../src/playlist3.c:2314
 msgid "Not Connected"
 msgstr "未连接"
 
 #: ../src/playlist3.c:812 ../src/playlist3.c:817 ../src/playlist3.c:826
-#: ../src/playlist3.c:831 ../src/playlist3.c:1736 ../src/playlist3.c:1742
+#: ../src/playlist3.c:831 ../src/playlist3.c:1738 ../src/playlist3.c:1745
 msgid "GMPC"
 msgstr "GMPC"
 
@@ -750,106 +750,106 @@ msgstr "断开连接"
 #. *
 #. * Set paused in Window string
 #. 
-#: ../src/playlist3.c:1692 ../src/playlist3.c:1697
+#: ../src/playlist3.c:1693 ../src/playlist3.c:1698
 msgid "paused"
 msgstr "已暂停"
 
-#: ../src/playlist3.c:1775
+#: ../src/playlist3.c:1778
 #, c-format
 msgid "Repeat: %s"
 msgstr "重复: %s"
 
-#: ../src/playlist3.c:1776 ../src/playlist3.c:1789 ../src/playlist3.c:1804
-#: ../src/playlist3.c:1817
+#: ../src/playlist3.c:1779 ../src/playlist3.c:1792 ../src/playlist3.c:1807
+#: ../src/playlist3.c:1820
 msgid "On"
 msgstr "打开"
 
-#: ../src/playlist3.c:1788
+#: ../src/playlist3.c:1791
 #, c-format
 msgid "Random: %s"
 msgstr "随机: %s"
 
-#: ../src/playlist3.c:1803
+#: ../src/playlist3.c:1806
 #, c-format
 msgid "Single mode: %s"
 msgstr "单曲模式: %s"
 
-#: ../src/playlist3.c:1816
+#: ../src/playlist3.c:1819
 #, c-format
 msgid "Consume: %s"
 msgstr ""
 
-#: ../src/playlist3.c:1877
+#: ../src/playlist3.c:1880
 msgid "MPD Reported the following error"
 msgstr "MPD 报告了如下错误"
 
-#: ../src/playlist3.c:2010 ../src/playlist3.c:2016
+#: ../src/playlist3.c:2014 ../src/playlist3.c:2020
 msgid "Profile"
 msgstr "配置文件"
 
-#: ../src/playlist3.c:2011
+#: ../src/playlist3.c:2015
 msgid "added"
 msgstr "已添加"
 
-#: ../src/playlist3.c:2018
+#: ../src/playlist3.c:2022
 msgid "changed hostname to:"
 msgstr "将主机名称修改为："
 
 #. Update DB
-#: ../src/playlist3.c:2128
+#: ../src/playlist3.c:2132
 msgid "Update Database"
 msgstr "更新媒体库"
 
 #. Server Information
-#: ../src/playlist3.c:2137 ../src/vala/gmpc-test-plugin.c:919
+#: ../src/playlist3.c:2141
 msgid "Information"
 msgstr "信息"
 
-#: ../src/playlist3.c:2241
+#: ../src/playlist3.c:2245
 msgid "By"
 msgstr ""
 
-#: ../src/playlist3.c:2247
+#: ../src/playlist3.c:2251
 msgid "From"
 msgstr ""
 
-#: ../src/playlist3.c:2303
+#: ../src/playlist3.c:2307
 msgid "Not Playing"
 msgstr "没有播放"
 
-#: ../src/playlist3.c:2417
+#: ../src/playlist3.c:2421
 msgid "Interface"
 msgstr "界面"
 
-#: ../src/playlist3.c:2684
+#: ../src/playlist3.c:2688
 msgid "Single Mode enabled"
 msgstr ""
 
-#: ../src/playlist3.c:2687
+#: ../src/playlist3.c:2691
 msgid "Single Mode disabled"
 msgstr ""
 
-#: ../src/playlist3.c:2695
+#: ../src/playlist3.c:2699
 msgid "Consume Mode enabled"
 msgstr ""
 
-#: ../src/playlist3.c:2698
+#: ../src/playlist3.c:2702
 msgid "Consume Mode disabled"
 msgstr ""
 
-#: ../src/playlist3.c:2706
+#: ../src/playlist3.c:2710
 msgid "Repeat enabled"
 msgstr "重复播放已启用"
 
-#: ../src/playlist3.c:2709
+#: ../src/playlist3.c:2713
 msgid "Repeat disabled"
 msgstr "重复播放已禁用"
 
-#: ../src/playlist3.c:2717
+#: ../src/playlist3.c:2721
 msgid "Random enabled"
 msgstr "随机播放已启用"
 
-#: ../src/playlist3.c:2720
+#: ../src/playlist3.c:2724
 msgid "Random disabled"
 msgstr "随机播放已禁用"
 
@@ -986,10 +986,10 @@ msgstr "元数据提供者和浏览器扩展"
 msgid "Misc."
 msgstr "杂项"
 
-#: ../src/preferences.c:391 ../src/browsers/gmpc-metadata-browser2.c:3743
-#: ../src/browsers/gmpc-metadata-browser2.c:3749
-#: ../src/browsers/gmpc-metadata-browser2.c:4143
-#: ../src/browsers/gmpc-metadata-browser2.c:4769
+#: ../src/preferences.c:391 ../src/browsers/gmpc-metadata-browser2.c:3767
+#: ../src/browsers/gmpc-metadata-browser2.c:3773
+#: ../src/browsers/gmpc-metadata-browser2.c:4167
+#: ../src/browsers/gmpc-metadata-browser2.c:4815
 msgid "Unknown"
 msgstr "未知"
 
@@ -1298,10 +1298,10 @@ msgstr ""
 "in order to change these settings</i></span>"
 
 #: ../glade/preferences-server.ui.h:6
-#: ../src/browsers/gmpc-metadata-browser2.c:2141
-#: ../src/browsers/gmpc-metadata-browser2.c:3086
+#: ../src/browsers/gmpc-metadata-browser2.c:2143
+#: ../src/browsers/gmpc-metadata-browser2.c:3110
 #: ../src/gmpc-mpddata-treeview.gob:71 ../src/gmpc-mpddata-treeview.gob:650
-#: ../src/vala/gmpc-test-plugin.c:963
+#: ../src/vala/gmpc-test-plugin.c:1138
 msgid "Album"
 msgstr "专辑"
 
@@ -1310,8 +1310,8 @@ msgid "Enable crossfade"
 msgstr "启用"
 
 #: ../glade/preferences-server.ui.h:9
-#: ../src/browsers/gmpc-metadata-browser2.c:2164
-#: ../src/browsers/gmpc-metadata-browser2.c:3127
+#: ../src/browsers/gmpc-metadata-browser2.c:2166
+#: ../src/browsers/gmpc-metadata-browser2.c:3151
 #: ../src/gmpc-mpddata-treeview.gob:75
 msgid "Track"
 msgstr "音轨"
@@ -1463,32 +1463,32 @@ msgstr "搜索播放列表"
 msgid "Search playlist <query>"
 msgstr ""
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:541
+#: ../src/browsers/playlist3-current-playlist-browser.c:538
 msgid "Are you sure you want to clear the playlist?"
 msgstr "是否确定清空播放列表？"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:658
-#: ../src/browsers/playlist3-current-playlist-browser.c:678
-#: ../src/browsers/playlist3-current-playlist-browser.c:720
-#: ../src/browsers/playlist3-current-playlist-browser.c:742
+#: ../src/browsers/playlist3-current-playlist-browser.c:655
+#: ../src/browsers/playlist3-current-playlist-browser.c:675
+#: ../src/browsers/playlist3-current-playlist-browser.c:717
+#: ../src/browsers/playlist3-current-playlist-browser.c:739
 msgid "Your mpd has a broken 'addid', pasting will fail."
 msgstr ""
 
 #. add the delete widget
-#: ../src/browsers/playlist3-current-playlist-browser.c:771
+#: ../src/browsers/playlist3-current-playlist-browser.c:768
 msgid "Crop"
 msgstr "Crop"
 
 #. add the shuffle widget
-#: ../src/browsers/playlist3-current-playlist-browser.c:785
+#: ../src/browsers/playlist3-current-playlist-browser.c:782
 msgid "Shuffle"
 msgstr "打乱顺序"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:918
+#: ../src/browsers/playlist3-current-playlist-browser.c:915
 msgid "Add URL"
 msgstr "添加 URL"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:1007
+#: ../src/browsers/playlist3-current-playlist-browser.c:1004
 #, c-format
 msgid ""
 "<i>Playlist <b>\"%s\"</b> already exists\n"
@@ -1497,16 +1497,16 @@ msgstr ""
 "<i>播放列表 <b>“%s”</b> 已存在\n"
 "是否覆盖？</i>"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:1031
+#: ../src/browsers/playlist3-current-playlist-browser.c:1028
 msgid "Failed to save the playlist file."
 msgstr "保存播放列表失败。"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:1112
-#: ../src/browsers/playlist3-current-playlist-browser.c:1168
+#: ../src/browsers/playlist3-current-playlist-browser.c:1109
+#: ../src/browsers/playlist3-current-playlist-browser.c:1165
 msgid "Play Queue"
 msgstr "播放队列"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:1120
+#: ../src/browsers/playlist3-current-playlist-browser.c:1117
 msgid "Search Playlist"
 msgstr ""
 
@@ -1595,7 +1595,7 @@ msgid "Search database <query>"
 msgstr ""
 
 #: ../src/browsers/playlist3-find2-browser.c:87
-#: ../src/vala/gmpc-test-plugin.c:991
+#: ../src/vala/gmpc-test-plugin.c:1166
 msgid "Query"
 msgstr ""
 
@@ -1731,105 +1731,110 @@ msgstr ""
 msgid "Tag statistics"
 msgstr ""
 
-#: ../src/browsers/gmpc-nowplaying2.c:301
-#: ../src/browsers/gmpc-nowplaying2.c:1083
+#: ../src/browsers/gmpc-nowplaying2.c:303
+#: ../src/browsers/gmpc-nowplaying2.c:1087
 msgid "Format"
 msgstr ""
 
-#: ../src/browsers/gmpc-nowplaying2.c:301
-#: ../src/browsers/gmpc-nowplaying2.c:1083
+#: ../src/browsers/gmpc-nowplaying2.c:303
+#: ../src/browsers/gmpc-nowplaying2.c:1087
 msgid "Channel"
 msgstr ""
 
-#: ../src/browsers/gmpc-nowplaying2.c:301
-#: ../src/browsers/gmpc-nowplaying2.c:1083
+#: ../src/browsers/gmpc-nowplaying2.c:303
+#: ../src/browsers/gmpc-nowplaying2.c:1087
+msgid "Channels"
+msgstr ""
+
+#: ../src/browsers/gmpc-nowplaying2.c:303
+#: ../src/browsers/gmpc-nowplaying2.c:1087
 msgid "kHz"
 msgstr "kHz"
 
-#: ../src/browsers/gmpc-nowplaying2.c:301
-#: ../src/browsers/gmpc-nowplaying2.c:1083
+#: ../src/browsers/gmpc-nowplaying2.c:303
+#: ../src/browsers/gmpc-nowplaying2.c:1087
 msgid "kbps"
 msgstr ""
 
-#: ../src/browsers/gmpc-nowplaying2.c:1058
-#: ../src/browsers/gmpc-metadata-browser2.c:3089
+#: ../src/browsers/gmpc-nowplaying2.c:1060
+#: ../src/browsers/gmpc-metadata-browser2.c:3113
 #: ../src/gmpc-mpddata-treeview.gob:74 ../src/gmpc-mpddata-treeview.gob:662
 msgid "Genre"
 msgstr "流派"
 
-#: ../src/browsers/gmpc-nowplaying2.c:1107
-#: ../src/browsers/gmpc-metadata-browser2.c:3100
+#: ../src/browsers/gmpc-nowplaying2.c:1111
+#: ../src/browsers/gmpc-metadata-browser2.c:3124
 msgid "Codec"
 msgstr ""
 
-#: ../src/browsers/gmpc-nowplaying2.c:1128
-#: ../src/browsers/gmpc-metadata-browser2.c:3106
+#: ../src/browsers/gmpc-nowplaying2.c:1132
+#: ../src/browsers/gmpc-metadata-browser2.c:3130
 msgid "Length"
 msgstr ""
 
-#: ../src/browsers/gmpc-nowplaying2.c:1158
+#: ../src/browsers/gmpc-nowplaying2.c:1162
 msgid "Track number"
 msgstr "音轨号"
 
-#: ../src/browsers/gmpc-nowplaying2.c:1223
-#: ../src/browsers/gmpc-nowplaying2.c:1225
-#: ../src/browsers/gmpc-metadata-browser2.c:3200
-#: ../src/browsers/gmpc-metadata-browser2.c:3202
-#: ../src/browsers/gmpc-metadata-browser2.c:5216
+#: ../src/browsers/gmpc-nowplaying2.c:1227
+#: ../src/browsers/gmpc-nowplaying2.c:1229
+#: ../src/browsers/gmpc-metadata-browser2.c:3224
+#: ../src/browsers/gmpc-metadata-browser2.c:3226
+#: ../src/browsers/gmpc-metadata-browser2.c:5262
 msgid "Guitar Tabs"
 msgstr ""
 
-#: ../src/browsers/gmpc-nowplaying2.c:1249
-#: ../src/browsers/gmpc-nowplaying2.c:1251
-#: ../src/browsers/gmpc-metadata-browser2.c:3226
-#: ../src/browsers/gmpc-metadata-browser2.c:3228
-#: ../src/browsers/gmpc-metadata-browser2.c:5220
+#: ../src/browsers/gmpc-nowplaying2.c:1253
+#: ../src/browsers/gmpc-nowplaying2.c:1255
+#: ../src/browsers/gmpc-metadata-browser2.c:3250
+#: ../src/browsers/gmpc-metadata-browser2.c:3252
+#: ../src/browsers/gmpc-metadata-browser2.c:5266
 msgid "Similar Songs"
 msgstr "相似歌曲"
 
-#: ../src/browsers/gmpc-nowplaying2.c:1284
-#: ../src/browsers/gmpc-nowplaying2.c:1286
-#: ../src/browsers/gmpc-metadata-browser2.c:3261
-#: ../src/browsers/gmpc-metadata-browser2.c:3263
-#: ../src/browsers/gmpc-metadata-browser2.c:4242
-#: ../src/browsers/gmpc-metadata-browser2.c:4244
-#: ../src/browsers/gmpc-metadata-browser2.c:5208
+#: ../src/browsers/gmpc-nowplaying2.c:1288
+#: ../src/browsers/gmpc-nowplaying2.c:1290
+#: ../src/browsers/gmpc-metadata-browser2.c:3285
+#: ../src/browsers/gmpc-metadata-browser2.c:3287
+#: ../src/browsers/gmpc-metadata-browser2.c:4266
+#: ../src/browsers/gmpc-metadata-browser2.c:4268
+#: ../src/browsers/gmpc-metadata-browser2.c:5254
 msgid "Similar Artist"
 msgstr "相似作者"
 
-#: ../src/browsers/gmpc-nowplaying2.c:1306
-#: ../src/browsers/gmpc-nowplaying2.c:1308
-#: ../src/browsers/gmpc-metadata-browser2.c:3283
-#: ../src/browsers/gmpc-metadata-browser2.c:3285
-#: ../src/browsers/gmpc-metadata-browser2.c:3888
-#: ../src/browsers/gmpc-metadata-browser2.c:3890
-#: ../src/browsers/gmpc-metadata-browser2.c:4264
-#: ../src/browsers/gmpc-metadata-browser2.c:4266
+#: ../src/browsers/gmpc-nowplaying2.c:1310
+#: ../src/browsers/gmpc-nowplaying2.c:1312
+#: ../src/browsers/gmpc-metadata-browser2.c:3307
+#: ../src/browsers/gmpc-metadata-browser2.c:3309
+#: ../src/browsers/gmpc-metadata-browser2.c:3912
+#: ../src/browsers/gmpc-metadata-browser2.c:3914
+#: ../src/browsers/gmpc-metadata-browser2.c:4288
+#: ../src/browsers/gmpc-metadata-browser2.c:4290
 #: ../src/vala/gmpc-song-links.c:116
 msgid "Web Links"
 msgstr ""
 
-#: ../src/browsers/gmpc-nowplaying2.c:1369
+#: ../src/browsers/gmpc-nowplaying2.c:1373
 msgid "Other albums by"
 msgstr ""
 
-#: ../src/browsers/gmpc-nowplaying2.c:1473
-#: ../src/browsers/gmpc-metadata-browser2.c:4426
+#: ../src/browsers/gmpc-nowplaying2.c:1477
+#: ../src/browsers/gmpc-metadata-browser2.c:4472
 msgid "No Album"
 msgstr ""
 
-#: ../src/browsers/gmpc-nowplaying2.c:1655
+#: ../src/browsers/gmpc-nowplaying2.c:1659
 msgid "Now Playing"
 msgstr "播放中"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:693
-#: ../src/browsers/gmpc-metadata-browser2.c:1565
-#: ../src/browsers/gmpc-metadata-browser2.c:1762
-#: ../src/browsers/gmpc-metadata-browser2.c:1906
-#: ../src/browsers/gmpc-metadata-browser2.c:3139
-#: ../src/browsers/gmpc-metadata-browser2.c:3524
-#: ../src/browsers/gmpc-metadata-browser2.c:3799
-#: ../src/browsers/gmpc-metadata-browser2.c:4188
+#: ../src/browsers/gmpc-metadata-browser2.c:1566
+#: ../src/browsers/gmpc-metadata-browser2.c:1763
+#: ../src/browsers/gmpc-metadata-browser2.c:1908
+#: ../src/browsers/gmpc-metadata-browser2.c:3163
+#: ../src/browsers/gmpc-metadata-browser2.c:3548
+#: ../src/browsers/gmpc-metadata-browser2.c:3823
+#: ../src/browsers/gmpc-metadata-browser2.c:4212
 msgid "_Replace"
 msgstr ""
 
@@ -1852,78 +1857,78 @@ msgstr "正在获取"
 msgid "Metadata Browser"
 msgstr "元数据浏览器"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:2093
-#: ../src/browsers/gmpc-metadata-browser2.c:3083
-#: ../src/browsers/gmpc-metadata-browser2.c:3772
+#: ../src/browsers/gmpc-metadata-browser2.c:2096
+#: ../src/browsers/gmpc-metadata-browser2.c:3107
+#: ../src/browsers/gmpc-metadata-browser2.c:3796
 #: ../src/gmpc-mpddata-treeview.gob:70 ../src/gmpc-mpddata-treeview.gob:636
-#: ../src/vala/gmpc-test-plugin.c:951
+#: ../src/vala/gmpc-test-plugin.c:1127
 msgid "Artist"
 msgstr "艺术家"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:2134
+#: ../src/browsers/gmpc-metadata-browser2.c:2137
 msgid "Year"
 msgstr ""
 
-#: ../src/browsers/gmpc-metadata-browser2.c:2172
-#: ../src/browsers/gmpc-metadata-browser2.c:3785
-#: ../src/browsers/gmpc-metadata-browser2.c:4174
+#: ../src/browsers/gmpc-metadata-browser2.c:2174
+#: ../src/browsers/gmpc-metadata-browser2.c:3809
+#: ../src/browsers/gmpc-metadata-browser2.c:4198
 msgid "Songs"
 msgstr "歌曲"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:2946
+#: ../src/browsers/gmpc-metadata-browser2.c:2970
 msgid "Rating"
 msgstr ""
 
-#: ../src/browsers/gmpc-metadata-browser2.c:3092
+#: ../src/browsers/gmpc-metadata-browser2.c:3116
 #: ../src/gmpc-mpddata-treeview.gob:79 ../src/gmpc-mpddata-treeview.gob:674
 msgid "Date"
 msgstr "日期"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:3777
-#: ../src/browsers/gmpc-metadata-browser2.c:4166
+#: ../src/browsers/gmpc-metadata-browser2.c:3801
+#: ../src/browsers/gmpc-metadata-browser2.c:4190
 msgid "Genres"
 msgstr ""
 
-#: ../src/browsers/gmpc-metadata-browser2.c:3781
-#: ../src/browsers/gmpc-metadata-browser2.c:4170
+#: ../src/browsers/gmpc-metadata-browser2.c:3805
+#: ../src/browsers/gmpc-metadata-browser2.c:4194
 msgid "Dates"
 msgstr ""
 
-#: ../src/browsers/gmpc-metadata-browser2.c:3789
-#: ../src/browsers/gmpc-metadata-browser2.c:4178
+#: ../src/browsers/gmpc-metadata-browser2.c:3813
+#: ../src/browsers/gmpc-metadata-browser2.c:4202
 msgid "Playtime"
 msgstr "播放时间"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:3830
-#: ../src/browsers/gmpc-metadata-browser2.c:3832
-#: ../src/browsers/gmpc-metadata-browser2.c:5204
+#: ../src/browsers/gmpc-metadata-browser2.c:3854
+#: ../src/browsers/gmpc-metadata-browser2.c:3856
+#: ../src/browsers/gmpc-metadata-browser2.c:5250
 msgid "Album information"
 msgstr "专辑介绍"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:3864
-#: ../src/browsers/gmpc-metadata-browser2.c:3866
+#: ../src/browsers/gmpc-metadata-browser2.c:3888
+#: ../src/browsers/gmpc-metadata-browser2.c:3890
 msgid "Song list"
 msgstr ""
 
-#: ../src/browsers/gmpc-metadata-browser2.c:4219
-#: ../src/browsers/gmpc-metadata-browser2.c:4221
-#: ../src/browsers/gmpc-metadata-browser2.c:5200
+#: ../src/browsers/gmpc-metadata-browser2.c:4243
+#: ../src/browsers/gmpc-metadata-browser2.c:4245
+#: ../src/browsers/gmpc-metadata-browser2.c:5246
 msgid "Artist information"
 msgstr "艺术家简介"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:4322
+#: ../src/browsers/gmpc-metadata-browser2.c:4346
 msgid "Albums by"
 msgstr ""
 
-#: ../src/browsers/gmpc-metadata-browser2.c:5197
+#: ../src/browsers/gmpc-metadata-browser2.c:5243
 msgid "Enable/disable metadata options"
 msgstr ""
 
-#: ../src/browsers/gmpc-metadata-browser2.c:5212
+#: ../src/browsers/gmpc-metadata-browser2.c:5258
 msgid "Lyrics"
 msgstr "歌词"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:5224
+#: ../src/browsers/gmpc-metadata-browser2.c:5270
 msgid "Web links"
 msgstr ""
 
@@ -1932,7 +1937,7 @@ msgid "Markup"
 msgstr ""
 
 #: ../src/gmpc-mpddata-treeview.gob:72 ../src/gmpc-mpddata-treeview.gob:623
-#: ../src/vala/gmpc-test-plugin.c:978
+#: ../src/vala/gmpc-test-plugin.c:1151
 msgid "Title"
 msgstr "标题"
 
@@ -2016,7 +2021,7 @@ msgid "Select file"
 msgstr "选择文件"
 
 #: ../src/gmpc-meta-text-view.gob:112 ../src/gmpc-metaimage.gob:744
-#: ../src/vala/gmpc-test-plugin.c:1270
+#: ../src/vala/gmpc-test-plugin.c:1448
 msgid "Metadata selector"
 msgstr "元数据选择器"
 
@@ -2048,7 +2053,7 @@ msgstr "正在获取专辑介绍"
 msgid "Not Available"
 msgstr "不可用"
 
-#: ../src/gmpc-meta-text-view.gob:448 ../src/gmpc-metaimage.gob:781
+#: ../src/gmpc-meta-text-view.gob:448 ../src/gmpc-metaimage.gob:782
 msgid "Select File"
 msgstr "选择文件"
 
@@ -2056,11 +2061,11 @@ msgstr "选择文件"
 msgid "Text Document"
 msgstr "文本文档"
 
-#: ../src/gmpc-meta-text-view.gob:457 ../src/gmpc-metaimage.gob:791
+#: ../src/gmpc-meta-text-view.gob:457 ../src/gmpc-metaimage.gob:792
 msgid "All"
 msgstr "所有文件"
 
-#: ../src/gmpc-metaimage.gob:786
+#: ../src/gmpc-metaimage.gob:787
 msgid "Images"
 msgstr "图像文件"
 
@@ -2115,59 +2120,51 @@ msgstr "获取可用命令的列表"
 msgid "Lookup %s on %s"
 msgstr ""
 
-#: ../src/vala/gmpc-test-plugin.c:133 ../src/vala/gmpc-test-plugin.c:174
-msgid "Uri"
-msgstr ""
-
-#: ../src/vala/gmpc-test-plugin.c:137 ../src/vala/gmpc-test-plugin.c:178
+#: ../src/vala/gmpc-test-plugin.c:150 ../src/vala/gmpc-test-plugin.c:225
 msgid "Provider"
 msgstr ""
 
-#: ../src/vala/gmpc-test-plugin.c:143
+#: ../src/vala/gmpc-test-plugin.c:156
 msgid "Filetype"
 msgstr "文件类型"
 
-#: ../src/vala/gmpc-test-plugin.c:149
+#: ../src/vala/gmpc-test-plugin.c:162
 msgid "Size"
 msgstr "大小"
 
-#: ../src/vala/gmpc-test-plugin.c:149
+#: ../src/vala/gmpc-test-plugin.c:162
 msgid "wxh"
 msgstr ""
 
-#: ../src/vala/gmpc-test-plugin.c:813
-msgid "Cover"
-msgstr "封面"
+#: ../src/vala/gmpc-test-plugin.c:183 ../src/vala/gmpc-test-plugin.c:242
+msgid "Set"
+msgstr ""
 
-#: ../src/vala/gmpc-test-plugin.c:826
-msgid "Lyric"
-msgstr "歌词"
-
-#: ../src/vala/gmpc-test-plugin.c:930
+#: ../src/vala/gmpc-test-plugin.c:1101
 msgid "Insufficient information to store/fetch this metadata"
 msgstr ""
 
-#: ../src/vala/gmpc-test-plugin.c:942
+#: ../src/vala/gmpc-test-plugin.c:1110
 msgid "Artist art"
 msgstr ""
 
-#: ../src/vala/gmpc-test-plugin.c:943
+#: ../src/vala/gmpc-test-plugin.c:1111
 msgid "Album art"
 msgstr ""
 
-#: ../src/vala/gmpc-test-plugin.c:944
-msgid "Song Lyrics"
-msgstr "歌曲歌词"
+#: ../src/vala/gmpc-test-plugin.c:1112
+msgid "Song lyrics"
+msgstr ""
 
-#: ../src/vala/gmpc-test-plugin.c:945
+#: ../src/vala/gmpc-test-plugin.c:1113
 msgid "Album Info"
 msgstr "专辑信息"
 
-#: ../src/vala/gmpc-test-plugin.c:946
+#: ../src/vala/gmpc-test-plugin.c:1114
 msgid "Artist Biography"
 msgstr ""
 
-#: ../src/vala/gmpc-test-plugin.c:947
+#: ../src/vala/gmpc-test-plugin.c:1115
 msgid "Guitar Tab"
 msgstr ""
 

@@ -8,24 +8,24 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-12-23 15:44+0100\n"
-"PO-Revision-Date: 2009-12-17 12:47+0000\n"
-"Last-Translator: Christian Weiske <cweiske@cweiske.de>\n"
+"POT-Creation-Date: 2010-01-23 17:28+0100\n"
+"PO-Revision-Date: 2010-01-18 09:07+0000\n"
+"Last-Translator: Wieland Hoffmann <Unknown>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-12-23 17:40+0000\n"
+"X-Launchpad-Export-Date: 2010-02-04 20:12+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
 msgid "A gnome frontend for the mpd daemon"
 msgstr "Ein Gnome-Front-End für den Music Player Daemon"
 
-#: ../data/gmpc.desktop.in.h:2 ../src/main.c:346 ../src/tray-icon2.c:593
-#: ../src/browsers/gmpc-nowplaying2.c:1584
-#: ../src/browsers/gmpc-nowplaying2.c:1586
+#: ../data/gmpc.desktop.in.h:2 ../src/main.c:346 ../src/playlist3.c:1944
+#: ../src/tray-icon2.c:593 ../src/browsers/gmpc-nowplaying2.c:1588
+#: ../src/browsers/gmpc-nowplaying2.c:1590
 msgid "Gnome Music Player Client"
 msgstr "Gnome Music Player Client"
 
@@ -324,7 +324,7 @@ msgstr "Mit mpd verbunden"
 msgid "Disconnected from mpd"
 msgstr "Verbindung von mpd getrennt"
 
-#: ../src/MetaData/metadata.c:295
+#: ../src/MetaData/metadata.c:294
 msgid ""
 "A new metadata plugin was added, gmpc has purged all failed hits from the "
 "cache"
@@ -332,7 +332,7 @@ msgstr ""
 "Ein neues Metadaten-Plugin wurde hinzugefügt. gmpc hat alle fehlgeschlagenen "
 "Treffer aus dem Cache entfernt"
 
-#: ../src/MetaData/metadata.c:1422
+#: ../src/MetaData/metadata.c:1432
 msgid "Metadata Handler"
 msgstr "Metadaten-Verwaltung"
 
@@ -497,8 +497,8 @@ msgstr "aktivieren"
 msgid "disable"
 msgstr "deaktivieren"
 
-#: ../src/mpdinteraction.c:108 ../src/playlist3.c:1776 ../src/playlist3.c:1789
-#: ../src/playlist3.c:1804 ../src/playlist3.c:1817
+#: ../src/mpdinteraction.c:108 ../src/playlist3.c:1779 ../src/playlist3.c:1792
+#: ../src/playlist3.c:1807 ../src/playlist3.c:1820
 #: ../glade/preferences-server.ui.h:8
 msgid "Off"
 msgstr "Aus"
@@ -775,12 +775,12 @@ msgstr "Bewerten"
 msgid "Connected"
 msgstr "Verbunden"
 
-#: ../src/playlist3.c:796 ../src/playlist3.c:2310
+#: ../src/playlist3.c:796 ../src/playlist3.c:2314
 msgid "Not Connected"
 msgstr "Nicht verbunden"
 
 #: ../src/playlist3.c:812 ../src/playlist3.c:817 ../src/playlist3.c:826
-#: ../src/playlist3.c:831 ../src/playlist3.c:1736 ../src/playlist3.c:1742
+#: ../src/playlist3.c:831 ../src/playlist3.c:1738 ../src/playlist3.c:1745
 msgid "GMPC"
 msgstr "GMPC"
 
@@ -795,106 +795,106 @@ msgstr "Nicht verbunden"
 #. *
 #. * Set paused in Window string
 #. 
-#: ../src/playlist3.c:1692 ../src/playlist3.c:1697
+#: ../src/playlist3.c:1693 ../src/playlist3.c:1698
 msgid "paused"
 msgstr "Pausiert"
 
-#: ../src/playlist3.c:1775
+#: ../src/playlist3.c:1778
 #, c-format
 msgid "Repeat: %s"
 msgstr "Wiederholung: %s"
 
-#: ../src/playlist3.c:1776 ../src/playlist3.c:1789 ../src/playlist3.c:1804
-#: ../src/playlist3.c:1817
+#: ../src/playlist3.c:1779 ../src/playlist3.c:1792 ../src/playlist3.c:1807
+#: ../src/playlist3.c:1820
 msgid "On"
 msgstr "An"
 
-#: ../src/playlist3.c:1788
+#: ../src/playlist3.c:1791
 #, c-format
 msgid "Random: %s"
 msgstr "Zufall: %s"
 
-#: ../src/playlist3.c:1803
+#: ../src/playlist3.c:1806
 #, c-format
 msgid "Single mode: %s"
 msgstr "Einzellied Modus: %s"
 
-#: ../src/playlist3.c:1816
+#: ../src/playlist3.c:1819
 #, c-format
 msgid "Consume: %s"
 msgstr "Konsumieren Modus: %s"
 
-#: ../src/playlist3.c:1877
+#: ../src/playlist3.c:1880
 msgid "MPD Reported the following error"
 msgstr "MPD meldete folgenden Fehler"
 
-#: ../src/playlist3.c:2010 ../src/playlist3.c:2016
+#: ../src/playlist3.c:2014 ../src/playlist3.c:2020
 msgid "Profile"
 msgstr "Profil"
 
-#: ../src/playlist3.c:2011
+#: ../src/playlist3.c:2015
 msgid "added"
 msgstr "hinzugefügt"
 
-#: ../src/playlist3.c:2018
+#: ../src/playlist3.c:2022
 msgid "changed hostname to:"
 msgstr "Hostname geändert zu:"
 
 #. Update DB
-#: ../src/playlist3.c:2128
+#: ../src/playlist3.c:2132
 msgid "Update Database"
 msgstr "Aktualisiere Datenbank"
 
 #. Server Information
-#: ../src/playlist3.c:2137 ../src/vala/gmpc-test-plugin.c:919
+#: ../src/playlist3.c:2141
 msgid "Information"
 msgstr "Information"
 
-#: ../src/playlist3.c:2241
+#: ../src/playlist3.c:2245
 msgid "By"
 msgstr "Von"
 
-#: ../src/playlist3.c:2247
+#: ../src/playlist3.c:2251
 msgid "From"
 msgstr "Von"
 
-#: ../src/playlist3.c:2303
+#: ../src/playlist3.c:2307
 msgid "Not Playing"
 msgstr "Keine Wiedergabe"
 
-#: ../src/playlist3.c:2417
+#: ../src/playlist3.c:2421
 msgid "Interface"
 msgstr "Oberfläche"
 
-#: ../src/playlist3.c:2684
+#: ../src/playlist3.c:2688
 msgid "Single Mode enabled"
 msgstr "Einzelmodus aktiviert"
 
-#: ../src/playlist3.c:2687
+#: ../src/playlist3.c:2691
 msgid "Single Mode disabled"
 msgstr "Einzelmodus deaktiviert"
 
-#: ../src/playlist3.c:2695
+#: ../src/playlist3.c:2699
 msgid "Consume Mode enabled"
 msgstr "Verbrauchsmodus aktiviert"
 
-#: ../src/playlist3.c:2698
+#: ../src/playlist3.c:2702
 msgid "Consume Mode disabled"
 msgstr "Verbrauchsmodus deaktiviert"
 
-#: ../src/playlist3.c:2706
+#: ../src/playlist3.c:2710
 msgid "Repeat enabled"
 msgstr "Wiederholung aktiviert"
 
-#: ../src/playlist3.c:2709
+#: ../src/playlist3.c:2713
 msgid "Repeat disabled"
 msgstr "Wiederholung deaktiviert"
 
-#: ../src/playlist3.c:2717
+#: ../src/playlist3.c:2721
 msgid "Random enabled"
 msgstr "Zufall aktiviert"
 
-#: ../src/playlist3.c:2720
+#: ../src/playlist3.c:2724
 msgid "Random disabled"
 msgstr "Zufall deaktiviert"
 
@@ -1033,10 +1033,10 @@ msgstr "Metadaten Anbieter und Browser Erweiterung"
 msgid "Misc."
 msgstr "Sonstiges"
 
-#: ../src/preferences.c:391 ../src/browsers/gmpc-metadata-browser2.c:3743
-#: ../src/browsers/gmpc-metadata-browser2.c:3749
-#: ../src/browsers/gmpc-metadata-browser2.c:4143
-#: ../src/browsers/gmpc-metadata-browser2.c:4769
+#: ../src/preferences.c:391 ../src/browsers/gmpc-metadata-browser2.c:3767
+#: ../src/browsers/gmpc-metadata-browser2.c:3773
+#: ../src/browsers/gmpc-metadata-browser2.c:4167
+#: ../src/browsers/gmpc-metadata-browser2.c:4815
 msgid "Unknown"
 msgstr "Unbekannt"
 
@@ -1365,10 +1365,10 @@ msgstr ""
 "um diese Einstellungen vorzunehmen</i></span>"
 
 #: ../glade/preferences-server.ui.h:6
-#: ../src/browsers/gmpc-metadata-browser2.c:2141
-#: ../src/browsers/gmpc-metadata-browser2.c:3086
+#: ../src/browsers/gmpc-metadata-browser2.c:2143
+#: ../src/browsers/gmpc-metadata-browser2.c:3110
 #: ../src/gmpc-mpddata-treeview.gob:71 ../src/gmpc-mpddata-treeview.gob:650
-#: ../src/vala/gmpc-test-plugin.c:963
+#: ../src/vala/gmpc-test-plugin.c:1138
 msgid "Album"
 msgstr "Album"
 
@@ -1377,8 +1377,8 @@ msgid "Enable crossfade"
 msgstr "Überblenden einschalten"
 
 #: ../glade/preferences-server.ui.h:9
-#: ../src/browsers/gmpc-metadata-browser2.c:2164
-#: ../src/browsers/gmpc-metadata-browser2.c:3127
+#: ../src/browsers/gmpc-metadata-browser2.c:2166
+#: ../src/browsers/gmpc-metadata-browser2.c:3151
 #: ../src/gmpc-mpddata-treeview.gob:75
 msgid "Track"
 msgstr "Stück"
@@ -1531,33 +1531,33 @@ msgstr "Wiedergabeliste durchsuchen"
 msgid "Search playlist <query>"
 msgstr "Durchsuche Wiedergabeliste nach <query>"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:541
+#: ../src/browsers/playlist3-current-playlist-browser.c:538
 msgid "Are you sure you want to clear the playlist?"
 msgstr "Sind sie sicher, dass Sie die Wiedergabeliste löschen wollen?"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:658
-#: ../src/browsers/playlist3-current-playlist-browser.c:678
-#: ../src/browsers/playlist3-current-playlist-browser.c:720
-#: ../src/browsers/playlist3-current-playlist-browser.c:742
+#: ../src/browsers/playlist3-current-playlist-browser.c:655
+#: ../src/browsers/playlist3-current-playlist-browser.c:675
+#: ../src/browsers/playlist3-current-playlist-browser.c:717
+#: ../src/browsers/playlist3-current-playlist-browser.c:739
 msgid "Your mpd has a broken 'addid', pasting will fail."
 msgstr ""
 "Ihr mpd hat eine fehlerhafte 'addid', das Einfügen wird fehlschlagen."
 
 #. add the delete widget
-#: ../src/browsers/playlist3-current-playlist-browser.c:771
+#: ../src/browsers/playlist3-current-playlist-browser.c:768
 msgid "Crop"
 msgstr "Freistellen"
 
 #. add the shuffle widget
-#: ../src/browsers/playlist3-current-playlist-browser.c:785
+#: ../src/browsers/playlist3-current-playlist-browser.c:782
 msgid "Shuffle"
 msgstr "Zufällig"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:918
+#: ../src/browsers/playlist3-current-playlist-browser.c:915
 msgid "Add URL"
 msgstr "URL hinzufügen"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:1007
+#: ../src/browsers/playlist3-current-playlist-browser.c:1004
 #, c-format
 msgid ""
 "<i>Playlist <b>\"%s\"</b> already exists\n"
@@ -1566,16 +1566,16 @@ msgstr ""
 "<i>Wiedergabeliste <b>\"%s\"</b> existiert bereits\n"
 "Überschreiben?</i>"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:1031
+#: ../src/browsers/playlist3-current-playlist-browser.c:1028
 msgid "Failed to save the playlist file."
 msgstr "Die Wiedergabeliste konnte nicht gespeichert werden."
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:1112
-#: ../src/browsers/playlist3-current-playlist-browser.c:1168
+#: ../src/browsers/playlist3-current-playlist-browser.c:1109
+#: ../src/browsers/playlist3-current-playlist-browser.c:1165
 msgid "Play Queue"
 msgstr "Wiedergabe-Warteschlange"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:1120
+#: ../src/browsers/playlist3-current-playlist-browser.c:1117
 msgid "Search Playlist"
 msgstr "Wiedergabeliste durchsuchen"
 
@@ -1672,7 +1672,7 @@ msgid "Search database <query>"
 msgstr "Durchsuche Datenbank nach <query>"
 
 #: ../src/browsers/playlist3-find2-browser.c:87
-#: ../src/vala/gmpc-test-plugin.c:991
+#: ../src/vala/gmpc-test-plugin.c:1166
 msgid "Query"
 msgstr "Suche"
 
@@ -1808,105 +1808,110 @@ msgstr "Tag Felder"
 msgid "Tag statistics"
 msgstr "Tag Statistiken"
 
-#: ../src/browsers/gmpc-nowplaying2.c:301
-#: ../src/browsers/gmpc-nowplaying2.c:1083
+#: ../src/browsers/gmpc-nowplaying2.c:303
+#: ../src/browsers/gmpc-nowplaying2.c:1087
 msgid "Format"
 msgstr "Format"
 
-#: ../src/browsers/gmpc-nowplaying2.c:301
-#: ../src/browsers/gmpc-nowplaying2.c:1083
+#: ../src/browsers/gmpc-nowplaying2.c:303
+#: ../src/browsers/gmpc-nowplaying2.c:1087
 msgid "Channel"
 msgstr "Kanäle"
 
-#: ../src/browsers/gmpc-nowplaying2.c:301
-#: ../src/browsers/gmpc-nowplaying2.c:1083
+#: ../src/browsers/gmpc-nowplaying2.c:303
+#: ../src/browsers/gmpc-nowplaying2.c:1087
+msgid "Channels"
+msgstr ""
+
+#: ../src/browsers/gmpc-nowplaying2.c:303
+#: ../src/browsers/gmpc-nowplaying2.c:1087
 msgid "kHz"
 msgstr "kHz"
 
-#: ../src/browsers/gmpc-nowplaying2.c:301
-#: ../src/browsers/gmpc-nowplaying2.c:1083
+#: ../src/browsers/gmpc-nowplaying2.c:303
+#: ../src/browsers/gmpc-nowplaying2.c:1087
 msgid "kbps"
 msgstr "Kbps"
 
-#: ../src/browsers/gmpc-nowplaying2.c:1058
-#: ../src/browsers/gmpc-metadata-browser2.c:3089
+#: ../src/browsers/gmpc-nowplaying2.c:1060
+#: ../src/browsers/gmpc-metadata-browser2.c:3113
 #: ../src/gmpc-mpddata-treeview.gob:74 ../src/gmpc-mpddata-treeview.gob:662
 msgid "Genre"
 msgstr "Genre"
 
-#: ../src/browsers/gmpc-nowplaying2.c:1107
-#: ../src/browsers/gmpc-metadata-browser2.c:3100
+#: ../src/browsers/gmpc-nowplaying2.c:1111
+#: ../src/browsers/gmpc-metadata-browser2.c:3124
 msgid "Codec"
 msgstr "Codec"
 
-#: ../src/browsers/gmpc-nowplaying2.c:1128
-#: ../src/browsers/gmpc-metadata-browser2.c:3106
+#: ../src/browsers/gmpc-nowplaying2.c:1132
+#: ../src/browsers/gmpc-metadata-browser2.c:3130
 msgid "Length"
 msgstr "Länge"
 
-#: ../src/browsers/gmpc-nowplaying2.c:1158
+#: ../src/browsers/gmpc-nowplaying2.c:1162
 msgid "Track number"
 msgstr "Stück"
 
-#: ../src/browsers/gmpc-nowplaying2.c:1223
-#: ../src/browsers/gmpc-nowplaying2.c:1225
-#: ../src/browsers/gmpc-metadata-browser2.c:3200
-#: ../src/browsers/gmpc-metadata-browser2.c:3202
-#: ../src/browsers/gmpc-metadata-browser2.c:5216
+#: ../src/browsers/gmpc-nowplaying2.c:1227
+#: ../src/browsers/gmpc-nowplaying2.c:1229
+#: ../src/browsers/gmpc-metadata-browser2.c:3224
+#: ../src/browsers/gmpc-metadata-browser2.c:3226
+#: ../src/browsers/gmpc-metadata-browser2.c:5262
 msgid "Guitar Tabs"
 msgstr "Gitarren-Tabs"
 
-#: ../src/browsers/gmpc-nowplaying2.c:1249
-#: ../src/browsers/gmpc-nowplaying2.c:1251
-#: ../src/browsers/gmpc-metadata-browser2.c:3226
-#: ../src/browsers/gmpc-metadata-browser2.c:3228
-#: ../src/browsers/gmpc-metadata-browser2.c:5220
+#: ../src/browsers/gmpc-nowplaying2.c:1253
+#: ../src/browsers/gmpc-nowplaying2.c:1255
+#: ../src/browsers/gmpc-metadata-browser2.c:3250
+#: ../src/browsers/gmpc-metadata-browser2.c:3252
+#: ../src/browsers/gmpc-metadata-browser2.c:5266
 msgid "Similar Songs"
 msgstr "Ähnliche Lieder"
 
-#: ../src/browsers/gmpc-nowplaying2.c:1284
-#: ../src/browsers/gmpc-nowplaying2.c:1286
-#: ../src/browsers/gmpc-metadata-browser2.c:3261
-#: ../src/browsers/gmpc-metadata-browser2.c:3263
-#: ../src/browsers/gmpc-metadata-browser2.c:4242
-#: ../src/browsers/gmpc-metadata-browser2.c:4244
-#: ../src/browsers/gmpc-metadata-browser2.c:5208
+#: ../src/browsers/gmpc-nowplaying2.c:1288
+#: ../src/browsers/gmpc-nowplaying2.c:1290
+#: ../src/browsers/gmpc-metadata-browser2.c:3285
+#: ../src/browsers/gmpc-metadata-browser2.c:3287
+#: ../src/browsers/gmpc-metadata-browser2.c:4266
+#: ../src/browsers/gmpc-metadata-browser2.c:4268
+#: ../src/browsers/gmpc-metadata-browser2.c:5254
 msgid "Similar Artist"
 msgstr "Ähnliche Künstler"
 
-#: ../src/browsers/gmpc-nowplaying2.c:1306
-#: ../src/browsers/gmpc-nowplaying2.c:1308
-#: ../src/browsers/gmpc-metadata-browser2.c:3283
-#: ../src/browsers/gmpc-metadata-browser2.c:3285
-#: ../src/browsers/gmpc-metadata-browser2.c:3888
-#: ../src/browsers/gmpc-metadata-browser2.c:3890
-#: ../src/browsers/gmpc-metadata-browser2.c:4264
-#: ../src/browsers/gmpc-metadata-browser2.c:4266
+#: ../src/browsers/gmpc-nowplaying2.c:1310
+#: ../src/browsers/gmpc-nowplaying2.c:1312
+#: ../src/browsers/gmpc-metadata-browser2.c:3307
+#: ../src/browsers/gmpc-metadata-browser2.c:3309
+#: ../src/browsers/gmpc-metadata-browser2.c:3912
+#: ../src/browsers/gmpc-metadata-browser2.c:3914
+#: ../src/browsers/gmpc-metadata-browser2.c:4288
+#: ../src/browsers/gmpc-metadata-browser2.c:4290
 #: ../src/vala/gmpc-song-links.c:116
 msgid "Web Links"
 msgstr "Links"
 
-#: ../src/browsers/gmpc-nowplaying2.c:1369
+#: ../src/browsers/gmpc-nowplaying2.c:1373
 msgid "Other albums by"
 msgstr "Andere Alben von"
 
-#: ../src/browsers/gmpc-nowplaying2.c:1473
-#: ../src/browsers/gmpc-metadata-browser2.c:4426
+#: ../src/browsers/gmpc-nowplaying2.c:1477
+#: ../src/browsers/gmpc-metadata-browser2.c:4472
 msgid "No Album"
 msgstr "Kein Album"
 
-#: ../src/browsers/gmpc-nowplaying2.c:1655
+#: ../src/browsers/gmpc-nowplaying2.c:1659
 msgid "Now Playing"
 msgstr "Aktueller Titel"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:693
-#: ../src/browsers/gmpc-metadata-browser2.c:1565
-#: ../src/browsers/gmpc-metadata-browser2.c:1762
-#: ../src/browsers/gmpc-metadata-browser2.c:1906
-#: ../src/browsers/gmpc-metadata-browser2.c:3139
-#: ../src/browsers/gmpc-metadata-browser2.c:3524
-#: ../src/browsers/gmpc-metadata-browser2.c:3799
-#: ../src/browsers/gmpc-metadata-browser2.c:4188
+#: ../src/browsers/gmpc-metadata-browser2.c:1566
+#: ../src/browsers/gmpc-metadata-browser2.c:1763
+#: ../src/browsers/gmpc-metadata-browser2.c:1908
+#: ../src/browsers/gmpc-metadata-browser2.c:3163
+#: ../src/browsers/gmpc-metadata-browser2.c:3548
+#: ../src/browsers/gmpc-metadata-browser2.c:3823
+#: ../src/browsers/gmpc-metadata-browser2.c:4212
 msgid "_Replace"
 msgstr "_Ersetzen"
 
@@ -1929,78 +1934,78 @@ msgstr "Herunterladen"
 msgid "Metadata Browser"
 msgstr "Metadaten-Browser"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:2093
-#: ../src/browsers/gmpc-metadata-browser2.c:3083
-#: ../src/browsers/gmpc-metadata-browser2.c:3772
+#: ../src/browsers/gmpc-metadata-browser2.c:2096
+#: ../src/browsers/gmpc-metadata-browser2.c:3107
+#: ../src/browsers/gmpc-metadata-browser2.c:3796
 #: ../src/gmpc-mpddata-treeview.gob:70 ../src/gmpc-mpddata-treeview.gob:636
-#: ../src/vala/gmpc-test-plugin.c:951
+#: ../src/vala/gmpc-test-plugin.c:1127
 msgid "Artist"
 msgstr "Künstler"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:2134
+#: ../src/browsers/gmpc-metadata-browser2.c:2137
 msgid "Year"
 msgstr "Jahr"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:2172
-#: ../src/browsers/gmpc-metadata-browser2.c:3785
-#: ../src/browsers/gmpc-metadata-browser2.c:4174
+#: ../src/browsers/gmpc-metadata-browser2.c:2174
+#: ../src/browsers/gmpc-metadata-browser2.c:3809
+#: ../src/browsers/gmpc-metadata-browser2.c:4198
 msgid "Songs"
 msgstr "Lieder"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:2946
+#: ../src/browsers/gmpc-metadata-browser2.c:2970
 msgid "Rating"
 msgstr "Bewertung"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:3092
+#: ../src/browsers/gmpc-metadata-browser2.c:3116
 #: ../src/gmpc-mpddata-treeview.gob:79 ../src/gmpc-mpddata-treeview.gob:674
 msgid "Date"
 msgstr "Datum"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:3777
-#: ../src/browsers/gmpc-metadata-browser2.c:4166
+#: ../src/browsers/gmpc-metadata-browser2.c:3801
+#: ../src/browsers/gmpc-metadata-browser2.c:4190
 msgid "Genres"
 msgstr "Genres"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:3781
-#: ../src/browsers/gmpc-metadata-browser2.c:4170
+#: ../src/browsers/gmpc-metadata-browser2.c:3805
+#: ../src/browsers/gmpc-metadata-browser2.c:4194
 msgid "Dates"
 msgstr "Data"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:3789
-#: ../src/browsers/gmpc-metadata-browser2.c:4178
+#: ../src/browsers/gmpc-metadata-browser2.c:3813
+#: ../src/browsers/gmpc-metadata-browser2.c:4202
 msgid "Playtime"
 msgstr "Laufzeit"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:3830
-#: ../src/browsers/gmpc-metadata-browser2.c:3832
-#: ../src/browsers/gmpc-metadata-browser2.c:5204
+#: ../src/browsers/gmpc-metadata-browser2.c:3854
+#: ../src/browsers/gmpc-metadata-browser2.c:3856
+#: ../src/browsers/gmpc-metadata-browser2.c:5250
 msgid "Album information"
 msgstr "Album Information"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:3864
-#: ../src/browsers/gmpc-metadata-browser2.c:3866
+#: ../src/browsers/gmpc-metadata-browser2.c:3888
+#: ../src/browsers/gmpc-metadata-browser2.c:3890
 msgid "Song list"
 msgstr ""
 
-#: ../src/browsers/gmpc-metadata-browser2.c:4219
-#: ../src/browsers/gmpc-metadata-browser2.c:4221
-#: ../src/browsers/gmpc-metadata-browser2.c:5200
+#: ../src/browsers/gmpc-metadata-browser2.c:4243
+#: ../src/browsers/gmpc-metadata-browser2.c:4245
+#: ../src/browsers/gmpc-metadata-browser2.c:5246
 msgid "Artist information"
 msgstr "Künstler informationen"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:4322
+#: ../src/browsers/gmpc-metadata-browser2.c:4346
 msgid "Albums by"
-msgstr ""
+msgstr "Alben von"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:5197
+#: ../src/browsers/gmpc-metadata-browser2.c:5243
 msgid "Enable/disable metadata options"
 msgstr "Metadaten Informationen anzeigen/ausblenden"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:5212
+#: ../src/browsers/gmpc-metadata-browser2.c:5258
 msgid "Lyrics"
 msgstr "Liedtexte"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:5224
+#: ../src/browsers/gmpc-metadata-browser2.c:5270
 msgid "Web links"
 msgstr "Links"
 
@@ -2009,7 +2014,7 @@ msgid "Markup"
 msgstr "Hervorhebungen (Markup)"
 
 #: ../src/gmpc-mpddata-treeview.gob:72 ../src/gmpc-mpddata-treeview.gob:623
-#: ../src/vala/gmpc-test-plugin.c:978
+#: ../src/vala/gmpc-test-plugin.c:1151
 msgid "Title"
 msgstr "Titel"
 
@@ -2093,7 +2098,7 @@ msgid "Select file"
 msgstr "Wähle Datei"
 
 #: ../src/gmpc-meta-text-view.gob:112 ../src/gmpc-metaimage.gob:744
-#: ../src/vala/gmpc-test-plugin.c:1270
+#: ../src/vala/gmpc-test-plugin.c:1448
 msgid "Metadata selector"
 msgstr "Metadaten-Wähler"
 
@@ -2125,7 +2130,7 @@ msgstr "Lade Album-Informationen"
 msgid "Not Available"
 msgstr "Nicht verfügbar"
 
-#: ../src/gmpc-meta-text-view.gob:448 ../src/gmpc-metaimage.gob:781
+#: ../src/gmpc-meta-text-view.gob:448 ../src/gmpc-metaimage.gob:782
 msgid "Select File"
 msgstr "Wähle Datei"
 
@@ -2133,11 +2138,11 @@ msgstr "Wähle Datei"
 msgid "Text Document"
 msgstr "Textdokument"
 
-#: ../src/gmpc-meta-text-view.gob:457 ../src/gmpc-metaimage.gob:791
+#: ../src/gmpc-meta-text-view.gob:457 ../src/gmpc-metaimage.gob:792
 msgid "All"
 msgstr "Alle"
 
-#: ../src/gmpc-metaimage.gob:786
+#: ../src/gmpc-metaimage.gob:787
 msgid "Images"
 msgstr "Bilder"
 
@@ -2195,59 +2200,51 @@ msgstr "Liste der verfügbaren Befehle"
 msgid "Lookup %s on %s"
 msgstr "Schlage %s bei %s nach"
 
-#: ../src/vala/gmpc-test-plugin.c:133 ../src/vala/gmpc-test-plugin.c:174
-msgid "Uri"
-msgstr "Uri"
-
-#: ../src/vala/gmpc-test-plugin.c:137 ../src/vala/gmpc-test-plugin.c:178
+#: ../src/vala/gmpc-test-plugin.c:150 ../src/vala/gmpc-test-plugin.c:225
 msgid "Provider"
 msgstr "Anbieter"
 
-#: ../src/vala/gmpc-test-plugin.c:143
+#: ../src/vala/gmpc-test-plugin.c:156
 msgid "Filetype"
 msgstr "Dateityp"
 
-#: ../src/vala/gmpc-test-plugin.c:149
+#: ../src/vala/gmpc-test-plugin.c:162
 msgid "Size"
 msgstr "Größe"
 
-#: ../src/vala/gmpc-test-plugin.c:149
+#: ../src/vala/gmpc-test-plugin.c:162
 msgid "wxh"
 msgstr "WxH"
 
-#: ../src/vala/gmpc-test-plugin.c:813
-msgid "Cover"
-msgstr "Cover"
+#: ../src/vala/gmpc-test-plugin.c:183 ../src/vala/gmpc-test-plugin.c:242
+msgid "Set"
+msgstr ""
 
-#: ../src/vala/gmpc-test-plugin.c:826
-msgid "Lyric"
-msgstr "Liedtext"
-
-#: ../src/vala/gmpc-test-plugin.c:930
+#: ../src/vala/gmpc-test-plugin.c:1101
 msgid "Insufficient information to store/fetch this metadata"
 msgstr "Keine ausreichenden Informationen um Metadaten zu speichern/beziehen"
 
-#: ../src/vala/gmpc-test-plugin.c:942
+#: ../src/vala/gmpc-test-plugin.c:1110
 msgid "Artist art"
 msgstr "Künstlerbilder"
 
-#: ../src/vala/gmpc-test-plugin.c:943
+#: ../src/vala/gmpc-test-plugin.c:1111
 msgid "Album art"
 msgstr "Album Cover"
 
-#: ../src/vala/gmpc-test-plugin.c:944
-msgid "Song Lyrics"
-msgstr "Liedtexte"
+#: ../src/vala/gmpc-test-plugin.c:1112
+msgid "Song lyrics"
+msgstr ""
 
-#: ../src/vala/gmpc-test-plugin.c:945
+#: ../src/vala/gmpc-test-plugin.c:1113
 msgid "Album Info"
 msgstr "Album Info"
 
-#: ../src/vala/gmpc-test-plugin.c:946
+#: ../src/vala/gmpc-test-plugin.c:1114
 msgid "Artist Biography"
 msgstr "Künstler Biographie"
 
-#: ../src/vala/gmpc-test-plugin.c:947
+#: ../src/vala/gmpc-test-plugin.c:1115
 msgid "Guitar Tab"
 msgstr "Gitarren-Tabs"
 
@@ -2501,6 +2498,12 @@ msgstr ""
 
 #~ msgid "Favored"
 #~ msgstr "Favorisiert"
+
+#~ msgid "Lyric"
+#~ msgstr "Liedtext"
+
+#~ msgid "Song Lyrics"
+#~ msgstr "Liedtexte"
 
 #~ msgid "--debug-updates"
 #~ msgstr "--debug-aktualisationen"
