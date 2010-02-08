@@ -396,8 +396,8 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
                 string base64 =(string)button.get_data("data");
                 if(base64 != null) {
                     string filename = Gmpc.MetaData.get_metadata_filename(this.query_type,this.song, null); 
-                    size_t len;
-                    uchar[] data = GLib.Base64.decode(base64, out len);
+                    size_t len=0;
+                    uchar[] data = GLib.Base64.decode(base64);
                     try{
                     GLib.FileUtils.set_contents(filename, (string)data, (ssize_t)len);
 

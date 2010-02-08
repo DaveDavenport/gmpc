@@ -409,6 +409,7 @@ namespace Gmpc {
                     event.button_press_event.connect((widget, event) => {
                         string artist = (string)widget.get_data("artist");
                         Gmpc.Browser.Metadata.show_artist(artist);
+			return false;
                     });
                 }
                 /* Album */
@@ -436,7 +437,9 @@ namespace Gmpc {
                         string album = (string)widget.get_data("album");
                         if(artist != null && album != null) {
                             Gmpc.Browser.Metadata.show_album(artist,album);
-                            }
+			    return true;
+			    }
+			    return false;
                             });
                 }
                 /* Genre */
