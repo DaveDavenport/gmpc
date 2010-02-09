@@ -38,7 +38,7 @@ private const string some_unique_name_lp = Config.VERSION;
 public class Gmpc.Provider.MusicTree : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIface 
 {
     private GLib.Regex image_filename = null;
-    public int[] version = {0,0,2};
+    public const int[] version = {0,0,2};
 
     
     public override weak int[] get_version() {

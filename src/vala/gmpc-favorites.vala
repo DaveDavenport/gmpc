@@ -75,7 +75,7 @@ namespace Gmpc.Favorites{
         /**
          * Signal for the widget using the list to see if it needs to recheck status
          */
-        signal void updated();
+        public signal void updated();
 
         /**
          * Check if the song (specified by path) is favored
