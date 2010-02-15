@@ -50,7 +50,6 @@ public class Gmpc.Provider.MusicTree : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIfa
     }
 
     construct {
-        /* Mark the plugin as an internal dummy */
         this.plugin_type = 8+32;
         /* Todo get list from gdk? */
         try {
@@ -83,9 +82,10 @@ public class Gmpc.Provider.MusicTree : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIfa
         if( id != null ) {
             directory = profiles.get_music_directory(id);
         }
-        
+       	log("Gmpc.Plugin.MusicTreeProvider", GLib.LogLevelFlags.LEVEL_DEBUG, "Got directory: %s",
+			(directory == null)?"(null)":directory); 
 
-        if(directory == null)
+        if(directory == null || directory.length == 0)
         {
             log("Gmpc.Plugin.MusicTreeProvider", GLib.LogLevelFlags.LEVEL_DEBUG, 
                     "No Music directory specified");
