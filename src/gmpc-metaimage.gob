@@ -66,12 +66,12 @@ typedef enum _GmpcMetaImageState{
 
 class Gmpc:MetaImage from Gtk:Event:Box{
 	private GmpcMetaImageState state = {STATE_EMPTY};
-    private int refresh = FALSE;
+	private int refresh = FALSE;
 	private gulong status_signal = {0};
 	private gulong connect_signal = {0};
 	private gulong meta_id = {0};
 
-    private gulong metadata_force_reload = {0};
+	private gulong metadata_force_reload = {0};
 
 	private gchar *image_url = {NULL};
 
@@ -87,8 +87,8 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 	public gchar *no_cover_icon = {g_strdup("gmpc-no-cover")} destroywith g_free;
 	public gchar *loading_cover_icon = {g_strdup("gmpc-loading-cover")} destroywith g_free;
 
-    private gulong expose_id = {0};
-    public gboolean scale_up = FALSE;
+	private gulong expose_id = {0};
+	public gboolean scale_up = FALSE;
 	/**
 	 * I want fully set/get control,so I don't use property stuff,
 	 * is there a way around this?
@@ -162,27 +162,29 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                     G_OBJECT(self));                            		
         }
     }
-	private GtkWidget *image = { (GtkWidget *)gmpc_meta_image_async_new()} ;
-	init (self)
-	{
-        GtkWidget *win = NULL;
-		gtk_container_add(GTK_CONTAINER(self), self->_priv->image);		
-		gtk_container_set_resize_mode(GTK_CONTAINER(self), GTK_RESIZE_IMMEDIATE);
-		gtk_widget_show_all(GTK_WIDGET(self));
+    private GtkWidget *image = { (GtkWidget *)gmpc_meta_image_async_new()} ;
+    private GtkWidget *tooltip_image = { (GtkWidget *)gmpc_meta_image_async_new()} ;
 
-		g_signal_connect_swapped(G_OBJECT(self/*->_priv->image*/), "button-press-event", G_CALLBACK(self_menu_populate_callback), self);
-		self->_priv->meta_id = g_signal_connect(G_OBJECT(gmw), "data-changed", G_CALLBACK(self_meta_callback), self);
-		gtk_widget_add_events(GTK_WIDGET(self->_priv->image), GDK_POINTER_MOTION_MASK);
-		gtk_widget_set_no_show_all(GTK_WIDGET(self),TRUE);
+    init (self)
+    {
+	    GtkWidget *win = NULL;
+	    gtk_container_add(GTK_CONTAINER(self), self->_priv->image);		
+	    gtk_container_set_resize_mode(GTK_CONTAINER(self), GTK_RESIZE_IMMEDIATE);
+	    gtk_widget_show_all(GTK_WIDGET(self));
 
-        win = gtk_window_new(GTK_WINDOW_POPUP); 
-        gtk_window_set_resizable(GTK_WINDOW(win), FALSE);
-        gtk_widget_modify_bg(win, GTK_STATE_NORMAL, &(GTK_WIDGET(self)->style->black));
-        gtk_container_set_border_width(GTK_CONTAINER(win), 6);
-        gtk_container_add(GTK_CONTAINER(win), GTK_WIDGET(gmpc_meta_image_async_new()));
+	    g_signal_connect_swapped(G_OBJECT(self/*->_priv->image*/), "button-press-event", G_CALLBACK(self_menu_populate_callback), self);
+	    self->_priv->meta_id = g_signal_connect(G_OBJECT(gmw), "data-changed", G_CALLBACK(self_meta_callback), self);
+	    gtk_widget_add_events(GTK_WIDGET(self->_priv->image), GDK_POINTER_MOTION_MASK);
+	    gtk_widget_set_no_show_all(GTK_WIDGET(self),TRUE);
 
-        gtk_widget_set_tooltip_window(GTK_WIDGET(self), GTK_WINDOW(win));
-        g_signal_connect(G_OBJECT(self), "query-tooltip", G_CALLBACK(self_tooltip_query), win);
+	    win = gtk_window_new(GTK_WINDOW_POPUP); 
+	    gtk_window_set_resizable(GTK_WINDOW(win), FALSE);
+	    gtk_widget_modify_bg(win, GTK_STATE_NORMAL, &(GTK_WIDGET(self)->style->black));
+	    gtk_container_set_border_width(GTK_CONTAINER(win), 6);
+	    gtk_container_add(GTK_CONTAINER(win), GTK_WIDGET(self->_priv->tooltip_image));
+
+	    gtk_widget_set_tooltip_window(GTK_WIDGET(self), GTK_WINDOW(win));
+	    g_signal_connect(G_OBJECT(self), "query-tooltip", G_CALLBACK(self_tooltip_query), win);
     }
     private 
     gboolean tooltip_query(self, gint x, gint y,gboolean keyboard_mode, GtkTooltip *tip, GtkWidget *win)
@@ -191,10 +193,10 @@ class Gmpc:MetaImage from Gtk:Event:Box{
         {
             if(self->_priv->image_url)
             {
-                GtkWidget *image = gtk_bin_get_child(GTK_BIN(win));
-                if(GMPC_META_IMAGE_ASYNC(image)->uri == NULL || strcmp(GMPC_META_IMAGE_ASYNC(image)->uri, self->_priv->image_url) != 0)
-                    gmpc_meta_image_async_set_from_file(GMPC_META_IMAGE_ASYNC(image), self->_priv->image_url, 350, FALSE); 
-                gtk_widget_show(image);
+                if(GMPC_META_IMAGE_ASYNC(self->_priv->tooltip_image)->uri == NULL || 
+				strcmp(GMPC_META_IMAGE_ASYNC(self->_priv->tooltip_image)->uri, self->_priv->image_url) != 0)
+			gmpc_meta_image_async_set_from_file(GMPC_META_IMAGE_ASYNC(self->_priv->tooltip_image), self->_priv->image_url, 350, FALSE); 
+                gtk_widget_show(self->_priv->tooltip_image);
                 return TRUE;
             }
         }
@@ -532,10 +534,12 @@ class Gmpc:MetaImage from Gtk:Event:Box{
             GError *error = NULL;
             GdkPixbuf *pb2 = NULL; 
 
-            if(self->_priv->state == STATE_NA) {
+
+	    if(self->_priv->state == STATE_NA) {
                 return;
             }
             self->_priv->state = STATE_NA;
+	    gmpc_meta_image_async_clear_now(GMPC_META_IMAGE_ASYNC(self->_priv->tooltip_image));
 
             if(self->_priv->image_url)
             {
@@ -587,10 +591,12 @@ class Gmpc:MetaImage from Gtk:Event:Box{
             int border = FALSE;
             GError *error = NULL;
             GdkPixbuf *pb2 = NULL;
+
             if(self->_priv->state == STATE_FETCHING) {
                 return;
             }
             self->_priv->state = STATE_FETCHING;
+	    gmpc_meta_image_async_clear_now(GMPC_META_IMAGE_ASYNC(self->_priv->tooltip_image));
             if(self->_priv->image_url)
             {
                 q_free(self->_priv->image_url);
