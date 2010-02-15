@@ -795,7 +795,7 @@ int main(int argc, char **argv)
 	g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Create main window\n");
 	gdk_window_set_debug_updates(do_debug_updates);
 
-	if( (revision != NULL && revision[0] != '\0') && cfg_get_single_value_as_int_with_default(config, "Default", "help-question", 0) == 0 && cfg_get_single_value_as_int_with_default(config, "Default", "first-run", 1)) 
+	if( (revision != NULL && revision[0] != '\0') && cfg_get_single_value_as_int_with_default(config, "Default", "help-question", 0) < 2 && cfg_get_single_value_as_int_with_default(config, "Default", "first-run", 1)) 
 	{
 		GtkWidget * dialog = gtk_message_dialog_new_with_markup(NULL, 
 				GTK_DIALOG_MODAL,
@@ -810,7 +810,7 @@ int main(int argc, char **argv)
 				  "\nThanks,\n<i>Qball Cow</i>"));
 		gtk_dialog_run(GTK_DIALOG(dialog));
 		gtk_widget_destroy(dialog);
-		cfg_set_single_value_as_int(config, "Default", "help-question", 1);
+		cfg_set_single_value_as_int(config, "Default", "help-question", 2);
 	}
 	/**
      * Create the main window

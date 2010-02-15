@@ -116,6 +116,7 @@ public class Gmpc.Progress : Gtk.HBox
 		p = (p > this.total)? this.total:p;
                 if(this.do_countdown){
                     a += "-";
+		    p = this.total-p;	
                 }
                 e_hour = (int) p/3600;
                 e_minutes = (int) (p%3600)/60;
