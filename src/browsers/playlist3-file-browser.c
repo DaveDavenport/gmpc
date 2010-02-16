@@ -219,14 +219,14 @@ static void pl3_file_browser_init(void)
 	gtk_box_pack_start(GTK_BOX(vbox), pl3_fb_sw, TRUE, TRUE,0);
 	gtk_widget_show_all(pl3_fb_sw);	
 
-        /* Warning box for when there is no music */
-        pl3_fb_warning_box = gtk_label_new("");
-        gtk_label_set_markup(GTK_LABEL(pl3_fb_warning_box), 
-	_("It seems you have no music in your database.\n"
-	  "To add music, copy the music to your <i>music_directory</i> as specified in your mpd config file.\n"
-          "Then update the database. (Server->Update Database)"));
-        gtk_misc_set_alignment(GTK_MISC(pl3_fb_warning_box), 0.0,0.0);
-        gtk_misc_set_padding(GTK_MISC(pl3_fb_warning_box), 12,12);
+    /* Warning box for when there is no music */
+    pl3_fb_warning_box = gtk_label_new("");
+    gtk_label_set_markup(GTK_LABEL(pl3_fb_warning_box), 
+            _("It seems you have no music in your database.\n"
+                "To add music, copy the music to your <i>music_directory</i> as specified in your mpd config file.\n"
+                "Then update the database. (Server->Update Database)"));
+    gtk_misc_set_alignment(GTK_MISC(pl3_fb_warning_box), 0.0,0.0);
+    gtk_misc_set_padding(GTK_MISC(pl3_fb_warning_box), 12,12);
 	gtk_widget_set_no_show_all(pl3_fb_warning_box, TRUE);
 	gtk_box_pack_end(GTK_BOX(vbox), pl3_fb_warning_box, FALSE, TRUE,0);
 
@@ -1256,6 +1256,11 @@ static void pl3_file_browser_connection_changed(MpdObj *mi, int connect, gpointe
 
 static void pl3_file_browser_status_changed(MpdObj *mi,ChangedStatusType what, void *data)
 {
+    if(what&MPD_CST_UPDATING) {
+        if(pl3_fb_vbox != NULL && mpd_status_db_is_updating(connection)){
+            gtk_widget_hide(pl3_fb_warning_box);
+        }
+    }
     if(what&MPD_CST_DATABASE)
     {
         pl3_file_browser_reupdate();
