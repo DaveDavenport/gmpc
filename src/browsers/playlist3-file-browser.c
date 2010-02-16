@@ -232,7 +232,6 @@ static void pl3_file_browser_init(void)
 
     gtk_paned_add2(GTK_PANED(pl3_fb_vbox), vbox);
 	/* set initial state */
-	debug_printf(DEBUG_INFO,"initialized current playlist treeview\n");
     gtk_widget_show(vbox);
     gtk_widget_show(pl3_fb_vbox);
 	g_object_ref_sink(G_OBJECT(pl3_fb_vbox));
@@ -549,7 +548,6 @@ static void pl3_file_browser_view_folder(GtkTreeSelection *selection, gpointer u
 		data = mpd_database_get_directory(connection, path);
 	}
 	else{
-		debug_printf(DEBUG_INFO,"View Playlist\n");
 		data = mpd_database_get_playlist_content(connection, path);
 	}
 	/* Check, and set the up arrow in the model */
@@ -1290,7 +1288,7 @@ static void pl3_file_browser_save_myself(void)
         if(path)
         {
             gint *indices = gtk_tree_path_get_indices(path);
-            debug_printf(DEBUG_INFO,"Saving myself to position: %i\n", indices[0]);
+            g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Saving myself to position: %i\n", indices[0]);
             cfg_set_single_value_as_int(config, "file-browser","position",indices[0]);
             gtk_tree_path_free(path);
         }
