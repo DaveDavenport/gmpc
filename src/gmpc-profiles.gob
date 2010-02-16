@@ -23,13 +23,13 @@ requires 2.0.0
 #include <stdlib.h>
 #include <time.h>
 #include <libmpd/libmpd.h>
-#include <libmpd/debug_printf.h>
 #include "config1.h"
 %}
 %privateheader{
     #include "main.h"
 	#include "plugin.h"
     #include "playlist3-messages.h"
+    #define LOG_DOMAIN "Profiles"
 %}
 %h{
   enum {
@@ -61,7 +61,6 @@ requires 2.0.0
   }Profile;
 
 %}
-
 class Gmpc:Profiles from G:Object
 {
   private config_obj *profiles = {NULL}; 
@@ -105,11 +104,11 @@ class Gmpc:Profiles from G:Object
         playlist3_error_add_widget(connect_button);
         q_free(message);
 
-        debug_printf(DEBUG_INFO,"Item %s added\n", id);
+        g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG,"Item %s added\n", id);
     }
     else if(changed == PROFILE_REMOVED)
     {
-		debug_printf(DEBUG_INFO,"Item %s removed\n", id);
+		g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG,"Item %s removed\n", id);
     }
 	else if(changed == PROFILE_COL_CHANGED)
 	{
@@ -119,7 +118,7 @@ class Gmpc:Profiles from G:Object
         playlist3_show_error_message(message, ERROR_INFO);
         q_free(message);
         */
-        debug_printf(DEBUG_INFO,"Item %s changed col: %i\n", id, col);
+        g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG,"Item %s changed col: %i\n", id, col);
     }
   }
 
@@ -151,7 +150,7 @@ class Gmpc:Profiles from G:Object
           /**
            * Show gtk error message and quit 
            */
-          debug_printf(DEBUG_ERROR,"Failed to save/load Profile file:\n%s\n",url);
+          g_log(LOG_DOMAIN, G_LOG_LEVEL_ERROR,"Failed to save/load Profile file:\n%s\n",url);
           abort();
       }
       g_free(url);
@@ -420,7 +419,7 @@ class Gmpc:Profiles from G:Object
     Profile *prof =  self_get_profile(self, id);
     if(!prof)
     {
-        debug_printf(DEBUG_WARNING, "Trying to remove not-existing profile: %i\n", id);
+        g_log(LOG_DOMAIN, G_LOG_LEVEL_WARNING, "Trying to remove not-existing profile: %i\n", id);
       return;
     }
     /* Generate removal message before the actual profile is destroyed */

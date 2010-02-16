@@ -21,12 +21,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
-#include <libmpd/debug_printf.h>
 #include <libsoup/soup.h>
 #include <zlib.h>
 #include "gmpc_easy_download.h"
 #include "main.h"
 
+#define LOG_DOMAIN "EasyDownload"
 /****
  * ZIP MISC
  * **********/
@@ -78,7 +78,7 @@ static int read_cb(void *z, char *buffer, int size)
 			return size - zs->avail_out;
 		}
 	}
-	debug_printf(DEBUG_ERROR, "failed unzipping stream: %i\n",r);
+	g_log(LOG_DOMAIN, G_LOG_LEVEL_WARNING, "failed unzipping stream: %i\n",r);
 	return -1;
 }
 
@@ -207,7 +207,7 @@ static void proxy_pref_construct(GtkWidget * container)
 	gtk_builder_add_from_file(proxy_pref_xml, path, &error);
 
     if(error){
-        debug_printf(DEBUG_ERROR, "Failed to load %s: '%s'", path,error->message); 
+        g_log(LOG_DOMAIN, G_LOG_LEVEL_WARNING, "Failed to load %s: '%s'", path,error->message); 
         g_error_free(error);
         g_free(path);
        
@@ -305,10 +305,10 @@ static void gmpc_easy_async_headers_update(SoupMessage * msg, gpointer data)
 	if (encoding) {
 		if (strcmp(encoding, "gzip") == 0) {
 			d->is_gzip = 1;
-            debug_printf(DEBUG_WARNING, "Url is gzipped");
+            g_log(LOG_DOMAIN, G_LOG_LEVEL_WARNING, "Url is gzipped");
 		} else if (strcmp(encoding, "deflate") == 0) {
 			d->is_deflate = 1;
-            debug_printf(DEBUG_WARNING, "Url is enflated");
+            g_log(LOG_DOMAIN, G_LOG_LEVEL_WARNING, "Url is enflated");
 		}
 	}
 	/* If a second set comes in, close that */
@@ -364,12 +364,12 @@ static void gmpc_easy_async_status_update(SoupMessage * msg, SoupBuffer * buffer
                     d->data[d->length]='\0';
 				} while (res > 0);
 				if (res < 0) {
-                    debug_printf(DEBUG_ERROR, "Failure during unzipping 1: %s", d->uri);
+                    g_log(LOG_DOMAIN, G_LOG_LEVEL_WARNING, "Failure during unzipping 1: %s", d->uri);
 					soup_session_cancel_message(soup_session, d->msg, SOUP_STATUS_MALFORMED);
 				}
 			} else {
 				/* give error */
-                debug_printf(DEBUG_ERROR, "Failure during inflateInit2: %s", d->uri);
+                g_log(LOG_DOMAIN, G_LOG_LEVEL_WARNING, "Failure during inflateInit2: %s", d->uri);
                 soup_session_cancel_message(soup_session, d->msg, SOUP_STATUS_MALFORMED);
 			}
 		} else {
@@ -386,7 +386,7 @@ static void gmpc_easy_async_status_update(SoupMessage * msg, SoupBuffer * buffer
                 d->data[d->length]='\0';
             } while (res > 0);
 			if (res < 0) {
-                debug_printf(DEBUG_ERROR, "Failure during unzipping 2: %s", d->uri);
+                g_log(LOG_DOMAIN, G_LOG_LEVEL_WARNING, "Failure during unzipping 2: %s", d->uri);
                 soup_session_cancel_message(soup_session, d->msg, SOUP_STATUS_MALFORMED);
 			}
 		}

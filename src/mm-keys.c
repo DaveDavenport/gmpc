@@ -21,7 +21,7 @@
 
 #include <config.h>
 #ifdef ENABLE_MMKEYS
-
+#define LOG_DOMAIN "Mmkeys"
 #include <stdio.h>
 #include "mm-keys.h"
 
@@ -442,7 +442,7 @@ static int grab_mmkey (int key_code, unsigned int mask, GdkWindow *root)
 
 	gdk_flush ();
 	if (gdk_error_trap_pop ()) {
-		debug_printf (DEBUG_INFO, "Error grabbing key %d+%d, %p\n", key_code, mask, root);
+		g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Error grabbing key %d+%d, %p\n", key_code, mask, root);
 		return FALSE;
 	}
 	return TRUE;
@@ -467,7 +467,7 @@ static GdkFilterReturn filter_mmkeys (GdkXEvent *xevent, GdkEvent *event, gpoint
 		if(keycodes[i] == (int)(key->keycode) && masks[i] == keystate )
 		{
 			g_signal_emit (data, signals[i], 0, 0);
-			debug_printf(DEBUG_INFO, "%s pressed", keynames[i]);
+			g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "%s pressed", keynames[i]);
 			return GDK_FILTER_REMOVE;
 		}
 	}
@@ -507,7 +507,7 @@ static void ungrab_mmkey (int key_code, int mask, GdkWindow *root)
 
 	gdk_flush ();
 	if (gdk_error_trap_pop ()) {
-		debug_printf (DEBUG_INFO, "Error ungrabbing key %d+%d, %p\n", key_code, mask, root);
+		g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Error ungrabbing key %d+%d, %p\n", key_code, mask, root);
 	}
 }
 
@@ -612,7 +612,7 @@ accel_edited_callback (GtkCellRendererText *cell,
 
 	gtk_tree_model_get_iter (model, &iter, path);
 
-	debug_printf(DEBUG_INFO, "EggCellRenderKeys grabbed %d %u", mask, hardware_keycode );
+	g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "EggCellRenderKeys grabbed %d %u", mask, hardware_keycode );
 	if(hardware_keycode == 22)
 	{
 		hardware_keycode = 0;
@@ -690,7 +690,7 @@ void mmkeys_pref_construct(GtkWidget *container)
     gtk_builder_add_from_file(mmkeys_pref_xml, path, &error);
     if(error)
     {
-        debug_printf(DEBUG_ERROR, "Problems loading ui: %s\n", error->message);
+        g_log(LOG_DOMAIN, G_LOG_LEVEL_ERROR, "Problems loading ui: %s\n", error->message);
         g_error_free(error);
         g_object_unref(mmkeys_pref_xml);
         return;
