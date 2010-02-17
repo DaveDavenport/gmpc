@@ -770,7 +770,7 @@ static void tag2_column_header_menu_item_clicked(GtkCheckMenuItem *item, tag_ele
             {
                 mpd_database_search_field_start(connection, te->type);
                 data = mpd_database_search_commit(connection);
-                gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(te->model), data);
+                gmpc_mpddata_model_set_mpd_data_slow(GMPC_MPDDATA_MODEL(te->model), data);
             }else {
                 gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(te->model), NULL);
             }
