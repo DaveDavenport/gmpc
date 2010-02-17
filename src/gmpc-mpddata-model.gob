@@ -1056,9 +1056,33 @@ end:
         {
             MpdData_real *a = *(MpdData_real **)ppaa;
             MpdData_real *b = *(MpdData_real **)ppbb;
-            return strcmp(a->tag, b->tag); 
+            if(a->type == MPD_DATA_TYPE_TAG && b->type == MPD_DATA_TYPE_TAG)
+            {
+                if(a->tag_type != b->tag_type)
+                    return a->tag_type - b->tag_type;
+                if(a->tag== NULL && b->tag != NULL)
+                    return -1;
+                else if(b->tag == NULL && a->tag != NULL)
+                    return 1;
+                else if (a->tag  && b->tag)
+                {
+                    int val;
+                    if(a->tag && b->tag) {
+                        gchar *sa,*sb;
+                        sa = g_utf8_strdown(a->tag, -1);
+                        sb = g_utf8_strdown(b->tag, -1);
+                        val = g_utf8_collate(sa,sb);
+                        g_free(sa);
+                        g_free(sb);
+                    } else {
+                        val = (a == NULL)?((b==NULL)?0:-1):1;
+                    }
+                    return val;
+                }
+            }
+            return a->type - b->type;
         }
-
+        
         /**
          * For now this assumes tag list only.
          */
