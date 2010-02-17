@@ -139,7 +139,7 @@ static void url_parse_extm3u_file(const char *data, int size)
                      g_free(scheme);
                  }
                  else{
-                     g_log(LOG_WARNING, G_LOG_LEVEL_DEBUG, "Failed to parse scheme: %s",sloc->value);
+                     g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Failed to parse scheme: %s",sloc->value);
                  }
              }
          }
