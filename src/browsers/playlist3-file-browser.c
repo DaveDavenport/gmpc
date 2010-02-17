@@ -503,7 +503,7 @@ static void pl3_file_browser_reupdate(void)
 
 		GtkTreeModel *model = GTK_TREE_MODEL(pl3_fb_dir_store); 
 		
-		if(mpd_stats_get_total_songs(connection) == 0)
+		if(mpd_stats_get_total_songs(connection) == 0 && !mpd_status_db_is_updating(connection))
 		{
                     gtk_widget_show(pl3_fb_warning_box);
 		}else{
