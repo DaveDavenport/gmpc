@@ -485,7 +485,6 @@ static void serverinformation_popup_close(GtkWidget *dialog, gint response_id, g
     /* destroy dialog */
     gtk_widget_destroy(dialog);
     
-    debug_printf(DEBUG_INFO,"Close dialog: %i %i",width,height);
 }
 
 static void serverstats_connection_changed(MpdObj *mi, int connect,void *usedata)

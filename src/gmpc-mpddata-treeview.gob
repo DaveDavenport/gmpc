@@ -132,6 +132,8 @@ static gint  col_position[NUM_COLS] = {
 };
 
 static GList *paste_queue = NULL;
+
+#define LOG_DOMAIN "MpdData.TreeView"
 %}
 
 class Gmpc:MpdData:Treeview from Gtk:Tree:View {
@@ -893,7 +895,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 								MPDDATA_MODEL_ROW_TYPE,&type, 
 								MPDDATA_MODEL_COL_PATH, &path, 
 								-1);			
-						debug_printf(DEBUG_INFO, "Copying song, into queue: %s\n", path);
+						g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Copying song, into queue: %s\n", path);
 						if(type == MPD_DATA_TYPE_SONG) {
 							paste_queue = g_list_prepend(paste_queue, path);
 						} else if (type == MPD_DATA_TYPE_DIRECTORY) {

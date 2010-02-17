@@ -71,6 +71,10 @@ requires 2.0.0
 	} ;
 %}
 
+%{
+#define LOG_DOMAIN "MpdData.Model"
+%}
+
  class Gmpc:MpdData:Model from G:Object
           (interface Gtk:Tree:Sortable)
           (interface Gtk:Tree:Model)
@@ -820,7 +824,7 @@ end:
             self->_priv->data = NULL;
 
             if(self->num_rows != 0)
-                debug_printf(DEBUG_ERROR,"not every row cleared %i\n",self->num_rows);
+                g_log(LOG_DOMAIN, G_LOG_LEVEL_WARNING,"not every row cleared %i\n",self->num_rows);
             self->num_rows =0;
             /* Free possible stored images */
             if(self->_priv->images && self->_priv->use_images)

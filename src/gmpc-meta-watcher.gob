@@ -21,7 +21,6 @@ requires 2.0.0
 %ht{
 #include <gtk/gtk.h>
 #include <libmpd/libmpd.h>
-#include <libmpd/debug_printf.h>
 #include "metadata.h"
 
 %}

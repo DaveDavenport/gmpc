@@ -419,7 +419,7 @@ class Gmpc:Profiles from G:Object
     Profile *prof =  self_get_profile(self, id);
     if(!prof)
     {
-        g_log(LOG_DOMAIN, G_LOG_LEVEL_WARNING, "Trying to remove not-existing profile: %i\n", id);
+        g_log(LOG_DOMAIN, G_LOG_LEVEL_WARNING, "Trying to remove not-existing profile: %s\n", id);
       return;
     }
     /* Generate removal message before the actual profile is destroyed */

@@ -50,6 +50,7 @@
 #include "bug-information.h"
 
 #include "Widgets/pixbuf-cache.h"
+#include <libmpd/debug_printf.h>
 
 #define LOG_DOMAIN "Gmpc"
 /**
