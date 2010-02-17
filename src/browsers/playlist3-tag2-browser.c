@@ -113,6 +113,38 @@ gmpcPlugin tag2_plug = {
 	.mpd_connection_changed = tag2_connection_changed,
 	.mpd_status_changed = tag2_status_changed,
 };
+
+
+static gint __add_sort(gpointer aa, gpointer bb, gpointer data)
+{
+    MpdData_real *a = *(MpdData_real **)aa;
+    MpdData_real *b = *(MpdData_real **)bb;
+    if(a->type == MPD_DATA_TYPE_TAG && b->type == MPD_DATA_TYPE_TAG)
+    {
+        if(a->tag_type != b->tag_type)
+            return a->tag_type - b->tag_type;
+        if(a->tag== NULL && b->tag != NULL)
+            return -1;
+        else if(b->tag == NULL && a->tag != NULL)
+            return 1;
+        else if (a->tag  && b->tag)
+        {
+            int val;
+            if(a->tag && b->tag) {
+                gchar *sa,*sb;
+                sa = g_utf8_strdown(a->tag, -1);
+                sb = g_utf8_strdown(b->tag, -1);
+                val = g_utf8_collate(sa,sb);
+                g_free(sa);
+                g_free(sb);
+            } else {
+                val = (a == NULL)?((b==NULL)?0:-1):1;
+            }
+            return val;
+        }
+    }
+    return a->type - b->type;
+}
 /** Little hack to work around gmpc's limitations */
 static GList *tag2_ht = NULL;
 /** This stucture contains all the needed data for a browser
@@ -620,6 +652,8 @@ static void tag2_changed(GtkTreeSelection *sel2, tag_element *te)
              * This will make sure, selected rows that are matched, don't get de-selected 
              */
             sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(te_i->tree));
+
+            data = misc_sort_mpddata(data, (GCompareDataFunc)__add_sort , NULL);
             gmpc_mpddata_model_set_mpd_data_slow(GMPC_MPDDATA_MODEL(te_i->model), data);
             /* this make sure the selected row is centered in the middle of the treeview.
              * Otherwise the user could have the tedious job of finding it again
@@ -867,6 +901,7 @@ static void tag2_songlist_clear_selection(GtkWidget *button, tag_browser *browse
             mpd_database_search_field_start(connection, te->type);
 
             data = mpd_database_search_commit(connection);
+            data = misc_sort_mpddata(data, (GCompareDataFunc)__add_sort , NULL);
             gmpc_mpddata_model_set_mpd_data_slow(GMPC_MPDDATA_MODEL(te->model), data);
         }else 
             gmpc_mpddata_model_set_mpd_data_slow(GMPC_MPDDATA_MODEL(te->model), NULL);
@@ -1323,6 +1358,7 @@ static void tag2_connection_changed_foreach(tag_browser *browser, gpointer userd
             {
                 mpd_database_search_field_start(connection, te->type);
                 data = mpd_database_search_commit(connection);
+                data = misc_sort_mpddata(data, (GCompareDataFunc)__add_sort , NULL);
                 gmpc_mpddata_model_set_mpd_data_slow(GMPC_MPDDATA_MODEL(te->model), data);
             }else {
                 gmpc_mpddata_model_set_mpd_data_slow(GMPC_MPDDATA_MODEL(te->model), NULL);
