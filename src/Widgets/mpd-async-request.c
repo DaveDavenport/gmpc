@@ -7,6 +7,8 @@
 #include "main.h"
 #include "mpd-async-request.h"
 
+#define LOG_DOMAIN "MpdAsyncRequest"
+
 typedef struct {
     MpdObj *mi;
     MpdAsyncFunction *function;
@@ -21,12 +23,12 @@ static void __async_handler_function(GSimpleAsyncResult *simple,
                                          GCancellable *cancel)
 {
     MpdAsyncData *data = g_simple_async_result_get_op_res_gpointer (G_SIMPLE_ASYNC_RESULT (simple));
-    printf("Start async function\n");
+    g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG,"Start async function\n");
     if(mpd_connect(data->mi) == MPD_OK)
     {
-        printf("call function\n");
+        g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG,"call function\n");
         data->result = (data->function(data->mi, data->function_data));
-        printf("Got result: %p\n", data->result);
+        g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG,"Got result: %p\n", data->result);
     }
 
     mpd_free(data->mi);
@@ -34,14 +36,14 @@ static void __async_handler_function(GSimpleAsyncResult *simple,
 static void __mpd_async_simple_callback(GObject *object, GAsyncResult *simple, gpointer user_data)
 {
     MpdAsyncData *data = g_simple_async_result_get_op_res_gpointer (G_SIMPLE_ASYNC_RESULT (simple));
-    printf("Start async result function %p\n",data);
+    g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG,"Start async result function %p\n",data);
     if(data->callback)
         data->callback(data->result, data->callback_data);
 }
 static void __mpd_async_result_free_data(gpointer udata)
 {
     MpdAsyncData *data = (MpdAsyncData *)udata;
-    printf("Free data\n");
+    g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG,"Free data\n");
     g_free(data);
 }
 void mpd_async_request(MpdAsyncCallback *callback, gpointer callback_data, MpdAsyncFunction *function, gpointer function_data)
@@ -80,7 +82,7 @@ void mpd_async_request(MpdAsyncCallback *callback, gpointer callback_data, MpdAs
 
     res = g_simple_async_result_new(NULL, __mpd_async_simple_callback, NULL, mpd_async_request);
     g_simple_async_result_set_op_res_gpointer (G_SIMPLE_ASYNC_RESULT (res), data, __mpd_async_result_free_data);
-    printf("Start async thread %p\n",data);
+    g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG,"Start async thread %p\n",data);
     g_simple_async_result_run_in_thread (res,
             __async_handler_function,
             G_PRIORITY_LOW,
