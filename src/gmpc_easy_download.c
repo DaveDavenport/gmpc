@@ -305,10 +305,10 @@ static void gmpc_easy_async_headers_update(SoupMessage * msg, gpointer data)
 	if (encoding) {
 		if (strcmp(encoding, "gzip") == 0) {
 			d->is_gzip = 1;
-            g_log(LOG_DOMAIN, G_LOG_LEVEL_WARNING, "Url is gzipped");
+            g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Url is gzipped");
 		} else if (strcmp(encoding, "deflate") == 0) {
 			d->is_deflate = 1;
-            g_log(LOG_DOMAIN, G_LOG_LEVEL_WARNING, "Url is enflated");
+            g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Url is enflated");
 		}
 	}
 	/* If a second set comes in, close that */
