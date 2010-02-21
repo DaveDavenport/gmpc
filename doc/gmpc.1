@@ -1,16 +1,54 @@
-
-.TH gmpc 1 "October 29, 2008" "" "Gnome Music Player Client"
+.TH gmpc 1 "February 21, 2010" "" "Gnome Music Player Client"
 
 .SH NAME
+GMPC - Gnome Music Player Client
+
+.SH SYNOPSIS
 gmpc [OPTION]
 
 .SH DESCRIPTION
-GMPC is a fully featured but still very lightweight gtk client for the music player deamon (MPD)
+GMPC is a fully featured but still very lightweight gtk client 
+for the music player daemon (MPD).
+.P
+It provides several different ways to browse your music. Based on the file system,
+tags, search and metadata.
+
+.P
+GMPC can show the following types of metadata:
+
+* Album covers
+.br
+* Artist images
+.br
+* Lyrics
+.br
+* Guitar tabs
+.br
+* Album information
+.br
+* Artist biography
+.br
+* Similar artist
+* Similar songs
+
+GMPC uses plugins to fetch metadata and can be extended using plugins.
 
 .SH OPTIONS
 .TP
+.BI --fullscreen
+Start fullscreen.
+.TP
 .BI --start-hidden
 Start hidden.
+.TP
+.BI --replace
+Replace the running session of gmpc.
+.TP
+.BI --quit
+Quit the running gmpc
+.TP
+.BI --profile=<profile>
+Start with a specific profile.
 .TP
 .BI --help
 Show an overview of the commandline options.
@@ -26,6 +64,9 @@ Make gmpc output debug information
 
 3 \- All Messages
 .TP
+.BI --log-filter=<LogDomain>
+Print out debug information from a certain log domain.
+.TP
 .BI --version
 Display version and if possible git revision.
 .TP
@@ -38,17 +79,22 @@ Cleans up the cover db.
 .BI --disable-plugins
 Don't load any plugins.
 .TP
-.BI --replace
-Replace the running session of gmpc.
-.TP
-.BI --quit
-Quit the running gmpc
+.BI --bug-information
+Show a dialog with useful information for a bug report.
 .br
 
 .SH SEE ALSO
-Website: http://gmpcwiki.sarine.nl
+Website: http://gmpc.wikia.com/
 
 MPD Website: http://www.musicpd.org
 
+Bug tracker: http://www.musicpd.org/mantis/
+
+.BR gmpc-remote(1)
+.BR mpd(1)
+.BR mpd.conf(5)
+
 .SH AUTHOR
 GMPC was written by Qball Cow <qball@sarine.nl>
+
+Special thanks to all the people that provided feedback and patches
