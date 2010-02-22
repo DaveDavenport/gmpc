@@ -206,7 +206,7 @@ static void url_parse_spiff_file(const char *data, int size, const gchar *uri)
                             g_free(scheme);
                         }
                         else{
-                            g_log(LOG_WARNING, G_LOG_LEVEL_DEBUG, "Failed to parse scheme: %s",sloc->value);
+                            g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Failed to parse scheme: %s",sloc->value);
                         }
                     }
                 }
@@ -216,7 +216,7 @@ static void url_parse_spiff_file(const char *data, int size, const gchar *uri)
         }
         else 
         {
-            g_log(LOG_WARNING, G_LOG_LEVEL_DEBUG, "Error message: %s", error->message);
+            g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Error message: %s", error->message);
             g_error_free(error);
         }
 
