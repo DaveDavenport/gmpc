@@ -43,7 +43,7 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 	/***
 	 * plugin setup
 	 */
-	private int[] version = {0,0,1};
+	private const int[] version = {0,0,1};
 
 
 	/**

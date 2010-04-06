@@ -26,8 +26,8 @@ private const string some_unique_name_mb = Config.VERSION;
 
 public class  Gmpc.Plugin.DatabaseUpdateTracker : Gmpc.Plugin.Base {
     private Gtk.Image image = null;
-    public int[] version = {0,0,2};
 
+    private const int[] version = {0,0,2};
     public override unowned int[] get_version() {
         return this.version;
     }

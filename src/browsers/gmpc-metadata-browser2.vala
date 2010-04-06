@@ -523,7 +523,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         Gdk.Color.parse(foreground,out this.foreground);
     }
 
-    private int[] version =  {0,0,0};
+    private const int[] version =  {0,0,0};
     public override  unowned int[] get_version() {
         return version;
     }

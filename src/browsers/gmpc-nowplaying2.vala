@@ -62,7 +62,7 @@ namespace Gmpc {
 
             }
             /* Version of the plugin*/
-            public int[] version =  {0,0,0};
+            private const int[] version =  {0,0,0};
             public override  unowned int[] get_version() {
                 return version;
             }

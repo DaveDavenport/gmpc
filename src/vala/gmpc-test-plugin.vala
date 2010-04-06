@@ -720,7 +720,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
 
 
 public class  Gmpc.TestPlugin : Gmpc.Plugin.Base,Gmpc.Plugin.ToolMenuIface, Gmpc.Plugin.SongListIface {
-    public int[] version = {0,0,2};
+    private const int[] version = {0,0,2};
     /*********************************************************************************
      * Plugin base functions 
      * These functions are required.
