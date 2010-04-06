@@ -49,11 +49,11 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 	/**
 	 * Required plugin implementation
 	 */
-	 public override weak string get_name() 
+	 public override unowned string get_name() 
 	 {
 		return _("Gmpc Easy Command");
 	 }
-	 public override weak int[] get_version()
+	 public override unowned int[] get_version()
 	 {
 		return this.version;
 	 }
@@ -142,7 +142,7 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 		this.do_query(value_unsplit);
 	}
 	public void do_query(string value_unsplit) {
-		weak Gtk.TreeModel model = this.store;
+		unowned Gtk.TreeModel model = this.store;
 		Gtk.TreeIter iter;
 		if (value_unsplit.length == 0) {
 			if(this.window != null) {

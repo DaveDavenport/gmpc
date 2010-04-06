@@ -65,7 +65,7 @@ public class Gmpc.Widget.SimilarSongs : Gtk.Alignment{
         {
             if(model.get_iter(out iter, path))
             {
-                weak MPD.Song song = null;
+                unowned MPD.Song song = null;
                 model.get(iter, 0, out song, -1);
                 if(song != null)
                 {
@@ -89,7 +89,7 @@ public class Gmpc.Widget.SimilarSongs : Gtk.Alignment{
             Gtk.TreePath path = list.data;
             if(model.get_iter(out iter, path))
             {
-                weak MPD.Song song = null;
+                unowned MPD.Song song = null;
                 model.get(iter, 0, out song, -1);
                 if(song != null)
                 {
@@ -110,7 +110,7 @@ public class Gmpc.Widget.SimilarSongs : Gtk.Alignment{
         {
             if(model.get_iter(out iter, path))
             {
-                weak MPD.Song song = null;
+                unowned MPD.Song song = null;
                 model.get(iter, 0, out song, -1);
                 if(song != null)
                 {
@@ -135,7 +135,7 @@ public class Gmpc.Widget.SimilarSongs : Gtk.Alignment{
         Gtk.TreeIter iter;
         if(model.get_iter(out iter, path))
         {
-            weak MPD.Song song = null;
+            unowned MPD.Song song = null;
             model.get(iter, 0, out song, -1);
             if(song != null)
             {
@@ -170,7 +170,7 @@ public class Gmpc.Widget.SimilarSongs : Gtk.Alignment{
 
     private Gmpc.MetaData.Item copy = null;
     MPD.Data.Item item = null;
-    private weak List <weak string> current = null;
+    private unowned List <unowned string> current = null;
     private bool update_sim_song()
     {
         if(current == null){
@@ -341,7 +341,7 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
         /* Set result */
         else {
             List<Gtk.Widget> in_db_list = null;
-            GLib.List<weak string> list = met.get_text_list().copy();
+            GLib.List<unowned string> list = met.get_text_list().copy();
             list.sort((GLib.CompareFunc)string.collate);
 
 
@@ -349,7 +349,7 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
             int i = 0;
             if(list != null)
             {
-                weak List<weak string> liter= null;                 
+                unowned List<unowned string> liter= null;                 
                 MPD.Database.search_field_start(server, MPD.Tag.Type.ARTIST);
                 var data = MPD.Database.search_commit(server);
 
@@ -359,7 +359,7 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
                 {
 
                     data.sort_album_disc_track();
-                    weak MPD.Data.Item iter = data.get_first();
+                    unowned MPD.Data.Item iter = data.get_first();
 
                     liter = list.first();
                     string artist = "";
@@ -429,7 +429,7 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
     void
     artist_button_clicked(Gtk.Button button)
     {
-        weak string artist = (string)button.get_data("artist");
+        unowned string artist = (string)button.get_data<string>("artist");
         Gmpc.Browser.Metadata.show_artist(artist);
     }
     public
@@ -523,12 +523,12 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         Gdk.Color.parse(foreground,out this.foreground);
     }
 
-    public const int[] version =  {0,0,0};
-    public override  weak int[] get_version() {
+    private int[] version =  {0,0,0};
+    public override  unowned int[] get_version() {
         return version;
     }
 
-    public override weak string get_name() {
+    public override unowned string get_name() {
         return N_("Metadata Browser");
     }
 
@@ -544,7 +544,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         if(this.rref != null) {
             var path = rref.get_path();
             if(path != null) {
-                weak int[] indices  = path.get_indices();
+                unowned int[] indices  = path.get_indices();
                 config.set_int(this.get_name(), "position", indices[0]);
             }
         }
@@ -1137,7 +1137,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         Gtk.TreeModel model;
         if(sel.get_selected(out model, out iter))
         {
-            weak MPD.Song songs = null;
+            unowned MPD.Song songs = null;
             this.model_songs .get(iter, 0,out songs, -1);
             return songs;
         }
@@ -1160,7 +1160,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
 
             this.model_albums.set_request_artist(artist);
             MPD.Data.Item list = null;
-            weak MPD.Data.Item iter = data.get_first();
+            unowned MPD.Data.Item iter = data.get_first();
             if(iter!= null)
             {
                 do{
@@ -1174,7 +1174,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
                     MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM, iter.tag);
                     var ydata = MPD.Database.search_commit(server);
                     if(ydata != null) {
-                        weak MPD.Data.Item yi = ydata.get_first();
+                        unowned MPD.Data.Item yi = ydata.get_first();
                         while(list.song.date == null && yi != null)
                         {
                             if(yi.tag != null && yi.tag.length > 0) {
@@ -1518,7 +1518,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
 
         /* Lyrics */
         i = 0;
-        weak SList<weak Gtk.RadioButton> group  = null;
+        unowned SList<unowned Gtk.RadioButton> group  = null;
         if(config.get_int_with_default("MetaData", "show-lyrics",1) == 1)
         {
             var alib = new Gtk.Alignment(0f,0f,1f,0f);
@@ -1691,7 +1691,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         var model = tree.get_model();
         if(model.get_iter(out iter, path))
         {
-            weak MPD.Song song = null;
+            unowned MPD.Song song = null;
             model.get(iter, 0, out song, -1);
             if(song != null)
             {
@@ -1704,7 +1704,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
 
     private void album_song_browser_play_clicked(Gtk.ImageMenuItem item)
     {
-        Gtk.TreeView tree = (Gtk.TreeView)item.get_data("tree");
+        Gtk.TreeView tree = (Gtk.TreeView)item.get_data<Gtk.TreeView>("tree");
         if(tree != null)
         {
             Gtk.TreeIter iter;
@@ -1715,7 +1715,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             {
                 if(model.get_iter(out iter, path))
                 {
-                    weak MPD.Song song = null;
+                    unowned MPD.Song song = null;
                     model.get(iter, 0, out song, -1);
                     if(song != null)
                     {
@@ -1728,7 +1728,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
     }
     private void album_song_browser_add_clicked(Gtk.ImageMenuItem item)
     {
-        Gtk.TreeView tree = (Gtk.TreeView)item.get_data("tree");
+        Gtk.TreeView tree = (Gtk.TreeView)item.get_data<Gtk.TreeView>("tree");
         if(tree != null)
         {
             Gtk.TreeIter iter;
@@ -1739,7 +1739,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             {
                 if(model.get_iter(out iter, path))
                 {
-                    weak MPD.Song song = null;
+                    unowned MPD.Song song = null;
                     model.get(iter, 0, out song, -1);
                     if(song != null)
                     {
@@ -1787,9 +1787,9 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
                 var list = tree.get_selection().get_selected_rows(out model);
                 if(list != null)
                 {
-                    weak Gtk.TreePath path = list.data;
+                    unowned Gtk.TreePath path = list.data;
                     Gtk.TreeIter iter;
-                    weak MPD.Song song = null;
+                    unowned MPD.Song song = null;
                     if(model.get_iter(out iter, path))
                     {
                         model.get(iter, 0, out song);
@@ -1900,7 +1900,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
 
         /* Lyrics */
         i = 0;
-        weak SList<weak Gtk.RadioButton> group  = null;
+        unowned SList<unowned Gtk.RadioButton> group  = null;
         /* Album information */
         if(config.get_int_with_default("MetaData", "show-album-information",1) == 1)
         {
@@ -2156,7 +2156,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         notebook.set_show_tabs(false);
 
         i = 0;
-        weak SList<weak Gtk.RadioButton> group  = null;
+        unowned SList<unowned Gtk.RadioButton> group  = null;
         /* Artist information */
         if(config.get_int_with_default("MetaData", "show-artist-information",1) == 1)
         {
@@ -2312,7 +2312,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             MPD.Data.Item list = null;
             var data = MPD.Database.search_commit(server);
             if(data != null){
-                weak MPD.Data.Item iter = data.get_first();
+                unowned MPD.Data.Item iter = data.get_first();
                 do{
                     if(iter.tag == song.album){
                         iter = iter.next(false); 
@@ -2328,7 +2328,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
                     MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM, iter.tag);
                     var ydata = MPD.Database.search_commit(server);
                     if(ydata != null) {
-                        weak MPD.Data.Item yi = ydata.get_first();
+                        unowned MPD.Data.Item yi = ydata.get_first();
                         while(list.song.date == null && yi != null)
                         {
                             if(yi.tag != null && yi.tag.length > 0) {
@@ -2343,7 +2343,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
 
             list.sort_album_disc_track();
             if(list != null) {
-                weak MPD.Data.Item iter = list.get_first();
+                unowned MPD.Data.Item iter = list.get_first();
                 do{
                     button = new Gtk.Button();
                     button.set_relief(Gtk.ReliefStyle.NONE);
@@ -2525,7 +2525,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         public MPD.Song song;
     }
     private List<Hitem?> history = null;
-    private weak List<Hitem?> current = null;
+    private unowned List<Hitem?> current = null;
     private void show_hitem(Hitem hi)
     {
         switch(hi.type)
@@ -2572,7 +2572,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
     }
     private void history_show_list_clicked(Gtk.MenuItem item)
     {
-        weak List<Hitem?> a = (List<Hitem?>) item.get_data("current");
+        unowned List<Hitem?> a = (List<Hitem?>) item.get_data<List<Hitem?>>("current");
         if(a != null)
         {
             current = a;
@@ -2582,7 +2582,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
     private void history_show_list()
     {
         var menu = new Gtk.Menu();
-        weak List<Hitem?> iter = history.last();
+        unowned List<Hitem?> iter = history.last();
         while(iter!= null){
             var i = iter.data;
             string label = "";
@@ -2639,7 +2639,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
     {
         if(history != null)
         {
-            weak Hitem a = current.data;
+            unowned Hitem a = current.data;
             if(a.type == hi.type) {
                 if(Gmpc.Misc.song_checksum(a.song) == Gmpc.Misc.song_checksum(hi.song)){
                     return;
@@ -2648,7 +2648,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         }
         history.prepend(hi);
         if(history.length() > 25){
-            weak List<Hitem?> a = history.last();
+            unowned List<Hitem?> a = history.last();
             history.remove(a.data);
         }
         current = history;
@@ -2789,7 +2789,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
     {
         if(rref != null)
         {
-            weak Gtk.TreeView category_tree = Gmpc.Playlist3.get_category_tree_view();
+            unowned Gtk.TreeView category_tree = Gmpc.Playlist3.get_category_tree_view();
             var sel = category_tree.get_selection();
             var path = rref.get_path();
             if(path != null){

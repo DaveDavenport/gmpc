@@ -41,11 +41,11 @@ public class Gmpc.Provider.MusicTree : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIfa
     public int[] version = {0,0,2};
 
     
-    public override weak int[] get_version() {
+    public override unowned int[] get_version() {
         return this.version;
     }
 
-    public override weak string get_name() {
+    public override unowned string get_name() {
         return N_("Music Tree Provider");
     }
 
@@ -75,7 +75,7 @@ public class Gmpc.Provider.MusicTree : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIfa
     {
         List<Gmpc.MetaData.Item> list = null;
         string id =  profiles.get_current_id();
-        weak string directory = null;
+        unowned string directory = null;
 
         log("Gmpc.Plugin.MusicTreeProvider", GLib.LogLevelFlags.LEVEL_DEBUG, 
                 "Starting Query");

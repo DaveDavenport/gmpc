@@ -28,11 +28,11 @@ public class  Gmpc.Plugin.DatabaseUpdateTracker : Gmpc.Plugin.Base {
     private Gtk.Image image = null;
     public int[] version = {0,0,2};
 
-    public override weak int[] get_version() {
+    public override unowned int[] get_version() {
         return this.version;
     }
 
-    public override weak string get_name() {
+    public override unowned string get_name() {
         return "Database Update Tracker";
     }
 

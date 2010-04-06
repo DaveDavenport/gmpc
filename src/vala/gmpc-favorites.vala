@@ -75,7 +75,7 @@ namespace Gmpc.Favorites{
         /**
          * Signal for the widget using the list to see if it needs to recheck status
          */
-        signal void updated();
+        public signal void updated();
 
         /**
          * Check if the song (specified by path) is favored
@@ -84,7 +84,7 @@ namespace Gmpc.Favorites{
         bool
         is_favorite(string path)
         {
-            weak MPD.Data.Item iter = this.list.get_first();
+            unowned MPD.Data.Item iter = this.list.get_first();
             while(iter != null)
             {
                 if(iter.type == MPD.Data.Type.SONG)
@@ -115,7 +115,7 @@ namespace Gmpc.Favorites{
                     /* Remove it */
                     /* To be able to remove it we have to first lookup the position */
                     /* This needs libmpd 0.18.1 */
-                    weak MPD.Data.Item iter = this.list.get_first();
+                    unowned MPD.Data.Item iter = this.list.get_first();
                     while(iter != null)
                     {
                         if(iter.type == MPD.Data.Type.SONG)
@@ -161,7 +161,7 @@ namespace Gmpc.Favorites{
             } else {
                 favorites.ref();
             }
-            favorites.updated += update;
+            favorites.updated.connect(update);
             this.image = new Gtk.Image();
             this.update(favorites);
             this.add(this.image);

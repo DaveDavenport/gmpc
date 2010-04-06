@@ -7,7 +7,7 @@ namespace MPD {
     public class Server {
 
         public MPD.Song playlist_get_song(int songid);
-        public weak MPD.Song playlist_get_current_song();
+        public unowned MPD.Song playlist_get_current_song();
         public int player_get_next_song_id();
         [CCode (cname="mpd_server_get_database_update_time")]
         public int get_database_update_time();
@@ -158,10 +158,10 @@ namespace MPD {
                 public void sort_album_disc_track();
 
                 [CCode (cname="mpd_data_get_next_real")] 
-                public weak Item? next(bool free);
+                public unowned Item? next(bool free);
 
                 [CCode (cname="mpd_data_get_first")] 
-                public weak Item? get_first();
+                public unowned Item? get_first();
 
                 [CCode (cname="mpd_data_get_first")] 
                 [ReturnsModifiedPointer ()]

@@ -62,12 +62,12 @@ namespace Gmpc {
 
             }
             /* Version of the plugin*/
-            public const int[] version =  {0,0,0};
-            public override  weak int[] get_version() {
+            public int[] version =  {0,0,0};
+            public override  unowned int[] get_version() {
                 return version;
             }
             /* Name */
-            public override weak string get_name() {
+            public override unowned string get_name() {
                 return ("Now Playing");
             }
 
@@ -81,7 +81,7 @@ namespace Gmpc {
                     if(this.np_ref != null) {
                         var path = np_ref.get_path();
                         if(path != null) {
-                            weak int[] indices  = path.get_indices();
+                            unowned int[] indices  = path.get_indices();
                             config.set_int(this.get_name(), "position", indices[0]);
                             Gtk.ListStore model = (Gtk.ListStore) np_ref.get_model();
                             Gtk.TreeIter iter;
@@ -106,7 +106,7 @@ namespace Gmpc {
                 if(this.np_ref != null) {
                     var path = np_ref.get_path();
                     if(path != null) {
-                        weak int[] indices  = path.get_indices();
+                        unowned int[] indices  = path.get_indices();
                         config.set_int(this.get_name(), "position", indices[0]);
                     }
                 }
@@ -407,8 +407,9 @@ namespace Gmpc {
 
                     event.set_data_full("artist",(void *)"%s".printf(song.artist), (GLib.DestroyNotify) g_free);
                     event.button_press_event.connect((widget, event) => {
-                        string artist = (string)widget.get_data("artist");
+                        string artist = (string)widget.get_data<string>("artist");
                         Gmpc.Browser.Metadata.show_artist(artist);
+			return false;
                     });
                 }
                 /* Album */
@@ -432,11 +433,12 @@ namespace Gmpc {
                     event.set_data_full("artist",(void *)"%s".printf(song.artist), (GLib.DestroyNotify) g_free);
                     event.set_data_full("album",(void *)"%s".printf(song.album), (GLib.DestroyNotify) g_free);
                     event.button_press_event.connect((widget, event) => {
-                        string artist = (string)widget.get_data("artist");
-                        string album = (string)widget.get_data("album");
+                        string artist = (string)widget.get_data<string>("artist");
+                        string album = (string)widget.get_data<string>("album");
                         if(artist != null && album != null) {
                             Gmpc.Browser.Metadata.show_album(artist,album);
                             }
+			return false;
                             });
                 }
                 /* Genre */
@@ -547,7 +549,7 @@ namespace Gmpc {
 
                 /* Lyrics */
                 var i = 0;
-                weak SList<weak Gtk.RadioButton> group  = null;
+                unowned SList<unowned Gtk.RadioButton> group  = null;
                 if(config.get_int_with_default("MetaData", "show-lyrics",1) == 1)
                 {
                     var alib = new Gtk.Alignment(0f,0f,1f,0f);
@@ -772,7 +774,7 @@ namespace Gmpc {
                     MPD.Data.Item list = null;
                     var data = MPD.Database.search_commit(server);
                     if(data != null){
-                        weak MPD.Data.Item iter = data.get_first();
+                        unowned MPD.Data.Item iter = data.get_first();
                         do{
                             if(iter.tag == song.album){
                                 iter = iter.next(false); 
@@ -796,7 +798,7 @@ namespace Gmpc {
 
                     list.sort_album_disc_track();
                     if(list != null) {
-                        weak MPD.Data.Item iter = list.get_first();
+                        unowned MPD.Data.Item iter = list.get_first();
                         do{
                             var button = new Gtk.Button();
                             button.set_relief(Gtk.ReliefStyle.NONE);
@@ -911,7 +913,7 @@ namespace Gmpc {
              */
             private void select_now_playing_browser(Gtk.ImageMenuItem item)
             {
-                weak Gtk.TreeView tree = Gmpc.Playlist3.get_category_tree_view();
+                unowned Gtk.TreeView tree = Gmpc.Playlist3.get_category_tree_view();
                 var sel = tree.get_selection();
                 var path = np_ref.get_path();
                 if(path != null)

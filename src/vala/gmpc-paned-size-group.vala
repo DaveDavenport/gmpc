@@ -23,7 +23,7 @@ using MPD;
 
 namespace Gmpc{
 	public class PanedSizeGroup : GLib.Object {
-		private List<weak Gtk.Paned> list = null;
+		private List<unowned Gtk.Paned> list = null;
         private int position = config.get_int_with_default("paned-size-group", "position", 150);
 
 		public 
@@ -51,7 +51,7 @@ namespace Gmpc{
 
 			var pane = (Gtk.Paned) paned;
 			position = pane.get_position();
-			foreach(weak Gtk.Paned p in list)
+			foreach(unowned Gtk.Paned p in list)
 			{
 				if(p != paned)
 				{

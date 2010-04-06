@@ -21,7 +21,7 @@ namespace Gmpc {
 
     [CCode (cheader_filename="gmpc-meta-watcher.h")]
     public class MetaWatcher {
-        signal void data_changed(MPD.Song song,  Gmpc.MetaData.Type type, Gmpc.MetaData.Result result,MetaData.Item met);
+        public signal void data_changed(MPD.Song song,  Gmpc.MetaData.Type type, Gmpc.MetaData.Result result,MetaData.Item met);
 
 
         [CCode ( cname="gmpc_meta_watcher_get_meta_path", cheader_filename="gmpc-meta-watcher.h" )]
@@ -50,7 +50,7 @@ namespace Gmpc {
             [CCode (cname="meta_data_new")]
             public Item ();
             public Gmpc.MetaData.Type type; 
-           public weak string plugin_name;
+           public unowned string plugin_name;
            public int size;
            public Gmpc.MetaData.ContentType content_type;
 
@@ -61,25 +61,25 @@ namespace Gmpc {
            public void set_uri(string uri);
            /* add accessors? */
            [CCode (cname="meta_data_get_raw")]
-           public weak uchar[] get_raw();
+           public unowned uchar[] get_raw();
 
            [CCode (cname="meta_data_get_text")]
-           public weak string  get_text();
+           public unowned string  get_text();
            [CCode (cname="meta_data_get_text_from_html")]
            public string get_text_from_html();
            /* same as get_text */
 
            [CCode (cname="meta_data_get_uri")]
-           public weak string get_uri();
+           public unowned string get_uri();
 
            [CCode (cname="meta_data_get_html")]
-           public weak string get_html();
+           public unowned string get_html();
 
            [CCode (cname="meta_data_get_text_vector")]
-           public weak string[] get_text_vector();
+           public unowned string[] get_text_vector();
 
            [CCode (cname="meta_data_get_text_list")]
-           public weak GLib.List<weak string> get_text_list();
+           public unowned GLib.List<unowned string> get_text_list();
 
            [CCode (cname="meta_data_is_text_list")]
            public bool  is_text_list();
@@ -198,9 +198,9 @@ namespace Gmpc {
             public void cancel ();
 
             [CCode (cname="gmpc_easy_handler_get_data_vala_wrap", cheader_filename="gmpc_easy_download.h")]
-            public weak uchar[] get_data();
+            public unowned uchar[] get_data();
             [CCode (cname="gmpc_easy_handler_get_uri", cheader_filename="gmpc_easy_download.h")]
-            public weak string get_uri();
+            public unowned string get_uri();
 
             [CCode (cname="gmpc_easy_handler_get_user_data", cheader_filename="gmpc_easy_download.h")]
             public void * get_user_data();
@@ -217,7 +217,7 @@ namespace Gmpc {
         public delegate void Callback (Gmpc.AsyncDownload.Handle handle, Gmpc.AsyncDownload.Status status);
 
         [CCode (cname="gmpc_easy_async_downloader", cheader_filename="gmpc_easy_download.h")]
-        public weak Gmpc.AsyncDownload.Handle download(string uri, Gmpc.AsyncDownload.Callback callback);
+        public unowned Gmpc.AsyncDownload.Handle download(string uri, Gmpc.AsyncDownload.Callback callback);
         
         [CCode (cname="gmpc_easy_download_uri_escape", cheader_filename="gmpc_easy_download.h")]
         public string escape_uri(string part);
@@ -232,7 +232,7 @@ namespace Gmpc {
 
     namespace Playlist {
         [CCode (cname="(GtkWindow *)playlist3_get_window", cheader_filename="plugin.h")]
-        public weak Gtk.Window get_window();
+        public unowned Gtk.Window get_window();
 [CCode (cname="playlist3_window_is_hidden", cheader_filename="plugin.h")]
         public bool is_hidden();
 
@@ -317,7 +317,7 @@ namespace Gmpc {
             public void set_request_artist(string? list);
 
             [CCode (cname="gmpc_mpddata_model_get_request_artist")]
-            public weak string get_request_artist();
+            public unowned string get_request_artist();
             public int icon_size;
         }
     }
@@ -342,7 +342,7 @@ namespace Gmpc {
             public string? get_current_id();
             public void set_db_update_time(string id, int value);
             public int get_db_update_time(string id);
-            public weak string? get_music_directory(string id); 
+            public unowned string? get_music_directory(string id); 
 
     }
 

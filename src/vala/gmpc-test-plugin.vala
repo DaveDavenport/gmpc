@@ -28,7 +28,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
     private MPD.Song song = null;
     private Gmpc.MetaData.Type query_type = Gmpc.MetaData.Type.ALBUM_ART;
 
-    private GLib.List<weak Gmpc.AsyncDownload.Handle> downloads = null;
+    private GLib.List<unowned Gmpc.AsyncDownload.Handle> downloads = null;
     /** fetching handles */
     private void *handle = null;
     private void *handle2 = null;
@@ -172,7 +172,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
         this.bar.pulse();
         if(status == Gmpc.AsyncDownload.Status.DONE)
         {
-            weak uchar[] data = handle.get_data();
+            unowned uchar[] data = handle.get_data<uchar[]>();
             if(this.query_type == Gmpc.MetaData.Type.ALBUM_ART || this.query_type == Gmpc.MetaData.Type.ARTIST_ART)
             {
                 try{
@@ -235,14 +235,14 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
                 }
             }
         }
-        foreach(weak MetaData.Item md in list)
+        foreach(unowned MetaData.Item md in list)
         {
 
             if(this.query_type == Gmpc.MetaData.Type.ALBUM_ART || this.query_type == Gmpc.MetaData.Type.ARTIST_ART)
             {
                 if(md.content_type == Gmpc.MetaData.ContentType.URI)
                 {
-                    weak string uri = md.get_uri();
+                    unowned string uri = md.get_uri();
                     if(md.content_type == Gmpc.MetaData.ContentType.URI)
                     {
                         if(uri[0] == '/'){
@@ -290,7 +290,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
 
                 if(md.content_type == Gmpc.MetaData.ContentType.TEXT)
                 {
-                    weak string uri = md.get_text();
+                    unowned string uri = md.get_text();
                     add_entry_text(plugin_name, "n/a", uri);
                 }
                 else 
@@ -302,7 +302,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
                 else
                 if(md.content_type == Gmpc.MetaData.ContentType.URI)
                 {
-                    weak string uri = md.get_uri();
+                    unowned string uri = md.get_uri();
                     if(uri[0] == '/'){
                         try {
                             string content;
@@ -324,7 +324,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
     public void store_image(Gmpc.AsyncDownload.Handle handle, Gmpc.AsyncDownload.Status status)
     {
         if(status == Gmpc.AsyncDownload.Status.PROGRESS){
-            weak uchar[] data =handle.get_data();
+            unowned uchar[] data =handle.get_data<uchar[]>();
             this.sensitive = false;
             this.pbox.show();
             int64 total_size = handle.get_content_size(); 
@@ -338,7 +338,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
         this.downloads.remove(handle);
         if(status == Gmpc.AsyncDownload.Status.DONE)
         {
-            weak uchar[] data = handle.get_data();
+            unowned uchar[] data = handle.get_data<uchar[]>();
             var file = Gmpc.MetaData.get_metadata_filename(this.query_type, this.song,null); 
             try {
                 GLib.FileUtils.set_contents(file, (string)data, (long)data.length);
@@ -369,7 +369,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
         string path = null;
         if(this.query_type == Gmpc.MetaData.Type.ALBUM_ART || this.query_type == Gmpc.MetaData.Type.ARTIST_ART)
         {
-            path = (string)button.get_data("path");
+            path = (string)button.get_data<string>("path");
             if(path != null)
             {
                 if(path[0]  == '/')
@@ -393,13 +393,12 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
                         this.downloads.append(h);
                 }
             }else{
-                string base64 =(string)button.get_data("data");
+                string base64 =(string)button.get_data<string>("data");
                 if(base64 != null) {
                     string filename = Gmpc.MetaData.get_metadata_filename(this.query_type,this.song, null); 
-                    size_t len;
-                    uchar[] data = GLib.Base64.decode(base64, out len);
+                    uchar[] data = GLib.Base64.decode(base64 );
                     try{
-                    GLib.FileUtils.set_contents(filename, (string)data, (ssize_t)len);
+                    GLib.FileUtils.set_contents(filename, (string)data, (ssize_t)data.length);
 
                     var met = new MetaData.Item();
                     met.type = this.query_type;
@@ -422,7 +421,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
         }else{
             string lyric;
 
-            lyric = (string)button.get_data("lyrics");
+            lyric = (string)button.get_data<string>("lyrics");
             var file = Gmpc.MetaData.get_metadata_filename(this.query_type, this.song,null); 
             try {
                 GLib.FileUtils.set_contents(file,lyric, -1); 
@@ -721,7 +720,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
 
 
 public class  Gmpc.TestPlugin : Gmpc.Plugin.Base,Gmpc.Plugin.ToolMenuIface, Gmpc.Plugin.SongListIface {
-    public const int[] version = {0,0,2};
+    public int[] version = {0,0,2};
     /*********************************************************************************
      * Plugin base functions 
      * These functions are required.
@@ -730,13 +729,13 @@ public class  Gmpc.TestPlugin : Gmpc.Plugin.Base,Gmpc.Plugin.ToolMenuIface, Gmpc
         /* Mark the plugin as an internal dummy */
         this.plugin_type = 8+4;
     }
-    public override weak int[] get_version() {
+    public override unowned int[] get_version() {
         return this.version;
     }
     /**
      * The name of the plugin
      */
-    public override weak string get_name() {
+    public override unowned string get_name() {
         return "Vala test plugin";
     }
 
@@ -766,14 +765,14 @@ public class  Gmpc.TestPlugin : Gmpc.Plugin.Base,Gmpc.Plugin.ToolMenuIface, Gmpc
     private void menu_activate_tree(Gtk.MenuItem item)
     {
         Gtk.TreeIter iter;
-        Gtk.TreeView tv = (Gtk.TreeView)item.get_data("treeview");
+        Gtk.TreeView tv = (Gtk.TreeView)item.get_data<string>("treeview");
         Gtk.TreeModel model = tv.get_model();
         var selection = tv.get_selection();
-        foreach(weak Gtk.TreePath path in selection.get_selected_rows(out model))
+        foreach(unowned Gtk.TreePath path in selection.get_selected_rows(out model))
         {
             if(model.get_iter(out iter, path))
             {
-                weak MPD.Song song = null;
+                unowned MPD.Song song = null;
                 model.get(iter,0, out song);
                 if(song != null)
                 {
@@ -803,7 +802,7 @@ public class  Gmpc.TestPlugin : Gmpc.Plugin.Base,Gmpc.Plugin.ToolMenuIface, Gmpc
 
     public void menu_activated_album(Gtk.MenuItem item)
     {
-        weak MPD.Song song = server.playlist_get_current_song();
+        unowned MPD.Song song = server.playlist_get_current_song();
         new Gmpc.MetaData.EditWindow(song,Gmpc.MetaData.Type.ALBUM_ART);
     }
     public int tool_menu_integration(Gtk.Menu menu)

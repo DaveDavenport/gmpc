@@ -178,7 +178,7 @@ public class Gmpc.Progress : Gtk.HBox
 
     }
    
-    signal void seek_event (uint seek_time);
+    public signal void seek_event (uint seek_time);
 
 
     private void value_changed (Gtk.Scale range)

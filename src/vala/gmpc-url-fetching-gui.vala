@@ -51,7 +51,7 @@ namespace Gmpc.UrlFetching
 		private void add_url_dialog_response( int response_id)
 		{
 			if(response_id == 1) {
-				weak Gtk.Entry entry = (Gtk.Entry)this.builder.get_object("url_entry");
+				unowned Gtk.Entry entry = (Gtk.Entry)this.builder.get_object("url_entry");
 				string url = entry.get_text();
 				this.parse_callback(this, url);
 				return;

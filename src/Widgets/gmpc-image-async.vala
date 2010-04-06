@@ -31,7 +31,7 @@ public class Gmpc.PixbufLoaderAsync : GLib.Object
     private Gtk.TreeRowReference rref = null;
 
 
-    signal void pixbuf_update(Gdk.Pixbuf? pixbuf);
+    public signal void pixbuf_update(Gdk.Pixbuf? pixbuf);
 
     public void set_rref(Gtk.TreeRowReference rreference)
     {
