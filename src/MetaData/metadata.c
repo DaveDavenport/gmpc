@@ -27,6 +27,7 @@
 
 #include "gmpc_easy_download.h"
 
+#define LOG_DOMAIN "MetaData"
 
 int meta_num_plugins=0;
 gmpcPluginParent **meta_plugins = NULL;
@@ -186,7 +187,7 @@ mpd_Song *rewrite_mpd_song(mpd_Song *tsong, MetaDataType type)
 			edited->artist = g_strdup_printf("%s %s", g_strstrip(str[1]), g_strstrip(str[0]));
 		}
 		g_strfreev(str);
-		debug_printf(DEBUG_INFO, "string converted to: '%s'", edited->artist);
+		g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "string converted to: '%s'", edited->artist);
 	}
 
 	/**
@@ -342,7 +343,7 @@ void meta_data_destroy(void)
 		process_queue = NULL;
 	}
 
-	debug_printf(DEBUG_INFO,"Done..");
+	g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG,"Done..");
 	/* Close the cover database  */
 	TOC("test")
 	metadata_cache_destroy();
@@ -470,11 +471,11 @@ static void metadata_download_handler(const GEADAsyncHandler *handle, GEADStatus
 
 		if(error){
 			/* Ok we failed to store it, now we cleanup, and try the next entry. */
-			debug_printf(DEBUG_ERROR, "Failed to store file: %s: '%s'", filename, error->message);
+			g_log(LOG_DOMAIN, G_LOG_LEVEL_WARNING, "Failed to store file: %s: '%s'", filename, error->message);
 			g_error_free(error); error = NULL;
 		}
 		else
-			debug_printf(DEBUG_ERROR, "Failed to store file: %s: '%li'", gmpc_easy_handler_get_uri(handle),length);
+			g_log(LOG_DOMAIN, G_LOG_LEVEL_WARNING, "Failed to store file: %s: '%i'", gmpc_easy_handler_get_uri(handle),(int)length);
 		/* If we fail, clean up and try next one */
 		g_free(filename);
 	}
@@ -990,10 +991,10 @@ gchar * gmpc_get_metadata_filename(MetaDataType  type, mpd_Song *song, char *ext
 		/*
 		   if (g_get_charset (&charset))
 		   {
-		   debug_printf(DEBUG_INFO, "Locale is utf-8, just copying");
+		   g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Locale is utf-8, just copying");
 		   dirname = g_strdup(song->artist);
 		   }else{
-		   debug_printf(DEBUG_INFO, "Locale is %s converting to UTF-8", charset);
+		   g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Locale is %s converting to UTF-8", charset);
 		   dirname = g_convert_with_fallback (song->artist, -1,
 		   charset, "UTF-8","-", NULL, NULL, &error);
 		   }
@@ -1007,7 +1008,7 @@ gchar * gmpc_get_metadata_filename(MetaDataType  type, mpd_Song *song, char *ext
 		}
 		//dirname = g_filename_from_utf8(song->artist,-1,NULL,NULL,&error); 
 		if(error) {
-			debug_printf(DEBUG_ERROR, "Failed to convert %s to file encoding. '%s'", song->artist, error->message);
+			g_log(LOG_DOMAIN, G_LOG_LEVEL_WARNING, "Failed to convert %s to file encoding. '%s'", song->artist, error->message);
 			g_error_free(error);
 			if(dirname) g_free(dirname);
 			dirname = g_strdup("invalid");

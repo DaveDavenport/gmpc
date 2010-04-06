@@ -25,6 +25,7 @@
 #include "playlist3.h"
 #include "misc.h"
 
+#define LOG_DOMAIN "Preferences"
 #define PLUGIN_STATS -200
 void preferences_show_pref_window(int plugin_id);
 static void plugin_stats_construct(GtkWidget *);
@@ -148,13 +149,9 @@ void create_preferences_window(void)
     gtk_builder_add_from_file(xml_preferences_window, string,&error);
 	q_free(string);
     if(error) {
-        debug_printf(DEBUG_ERROR, error->message); 
+        g_log(LOG_DOMAIN, G_LOG_LEVEL_ERROR,"Failed to load preferences.ui: %s", error->message); 
         g_error_free(error);
     }
-	/* check for errors and axit when there is no gui file */
-	if(xml_preferences_window == NULL)  g_error("Couldnt initialize GUI. Please check installation\n");
-
-
 	/* set info from struct */
 	/* hostname */
 	dialog = (GtkWidget *)gtk_builder_get_object(xml_preferences_window, "preferences_window");

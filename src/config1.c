@@ -27,7 +27,9 @@
 #include <sys/stat.h>
 #endif
 #include "config1.h"
-#include <libmpd/debug_printf.h>
+
+#define LOG_DOMAIN "Config"
+
 typedef enum _ConfigNodeType  {
 	TYPE_CATEGORY,
 	TYPE_ITEM,
@@ -242,7 +244,7 @@ config_obj *cfg_open(gchar *url)
 			fclose(fp);
 		}
 	}
-	debug_printf(DEBUG_INFO,"Config %s: allocated: %i\n", cfgo->url, cfgo->total_size);
+	g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG,"Config %s: allocated: %i\n", cfgo->url, cfgo->total_size);
     /*
 	g_mutex_unlock(cfgo->lock);
     */
@@ -257,7 +259,7 @@ void cfg_close(config_obj *cfgo)
 		return;
 	}
     cfg_save_real(cfgo);
-	debug_printf(DEBUG_INFO,"Closing config '%s' with %i bytes allocated\n", cfgo->url, cfgo->total_size);
+	g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG,"Closing config '%s' with %i bytes allocated\n", cfgo->url, cfgo->total_size);
     /*
 	g_mutex_lock(cfgo->lock);
     */
@@ -272,7 +274,7 @@ void cfg_close(config_obj *cfgo)
     */
 	cfgo->total_size-= /*sizeof(&cfgo->lock)+*/sizeof(config_obj);
 /*	g_mutex_free(cfgo->lock);*/
-	debug_printf(DEBUG_INFO,"Memory remaining: %i\n", cfgo->total_size);
+	g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG,"Memory remaining: %i\n", cfgo->total_size);
 	g_free(cfgo);
 	cfgo = NULL;
 }
@@ -409,8 +411,8 @@ static gboolean cfg_save_real(config_obj *cfgo)
     }else {
         return FALSE;
     }
-    debug_printf(DEBUG_INFO, "Save triggered:%s", cfgo->url);
-    debug_printf(DEBUG_INFO,"Saving config file: %s (%i bytes)", cfgo->url, cfgo->total_size);
+    g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Save triggered:%s", cfgo->url);
+    g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG,"Saving config file: %s (%i bytes)", cfgo->url, cfgo->total_size);
 	if(cfgo->root != NULL)
 	{
 		FILE *fp = g_fopen(cfgo->url, "w");
@@ -681,7 +683,7 @@ void cfg_del_single_value_mm(config_obj *cfg, const char *class,const char *scla
 	{
 		__int_cfg_remove_node(cfg,node);
 		cfg_save_delayed(cfg);
-        debug_printf(DEBUG_INFO, "triggered save delay: del: %s, %s", class, key);
+        g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "triggered save delay: del: %s, %s", class, key);
 	}
 /*	g_mutex_unlock(cfg->lock);*/
 }
@@ -703,7 +705,7 @@ void cfg_remove_class(config_obj *cfg, const char *class)
 		__int_cfg_remove_node(cfg, node);
 	}
 	cfg_save_delayed(cfg);
-    debug_printf(DEBUG_INFO, "triggered save delay: del: %s", class);
+    g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "triggered save delay: del: %s", class);
 /*    g_mutex_unlock(cfg->lock);*/
 }
 static void __int_cfg_set_single_value_as_string(config_obj *cfg, const char *class, const char *sclass, const char *ssclass, const char *key, const char *value)
@@ -761,7 +763,7 @@ static void __int_cfg_set_single_value_as_string(config_obj *cfg, const char *cl
         newnode->value = NULL;
     }
 	cfg_save_delayed(cfg);
-    debug_printf(DEBUG_INFO, "triggered save delay: set: %s,%s -> %s", class,key,value);
+    g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "triggered save delay: set: %s,%s -> %s", class,key,value);
 }
 
 void cfg_set_single_value_as_string(config_obj *cfg, const char *class, const char *key, const char *value)

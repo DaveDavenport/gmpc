@@ -1,15 +1,15 @@
 #Define the version
 m4_define([package_major_version], [0])
-m4_define([package_minor_version], [19])
-m4_define([package_micro_version], [101])
+m4_define([package_minor_version], [20])
+m4_define([package_micro_version], [95])
 m4_define([package_version], [package_major_version.package_minor_version.package_micro_version])
 
-AC_INIT([gmpc], [0.19.101], [qball@sarine.nl])
+AC_INIT([gmpc], [0.20.95], [qball@sarine.nl])
 
 #Define variable
-m4_define([package_tagline],       "♯♪ + ♭♪ = ☺")
+m4_define([package_tagline],       "  ")
 m4_define([package_website],       "http://gmpc.wikia.com")
-m4_define([package_copyright],     "Copyright 2003-2009 Qball Cow")
+m4_define([package_copyright],     "Copyright 2003-2010 Qball Cow")
 m4_define([package_bugtracker],    "http://gmpc.wikia.com/wiki/GMPC_HELP")
 
 
@@ -260,7 +260,7 @@ AC_MSG_RESULT($PACKAGE_PREFIX)
 
 # i18n support
 dnl please keep them in alphabetical order
-ALL_LINGUAS="ar bg bn bs cs da de en_CA en_GB es fi fr gl he hi hu hy id it ja jv lv ml ms nb ne nl pl pt pt_BR ro ru sq sv th tr zh_CN zh_TW"
+ALL_LINGUAS="ar bg bn bs cs da de el en_CA en_GB es fi fr gl he hi hu hy id it ja jv lv ml ms nb ne nl pl pt pt_BR ro ru sq sv th tr zh_CN zh_TW"
 
 
 AM_GLIB_GNU_GETTEXT
@@ -364,7 +364,7 @@ if test x${GOB2} = x""; then
 	exit 0;
 fi
 
-AM_PROG_VALAC([0.7.9])
+AM_PROG_VALAC([0.7.10])
 
 if test x${VALAC} = x""; then
     exit 0;

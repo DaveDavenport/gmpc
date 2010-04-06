@@ -45,6 +45,9 @@
 
 #define ALBUM_SIZE_SMALL 48
 #define ALBUM_SIZE_LARGE 80
+
+#define LOG_DOMAIN "Playlist"
+
 /* Drag and drop Target table */
 static GtkTargetEntry target_table[] = {
 	{(gchar *) "x-url/http", 0, 0},
@@ -503,7 +506,7 @@ int pl3_window_key_press_event(GtkWidget * mw, GdkEventKey * event)
 					else if (action == KB_ACTION_TOGGLE_MUTE)
 						volume_toggle_mute();
 					else {
-						debug_printf(DEBUG_ERROR,
+						g_log(LOG_DOMAIN, G_LOG_LEVEL_WARNING,
 								"Keybinding action (%i) for: %i %i is invalid\n", action, event->state, event->keyval);
 						found = 0;
 					}
@@ -575,7 +578,7 @@ gboolean pl3_close(void)
 
 		if (pl3_zoom <= PLAYLIST_SMALL) {
 			gtk_window_get_size(GTK_WINDOW(window), &pl3_wsize.width, &pl3_wsize.height);
-			debug_printf(DEBUG_INFO, "pl3_close: save size: %i %i\n", pl3_wsize.width, pl3_wsize.height);
+			g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "pl3_close: save size: %i %i\n", pl3_wsize.width, pl3_wsize.height);
 			cfg_set_single_value_as_int(config, "playlist", "width", pl3_wsize.width);
 			cfg_set_single_value_as_int(config, "playlist", "height", pl3_wsize.height);
 		}
@@ -630,7 +633,7 @@ int pl3_hide(void)
 		 */
 		if (pl3_zoom <= PLAYLIST_SMALL) {
 			gtk_window_get_size(GTK_WINDOW(pl3_win), &pl3_wsize.width, &pl3_wsize.height);
-			debug_printf(DEBUG_INFO, "pl3_hide: save size: %i %i\n", pl3_wsize.width, pl3_wsize.height);
+			g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "pl3_hide: save size: %i %i\n", pl3_wsize.width, pl3_wsize.height);
 			cfg_set_single_value_as_int(config, "playlist", "width", pl3_wsize.width);
 			cfg_set_single_value_as_int(config, "playlist", "height", pl3_wsize.height);
 			cfg_set_single_value_as_int(config, "playlist", "pane-pos",
@@ -655,7 +658,7 @@ static void pl3_show_and_position_window(void)
 		gtk_window_move(GTK_WINDOW(pl3_win), pl3_wsize.x, pl3_wsize.y);
 	}
 	if (pl3_wsize.height > 0 && pl3_wsize.width > 0) {
-		debug_printf(DEBUG_INFO, "restore size %i %i\n", pl3_wsize.width, pl3_wsize.height);
+		g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "restore size %i %i\n", pl3_wsize.width, pl3_wsize.height);
 		gtk_window_resize(GTK_WINDOW(pl3_win), pl3_wsize.width, pl3_wsize.height);
 	}
 	gtk_widget_show(pl3_win);
@@ -895,7 +898,7 @@ void create_playlist3(void)
 	 * Check if the file is loaded, if not then show an error message and abort the program
 	 */
 	if (pl3_xml == NULL) {
-		debug_printf(DEBUG_ERROR, "Failed to open playlist3.glade.\n");
+		g_log(LOG_DOMAIN, G_LOG_LEVEL_WARNING, "Failed to open playlist3.glade.\n");
 		abort();
 	}
 
@@ -1113,7 +1116,7 @@ void create_playlist3(void)
 			gtk_window_move(GTK_WINDOW(playlist3_get_window()), pl3_wsize.x, pl3_wsize.y);
 		}
 		if (pl3_wsize.height > 0 && pl3_wsize.width > 0) {
-			debug_printf(DEBUG_INFO, "restore size %i %i\n", pl3_wsize.width, pl3_wsize.height);
+			g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "restore size %i %i\n", pl3_wsize.width, pl3_wsize.height);
 			gtk_window_resize(GTK_WINDOW(playlist3_get_window()), pl3_wsize.width, pl3_wsize.height);
 		}
 		/* restore pane position */
@@ -1515,7 +1518,7 @@ static void playlist_zoom_level_changed(void)
 		gtk_window_get_size(GTK_WINDOW(pl3_win), &pl3_wsize.width, &pl3_wsize.height);
 		cfg_set_single_value_as_int(config, "playlist", "width", pl3_wsize.width);
 		cfg_set_single_value_as_int(config, "playlist", "height", pl3_wsize.height);
-		debug_printf(DEBUG_INFO, "save size: %i %i\n", pl3_wsize.width, pl3_wsize.height);
+		g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "save size: %i %i\n", pl3_wsize.width, pl3_wsize.height);
 	}
 
 	if (pl3_old_zoom == PLAYLIST_MINI && pl3_zoom != PLAYLIST_MINI) {
@@ -1563,7 +1566,7 @@ static void playlist_zoom_level_changed(void)
 
 	gtk_window_set_resizable(GTK_WINDOW(pl3_win), TRUE);
 	if (pl3_wsize.width > 0 && pl3_wsize.height > 0 && pl3_old_zoom == PLAYLIST_MINI) {
-		debug_printf(DEBUG_INFO, "restore size %i %i\n", pl3_wsize.width, pl3_wsize.height);
+		g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "restore size %i %i\n", pl3_wsize.width, pl3_wsize.height);
 		gtk_window_resize(GTK_WINDOW(pl3_win), pl3_wsize.width, pl3_wsize.height);
 	}
 	gtk_widget_show(glade_xml_get_widget(pl3_xml, "vbox5"));
@@ -1678,7 +1681,7 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
 					if (pb) {
 						ige_mac_dock_set_icon_from_pixbuf(dock, pb);
 					} else {
-						debug_printf(DEBUG_ERROR, "failed to get icon\n");
+						g_log(LOG_DOMAIN, G_LOG_LEVEL_WARNING, "failed to get icon\n");
 					}
 #endif
 					break;
@@ -1725,7 +1728,7 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
 					if (pb) {
 						ige_mac_dock_set_icon_from_pixbuf(dock, pb);
 					} else {
-						debug_printf(DEBUG_ERROR, "failed to get icon\n");
+						g_log(LOG_DOMAIN, G_LOG_LEVEL_WARNING, "failed to get icon\n");
 					}
 #endif
 					g_free(markup);
@@ -1758,7 +1761,7 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
 				if (pb) {
 					ige_mac_dock_set_icon_from_pixbuf(dock, pb);
 				} else {
-					debug_printf(DEBUG_ERROR, "failed to get icon\n");
+					g_log(LOG_DOMAIN, G_LOG_LEVEL_WARNING, "failed to get icon\n");
 				}
 #endif
 

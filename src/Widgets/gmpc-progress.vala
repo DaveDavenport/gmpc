@@ -112,11 +112,11 @@ public class Gmpc.Progress : Gtk.HBox
                 int t_seconds = (int) this.total%60;
                 string a = "";
                 uint p = (uint)(this.total * (event.x/(double)(scale.allocation.width-scale.style.xthickness)));
-				/* Don't show beyond end time */
-				p = (p > this.total)? this.total:p;
+		/* Don't show beyond end time */
+		p = (p > this.total)? this.total:p;
                 if(this.do_countdown){
-                    p = (uint)(this.total * (event.x/(double)(scale.allocation.width-scale.style.xthickness)));
                     a += "-";
+		    p = this.total-p;	
                 }
                 e_hour = (int) p/3600;
                 e_minutes = (int) (p%3600)/60;
@@ -184,19 +184,11 @@ public class Gmpc.Progress : Gtk.HBox
     private void value_changed (Gtk.Scale range)
     {
         if(this.total > 0)
-		{
-			if(this.do_countdown)
-			{
-				uint seconds = (uint)(this.total*(1-range.get_value()));
-				if(seconds != this.current)
-					seek_event(seconds);
-				
-			}else{
-				uint seconds = (uint)(this.total*(range.get_value()));
-				if(seconds != this.current)
-					seek_event(seconds);
-			}
-		}
+	{
+		uint seconds = (uint)(this.total*(range.get_value()));
+		if(seconds != this.current)
+			seek_event(seconds);
+	}
     }
 	private int press = 0;
     private bool button_release_event_callback (Gtk.Scale scale, Gdk.EventButton event)
@@ -212,7 +204,6 @@ public class Gmpc.Progress : Gtk.HBox
             if(event.button == 3)
             {
                 this.do_countdown = !this.do_countdown;
-                this.scale.inverted = this.do_countdown;
                 var cur = this.current;
                 var tot = this.total;
                 this.total=this.current = 0;
@@ -267,13 +258,8 @@ public class Gmpc.Progress : Gtk.HBox
 
             GLib.SignalHandler.block(this.scale, this.set_value_handler);
             if(this.total > 0) {
-                if(this.do_countdown){
-                    this.scale.set_value(1-this.current/(double)this.total);
-                }else{
-                    this.scale.set_value(this.current/(double)this.total);
-                }
-
-            } else {
+		    this.scale.set_value(this.current/(double)this.total);
+	    } else {
                 this.scale.set_value(0.0);
             }
 

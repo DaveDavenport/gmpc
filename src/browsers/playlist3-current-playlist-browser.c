@@ -1147,7 +1147,6 @@ static void pl3_current_playlist_save_myself(GmpcPluginBase *obj)
         if(path)
         {
             gint *indices = gtk_tree_path_get_indices(path);
-            debug_printf(DEBUG_INFO,"Saving myself to position: %i\n", indices[0]);
             cfg_set_single_value_as_int(config, "current-playlist","position",indices[0]);
             gtk_tree_path_free(path);
         }

@@ -30,7 +30,6 @@
 #include <string.h>
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
-#include <libmpd/debug_printf.h>
 #include "main.h"
 #include "misc.h"
 #include "gmpc-mpddata-treeview.h"
@@ -43,6 +42,7 @@
 #include "playlist3-playlist-editor.h"
 #include "gmpc-extras.h"
 
+#define LOG_DOMAIN "TagBrowser"
 /**
  * dirty hack to workaround single parameter for now 
  */
@@ -113,6 +113,8 @@ gmpcPlugin tag2_plug = {
 	.mpd_connection_changed = tag2_connection_changed,
 	.mpd_status_changed = tag2_status_changed,
 };
+
+
 /** Little hack to work around gmpc's limitations */
 static GList *tag2_ht = NULL;
 /** This stucture contains all the needed data for a browser
@@ -620,6 +622,7 @@ static void tag2_changed(GtkTreeSelection *sel2, tag_element *te)
              * This will make sure, selected rows that are matched, don't get de-selected 
              */
             sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(te_i->tree));
+
             gmpc_mpddata_model_set_mpd_data_slow(GMPC_MPDDATA_MODEL(te_i->model), data);
             /* this make sure the selected row is centered in the middle of the treeview.
              * Otherwise the user could have the tedious job of finding it again
@@ -767,7 +770,7 @@ static void tag2_column_header_menu_item_clicked(GtkCheckMenuItem *item, tag_ele
             {
                 mpd_database_search_field_start(connection, te->type);
                 data = mpd_database_search_commit(connection);
-                gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(te->model), data);
+                gmpc_mpddata_model_set_mpd_data_slow(GMPC_MPDDATA_MODEL(te->model), data);
             }else {
                 gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(te->model), NULL);
             }
@@ -1850,7 +1853,7 @@ static void tag2_save_myself(void)
 			{
 				gint *indices = gtk_tree_path_get_indices(path);
 				gchar *group = g_strdup_printf("tag2-plugin:%s",tb->key);
-				debug_printf(DEBUG_INFO,"Saving myself to position: %i\n", indices[0]);
+				g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG,"Saving myself to position: %i\n", indices[0]);
 				cfg_set_single_value_as_int(config, group,"position",indices[0]);
 				gtk_tree_path_free(path);
 				g_free(group);

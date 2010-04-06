@@ -20,7 +20,6 @@
 #ifndef __CONFIG_1_H__
 #define __CONFIG_1_H__
 #include <glib.h>
-#include <libmpd/debug_printf.h>
 #define CFG_INT_NOT_DEFINED -65536
 
 

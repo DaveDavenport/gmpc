@@ -353,20 +353,12 @@ static void mpd_interaction_init(void)
 }
 
 gmpcPlugin server_plug = {
-	N_("Server Settings"), 	/** name */
-	{1,1,1},			/** Version */
-	GMPC_INTERNALL,		/** Plugin Type */
-	0,					/** Internal Id */
-	NULL,				/** path to plugin */
-	mpd_interaction_init,/** init */
-	NULL,                           /** Destroy */
-	NULL,				/** browser ext */
-	ServerStatusChangedCallback,	/** status changed */
-	NULL,
-	&server_gpp,			/** preferences */
-	NULL,				/** Metadata */
-	NULL,				/** get enabled */
-	NULL				/** set enabled */
+	.name = N_("Server Settings"), 	/** name */
+	.version = {1,1,1},			/** Version */
+	.plugin_type = GMPC_INTERNALL,		/** Plugin Type */
+	.init = mpd_interaction_init,/** init */
+	.mpd_status_changed = ServerStatusChangedCallback,	/** status changed */
+	.pref = &server_gpp			/** preferences */
 };
 enum
 {
@@ -383,20 +375,10 @@ gmpcPrefPlugin connection_gpp = {
 };
 
 gmpcPlugin connection_plug = {
-	N_("Connection"),       /* name */
-	{1,1,1},                /* version */
-	GMPC_INTERNALL,         /* type */
-	0,                      /* id */
-	NULL,                   /* path */
-	NULL,                   /* init function */
-	NULL,                   /* destroy function */
-	NULL,                   /* browser */
-	NULL,                   /* status changed */
-	NULL,                   /* connection changed */
-	&connection_gpp,        /* preferences */
-	NULL,                   /* metadata */
-	NULL,                   /* get_enabled */
-	NULL                    /* set_enabled */
+	.name = N_("Connection"),       /* name */
+	.version = {1,1,1},                /* version */
+	.plugin_type = GMPC_INTERNALL,         /* type */
+	.pref = &connection_gpp        /* preferences */
 };
 
 guint connecting_pulse = 0;

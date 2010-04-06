@@ -29,6 +29,7 @@ requires 2.0.0
 %}
 %{
 #define BLOCK_SIZE 200
+#define LOG_DOMAIN "MpdData.Model.Playlist"
 %}
 /**
  * This is a Special version of Gmpc:MpdData:Model that is made to show the current playlist, and keep in sync with it.
@@ -278,7 +279,7 @@ override (G:Object)
             }
             if(GMPC_MPDDATA_MODEL(self)->num_rows != new_length)
             {
-                debug_printf(DEBUG_ERROR, "Playlist out of sync: %i-%i \n",GMPC_MPDDATA_MODEL(self)->num_rows,new_length);
+                g_log(LOG_DOMAIN, G_LOG_LEVEL_WARNING, "Playlist out of sync: %i-%i \n",GMPC_MPDDATA_MODEL(self)->num_rows,new_length);
             }
             self->_priv->playlist_id = mpd_playlist_get_playlist_id(mi);
         }
@@ -415,7 +416,7 @@ override (G:Object)
         if(data->song == NULL)
         {
             g_value_init(value, GMPC_MPDDATA_MODEL(self)->types[column]);
-            debug_printf(DEBUG_ERROR,"failed to get song entry\n");
+            g_log(LOG_DOMAIN, G_LOG_LEVEL_WARNING,"failed to get song entry\n");
             return;
         }
         if(column == MPDDATA_MODEL_COL_ICON_ID)

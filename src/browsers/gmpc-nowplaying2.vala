@@ -437,8 +437,9 @@ namespace Gmpc {
                         string album = (string)widget.get_data<string>("album");
                         if(artist != null && album != null) {
                             Gmpc.Browser.Metadata.show_album(artist,album);
-                            }
-			return false;
+			    return true;
+			    }
+			    return false;
                             });
                 }
                 /* Genre */

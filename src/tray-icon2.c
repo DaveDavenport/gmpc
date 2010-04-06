@@ -27,7 +27,7 @@
 #include "gmpc-metaimage.h"
 #include "misc.h"
 
-
+#define LOG_DOMAIN "TrayIcon"
 /* name of config field */
 #define TRAY_ICON2_ID "tray-icon2"
 
@@ -824,7 +824,7 @@ static void tray_icon2_connection_changed(MpdObj *mi, int connect,void *user_dat
 
 void tray_enable_toggled(GtkToggleButton *but)
 {
-	debug_printf(DEBUG_INFO,"tray-icon.c: changing tray icon %i\n", gtk_toggle_button_get_active(but));
+	g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG,"tray-icon.c: changing tray icon %i\n", gtk_toggle_button_get_active(but));
 	cfg_set_single_value_as_int(config, TRAY_ICON2_ID, "enable", (int)gtk_toggle_button_get_active(but));
 	if(cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "enable", 1)) {
 		tray_icon2_set_enabled(TRUE);

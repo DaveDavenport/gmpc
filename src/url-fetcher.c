@@ -21,14 +21,15 @@
 #include <unistd.h>
 #include <string.h>
 #include <libmpd/libmpd.h>
-#include <libmpd/debug_printf.h>
 #include <glib/gstdio.h>
 #include "main.h"
 #include "playlist3.h"
 #include "gmpc_easy_download.h"
 #include "gmpc-extras.h"
 
- #ifdef XSPF
+#define LOG_DOMAIN "UrlFetcher"
+
+#ifdef XSPF
 #include <xspf_c.h>
 #endif
 
@@ -124,7 +125,7 @@ static void url_parse_extm3u_file(const char *data, int size)
                  char *scheme = g_uri_parse_scheme(sloc->value);
                  if(scheme)
                  {
-                     debug_printf(DEBUG_INFO, "Trying to add url: %s", sloc->value);
+                     g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Trying to add url: %s", sloc->value);
                      if(strcmp(scheme, "http") == 0 && has_http) 
                      {
                          mpd_playlist_add(connection, sloc->value);
@@ -138,7 +139,7 @@ static void url_parse_extm3u_file(const char *data, int size)
                      g_free(scheme);
                  }
                  else{
-                     debug_printf(DEBUG_ERROR, "Failed to parse scheme: %s",sloc->value);
+                     g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Failed to parse scheme: %s",sloc->value);
                  }
              }
          }
@@ -191,7 +192,7 @@ static void url_parse_spiff_file(const char *data, int size, const gchar *uri)
                         char *scheme = g_uri_parse_scheme(sloc->value);
                         if(scheme)
                         {
-                            debug_printf(DEBUG_INFO, "Trying to add url: %s", sloc->value);
+                            g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Trying to add url: %s", sloc->value);
                             if(strcmp(scheme, "http") == 0 && has_http) 
                             {
                                 mpd_playlist_add(connection, sloc->value);
@@ -205,7 +206,7 @@ static void url_parse_spiff_file(const char *data, int size, const gchar *uri)
                             g_free(scheme);
                         }
                         else{
-                            debug_printf(DEBUG_ERROR, "Failed to parse scheme: %s",sloc->value);
+                            g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Failed to parse scheme: %s",sloc->value);
                         }
                     }
                 }
@@ -215,7 +216,7 @@ static void url_parse_spiff_file(const char *data, int size, const gchar *uri)
         }
         else 
         {
-            debug_printf(DEBUG_ERROR, "Error message: %s", error->message);
+            g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Error message: %s", error->message);
             g_error_free(error);
         }
 
@@ -280,12 +281,12 @@ static int url_check_binary(const char *data, const int size)
 static void parse_data(const char *data, guint size, const char *text)
 {
 	if (url_check_binary(data, size)) {
-		debug_printf(DEBUG_INFO, "Adding url\n", text);
+		g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Adding url: %s\n", text);
 		mpd_playlist_add(connection, (char *)text);
 		pl3_push_statusbar_message(_("Added 1 stream"));
 	}
     else if (!strncasecmp(data, "<?xml", 5)) {
-        debug_printf(DEBUG_INFO,  "Detected a xml file, might be xspf");
+        g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG,  "Detected a xml file, might be xspf");
         /* This might just be a xspf file */
 #ifdef XSPF		
 		url_parse_xspf_file(data, size, text);
@@ -297,22 +298,22 @@ static void parse_data(const char *data, guint size, const char *text)
     }
 	/** pls file: */
 	else if (!strncasecmp(data, "[playlist]", 10)) {
-		debug_printf(DEBUG_INFO, "Detected a PLS\n");
+		g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Detected a PLS\n");
 		url_parse_pls_file(data, size);
 	}
 	/** Extended M3U file */
 	else if (!strncasecmp(data, "#EXTM3U", 7)) {
-		debug_printf(DEBUG_INFO, "Detected a Extended M3U\n");
+		g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Detected a Extended M3U\n");
 		url_parse_extm3u_file(data, size);
 	}
 	/** Hack to detect most non-extended m3u files */
 	else if (!strncasecmp(data, "http://", 7)) {
-		debug_printf(DEBUG_INFO, "Might be a M3U, or generic list\n");
+		g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Might be a M3U, or generic list\n");
 		url_parse_extm3u_file(data, size);
 	}
 	/** Assume Binary file */
 	else {
-		debug_printf(DEBUG_INFO, "Adding url: %s\n", text);
+		g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Adding url: %s\n", text);
 		mpd_playlist_add(connection, (char *)text);
 		pl3_push_statusbar_message(_("Added 1 stream"));
 	}
