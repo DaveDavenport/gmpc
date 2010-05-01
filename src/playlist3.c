@@ -387,12 +387,15 @@ gboolean pl3_window_is_fullscreen(void)
 void pl3_window_fullscreen(void)
 {
 	GtkWidget *win = playlist3_get_window();
+	GtkWidget *p = glade_xml_get_widget(pl3_xml, "alignment1");
 
 	if (pl3_zoom < PLAYLIST_MINI) {
 		if (pl3_window_is_fullscreen()) {
 			gtk_window_unfullscreen(GTK_WINDOW(win));
+			gtk_widget_show(p);
 		} else {
 			gtk_window_fullscreen(GTK_WINDOW(win));
+			gtk_widget_hide(p);
 		}
 	}
 }
