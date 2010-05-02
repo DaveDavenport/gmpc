@@ -375,6 +375,23 @@ int pl3_cat_tree_button_release_event(GtkTreeView * tree, GdkEventButton * event
 /**********************************************************
  * MISC
  */
+
+static gboolean pl3_win_state_event(GtkWidget *window, GdkEventWindowState *event, gpointer data)
+{
+	GtkWidget *p = glade_xml_get_widget(pl3_xml, "alignment1");
+	GtkWidget *m = glade_xml_get_widget(pl3_xml, "menubar1");
+	GtkWidget *h = glade_xml_get_widget(pl3_xml, "hbox1");
+	if(((event->new_window_state)&GDK_WINDOW_STATE_FULLSCREEN)) {
+			gtk_widget_hide(p);
+			gtk_widget_hide(m);
+			gtk_widget_hide(h);
+	}else{
+			gtk_widget_show(p);
+			gtk_widget_show(m);
+			gtk_widget_show(h);
+	}
+	return FALSE;
+}
 gboolean pl3_window_is_fullscreen(void)
 {
 	GtkWidget *win = playlist3_get_window();
@@ -387,15 +404,12 @@ gboolean pl3_window_is_fullscreen(void)
 void pl3_window_fullscreen(void)
 {
 	GtkWidget *win = playlist3_get_window();
-	GtkWidget *p = glade_xml_get_widget(pl3_xml, "alignment1");
 
 	if (pl3_zoom < PLAYLIST_MINI) {
 		if (pl3_window_is_fullscreen()) {
 			gtk_window_unfullscreen(GTK_WINDOW(win));
-			gtk_widget_show(p);
 		} else {
 			gtk_window_fullscreen(GTK_WINDOW(win));
-			gtk_widget_hide(p);
 		}
 	}
 }
@@ -1243,6 +1257,10 @@ void create_playlist3(void)
 		}
 		cfg_free_multiple(list);
 	}
+
+	g_signal_connect(G_OBJECT(playlist3_get_window()), "window-state-event", G_CALLBACK(pl3_win_state_event), NULL);
+
+
 
 	/**
 	 * Add status icons 
