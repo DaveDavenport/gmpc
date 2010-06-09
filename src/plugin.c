@@ -743,8 +743,10 @@ gint  gmpc_plugin_tool_menu_integration (gmpcPluginParent  *plug, GtkMenu *menu)
         }
         return 0;
     }
-    if(plug->old->tool_menu_integration)
-        return plug->old->tool_menu_integration(menu);
+    if(plug->old){
+        if(plug->old->tool_menu_integration)
+            return plug->old->tool_menu_integration(menu);
+    }
     return 0;
 }
 
