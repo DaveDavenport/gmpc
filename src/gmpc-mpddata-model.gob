@@ -1002,6 +1002,16 @@ end:
                         val = (ca == NULL)?((cb==NULL)?0:-1):1;
                     }
                 }
+
+                if (val == 0 &&
+                        a->type == MPD_DATA_TYPE_SONG &&
+                        b->type == MPD_DATA_TYPE_SONG && 
+                        a->song->file &&
+                        b->song->file)
+                {
+                    val = strcmp (a->song->file, b->song->file);
+                }
+
                 g_value_unset(&va);
                 g_value_unset(&vb);
                 return fact*val; 
