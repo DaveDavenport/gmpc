@@ -558,7 +558,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
         this.bar = new Gtk.ProgressBar();
         vbox.pack_start(this.pbox, false, false, 0);
         this.cancel = new Gtk.Button.from_stock("gtk-cancel");
-        this.cancel.clicked += this.b_cancel;
+        this.cancel.clicked.connect(this.b_cancel);
         this.pbox.pack_start(this.bar, true, true, 0);
         this.pbox.pack_start(this.cancel, false, false, 0);
         this.bar.show();
@@ -576,7 +576,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
         var hbox = new Gtk.HBox(false, 6);
 
         var button = new Gtk.Button.from_stock("gtk-quit");
-        button.clicked += destroy_popup;
+        button.clicked.connect(destroy_popup);
         hbox.pack_end(button, false, false, 0);
         vbox.pack_end(hbox, false, false,0);
 
@@ -609,7 +609,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
         this.combo.add_attribute(renderer, "text", 1);
 
         qhbox.pack_start(this.combo, true,true,0);
-        this.combo.changed += combo_box_changed;
+        this.combo.changed.connect(combo_box_changed);
 
         vbox.pack_start(qhbox, false, false, 0);
        
@@ -663,7 +663,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
         var ali = new Gtk.Alignment(1.0f, 0.5f, 0.0f, 0.0f);
         ali.add(button);
         vbox.pack_start(ali, false, false, 0);
-        button.clicked += refresh_query;
+        button.clicked.connect(refresh_query);
 
 
 
@@ -794,7 +794,7 @@ public class  Gmpc.TestPlugin : Gmpc.Plugin.Base,Gmpc.Plugin.ToolMenuIface, Gmpc
             item.set_data("treeview", tv);
             menu.append(item);
 
-            item.activate += menu_activate_tree;
+            item.activate.connect(menu_activate_tree);
             return 1;
         }
         return 0;
@@ -809,7 +809,7 @@ public class  Gmpc.TestPlugin : Gmpc.Plugin.Base,Gmpc.Plugin.ToolMenuIface, Gmpc
     {
         Gtk.MenuItem item = new Gtk.MenuItem.with_label("Edit metadata current song");
         menu.append(item);
-        item.activate += menu_activated_album;
+        item.activate.connect(menu_activated_album);
         return 2;
     }
 }

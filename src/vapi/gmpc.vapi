@@ -295,7 +295,7 @@ namespace Gmpc {
 
     /* objects */
     namespace MpdData {
-        [CCode (chader_filename="gmpc-mpddata-treeview.h",cname="GmpcMpdDataTreeview")]
+        [CCode (cheader_filename="gmpc-mpddata-treeview.h",cname="GmpcMpdDataTreeview")]
         public class TreeView : Gtk.TreeView {
             [CCode (cname="gmpc_mpddata_treeview_new")]
             public TreeView(string name, bool sort, Gtk.TreeModel model);

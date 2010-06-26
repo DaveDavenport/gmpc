@@ -37,8 +37,8 @@ namespace Gmpc.Favorites{
     private class List : GLib.Object {
         private MPD.Data.Item? list = null; 
         construct {
-            gmpcconn.connection_changed += con_changed;
-            gmpcconn.status_changed += status_changed;
+            gmpcconn.connection_changed.connect(con_changed);
+            gmpcconn.status_changed.connect(status_changed);
         }
 
         /**
@@ -165,9 +165,9 @@ namespace Gmpc.Favorites{
             this.image = new Gtk.Image();
             this.update(favorites);
             this.add(this.image);
-            this.button_press_event += button_press_event_callback;
-            this.enter_notify_event += enter_notify_event_callback;
-            this.leave_notify_event += leave_notify_event_callback;
+            this.button_press_event.connect(button_press_event_callback);
+            this.enter_notify_event.connect(enter_notify_event_callback);
+            this.leave_notify_event.connect(leave_notify_event_callback);
 
         }
         ~Button() {
@@ -176,7 +176,7 @@ namespace Gmpc.Favorites{
         }
         private
         bool
-        button_press_event_callback(Gmpc.Favorites.Button button,Gdk.EventButton event)
+        button_press_event_callback(Gtk.Widget button,Gdk.EventButton event)
         {
             if(event.button == 1 && this.song != null) {
                 favorites.set_favorite(this.song.file, !this.fstate);
@@ -210,7 +210,7 @@ namespace Gmpc.Favorites{
         /* on mouse over, do some pre-highlighting */
         private
         bool
-        enter_notify_event_callback(Gmpc.Favorites.Button button, Gdk.EventCrossing motion)
+        enter_notify_event_callback(Gtk.Widget button, Gdk.EventCrossing motion)
         {
             var pb2 = pb.copy();
             if(this.fstate){
@@ -224,7 +224,7 @@ namespace Gmpc.Favorites{
         /* Reset default highlighting */
         private
         bool
-        leave_notify_event_callback(Gmpc.Favorites.Button button, Gdk.EventCrossing motion)
+        leave_notify_event_callback(Gtk.Widget button, Gdk.EventCrossing motion)
         {
             this.update(favorites);
             return false;

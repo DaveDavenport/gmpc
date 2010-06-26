@@ -195,7 +195,7 @@ namespace Gmpc {
              * If the style changed because f.e. the user switched theme, make sure the correct colouring is kept preserved.
              */
 
-            private void browser_bg_style_changed(Gtk.Container bg,Gtk.Style? style)
+            private void browser_bg_style_changed(Gtk.Widget bg,Gtk.Style? style)
             {
                 debug("Change style signal");
                 if(this.theme_colors) {
@@ -247,7 +247,7 @@ namespace Gmpc {
                     this.paned.set_shadow_type(Gtk.ShadowType.NONE);
                     this.container = new Gtk.EventBox();
                     this.container.set_visible_window(true);
-                    this.paned.style_set += browser_bg_style_changed;
+                    this.paned.style_set.connect(browser_bg_style_changed);
                     this.paned.add_with_viewport(this.container);
                     this.paned.get_vadjustment().set("step-increment", 20.0);
 
@@ -912,7 +912,7 @@ namespace Gmpc {
             /**
              * Makes gmpc jump to the now playing browser 
              */
-            private void select_now_playing_browser(Gtk.ImageMenuItem item)
+            private void select_now_playing_browser(Gtk.Widget item)
             {
                 unowned Gtk.TreeView tree = Gmpc.Playlist3.get_category_tree_view();
                 var sel = tree.get_selection();
@@ -932,7 +932,7 @@ namespace Gmpc {
                 {
                     var item = new Gtk.ImageMenuItem.with_mnemonic(_("Now Playing"));
                     item.set_image(new Gtk.Image.from_icon_name("media-audiofile", Gtk.IconSize.MENU));
-                    item.activate += select_now_playing_browser;
+                    item.activate.connect(select_now_playing_browser);
                     item.add_accelerator("activate", menu.get_accel_group(),0x069, Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
                     menu.append(item);
                     return 1;

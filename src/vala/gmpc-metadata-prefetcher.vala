@@ -38,7 +38,7 @@ public class  Gmpc.Plugin.MetadataPrefetcher : Gmpc.Plugin.Base {
         /* Mark the plugin as an internal dummy */
         this.plugin_type = 8+4;
         /* Attach status changed signal */
-        gmpcconn.status_changed += status_changed;
+        gmpcconn.status_changed.connect(status_changed);
     }
 
 

@@ -210,7 +210,7 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 			this.window = null;
 		}
 	}
-	private bool key_press_event(Gtk.Entry widget, Gdk.EventKey event) {
+	private bool key_press_event(Gtk.Widget widget, Gdk.EventKey event) {
 		/* Escape */
 		if (event.keyval == 0xff1b) {
 			this.window.destroy();
@@ -225,7 +225,7 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 		return false;
 	}
 
-	private bool popup_expose_handler(Gtk.Window widget, Gdk.EventExpose event) {
+	private bool popup_expose_handler(Gtk.Widget widget, Gdk.EventExpose event) {
 		var ctx = Gdk.cairo_create(widget.window);
 		int width = widget.allocation.width;
 		int height = widget.allocation.height;
@@ -292,7 +292,7 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 				window.set_colormap(colormap);
 			}
 			window.app_paintable = true;
-			window.expose_event += popup_expose_handler;
+			window.expose_event.connect(popup_expose_handler);
 
 /*			Disable this as often gmpc is moved and bring to top, not desirable..
 			if (!Gmpc.Playlist.is_hidden()) {
@@ -302,10 +302,10 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 */
 			/* setup entry */
 			entry.set_completion(this.completion);
-			entry.activate += this.activate;
-			entry.key_press_event += this.key_press_event;
+			entry.activate.connect(this.activate);
+			entry.key_press_event.connect(this.key_press_event);
 
-			entry.focus_out_event += this.focus_out_event;
+			entry.focus_out_event.connect(this.focus_out_event);
 
 			window.show_all();
 			window.present();
@@ -315,7 +315,7 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 		}
 	}
 	private bool
-	focus_out_event(Gtk.Entry entry, Gdk.EventFocus event)
+	focus_out_event(Gtk.Widget entry, Gdk.EventFocus event)
 	{
 		this.window.destroy();
 		this.window = null;
@@ -390,7 +390,7 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 		window.show_all();
 
 		/* delete event */
-		window.response += help_window_destroy;
+		window.response.connect(help_window_destroy);
 	}
 }
 

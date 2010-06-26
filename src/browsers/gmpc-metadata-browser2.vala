@@ -53,7 +53,7 @@ public class Gmpc.Widget.SimilarSongs : Gtk.Alignment{
         this.song = song;
         this.set(0.0f, 0.0f, 1.0f, 0.0f);
     }
-    private void add_clicked(Gtk.ImageMenuItem item)
+    private void add_clicked(Gtk.Widget item)
     {
         Gtk.TreeView tree = (Gtk.TreeView)this.pchild;
 
@@ -76,7 +76,7 @@ public class Gmpc.Widget.SimilarSongs : Gtk.Alignment{
         MPD.PlayQueue.queue_commit(server);
 
     }
-    private void play_clicked(Gtk.ImageMenuItem item)
+    private void play_clicked(Gtk.Widget item)
     {
         Gtk.TreeView tree = (Gtk.TreeView)this.pchild;
 
@@ -98,7 +98,7 @@ public class Gmpc.Widget.SimilarSongs : Gtk.Alignment{
             }
         }
     }
-    private void replace_clicked(Gtk.ImageMenuItem item)
+    private void replace_clicked(Gtk.Widget item)
     {
         bool found = false;
         Gtk.TreeView tree = (Gtk.TreeView)this.pchild;
@@ -129,9 +129,9 @@ public class Gmpc.Widget.SimilarSongs : Gtk.Alignment{
 
         this.play_clicked(item);
     }
-    private void tree_row_activated(Gmpc.MpdData.TreeView tree, Gtk.TreePath path , Gtk.TreeViewColumn column)
+    private void tree_row_activated(Gtk.Widget tree, Gtk.TreePath path , Gtk.TreeViewColumn column)
     {
-        var model = tree.get_model();
+        var model = (tree as Gtk.TreeView).get_model();
         Gtk.TreeIter iter;
         if(model.get_iter(out iter, path))
         {
@@ -143,22 +143,22 @@ public class Gmpc.Widget.SimilarSongs : Gtk.Alignment{
             }
         }
     }
-    private bool tree_right_menu(Gmpc.MpdData.TreeView tree, Gdk.EventButton event)
+    private bool tree_right_menu(Gtk.Widget tree, Gdk.EventButton event)
     {
         if(event.button == 3)
         {
             var menu = new Gtk.Menu();
             var item = new Gtk.ImageMenuItem.from_stock("gtk-media-play",null);
-            item.activate += play_clicked;
+            item.activate.connect(play_clicked);
             menu.append(item);
 
             item = new Gtk.ImageMenuItem.from_stock("gtk-add",null);
-            item.activate += add_clicked;
+            item.activate.connect(add_clicked);
             menu.append(item);
 
             item = new Gtk.ImageMenuItem.with_mnemonic(_("_Replace"));
             item.set_image(new Gtk.Image.from_stock("gtk-redo", Gtk.IconSize.MENU));
-            item.activate += replace_clicked;
+            item.activate.connect(replace_clicked);
             menu.append(item);
 
             menu.popup(null, null, null, event.button, event.time);
@@ -212,8 +212,8 @@ public class Gmpc.Widget.SimilarSongs : Gtk.Alignment{
             model.set_mpd_data((owned)item);
             Gmpc.MpdData.TreeView tree = new Gmpc.MpdData.TreeView("similar-song", true, model);
             tree.enable_click_fix();
-            tree.button_release_event += tree_right_menu;
-            tree.row_activated += tree_row_activated;
+            tree.button_release_event.connect(tree_right_menu);
+            tree.row_activated.connect(tree_row_activated);
             this.add(tree);
 
             this.pchild = tree;
@@ -267,7 +267,7 @@ public class Gmpc.Widget.SimilarSongs : Gtk.Alignment{
     public void update()
     {
         MetaData.Item item = null;
-        metawatcher.data_changed += metadata_changed;
+        metawatcher.data_changed.connect(metadata_changed);
         Gmpc.MetaData.Result gm_result = metawatcher.query(song, Gmpc.MetaData.Type.SONG_SIMILAR,out item);
         this.metadata_changed(metawatcher, this.song, Gmpc.MetaData.Type.SONG_SIMILAR, gm_result, item); 
     }
@@ -470,7 +470,7 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
             hbox.pack_start(find,false,false,0);
 
             find.set_data_full("artist",(void *)"%s".printf(artist), (GLib.DestroyNotify) g_free);
-            find.clicked+= artist_button_clicked;
+            find.clicked.connect(artist_button_clicked);
         }
 
         event.add(hbox);
@@ -487,7 +487,7 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
         this.set_row_spacings(6);
         this.set_col_spacings(6);
 
-        metawatcher.data_changed += metadata_changed;
+        metawatcher.data_changed.connect(metadata_changed);
 	this.size_allocate.connect(size_changed);
 
         Gmpc.MetaData.Result gm_result = metawatcher.query(song, Gmpc.MetaData.Type.ARTIST_SIMILAR,out item);
@@ -508,13 +508,14 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
     private bool theme_colors = (bool) config.get_int_with_default("Now Playing", "use-theme-color",1); 
     private Gdk.Color background;
     private Gdk.Color foreground;
+    private Gmpc.MpdData.TreeView song_tree = null;
 
     construct {
         /* Set the plugin as an internal one and of type pl_browser */
         this.plugin_type = 2|8; 
 
-        gmpcconn.connection_changed += con_changed;
-        gmpcconn.status_changed += status_changed;
+        gmpcconn.connection_changed.connect(con_changed);
+        gmpcconn.status_changed.connect(status_changed);
 
 
         var background = config.get_string_with_default("Now Playing", "background-color", "#000");
@@ -583,7 +584,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
     /**
      * Makes gmpc jump to the metadata browser 
      */
-    private void select_metadata_browser(Gtk.ImageMenuItem item)
+    private void select_metadata_browser(Gtk.Widget widget)
     {
         this.select_browser(null);
     }
@@ -596,7 +597,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         {
             var item = new Gtk.ImageMenuItem.with_mnemonic(_(this.get_name()));
             item.set_image(new Gtk.Image.from_icon_name("gmpc-metabrowser", Gtk.IconSize.MENU));
-            item.activate += select_metadata_browser;
+            item.activate.connect(select_metadata_browser);
             item.add_accelerator("activate", menu.get_accel_group(),0xffc1,0, Gtk.AccelFlags.VISIBLE);
             menu.append(item);
 
@@ -608,7 +609,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
     /**
      * This builds the browser
      */
-     private void browser_bg_style_changed(Gtk.Container bg,Gtk.Style? style)
+     private void browser_bg_style_changed(Gtk.Widget bg,Gtk.Style? style)
      {
          this.metadata_box.modify_bg(Gtk.StateType.NORMAL,this.metadata_sw.style.base[Gtk.StateType.NORMAL]);
 
@@ -620,8 +621,9 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
          this.change_color_style(this.metadata_sw);
      }
     /* This hack makes clicking a selected row again, unselect it */
-     private bool browser_button_press_event(Gtk.TreeView tree, Gdk.EventButton event)
+     private bool browser_button_press_event(Gtk.Widget treel, Gdk.EventButton event)
      {
+        var tree = (treel as Gtk.TreeView);
         Gtk.TreePath path= null;
         if(event.button != 1) return false;
         if(tree.get_path_at_pos((int)event.x,(int)event.y,out path, null, null, null))
@@ -635,19 +637,19 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
      }
     /**
      * Artist tree view functions */
-     private void browser_artist_entry_changed(Gtk.Entry entry)
+     private void browser_artist_entry_changed(Gtk.Editable entry)
      {
-        string text = entry.get_text();
+        string text = (entry as Gtk.Entry).get_text();
         if(text.size() > 0) {
-            entry.show();
-            entry.grab_focus();
+            (entry as Gtk.Widget).show();
+            (entry as Gtk.Widget).grab_focus();
         }else{
-            entry.hide();
+            (entry as Gtk.Widget).hide();
             this.tree_artist.grab_focus();
         }
         this.model_filter_artist.refilter();
      }
-     private void artist_add_clicked(Gtk.ImageMenuItem item )
+     private void artist_add_clicked(Gtk.Widget item )
      {
         string artist = browser_get_selected_artist(); 
         if(artist != null)
@@ -667,26 +669,27 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             }
         }
      }
-     private void artist_replace_clicked(Gtk.ImageMenuItem item)
+     private void artist_replace_clicked(Gtk.Widget item)
      {
          MPD.PlayQueue.clear(server);
          artist_add_clicked(item);
          MPD.Player.play(server);
      }
      /* Handle right mouse click */
-    private bool artist_browser_button_release_event(Gtk.TreeView tree, Gdk.EventButton event)
+    private bool artist_browser_button_release_event(Gtk.Widget treel, Gdk.EventButton event)
     {
+        var tree = (treel as Gtk.TreeView);
         if(event.button == 3) {
             if(tree.get_selection().count_selected_rows()>0)
             {
                 var menu = new Gtk.Menu();
                 var item = new Gtk.ImageMenuItem.from_stock("gtk-add",null);
-                item.activate += artist_add_clicked;
+                item.activate.connect(artist_add_clicked);
                 menu.append(item);
 
                 item = new Gtk.ImageMenuItem.with_mnemonic(_("_Replace"));
                 item.set_image(new Gtk.Image.from_stock("gtk-redo", Gtk.IconSize.MENU));
-                item.activate += artist_replace_clicked;
+                item.activate.connect(artist_replace_clicked);
                 menu.append(item);
 
                 menu.popup(null, null, null, event.button, event.time);
@@ -713,7 +716,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
 
          return visible;
      }
-     private bool browser_artist_key_press_event(Gtk.TreeView widget, Gdk.EventKey event)
+     private bool browser_artist_key_press_event(Gtk.Widget widget, Gdk.EventKey event)
      {
         unichar uc = Gdk.keyval_to_unicode(event.keyval);
         if(uc > 0)
@@ -732,7 +735,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
      /** 
       * Album tree view
       */
-     private void album_add_clicked(Gtk.ImageMenuItem item )
+     private void album_add_clicked(Gtk.Widget item )
      {
         string artist = browser_get_selected_artist(); 
         if(artist != null)
@@ -773,26 +776,26 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             }
         }
      }
-     private void album_replace_clicked(Gtk.ImageMenuItem item)
+     private void album_replace_clicked(Gtk.Widget item)
      {
          MPD.PlayQueue.clear(server);
          album_add_clicked(item);
          MPD.Player.play(server);
      }
     /* Handle right mouse click */
-    private bool album_browser_button_release_event(Gtk.TreeView tree, Gdk.EventButton event)
+    private bool album_browser_button_release_event(Gtk.Widget tree, Gdk.EventButton event)
     {
         if(event.button == 3) {
-            if(tree.get_selection().count_selected_rows()>0)
+            if((tree as Gtk.TreeView).get_selection().count_selected_rows()>0)
             {
                 var menu = new Gtk.Menu();
                 var item = new Gtk.ImageMenuItem.from_stock("gtk-add",null);
-                item.activate += album_add_clicked;
+                item.activate.connect(album_add_clicked);
                 menu.append(item);
 
                 item = new Gtk.ImageMenuItem.with_mnemonic(_("_Replace"));
                 item.set_image(new Gtk.Image.from_stock("gtk-redo", Gtk.IconSize.MENU));
-                item.activate += album_replace_clicked;
+                item.activate.connect(album_replace_clicked);
                 menu.append(item);
 
                 menu.popup(null, null, null, event.button, event.time);
@@ -820,7 +823,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
      }
 
 
-     private bool browser_album_key_press_event(Gtk.TreeView widget, Gdk.EventKey event)
+     private bool browser_album_key_press_event(Gtk.Widget widget, Gdk.EventKey event)
      {
         unichar uc = Gdk.keyval_to_unicode(event.keyval);
         if(uc > 0)
@@ -837,8 +840,9 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         return false;
      }
 
-     private void browser_album_entry_changed(Gtk.Entry entry)
+     private void browser_album_entry_changed(Gtk.Editable pentry)
      {
+        Gtk.Entry entry = (pentry as Gtk.Entry);
         string text = entry.get_text();
         if(text.size() > 0) {
             entry.show();
@@ -852,7 +856,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
      /**
       * Songs 
       */
-     private void song_add_clicked(Gtk.ImageMenuItem item )
+     private void song_add_clicked(Gtk.Widget item )
      {
         MPD.Song? song = browser_get_selected_song(); 
         if(song != null)
@@ -860,26 +864,27 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             MPD.PlayQueue.add_song(server,song.file); 
         }
      }
-     private void song_replace_clicked(Gtk.ImageMenuItem item)
+     private void song_replace_clicked(Gtk.Widget item)
      {
          MPD.PlayQueue.clear(server);
          song_add_clicked(item);
          MPD.Player.play(server);
      }
      /* Handle right mouse click */
-    private bool song_browser_button_release_event(Gtk.TreeView tree, Gdk.EventButton event)
+    private bool song_browser_button_release_event(Gtk.Widget ptree, Gdk.EventButton event)
     {
+        Gtk.TreeView tree = (ptree as Gtk.TreeView);
         if(event.button == 3) {
             if(tree.get_selection().count_selected_rows()>0)
             {
                 var menu = new Gtk.Menu();
                 var item = new Gtk.ImageMenuItem.from_stock("gtk-add",null);
-                item.activate += song_add_clicked;
+                item.activate.connect(song_add_clicked);
                 menu.append(item);
 
                 item = new Gtk.ImageMenuItem.with_mnemonic(_("_Replace"));
                 item.set_image(new Gtk.Image.from_stock("gtk-redo", Gtk.IconSize.MENU));
-                item.activate += song_replace_clicked;
+                item.activate.connect(song_replace_clicked);
                 menu.append(item);
 
                 menu.popup(null, null, null, event.button, event.time);
@@ -908,7 +913,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         {
             this.paned = new Gtk.HPaned();
             paned_size_group.add_paned(this.paned); 
-            this.paned.style_set += browser_bg_style_changed;
+            this.paned.style_set.connect(browser_bg_style_changed);
             /* Bow with browsers */
             this.browser_box = new Gtk.VBox(true, 6);
             this.paned.add1(this.browser_box);
@@ -925,7 +930,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             });
 */
             this.artist_filter_entry.set_no_show_all(true);
-            this.artist_filter_entry.changed += browser_artist_entry_changed;
+            this.artist_filter_entry.changed.connect(browser_artist_entry_changed);
 
             box.pack_start(this.artist_filter_entry, false, false, 0);
 
@@ -942,9 +947,9 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             new Gmpc.MpdData.Treeview.Tooltip(this.tree_artist, Gmpc.MetaData.Type.ARTIST_ART);
 
             this.tree_artist.set_enable_search(false);
-            this.tree_artist.button_press_event+=browser_button_press_event;
-            this.tree_artist.button_release_event+=artist_browser_button_release_event;
-            this.tree_artist.key_press_event += browser_artist_key_press_event;
+            this.tree_artist.button_press_event.connect(browser_button_press_event);
+            this.tree_artist.button_release_event.connect(artist_browser_button_release_event);
+            this.tree_artist.key_press_event.connect(browser_artist_key_press_event);
             sw.add(tree_artist);
             /* setup the columns */ 
             var column = new Gtk.TreeViewColumn();
@@ -960,7 +965,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             column.add_attribute(trenderer, "text", 7);
             this.tree_artist.append_column(column);
             column.set_title(_("Artist"));
-            this.tree_artist.get_selection().changed += browser_artist_changed;
+            this.tree_artist.get_selection().changed.connect(browser_artist_changed);
 
             /* set fixed height mode */
             column.sizing = Gtk.TreeViewColumnSizing.FIXED;
@@ -980,7 +985,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             });
 */
             this.album_filter_entry.set_no_show_all(true);
-            this.album_filter_entry.changed += browser_album_entry_changed;
+            this.album_filter_entry.changed.connect(browser_album_entry_changed);
             box.pack_start(this.album_filter_entry, false, false, 0);
 
             sw = new Gtk.ScrolledWindow(null, null);
@@ -995,9 +1000,9 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             this.tree_album.set_enable_search(false);
             new Gmpc.MpdData.Treeview.Tooltip(this.tree_album, Gmpc.MetaData.Type.ALBUM_ART);
 
-            this.tree_album.button_press_event+=browser_button_press_event;
-            this.tree_album.button_release_event+=album_browser_button_release_event;
-            this.tree_album.key_press_event += browser_album_key_press_event;
+            this.tree_album.button_press_event.connect(browser_button_press_event);
+            this.tree_album.button_release_event.connect(album_browser_button_release_event);
+            this.tree_album.key_press_event.connect(browser_album_key_press_event);
             sw.add(tree_album);
             /* setup the columns */ 
             column = new Gtk.TreeViewColumn();
@@ -1025,7 +1030,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             column.set_title(_("Album"));
 
 
-            this.tree_album.get_selection().changed += browser_album_changed;
+            this.tree_album.get_selection().changed.connect(browser_album_changed);
 
             /* Song list */
             sw = new Gtk.ScrolledWindow(null, null);
@@ -1035,8 +1040,8 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             this.model_songs = new Gmpc.MpdData.Model();
             this.tree_songs = new Gtk.TreeView.with_model(this.model_songs);
             this.tree_songs.rules_hint = true;
-            this.tree_songs.button_press_event+=browser_button_press_event;
-            this.tree_songs.button_release_event+=song_browser_button_release_event;
+            this.tree_songs.button_press_event.connect(browser_button_press_event);
+            this.tree_songs.button_release_event.connect(song_browser_button_release_event);
             sw.add(tree_songs);
             /* setup the columns */ 
             column = new Gtk.TreeViewColumn();
@@ -1064,7 +1069,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             this.tree_songs.set_search_column(7);
             column.set_title(_("Songs"));
 
-            this.tree_songs.get_selection().changed += browser_songs_changed;
+            this.tree_songs.get_selection().changed.connect(browser_songs_changed);
 
             /* The right view */
             this.metadata_sw = new Gtk.ScrolledWindow(null, null);
@@ -1487,13 +1492,13 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
 
         var abutton = new Gtk.Button.from_stock("gtk-add");
         abutton.set_relief(Gtk.ReliefStyle.NONE);
-        abutton.clicked += add_selected_song;
+        abutton.clicked.connect(add_selected_song);
         control_hbox.pack_start(abutton, false, false,0);
 
         abutton = new Gtk.Button.with_mnemonic(_("_Replace"));
         abutton.set_image(new Gtk.Image.from_stock("gtk-redo", Gtk.IconSize.BUTTON));
         abutton.set_relief(Gtk.ReliefStyle.NONE);
-        abutton.clicked += replace_selected_song;
+        abutton.clicked.connect(replace_selected_song);
         control_hbox.pack_start(abutton, false, false,0);
 
 
@@ -1685,10 +1690,10 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         /* show it */
         return vbox;
     }
-    private void album_song_tree_row_activated(Gtk.TreeView tree, Gtk.TreePath path, Gtk.TreeViewColumn column)
+    private void album_song_tree_row_activated(Gtk.Widget tree, Gtk.TreePath path, Gtk.TreeViewColumn column)
     {
         Gtk.TreeIter iter;
-        var model = tree.get_model();
+        var model = (tree as Gtk.TreeView).get_model();
         if(model.get_iter(out iter, path))
         {
             unowned MPD.Song song = null;
@@ -1702,7 +1707,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
 
     }
 
-    private void album_song_browser_play_clicked(Gtk.ImageMenuItem item)
+    private void album_song_browser_play_clicked(Gtk.Widget item)
     {
         Gtk.TreeView tree = (Gtk.TreeView)item.get_data<Gtk.TreeView>("tree");
         if(tree != null)
@@ -1726,7 +1731,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             }
         }
     }
-    private void album_song_browser_add_clicked(Gtk.ImageMenuItem item)
+    private void album_song_browser_add_clicked(Gtk.Widget item)
     {
         Gtk.TreeView tree = (Gtk.TreeView)item.get_data<Gtk.TreeView>("tree");
         if(tree != null)
@@ -1750,7 +1755,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             MPD.PlayQueue.queue_commit(server);
         }
     }
-    private void album_song_browser_replace_clicked(Gtk.ImageMenuItem item)
+    private void album_song_browser_replace_clicked(Gtk.Widget item)
     {
          MPD.PlayQueue.clear(server);
          album_song_browser_add_clicked(item);
@@ -1758,27 +1763,28 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
     }
 
 
-    private bool album_song_tree_button_press_event(Gmpc.MpdData.TreeView tree, Gdk.EventButton event)
+    private bool album_song_tree_button_press_event(Gtk.Widget dum, Gdk.EventButton event)
     {
+        var tree = this.song_tree;
         if(event.button == 3) {
             var menu = new Gtk.Menu();
 
             if(tree.get_selection().count_selected_rows() == 1)
             {
                 var item = new Gtk.ImageMenuItem.from_stock("gtk-media-play",null);
-                item.activate += album_song_browser_play_clicked;
+                item.activate.connect(album_song_browser_play_clicked);
                 item.set_data("tree", (void *)tree);
                 menu.append(item);
             }
             var item = new Gtk.ImageMenuItem.from_stock("gtk-add",null);
-            item.activate += album_song_browser_add_clicked;
+            item.activate.connect(album_song_browser_add_clicked);
             item.set_data("tree", (void *)tree);
             menu.append(item);
 
             item = new Gtk.ImageMenuItem.with_mnemonic(_("_Replace"));
             item.set_image(new Gtk.Image.from_stock("gtk-redo", Gtk.IconSize.MENU));
             item.set_data("tree", (void *)tree);
-            item.activate += album_song_browser_replace_clicked;
+            item.activate.connect(album_song_browser_replace_clicked);
             menu.append(item);
             
             if(tree.get_selection().count_selected_rows() == 1)
@@ -1872,13 +1878,13 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
 
         var button = new Gtk.Button.from_stock("gtk-add");
         button.set_relief(Gtk.ReliefStyle.NONE);
-        button.clicked += add_selected_song;
+        button.clicked.connect(add_selected_song);
         hbox.pack_start(button, false, false,0);
 
         button = new Gtk.Button.with_mnemonic(_("_Replace"));
         button.set_image(new Gtk.Image.from_stock("gtk-redo", Gtk.IconSize.BUTTON));
         button.set_relief(Gtk.ReliefStyle.NONE);
-        button.clicked += replace_selected_song;
+        button.clicked.connect(replace_selected_song);
         hbox.pack_start(button, false, false,0);
 
 
@@ -1952,10 +1958,10 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             var data = MPD.Database.search_commit(server);
             data.sort_album_disc_track();
             songs.set_mpd_data((owned)data);
-            var song_tree = new Gmpc.MpdData.TreeView("metadata-album-songs", true,songs); 
+            song_tree = new Gmpc.MpdData.TreeView("metadata-album-songs", true,songs); 
             song_tree.enable_click_fix();
-            song_tree.button_release_event += album_song_tree_button_press_event;
-            song_tree.row_activated += album_song_tree_row_activated;
+            song_tree.button_release_event.connect(album_song_tree_button_press_event);
+            song_tree.row_activated.connect(album_song_tree_row_activated);
             sw.add(song_tree);
             var alib = new Gtk.Alignment(0f,0f,1f,0f);
 
@@ -2130,13 +2136,13 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
 
         var button = new Gtk.Button.from_stock("gtk-add");
         button.set_relief(Gtk.ReliefStyle.NONE);
-        button.clicked += add_selected_song;
+        button.clicked.connect(add_selected_song);
         hbox.pack_start(button, false, false,0);
 
         button = new Gtk.Button.with_mnemonic(_("_Replace"));
         button.set_image(new Gtk.Image.from_stock("gtk-redo", Gtk.IconSize.BUTTON));
         button.set_relief(Gtk.ReliefStyle.NONE);
-        button.clicked += replace_selected_song;
+        button.clicked.connect(replace_selected_song);
         hbox.pack_start(button, false, false,0);
 
         info_box.attach(hbox, 0,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
@@ -2211,10 +2217,10 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             var data = MPD.Database.search_commit(server);
             data.sort_album_disc_track();
             songs.set_mpd_data((owned)data);
-            var song_tree = new Gmpc.MpdData.TreeView("metadata-artist-songs", true,songs); 
+            song_tree = new Gmpc.MpdData.TreeView("metadata-artist-songs", true,songs); 
             song_tree.enable_click_fix();
-            song_tree.button_release_event += album_song_tree_button_press_event;
-            song_tree.row_activated += album_song_tree_row_activated;
+            song_tree.button_release_event.connect(album_song_tree_button_press_event);
+            song_tree.row_activated.connect(album_song_tree_row_activated);
             sw.add(song_tree);
             var alib = new Gtk.Alignment(0f,0f,1f,0f);
 

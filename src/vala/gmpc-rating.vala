@@ -47,7 +47,7 @@ public class Gmpc.Rating : Gtk.Frame
         }
 
     }
-    public bool button_press_event_callback(Gtk.EventBox wid, Gdk.EventButton event)
+    public bool button_press_event_callback(Gtk.Widget wid, Gdk.EventButton event)
     {
         if(event.type == Gdk.EventType.BUTTON_PRESS)
         {
@@ -94,7 +94,7 @@ public class Gmpc.Rating : Gtk.Frame
         this.add(this.event_box);
         this.event_box.add(this.box);
 
-        this.event_box.button_press_event += button_press_event_callback;
+        this.event_box.button_press_event.connect(button_press_event_callback);
         this.show_all();
     }
 

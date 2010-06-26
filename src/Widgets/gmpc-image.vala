@@ -48,7 +48,7 @@ public class Gmpc.Image:Gtk.EventBox {
 	construct {
 		this.app_paintable = true;
 		this.visible_window = false;
-		this.expose_event += this.on_expose;
+		this.expose_event.connect(this.on_expose);
 		this.fd = new Pango.FontDescription();//from_string("sans mono"); 
 		fd.set_family("sans mono");
 
