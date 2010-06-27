@@ -63,9 +63,9 @@ namespace Gmpc {
                 if(source_v)
                 {
                     if(dest_v)
-                        this.move_before(source_iter, dest_iter);
+                        this.move_before(ref source_iter, dest_iter);
                     else
-                        this.move_before(source_iter, null);
+                        this.move_before(ref source_iter, null);
                 }
                 return true;
             }
