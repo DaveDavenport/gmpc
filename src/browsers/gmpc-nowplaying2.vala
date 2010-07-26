@@ -34,9 +34,9 @@ private const string some_unique_name_mb2 = Config.VERSION;
 namespace Gmpc {
     namespace Plugin {
         public class Mockup : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface {
-            private bool theme_colors = (bool) config.get_int_with_default("Now Playing", "use-theme-color",1); 
-            private string title_color = config.get_string_with_default("Now Playing", "title-color", "#4d90dd");
-            private string item_color = config.get_string_with_default("Now Playing", "item-color", "#304ab8");
+            private bool    theme_colors    = (bool) config.get_int_with_default("Now Playing", "use-theme-color",1); 
+            private string  title_color     = config.get_string_with_default("Now Playing", "title-color", "#4d90dd");
+            private string  item_color      = config.get_string_with_default("Now Playing", "item-color", "#304ab8");
             private Gdk.Color background;
             private Gdk.Color foreground;
 
@@ -310,6 +310,7 @@ namespace Gmpc {
                 var hbox = new Gtk.HBox(false, 6);
                 /* Album image */
                 var ali = new Gtk.Alignment(0f,0f,0f,0f);
+                ali.set_size_request(200,200);
                 var album_image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ALBUM_ART, 200);
                 album_image.set_scale_up(true);
                 album_image.set_squared(false);
@@ -319,6 +320,7 @@ namespace Gmpc {
 
                 /* Artist image */
                 ali = new Gtk.Alignment(1f,0f,0f,0f);
+                ali.set_size_request(200,200);
                 var artist_image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ARTIST_ART, 200);
                 artist_image.set_scale_up(true);
                 artist_image.set_squared(false);
@@ -409,8 +411,8 @@ namespace Gmpc {
                     event.button_press_event.connect((widget, event) => {
                         string artist = (string)widget.get_data<string>("artist");
                         Gmpc.Browser.Metadata.show_artist(artist);
-			return false;
-                    });
+                        return false;
+                        });
                 }
                 /* Album */
                 if(song.album != null) {
@@ -807,8 +809,6 @@ namespace Gmpc {
                             button.add(but_hbox);
                             var image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ALBUM_ART, 48);
                             var but_song = iter.song; 
-//                            but_song.artist = song.artist;
-  //                          but_song.album = iter.tag;
                             image.set_squared(true);
                             image.update_from_song_delayed(but_song);
 
