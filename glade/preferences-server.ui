@@ -29,11 +29,14 @@
         <col id="0">2</col>
         <col id="1" translatable="yes">Album</col>
       </row>
+      <row>
+        <col id="0">3</col>
+        <col id="1" translatable="yes">Auto</col>
+      </row>
     </data>
   </object>
   <object class="GtkVBox" id="server-vbox">
     <property name="visible">True</property>
-    <property name="orientation">vertical</property>
     <property name="spacing">6</property>
     <child>
       <object class="GtkFrame" id="frame6">
