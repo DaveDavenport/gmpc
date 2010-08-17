@@ -1,12 +1,13 @@
 <?xml version="1.0"?>
-<!--*- mode: xml -*-->
 <interface>
+  <!-- interface-requires gtk+ 2.12 -->
+  <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkAboutDialog" id="aboutdialog">
     <property name="border_width">5</property>
     <property name="modal">True</property>
-    <property name="window_position">GTK_WIN_POS_CENTER_ON_PARENT</property>
+    <property name="window_position">center-on-parent</property>
     <property name="destroy_with_parent">True</property>
-    <property name="type_hint">GDK_WINDOW_TYPE_HINT_NORMAL</property>
+    <property name="type_hint">normal</property>
     <property name="copyright" translatable="yes">Copyright 2003-2007 Qball Cow</property>
     <property name="website">http://gmpc.wikia.com/</property>
     <property name="license">		    GNU GENERAL PUBLIC LICENSE
@@ -290,20 +291,24 @@ POSSIBILITY OF SUCH DAMAGES.
 
 		     END OF TERMS AND CONDITIONS
 </property>
-    <property name="authors">Qball Cow &lt;qball@sarine.nl&gt;</property>
-    <property name="documenters"/>
-    <property comments="TRANSLATORS: Replace this string with your names, one name per line." name="translator_credits" translatable="yes">translator-credits</property>
+    <property name="authors">Qball Cow &lt;qball@sarine.nl&gt;
+
+Special Contributer:
+Nick (nycparamedic)
+</property>
+    <property name="documenters"></property>
+    <property name="translator_credits" translatable="yes" comments="TRANSLATORS: Replace this string with your names, one name per line.">translator-credits</property>
     <property name="artists">Chromakode
 Jakub Szypulka</property>
     <property name="logo_icon_name">gmpc</property>
     <child internal-child="vbox">
       <object class="GtkVBox" id="dialog-vbox5">
         <child internal-child="action_area">
-          <object class="GtkHButtonBox" id="dialog-action_area5">
-          </object>
+          <object class="GtkHButtonBox" id="dialog-action_area5"/>
           <packing>
             <property name="expand">False</property>
-            <property name="pack_type">GTK_PACK_END</property>
+            <property name="pack_type">end</property>
+            <property name="position">0</property>
           </packing>
         </child>
       </object>
