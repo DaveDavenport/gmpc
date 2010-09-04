@@ -153,6 +153,7 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 		}
 		foreach(string value in value_unsplit.split(";")) {
 			bool found = false;
+			value = value.strip();
 			/* ToDo: Make this nicer... maybe some fancy parsing */
 			if (model.get_iter_first(out iter)) {
 				do {
@@ -162,7 +163,7 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 					model.get(iter, 1, out name, 2, out pattern, 3, out callback, 4, out data);
 
 					test = "%s[ ]*%s$".printf(name, pattern);
-					if (GLib.Regex.match_simple(test, value.strip(), GLib.RegexCompileFlags.CASELESS, 0)) {
+					if (GLib.Regex.match_simple(test, value, GLib.RegexCompileFlags.CASELESS, 0)) {
 						string param;
 						if (value.length > name.length)
 							param = value.substring(name.length, -1);
@@ -186,7 +187,7 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 						void *data;
 						model.get(iter, 1, out name, 2, out pattern, 3, out callback, 4, out data);
 
-						test = "^%s.*".printf(value.strip());
+						test = "^%s.*".printf(value);
 						if (GLib.Regex.match_simple(test, name,GLib.RegexCompileFlags.CASELESS, 0)) {
 							string param;
 							if (value.length > name.length)
@@ -202,7 +203,7 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 			}
 			/* If we still cannot match it, give a message */
 			if (!found)
-				Gmpc.Messages.show("Unknown command: '%s'".printf(value.strip()), Gmpc.Messages.Level.INFO);
+				Gmpc.Messages.show("Unknown command: '%s'".printf(value), Gmpc.Messages.Level.INFO);
 		}
 
 		if(this.window != null) {
