@@ -19,6 +19,9 @@ namespace Gmpc {
     [CCode (cname = "gmpc_profiles", cheader_filename="plugin.h")]
     static Profiles profiles;
 
+    [CCode (cname = "gmpc_easy_command", cheader_filename="plugin.h")]
+    static Easy.Command  easy_command;
+
     [CCode (cheader_filename="gmpc-meta-watcher.h")]
     public class MetaWatcher {
         public signal void data_changed(MPD.Song song,  Gmpc.MetaData.Type type, Gmpc.MetaData.Result result,MetaData.Item met);
