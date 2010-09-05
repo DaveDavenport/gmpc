@@ -1,26 +1,26 @@
+# Gmpc eesti tõlge
 # Estonian translation for gmpc
 # Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
 # This file is distributed under the same license as the gmpc package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# mihkel <turakas gmail com>, 2010.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-09-05 10:00+0200\n"
-"PO-Revision-Date: 2010-06-30 11:32+0000\n"
-"Last-Translator: lyyser <Unknown>\n"
+"POT-Creation-Date: 2010-09-05 10:01+0200\n"
+"PO-Revision-Date: 2010-08-21 23:01+0300\n"
+"Last-Translator: mihkel <turakas gmail com>\n"
 "Language-Team: Estonian <et@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-09-05 07:40+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Generator: Emacs\n"
 
 #: ../data/gmpc.desktop.in.h:1
 msgid "A gnome frontend for the mpd daemon"
-msgstr ""
+msgstr "GNOME liides mpd teenusele"
 
 #: ../data/gmpc.desktop.in.h:2 ../src/main.c:350 ../src/playlist3.c:1978
 #: ../src/tray-icon2.c:612 ../src/browsers/gmpc-nowplaying2.c:1802
@@ -39,7 +39,7 @@ msgstr "Tarbima"
 
 #: ../glade/playlist3.glade.h:3
 msgid "Easy Command Help"
-msgstr ""
+msgstr "Lihtne käsuabi"
 
 #: ../glade/playlist3.glade.h:4
 msgid "Getting help"
@@ -56,7 +56,7 @@ msgstr "Järgmine"
 
 #: ../glade/playlist3.glade.h:7
 msgid "Play/Pause"
-msgstr "Esita /paus"
+msgstr "Esita/pausi"
 
 #. * MM_NEXT
 #: ../glade/playlist3.glade.h:8 ../src/mm-keys.c:75
@@ -87,7 +87,7 @@ msgstr "Näita sõnumeid"
 
 #: ../glade/playlist3.glade.h:14
 msgid "Single mode"
-msgstr "Ühes olek"
+msgstr "Üksik režiim"
 
 #. * MM_PREV
 #: ../glade/playlist3.glade.h:15 ../src/mm-keys.c:76
@@ -100,7 +100,7 @@ msgstr "Külasta veebisaiti"
 
 #: ../glade/playlist3.glade.h:17
 msgid "_Collapse Interface"
-msgstr "_Kommpaktne vaade"
+msgstr "_Ahenda kasutajaliidest"
 
 #: ../glade/playlist3.glade.h:18
 msgid "_Connect"
@@ -116,7 +116,7 @@ msgstr "_Katkesta ühendus"
 
 #: ../glade/playlist3.glade.h:21
 msgid "_Expand Interface"
-msgstr "_Laienda vaadet"
+msgstr "Lai_enda kasutajaliidest"
 
 #: ../glade/playlist3.glade.h:22
 msgid "_Fullscreen"
@@ -136,7 +136,7 @@ msgstr "_Muusika"
 
 #: ../glade/playlist3.glade.h:26
 msgid "_Option"
-msgstr "_Seade"
+msgstr "_Valik"
 
 #: ../glade/playlist3.glade.h:27
 msgid "_Send Password"
@@ -172,7 +172,7 @@ msgstr "Näita programmi versiooni ning läbivaadet"
 
 #: ../src/main.c:289
 msgid "Quits the running gmpc"
-msgstr "Välju töötavast gmpc"
+msgstr "Välju töötavast gmpc-st"
 
 #: ../src/main.c:291
 msgid "Replace the running gmpc"
@@ -180,11 +180,11 @@ msgstr "Muuda juba alanud protsess gmpc"
 
 #: ../src/main.c:293
 msgid "Don't load the plugins"
-msgstr "Ära lae lisandprogrammisi"
+msgstr "Ära lae pluginaid"
 
 #: ../src/main.c:295
 msgid "Load alternative config file"
-msgstr "Lae alternatiivne konfiguratsioonifail"
+msgstr "Laadi alternatiivne seadetefail"
 
 #: ../src/main.c:297
 msgid "Set the debug level"
@@ -192,11 +192,11 @@ msgstr "Silumise taseme määramine"
 
 #: ../src/main.c:299
 msgid "Start gmpc hidden to tray"
-msgstr "Käiitumisel gmpc peidetud salve"
+msgstr "Käivitamisel peida gmpc salve"
 
 #: ../src/main.c:301
 msgid "Remove all failed hits from metadata cache"
-msgstr ""
+msgstr "Eemalda kõik nurjunud päringud metaandmete puhvrist"
 
 #: ../src/main.c:303
 msgid "Show redraw events in GTK+"
@@ -208,7 +208,7 @@ msgstr "Näita veadialoogi"
 
 #: ../src/main.c:307
 msgid "Shows all output from a certain log domain"
-msgstr ""
+msgstr "Kuva kogu väljund kindlast logi domeenist"
 
 #: ../src/main.c:309
 msgid "Select a profile"
@@ -220,7 +220,7 @@ msgstr "välju"
 
 #: ../src/main.c:448
 msgid "Quit gmpc"
-msgstr "Välju gmpc"
+msgstr "Välju gmpc-st"
 
 #: ../src/main.c:449
 msgid "hide"
@@ -244,19 +244,19 @@ msgstr "näita teadet"
 
 #: ../src/main.c:454
 msgid "Show trayicon notification"
-msgstr ""
+msgstr "Kuva salveikooni teated"
 
 #: ../src/main.c:509
 msgid "Failed to load the configuration system."
-msgstr ""
+msgstr "Seadetesüsteemi laadimine nurjus."
 
 #: ../src/main.c:528
 msgid "Failed to load debug-log file."
-msgstr ""
+msgstr "Debug-log faili laadimine nurjus"
 
 #: ../src/main.c:670
 msgid "Failed to setup libmpd"
-msgstr ""
+msgstr "Libmpd ülesseadmine nurjus"
 
 #: ../src/main.c:804
 msgid ""
@@ -272,10 +272,20 @@ msgid ""
 "Thanks,\n"
 "<i>Qball Cow</i>"
 msgstr ""
+"GMPC meeskond otsib abi GMPV hooldamisel ja arendamisel\n"
+"Abi on vaja järgmistele aladel:\n"
+"* Veebilehe hooldus ja uuendamine.\n"
+"* Kasutajatugi\n"
+"* Pluginate hooldus\n"
+"* GMPC hooldamine\n"
+"Kui oled huvitatud, tule meie irc kanalile (#gmpc on irc.freenode.net)\n"
+"\n"
+"Tänud,\n"
+"<i>Qball Cow</i>"
 
 #: ../src/main.c:1109
 msgid "GMPC has insufficient permissions on the mpd server."
-msgstr ""
+msgstr "GMPC-l pole piisavalt õigusi mpd serveril."
 
 #: ../src/main.c:1135
 #, c-format
@@ -283,11 +293,13 @@ msgid ""
 "Failed to set password on: '%s'\n"
 "Please try again"
 msgstr ""
+"Salasõna määramine nurjus: '%s'\n"
+"Palun proovi uuesti"
 
 #: ../src/main.c:1138
 #, c-format
 msgid "Please enter your password for: '%s'"
-msgstr ""
+msgstr "Palun sisesta oma salasõna: '%s'"
 
 #: ../src/main.c:1168 ../src/main.c:1189
 msgid "error code"
@@ -295,29 +307,30 @@ msgstr "vea kood"
 
 #: ../src/main.c:1178
 msgid "Insufficient permission to connect to mpd. Check password"
-msgstr ""
+msgstr "Ebapiisavad õigused mpd-ga ühendamiseks. Kontrolli salasõna"
 
 #: ../src/main.c:1213
 msgid "MPD versions before 0.13.0 are not supported"
-msgstr ""
+msgstr "MPD versioonid alla 0.13.0 ei ole toetatud"
 
 #: ../src/main.c:1270
 msgid "Connected to mpd"
-msgstr ""
+msgstr "Mpd-ga ühendatud"
 
 #: ../src/main.c:1272
 msgid "Disconnected from mpd"
-msgstr ""
+msgstr "Mpd-st lahti ühendatud"
 
 #: ../src/MetaData/metadata.c:295
 msgid ""
 "A new metadata plugin was added, gmpc has purged all failed hits from the "
 "cache"
 msgstr ""
+"Uus metaandmete plugin lisati. GMPC puhastas kõik nurjunud katsed puhvrist"
 
 #: ../src/MetaData/metadata.c:1818
 msgid "Metadata Handler"
-msgstr ""
+msgstr "Metaandmete käsitleja"
 
 #: ../src/misc.c:39
 msgid "Total time"
@@ -327,7 +340,7 @@ msgstr "Aeg kokku"
 msgid "day"
 msgid_plural "days"
 msgstr[0] "päev"
-msgstr[1] "päevad"
+msgstr[1] "päeva"
 
 #: ../src/misc.c:59
 msgid "hour"
@@ -343,11 +356,11 @@ msgstr[1] "minutit"
 
 #: ../src/misc.c:296
 msgid "Failed to execute"
-msgstr ""
+msgstr "Käivitamine nurjus"
 
 #: ../src/mm-keys.c:73
 msgid "PlayPause"
-msgstr ""
+msgstr "EsitaPausi"
 
 #. * MM_STOP
 #: ../src/mm-keys.c:77
@@ -372,7 +385,7 @@ msgstr "Peida aken"
 #. * MM_HIDE
 #: ../src/mm-keys.c:83
 msgid "Toggle window"
-msgstr ""
+msgstr "Lülita aken"
 
 #. * MM_TOGGLE_HIDDEN
 #: ../src/mm-keys.c:84
@@ -387,7 +400,7 @@ msgstr "Vaiksemaks"
 #. * MM_VOLUME_DOWN
 #: ../src/mm-keys.c:86
 msgid "Show song"
-msgstr ""
+msgstr "Kuva lugu"
 
 #. * MM_SHOW_NOTIFICATION
 #: ../src/mm-keys.c:87
@@ -397,7 +410,7 @@ msgstr "Lülita summutamist"
 #. * MM_TOGGLE_MUTE
 #: ../src/mm-keys.c:88
 msgid "Show easy command entry"
-msgstr ""
+msgstr "Näita lihtsa käsu kirjet"
 
 #: ../src/mm-keys.c:370
 msgid ""
@@ -431,6 +444,9 @@ msgid ""
 "\n"
 "%s is already mapped to %s"
 msgstr ""
+"Dubleeriv seostus tuvastatud\n"
+"\n"
+"%s on juba seostatud %s"
 
 #: ../src/mm-keys.c:664
 #, c-format
@@ -453,7 +469,7 @@ msgstr "Otsetee"
 
 #: ../src/mpdinteraction.c:92
 msgid "enable"
-msgstr "luba"
+msgstr "võimalda"
 
 #: ../src/mpdinteraction.c:95
 msgid "disable"
@@ -467,55 +483,59 @@ msgstr "Väljas"
 
 #: ../src/mpdinteraction.c:163
 msgid "Single: The used MPD server is to old and does not support this."
-msgstr ""
+msgstr "Üksik: Kasutatav MPD server on liiga vana ja ei toeta seda."
 
 #: ../src/mpdinteraction.c:165
 msgid "Single: You have insufficient permission to use this option."
-msgstr ""
+msgstr "Üksik: Sul on ebapiisavad õigused selle valiku kasutamiseks."
 
 #: ../src/mpdinteraction.c:182
 msgid "Consume: The used MPD server is to old and does not support this."
-msgstr ""
+msgstr "Tarbi: Kasutatav MPD server on liiga vana ja ei toeta seda."
 
 #: ../src/mpdinteraction.c:184
 msgid "Consume: You have insufficient permission to use this option."
-msgstr ""
+msgstr "Tarbi: Sul on ebapiisavad õigused selle valiku kasutamiseks."
 
 #: ../src/mpdinteraction.c:269
 msgid ""
 "Stop after current song: The used MPD server is to old and does not support "
 "this."
 msgstr ""
+"Peata peale aktiivset lugu: Kasutatav MPD server on liiga vana ja ei toeta "
+"seda."
 
 #: ../src/mpdinteraction.c:271
 msgid "Stop after current song: You have insufficient permission."
-msgstr ""
+msgstr "Peata peale aktiivset lugu: Sul pole piisavalt õigusi."
 
 #: ../src/mpdinteraction.c:273
 msgid "Playback will be stopped after the current playing song."
-msgstr ""
+msgstr "Taasesitamine peatatakse peale aktiivse loo esitamist."
 
 #: ../src/mpdinteraction.c:283
 msgid ""
 "Repeat current song: The used MPD server is to old and does not support this."
 msgstr ""
+"Korda aktiivset lugu: Kasutatav MPD server on liiga vana ja ei toeta seda."
 
 #: ../src/mpdinteraction.c:285
 msgid "Repeat current song: You have insufficient permission."
-msgstr ""
+msgstr "Korda aktiivset lugu: Sul pole piisavalt õigusi."
 
 #: ../src/mpdinteraction.c:287
 msgid "The current song will be forever repeated."
-msgstr ""
+msgstr "Aktiivset lugu korratakse lõpmatuseni."
 
 #: ../src/mpdinteraction.c:297
 msgid ""
 "Update database: The used MPD server is to old and does not support this."
 msgstr ""
+"Uuenda andmebaasi: Kasutatav MPD server on liiga vana ja ei toeta seda."
 
 #: ../src/mpdinteraction.c:299
 msgid "Update database: You have insufficient permission."
-msgstr ""
+msgstr "Uuenda andmebaasi: Sul pole piisavalt õigusi."
 
 #. Player control
 #. basic playlist commands
@@ -565,7 +585,7 @@ msgstr "juhuslik"
 
 #: ../src/mpdinteraction.c:314
 msgid "Random (on|off)"
-msgstr ""
+msgstr "Juhuslik (sees|väljas)"
 
 #: ../src/mpdinteraction.c:315
 msgid "repeat"
@@ -573,7 +593,7 @@ msgstr "korda"
 
 #: ../src/mpdinteraction.c:315
 msgid "Repeat (on|off)"
-msgstr ""
+msgstr "Kordus (sees|väljas)"
 
 #: ../src/mpdinteraction.c:317
 msgid "single"
@@ -581,15 +601,15 @@ msgstr "üksik"
 
 #: ../src/mpdinteraction.c:317
 msgid "Single (on|off)"
-msgstr ""
+msgstr "Üksik (sees|väljas)"
 
 #: ../src/mpdinteraction.c:318
 msgid "consume"
-msgstr ""
+msgstr "tarbi"
 
 #: ../src/mpdinteraction.c:318
 msgid "Consume (on|off)"
-msgstr ""
+msgstr "Tarbi (sees|väljas)"
 
 #. volume commands
 #: ../src/mpdinteraction.c:321
@@ -598,7 +618,7 @@ msgstr "helitugevus"
 
 #: ../src/mpdinteraction.c:321
 msgid "Volume (+-)<level>"
-msgstr ""
+msgstr "Helitugevus (+-)<nivoo>"
 
 #: ../src/mpdinteraction.c:322
 msgid "mute"
@@ -606,16 +626,16 @@ msgstr "vaigista"
 
 #: ../src/mpdinteraction.c:324
 msgid "crossfade"
-msgstr ""
+msgstr "siire"
 
 #: ../src/mpdinteraction.c:324
 msgctxt "Regex for matching crossfade, translate off"
 msgid "([0-9]+|Off)"
-msgstr ""
+msgstr "([0-9]+|Väljas)"
 
 #: ../src/mpdinteraction.c:324
 msgid "Set Crossfade <seconds>"
-msgstr ""
+msgstr "Näära siire <sekundites>"
 
 #: ../src/mpdinteraction.c:326
 msgid "output"
@@ -632,7 +652,7 @@ msgstr ""
 
 #: ../src/mpdinteraction.c:329
 msgid "Play <query>"
-msgstr "Esita <query>"
+msgstr "Esita <päring>"
 
 #: ../src/mpdinteraction.c:330
 msgid "add"
@@ -640,20 +660,20 @@ msgstr "lisa"
 
 #: ../src/mpdinteraction.c:330
 msgid "Add <query>"
-msgstr "Lisa <query>"
+msgstr "Lisa <päring>"
 
 #: ../src/mpdinteraction.c:331
 msgid "replace"
-msgstr ""
+msgstr "asenda"
 
 #: ../src/mpdinteraction.c:331
 msgid "Replace <query>"
-msgstr ""
+msgstr "Asenda <päring>"
 
 #. Basic seek commands
 #: ../src/mpdinteraction.c:334
 msgid "seek"
-msgstr ""
+msgstr "kerimine"
 
 #: ../src/mpdinteraction.c:334
 msgid "Seek within the current song"
@@ -661,19 +681,19 @@ msgstr ""
 
 #: ../src/mpdinteraction.c:337
 msgid "stop after current song"
-msgstr ""
+msgstr "peata peale aktiivset lugu"
 
 #: ../src/mpdinteraction.c:339
 msgid "Stop playback after the current song"
-msgstr ""
+msgstr "Peata taasesitamine peale aktiivset lugu"
 
 #: ../src/mpdinteraction.c:343
 msgid "repeat current song"
-msgstr ""
+msgstr "korda aktiivset lugu"
 
 #: ../src/mpdinteraction.c:345
 msgid "Repeat the current song"
-msgstr ""
+msgstr "Krda aktiivset lugu"
 
 #: ../src/mpdinteraction.c:349
 msgid "update database"
@@ -698,22 +718,22 @@ msgstr "Ühendan"
 #. Add all from album
 #: ../src/mpdinteraction.c:1518
 msgid "All from album"
-msgstr ""
+msgstr "Kõik albumilt"
 
 #. Add all from artist
 #: ../src/mpdinteraction.c:1530
 msgid "All from artist"
-msgstr ""
+msgstr "Kõik esitajalt"
 
 #. Add all from genre
 #: ../src/mpdinteraction.c:1540
 msgid "All from genre"
-msgstr ""
+msgstr "Kõik stiililt"
 
 #. Add all from file
 #: ../src/mpdinteraction.c:1548
 msgid "All from same directory"
-msgstr ""
+msgstr "Kõik samast kataloogist"
 
 #. Create sub menu
 #. Add
@@ -723,7 +743,7 @@ msgstr "Lisa rohkem"
 
 #: ../src/mpdinteraction.c:1566
 msgid "Set Rating"
-msgstr ""
+msgstr "Määra hinnang"
 
 #: ../src/playlist3.c:808
 msgid "Connected"
@@ -740,7 +760,7 @@ msgstr "GMPC"
 
 #: ../src/playlist3.c:833 ../src/playlist3.c:838
 msgid "Connected to"
-msgstr "Ühendatud..."
+msgstr "Ühendatud"
 
 #: ../src/playlist3.c:847 ../src/playlist3.c:852
 msgid "Disconnected"
@@ -756,7 +776,7 @@ msgstr "pausitud"
 #: ../src/playlist3.c:1812
 #, c-format
 msgid "Repeat: %s"
-msgstr ""
+msgstr "Korda: %s"
 
 #: ../src/playlist3.c:1813 ../src/playlist3.c:1826 ../src/playlist3.c:1841
 #: ../src/playlist3.c:1854
@@ -766,21 +786,21 @@ msgstr "Ilmunud"
 #: ../src/playlist3.c:1825
 #, c-format
 msgid "Random: %s"
-msgstr ""
+msgstr "Juhuslik: %s"
 
 #: ../src/playlist3.c:1840
 #, c-format
 msgid "Single mode: %s"
-msgstr ""
+msgstr "Üksik režiim: %s"
 
 #: ../src/playlist3.c:1853
 #, c-format
 msgid "Consume: %s"
-msgstr ""
+msgstr "Tarbi: %s"
 
 #: ../src/playlist3.c:1914
 msgid "MPD Reported the following error"
-msgstr ""
+msgstr "MPD raporteeris järgmise vea"
 
 #: ../src/playlist3.c:2048 ../src/playlist3.c:2054
 msgid "Profile"
@@ -792,7 +812,7 @@ msgstr "lisatud"
 
 #: ../src/playlist3.c:2056
 msgid "changed hostname to:"
-msgstr ""
+msgstr "hostinimi muudeti:"
 
 #. Update DB
 #: ../src/playlist3.c:2166
@@ -806,11 +826,11 @@ msgstr "Info"
 
 #: ../src/playlist3.c:2279
 msgid "By"
-msgstr ""
+msgstr "esitaja"
 
 #: ../src/playlist3.c:2285
 msgid "From"
-msgstr "Alates"
+msgstr "Albumilt"
 
 #: ../src/playlist3.c:2341
 msgid "Not Playing"
@@ -822,35 +842,35 @@ msgstr "Kujundus"
 
 #: ../src/playlist3.c:2722
 msgid "Single Mode enabled"
-msgstr ""
+msgstr "Üksik režiim võimaldatud"
 
 #: ../src/playlist3.c:2725
 msgid "Single Mode disabled"
-msgstr ""
+msgstr "Üksik režiim keelatud"
 
 #: ../src/playlist3.c:2733
 msgid "Consume Mode enabled"
-msgstr ""
+msgstr "Tarbmise režiim võimaldatud"
 
 #: ../src/playlist3.c:2736
 msgid "Consume Mode disabled"
-msgstr ""
+msgstr "Tarbimise režiim keelatud"
 
 #: ../src/playlist3.c:2744
 msgid "Repeat enabled"
-msgstr ""
+msgstr "Kordus võimaldatud"
 
 #: ../src/playlist3.c:2747
 msgid "Repeat disabled"
-msgstr ""
+msgstr "Kordus keelatud"
 
 #: ../src/playlist3.c:2755
 msgid "Random enabled"
-msgstr ""
+msgstr "Juhuslik võimaldatud"
 
 #: ../src/playlist3.c:2758
 msgid "Random disabled"
-msgstr ""
+msgstr "Juhuslik keelatud"
 
 #: ../src/playlist3-messages.c:36
 msgid "Info"
@@ -878,15 +898,15 @@ msgstr "Sõnum"
 #: ../src/plugin.c:131 ../src/plugin.c:142 ../src/plugin.c:153
 #: ../src/plugin.c:221
 msgid "Failed to load plugin"
-msgstr ""
+msgstr "Plugina laadimine nurjus"
 
 #: ../src/plugin.c:60
 msgid "plugin has no name"
-msgstr ""
+msgstr "pluginal pole nime"
 
 #: ../src/plugin.c:68
 msgid "plugin with same name already exists"
-msgstr ""
+msgstr "sama nimega plugin on juba olemas"
 
 #: ../src/plugin.c:75
 msgid "plugin is missing set/get enable function"
@@ -899,23 +919,23 @@ msgstr ""
 #: ../src/plugin.c:97 ../src/plugin.c:103 ../src/plugin.c:110
 #: ../src/plugin.c:131
 msgid "plugin metadata structure is incorrect"
-msgstr ""
+msgstr "plugina metaandmete struktuur on vale"
 
 #: ../src/plugin.c:117
 msgid "plugin get_image api is deprecated "
-msgstr ""
+msgstr "plugina get_image api on iganenud"
 
 #: ../src/plugin.c:124
 msgid "plugin get_uris api is deprecated "
-msgstr ""
+msgstr "plugina get_uris api on iganenud"
 
 #: ../src/plugin.c:153
 msgid "plugin preferences structure is incorrect"
-msgstr ""
+msgstr "plugina eelistuste struktuur on vale"
 
 #: ../src/plugin.c:232
 msgid "Failed to create plugin instance"
-msgstr ""
+msgstr "Plugina instantsi loomine nurjus"
 
 #: ../src/plugin.c:244
 msgid "Failed to bind symbol in plugin"
@@ -924,21 +944,23 @@ msgstr ""
 #: ../src/plugin.c:256
 #, c-format
 msgid "Plugin %s has wrong api version: %i"
-msgstr ""
+msgstr "Pluginal %s on vale api versioon: %i"
 
 #: ../src/plugin.c:266 ../src/plugin.c:273
 #, c-format
 msgid "Plugin %s has wrong no plugin structure: %s"
-msgstr ""
+msgstr "Pluginal %s on vale plugina struktuur: %s"
 
 #: ../src/plugin.c:292
 msgid ""
 "One or more plugins failed to load, see help->messages for more information"
 msgstr ""
+"Ühe või enama plugina laadimine nurjus. Vaada abi->teated, et näha rohkem "
+"infot"
 
 #: ../src/preferences.c:85
 msgid "Plugin version"
-msgstr ""
+msgstr "Plugina versioon"
 
 #: ../src/preferences.c:106 ../src/preferences.c:209
 msgid "Plugins"
@@ -971,15 +993,15 @@ msgstr "Liba"
 
 #: ../src/preferences.c:374
 msgid "Browser Extension"
-msgstr ""
+msgstr "Sirvija laiendus"
 
 #: ../src/preferences.c:377
 msgid "Metadata Provider"
-msgstr ""
+msgstr "Metaandmete pakkuja"
 
 #: ../src/preferences.c:380
 msgid "Metadata Provider and Browser Extension"
-msgstr ""
+msgstr "Metaandmete pakkuja ja sirvija laiendus"
 
 #: ../src/preferences.c:383
 msgid "Misc."
@@ -1002,16 +1024,16 @@ msgstr "Lisatud %i %s"
 #: ../src/url-fetcher.c:226
 msgid "stream"
 msgid_plural "streams"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "voog"
+msgstr[1] "vood"
 
 #: ../src/url-fetcher.c:286 ../src/url-fetcher.c:318
 msgid "Added 1 stream"
-msgstr ""
+msgstr "Lisatud 1 voog"
 
 #: ../src/url-fetcher.c:389
 msgid "Failed to open local file"
-msgstr ""
+msgstr "Kohaliku faili avamine nurjus"
 
 #: ../src/url-fetcher.c:406
 msgid "Uri scheme not supported"
@@ -1019,7 +1041,7 @@ msgstr ""
 
 #: ../src/tray-icon2.c:143
 msgid "Pla_ylist"
-msgstr ""
+msgstr "Esitus_loend"
 
 #: ../src/tray-icon2.c:910
 msgid "Notification"
@@ -1033,14 +1055,16 @@ msgid ""
 "It is the first time you have launched gmpc.\n"
 "This assistant will help you connect gmpc to your mpd daemon."
 msgstr ""
+"See on esimene kord, kui käivitad gmpc.\n"
+"Järgnevad dialoogid aitavad sul ühendada gmpc oma mpd teenusega."
 
 #: ../src/setup-assistant.c:113
 msgid "Welcome to GMPC"
-msgstr "Teretulemast GMPC"
+msgstr "Teretulemast GMPC-sse"
 
 #: ../src/setup-assistant.c:132
 msgid "Setup connection"
-msgstr ""
+msgstr "Ühenduse seadistamine"
 
 #. *
 #. * End
@@ -1050,6 +1074,8 @@ msgid ""
 "Gmpc is now ready for use.\n"
 "Enjoy using gmpc."
 msgstr ""
+"Gmpc on kasutamiseks valmis.\n"
+"Naudi gmpc kasutamist."
 
 #: ../src/setup-assistant.c:143
 msgid "Finish"
@@ -1128,11 +1154,11 @@ msgstr "Copyright 2003-2007 Qball Cow"
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
-"  lyyser https://launchpad.net/~lyyser"
+"  lyyser https://launchpad.net/~logard-1961"
 
 #: ../glade/password-dialog.ui.h:1
 msgid "Enter your password for: '<hostname>'"
-msgstr ""
+msgstr "Sisesta oma salasõna: '<hostinimi>'"
 
 #: ../glade/password-dialog.ui.h:2
 msgid "Password"
@@ -1148,7 +1174,7 @@ msgstr "<b>Profiil:</b>"
 
 #: ../glade/preferences-connection.ui.h:2
 msgid "Conn_ect"
-msgstr ""
+msgstr "_Ühenda"
 
 #: ../glade/preferences-connection.ui.h:3
 msgid "Host:"
@@ -1156,7 +1182,7 @@ msgstr "Host:"
 
 #: ../glade/preferences-connection.ui.h:4
 msgid "Music Directory:"
-msgstr ""
+msgstr "Muusika kataloog:"
 
 #: ../glade/preferences-connection.ui.h:5
 #: ../src/browsers/playlist3-playlist-editor.c:502
@@ -1174,19 +1200,19 @@ msgstr "Port:"
 
 #: ../glade/preferences-connection.ui.h:8
 msgid "Timeout (s):"
-msgstr ""
+msgstr "Aegumine (s):"
 
 #: ../glade/preferences-connection.ui.h:9
 msgid "_Autoconnect"
-msgstr ""
+msgstr "_Automaatühendus"
 
 #: ../glade/preferences-connection.ui.h:11
 msgid "_Use Authentication"
-msgstr ""
+msgstr "Autentimise kas_utamine"
 
 #: ../glade/preferences-connection.ui.h:12
 msgid "localhost"
-msgstr "kohalikud failid"
+msgstr "localhost"
 
 #: ../glade/preferences-esf-dialog.ui.h:1
 msgid "<b>Enable Field:</b>"
@@ -1194,11 +1220,11 @@ msgstr ""
 
 #: ../glade/preferences-esf-dialog.ui.h:2
 msgid "<b>Example:</b>"
-msgstr ""
+msgstr "<b>Näide:</b>"
 
 #: ../glade/preferences-esf-dialog.ui.h:3
 msgid "<span size=\"large\"><b>Format Rule:</b></span>"
-msgstr ""
+msgstr "<span size=\"large\"><b>Vormingu reegel:</b></span>"
 
 #: ../glade/preferences-esf-dialog.ui.h:4
 msgid "A_lbum"
@@ -1210,7 +1236,7 @@ msgstr ""
 
 #: ../glade/preferences-esf-dialog.ui.h:6
 msgid "T_rack"
-msgstr ""
+msgstr "_Rada"
 
 #: ../glade/preferences-esf-dialog.ui.h:7
 msgid "_Artist"
@@ -1222,7 +1248,7 @@ msgstr "_Kuupäev"
 
 #: ../glade/preferences-esf-dialog.ui.h:9
 msgid "_Stream name"
-msgstr ""
+msgstr "_Voo nimi"
 
 #: ../glade/preferences-esf-dialog.ui.h:10
 msgid "_Title"
@@ -1234,7 +1260,7 @@ msgstr "näidis"
 
 #: ../glade/preferences-playlist.ui.h:1
 msgid "<b>Main:</b>"
-msgstr ""
+msgstr "<b>Peamine:</b>"
 
 #: ../glade/preferences-playlist.ui.h:2
 msgid "<b>Playlist:</b>"
@@ -1242,7 +1268,7 @@ msgstr "<b>Esitusloend:</b>"
 
 #: ../glade/preferences-playlist.ui.h:3
 msgid "Center playing song"
-msgstr ""
+msgstr "Keskjoonda esitatav lugu"
 
 #: ../glade/preferences-playlist.ui.h:4
 msgid "Enable search as you type. (Might be slow)"
@@ -1250,11 +1276,11 @@ msgstr ""
 
 #: ../glade/preferences-playlist.ui.h:5
 msgid "Hide on close"
-msgstr ""
+msgstr "Peida sulgemisel"
 
 #: ../glade/preferences-playlist.ui.h:6
 msgid "Save position and size between sessions"
-msgstr ""
+msgstr "Salvesta suurus ja asukoht seansside vahel"
 
 #: ../glade/preferences-playlist.ui.h:7
 msgid "Show buttons instead of dropdown in collapsed view"
@@ -1266,33 +1292,35 @@ msgstr ""
 
 #: ../glade/preferences-playlist.ui.h:9
 msgid "Stop playing on exit"
-msgstr ""
+msgstr "Lõpeta väljumisel mängimine"
 
 #: ../glade/preferences-playlist.ui.h:10
 msgid "Stylize album covers"
-msgstr ""
+msgstr "Stiliseeri albumi kaanepildid"
 
 #: ../glade/preferences-plugins.ui.h:1
 msgid "<b>Loaded Plugins:</b>"
-msgstr ""
+msgstr "<b>Laaditud pluginad:</b>"
 
 #: ../glade/preferences-server.ui.h:1
 msgid "<b>Crossfade:</b>"
-msgstr ""
+msgstr "<b>Siire:</b>"
 
 #: ../glade/preferences-server.ui.h:2
 msgid "<b>Output Devices:</b>"
-msgstr ""
+msgstr "<b>Väljundseadmed:</b>"
 
 #: ../glade/preferences-server.ui.h:3
 msgid "<b>Replaygain</b>"
-msgstr ""
+msgstr "<b>ReplayGain</b>"
 
 #: ../glade/preferences-server.ui.h:4
 msgid ""
 "<span size=\"small\"><i>You need to be connected\n"
 "in order to change these settings</i></span>"
 msgstr ""
+"<span size=\"small\"><i>Sa pead olema ühendatud,\n"
+"et neid seadeid muuta</i></span>"
 
 #: ../glade/preferences-server.ui.h:6
 #: ../src/browsers/gmpc-metadata-browser2.c:2228
@@ -1309,7 +1337,7 @@ msgstr "Tegevus"
 
 #: ../glade/preferences-server.ui.h:8
 msgid "Enable crossfade"
-msgstr ""
+msgstr "Võimalda siire"
 
 #: ../glade/preferences-server.ui.h:10
 #: ../src/browsers/gmpc-metadata-browser2.c:2251
@@ -1344,7 +1372,7 @@ msgstr "Asukoht:"
 
 #: ../glade/preferences-trayicon.ui.h:6
 msgid "Show on song change"
-msgstr ""
+msgstr "Kuva loo vahetamisel"
 
 #: ../glade/preferences-trayicon.ui.h:7
 msgid "Show severity"
@@ -1364,7 +1392,7 @@ msgstr "HTTP puhver:"
 
 #: ../glade/preferences-proxy.ui.h:5
 msgid "Use a proxy for internet connectivity"
-msgstr ""
+msgstr "Interneti ühenduseks kasuta proksit"
 
 #: ../glade/preferences-proxy.ui.h:6
 msgid "Use authentication"
@@ -1376,17 +1404,19 @@ msgstr "Kasutajanimi:"
 
 #: ../glade/preferences-mmkeys.ui.h:1
 msgid "To disable a keybinding edit it and press 'backspace'"
-msgstr ""
+msgstr "Kiirklahvide keelamiseks redigeeri seda ja vajuta 'backspace'"
 
 #: ../glade/preferences.ui.h:1
 msgid ""
 "<span size=\"x-large\"><b>Plugins</b></span>\n"
 "<i>None Selected</i>"
 msgstr ""
+"<span size=\"x-large\"><b>Pluginad</b></span>\n"
+"<i>Ühtegi pole valitud</i>"
 
 #: ../glade/preferences.ui.h:3
 msgid "gmpc - Configuration"
-msgstr ""
+msgstr "gmpc - Seadistamine"
 
 #: ../glade/playlist-message-window.ui.h:1
 msgid "Messages"
@@ -1394,15 +1424,15 @@ msgstr "Sõnumid"
 
 #: ../glade/playlist-message-window.ui.h:2
 msgid "_Copy to clipboard"
-msgstr ""
+msgstr "_Lõikelauale kopeerimine"
 
 #: ../glade/playlist-save-dialog.ui.h:1
 msgid "<enter playlist name>"
-msgstr ""
+msgstr "<sisesta esitusloendi nimi>"
 
 #: ../glade/playlist-save-dialog.ui.h:2
 msgid "<span size=\"x-small\"><i>Playlist already exists.</i></span>"
-msgstr ""
+msgstr "<span size=\"x-small\"><i>Esitusloend on juba olemas.</i></span>"
 
 #: ../glade/playlist-save-dialog.ui.h:3
 msgid "Save Playlist"
@@ -1427,41 +1457,41 @@ msgstr "gtk-sulge"
 #: ../src/browsers/playlist3-current-playlist-browser.c:156
 msgid "item"
 msgid_plural "items"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "kirje"
+msgstr[1] "kirjed"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:162
 msgid "(Estimation)"
-msgstr ""
+msgstr "(Hinnanguline)"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:215
 msgid "switch play queue"
-msgstr ""
+msgstr "vaheta esitamise järjekorda"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:216
 msgid "Switch to play queue"
-msgstr ""
+msgstr "Vaheta järjekorra esitamiseks"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:219
 #: ../src/browsers/playlist3-current-playlist-browser.c:220
 msgid "Clear play queue"
-msgstr ""
+msgstr "Puhasta esitamise järjekord"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:224
 msgid "Crop current song"
-msgstr ""
+msgstr "Kärbi aktiivne lugu"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:225
 msgid "Crop the playlist so it only contains the current song"
-msgstr ""
+msgstr "Kärbi esitusloendit nii, et see sialdaks ainult aktiivset lugu"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:229
 msgid "search playlist"
-msgstr ""
+msgstr "otsi esitusloendist"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:230
 msgid "Search playlist <query>"
-msgstr ""
+msgstr "Otsi esitusloendist <päring>"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:544
 msgid "Are you sure you want to clear the playlist?"
@@ -1499,7 +1529,7 @@ msgstr ""
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:1034
 msgid "Failed to save the playlist file."
-msgstr ""
+msgstr "Esitusloendi faili salvestamine nurjus."
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:1115
 #: ../src/browsers/playlist3-current-playlist-browser.c:1170
@@ -1528,11 +1558,15 @@ msgid ""
 "your mpd config file.\n"
 "Then update the database. (Server->Update Database)"
 msgstr ""
+"Paistab, et sinu andmebaasis pole ühtegi lugu.\n"
+"Muusika lisamiseks kopeeri muusika sinu <i>music_directory</i> kataloogi, "
+"nagu mpd seadetefailis kirjas.\n"
+"Siis uuenda andmebaasi. (Server->Andmebaasi uuendamine)"
 
 #: ../src/browsers/playlist3-file-browser.c:257
 #, c-format
 msgid "Added folder '%s' recursively"
-msgstr ""
+msgstr "Kataloog '%s' lisatud reskursiivselt"
 
 #. add the replace widget
 #. replace the replace widget
@@ -1558,7 +1592,7 @@ msgstr "Uuenda"
 
 #: ../src/browsers/playlist3-file-browser.c:781
 msgid "Loaded playlist"
-msgstr ""
+msgstr "Laaditud esitusloend"
 
 #: ../src/browsers/playlist3-file-browser.c:1052
 #: ../src/browsers/playlist3-playlist-editor.c:434
@@ -1569,8 +1603,8 @@ msgstr "Lisatud"
 #: ../src/browsers/playlist3-playlist-editor.c:434
 msgid "song"
 msgid_plural "songs"
-msgstr[0] "laul"
-msgstr[1] "laulud"
+msgstr[0] "lugu"
+msgstr[1] "lood"
 
 #: ../src/browsers/playlist3-file-browser.c:1056
 msgid "directory"
@@ -1587,15 +1621,15 @@ msgstr[1] "esitusloendid"
 #: ../src/browsers/playlist3-file-browser.c:1081
 #: ../src/browsers/playlist3-file-browser.c:1131
 msgid "Are you sure you want to clear the selected playlist?"
-msgstr ""
+msgstr "Kas oled kindel, et soovid puhastada valitud esitusloendi?"
 
 #: ../src/browsers/playlist3-file-browser.c:1392
 msgid "search database"
-msgstr ""
+msgstr "otsi andmebaasist"
 
 #: ../src/browsers/playlist3-file-browser.c:1393
 msgid "Search database <query>"
-msgstr ""
+msgstr "Otsi andmebaasist <päring>"
 
 #: ../src/browsers/playlist3-find2-browser.c:88
 #: ../src/vala/gmpc-test-plugin.c:1184
@@ -1609,7 +1643,7 @@ msgstr "Otsing"
 
 #: ../src/browsers/playlist3-find2-browser.c:371
 msgid "Search failed"
-msgstr ""
+msgstr "Otsing nurjus"
 
 #: ../src/browsers/playlist3-find2-browser.c:657
 msgid "Add all"
@@ -1617,7 +1651,7 @@ msgstr "Lisa kõik"
 
 #: ../src/browsers/playlist3-find2-browser.c:884
 msgid "switch search"
-msgstr ""
+msgstr "muuda otsingut"
 
 #: ../src/browsers/playlist3-find2-browser.c:885
 msgid "Switch to the search browser"
@@ -1625,12 +1659,12 @@ msgstr ""
 
 #: ../src/browsers/playlist3-find2-browser.c:899
 msgid "Search Browser"
-msgstr ""
+msgstr "Otsingu sirvija"
 
 #: ../src/browsers/playlist3-playlist-editor.c:139
 #: ../src/browsers/playlist3-playlist-editor.c:1072
 msgid "Playlist Editor"
-msgstr ""
+msgstr "Esitusloendi redaktor"
 
 #: ../src/browsers/playlist3-playlist-editor.c:302
 #: ../src/browsers/playlist3-playlist-editor.c:324
@@ -1667,20 +1701,20 @@ msgstr "Lisa esitusnimekirja"
 
 #: ../src/browsers/playlist3-playlist-editor.c:1065
 msgid "Added playing song to favorites list."
-msgstr ""
+msgstr "Aktiiven lugu lemmikutesse lisatud."
 
 #. *
 #: ../src/browsers/playlist3-playlist-editor.c:1085
 msgid "Add Current Song to favorites"
-msgstr ""
+msgstr "Lisa aktiivne lugu lemmikutesse"
 
 #: ../src/browsers/playlist3-tag2-browser.c:103
 msgid "Tag based browser"
-msgstr ""
+msgstr "Sildipõhine sirvija"
 
 #: ../src/browsers/playlist3-tag2-browser.c:1886
 msgid "Reset browser"
-msgstr ""
+msgstr "Lähtesta sirvija"
 
 #. name
 #: ../src/browsers/server-information.c:302
@@ -1699,27 +1733,27 @@ msgstr "Tööaeg"
 
 #: ../src/browsers/server-information.c:336
 msgid "Time Playing"
-msgstr ""
+msgstr "Esitamise aeg"
 
 #. * Mpd Playtime
 #: ../src/browsers/server-information.c:349
 msgid "Total Playtime"
-msgstr ""
+msgstr "Mänguaeg kokku"
 
 #. * Mpd Artists
 #: ../src/browsers/server-information.c:351
 msgid "Number of artists"
-msgstr ""
+msgstr "Esitajate arv"
 
 #. * Mpd Albums
 #: ../src/browsers/server-information.c:353
 msgid "Number of albums"
-msgstr ""
+msgstr "Albumite arv"
 
 #. * Mpd Songs
 #: ../src/browsers/server-information.c:355
 msgid "Number of songs"
-msgstr "Laulude arv"
+msgstr "Lugude arv"
 
 #. * Mpd Songs
 #: ../src/browsers/server-information.c:357
@@ -1729,11 +1763,11 @@ msgstr ""
 #. * Mpd Songs
 #: ../src/browsers/server-information.c:359
 msgid "Tag Types"
-msgstr ""
+msgstr "Sildi tüübid"
 
 #: ../src/browsers/server-information.c:364
 msgid "Tag statistics"
-msgstr ""
+msgstr "Sildi statistika"
 
 #: ../src/browsers/gmpc-nowplaying2.c:321
 #: ../src/browsers/gmpc-nowplaying2.c:1267
@@ -1786,7 +1820,7 @@ msgstr "Pala number"
 #: ../src/browsers/gmpc-metadata-browser2.c:3303
 #: ../src/browsers/gmpc-metadata-browser2.c:5456
 msgid "Guitar Tabs"
-msgstr ""
+msgstr "Kitarri tabulatuurid"
 
 #: ../src/browsers/gmpc-nowplaying2.c:1433
 #: ../src/browsers/gmpc-nowplaying2.c:1435
@@ -1794,7 +1828,7 @@ msgstr ""
 #: ../src/browsers/gmpc-metadata-browser2.c:3329
 #: ../src/browsers/gmpc-metadata-browser2.c:5460
 msgid "Similar Songs"
-msgstr ""
+msgstr "Sarnased lood"
 
 #: ../src/browsers/gmpc-nowplaying2.c:1468
 #: ../src/browsers/gmpc-nowplaying2.c:1470
@@ -1804,7 +1838,7 @@ msgstr ""
 #: ../src/browsers/gmpc-metadata-browser2.c:4409
 #: ../src/browsers/gmpc-metadata-browser2.c:5448
 msgid "Similar Artist"
-msgstr ""
+msgstr "Sarnased esitajad"
 
 #: ../src/browsers/gmpc-nowplaying2.c:1490
 #: ../src/browsers/gmpc-nowplaying2.c:1492
@@ -1816,7 +1850,7 @@ msgstr ""
 #: ../src/browsers/gmpc-metadata-browser2.c:4476
 #: ../src/vala/gmpc-song-links.c:117
 msgid "Web Links"
-msgstr ""
+msgstr "Veebi lingid"
 
 #: ../src/browsers/gmpc-nowplaying2.c:1518
 #: ../src/browsers/gmpc-nowplaying2.c:1520
@@ -1828,12 +1862,12 @@ msgstr "Esitaja info"
 
 #: ../src/browsers/gmpc-nowplaying2.c:1586
 msgid "Other albums by"
-msgstr ""
+msgstr "Teised albumid"
 
 #: ../src/browsers/gmpc-nowplaying2.c:1690
 #: ../src/browsers/gmpc-metadata-browser2.c:4659
 msgid "No Album"
-msgstr ""
+msgstr "Albumit pole"
 
 #: ../src/browsers/gmpc-nowplaying2.c:1882
 msgid "Now Playing"
@@ -1859,7 +1893,7 @@ msgstr "Pole kättesaadav"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:851
 msgid "Fetching .. "
-msgstr ""
+msgstr "Tõmban ..."
 
 #: ../src/browsers/gmpc-metadata-browser2.c:1059
 msgid "Fetching"
@@ -1922,11 +1956,11 @@ msgstr "Albumi info"
 #: ../src/browsers/gmpc-metadata-browser2.c:4449
 #: ../src/browsers/gmpc-metadata-browser2.c:4451
 msgid "Song list"
-msgstr ""
+msgstr "Lugude nimekiri"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:4533
 msgid "Albums by"
-msgstr ""
+msgstr "Albumid"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:5437
 msgid "Enable/disable metadata options"
@@ -1938,7 +1972,7 @@ msgstr "Laulusõnad"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:5464
 msgid "Web links"
-msgstr ""
+msgstr "Veebilingid"
 
 #: ../src/gmpc-mpddata-treeview.gob:69
 msgid "Markup"
@@ -1975,7 +2009,7 @@ msgstr "Kommentaar"
 
 #: ../src/gmpc-mpddata-treeview.gob:83
 msgid "Icon Id"
-msgstr ""
+msgstr "Ikooni id"
 
 #: ../src/gmpc-mpddata-treeview.gob:84
 msgid "Position"
@@ -2013,16 +2047,16 @@ msgstr "Muuda veergusi"
 
 #: ../src/gmpc-profiles.gob:99
 msgid "Added profile"
-msgstr ""
+msgstr "Lisatud profiil"
 
 #. Generate removal message before the actual profile is destroyed
 #: ../src/gmpc-profiles.gob:426
 msgid "Removed profile"
-msgstr ""
+msgstr "Eemaldatud profiil"
 
 #: ../src/gmpc-meta-text-view.gob:98 ../src/gmpc-metaimage.gob:737
 msgid "Refetch"
-msgstr ""
+msgstr "Tiri uuesti"
 
 #: ../src/gmpc-meta-text-view.gob:103 ../src/gmpc-metaimage.gob:742
 msgid "Select file"
@@ -2031,15 +2065,15 @@ msgstr "Vali fail"
 #: ../src/gmpc-meta-text-view.gob:112 ../src/gmpc-metaimage.gob:751
 #: ../src/vala/gmpc-test-plugin.c:1482
 msgid "Metadata selector"
-msgstr ""
+msgstr "Metaandmete valija"
 
 #: ../src/gmpc-meta-text-view.gob:304
 msgid "Failed to open file:"
-msgstr ""
+msgstr "Faili avamine nurjus:"
 
 #: ../src/gmpc-meta-text-view.gob:304
 msgid "because of encoding issues"
-msgstr ""
+msgstr "kodeerimise tõrgete tõttu"
 
 #: ../src/gmpc-meta-text-view.gob:347
 msgid "Fetching Lyrics"
@@ -2051,11 +2085,11 @@ msgstr "Esitaja info tõmbamine"
 
 #: ../src/gmpc-meta-text-view.gob:355
 msgid "Fetching Guitar tab"
-msgstr ""
+msgstr "Tirin kitarri tabulatuure"
 
 #: ../src/gmpc-meta-text-view.gob:359
 msgid "Fetching Album Info"
-msgstr ""
+msgstr "Tirin albumi infot"
 
 #: ../src/gmpc-meta-text-view.gob:370
 msgid "Not Available"
@@ -2079,7 +2113,7 @@ msgstr "Pildid"
 
 #: ../src/gmpc-stats-label.gob:106 ../src/gmpc-stats-label.gob:128
 msgid "n/a"
-msgstr ""
+msgstr "puudub"
 
 #: ../src/gmpc-stats-label.gob:141
 msgid "Loading"
@@ -2087,19 +2121,19 @@ msgstr "Laadimine"
 
 #: ../src/vala/gmpc-database-update-tracker.c:97
 msgid "MPD is rescanning the database"
-msgstr ""
+msgstr "MPD taasuurib andmebaasi"
 
 #: ../src/vala/gmpc-database-update-tracker.c:147
 msgid "MPD Database has been updated at:"
-msgstr ""
+msgstr "MPD andmebaas on uuendatud:"
 
 #: ../src/vala/gmpc-easy-command.c:92
 msgid "Gmpc Easy Command"
-msgstr ""
+msgstr "Gmpc lihtsad käsud"
 
 #: ../src/vala/gmpc-easy-command.c:582
 msgid "Easy Command help"
-msgstr ""
+msgstr "Lihtsate käskude abi"
 
 #: ../src/vala/gmpc-easy-command.c:597
 msgid "Command"
@@ -2121,7 +2155,7 @@ msgstr "Abi"
 
 #: ../src/vala/gmpc-easy-command.c:670
 msgid "Get a list of available commands"
-msgstr ""
+msgstr "Nimekiri võimalikest käskudest"
 
 #: ../src/vala/gmpc-song-links.c:453
 #, c-format
@@ -2142,7 +2176,7 @@ msgstr "Suurus"
 
 #: ../src/vala/gmpc-test-plugin.c:165
 msgid "wxh"
-msgstr ""
+msgstr "wxh"
 
 #: ../src/vala/gmpc-test-plugin.c:186 ../src/vala/gmpc-test-plugin.c:245
 msgid "Set"
@@ -2150,15 +2184,15 @@ msgstr "Määra"
 
 #: ../src/vala/gmpc-test-plugin.c:1119
 msgid "Insufficient information to store/fetch this metadata"
-msgstr ""
+msgstr "Pole piisavalt infot talletamaks/tirimaks metaandmeid"
 
 #: ../src/vala/gmpc-test-plugin.c:1128
 msgid "Artist art"
-msgstr ""
+msgstr "Esitaja pilt"
 
 #: ../src/vala/gmpc-test-plugin.c:1129
 msgid "Album art"
-msgstr ""
+msgstr "Albumi pilt"
 
 #: ../src/vala/gmpc-test-plugin.c:1130
 msgid "Song lyrics"
@@ -2166,7 +2200,7 @@ msgstr "Laualu sõnad"
 
 #: ../src/vala/gmpc-test-plugin.c:1131
 msgid "Album Info"
-msgstr "Albumi Info"
+msgstr "Albumi info"
 
 #: ../src/vala/gmpc-test-plugin.c:1132
 msgid "Artist Biography"
@@ -2174,7 +2208,7 @@ msgstr "Esitaja elulugu"
 
 #: ../src/vala/gmpc-test-plugin.c:1133
 msgid "Guitar Tab"
-msgstr ""
+msgstr "Kitarri tabulatuur"
 
 #: ../src/Widgets/gmpc-menu-item-rating.c:89
 msgid "Rating:"
@@ -2182,4 +2216,4 @@ msgstr "Hinnang:"
 
 #: ../src/Providers/music-tree.c:183
 msgid "Music Tree Provider"
-msgstr ""
+msgstr "Muusikapuu pakkuja"
