@@ -99,6 +99,7 @@ static void destroy_cache_entry(DCE *entry)
 
 void pixbuf_cache_invalidate_pixbuf_entry(gchar *url)
 {
+    GTimer *t = g_timer_new();
     gchar *key;
     DCE *e;
     GList *liter,*list= NULL;
@@ -121,6 +122,10 @@ void pixbuf_cache_invalidate_pixbuf_entry(gchar *url)
         g_hash_table_remove(pb_cache, (gchar *)liter->data);
     }
     g_list_free(list);
+
+    g_timer_stop(t);
+    g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Invalidate took %.6f", g_timer_elapsed(t, NULL));
+    g_timer_destroy(t);
 }
 void pixbuf_cache_create(void)
 {
@@ -143,6 +148,7 @@ void pixbuf_cache_destroy(void)
 
 void pixbuf_cache_add_icon(int size,const gchar *url, GdkPixbuf *pb)
 {
+    GTimer *t = g_timer_new();
     gchar *key;
     g_assert(pb_cache != NULL);
 
@@ -158,10 +164,14 @@ void pixbuf_cache_add_icon(int size,const gchar *url, GdkPixbuf *pb)
         g_hash_table_insert(pb_cache, key, e);
         g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "%i Add entry: %s", g_hash_table_size(pb_cache),key);
     }
+    g_timer_stop(t);
+    g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Add icon took %.6f", g_timer_elapsed(t, NULL));
+    g_timer_destroy(t);
 }
 
 GdkPixbuf *pixbuf_cache_lookup_icon(int size, const gchar *url)
 {
+    GTimer *t = g_timer_new();
     gchar *key = g_strdup_printf("%i:%s", size, url);
     DCE*retv = NULL;
     retv = g_hash_table_lookup(pb_cache, key);
@@ -171,7 +181,14 @@ GdkPixbuf *pixbuf_cache_lookup_icon(int size, const gchar *url)
     if(retv)
     {
         retv->in_use = TRUE;
+
+        g_timer_stop(t);
+        g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Lookup icon took %.6f", g_timer_elapsed(t, NULL));
+        g_timer_destroy(t);
         return g_object_ref(retv->pb);
     }
+    g_timer_stop(t);
+    g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Lookup icon took %.6f", g_timer_elapsed(t, NULL));
+    g_timer_destroy(t);
     return NULL;
 }
