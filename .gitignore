@@ -36,7 +36,6 @@
 /po/notexist
 /po/Makefile.in.in
 /po/.intltool-merge-cache
-/po/gmpc.pot
 
 ##
 # Makefiles
