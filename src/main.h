@@ -46,7 +46,6 @@
 #include "gmpc-profiles.h"
 #include "smclient/eggsmclient.h"
 
-extern GmpcEasyCommand *gmpc_easy_command;
 extern int 				gmpc_connected;
 extern GtkTreeModel 	*playlist;
 

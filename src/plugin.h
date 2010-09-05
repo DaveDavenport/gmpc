@@ -184,7 +184,10 @@ typedef struct {
 } gmpcPlugin;
 
 
-
+/**
+ * Allows the plugin to access the EasyCommand
+ */
+extern GmpcEasyCommand *gmpc_easy_command;
 
 /**
  * Playlist function 
