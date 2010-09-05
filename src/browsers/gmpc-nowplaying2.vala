@@ -25,6 +25,8 @@ using Gmpc.Widget;
 
 private const bool use_transition_mb2 = Gmpc.use_transition;
 private const string some_unique_name_mb2 = Config.VERSION;
+private const string np2_LOG_DOMAIN = "NowPlaying";
+
 /** 
  * This plugin implements an 'improved' now playing interface, modeled after the mockup found here
  * http://gmpc.wikia.com/wiki/GMPC_Mocup
@@ -68,7 +70,7 @@ namespace Gmpc {
             }
             /* Name */
             public override unowned string get_name() {
-                return ("Now Playing");
+                return N_("Now Playing");
             }
 
             public override void set_enabled(bool state) {
@@ -300,6 +302,7 @@ namespace Gmpc {
                     /* No need to update. */
                     return;
                 }
+                GLib.Timer t = new GLib.Timer();
                 this.clear();
                 this.song_checksum = checksum;
 
@@ -439,10 +442,10 @@ namespace Gmpc {
                         string album = (string)widget.get_data<string>("album");
                         if(artist != null && album != null) {
                             Gmpc.Browser.Metadata.show_album(artist,album);
-			    return true;
-			    }
-			    return false;
-                            });
+                            return true;
+                       }
+                       return false;
+                   });
                 }
                 /* Genre */
                 if(song.genre != null) {
@@ -597,9 +600,9 @@ namespace Gmpc {
                             debug("notebook page %i clicked", j);
                             notebook.set_current_page(j);
                             if(!text_view_queried){
-                            text_view.query_from_song(song);
-                            text_view_queried = true;
-                            this.change_color_style(text_view);
+                                text_view.query_from_song(song);
+                                text_view_queried = true;
+                                this.change_color_style(text_view);
                             }
                             });
                     if(i == 0){
@@ -847,6 +850,9 @@ namespace Gmpc {
                 this.container.add(vbox);
                 this.change_color_style(this.container);
                 this.container.show_all();
+
+                t.stop();
+                GLib.log(np2_LOG_DOMAIN, GLib.LogLevelFlags.LEVEL_DEBUG, "Building now playing took: %.6f seconds.", t.elapsed());
             }
             /** 
              * This shows the page when mpd is not playing, for now it is the gmpc logo + Gnome Music Player Client 
