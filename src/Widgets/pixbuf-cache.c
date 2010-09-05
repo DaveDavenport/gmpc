@@ -97,7 +97,7 @@ static void destroy_cache_entry(DCE *entry)
 
 
 
-void pixbuf_cache_invalidate_pixbuf_entry(gchar *url)
+void pixbuf_cache_invalidate_pixbuf_entry(const gchar *url)
 {
     GTimer *t = g_timer_new();
     gchar *key;

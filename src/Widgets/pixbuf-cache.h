@@ -35,5 +35,5 @@ GdkPixbuf *pixbuf_cache_lookup_icon(int size, const gchar *url);
  *
  * Invalidate entries in the cache
  */
-void pixbuf_cache_invalidate_pixbuf_entry(gchar *url);
+void pixbuf_cache_invalidate_pixbuf_entry(const gchar *url);
 #endif

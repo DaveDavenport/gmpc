@@ -25,12 +25,10 @@
 #include "metadata.h"
 #include "config1.h"
 #include "metadata-cache.h"
+#include "Widgets/pixbuf-cache.h"
 
 #define CACHE_NAME "Metadata cache"
 #define MDC_LOG_DOMAIN "MetaDataCache"
-
-/* function from metadata.c */
-mpd_Song *rewrite_mpd_song(mpd_Song *tsong, MetaDataType type);
 
 static const char metadata_sql_create[] =
 "CREATE TABLE IF NOT EXISTS metadata("
@@ -589,7 +587,7 @@ void meta_data_set_cache(mpd_Song *song, MetaDataResult result, MetaData *met)
 	if(met->type == META_ARTIST_ART || met->type == META_ALBUM_ART) {
 		MetaData *m= NULL;
 		MetaDataResult r = meta_data_get_from_cache(song, met->type, &m);
-		if(meta_data_is_uri(m)) {
+		if(r == META_DATA_AVAILABLE &&  meta_data_is_uri(m)) {
 			const gchar *uri = meta_data_get_uri(m);
 			pixbuf_cache_invalidate_pixbuf_entry(uri);
 		}	
