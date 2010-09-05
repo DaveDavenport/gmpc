@@ -417,6 +417,7 @@ static MetaData *sqlite_get_value(MetaDataType type,const char *key_a,const char
 
 MetaDataResult meta_data_get_from_cache(mpd_Song *song, MetaDataType type, MetaData **met)
 {
+	GTimer *t = g_timer_new();
 	const char *key_a= "", *key_b = "";
 	if(type == META_ALBUM_ART){
 		key_a = song->artist;
@@ -435,12 +436,19 @@ MetaDataResult meta_data_get_from_cache(mpd_Song *song, MetaDataType type, MetaD
 	if(key_a == NULL || key_b == NULL) {
 		*met = meta_data_new(); (*met)->type = type;
 		(*met)->plugin_name = CACHE_NAME; (*met)->content_type = META_DATA_CONTENT_EMPTY;
+		g_timer_stop(t);
+		g_log(MDC_LOG_DOMAIN, G_LOG_LEVEL_INFO,"get cache took: %.6f", g_timer_elapsed(t, NULL));
+		g_timer_destroy(t);
 		return META_DATA_UNAVAILABLE;
 	}
 	if(!g_utf8_validate(key_a, -1, NULL)){
 		g_log(MDC_LOG_DOMAIN, G_LOG_LEVEL_WARNING,"Key_a is not valid utf-8");
 		(*met) = meta_data_new(); (*met)->type = type;
 		(*met)->plugin_name = CACHE_NAME; (*met)->content_type = META_DATA_CONTENT_EMPTY;
+
+		g_timer_stop(t);
+		g_log(MDC_LOG_DOMAIN, G_LOG_LEVEL_INFO,"get cache took: %.6f", g_timer_elapsed(t, NULL));
+		g_timer_destroy(t);
 		return META_DATA_UNAVAILABLE;
 	}
 
@@ -448,6 +456,10 @@ MetaDataResult meta_data_get_from_cache(mpd_Song *song, MetaDataType type, MetaD
 		g_log(MDC_LOG_DOMAIN, G_LOG_LEVEL_WARNING,"Key_b is not valid utf-8");
 		(*met) = meta_data_new(); (*met)->type = type;
 		(*met)->plugin_name = CACHE_NAME; (*met)->content_type = META_DATA_CONTENT_EMPTY;
+
+		g_timer_stop(t);
+		g_log(MDC_LOG_DOMAIN, G_LOG_LEVEL_INFO,"get cache took: %.6f", g_timer_elapsed(t, NULL));
+		g_timer_destroy(t);
 		return META_DATA_UNAVAILABLE;
 	}
 	*met = sqlite_get_value(type,key_a, key_b);
@@ -459,11 +471,19 @@ MetaDataResult meta_data_get_from_cache(mpd_Song *song, MetaDataType type, MetaD
 		(*met)->content_type = META_DATA_CONTENT_EMPTY;
 
 		g_log(MDC_LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "No entry found for: %i-%s-%s", type, key_a, key_b);
+
+		g_timer_stop(t);
+		g_log(MDC_LOG_DOMAIN, G_LOG_LEVEL_INFO,"get cache took: %.6f", g_timer_elapsed(t, NULL));
+		g_timer_destroy(t);
 		return META_DATA_FETCHING;
 	}
 	if(meta_data_is_empty(*met))
 	{
 		g_log(MDC_LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Empty entry found for: %i-%s-%s", type, key_a, key_b);
+
+		g_timer_stop(t);
+		g_log(MDC_LOG_DOMAIN, G_LOG_LEVEL_INFO,"get cache took: %.6f", g_timer_elapsed(t, NULL));
+		g_timer_destroy(t);
 		return META_DATA_UNAVAILABLE;
 	}
 	if(meta_data_is_uri(*met))
@@ -478,14 +498,23 @@ MetaDataResult meta_data_get_from_cache(mpd_Song *song, MetaDataType type, MetaD
 			(*met)->size = 0;
 
 			g_log(MDC_LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Uri entry found for but invalid: %i-%s-%s", type, key_a, key_b);
+
+			g_timer_stop(t);
+			g_log(MDC_LOG_DOMAIN, G_LOG_LEVEL_INFO,"get cache took: %.6f", g_timer_elapsed(t, NULL));
+			g_timer_destroy(t);
 			return META_DATA_FETCHING;
 		}
 	}
 	g_log(MDC_LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Entry found for: %i-%s-%s", type, key_a, key_b);
+	g_timer_stop(t);
+	g_log(MDC_LOG_DOMAIN, G_LOG_LEVEL_INFO,"get cache took: %.6f", g_timer_elapsed(t, NULL));
+	g_timer_destroy(t);
 	return META_DATA_AVAILABLE;
 }
 void meta_data_set_cache_real(mpd_Song *song, MetaDataResult result, MetaData *met)
 {
+	GTimer *t = g_timer_new();
+
 	const char *key_a= "", *key_b = "";
 	if(!song) return;
 	if((met)->type == META_ALBUM_ART){
@@ -549,6 +578,10 @@ void meta_data_set_cache_real(mpd_Song *song, MetaDataResult result, MetaData *m
 		}
 		sqlite_list_end();
 	}
+
+	g_timer_stop(t);
+	g_log(MDC_LOG_DOMAIN, G_LOG_LEVEL_INFO,"set cache took: %.6f", g_timer_elapsed(t, NULL));
+	g_timer_destroy(t);
 }
 void meta_data_set_cache(mpd_Song *song, MetaDataResult result, MetaData *met)
 {
