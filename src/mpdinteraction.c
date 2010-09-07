@@ -88,13 +88,44 @@ static void output_set (gpointer data, const char *param)
 		if(split[0]) {
 			output = (int) strtol(split[0], NULL, 10);
 		}
-		if(output >=0 && split[1]){
-			if(g_utf8_collate(split[1], _("enable"))==0){
-				printf("enable output %i\n", output);
+		if(output >=0) {
+			/* Default to 'select' if no specific action given */
+			if(!split[1] || g_utf8_collate(split[1],  _("select"))==0) {
+				MpdData *devices = mpd_server_get_output_devices(connection);
+				MpdData *d = devices;
+				gboolean found = FALSE;
+				
+				while(d != NULL && d->output_dev->id != -10)
+				{
+					if (d->output_dev->id == output)
+					{
+						found = TRUE;
+						break;
+					}
+					d = mpd_data_get_next(d);
+				}
+				
+				if (found) {
+					g_debug("select output %i\n", output);
+					d = devices;
+					while (d != NULL && d->output_dev->id != -10)
+					{
+						mpd_server_set_output_device(connection, d->output_dev->id, d->output_dev->id == output ? 1 : 0);
+						d = mpd_data_get_next(d);
+					}
+				} else {
+					/* Let user know their request failed, otherwise they will likely be mystified */
+					gchar *str = g_strdup_printf("Can't select output %i because it does not exist", output);
+					g_debug("%s\n", str);
+					playlist3_message_show(pl3_messages, str, ERROR_WARNING);
+					g_free(str);
+				}
+			}else if(g_utf8_collate(split[1], _("enable"))==0){
+				g_debug("enable output %i\n", output);
 				mpd_server_set_output_device(connection, output, 1);
 			}else if (g_utf8_collate(split[1],  _("disable"))==0) {
 				mpd_server_set_output_device(connection, output, 0);
-				printf("disable output %i\n", output);
+				g_debug("disable output %i\n", output);
 			}
 		}
 		g_free(split);
@@ -319,12 +350,12 @@ static void mpd_interaction_init(void)
 
 	/* volume commands */
 	gmpc_easy_command_add_entry(gmpc_easy_command,_("volume"),"[+-]?[0-9]+",_("Volume (+-)<level>"),(GmpcEasyCommandCallback *)volume_set, NULL);
-	gmpc_easy_command_add_entry(gmpc_easy_command,_("mute"),  "",   _("Mute"),(GmpcEasyCommandCallback *)volume_mute, NULL);
+	gmpc_easy_command_add_entry(gmpc_easy_command,_("mute"),  "",   _("Mute"),(GmpcEasyCommandCallback *)volume_toggle_mute, NULL);
 
 	gmpc_easy_command_add_entry(gmpc_easy_command,_("crossfade"),C_("Regex for matching crossfade, translate off","([0-9]+|Off)"), _("Set Crossfade <seconds>"),(GmpcEasyCommandCallback *)crossfade_set, NULL);
 
-	gmpc_easy_command_add_entry(gmpc_easy_command,_("output"),C_("Regex for matching output","[0-9]+ (Enable|Disable)"),
-			_("output X enable or disable"),(GmpcEasyCommandCallback *)output_set, NULL);
+	gmpc_easy_command_add_entry(gmpc_easy_command,_("output"),C_("Regex for matching output","[0-9]+[ ]*(Enable|Disable|Select|)"),
+			_("output X enable or disable or select"),(GmpcEasyCommandCallback *)output_set, NULL);
 	/* basic playlist commands */
 	gmpc_easy_command_add_entry(gmpc_easy_command,_("play"),".*",_("Play <query>"),(GmpcEasyCommandCallback *)play_command, NULL);
 	gmpc_easy_command_add_entry(gmpc_easy_command,_("add"),".*",_("Add <query>"),(GmpcEasyCommandCallback *)add_command, NULL);
