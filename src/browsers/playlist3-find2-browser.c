@@ -607,7 +607,7 @@ static void pl3_find2_playlist_editor_add_to_playlist(GtkWidget *menu, gpointer 
 
 /**
  * Play the selected row, only usefull if one row is selected
- */
+ *
 static void pl3_find2_activate_row(GtkWidget *item,GtkTreeView *tree)
 {
 	GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(pl3_find2_tree));
@@ -631,6 +631,7 @@ static void pl3_find2_activate_row(GtkWidget *item,GtkTreeView *tree)
 		g_list_free (list);
 	}
 }
+*/
 
 static gboolean pl3_find2_browser_button_release_event(GtkWidget *but, GdkEventButton *event)
 {

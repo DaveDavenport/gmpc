@@ -175,7 +175,6 @@ static void __playlist_editor_async_callback(MpdData *data, gpointer callback_da
 static void playlist_editor_browser_playlist_editor_selected(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer userdata)
 {
     gchar *pl_path = NULL;
-    MpdData *data ;
     gtk_tree_model_get(GTK_TREE_MODEL(playlist_editor_store), iter, PL_NAME, &pl_path, -1);
     if(pl_path){
         gtk_widget_set_sensitive(playlist_editor_browser, FALSE);

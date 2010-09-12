@@ -20,6 +20,7 @@
 #include <string.h>
 #include <glib.h>
 #include <glib/gstdio.h>
+#include <ctype.h>
 #include "main.h"
 
 #include "metadata.h"
