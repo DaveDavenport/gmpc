@@ -187,7 +187,7 @@ AC_SUBST(gobject_LIBS)
 AC_SUBST(gobject_CFLAGS)
 
 #gtk
-PKG_CHECK_MODULES([gtk], gtk+-2.0 >= 2.12)
+PKG_CHECK_MODULES([gtk], gtk+-2.0 >= 2.16)
 AC_SUBST(gtk_LIBS)
 AC_SUBST(gtk_CFLAGS)
 
