@@ -880,9 +880,11 @@ static void pl3_current_playlist_browser_selected(GmpcPluginBrowserIface *obj, G
 {
     PlayQueuePlugin *self = (PlayQueuePlugin *)obj;
     unsigned long a = 0,b = 0;
+    gboolean init = FALSE;
     if(self->priv->pl3_cp_vbox == NULL)
     {
         pl3_current_playlist_browser_init((PlayQueuePlugin *)obj);
+        init = TRUE;
     }
     gtk_container_add(GTK_CONTAINER(container), self->priv->pl3_cp_vbox);
     gtk_widget_show(self->priv->pl3_cp_vbox);
@@ -891,6 +893,12 @@ static void pl3_current_playlist_browser_selected(GmpcPluginBrowserIface *obj, G
     __real_pl3_total_playtime_changed(GMPC_MPDDATA_MODEL_PLAYLIST(playlist),a,b,NULL);
 
     gtk_widget_grab_focus(self->priv->pl3_cp_tree);
+
+    if(init && cfg_get_single_value_as_int_with_default(config, "playlist", "st_cur_song", 0))
+    {
+            pl3_current_playlist_browser_scroll_to_current_song(self);
+            pl3_current_playlist_browser_select_current_song(self);
+    }
 }
 static void pl3_current_playlist_browser_unselected(GmpcPluginBrowserIface *obj, GtkContainer *container)
 {
