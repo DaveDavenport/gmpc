@@ -85,7 +85,7 @@ int main ( int argc, char **argv )
         },
         {
             "easycommand",     'e', 0, G_OPTION_ARG_STRING, &easycommand,
-            "Send an easy command query to the running gmpc.", NULL
+            "Send an easy command query to the running gmpc. Enclose query in double quotes if it contains spaces", NULL
         },
         {
 
@@ -117,8 +117,8 @@ int main ( int argc, char **argv )
     g_option_context_parse(context, &argc, &argv, &error);
     g_option_context_free(context);
     if(error){
-        g_error("Failed to parse command line options: '%s'", error->message);
-
+        printf("ERROR: failed to parse command line options: '%s'\n", error->message);
+		return EXIT_FAILURE;
     }
     bacon_connection = bacon_message_connection_new("gmpc");
     while(bacon_connection)
@@ -170,11 +170,10 @@ int main ( int argc, char **argv )
             if(easycommand)
             {
                 gchar *str = g_strdup_printf("EASYCOMMAND %s", easycommand);
-                printf("Send easycommand: %s\n", easycommand);
+                printf("Sending: %s\n", str);
                 bacon_message_connection_send(bacon_connection, str);
                 g_free(str);
             }
-
             if(quit)
             {
                 printf("send quit\n");

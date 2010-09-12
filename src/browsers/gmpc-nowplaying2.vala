@@ -62,6 +62,8 @@ namespace Gmpc {
                 Gdk.Color.parse(background,out this.background);
                 Gdk.Color.parse(foreground,out this.foreground);
 
+				/* Register easycommand to switch to this browser */
+				easy_command.add_entry(_("switch now playing"), "", _("Switch to Now Playing"), (Gmpc.Easy.Command.Callback *)select_now_playing_browser,this);
             }
             /* Version of the plugin*/
             private const int[] version =  {0,0,0};
@@ -918,7 +920,7 @@ namespace Gmpc {
             /**
              * Makes gmpc jump to the now playing browser 
              */
-            private void select_now_playing_browser(Gtk.Widget item)
+            public void select_now_playing_browser()
             {
                 unowned Gtk.TreeView tree = Gmpc.Playlist3.get_category_tree_view();
                 var sel = tree.get_selection();
