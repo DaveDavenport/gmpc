@@ -1295,6 +1295,13 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         }
      }
 
+     private void play_selected_song(Gtk.Button button)
+     {
+        MPD.Song? song = browser_get_selected_song(); 
+        if(song != null) {
+            Gmpc.MpdInteraction.play_path(song.file);
+        }
+     }
      private void replace_selected_song(Gtk.Button button)
      {
             MPD.PlayQueue.clear(server);
@@ -1501,6 +1508,10 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         abutton.clicked.connect(replace_selected_song);
         control_hbox.pack_start(abutton, false, false,0);
 
+        abutton = new Gtk.Button.from_stock("gtk-media-play");
+        abutton.set_relief(Gtk.ReliefStyle.NONE);
+        abutton.clicked.connect(play_selected_song);
+        control_hbox.pack_start(abutton, false, false,0);
 
         info_box.attach(control_hbox, 0,2,i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
         i++;
