@@ -152,17 +152,17 @@ public class Gmpc.PixbufLoaderAsync : GLib.Object
                           result = yield stream.read_async(data,1024, 0, cancel);
                           Gmpc.Fix.write_loader(loader,(string)data, result);
                       }catch ( Error erro) {
-                          warning("Error trying to fetch image: %s", erro.message);
+                          warning("Error trying to fetch image: %s::%s", erro.message,uri);
                       }
                   }while(!cancel.is_cancelled() && result > 0);
             }      
         }catch ( Error e) {
-            warning("Error trying to fetch image: %s", e.message);
+            warning("Error trying to fetch image: %s::%s", e.message,uri);
         }
         try {
             loader.close();
         }catch (Error err) {
-            warning("Error trying to parse image: %s", err.message);
+            warning("Error trying to parse image: %s::%s", err.message,uri);
             pixbuf_update(null);
             /* Failed to load the image */
             return;
@@ -206,10 +206,12 @@ public class Gmpc.MetaImageAsync : Gtk.Image
     public new void set_from_file(string uri, int size, bool border)
     {
         this.uri = uri;
-        loader = new PixbufLoaderAsync(); 
-        loader.pixbuf_update.connect((source, pixbuf)=>{
-                this.set_from_pixbuf(pixbuf);
-                });
+        if(loader == null) {
+            loader = new PixbufLoaderAsync(); 
+            loader.pixbuf_update.connect((source, pixbuf)=>{
+                    this.set_from_pixbuf(pixbuf);
+                    });
+        }
         loader.set_from_file(uri, size, border);
     }
     public void clear_now()
