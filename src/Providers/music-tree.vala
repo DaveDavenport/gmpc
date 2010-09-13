@@ -243,16 +243,17 @@ public class Gmpc.Provider.MusicTree : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIfa
                     break;
                 }
                 foreach (var info in files) {
-                    if(image_filename.match(info.get_name(), 0, null))
+					string name = info.get_name();
+                    if(name[0] != '.' && image_filename.match(name, 0, null))
                     {
                         MetaData.Item item = new MetaData.Item();
                         item.type = Gmpc.MetaData.Type.ALBUM_ART;
                         item.plugin_name = this.get_name();
                         item.content_type = MetaData.ContentType.URI;
-                        item.set_uri(GLib.Path.build_filename(path,info.get_name()));
+                        item.set_uri(GLib.Path.build_filename(path,name));
                         list.append((owned)item);
                         log("Gmpc.Plugin.MusicTreeProvider", GLib.LogLevelFlags.LEVEL_DEBUG, 
-                                "Found %s, adding",info.get_name()); 
+                                "Found %s, adding",name); 
                         /* Match filename against rules */
                     }
                 }
@@ -278,17 +279,18 @@ public class Gmpc.Provider.MusicTree : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIfa
                             break;
                         }
                         foreach (var pinfo in pfiles) {
-                            /* Match filename against rules */
-                            if(image_filename.match(pinfo.get_name(), 0, null))
+							string pname = pinfo.get_name();
+							/* Match filename against rules */
+                            if(pname[0] != '.' && image_filename.match(pname, 0, null))
                             {
                                 MetaData.Item pitem = new MetaData.Item();
                                 pitem.type = Gmpc.MetaData.Type.ALBUM_ART;
                                 pitem.plugin_name = this.get_name();
                                 pitem.content_type = MetaData.ContentType.URI;
-                                pitem.set_uri(GLib.Path.build_filename(path,pinfo.get_name()));
+                                pitem.set_uri(GLib.Path.build_filename(path,pname));
                                 list.append((owned)pitem);
                                 log("Gmpc.Plugin.MusicTreeProvider", GLib.LogLevelFlags.LEVEL_DEBUG, 
-                                        "Found %s, adding",pinfo.get_name()); 
+                                        "Found %s, adding",pname); 
                             }
                         }
                     }
