@@ -157,57 +157,70 @@ static BaconMessageConnection *bacon_connection = NULL;
 static void bacon_on_message_received(const char *message, gpointer data)
 {
 
-	if (message) {
+	if (message)
+	{
 		g_log(LOG_DOMAIN_IPC, G_LOG_LEVEL_DEBUG, "got message: '%s'\n", message);
 		/**
          * Makes mpd quit.
          */
-		if (strcmp(message, "QUIT") == 0) {
+		if (strcmp(message, "QUIT") == 0)
+		{
 			printf("I've been told to quit, doing this now\n");
 			main_quit();
 		}
 		/**
          * Gives play,pause command
          */
-		else if (strcmp(message, "PLAY") == 0 || strcmp(message, "PAUSE") == 0) {
+		else if (strcmp(message, "PLAY") == 0 || strcmp(message, "PAUSE") == 0)
+		{
 			play_song();
 		}
 		/**
          * Give next command
          */
-		else if (strcmp(message, "NEXT") == 0) {
+		else if (strcmp(message, "NEXT") == 0)
+		{
 			next_song();
 		}
 		/**
          * Give previous command
          */
-		else if (strcmp(message, "PREV") == 0) {
+		else if (strcmp(message, "PREV") == 0)
+		{
 			prev_song();
 		}
 		/**
          * Stop playback
          */
-		else if (strcmp(message, "STOP") == 0) {
+		else if (strcmp(message, "STOP") == 0)
+		{
 			stop_song();
-		} else if (strcmp(message, "TOGGLE_VIEW") == 0) {
+		} else if (strcmp(message, "TOGGLE_VIEW") == 0)
+		{
 			pl3_toggle_hidden();
-		} else if (strcmp(message, "HIDE_VIEW") == 0) {
+		} else if (strcmp(message, "HIDE_VIEW") == 0)
+		{
 			pl3_hide();
-		} else if (strcmp(message, "SHOW_VIEW") == 0) {
+		} else if (strcmp(message, "SHOW_VIEW") == 0)
+		{
 			create_playlist3();
-		} else if (strcmp(message, "CONNECT") == 0) {
+		} else if (strcmp(message, "CONNECT") == 0)
+		{
 			connect_to_mpd();
 		}
 		/**
          * pass gmpc an url to parse with the url_parser.
          */
-		else if (strncmp(message, "STREAM ", 7) == 0) {
+		else if (strncmp(message, "STREAM ", 7) == 0)
+		{
 			url_start_real(&message[7]);
 		}
 		/* Handle a query with gmpc_easy_command. This allows for more advanced control from gmpc-remote */
-		else if (strncmp(message, "EASYCOMMAND", strlen("EASYCOMMAND")) == 0) {
+		else if (strncmp(message, "EASYCOMMAND", strlen("EASYCOMMAND")) == 0)
+		{
 			gmpc_easy_command_do_query(gmpc_easy_command, (&message[strlen("EASYCOMMAND")]));
-		} else {
+		} else
+		{
 			create_playlist3();
 		}
 	}
@@ -230,14 +243,16 @@ static void xml_error_func(void *ctx, const char *msg, ...)
 
 static void gmpc_log_func(const gchar * log_domain, GLogLevelFlags log_level, const gchar * message, gpointer user_data)
 {
-	if (log_level <= global_log_level) {
+	if (log_level <= global_log_level)
+	{
 		g_log_default_handler(log_domain, log_level, message, user_data);
 	}
 }
 
 static gboolean set_log_filter(const gchar * option_name, const gchar * value, gpointer data, GError ** error)
 {
-	if (value == NULL || value[0] == 0) {
+	if (value == NULL || value[0] == 0)
+	{
 		g_set_error(error, 0, 0, "--log-filter requires a log domain as argument");
 		return FALSE;
 	}
@@ -322,10 +337,12 @@ int main(int argc, char **argv)
 	 * Set the default debug level
 	 * Depending if it is a git build or not
 	 */
-	if (revision && revision[0] != '\0') {
+	if (revision && revision[0] != '\0')
+	{
 		/* We run a svn version, so we want more default debug output */
 		debug_set_level(DEBUG_ERROR);
-	} else {
+	} else
+	{
 		/* Ok, release version... no debug */
 		debug_set_level(0);
 	}
@@ -350,13 +367,15 @@ int main(int argc, char **argv)
 	g_option_context_add_group(context, egg_sm_client_get_option_group());
 	g_option_context_parse(context, &argc, &argv, &error);
 	g_option_context_free(context);
-	if (error) {
+	if (error)
+	{
 		g_log(NULL, G_LOG_LEVEL_ERROR, "Failed to parse commandline options: %s", error->message);
 		g_error_free(error);
 	}
 
 	/* Show the version, if requested */
-	if (show_version) {
+	if (show_version)
+	{
 		print_version();
 		return EXIT_SUCCESS;
 	}
@@ -368,16 +387,20 @@ int main(int argc, char **argv)
 	 * 2 = Error + Warning messages
 	 * 3 = All messages
 	 */
-	if (debug_level >= 0) {
-		if (debug_level == 3) {
+	if (debug_level >= 0)
+	{
+		if (debug_level == 3)
+		{
 			global_log_level = G_LOG_LEVEL_DEBUG;
-		} else if (debug_level == 2) {
+		} else if (debug_level == 2)
+		{
 			global_log_level = G_LOG_LEVEL_INFO;
 		}
 		debug_set_level(debug_level);
 	}
 	/* Show the bug-information dialog */
-	if (show_bug_information) {
+	if (show_bug_information)
+	{
 		gtk_init(&argc, &argv);
 		bug_information_window_new(NULL);
 		return EXIT_SUCCESS;
@@ -464,7 +487,8 @@ int main(int argc, char **argv)
      * COMMANDLINE_OPTION:
      * Cleanup the metadata database and quit.
      */
-	if (clean_config) {
+	if (clean_config)
+	{
 		/* start the metadata system */
 		meta_data_init();
 		printf("Cleaning up cover file..\n");
@@ -484,9 +508,11 @@ int main(int argc, char **argv)
      * Check if the user has forced a different config file location.
      * else set to ~/.gmpc/gmpc.cfg
      */
-	if (!config_path) {
+	if (!config_path)
+	{
 		url = gmpc_get_user_path("gmpc.cfg");
-	} else {
+	} else
+	{
 		url = config_path;
 	}
 	/**
@@ -496,7 +522,8 @@ int main(int argc, char **argv)
 	config = cfg_open(url);
 
 	/** test if config opened correct  */
-	if (config == NULL) {
+	if (config == NULL)
+	{
 		/**
 		 * Show gtk error message and quit
 		 */
@@ -514,11 +541,14 @@ int main(int argc, char **argv)
 	/**
 	 * If requested, output debug info to file
 	 */
-	if (cfg_get_single_value_as_int_with_default(config, "Default", "Debug-log", FALSE)) {
+	if (cfg_get_single_value_as_int_with_default(config, "Default", "Debug-log", FALSE))
+	{
 		url = gmpc_get_user_path("debug-info.log");
-		if (url) {
+		if (url)
+		{
 			FILE *fp = g_fopen(url, "a");
-			if (!fp) {
+			if (!fp)
+			{
 				g_log(LOG_DOMAIN, G_LOG_LEVEL_ERROR, "Failed to open debug-log file: \"%s\"\n", url);
 				show_error_message(_("Failed to load debug-log file."));
 				abort();
@@ -536,20 +566,23 @@ int main(int argc, char **argv)
      * TODO, Check if version changed, then say something about it
      */
 	url = cfg_get_single_value_as_string(config, "Default", "version");
-	if (url == NULL || strcmp(url, VERSION)) {
+	if (url == NULL || strcmp(url, VERSION))
+	{
 		int *new_version = split_version(VERSION);
-		if (url) {
+		if (url)
+		{
 			int *old_version = split_version((const char *)url);
 			g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Welcome to a new version of gmpc.\n");
 			/* Do possible cleanup of config files and stuff */
 			/* old version older then 0.1.15.4.98 */
-			if ((old_version[0] <= 0 && old_version[1] <= 15 && old_version[2] <= 4 && old_version[3] <= 98)) {
+			if ((old_version[0] <= 0 && old_version[1] <= 15 && old_version[2] <= 4 && old_version[3] <= 98))
+			{
 				conf_mult_obj *iter, *cmo = cfg_get_class_list(config);
 				g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Purging old keys from the config file.\n");
-				for (iter = cmo; iter; iter = iter->next) {
-					if (strstr(iter->key, "colpos")
-						|| strstr(iter->key, "colshow")
-						|| strstr(iter->key, "colsize")) {
+				for (iter = cmo; iter; iter = iter->next)
+				{
+					if (strstr(iter->key, "colpos") || strstr(iter->key, "colshow") || strstr(iter->key, "colsize"))
+					{
 						g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Removing entry: %s\n", iter->key);
 						cfg_remove_class(config, iter->key);
 					}
@@ -558,7 +591,8 @@ int main(int argc, char **argv)
 
 			}
 			/* old version older then 0.17.0-beta1 */
-			if ((old_version[0] <= 0 && old_version[1] <= 16 && old_version[2] <= 95)) {
+			if ((old_version[0] <= 0 && old_version[1] <= 16 && old_version[2] <= 95))
+			{
 				printf("** Correct icon-size\n");
 				cfg_set_single_value_as_int(config, "gmpc-mpddata-model", "icon-size", 32);
 			}
@@ -568,7 +602,8 @@ int main(int argc, char **argv)
 		cfg_set_single_value_as_string(config, "Default", "version", VERSION);
 		q_free(new_version);
 	}
-	if (url) {
+	if (url)
+	{
 		q_free(url);
 	}
 	TEC("New version check");
@@ -577,21 +612,27 @@ int main(int argc, char **argv)
 	/**
      * Start IPC system.
      */
-	if (cfg_get_single_value_as_int_with_default(config, "Default", "allow-multiple", FALSE) == FALSE) {
+	if (cfg_get_single_value_as_int_with_default(config, "Default", "allow-multiple", FALSE) == FALSE)
+	{
 		/**
 		 * bacon here we come
          */
 		bacon_connection = bacon_message_connection_new("gmpc");
-		if (bacon_connection != NULL) {
-			if (!bacon_message_connection_get_is_server(bacon_connection)) {
-				if (replace || quit) {
+		if (bacon_connection != NULL)
+		{
+			if (!bacon_message_connection_get_is_server(bacon_connection))
+			{
+				if (replace || quit)
+				{
 					bacon_message_connection_send(bacon_connection, "QUIT");
-					while (!bacon_message_connection_get_is_server(bacon_connection)) {
+					while (!bacon_message_connection_get_is_server(bacon_connection))
+					{
 						bacon_message_connection_free(bacon_connection);
 						bacon_connection = bacon_message_connection_new("gmpc");
 						g_usleep(G_USEC_PER_SEC);
 					}
-				} else {
+				} else
+				{
 					g_log(LOG_DOMAIN_IPC, G_LOG_LEVEL_WARNING, "gmpc is allready running\n");
 					bacon_message_connection_send(bacon_connection, "PRESENT");
 					bacon_message_connection_free(bacon_connection);
@@ -604,7 +645,8 @@ int main(int argc, char **argv)
 			bacon_message_connection_set_callback(bacon_connection, bacon_on_message_received, NULL);
 		}
 		/* If user requested a quit, quit */
-		if (quit) {
+		if (quit)
+		{
 			cfg_close(config);
 			config = NULL;
 			if (bacon_connection)
@@ -615,7 +657,8 @@ int main(int argc, char **argv)
 	}
 	TEC("IPC setup");
 #endif
-	if (quit) {
+	if (quit)
+	{
 		cfg_close(config);
 		return EXIT_SUCCESS;
 	}
@@ -624,10 +667,13 @@ int main(int argc, char **argv)
 	/** Signals */
 
 	gmpc_profiles = gmpc_profiles_new();
-	if (profile_name) {
+	if (profile_name)
+	{
 		GList *iter, *items = gmpc_profiles_get_profiles_ids(gmpc_profiles);
-		for (iter = g_list_first(items); iter; iter = g_list_next(iter)) {
-			if (g_utf8_collate(profile_name, gmpc_profiles_get_name(gmpc_profiles, (const gchar *)iter->data)) == 0) {
+		for (iter = g_list_first(items); iter; iter = g_list_next(iter))
+		{
+			if (g_utf8_collate(profile_name, gmpc_profiles_get_name(gmpc_profiles, (const gchar *)iter->data)) == 0)
+			{
 				connection_set_current_profile((const gchar *)iter->data);
 				break;
 			}
@@ -655,7 +701,8 @@ int main(int argc, char **argv)
 	 * Create connection object
 	 */
 	connection = mpd_new_default();
-	if (connection == NULL) {
+	if (connection == NULL)
+	{
 	/**
          * if failed, print error message
          */
@@ -735,7 +782,8 @@ int main(int argc, char **argv)
 	/**
      *  load dynamic plugins
      */
-	if (!disable_plugins) {
+	if (!disable_plugins)
+	{
 #ifdef WIN32
 		packagedir = g_win32_get_package_installation_directory_of_module(NULL);
 		g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Got %s as package installation dir", packagedir);
@@ -751,9 +799,11 @@ int main(int argc, char **argv)
 		q_free(url);
 #endif
 		/* Load plugin from $PLUGIN_DIR if set */
-		if (g_getenv("PLUGIN_DIR") != NULL) {
+		if (g_getenv("PLUGIN_DIR") != NULL)
+		{
 			gchar *path = g_build_filename(g_getenv("PLUGIN_DIR"), NULL);
-			if (path && g_file_test(path, G_FILE_TEST_IS_DIR)) {
+			if (path && g_file_test(path, G_FILE_TEST_IS_DIR))
+			{
 				plugin_load_dir(path);
 			}
 			if (path)
@@ -764,7 +814,8 @@ int main(int argc, char **argv)
 		/**
 		 * if dir exists, try to load the plugins.
 		 */
-		if (g_file_test(url, G_FILE_TEST_IS_DIR)) {
+		if (g_file_test(url, G_FILE_TEST_IS_DIR))
+		{
 			g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Trying to load plugins in: %s", url);
 			if (!disable_plugins)
 				plugin_load_dir(url);
@@ -773,7 +824,8 @@ int main(int argc, char **argv)
 		q_free(url);
 	}
 	/* time todo some initialisation of plugins */
-	for (i = 0; i < num_plugins && plugins[i] != NULL; i++) {
+	for (i = 0; i < num_plugins && plugins[i] != NULL; i++)
+	{
 		TEC("Initializing plugin: %s", gmpc_plugin_get_name(plugins[i]));
 		gmpc_plugin_init(plugins[i]);
 	}
@@ -791,7 +843,8 @@ int main(int argc, char **argv)
 
 	if ((revision != NULL && revision[0] != '\0')
 		&& cfg_get_single_value_as_int_with_default(config, "Default", "help-question", 0) < 2
-		&& cfg_get_single_value_as_int_with_default(config, "Default", "first-run", 1)) {
+		&& cfg_get_single_value_as_int_with_default(config, "Default", "first-run", 1))
+	{
 		GtkWidget *dialog = gtk_message_dialog_new_with_markup(NULL,
 															   GTK_DIALOG_MODAL,
 															   GTK_MESSAGE_QUESTION, GTK_BUTTONS_CLOSE,
@@ -823,7 +876,8 @@ int main(int argc, char **argv)
      * If gmpc is ran for the first time, we want to show a wizard that helps 
      * the user getting started.
      */
-	if (cfg_get_single_value_as_int_with_default(config, "Default", "first-run", 1)) {
+	if (cfg_get_single_value_as_int_with_default(config, "Default", "first-run", 1))
+	{
 		setup_assistant();
 		cfg_set_single_value_as_int(config, "Default", "first-run", 0);
 		TEC("Setup first run assistant");
@@ -832,7 +886,8 @@ int main(int argc, char **argv)
 	/**
      * If autoconnect is enabled, tell gmpc that it's in state it should connect
      */
-	if (cfg_get_single_value_as_int_with_default(config, "connection", "autoconnect", DEFAULT_AUTOCONNECT)) {
+	if (cfg_get_single_value_as_int_with_default(config, "connection", "autoconnect", DEFAULT_AUTOCONNECT))
+	{
 		gmpc_connected = TRUE;
 	}
 	/*
@@ -859,7 +914,8 @@ int main(int argc, char **argv)
 	/**
      * If the user wants gmpc to be started hidden, call pl3_hide after the mainloop started running
      */
-	if (cfg_get_single_value_as_int_with_default(config, "Default", "start-hidden", FALSE) || start_hidden) {
+	if (cfg_get_single_value_as_int_with_default(config, "Default", "start-hidden", FALSE) || start_hidden)
+	{
 		g_timeout_add(250, (GSourceFunc) hide_on_start, NULL);
 	}
 	TEC("Setting up timers");
@@ -906,7 +962,8 @@ int main(int argc, char **argv)
      */
 
 #ifndef WIN32
-	if (bacon_connection) {
+	if (bacon_connection)
+	{
 		bacon_message_connection_free(bacon_connection);
 		bacon_connection = NULL;
 	}
@@ -915,7 +972,8 @@ int main(int argc, char **argv)
 	gmpc_easy_async_quit();
 
 	/* tell the plugins to save themself. */
-	for (i = 0; i < num_plugins && plugins[i] != NULL; i++) {
+	for (i = 0; i < num_plugins && plugins[i] != NULL; i++)
+	{
 		g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Telling '%s' to save itself\n", gmpc_plugin_get_name(plugins[i]));
 		gmpc_plugin_save_yourself(plugins[i]);
 	}
@@ -928,7 +986,8 @@ int main(int argc, char **argv)
 	meta_data_destroy();
 
 	/* time todo some destruction of plugins */
-	for (i = 0; i < num_plugins && plugins[i] != NULL; i++) {
+	for (i = 0; i < num_plugins && plugins[i] != NULL; i++)
+	{
 		g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Telling '%s' to destroy itself\n", gmpc_plugin_get_name(plugins[i]));
 		gmpc_plugin_destroy(plugins[i]);
 	}
@@ -993,8 +1052,10 @@ void main_quit(void)
 	/**
 	 * Disconnect when connected
 	 */
-	if (mpd_check_connected(connection)) {
-		if (cfg_get_single_value_as_int_with_default(config, "connection", "stop-on-exit", FALSE)) {
+	if (mpd_check_connected(connection))
+	{
+		if (cfg_get_single_value_as_int_with_default(config, "connection", "stop-on-exit", FALSE))
+		{
 			mpd_player_stop(connection);
 		}
 		mpd_disconnect(connection);
@@ -1016,11 +1077,13 @@ static int autoconnect_backoff = 0;
 static int autoconnect_callback(void)
 {
 	/* check if there is an connection. */
-	if (!mpd_check_connected(connection)) {
+	if (!mpd_check_connected(connection))
+	{
 		/* connect when autoconnect is enabled, the user wants to be connected
 		 */
 		if (gmpc_connected
-			&& cfg_get_single_value_as_int_with_default(config, "connection", "autoconnect", DEFAULT_AUTOCONNECT)) {
+			&& cfg_get_single_value_as_int_with_default(config, "connection", "autoconnect", DEFAULT_AUTOCONNECT))
+		{
 			connect_to_mpd();
 		}
 	}
@@ -1065,13 +1128,15 @@ static void gmpc_status_changed_callback_real(GmpcConnection * conn, MpdObj * mi
 {
 	int i;
 	/* When permission changes, update the advanced search regex */
-	if (what & MPD_CST_PERMISSION) {
+	if (what & MPD_CST_PERMISSION)
+	{
 		advanced_search_update_taglist();
 	}
 	/**
 	 * Make the plugins recieve the signals
 	 */
-	for (i = 0; i < num_plugins; i++) {
+	for (i = 0; i < num_plugins; i++)
+	{
 		gmpc_plugin_status_changed(plugins[i], mi, what);
 	}
 }
@@ -1084,30 +1149,31 @@ static void gmpc_status_changed_callback_real(GmpcConnection * conn, MpdObj * mi
 static void password_dialog_response(GtkWidget * dialog, gint response, gpointer data)
 {
 	gchar *path;
-	switch (response) {
+	switch (response)
+	{
 	case 0:
 		return;
 	case GTK_RESPONSE_OK:
 		{
-			path = (char *)
-				gtk_entry_get_text(GTK_ENTRY(gtk_builder_get_object(xml_password_window, "pass_entry")));
+			path = (char *)gtk_entry_get_text(GTK_ENTRY(gtk_builder_get_object(xml_password_window, "pass_entry")));
 			mpd_set_password(connection, path);
 			if (gtk_toggle_button_get_active
-				(GTK_TOGGLE_BUTTON(gtk_builder_get_object(xml_password_window, "ck_save_pass")))) {
+				(GTK_TOGGLE_BUTTON(gtk_builder_get_object(xml_password_window, "ck_save_pass"))))
+			{
 				connection_set_password(path);
 			}
 			mpd_send_password(connection);
 		}
 		break;
 	default:
-		if (mpd_server_check_command_allowed(connection, "status") != MPD_SERVER_COMMAND_ALLOWED) {
+		if (mpd_server_check_command_allowed(connection, "status") != MPD_SERVER_COMMAND_ALLOWED)
+		{
 			playlist3_show_error_message(_("GMPC has insufficient permissions on the mpd server."), ERROR_CRITICAL);
 			mpd_disconnect(connection);
 		}
 		break;
 	}
-	gtk_widget_destroy((GtkWidget *)
-					   gtk_builder_get_object(xml_password_window, "password-dialog"));
+	gtk_widget_destroy((GtkWidget *) gtk_builder_get_object(xml_password_window, "password-dialog"));
 	g_object_unref(xml_password_window);
 	xml_password_window = NULL;
 }
@@ -1126,9 +1192,11 @@ static void password_dialog(int failed)
 	q_free(path);
 	if (!xml_password_window)
 		return;
-	if (failed) {
+	if (failed)
+	{
 		path = g_strdup_printf(_("Failed to set password on: '%s'\nPlease try again"), mpd_get_hostname(connection));
-	} else {
+	} else
+	{
 		path = g_strdup_printf(_("Please enter your password for: '%s'"), mpd_get_hostname(connection));
 	}
 	gtk_label_set_text(GTK_LABEL(gtk_builder_get_object(xml_password_window, "pass_label")), path);
@@ -1151,7 +1219,8 @@ static int error_callback(MpdObj * mi, int error_id, char *error_msg, gpointer d
 															   "autoconnect",
 															   DEFAULT_AUTOCONNECT);
 	/* if we are not connected we show a reconnect */
-	if (!mpd_check_connected(mi)) {
+	if (!mpd_check_connected(mi))
+	{
 		GtkWidget *button;
 		char *str;
 		/* no response? then we just ignore it when autoconnecting. */
@@ -1164,20 +1233,25 @@ static int error_callback(MpdObj * mi, int error_id, char *error_msg, gpointer d
 		g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(connect_to_mpd), NULL);
 		playlist3_error_add_widget(button);
 		g_free(str);
-	} else {
+	} else
+	{
 		if (setup_assistant_is_running()
-			&& (error_id == MPD_ACK_ERROR_PERMISSION || error_id == MPD_ACK_ERROR_PASSWORD)) {
+			&& (error_id == MPD_ACK_ERROR_PERMISSION || error_id == MPD_ACK_ERROR_PASSWORD))
+		{
 			gchar *str = g_markup_printf_escaped("<b>%s</b>",
 												 _("Insufficient permission to connect to mpd. Check password"));
 			setup_assistant_set_error(str);
 			q_free(str);
 			return TRUE;
 		}
-		if (error_id == MPD_ACK_ERROR_PASSWORD) {
+		if (error_id == MPD_ACK_ERROR_PASSWORD)
+		{
 			password_dialog(TRUE);
-		} else if (error_id == MPD_ACK_ERROR_PERMISSION) {
+		} else if (error_id == MPD_ACK_ERROR_PERMISSION)
+		{
 			password_dialog(FALSE);
-		} else {
+		} else
+		{
 			gchar *str = g_markup_printf_escaped("<b>%s %i: %s</b>",
 												 _("error code"), error_id,
 												 error_msg);
@@ -1194,13 +1268,15 @@ static int error_callback(MpdObj * mi, int error_id, char *error_msg, gpointer d
 static void connection_changed(MpdObj * mi, int connected, gpointer data)
 {
 	/* propagate the signal to the connection object */
-	if (mpd_check_connected(mi) != connected) {
+	if (mpd_check_connected(mi) != connected)
+	{
 		g_log(LOG_DOMAIN, G_LOG_LEVEL_ERROR, "Connection state differs from actual state: act: %i\n", !connected);
 	}
 	/**
 	 * Check version
 	 */
-	if (connected && !mpd_server_check_version(mi, 0, 13, 0)) {
+	if (connected && !mpd_server_check_version(mi, 0, 13, 0))
+	{
 		gchar *value = g_markup_printf_escaped("<b>%s</b>",
 											   _("MPD versions before 0.13.0 are not supported"));
 		/* disable user connect ! */
@@ -1211,21 +1287,25 @@ static void connection_changed(MpdObj * mi, int connected, gpointer data)
 		g_free(value);
 	}
 	/* Remove timeout */
-	if (connected) {
+	if (connected)
+	{
 		if (autoconnect_timeout)
 			g_source_remove(autoconnect_timeout);
 		autoconnect_timeout = 0;
 		autoconnect_backoff = 0;
 	}
-	if (connected) {
+	if (connected)
+	{
 		advanced_search_update_taglist();
 	}
 	/**
 	 * force an update of status, to check password
 	 */
-	if (connected) {
+	if (connected)
+	{
 		mpd_status_update(mi);
-		if (connected != mpd_check_connected(mi)) {
+		if (connected != mpd_check_connected(mi))
+		{
 			g_log(LOG_DOMAIN, G_LOG_LEVEL_WARNING, "State differs, exit");
 			/* Probly disconnected when getting status..   exiting */
 			return;
@@ -1245,7 +1325,8 @@ static void connection_changed_real(GmpcConnection * obj, MpdObj * mi, int conne
      * propegate signals
      */
 	g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Connection changed %i-%i \n", connected, mpd_check_connected(mi));
-	for (i = 0; i < num_plugins; i++) {
+	for (i = 0; i < num_plugins; i++)
+	{
 		g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Connection changed plugin: %s\n", gmpc_plugin_get_name(plugins[i]));
 		gmpc_plugin_mpd_connection_changed(plugins[i], mi, connected, NULL);
 		TEC("Connection changed plugin: %s", gmpc_plugin_get_name(plugins[i]));
@@ -1258,13 +1339,16 @@ static void connection_changed_real(GmpcConnection * obj, MpdObj * mi, int conne
 	if (connected)
 		mpd_status_update(mi);
 
-	if (connected) {
+	if (connected)
+	{
 		playlist3_show_error_message(_("Connected to mpd"), ERROR_INFO);
-	} else {
+	} else
+	{
 		playlist3_show_error_message(_("Disconnected from mpd"), ERROR_INFO);
 	}
 
-	if (!connected) {
+	if (!connected)
+	{
 		if (autoconnect_timeout)
 			g_source_remove(autoconnect_timeout);
 		autoconnect_timeout = g_timeout_add_seconds(5, (GSourceFunc) autoconnect_callback, NULL);
@@ -1293,16 +1377,20 @@ static void move_old_gmpc_data(void)
 	gchar *path;
 
 	url = gmpc_get_user_path(NULL);
-	if (!g_file_test(url, G_FILE_TEST_EXISTS)) {
+	if (!g_file_test(url, G_FILE_TEST_EXISTS))
+	{
 		path = g_build_filename(old, ".gmpc", NULL);
-		if (g_file_test(path, G_FILE_TEST_IS_DIR)) {
+		if (g_file_test(path, G_FILE_TEST_IS_DIR))
+		{
 			GDir *dir;
 			const gchar *iter;
 			/* Create the directory */
 			create_gmpc_paths();
 			dir = g_dir_open(path, 0, NULL);
-			if (dir) {
-				while ((iter = g_dir_read_name(dir)) != NULL) {
+			if (dir)
+			{
+				while ((iter = g_dir_read_name(dir)) != NULL)
+				{
 					gchar *dest_path = g_build_filename(url, iter, NULL);
 					gchar *src_path = g_build_filename(path, iter, NULL);
 					printf("move %s %s\n", src_path, dest_path);
@@ -1318,9 +1406,11 @@ static void move_old_gmpc_data(void)
 	g_free(url);
 
 	url = gmpc_get_covers_path("covers.sql");
-	if (!g_file_test(url, G_FILE_TEST_EXISTS)) {
+	if (!g_file_test(url, G_FILE_TEST_EXISTS))
+	{
 		path = g_build_filename(old, ".covers", "covers.sql", NULL);
-		if (g_file_test(path, G_FILE_TEST_EXISTS)) {
+		if (g_file_test(path, G_FILE_TEST_EXISTS))
+		{
 			/* Create the directory */
 			create_gmpc_paths();
 			printf("move %s %s\n", path, url);
@@ -1337,8 +1427,10 @@ static void create_directory(gchar * url)
 	 * Check if ~/.gmpc/ exists
 	 * If not try to create it.
 	 */
-	if (!g_file_test(url, G_FILE_TEST_EXISTS)) {
-		if (g_mkdir_with_parents(url, 0700) < 0) {
+	if (!g_file_test(url, G_FILE_TEST_EXISTS))
+	{
+		if (g_mkdir_with_parents(url, 0700) < 0)
+		{
 			g_log(LOG_DOMAIN, G_LOG_LEVEL_ERROR, "Failed to create: %s\n", url);
 			show_error_message("Failed to create config directory.");
 			abort();
@@ -1347,10 +1439,12 @@ static void create_directory(gchar * url)
 	/**
 	 * if it exists, check if it's a directory
 	 */
-	if (!g_file_test(url, G_FILE_TEST_IS_DIR)) {
+	if (!g_file_test(url, G_FILE_TEST_IS_DIR))
+	{
 		show_error_message("The config directory is not a directory.");
 		abort();
-	} else {
+	} else
+	{
 		g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "%s exist and is directory", url);
 	}
 }
@@ -1379,7 +1473,8 @@ static void print_version(void)
 	printf(GMPC_COPYRIGHT "\n\n" RESET);
 	printf("%-25s: %s\n", ("Tagline"), GMPC_TAGLINE);
 	printf("%-25s: %i.%i.%i\n", ("Version"), GMPC_MAJOR_VERSION, GMPC_MINOR_VERSION, GMPC_MICRO_VERSION);
-	if (revision && revision[0] != '\0') {
+	if (revision && revision[0] != '\0')
+	{
 		printf("%-25s: %s\n", ("Revision"), revision);
 	}
 }
