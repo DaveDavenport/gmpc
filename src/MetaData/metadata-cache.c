@@ -431,21 +431,25 @@ MetaDataResult meta_data_get_from_cache(mpd_Song *song, MetaDataType type, MetaD
 {
 	GTimer *t = g_timer_new();
 	const char *key_a= "", *key_b = NULL; 
+	gboolean have_b = FALSE;
 	if(type == META_ALBUM_ART){
 		key_a = song->artist;
 		key_b = song->album;
+		have_b = TRUE;
 	}else if(type == META_ALBUM_TXT){
 		key_a = song->artist;
 		key_b = song->album;
+		have_b = TRUE;
 	}else if (type == META_ARTIST_ART || type == META_ARTIST_TXT || type == META_ARTIST_SIMILAR) {
 		key_a = song->artist;
 	}else if (type == META_SONG_TXT || type == META_SONG_SIMILAR || type == META_SONG_GUITAR_TAB) {
 		key_a = song->artist;
 		key_b = song->title;
+		have_b = TRUE;
 	}else if (type == META_GENRE_SIMILAR) {
 		key_a = song->genre;
 	}
-	if(key_a == NULL) {
+	if(key_a == NULL || (have_b && key_b == NULL)) {
 		*met = meta_data_new(); (*met)->type = type;
 		(*met)->plugin_name = CACHE_NAME; (*met)->content_type = META_DATA_CONTENT_EMPTY;
 		g_timer_stop(t);
@@ -482,7 +486,7 @@ MetaDataResult meta_data_get_from_cache(mpd_Song *song, MetaDataType type, MetaD
 		(*met)->plugin_name = "Metadata Cache";
 		(*met)->content_type = META_DATA_CONTENT_EMPTY;
 
-		g_log(MDC_LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "No entry found for: %i-%s-%s", type, key_a, key_b);
+		g_log(MDC_LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "No entry found for: %i-%s-%s", type, key_a, (key_b)?"(null)":key_b);
 
 		g_timer_stop(t);
 		g_log(MDC_LOG_DOMAIN, G_LOG_LEVEL_INFO,"get cache took: %.6f", g_timer_elapsed(t, NULL));
@@ -491,7 +495,7 @@ MetaDataResult meta_data_get_from_cache(mpd_Song *song, MetaDataType type, MetaD
 	}
 	if(meta_data_is_empty(*met))
 	{
-		g_log(MDC_LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Empty entry found for: %i-%s-%s", type, key_a, key_b);
+		g_log(MDC_LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Empty entry found for: %i-%s-%s", type, key_a,  (key_b)?"(null)":key_b);
 
 		g_timer_stop(t);
 		g_log(MDC_LOG_DOMAIN, G_LOG_LEVEL_INFO,"get cache took: %.6f", g_timer_elapsed(t, NULL));
@@ -509,7 +513,7 @@ MetaDataResult meta_data_get_from_cache(mpd_Song *song, MetaDataType type, MetaD
 			(*met)->content = NULL;
 			(*met)->size = 0;
 
-			g_log(MDC_LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Uri entry found for but invalid: %i-%s-%s", type, key_a, key_b);
+			g_log(MDC_LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Uri entry found for but invalid: %i-%s-%s", type, key_a,(key_b)?"(null)":key_b);
 
 			g_timer_stop(t);
 			g_log(MDC_LOG_DOMAIN, G_LOG_LEVEL_INFO,"get cache took: %.6f", g_timer_elapsed(t, NULL));
@@ -517,7 +521,7 @@ MetaDataResult meta_data_get_from_cache(mpd_Song *song, MetaDataType type, MetaD
 			return META_DATA_FETCHING;
 		}
 	}
-	g_log(MDC_LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Entry found for: %i-%s-%s", type, key_a, key_b);
+	g_log(MDC_LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Entry found for: %i-%s-%s", type, key_a,(key_b)?"(null)":key_b);
 	g_timer_stop(t);
 	g_log(MDC_LOG_DOMAIN, G_LOG_LEVEL_INFO,"get cache took: %.6f", g_timer_elapsed(t, NULL));
 	g_timer_destroy(t);
