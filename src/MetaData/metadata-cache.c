@@ -39,11 +39,14 @@ static const char metadata_sql_create[] =
 "   content VARCHAR "
 ");"
 "CREATE INDEX IF NOT EXISTS"
-" metadata_content ON metadata(type, key_a, key_b)"
+" metadata_content ON metadata(type,key_a, key_b);"
+"CREATE INDEX IF NOT EXISTS"
+" metadata_content_type ON metadata(type);"
 "";
 
 enum metadata_sql {
 	META_DATA_SQL_GET,
+	META_DATA_SQL_GET_KEYA,
 	META_DATA_SQL_SET,
 	META_DATA_SQL_UPDATE,
 	META_DATA_SQL_DELETE,
@@ -57,6 +60,8 @@ enum metadata_sql {
 static const char *const metadata_sql[] = {
 	[META_DATA_SQL_GET] =
 		"SELECT contenttype,content FROM metadata WHERE type=? AND key_a=? AND key_b=?",
+	[META_DATA_SQL_GET_KEYA] =
+		"SELECT contenttype,content FROM metadata INDEXED BY metadata_content_type WHERE type=? AND key_a=?",
 	[META_DATA_SQL_SET] =
 		"INSERT INTO metadata(contenttype,content,type,key_a, key_B) VALUES(?,?,?,?,?)",
 	[META_DATA_SQL_UPDATE] =
@@ -327,9 +332,15 @@ static gboolean sqlite_set_value(MetaDataType type,const char *key_a,const char 
 
 static MetaData *sqlite_get_value(MetaDataType type,const char *key_a,const char *key_b)
 {
-	sqlite3_stmt *const stmt = metadata_stmt[META_DATA_SQL_GET];
+	sqlite3_stmt *stmt;
+	
 	int ret;
 	MetaData *met = NULL;
+	if(key_b == NULL) {
+		stmt = metadata_stmt[META_DATA_SQL_GET_KEYA];
+	}else {
+		stmt = metadata_stmt[META_DATA_SQL_GET];
+	}
 	sqlite3_reset(stmt);
 
 	ret = sqlite3_bind_int(stmt, 1, type);
@@ -345,12 +356,15 @@ static MetaData *sqlite_get_value(MetaDataType type,const char *key_a,const char
 				sqlite3_errmsg(metadata_db));
 		return NULL;
 	}
+	if(key_b != NULL)
+	{
 
-	ret = sqlite3_bind_text(stmt, 3, key_b,-1, NULL);
-	if (ret != SQLITE_OK) {
-		g_log(MDC_LOG_DOMAIN, G_LOG_LEVEL_WARNING,"sqlite3_bind_text() failed: %s",
-				sqlite3_errmsg(metadata_db));
-		return NULL;
+		ret = sqlite3_bind_text(stmt, 3, key_b,-1, NULL);
+		if (ret != SQLITE_OK) {
+			g_log(MDC_LOG_DOMAIN, G_LOG_LEVEL_WARNING,"sqlite3_bind_text() failed: %s",
+					sqlite3_errmsg(metadata_db));
+			return NULL;
+		}
 	}
 
 	do {
@@ -416,7 +430,7 @@ static MetaData *sqlite_get_value(MetaDataType type,const char *key_a,const char
 MetaDataResult meta_data_get_from_cache(mpd_Song *song, MetaDataType type, MetaData **met)
 {
 	GTimer *t = g_timer_new();
-	const char *key_a= "", *key_b = "";
+	const char *key_a= "", *key_b = NULL; 
 	if(type == META_ALBUM_ART){
 		key_a = song->artist;
 		key_b = song->album;
@@ -431,7 +445,7 @@ MetaDataResult meta_data_get_from_cache(mpd_Song *song, MetaDataType type, MetaD
 	}else if (type == META_GENRE_SIMILAR) {
 		key_a = song->genre;
 	}
-	if(key_a == NULL || key_b == NULL) {
+	if(key_a == NULL) {
 		*met = meta_data_new(); (*met)->type = type;
 		(*met)->plugin_name = CACHE_NAME; (*met)->content_type = META_DATA_CONTENT_EMPTY;
 		g_timer_stop(t);
@@ -450,7 +464,7 @@ MetaDataResult meta_data_get_from_cache(mpd_Song *song, MetaDataType type, MetaD
 		return META_DATA_UNAVAILABLE;
 	}
 
-	if(!g_utf8_validate(key_b, -1, NULL)){
+	if(key_b != NULL && !g_utf8_validate(key_b, -1, NULL)){
 		g_log(MDC_LOG_DOMAIN, G_LOG_LEVEL_WARNING,"Key_b is not valid utf-8");
 		(*met) = meta_data_new(); (*met)->type = type;
 		(*met)->plugin_name = CACHE_NAME; (*met)->content_type = META_DATA_CONTENT_EMPTY;

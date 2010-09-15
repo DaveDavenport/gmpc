@@ -60,6 +60,34 @@ int main(int argc, char **argv)
     a = now.tv_usec - current.tv_usec;
     printf("elapsed 10.000 queries: %li us\n", (a<0)?1-a:a);
     current = now;
+
+
+    for(j=10;j>0;j--)
+    {
+        for(i=0;i<11;i++)
+        {
+            MetaData *met = NULL;
+            mpd_Song *song = mpd_newSong();
+            song->artist = g_strdup(artists[i]);
+            song->album = g_strdup("unplugged");
+            result = meta_data_get_from_cache(song, META_ALBUM_ART, &met);
+            if(met) meta_data_free(met);
+
+            mpd_freeSong(song);
+        }
+    }
+
+    g_get_current_time(&now);
+    a = now.tv_usec - current.tv_usec;
+    printf("elapsed 100 queries: %li us\n", (a<0)?1-a:a);
+    current = now;
+
+
+
+
+
+
+
     metadata_cache_destroy();
 
     g_get_current_time(&now);
