@@ -687,9 +687,10 @@ int main(int argc, char **argv)
 	 * Initialize the new metadata subsystem.
 	 */
 	meta_data_init();
-	pixbuf_cache_create();
 
 	TEC("Initializing metadata system");
+	pixbuf_cache_create();
+	TEC("Pixbuf cache create()");
 
 	/**
 	 * stock icons

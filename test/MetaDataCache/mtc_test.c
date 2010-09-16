@@ -42,6 +42,7 @@ int main(int argc, char **argv)
     a = now.tv_usec - current.tv_usec;
     printf("elapsed open db: %li us\n", (a<0)?1-a:a);
     current = now;
+    /*
     for(;j>0;j--)
     {
         for(i=0;i<11;i++)
@@ -76,7 +77,7 @@ int main(int argc, char **argv)
             mpd_freeSong(song);
         }
     }
-
+*/
     g_get_current_time(&now);
     a = now.tv_usec - current.tv_usec;
     printf("elapsed 100 queries: %li us\n", (a<0)?1-a:a);

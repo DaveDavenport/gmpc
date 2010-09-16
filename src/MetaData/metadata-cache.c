@@ -78,7 +78,7 @@ static const char *const metadata_sql[] = {
 	[META_DATA_SQL_SET_SYNCHRONOUS] = 
 		"PRAGMA synchronous = 0",
 	[META_DATA_SQL_CHECK_INTEGRETY] = 
-		"PRAGMA integrity_check;"
+		"PRAGMA quick_check;"
 };
 
 static sqlite3 *metadata_db;
@@ -640,17 +640,20 @@ void metadata_cache_init(void)
 	unsigned i;
 	gboolean database_valid = FALSE;
 	gchar *url = gmpc_get_covers_path("covers.sql");
+	INIT_TIC_TAC();
 	do{
+		
 		ret = sqlite3_open(url, &metadata_db);
 		if (ret != SQLITE_OK)
 			g_log(MDC_LOG_DOMAIN, G_LOG_LEVEL_ERROR, "Failed to open sqlite database '%s': %s",
 					url, sqlite3_errmsg(metadata_db));
-
+		TEC("Sqlite3 open database");
 		ret = sqlite3_exec(metadata_db, metadata_sql_create, NULL, NULL, NULL);
 		if (ret != SQLITE_OK)
 			g_log(MDC_LOG_DOMAIN, G_LOG_LEVEL_ERROR, "Failed to create metadata table: %s",
 					sqlite3_errmsg(metadata_db));
 
+		TEC("Sqlite3 create database");
 		/* prepare the statements we're going to use */
 
 		for (i = 0; i < G_N_ELEMENTS(metadata_sql); ++i) {
@@ -659,6 +662,7 @@ void metadata_cache_init(void)
 			metadata_stmt[i] = metadata_prepare(metadata_sql[i]);
 		}
 		database_valid = sqlite_check_integrity();
+		TEC("Checked integrety1");
 		if(!database_valid){
 			gchar buffer[128];
 			gchar *new_uri = NULL;
@@ -676,10 +680,13 @@ void metadata_cache_init(void)
 			}
 			g_free(new_uri);
 		}
+		TEC("Checked integrety");
 		g_log(MDC_LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Database integrity check: valid");
 	}while(!database_valid);
 	g_free(url);
+
 	sqlite_set_synchronous();
+	TEC("Set synchronous()");
 }
 
 
