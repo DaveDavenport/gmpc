@@ -38,14 +38,62 @@
 #endif
 
 #define MAX_PLAYLIST_SIZE 12*1024
+
+
+
+
+typedef struct _UrlParseData
+{
+	GList *result;
+	void (*error_callback)(const gchar *error_msg, gpointer user_data);
+	void (*result_callback)(GList *result,gpointer user_data);
+	void (*progress_callback)(gdouble progress, gpointer user_data);
+	gpointer user_data;
+
+} UrlParseData;
+
+
+/**
+ * Default callback adds to play_queue
+ */
+ static void url_parse_default_error_callback(const gchar *message, gpointer user_data)
+ {
+	g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "UrlFetcher Default error callback: %s", message);
+ }
+static void url_parse_default_callback(GList *result, gpointer user_data)
+{
+	GList *iter;
+	g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "UrlFetcher Default callback called: %i items", g_list_length(result));
+	for(iter = g_list_first(result); iter != NULL; iter = g_list_next(iter))
+	{
+		g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "MPD Playlist add: %s", (const char *)iter->data);
+		mpd_playlist_add(connection, (const char *)iter->data);
+	}
+}
+
+static UrlParseData *url_parse_data_new(void)
+{
+	UrlParseData *d = g_slice_new0(UrlParseData);
+	/* Set default callback */
+	d->result_callback = url_parse_default_callback;
+	d->error_callback = url_parse_default_error_callback;
+	return d;
+}
+static void url_parse_data_free(UrlParseData *data)
+{
+	g_list_foreach(data->result, (GFunc)g_free, NULL);
+	g_list_free(data->result);
+	g_slice_free(UrlParseData, data);
+}
+
 /***
  * Parse PLS files:
  */
-static void url_parse_pls_file(const char *data, int size)
+static GList * url_parse_pls_file(const char *data, int size)
 {
 	int i = 0;
-	int songs = 0;
 	gchar **tokens = g_regex_split_simple("\n", data, G_REGEX_MULTILINE, G_REGEX_MATCH_NEWLINE_ANY);	// g_strsplit(data, "\n", -1);
+	GList *retv = NULL;
 	if (tokens)
 	{
 		for (i = 0; tokens[i]; i++)
@@ -59,28 +107,22 @@ static void url_parse_pls_file(const char *data, int size)
 				/** if delimiter is found, and the url behind it starts with http:// add it*/
 				if (tokens[i][del] == '=' && strncmp(&tokens[i][del + 1], "http://", 7) == 0)
 				{
-					mpd_playlist_add(connection, &tokens[i][del + 1]);
-					songs++;
+					retv = g_list_prepend(retv, g_strdup(&tokens[i][del+1]));
 				}
 			}
 		}
 		g_strfreev(tokens);
 	}
-	if (songs)
-	{
-		char *string = g_strdup_printf(_("Added %i %s"), songs, ngettext("stream", "streams", songs));
-		pl3_push_statusbar_message(string);
-		q_free(string);
-	}
+	return g_list_reverse(retv);
 }
 
 /***
  * Parse EXTM3U Files:
  */
-static void url_parse_extm3u_file(const char *data, int size)
+static GList * url_parse_extm3u_file(const char *data, int size)
 {
 	int i = 0;
-	int songs = 0;
+	GList *retv = NULL;
 	gchar **tokens = g_regex_split_simple("(\r\n|\n|\r)", data, G_REGEX_MULTILINE, G_REGEX_MATCH_NEWLINE_ANY);	// g_strsplit(data, "\n", -1);
 	if (tokens)
 	{
@@ -89,27 +131,21 @@ static void url_parse_extm3u_file(const char *data, int size)
 			/* Check for File */
 			if (!strncmp(tokens[i], "http://", 7))
 			{
-				mpd_playlist_add(connection, tokens[i]);
-				songs++;
+				retv = g_list_prepend(retv, g_strdup(tokens[i]));
 			}
 		}
 		g_strfreev(tokens);
 	}
-	if (songs)
-	{
-		char *string = g_strdup_printf(_("Added %i %s"), songs, ngettext("stream", "streams", songs));
-		pl3_push_statusbar_message(string);
-		q_free(string);
-	}
+	return g_list_reverse(retv);
 }
 
 #ifdef XSPF
 /***
   * parse xspf file 
   */
-static void url_parse_xspf_file(const char *data, int size, const char *uri)
+static GList *url_parse_xspf_file(const char *data, int size, const char *uri)
 {
-	int songs = 0;
+	GList *retv = NULL;
 	int has_http = FALSE, has_file = FALSE;
 	struct xspf_track *strack;
 	struct xspf_mvalue *sloc;
@@ -142,12 +178,10 @@ static void url_parse_xspf_file(const char *data, int size, const char *uri)
 					g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Trying to add url: %s", sloc->value);
 					if (strcmp(scheme, "http") == 0 && has_http)
 					{
-						mpd_playlist_add(connection, sloc->value);
-						songs++;
+						retv = g_list_prepend(retv,  g_strdup(sloc->value));
 					} else if (strcmp(scheme, "file") == 0 && has_file)
 					{
-						mpd_playlist_add(connection, sloc->value);
-						songs++;
+						retv = g_list_prepend(retv,  g_strdup(sloc->value));
 					}
 					g_free(scheme);
 				} else
@@ -158,22 +192,16 @@ static void url_parse_xspf_file(const char *data, int size, const char *uri)
 		}
 		xspf_free(slist);
 	}
-	if (songs)
-	{
-		char *string = g_strdup_printf(_("Added %i %s"), songs, ngettext("stream", "streams", songs));
-		pl3_push_statusbar_message(string);
-		q_free(string);
-	}
-
+	return g_list_reverse(retv);
 }
 #else
 #ifdef SPIFF
 /***
  * parse spiff file 
  */
-static void url_parse_spiff_file(const char *data, int size, const gchar * uri)
+static GList *url_parse_spiff_file(const char *data, int size, const gchar * uri)
 {
-	int songs = 0;
+	GList *retv = NULL;
 	const gchar *tempdir = g_get_tmp_dir();
 	gchar *filename = g_build_filename(tempdir, "gmpc-temp-spiff-file", NULL);
 	if (filename)
@@ -213,12 +241,10 @@ static void url_parse_spiff_file(const char *data, int size, const gchar * uri)
 							g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Trying to add url: %s", sloc->value);
 							if (strcmp(scheme, "http") == 0 && has_http)
 							{
-								mpd_playlist_add(connection, sloc->value);
-								songs++;
+								retv = g_list_prepend(retv,  g_strdup(sloc->value));
 							} else if (strcmp(scheme, "file") == 0 && has_file)
 							{
-								mpd_playlist_add(connection, sloc->value);
-								songs++;
+								retv = g_list_prepend(retv,  g_strdup(sloc->value));
 							}
 							g_free(scheme);
 						} else
@@ -238,13 +264,7 @@ static void url_parse_spiff_file(const char *data, int size, const gchar * uri)
 
 		g_free(filename);
 	}
-	if (songs)
-	{
-		char *string = g_strdup_printf(_("Added %i %s"), songs, ngettext("stream", "streams", songs));
-		pl3_push_statusbar_message(string);
-		q_free(string);
-	}
-
+	return retv;
 }
 #endif
 #endif
@@ -297,22 +317,21 @@ static int url_check_binary(const char *data, const int size)
 	return binary;
 }
 
-static void parse_data(const char *data, guint size, const char *text)
+static GList *parse_data(const char *data, guint size, const char *text)
 {
+	GList *urls = NULL;
 	if (url_check_binary(data, size))
 	{
-		g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Adding url: %s\n", text);
-		mpd_playlist_add(connection, (char *)text);
-		pl3_push_statusbar_message(_("Added 1 stream"));
+		urls = g_list_append(urls, g_strdup(text));
 	} else if (!strncasecmp(data, "<?xml", 5))
 	{
 		g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Detected a xml file, might be xspf");
 		/* This might just be a xspf file */
 #ifdef XSPF
-		url_parse_xspf_file(data, size, text);
+		urls = url_parse_xspf_file(data, size, text);
 #else
 #ifdef SPIFF
-		url_parse_spiff_file(data, size, text);
+		urls = url_parse_spiff_file(data, size, text);
 #endif
 #endif
 	}
@@ -320,41 +339,47 @@ static void parse_data(const char *data, guint size, const char *text)
 	else if (!strncasecmp(data, "[playlist]", 10))
 	{
 		g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Detected a PLS\n");
-		url_parse_pls_file(data, size);
+		urls = url_parse_pls_file(data, size);
 	}
 	/** Extended M3U file */
 	else if (!strncasecmp(data, "#EXTM3U", 7))
 	{
 		g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Detected a Extended M3U\n");
-		url_parse_extm3u_file(data, size);
+		urls = url_parse_extm3u_file(data, size);
 	}
 	/** Hack to detect most non-extended m3u files */
 	else if (!strncasecmp(data, "http://", 7))
 	{
 		g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Might be a M3U, or generic list\n");
-		url_parse_extm3u_file(data, size);
+		urls = url_parse_extm3u_file(data, size);
 	}
 	/** Assume Binary file */
 	else
 	{
 		g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Adding url: %s\n", text);
-		mpd_playlist_add(connection, (char *)text);
-		pl3_push_statusbar_message(_("Added 1 stream"));
+		urls = g_list_append(urls, g_strdup(text));
 	}
+
+	return urls;
 }
 
 static void url_fetcher_download_callback(const GEADAsyncHandler * handle, const GEADStatus status, gpointer data)
 {
+	UrlParseData *upd = (UrlParseData*)data;
 	const gchar *uri = gmpc_easy_handler_get_uri(handle);
 	if (status == GEAD_DONE)
 	{
 		goffset length;
 		const char *ddata = gmpc_easy_handler_get_data(handle, &length);
-		parse_data(ddata, (guint) length, uri);
-		gmpc_url_fetching_gui_set_completed(data);
+		upd->result = parse_data(ddata, (guint) length, uri);
+		upd->result_callback(upd->result, upd->user_data);
+		url_parse_data_free(upd);
+		upd = NULL;
 	} else if (status == GEAD_CANCELLED)
 	{
-		gmpc_url_fetching_gui_set_completed(data);
+		upd->result_callback(upd->result, upd->user_data);
+		url_parse_data_free(upd);
+		upd = NULL;
 	} else if (status == GEAD_PROGRESS)
 	{
 		goffset length;
@@ -365,24 +390,24 @@ static void url_fetcher_download_callback(const GEADAsyncHandler * handle, const
 			if (total > 0)
 			{
 				gdouble prog = (length / (double)total);
-				gmpc_url_fetching_gui_set_progress(data, (prog > 1) ? 1 : prog);
+				if(upd->progress_callback != NULL) 
+					upd->progress_callback(prog, upd->user_data);
 			} else
 			{
-				gmpc_url_fetching_gui_set_progress(data, -1);
+				if(upd->progress_callback != NULL) 
+					upd->progress_callback(-1, upd->user_data);
 			}
 		}
 		if (length > MAX_PLAYLIST_SIZE)
 		{
-			printf("Cancel to much data. Try to parse\n");
-			parse_data(ddata, (guint) length, uri);
-			printf("done\n");
+			upd->result = parse_data(ddata, (guint) length, uri);
 			gmpc_easy_async_cancel(handle);
 		}
 	} else
 	{
-		/* add failed urls anyway */
-		mpd_playlist_add(connection, uri);
-		gmpc_url_fetching_gui_set_completed(data);
+		upd->result_callback(upd->result, upd->user_data);
+		url_parse_data_free(upd);
+		upd = NULL;
 	}
 }
 
@@ -390,13 +415,16 @@ static void url_fetcher_download_callback(const GEADAsyncHandler * handle, const
  * Parsing uri
  */
 
-static void parse_uri(const char *uri, gpointer data)
+static void parse_uri(const char *uri, UrlParseData *upd)
 {
 	gchar *scheme;
+	g_assert(upd != NULL);
+	g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Trying url: %s", uri);
 	/* Check NULL */
 	if (uri == NULL)
 	{
-		gmpc_url_fetching_gui_set_completed(data);
+		upd->result_callback(upd->result, upd->user_data);
+		url_parse_data_free(upd);
 		return;
 	}
 	/* Check local path */
@@ -414,35 +442,41 @@ static void parse_uri(const char *uri, gpointer data)
 				ssize_t t = fread(buffer, 1, MAX_PLAYLIST_SIZE - 1, fp);
 				/* Make sure it is NULL terminated */
 				buffer[t] = '\0';
-				parse_data(buffer, (guint) t, uri);
+				upd->result = parse_data(buffer, (guint) t, uri);
+				upd->result_callback(upd->result, upd->user_data);
+				url_parse_data_free(upd);
 
 				fclose(fp);
-				gmpc_url_fetching_gui_set_completed(data);
 			}
 		} else
 		{
 			gchar *temp = g_strdup_printf("%s: '%s'", _("Failed to open local file"), uri);
-			gmpc_url_fetching_gui_set_error(data, temp);
+			if(upd->error_callback != NULL)
+				upd->error_callback(temp, upd->user_data);
+			url_parse_data_free(upd);
 			g_free(temp);
 		}
-	} else
+	}
+	else
 	{
 		/* remote uri */
 		if (url_validate_url(uri))
 		{
 			if (strcasecmp(scheme, "http") == 0)
 			{
-				gmpc_easy_async_downloader(uri, url_fetcher_download_callback, data);
+				gmpc_easy_async_downloader(uri, url_fetcher_download_callback, upd);
 			} else
 			{
-				mpd_playlist_add(connection, (char *)uri);
-				/* indicates it should stop */
-				gmpc_url_fetching_gui_set_completed(data);
+				upd->result = g_list_append(NULL, g_strdup(uri)); 
+				upd->result_callback(upd->result, upd->user_data);
+				url_parse_data_free(upd);
 			}
 		} else
 		{
 			gchar *temp = g_strdup_printf("%s: '%s'", _("Uri scheme not supported"), scheme);
-			gmpc_url_fetching_gui_set_error(data, temp);
+			if(upd->error_callback != NULL)
+				upd->error_callback(temp, upd->user_data);
+			url_parse_data_free(upd);
 			g_free(temp);
 		}
 	}
@@ -451,11 +485,29 @@ static void parse_uri(const char *uri, gpointer data)
 	/* Dialog needs to be kept running */
 	return;
 }
-
+static void gufg_set_progress(gdouble prog, gpointer a)
+{
+	gmpc_url_fetching_gui_set_progress(GMPC_URL_FETCHING_GUI(a), prog);	
+}
+static void gufg_set_error(const gchar *error_msg, gpointer a)
+{
+	gmpc_url_fetching_gui_set_error(GMPC_URL_FETCHING_GUI(a), error_msg);	
+}
+static void gufg_set_result(GList *result, gpointer a)
+{
+	url_parse_default_callback(result, a);
+	gmpc_url_fetching_gui_set_completed(GMPC_URL_FETCHING_GUI(a));	
+}
 static void gufg_parse_callback(GmpcUrlFetchingGui * a, const gchar * url, void *user_data)
 {
+	UrlParseData *data = url_parse_data_new();
 	gmpc_url_fetching_gui_set_processing(a);
-	parse_uri(url, a);
+	data->user_data = a;
+	data->progress_callback = gufg_set_progress;
+	data->error_callback = gufg_set_error;
+	data->result_callback = gufg_set_result;
+
+	parse_uri(url, data);
 }
 
 static gboolean gufg_validate_callback(GmpcUrlFetchingGui * a, const gchar * url, void *user_data)
@@ -497,12 +549,14 @@ void url_start_real(const gchar * url)
 		printf("add url2: '%s'\n", url);
 		if (mpd_playlist_load(connection, url) == MPD_PLAYLIST_LOAD_FAILED)
 		{
-			parse_uri(url, NULL);
+			UrlParseData *upd = url_parse_data_new();
+			parse_uri(url, upd);
 			return;
 		}
 	} else
 	{
-		parse_uri(url, NULL);
+		UrlParseData *upd = url_parse_data_new();
+		parse_uri(url, upd);
 	}
 }
 
