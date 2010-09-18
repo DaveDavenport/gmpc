@@ -78,6 +78,11 @@ void meta_data_add_plugin(gmpcPluginParent *plug);
 void url_start_real(const gchar *url);
 void url_start(void);
 
+void url_start_custom(const gchar *url, 
+	void (*error_callback)(const gchar *error_msg, gpointer user_data),
+	void (*result_callback)(GList *result,gpointer user_data),
+	void (*progress_callback)(gdouble progress, gpointer user_data),
+	gpointer user_data);
 /*
  * functions to get patch to different files.
  * This is needed to make the windows port work.

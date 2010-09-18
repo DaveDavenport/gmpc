@@ -387,7 +387,75 @@ void playlist_editor_fill_list_real(void)
 	   playlist_editor_browser_playlist_editor_selected, NULL);
 	 */
 }
+/***
+ * Add url 
+ */
+static gboolean gufg_validate_callback(GmpcUrlFetchingGui *a, const gchar *url, void *user_data)
+{
+    /* TODO add validator here, well probly url-fetcher validator */
+    return TRUE;
+}
 
+static void gufg_set_progress(gdouble prog, gpointer a)
+{
+	gmpc_url_fetching_gui_set_progress(GMPC_URL_FETCHING_GUI(a), prog);	
+}
+static void gufg_set_error(const gchar *error_msg, gpointer a)
+{
+	gmpc_url_fetching_gui_set_error(GMPC_URL_FETCHING_GUI(a), error_msg);	
+}
+static void gufg_set_result(GList *result, gpointer a)
+{
+    const gchar *playlist_name = g_object_get_data(G_OBJECT(a), "playlist-name"); 
+    if(playlist_name)
+    {
+        GList *iter;
+        for(iter = g_list_first(result); iter; iter = g_list_next(iter))
+        {
+            mpd_database_playlist_list_add(connection, playlist_name, (const gchar *)iter->data);
+        }
+    }
+	gmpc_url_fetching_gui_set_completed(GMPC_URL_FETCHING_GUI(a));	
+}
+static void gufg_parse_callback(GmpcUrlFetchingGui * a, const gchar * url,gpointer data) 
+{
+    gchar *playlist_name = (gchar *)data;
+    if(url != NULL)
+    {
+        gmpc_url_fetching_gui_set_processing(a);
+        g_object_set_data_full(G_OBJECT(a), "playlist-name", playlist_name, g_free); 
+        url_start_custom(url,gufg_set_error, gufg_set_result,gufg_set_progress, a);  
+        return;
+    }
+    else{
+        g_free(playlist_name);
+    }
+	gmpc_url_fetching_gui_set_completed(a);
+}
+static void playlist_editor_list_add_url(GtkButton * button, GtkTreeView * tree)
+{
+    /* Get playlist name */
+    gchar *pl_path = NULL;
+    GtkTreeModel *model_view = gtk_tree_view_get_model(GTK_TREE_VIEW(playlist_editor_icon_view));
+    GList *it, *list =
+        gtk_tree_selection_get_selected_rows(gtk_tree_view_get_selection(GTK_TREE_VIEW(playlist_editor_icon_view)),
+                &model_view);
+    for (it = g_list_first(list); it; it = g_list_next(it))
+    {
+        GtkTreePath *path = it->data;
+        GtkTreeIter iter;
+        if (gtk_tree_model_get_iter(GTK_TREE_MODEL(playlist_editor_store), &iter, path) && !pl_path)
+        {
+            gtk_tree_model_get(GTK_TREE_MODEL(playlist_editor_store), &iter, PL_NAME, &pl_path, -1);
+        }
+    }
+    g_list_foreach(list, (GFunc) gtk_tree_path_free, NULL);
+    g_list_free(list);
+    if(pl_path)
+    {
+        gmpc_url_fetching_gui_new(gufg_parse_callback, pl_path, gufg_validate_callback, NULL, g_object_unref);
+    }
+}
 /*********
  * Playlist list handling 
  */
@@ -630,7 +698,16 @@ static gboolean playlist_editor_key_released(GtkTreeView * tree, GdkEventButton 
 			}
 		}
 
+        /**
+         * add url to playlist 
+         */
+        item = gtk_image_menu_item_new_with_label(_("Add URL"));
+        gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+                gtk_image_new_from_icon_name("add-url", GTK_ICON_SIZE_MENU));
+        gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+
 		gmpc_mpddata_treeview_right_mouse_intergration(GMPC_MPDDATA_TREEVIEW(tree), GTK_MENU(menu));
+        g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(playlist_editor_list_add_url), tree);
 
 		gtk_widget_show_all(menu);
 		gtk_menu_popup(GTK_MENU(menu), NULL, NULL, NULL, NULL, 0, button->time);

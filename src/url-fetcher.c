@@ -500,14 +500,17 @@ static void gufg_set_result(GList *result, gpointer a)
 }
 static void gufg_parse_callback(GmpcUrlFetchingGui * a, const gchar * url, void *user_data)
 {
-	UrlParseData *data = url_parse_data_new();
-	gmpc_url_fetching_gui_set_processing(a);
-	data->user_data = a;
-	data->progress_callback = gufg_set_progress;
-	data->error_callback = gufg_set_error;
-	data->result_callback = gufg_set_result;
+	if(url != NULL)
+	{
+		UrlParseData *data = url_parse_data_new();
+		gmpc_url_fetching_gui_set_processing(a);
+		data->user_data = a;
+		data->progress_callback = gufg_set_progress;
+		data->error_callback = gufg_set_error;
+		data->result_callback = gufg_set_result;
 
-	parse_uri(url, data);
+		parse_uri(url, data);
+	}
 }
 
 static gboolean gufg_validate_callback(GmpcUrlFetchingGui * a, const gchar * url, void *user_data)
@@ -522,11 +525,13 @@ static gboolean gufg_validate_callback_0160(GmpcUrlFetchingGui * a, const gchar 
 
 static void gufg_parse_callback_0160(GmpcUrlFetchingGui * a, const gchar * url, void *user_data)
 {
-	if (mpd_playlist_load(connection, url) == MPD_PLAYLIST_LOAD_FAILED)
+	if(url != NULL)
 	{
-		gmpc_url_fetching_gui_set_processing(a);
-		parse_uri(url, (gpointer)a);
-		return;
+		if (mpd_playlist_load(connection, url) == MPD_PLAYLIST_LOAD_FAILED)
+		{
+			gufg_parse_callback(a, url, user_data);
+			return;
+		}
 	}
 	gmpc_url_fetching_gui_set_completed(a);
 }
@@ -559,5 +564,21 @@ void url_start_real(const gchar * url)
 		parse_uri(url, upd);
 	}
 }
+
+void url_start_custom(const gchar *url, 
+	void (*error_callback)(const gchar *error_msg, gpointer user_data),
+	void (*result_callback)(GList *result,gpointer user_data),
+	void (*progress_callback)(gdouble progress, gpointer user_data),
+	gpointer user_data)
+{
+	UrlParseData *data = url_parse_data_new();
+	data->user_data = user_data;
+	data->progress_callback = progress_callback;
+	data->error_callback = error_callback;
+	data->result_callback = result_callback;
+
+	parse_uri(url, data);
+}
+
 
 /* vim: set noexpandtab ts=4 sw=4 sts=4 tw=120: */

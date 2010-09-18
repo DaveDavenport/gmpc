@@ -46,7 +46,7 @@ namespace Gmpc.UrlFetching
 		public delegate bool ValidateUrl(Gui gui, string url);
 
 		/* Function you needs to parse setting */
-		public delegate void ParseUrl (Gui gui, string url); 
+		public delegate void ParseUrl (Gui gui, string? url); 
 
 		private void add_url_dialog_response( int response_id)
 		{
@@ -55,6 +55,10 @@ namespace Gmpc.UrlFetching
 				string url = entry.get_text();
 				this.parse_callback(this, url);
 				return;
+			}
+			else
+			{
+				this.parse_callback(this, null);
 			}
 			stdout.printf("destroy callback\n");
 			this.destroy_cb(this);
