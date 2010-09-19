@@ -32,10 +32,6 @@
 #include <gdk/gdk.h>
 #include "bacon-message-connection.h"
 
-#ifndef UNIX_PATH_MAX
-#define UNIX_PATH_MAX 108
-#endif
-
 struct BaconMessageConnection {
 	/* A server accepts connections */
 	gboolean is_server;
@@ -257,7 +253,7 @@ try_server (BaconMessageConnection *conn)
 
 	uaddr.sun_family = AF_UNIX;
 	strncpy (uaddr.sun_path, conn->path,
-			MIN (strlen(conn->path)+1, UNIX_PATH_MAX));
+			MIN (strlen(conn->path)+1, sizeof(uaddr.sun_path)));
 	conn->fd = socket (PF_UNIX, SOCK_STREAM, 0);
 	if (bind (conn->fd, (struct sockaddr *) &uaddr, sizeof (uaddr)) == -1)
 	{
@@ -278,7 +274,7 @@ try_client (BaconMessageConnection *conn)
 
 	uaddr.sun_family = AF_UNIX;
 	strncpy (uaddr.sun_path, conn->path,
-			MIN(strlen(conn->path)+1, UNIX_PATH_MAX));
+			MIN(strlen(conn->path)+1, sizeof(uaddr.sun_path)));
 	conn->fd = socket (PF_UNIX, SOCK_STREAM, 0);
 	if (connect (conn->fd, (struct sockaddr *) &uaddr,
 				sizeof (uaddr)) == -1)
