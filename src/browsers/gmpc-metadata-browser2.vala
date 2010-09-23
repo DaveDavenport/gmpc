@@ -2203,8 +2203,10 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
 
             var j = i;
             button_sai.clicked.connect((source) => {
-                    debug("notebook page %i clicked", j);
-                    notebook.set_current_page(j);
+                    if((source as Gtk.CheckButton).get_active()) {
+                        debug("notebook page %i clicked", j);
+                        notebook.set_current_page(j);
+                    }
                     });
             i++;
 
@@ -2224,8 +2226,11 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
 
             var j = i;
             button_sa.clicked.connect((source) => {
-                    debug("notebook page %i clicked", j);
-                    notebook.set_current_page(j);
+                    if((source as Gtk.CheckButton).get_active()) {
+                        debug("notebook page %i clicked", j);
+                        similar_artist.first_show();
+                        notebook.set_current_page(j);
+                    }
                     });
             similar_artist.show();
             i++;
@@ -2255,8 +2260,10 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             hboxje.pack_start(rbutton, false, false, 0);
             var j = i;
             rbutton.clicked.connect((source) => {
-                    debug("notebook page %i clicked", j);
-                    notebook.set_current_page(j);
+                    if((source as Gtk.CheckButton).get_active()) {
+                        debug("notebook page %i clicked", j);
+                        notebook.set_current_page(j);
+                    }
                     });
 
             alib.show();
@@ -2272,9 +2279,11 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             hboxje.pack_start(button_sl, false, false, 0);
             var j = i;
             button_sl.clicked.connect((source) => {
-                    debug("notebook page %i clicked", j);
-                    notebook.set_current_page(j);
-                    });
+                    if((source as Gtk.CheckButton).get_active()) {
+                        debug("notebook page %i clicked", j);
+                        notebook.set_current_page(j);
+                    }
+            });
             song_links.show();
             i++;
         }
