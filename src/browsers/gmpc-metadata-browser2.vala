@@ -36,7 +36,8 @@ private const bool use_transition_mdb = Gmpc.use_transition;
 private const string some_unique_name_mdb = Config.VERSION;
 
 
-public class Gmpc.Widget.SimilarSongs : Gtk.Alignment{
+public class Gmpc.Widget.SimilarSongs : Gtk.Alignment
+{
     private MPD.Song song = null;
     private Gtk.Widget pchild = null;
     private uint idle_add = 0;
@@ -274,7 +275,8 @@ public class Gmpc.Widget.SimilarSongs : Gtk.Alignment{
 
 }
 
-public class Gmpc.Widget.SimilarArtist : Gtk.Table {
+public class Gmpc.Widget.SimilarArtist : Gtk.Table
+{
     private MPD.Song song = null;
     private int columns = 1;
     private int button_width = 200;
@@ -476,25 +478,36 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table {
         event.add(hbox);
         return event;
     }
+    public bool first_show_b = false;
 
+    public void first_show()
+    {
+        GLib.log(np2_LOG_DOMAIN, GLib.LogLevelFlags.LEVEL_DEBUG, "First Show()");
+
+        if(!first_show_b)
+        {
+            MetaData.Item item = null;
+            metawatcher.data_changed.connect(metadata_changed);
+            this.size_allocate.connect(size_changed);
+
+            Gmpc.MetaData.Result gm_result = metawatcher.query(song, Gmpc.MetaData.Type.ARTIST_SIMILAR,out item);
+            if(gm_result == Gmpc.MetaData.Result.AVAILABLE)
+            {
+                this.metadata_changed(metawatcher, this.song, Gmpc.MetaData.Type.ARTIST_SIMILAR, gm_result, item); 
+            }
+            first_show_b = true;
+        }
+    }
     public SimilarArtist(MPD.Server server, MPD.Song song)
     {
-        MetaData.Item item = null;
         this.song = song;
 
         this.set_homogeneous(true);
 
         this.set_row_spacings(6);
         this.set_col_spacings(6);
+        this.show();
 
-        metawatcher.data_changed.connect(metadata_changed);
-	this.size_allocate.connect(size_changed);
-
-        Gmpc.MetaData.Result gm_result = metawatcher.query(song, Gmpc.MetaData.Type.ARTIST_SIMILAR,out item);
-        if(gm_result == Gmpc.MetaData.Result.AVAILABLE)
-        {
-            this.metadata_changed(metawatcher, this.song, Gmpc.MetaData.Type.ARTIST_SIMILAR, gm_result, item); 
-        }
     }
 }
 
@@ -1640,7 +1653,8 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             button.clicked.connect((source) => {
                     debug("notebook page %i clicked", j);
                     notebook.set_current_page(j);
-                    });
+                    similar_artist.first_show();
+            });
             similar_artist.show();
             i++;
         }

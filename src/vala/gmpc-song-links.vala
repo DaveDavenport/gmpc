@@ -50,6 +50,7 @@ public class Gmpc.Song.Links: Gtk.Frame
 
     public Links(Type type, MPD.Song song)
     {
+        debug("Links created");
         this.type = type;
         this.song = song;
         var event = new Gtk.EventBox();

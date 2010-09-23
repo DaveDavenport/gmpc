@@ -540,6 +540,7 @@ namespace Gmpc {
                 }
 
 
+                GLib.log(np2_LOG_DOMAIN, GLib.LogLevelFlags.LEVEL_DEBUG, "heading took: %.6f seconds.", t.elapsed());
                 hbox.pack_start(info_vbox, true, true, 0);
                 vbox.pack_start(hbox, false, false, 0);
 
@@ -573,13 +574,16 @@ namespace Gmpc {
                     hboxje.pack_start(button, false, false, 0);
                     var j = i;
                     button.clicked.connect((source) => {
-                            debug("notebook page %i clicked", j);
-                            notebook.set_current_page(j);
+                            if((source as Gtk.CheckButton).get_active()) {
+                                GLib.log(np2_LOG_DOMAIN,GLib.LogLevelFlags.LEVEL_DEBUG, "lyrics notebook page %i clicked", j);
+                                notebook.set_current_page(j);
+                            }
                             });
                     i++;
 
                     alib.show();
                 }
+                GLib.log(np2_LOG_DOMAIN, GLib.LogLevelFlags.LEVEL_DEBUG, "lyrics took: %.6f seconds.", t.elapsed());
 
                 /* Guitar Tabs */
                 if(config.get_int_with_default("MetaData", "show-guitar-tabs",1) == 1)
@@ -599,14 +603,16 @@ namespace Gmpc {
                     var j = i;
                     /* Only query the guitar-tab when opened or first notebook page*/
                     button.clicked.connect((source) => {
-                            debug("notebook page %i clicked", j);
-                            notebook.set_current_page(j);
-                            if(!text_view_queried){
-                                text_view.query_from_song(song);
-                                text_view_queried = true;
-                                this.change_color_style(text_view);
+                            if((source as Gtk.CheckButton).get_active()) {
+                                GLib.log(np2_LOG_DOMAIN,GLib.LogLevelFlags.LEVEL_DEBUG, "guitar tab notebook page %i clicked", j);
+                                notebook.set_current_page(j);
+                                if(!text_view_queried){
+                                    text_view.query_from_song(song);
+                                    text_view_queried = true;
+                                    this.change_color_style(text_view);
+                                }
                             }
-                            });
+                    });
                     if(i == 0){
                         text_view.query_from_song(song);
                         text_view_queried = true;
@@ -614,6 +620,8 @@ namespace Gmpc {
                     alib.show();
                     i++;
                 }
+                GLib.log(np2_LOG_DOMAIN, GLib.LogLevelFlags.LEVEL_DEBUG, "guitar tabs took: %.6f seconds.", t.elapsed());
+
                 /* Similar songs */
 
                 if(config.get_int_with_default("MetaData", "show-similar-songs",1) == 1)
@@ -630,15 +638,17 @@ namespace Gmpc {
                     var j = i;
                     /* Only query when opened or first notebook page*/
                     button.clicked.connect((source) => {
-                            debug("notebook page %i clicked", j);
-                            notebook.set_current_page(j);
-                            if(!similar_songs_queried){
-                            var similar_songs = new Gmpc.Widget.SimilarSongs(song);
-                            similar_songs.update();
-                            similar_songs_queried = true;
-                            similar_songs_box.add(similar_songs);
-                            this.change_color_style(similar_songs_box);
-                            similar_songs_box.show_all();
+                            if((source as Gtk.CheckButton).get_active()) {
+                                GLib.log(np2_LOG_DOMAIN,GLib.LogLevelFlags.LEVEL_DEBUG, "similar song notebook page %i clicked", j);
+                                notebook.set_current_page(j);
+                                if(!similar_songs_queried){
+                                    var similar_songs = new Gmpc.Widget.SimilarSongs(song);
+                                    similar_songs.update();
+                                    similar_songs_queried = true;
+                                    similar_songs_box.add(similar_songs);
+                                    this.change_color_style(similar_songs_box);
+                                    similar_songs_box.show_all();
+                                }
                             }
                             });
                     if(i == 0){
@@ -652,6 +662,7 @@ namespace Gmpc {
                     i++;
                 }
 
+                GLib.log(np2_LOG_DOMAIN, GLib.LogLevelFlags.LEVEL_DEBUG, "similar songs took: %.6f seconds.", t.elapsed());
                 if(config.get_int_with_default("MetaData", "show-similar-artist",1) == 1 && song.artist != null)
                 {
                     var similar_artist = new Gmpc.Widget.SimilarArtist(Gmpc.server,song);
@@ -664,12 +675,16 @@ namespace Gmpc {
 
                     var j = i;
                     button.clicked.connect((source) => {
-                            debug("notebook page %i clicked", j);
-                            notebook.set_current_page(j);
-                            });
+                            if((source as Gtk.CheckButton).get_active()) {
+                                GLib.log(np2_LOG_DOMAIN,GLib.LogLevelFlags.LEVEL_DEBUG, "similar artist notebook page %i clicked", j);
+                                similar_artist.first_show();
+                                notebook.set_current_page(j);
+                            }
+                    });
                     similar_artist.show();
                     i++;
                 }
+                GLib.log(np2_LOG_DOMAIN, GLib.LogLevelFlags.LEVEL_DEBUG, "similar Artist took: %.6f seconds.", t.elapsed());
                 if(config.get_int_with_default("MetaData", "show-web-links",1) == 1)
                 {
 
@@ -680,12 +695,15 @@ namespace Gmpc {
                     hboxje.pack_start(button, false, false, 0);
                     var j = i;
                     button.clicked.connect((source) => {
-                            debug("notebook page %i clicked", j);
-                            notebook.set_current_page(j);
+                            if((source as Gtk.CheckButton).get_active()) {
+                                GLib.log(np2_LOG_DOMAIN,GLib.LogLevelFlags.LEVEL_DEBUG, "song link notebook page %i clicked", j);
+                                notebook.set_current_page(j);
+                            }
                             });
                     song_links.show();
                     i++;
                 }
+                GLib.log(np2_LOG_DOMAIN, GLib.LogLevelFlags.LEVEL_DEBUG, "Web links took: %.6f seconds.", t.elapsed());
                 if(config.get_int_with_default("MetaData", "show-artist-information",1) == 1)
                 {
                     var alib = new Gtk.Alignment(0f,0f,1f,0f);
@@ -703,12 +721,14 @@ namespace Gmpc {
                     var j = i;
                     /* Only query the guitar-tab when opened or first notebook page*/
                     button.clicked.connect((source) => {
-                            debug("notebook page %i clicked", j);
-                            notebook.set_current_page(j);
-                            if(!text_view_queried){
-                            text_view.query_from_song(song);
-                            text_view_queried = true;
-                            this.change_color_style(text_view);
+                            if((source as Gtk.CheckButton).get_active()) {
+                                GLib.log(np2_LOG_DOMAIN,GLib.LogLevelFlags.LEVEL_DEBUG, "artist info notebook page %i clicked", j);
+                                notebook.set_current_page(j);
+                                if(!text_view_queried){
+                                    text_view.query_from_song(song);
+                                    text_view_queried = true;
+                                    this.change_color_style(text_view);
+                                }
                             }
                             });
                     if(i == 0){
@@ -719,6 +739,7 @@ namespace Gmpc {
                     i++;
                 }
 
+                GLib.log(np2_LOG_DOMAIN, GLib.LogLevelFlags.LEVEL_DEBUG, "Artist info took: %.6f seconds.", t.elapsed());
                 /* Track changed pages */
                 notebook.notify["page"].connect((source,spec) => {
                         var page = notebook.get_current_page();
@@ -754,6 +775,7 @@ namespace Gmpc {
 
                 bottom_hbox.pack_start(metadata_vbox, true, true, 0);
 
+                GLib.log(np2_LOG_DOMAIN, GLib.LogLevelFlags.LEVEL_DEBUG, "Building now playing took: %.6f seconds.", t.elapsed());
                 /* Create album list */
                 if(song.album != null && song.artist != null)
                 {
@@ -793,6 +815,7 @@ namespace Gmpc {
                             list.song = new MPD.Song();
                             list.song.artist = song.artist;
                             list.song.album  = iter.tag;
+                            /*
                             MPD.Database.search_field_start(server,MPD.Tag.Type.DATE);
                             MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, song.artist);
                             MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM, iter.tag);
@@ -800,6 +823,7 @@ namespace Gmpc {
                             if(ydata != null) {
                                 list.song.date = ydata.tag;
                             }
+                            */
                             iter = iter.next(false);
                         }while(iter != null);
                     }
