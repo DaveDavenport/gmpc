@@ -526,6 +526,7 @@ GEADAsyncHandler *gmpc_easy_async_downloader_with_headers(const gchar * uri, GEA
 	{
 		soup_session = soup_session_async_new();
 		gmpc_easy_download_set_proxy(soup_session);
+		g_object_set(soup_session, "timeout", 5, NULL);
 	}
 
 	msg = soup_message_new("GET", uri);
