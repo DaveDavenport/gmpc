@@ -324,7 +324,6 @@ int main(int argc, char **argv)
 	gboolean start_hidden = FALSE;
 	gboolean clean_config = FALSE;
 	gboolean quit = FALSE;
-	gboolean replace = FALSE;
 	gboolean do_debug_updates = FALSE;
 	gboolean show_bug_information = FALSE;
 	gboolean fullscreen = FALSE;
@@ -339,8 +338,6 @@ int main(int argc, char **argv)
 		 &show_version, N_("Show program version and revision"), NULL},
 		{"quit", 'q', 0, G_OPTION_ARG_NONE,
 		 &quit, N_("Quits the running gmpc"), NULL},
-		{"replace", 'r', 0, G_OPTION_ARG_NONE,
-		 &replace, N_("Replace the running gmpc"), NULL},
 		{"disable-plugins", 0, 0, G_OPTION_ARG_NONE,
 		 &disable_plugins, N_("Don't load the plugins"), NULL},
 		{"config", 0, 0, G_OPTION_ARG_FILENAME,
@@ -677,7 +674,7 @@ int main(int argc, char **argv)
 		if (unique_app_is_running (app))
 		{
 			UniqueResponse response; /* the response to our command */
-			if(replace || quit) 
+			if(quit) 
 			{
 					response = unique_app_send_message(app, UNIQUE_COMMAND_QUIT, NULL);
 					if(response !=  UNIQUE_RESPONSE_OK) {
