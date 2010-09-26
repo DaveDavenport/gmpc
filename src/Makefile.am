@@ -55,7 +55,6 @@ gmpc_SOURCES=\
 	url-fetcher.c\
 	advanced-search.c\
 	bug-information.c\
-    $(gmpc_bacon_FILES)\
     $(gmpc_egg_FILES)\
     $(gmpc_browser_FILES)
 
@@ -124,6 +123,10 @@ if USE_SYSTEM_LIBSEXY
 LIBS += @libsexy_LIBS@
 endif
 
+if HAVE_UNIQUE
+    LIBS += @unique_LIBS@;
+endif
+
 if OSX
 LIBS+=@macint_LIBS@
 endif
@@ -156,6 +159,9 @@ if USE_SYSTEM_LIBSEXY
 AM_CFLAGS += @libsexy_CFLAGS@
 endif
 
+if HAVE_UNIQUE
+    AM_CFLAGS += @unique_CFLAGS@ 
+endif
 if OSX
 AM_CFLAGS+=@macint_CFLAGS@
 INCLUDES+=-DOSX=1
@@ -210,7 +216,6 @@ EXTRA_DIST=\
 		egg/eggcolumnchooserdialog.h\
 		egg/eggcolumnmodel.h\
 		revision.h\
-		bacon/bacon-message-connection.h\
 		advanced-search.h\
 		gmpc-version.h.in\
 		bug-information.h\
@@ -297,13 +302,6 @@ gmpc_browser_FILES=\
 gmpc_egg_FILES=\
 	egg/eggcolumnchooserdialog.c\
 	egg/eggcolumnmodel.c
-
-##
-# Bacon
-##
-gmpc_bacon_FILES=\
-	bacon/bacon-message-connection.c
-
 
 ###
 # SM CLIENT STUFF

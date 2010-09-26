@@ -6,8 +6,7 @@ SUBDIRS = src pixmaps glade data po pixmaps doc test
 #SUBDIRS = src pixmaps glade data po pixmaps doc remote
 #endif
 
-if WIN32
-else
+if HAVE_UNIQUE 
 SUBDIRS += remote
 endif
 

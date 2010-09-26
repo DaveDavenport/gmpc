@@ -61,6 +61,12 @@
 #include "mm-keys.h"
 #endif
 
+
+
+#ifdef HAVE_UNIQUE
+#include <unique/unique.h>
+#endif
+
 #define RESET "\x1b[0m"
 #define BOLD  "\x1b[1m"
 
@@ -146,88 +152,117 @@ static void create_gmpc_paths(void);
 static void move_old_gmpc_data(void);
 static void print_version(void);
 
-#ifndef WIN32
-#include "bacon/bacon-message-connection.h"
-static BaconMessageConnection *bacon_connection = NULL;
-/**
- * Handle incoming (IPC) messages.
- * GMPC ships a utility called "gmpc-remote" that uses this interface.
- */
-#define LOG_DOMAIN_IPC "IPC"
-static void bacon_on_message_received(const char *message, gpointer data)
+#ifdef HAVE_UNIQUE
+enum
 {
+	UNIQUE_COMMAND_0, /* unused: 0 is an invalid command */
+	UNIQUE_COMMAND_QUIT,
+	UNIQUE_COMMAND_PLAY,
+	UNIQUE_COMMAND_PAUSE,
+	UNIQUE_COMMAND_NEXT,
+	UNIQUE_COMMAND_PREV,
+	UNIQUE_COMMAND_STOP,
+	UNIQUE_COMMAND_VIEW_TOGGLE,
+	UNIQUE_COMMAND_VIEW_HIDE,
+	UNIQUE_COMMAND_VIEW_SHOW,
+	UNIQUE_COMMAND_STREAM,
+	UNIQUE_COMMAND_CONNECT,
+	UNIQUE_COMMAND_EASYCOMMAND
+};
 
-	if (message)
+#define LOG_DOMAIN_IPC "IPC"
+static UniqueResponse
+message_received_cb (UniqueApp         *app,
+                     UniqueCommand      command,
+                     UniqueMessageData *message,
+                     guint              time_,
+                     gpointer           user_data)
+{
+	UniqueResponse res;
+
+	/* Cast to (int) to avoid stupid compile warning */
+	switch ((int)command)
 	{
-		g_log(LOG_DOMAIN_IPC, G_LOG_LEVEL_DEBUG, "got message: '%s'\n", message);
-		/**
-         * Makes mpd quit.
-         */
-		if (strcmp(message, "QUIT") == 0)
-		{
+		case UNIQUE_ACTIVATE:
+			/* move the main window to the screen that sent us the command */
+			gtk_window_set_screen (GTK_WINDOW (playlist3_get_window()), 
+					unique_message_data_get_screen (message));
+			gtk_window_present_with_time (GTK_WINDOW (playlist3_get_window()), time_);
+			res = UNIQUE_RESPONSE_OK;
+			break;
+		case UNIQUE_COMMAND_QUIT:
 			printf("I've been told to quit, doing this now\n");
 			main_quit();
-		}
-		/**
-         * Gives play,pause command
-         */
-		else if (strcmp(message, "PLAY") == 0 || strcmp(message, "PAUSE") == 0)
-		{
+			res = UNIQUE_RESPONSE_OK;
+			break;
+		case UNIQUE_COMMAND_PLAY:
+		case UNIQUE_COMMAND_PAUSE:
 			play_song();
-		}
-		/**
-         * Give next command
-         */
-		else if (strcmp(message, "NEXT") == 0)
-		{
+			res = UNIQUE_RESPONSE_OK;
+			break;
+		case UNIQUE_COMMAND_NEXT:
 			next_song();
-		}
-		/**
-         * Give previous command
-         */
-		else if (strcmp(message, "PREV") == 0)
-		{
+			res = UNIQUE_RESPONSE_OK;
+			break;
+		case UNIQUE_COMMAND_PREV:
 			prev_song();
-		}
-		/**
-         * Stop playback
-         */
-		else if (strcmp(message, "STOP") == 0)
-		{
+			res = UNIQUE_RESPONSE_OK;
+			break;
+		case UNIQUE_COMMAND_STOP:
 			stop_song();
-		} else if (strcmp(message, "TOGGLE_VIEW") == 0)
-		{
+			res = UNIQUE_RESPONSE_OK;
+			break;
+		case UNIQUE_COMMAND_VIEW_TOGGLE:
 			pl3_toggle_hidden();
-		} else if (strcmp(message, "HIDE_VIEW") == 0)
-		{
+			res = UNIQUE_RESPONSE_OK;
+			break;
+		case UNIQUE_COMMAND_VIEW_HIDE:
 			pl3_hide();
-		} else if (strcmp(message, "SHOW_VIEW") == 0)
-		{
+			res = UNIQUE_RESPONSE_OK;
+			break;
+		case UNIQUE_COMMAND_VIEW_SHOW:
 			create_playlist3();
-		} else if (strcmp(message, "CONNECT") == 0)
-		{
+			res = UNIQUE_RESPONSE_OK;
+			break;
+		case UNIQUE_COMMAND_CONNECT:
 			connect_to_mpd();
-		}
-		/**
-         * pass gmpc an url to parse with the url_parser.
-         */
-		else if (strncmp(message, "STREAM ", 7) == 0)
+			res = UNIQUE_RESPONSE_OK;
+			break;
+		case UNIQUE_COMMAND_STREAM:
 		{
-			url_start_real(&message[7]);
+			gchar *fn = unique_message_data_get_text(message);
+			res = UNIQUE_RESPONSE_FAIL;
+			if(fn)
+			{
+				url_start_real(fn);
+				g_free(fn);
+				res = UNIQUE_RESPONSE_OK;
+			}
+			break;
 		}
-		/* Handle a query with gmpc_easy_command. This allows for more advanced control from gmpc-remote */
-		else if (strncmp(message, "EASYCOMMAND", strlen("EASYCOMMAND")) == 0)
+		case UNIQUE_COMMAND_EASYCOMMAND:
 		{
-			gmpc_easy_command_do_query(gmpc_easy_command, (&message[strlen("EASYCOMMAND")]));
-		} else
-		{
-			create_playlist3();
+			gchar *fn = unique_message_data_get_filename(message);
+			res = UNIQUE_RESPONSE_FAIL;
+			if(fn)
+			{
+				gmpc_easy_command_do_query(gmpc_easy_command, 
+						fn);
+				g_free(fn);
+				res = UNIQUE_RESPONSE_OK;
+			}
+			break;
 		}
+		case UNIQUE_INVALID:
+		case UNIQUE_NEW:
+		case UNIQUE_CLOSE:
+		case UNIQUE_OPEN:
+		default:
+			res = UNIQUE_RESPONSE_OK;
+			break;
 	}
-	/**
-	 * Bring gmpc to front, as default action.
-	 */
 
+	return res;
 }
 #endif
 
@@ -279,6 +314,9 @@ int main(int argc, char **argv)
 	MmKeys *keys = NULL;
 #endif
 
+#ifdef HAVE_UNIQUE
+	UniqueApp *app = NULL;
+#endif
 	GError *error = NULL;
 	GOptionContext *context = NULL;
 	gboolean show_version = FALSE;
@@ -608,52 +646,78 @@ int main(int argc, char **argv)
 	}
 	TEC("New version check");
 
-#ifndef WIN32
+#ifdef HAVE_UNIQUE
 	/**
      * Start IPC system.
      */
 	if (cfg_get_single_value_as_int_with_default(config, "Default", "allow-multiple", FALSE) == FALSE)
 	{
-		/**
-		 * bacon here we come
-         */
-		bacon_connection = bacon_message_connection_new("gmpc");
-		if (bacon_connection != NULL)
+		/* as soon as we create the UniqueApp instance we either have the name
+		 * we requested ("org.mydomain.MyApplication", in the example) or we
+		 * don't because there already is an application using the same name
+		 */
+		app = unique_app_new_with_commands ("org.gmpclient.GMPC", NULL,
+				"quit",			UNIQUE_COMMAND_QUIT,
+				"play",			UNIQUE_COMMAND_PLAY,
+				"pause",		UNIQUE_COMMAND_PAUSE,
+				"next",			UNIQUE_COMMAND_NEXT,
+				"prev",			UNIQUE_COMMAND_PREV,
+				"stop",			UNIQUE_COMMAND_STOP,
+				"view-toggle",	UNIQUE_COMMAND_VIEW_TOGGLE,
+				"view-hide",	UNIQUE_COMMAND_VIEW_HIDE,
+				"view-show",	UNIQUE_COMMAND_VIEW_SHOW,
+				"stream",		UNIQUE_COMMAND_STREAM,
+				"connect",		UNIQUE_COMMAND_CONNECT,
+				"easycommand",	UNIQUE_COMMAND_EASYCOMMAND,
+				NULL);
+		/* if there already is an instance running, this will return TRUE; there
+		 * is no race condition because the check is already performed at
+		 * construction time
+		 */
+		if (unique_app_is_running (app))
 		{
-			if (!bacon_message_connection_get_is_server(bacon_connection))
+			UniqueResponse response; /* the response to our command */
+			if(replace || quit) 
 			{
-				if (replace || quit)
-				{
-					bacon_message_connection_send(bacon_connection, "QUIT");
-					while (!bacon_message_connection_get_is_server(bacon_connection))
-					{
-						bacon_message_connection_free(bacon_connection);
-						bacon_connection = bacon_message_connection_new("gmpc");
-						g_usleep(G_USEC_PER_SEC);
+					response = unique_app_send_message(app, UNIQUE_COMMAND_QUIT, NULL);
+					if(response !=  UNIQUE_RESPONSE_OK) {
+						g_log(LOG_DOMAIN_IPC, G_LOG_LEVEL_WARNING, 
+						"Failed to send quit command");
 					}
-				} else
-				{
-					g_log(LOG_DOMAIN_IPC, G_LOG_LEVEL_WARNING, "gmpc is allready running\n");
-					bacon_message_connection_send(bacon_connection, "PRESENT");
-					bacon_message_connection_free(bacon_connection);
+			}
+			else
+			{
+					g_log(LOG_DOMAIN_IPC, G_LOG_LEVEL_WARNING, 
+							"gmpc is allready running\n");
+					/* Send command to represent the window */	
+					response = unique_app_send_message (app, UNIQUE_ACTIVATE, NULL);
+					if(response !=  UNIQUE_RESPONSE_OK) {
+						g_log(LOG_DOMAIN_IPC, G_LOG_LEVEL_WARNING, "Failed to send activate command");
+					}
 					cfg_close(config);
 					config = NULL;
 					TEC("IPC setup and quitting");
 					exit(0);
-				}
 			}
-			bacon_message_connection_set_callback(bacon_connection, bacon_on_message_received, NULL);
+
 		}
 		/* If user requested a quit, quit */
 		if (quit)
 		{
 			cfg_close(config);
 			config = NULL;
-			if (bacon_connection)
-				bacon_message_connection_free(bacon_connection);
-
+			g_object_unref(app);
 			exit(0);
 		}
+		/* using this signal we get notifications from the newly launched instances
+		 * and we can reply to them; the default signal handler will just return
+		 * UNIQUE_RESPONSE_OK and terminate the startup notification sequence on each
+		 * watched window, so you can connect to the message-received signal only if
+		 * you want to handle the commands and responses
+		 */
+		g_signal_connect (app, 
+				"message-received", 
+				G_CALLBACK (message_received_cb), NULL);
 	}
 	TEC("IPC setup");
 #endif
@@ -865,6 +929,11 @@ int main(int argc, char **argv)
      * Create the main window
      */
 	create_playlist3();
+#ifdef HAVE_UNIQUE
+	if(app) {
+		unique_app_watch_window(app, GTK_WINDOW(playlist3_get_window()));
+	}
+#endif
 	/* Initialize the message system */
 	//playlist3_message_init()
 	plugin_add_new(GMPC_PLUGIN_BASE(pl3_messages), 0, NULL);
@@ -962,11 +1031,11 @@ int main(int argc, char **argv)
      *  cleaning up.
      */
 
-#ifndef WIN32
-	if (bacon_connection)
+
+#ifdef HAVE_UNIQUE
+	if(app != NULL) 
 	{
-		bacon_message_connection_free(bacon_connection);
-		bacon_connection = NULL;
+		g_object_unref(app);
 	}
 #endif
 	/* Quit _all_ downloads */
@@ -1450,12 +1519,11 @@ static void create_directory(gchar * url)
 	}
 }
 
+/**
+ * Create needed directories for mpd.
+ */
 static void create_gmpc_paths(void)
 {
-	/**
-	 * Create needed directories for mpd.
-	 */
-
 	/** create path */
 	gchar *url = gmpc_get_user_path(NULL);
 	create_directory(url);

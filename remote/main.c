@@ -22,13 +22,29 @@
 #include <stdlib.h>
 #include <gtk/gtk.h>
 #include <config.h>
-#include "bacon-message-connection.h"
+#include <unique/unique.h>
+/* Copied from main.h */
+enum
+{
+	UNIQUE_COMMAND_0, /* unused: 0 is an invalid command */
+	UNIQUE_COMMAND_QUIT,
+	UNIQUE_COMMAND_PLAY,
+	UNIQUE_COMMAND_PAUSE,
+	UNIQUE_COMMAND_NEXT,
+	UNIQUE_COMMAND_PREV,
+	UNIQUE_COMMAND_STOP,
+	UNIQUE_COMMAND_VIEW_TOGGLE,
+	UNIQUE_COMMAND_VIEW_HIDE,
+	UNIQUE_COMMAND_VIEW_SHOW,
+	UNIQUE_COMMAND_STREAM,
+	UNIQUE_COMMAND_CONNECT,
+	UNIQUE_COMMAND_EASYCOMMAND
+};
 
 int main ( int argc, char **argv )
 {
-    BaconMessageConnection *bacon_connection = NULL;
-
-
+	UniqueApp *app = NULL;
+    UniqueResponse response; /* the response to our command */
 
     GError *error = NULL;
     GOptionContext *context;
@@ -45,7 +61,6 @@ int main ( int argc, char **argv )
     gboolean toggle_view = FALSE;
     gboolean hide_view = FALSE;
     gboolean show_view = FALSE;
-    gboolean spawn = FALSE;
     gchar *stream = NULL;
     gchar *easycommand = NULL;
 
@@ -101,10 +116,6 @@ int main ( int argc, char **argv )
             "show-view", 'k', 0, G_OPTION_ARG_NONE, &show_view,
             "Give the running gmpc the command to show the window.", NULL
         },  
-        {
-            "spawn",    's', 0, G_OPTION_ARG_NONE, &spawn,
-            "Spawn gmpc if not running", NULL
-        },
         {NULL}
     };
 
@@ -120,98 +131,95 @@ int main ( int argc, char **argv )
         printf("ERROR: failed to parse command line options: '%s'\n", error->message);
 		return EXIT_FAILURE;
     }
-    bacon_connection = bacon_message_connection_new("gmpc");
-    while(bacon_connection)
-    {
-        if (!bacon_message_connection_get_is_server (bacon_connection)) 
-        {
-            if(play || pause)
-            {
-                printf("send play\n");
-                bacon_message_connection_send(bacon_connection, "PLAY");
-            }
-            if(prev)
-            {
-                printf("send prev\n");
-                bacon_message_connection_send(bacon_connection, "PREV");
-            }
-            if(next)
-            {
-                printf("send next\n");
-                bacon_message_connection_send(bacon_connection, "NEXT");
-            }
-            if(stop)
-            {
-                printf("send stop\n");
-                bacon_message_connection_send(bacon_connection, "STOP");
-            }
-            if(toggle_view)
-            {
-                printf("send toggle view\n");
-                bacon_message_connection_send(bacon_connection, "TOGGLE_VIEW");
-            }
-            if(hide_view)
-            {
-                printf("send hide view\n");
-                bacon_message_connection_send(bacon_connection, "HIDE_VIEW");
-            }
-            if(show_view)
-            {
-                printf("send show view\n");
-                bacon_message_connection_send(bacon_connection, "SHOW_VIEW");
-            }
-            if(stream)
-            {
-                gchar *str = g_strdup_printf("STREAM %s", stream);
-                printf("Send stream: %s\n", stream);
-                bacon_message_connection_send(bacon_connection, str);
-                g_free(str);
-            }
-            if(easycommand)
-            {
-                gchar *str = g_strdup_printf("EASYCOMMAND %s", easycommand);
-                printf("Sending: %s\n", str);
-                bacon_message_connection_send(bacon_connection, str);
-                g_free(str);
-            }
-            if(quit)
-            {
-                printf("send quit\n");
-                bacon_message_connection_send(bacon_connection, "QUIT");
-            }
-            bacon_message_connection_free (bacon_connection);
-            return EXIT_SUCCESS;
-        }
-        else if(spawn){
-            int count = 10;
-            printf("starting gmpc\n");
 
-            bacon_message_connection_free (bacon_connection);
-            bacon_connection = NULL;
 
-            g_spawn_command_line_async("gmpc",&error);
-            if(error){
-                g_error("Failed to spawn gmpc: '%s'", error->message);
-            }
-            do{
-                g_usleep(300000);
-                printf("waiting for gmpc to come up\n");
-                if(bacon_connection)
-                    bacon_message_connection_free (bacon_connection);
-                bacon_connection = bacon_message_connection_new("gmpc");
-            }while(bacon_message_connection_get_is_server (bacon_connection) && (--count > 0));
-            if(count == 0){
-                g_error("Failed to get gmpc to respond");
-            }
-            /* Send connect */
-            bacon_message_connection_send(bacon_connection, "CONNECT");
-            g_usleep(300000);
-        }else{ 
-            printf("GMPC is not running\n");
-            bacon_message_connection_free (bacon_connection);
-            return EXIT_FAILURE;
-        }
+    app = unique_app_new_with_commands ("org.gmpclient.GMPC", NULL,
+            "quit",			UNIQUE_COMMAND_QUIT,
+            "play",			UNIQUE_COMMAND_PLAY,
+            "pause",		UNIQUE_COMMAND_PAUSE,
+            "next",			UNIQUE_COMMAND_NEXT,
+            "prev",			UNIQUE_COMMAND_PREV,
+            "stop",			UNIQUE_COMMAND_STOP,
+            "view-toggle",	UNIQUE_COMMAND_VIEW_TOGGLE,
+            "view-hide",	UNIQUE_COMMAND_VIEW_HIDE,
+            "view-show",	UNIQUE_COMMAND_VIEW_SHOW,
+            "stream",		UNIQUE_COMMAND_STREAM,
+            "connect",		UNIQUE_COMMAND_CONNECT,
+            "easycommand",	UNIQUE_COMMAND_EASYCOMMAND,
+            NULL);
+    if(!unique_app_is_running(app)) {
+        printf("Error: GMPC is not running");
+        g_object_unref(app);
+        return EXIT_FAILURE;
     }
-    g_error("Failed to create IPC connection\n");
-    return EXIT_FAILURE;
+
+    
+
+
+    if(play || pause)
+    {
+        response = unique_app_send_message(app, UNIQUE_COMMAND_PLAY, NULL);
+        if(response  == UNIQUE_RESPONSE_FAIL) printf("Failed to send PLAY command\n");
+    }
+    if(prev)
+    {
+        response = unique_app_send_message(app, UNIQUE_COMMAND_PREV, NULL);
+        if(response  == UNIQUE_RESPONSE_FAIL) printf("Failed to send PREV command\n");
+    }
+    if(next)
+    {
+        response = unique_app_send_message(app, UNIQUE_COMMAND_NEXT, NULL);
+        if(response  == UNIQUE_RESPONSE_FAIL) printf("Failed to send NEXT command\n");
+    }
+    if(stop)
+    {
+        response = unique_app_send_message(app, UNIQUE_COMMAND_STOP, NULL);
+        if(response  == UNIQUE_RESPONSE_FAIL) printf("Failed to send STOP command\n");
+    }
+    if(toggle_view)
+    {
+        response = unique_app_send_message(app, UNIQUE_COMMAND_VIEW_TOGGLE, NULL);
+        if(response  == UNIQUE_RESPONSE_FAIL) printf("Failed to send VIEW_TOGGLE command\n");
+    }
+    if(hide_view)
+    {
+        response = unique_app_send_message(app, UNIQUE_COMMAND_VIEW_HIDE, NULL);
+        if(response  == UNIQUE_RESPONSE_FAIL) printf("Failed to send VIEW_HIDE command\n");
+    }
+    if(show_view)
+    {
+        response = unique_app_send_message(app, UNIQUE_COMMAND_VIEW_SHOW, NULL);
+        if(response  == UNIQUE_RESPONSE_FAIL) printf("Failed to send VIEW_SHOW command\n");
+    }
+    if(stream)
+    {
+        UniqueMessageData *message; /* the payload for the command */
+
+        message = unique_message_data_new();
+        unique_message_data_set_filename(message, stream);
+
+        response = unique_app_send_message(app, UNIQUE_COMMAND_STREAM, message);
+        if(response  == UNIQUE_RESPONSE_FAIL) printf("Failed to send STREAM command\n");
+        /* the message is copied, so we need to free it before returning */
+        unique_message_data_free (message);
+    }
+    if(easycommand)
+    {
+        UniqueMessageData *message; /* the payload for the command */
+
+        message = unique_message_data_new();
+        unique_message_data_set_filename(message, easycommand);
+
+        response = unique_app_send_message(app, UNIQUE_COMMAND_EASYCOMMAND, message);
+        if(response  == UNIQUE_RESPONSE_FAIL) printf("Failed to send EASYCOMMAND command\n");
+        /* the message is copied, so we need to free it before returning */
+        unique_message_data_free (message);
+    }
+    if(quit)
+    {
+        response = unique_app_send_message(app, UNIQUE_COMMAND_QUIT, NULL);
+        if(response  == UNIQUE_RESPONSE_FAIL) printf("Failed to send QUIT command\n");
+    }
+    g_object_unref(app);
+    return EXIT_SUCCESS;
 }

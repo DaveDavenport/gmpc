@@ -71,9 +71,19 @@ fi
 
 
 PKG_PROG_PKG_CONFIG
+unique=0;
+AC_ARG_ENABLE([unique],
+              [--enable-unique Use unique.], 
+	          [case "${enableval}" in
+		            yes)    enable_unique=true;;
+		             no)    enable_unique=false;;
+		              *)    AC_MSG_ERROR([bad value ${enableval} for --enable-unique]);;
+               esac],
+               [enable_unique=true])
 # libxspf 
 libxspf=0;
 libspiff=0;
+
 
 AC_ARG_ENABLE([libxspf],
               [--enable-libxspf Use libxspf.], 
@@ -118,6 +128,15 @@ if test "x${enable_libspiff}" != xno; then
 fi
 fi
 
+# Checking for libunique.
+if test "x$enable_unique" = "xtrue"; then
+	PKG_CHECK_MODULES([unique], unique-1.0)
+	AC_SUBST(unique_LIBS)
+	AC_SUBST(unique_CFLAGS)
+    unique=true;
+	AC_DEFINE([HAVE_UNIQUE], 1, [Use libunique])
+fi
+AM_CONDITIONAL(HAVE_UNIQUE, test "x$unique" = "xtrue")
 # Checks for header files.
 AC_HEADER_STDC
 AC_CHECK_HEADERS([stdlib.h string.h unistd.h])
@@ -516,6 +535,11 @@ if test "x$libxspf" = "x1"; then
 	echo "Use libxspf library:              enabled"
 else
 	echo "Use libxspf library:              disabled"
+fi
+if test "x$unique" = "xtrue"; then
+	echo "Use unique library:               enabled"
+else
+	echo "Use unique library:               disabled"
 fi
 echo "";
 echo "Now type make to build"
