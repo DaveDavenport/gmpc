@@ -103,7 +103,6 @@ static gboolean sqlite_check_integrity(void)
 	int database_check = FALSE;
 	sqlite3_stmt *const stmt = metadata_stmt[META_DATA_SQL_CHECK_INTEGRETY];
 	int ret;
-	sqlite3_reset(stmt);
 	do{
 		ret = sqlite3_step(stmt);
 		if(ret == SQLITE_ROW)
@@ -661,6 +660,7 @@ void metadata_cache_init(void)
 
 			metadata_stmt[i] = metadata_prepare(metadata_sql[i]);
 		}
+		TEC("Prepare metadata statements");
 		database_valid = sqlite_check_integrity();
 		TEC("Checked integrety1");
 		if(!database_valid){

@@ -888,8 +888,8 @@ int main(int argc, char **argv)
 	/* time todo some initialisation of plugins */
 	for (i = 0; i < num_plugins && plugins[i] != NULL; i++)
 	{
-		TEC("Initializing plugin: %s", gmpc_plugin_get_name(plugins[i]));
 		gmpc_plugin_init(plugins[i]);
+		TEC("Initializing plugin: %s", gmpc_plugin_get_name(plugins[i]));
 	}
 
 	/**
@@ -926,16 +926,18 @@ int main(int argc, char **argv)
      * Create the main window
      */
 	create_playlist3();
+	TEC("Creating playlist window");
 #ifdef HAVE_UNIQUE
 	if(app) {
 		unique_app_watch_window(app, GTK_WINDOW(playlist3_get_window()));
+		TEC("Setup unique app to watch main window");
 	}
 #endif
 	/* Initialize the message system */
 	//playlist3_message_init()
 	plugin_add_new(GMPC_PLUGIN_BASE(pl3_messages), 0, NULL);
+	TEC("Add pl3_messages");
 
-	TEC("Creating playlist window");
 
 	/**
      * First run dialog
