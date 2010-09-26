@@ -821,7 +821,7 @@ namespace Gmpc {
                         unowned MPD.Data.Item iter = data.get_first();
                         do{
                             if(iter.tag == song.album){
-                                iter = iter.next(false); 
+                                iter.next(false); 
                                 continue;
                             }
                             list.append_new();
@@ -838,7 +838,7 @@ namespace Gmpc {
                                 list.song.date = ydata.tag;
                             }
                             */
-                            iter = iter.next(false);
+                            iter.next(false);
                         }while(iter != null);
                     }
 
@@ -875,7 +875,7 @@ namespace Gmpc {
                                     });
                             albums++;
 
-                            iter = iter.next(false);
+                            iter.next(false);
                         }while(iter!= null);
                     }
 

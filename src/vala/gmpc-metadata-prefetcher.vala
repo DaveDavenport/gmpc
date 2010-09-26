@@ -42,7 +42,7 @@ public class  Gmpc.Plugin.MetadataPrefetcher : Gmpc.Plugin.Base {
     }
 
 
-    private void status_changed(Connection gmpcconn, MPD.Server server, MPD.Status.Changed what)
+    private void status_changed(Connection conn, MPD.Server server, MPD.Status.Changed what)
     {
         if(!this.get_enabled()) return;
         if((what&MPD.Status.Changed.NEXTSONG) == MPD.Status.Changed.NEXTSONG)

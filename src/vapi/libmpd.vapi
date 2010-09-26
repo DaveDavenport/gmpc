@@ -158,7 +158,8 @@ namespace MPD {
                 public void sort_album_disc_track();
 
                 [CCode (cname="mpd_data_get_next_real")] 
-                public unowned Item? next(bool free);
+                [ReturnsModifiedPointer ()]
+                public void next(bool free);
 
                 [CCode (cname="mpd_data_get_first")] 
                 public unowned Item? get_first();

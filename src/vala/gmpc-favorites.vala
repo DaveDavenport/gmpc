@@ -93,7 +93,7 @@ namespace Gmpc.Favorites{
                         return true;
                     }
                 }
-                iter = iter.next(false);
+                iter.next(false);
             }
             return false;
         }
@@ -125,7 +125,7 @@ namespace Gmpc.Favorites{
                                 return;
                             }
                         }
-                        iter = iter.next(false);
+                        iter.next(false);
                     }
                 }
             }

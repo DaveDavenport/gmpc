@@ -381,14 +381,14 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table
                             liter = liter.next;
                             list.remove(d);
                             //liter = null;
-                            iter = iter.next(false);
+                            iter.next(false);
                             if(iter != null)
                                 artist = iter.tag.casefold();
                         }
                         else if (res > 0) {
                             //list.remove(liter.data);
 
-                            iter = iter.next(false);
+                            iter.next(false);
                             if(iter != null)
                                 artist = iter.tag.casefold(); 
                         }
@@ -1197,10 +1197,10 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
                             if(yi.tag != null && yi.tag.length > 0) {
                                 list.song.date = yi.tag;
                             }
-                            yi = yi.next(false);
+                            yi.next(false);
                         }
                     }
-                    iter = iter.next(false);
+                    iter.next(false);
                 }while(iter!= null);
             }
 
@@ -2354,7 +2354,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
                 unowned MPD.Data.Item iter = data.get_first();
                 do{
                     if(iter.tag == song.album){
-                        iter = iter.next(false); 
+                        iter.next(false); 
                         continue;
                     }
                     list.append_new();
@@ -2373,10 +2373,10 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
                             if(yi.tag != null && yi.tag.length > 0) {
                                 list.song.date = yi.tag;
                             }
-                            yi = yi.next(false);
+                            yi.next(false);
                         }
                     }
-                    iter = iter.next(false);
+                    iter.next(false);
                 }while(iter != null);
             }
 
@@ -2415,7 +2415,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
                             });
                     albums++;
 
-                    iter = iter.next(false);
+                    iter.next(false);
                 }while(iter!= null);
             }
 
