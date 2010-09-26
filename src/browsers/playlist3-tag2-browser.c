@@ -166,7 +166,7 @@ static void tag2_browser_add_browser(GtkWidget * cat_tree, char *key)
 	/* get a reference to the key */
 	tb->ref_iter = gtk_tree_row_reference_new(GTK_TREE_MODEL(tree), path);
 	tag2_ht = g_list_append(tag2_ht, tb);
-	tag2_init_browser(tb);
+//	tag2_init_browser(tb);
 	gtk_tree_path_free(path);
 	pl3_update_go_menu();
 
@@ -1409,6 +1409,8 @@ static void tag2_pref_combo_changed(GtkComboBox * box, GtkTreeModel * model2)
 		tag_browser *tb;
 		/* get the active tag browser */
 		gtk_tree_model_get(model, &iter, 2, &tb, -1);
+        if (tb->tag2_vbox == NULL)
+            tag2_init_browser(tb);
 		/* iterate over all the tag elements and add them to the list */
 		if (tb->tag_lists)
 		{
