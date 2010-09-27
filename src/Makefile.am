@@ -366,12 +366,6 @@ egg_session_end_LDADD =                  \
 egg_session_end_LDFLAGS =                \
 	$(platform_session_end_ldflags)
 
-egg_launch_SOURCES =                     \
-	smclient/egg-launch.c
-
-egg_launch_LDADD =                       \
-	libeggdesktopfile.la
-
 EXTRA_DIST +=                             \
 	smclient/eggsmclient-osx.c                \
 	smclient/eggsmclient-win32.c              \

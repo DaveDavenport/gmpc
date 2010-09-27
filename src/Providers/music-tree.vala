@@ -34,6 +34,7 @@ using Gmpc.Plugin;
 private const bool use_transition_lp = Gmpc.use_transition;
 private const string some_unique_name_lp = Config.VERSION;
 
+private const string log_domain_cp = "Gmpc.Plugin.MusicTreeProvider";
 
 public class Gmpc.Provider.MusicTree : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIface 
 {
@@ -56,7 +57,7 @@ public class Gmpc.Provider.MusicTree : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIfa
 			image_filename = new GLib.Regex(".*\\.(png|jpg|jpeg|gif)$", 
 					GLib.RegexCompileFlags.CASELESS|GLib.RegexCompileFlags.DOTALL, 0);
 		}catch( Error e) {
-            log("Gmpc.Plugin.MusicTreeProvider", GLib.LogLevelFlags.LEVEL_ERROR, 
+            log(log_domain_cp, GLib.LogLevelFlags.LEVEL_ERROR, 
                     "Failed to create regex: %s", e.message);
         }
     }
@@ -76,18 +77,18 @@ public class Gmpc.Provider.MusicTree : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIfa
         string id =  profiles.get_current_id();
         unowned string directory = null;
 
-        log("Gmpc.Plugin.MusicTreeProvider", GLib.LogLevelFlags.LEVEL_DEBUG, 
+        log(log_domain_cp, GLib.LogLevelFlags.LEVEL_DEBUG, 
                 "Starting Query");
 
         if( id != null ) {
             directory = profiles.get_music_directory(id);
         }
-       	log("Gmpc.Plugin.MusicTreeProvider", GLib.LogLevelFlags.LEVEL_DEBUG, "Got directory: %s",
+       	log(log_domain_cp, GLib.LogLevelFlags.LEVEL_DEBUG, "Got directory: %s",
 			(directory == null)?"(null)":directory); 
 
         if(directory == null || directory.length == 0)
         {
-            log("Gmpc.Plugin.MusicTreeProvider", GLib.LogLevelFlags.LEVEL_DEBUG, 
+            log(log_domain_cp, GLib.LogLevelFlags.LEVEL_DEBUG, 
                     "No Music directory specified");
             /* With no directory specified, I cannot find anything */
             /* Signal this back */
@@ -98,7 +99,7 @@ public class Gmpc.Provider.MusicTree : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIfa
         /* Check song path */
         if(song == null || song.file == null) 
         {
-            log("Gmpc.Plugin.MusicTreeProvider", GLib.LogLevelFlags.LEVEL_DEBUG, 
+            log(log_domain_cp, GLib.LogLevelFlags.LEVEL_DEBUG, 
                     "No Song or no song path specified");
             callback((owned)list);
             /* and stop trying */
@@ -108,13 +109,13 @@ public class Gmpc.Provider.MusicTree : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIfa
         string scheme = GLib.Uri.parse_scheme(song.file); 
         if(scheme != null)
         {
-            log("Gmpc.Plugin.MusicTreeProvider", GLib.LogLevelFlags.LEVEL_DEBUG, 
+            log(log_domain_cp, GLib.LogLevelFlags.LEVEL_DEBUG, 
                     "Scheme '%s' indicates no local file.",scheme);
             callback((owned)list);
             /* and stop trying */
             return;
         }
-        log("Gmpc.Plugin.MusicTreeProvider", GLib.LogLevelFlags.LEVEL_DEBUG, 
+        log(log_domain_cp, GLib.LogLevelFlags.LEVEL_DEBUG, 
                 "Music directory: %s", directory);
 
         switch(type)
@@ -131,7 +132,7 @@ public class Gmpc.Provider.MusicTree : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIfa
                 break;
         }
 
-        log("Gmpc.Plugin.MusicTreeProvider", GLib.LogLevelFlags.LEVEL_DEBUG, 
+        log(log_domain_cp, GLib.LogLevelFlags.LEVEL_DEBUG, 
                 "Query done, %u results", list.length());
         /* Tell that we found nothing */
         callback((owned)list);
@@ -144,11 +145,11 @@ public class Gmpc.Provider.MusicTree : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIfa
      {
         List<Gmpc.MetaData.Item> list = null;
 
-        log("Gmpc.Plugin.MusicTreeProvider", GLib.LogLevelFlags.LEVEL_DEBUG, 
+        log(log_domain_cp, GLib.LogLevelFlags.LEVEL_DEBUG, 
                 "Query artist art ");
 
         string base_path = GLib.Path.get_dirname(song.file); 
-        log("Gmpc.Plugin.MusicTreeProvider", GLib.LogLevelFlags.LEVEL_DEBUG, 
+        log(log_domain_cp, GLib.LogLevelFlags.LEVEL_DEBUG, 
                 "Got basename: %s", base_path);
 
 
@@ -182,13 +183,13 @@ public class Gmpc.Provider.MusicTree : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIfa
 
         foreach(string opath in queries)
         {
-            log("Gmpc.Plugin.MusicTreeProvider", GLib.LogLevelFlags.LEVEL_DEBUG, 
+            log(log_domain_cp, GLib.LogLevelFlags.LEVEL_DEBUG, 
                     "Got path: %s. Checking info", opath);
             /* Start async file info */
             dir = File.new_for_path (opath);
             try {
                 var e = yield dir.query_info_async("access::can-read", 0,Priority.DEFAULT,null);
-                log("Gmpc.Plugin.MusicTreeProvider", GLib.LogLevelFlags.LEVEL_DEBUG, 
+                log(log_domain_cp, GLib.LogLevelFlags.LEVEL_DEBUG, 
                         "Got path: %s. Have info", opath);
                 if(e.get_attribute_boolean("access::can-read"))
                 {
@@ -198,17 +199,17 @@ public class Gmpc.Provider.MusicTree : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIfa
                     item.content_type = MetaData.ContentType.URI;
                     item.set_uri(opath);
                     list.append((owned)item);
-                    log("Gmpc.Plugin.MusicTreeProvider", GLib.LogLevelFlags.LEVEL_DEBUG, 
+                    log(log_domain_cp, GLib.LogLevelFlags.LEVEL_DEBUG, 
                             "Found %s, adding",opath);
                 }
 
             } catch (GLib.Error err) {
-                log("Gmpc.Plugin.MusicTreeProvider", GLib.LogLevelFlags.LEVEL_DEBUG,
+                log(log_domain_cp, GLib.LogLevelFlags.LEVEL_DEBUG,
                         "Error trying to get file info from '%s': %s\n",opath, err.message);
             }
         }
 
-        log("Gmpc.Plugin.MusicTreeProvider", GLib.LogLevelFlags.LEVEL_DEBUG, 
+        log(log_domain_cp, GLib.LogLevelFlags.LEVEL_DEBUG, 
                 "Query done, %u results", list.length());
         list.first();
         callback((owned)list);
@@ -222,16 +223,16 @@ public class Gmpc.Provider.MusicTree : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIfa
      {
         List<Gmpc.MetaData.Item> list = null;
 
-        log("Gmpc.Plugin.MusicTreeProvider", GLib.LogLevelFlags.LEVEL_DEBUG, 
+        log(log_domain_cp, GLib.LogLevelFlags.LEVEL_DEBUG, 
                 "Query album cover");
 
         string base_path = GLib.Path.get_dirname(song.file); 
-        log("Gmpc.Plugin.MusicTreeProvider", GLib.LogLevelFlags.LEVEL_DEBUG, 
+        log(log_domain_cp, GLib.LogLevelFlags.LEVEL_DEBUG, 
                 "Got basename: %s", base_path);
 
         string path = GLib.Path.build_filename(directory, base_path);
 
-        log("Gmpc.Plugin.MusicTreeProvider", GLib.LogLevelFlags.LEVEL_DEBUG, 
+        log(log_domain_cp, GLib.LogLevelFlags.LEVEL_DEBUG, 
                 "Got path: %s. Starting to itterate over childs", path);
         /* Start async directory walking */
         var dir = File.new_for_path (path);
@@ -252,14 +253,14 @@ public class Gmpc.Provider.MusicTree : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIfa
                         item.content_type = MetaData.ContentType.URI;
                         item.set_uri(GLib.Path.build_filename(path,name));
                         list.append((owned)item);
-                        log("Gmpc.Plugin.MusicTreeProvider", GLib.LogLevelFlags.LEVEL_DEBUG, 
+                        log(log_domain_cp, GLib.LogLevelFlags.LEVEL_DEBUG, 
                                 "Found %s, adding",name); 
                         /* Match filename against rules */
                     }
                 }
             }
         } catch (GLib.Error err) {
-            log("Gmpc.Plugin.MusicTreeProvider", GLib.LogLevelFlags.LEVEL_WARNING,
+            log(log_domain_cp, GLib.LogLevelFlags.LEVEL_WARNING,
                     "Error trying to walk directory '%s': %s\n",path, err.message);
         }
         /* Try parent, if this fails */
@@ -269,7 +270,7 @@ public class Gmpc.Provider.MusicTree : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIfa
             { 
 				var pdir = dir.get_parent();
 				path = pdir.get_path();
-                log("Gmpc.Plugin.MusicTreeProvider", GLib.LogLevelFlags.LEVEL_DEBUG, 
+                log(log_domain_cp, GLib.LogLevelFlags.LEVEL_DEBUG, 
                         "Nothing found, trying parent: %s", path);
                 try {
                     var pe = yield pdir.enumerate_children_async (FILE_ATTRIBUTE_STANDARD_NAME, 0, Priority.DEFAULT, null);
@@ -289,19 +290,19 @@ public class Gmpc.Provider.MusicTree : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIfa
                                 pitem.content_type = MetaData.ContentType.URI;
                                 pitem.set_uri(GLib.Path.build_filename(path,pname));
                                 list.append((owned)pitem);
-                                log("Gmpc.Plugin.MusicTreeProvider", GLib.LogLevelFlags.LEVEL_DEBUG, 
+                                log(log_domain_cp, GLib.LogLevelFlags.LEVEL_DEBUG, 
                                         "Found %s, adding",pname); 
                             }
                         }
                     }
                 } catch (GLib.Error perr) {
-                    log("Gmpc.Plugin.MusicTreeProvider", GLib.LogLevelFlags.LEVEL_WARNING,
+                    log(log_domain_cp, GLib.LogLevelFlags.LEVEL_WARNING,
                             "Error trying to walk parent of directory '%s': %s\n",path, perr.message);
                 }
             }
         }
 
-        log("Gmpc.Plugin.MusicTreeProvider", GLib.LogLevelFlags.LEVEL_DEBUG, 
+        log(log_domain_cp, GLib.LogLevelFlags.LEVEL_DEBUG, 
                 "Query done, %u results", list.length());
         list.first();
         callback((owned)list);
