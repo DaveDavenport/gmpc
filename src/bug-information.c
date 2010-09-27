@@ -256,7 +256,7 @@ void bug_information_window_new(GtkWidget * window)
 	text_view = gtk_text_view_new();
 	/* setup textview */
 	/* set tabarray */
-	tab_array = pango_tab_array_new_with_positions(1, TRUE, PANGO_TAB_LEFT, 200);
+	tab_array = pango_tab_array_new_with_positions(1, TRUE, PANGO_TAB_LEFT, 400);
 	gtk_text_view_set_accepts_tab(GTK_TEXT_VIEW(text_view), TRUE);
 	gtk_text_view_set_tabs(GTK_TEXT_VIEW(text_view), tab_array);
 	pango_tab_array_free(tab_array);
@@ -288,4 +288,29 @@ void bug_information_window_new(GtkWidget * window)
 	{
 		gtk_dialog_run(GTK_DIALOG(dialog));
 	}
+}
+
+
+/**
+ * print text to information for a bug report.
+ */
+void bug_information_file_new(FILE *fp)
+{
+	GtkTextBuffer *buffer;
+	GtkTextIter start, end;
+	gchar *output;
+	/* The buffer that holds the "report" */
+	buffer = gtk_text_buffer_new(NULL);
+
+	bug_information_generate_message(buffer);
+
+	gtk_text_buffer_get_start_iter(buffer, &start);
+	gtk_text_buffer_get_end_iter(buffer, &end);
+	output = gtk_text_buffer_get_text(buffer, &start, &end, FALSE);
+	if(output)
+	{
+		fprintf(fp, "%s\n", output);
+     	g_free(output);
+	}
+	g_object_unref(buffer);
 }

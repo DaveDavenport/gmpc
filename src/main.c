@@ -351,7 +351,7 @@ int main(int argc, char **argv)
 		{"debug-updates", 0, G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_NONE,
 		 &do_debug_updates, N_("Show redraw events in GTK+"), NULL},
 		{"bug-information", 'b', 0, G_OPTION_ARG_NONE,
-		 &show_bug_information, N_("Show bug information dialog"), NULL},
+		 &show_bug_information, N_("Show bug information"), NULL},
 		{"log-filter", 'f', 0, G_OPTION_ARG_CALLBACK,
 		 set_log_filter, N_("Shows all output from a certain log domain"), "<Log domain>"},
 		{"profile", 'p', 0, G_OPTION_ARG_STRING,
@@ -436,8 +436,7 @@ int main(int argc, char **argv)
 	/* Show the bug-information dialog */
 	if (show_bug_information)
 	{
-		gtk_init(&argc, &argv);
-		bug_information_window_new(NULL);
+		bug_information_file_new(stdout);
 		return EXIT_SUCCESS;
 	}
 	TEC("Parsing command line options");

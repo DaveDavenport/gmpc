@@ -27,4 +27,5 @@
 
 void bug_information_window_new(GtkWidget *window);
 
+void bug_information_file_new(FILE *fp);
 #endif
