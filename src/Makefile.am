@@ -50,6 +50,7 @@ gmpc_SOURCES=\
 	config1.c\
 	MetaData/metadata.c\
 	MetaData/metadata-cache.c\
+	MetaData/metadata-cache-sqlite.c\
 	gmpc_easy_download.c\
 	setup-assistant.c\
 	url-fetcher.c\
@@ -213,6 +214,7 @@ EXTRA_DIST=\
 		setup-assistant.h\
 		MetaData/metadata.h\
 		MetaData/metadata-cache.h\
+		MetaData/metadata-cache-sqlite.h\
 		egg/eggcolumnchooserdialog.h\
 		egg/eggcolumnmodel.h\
 		revision.h\
