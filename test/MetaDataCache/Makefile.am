@@ -35,6 +35,7 @@ nodist_mtc_test_SOURCES = \
         $(top_srcdir)/src/gmpc_easy_download.c\
         $(top_srcdir)/src/gmpc-meta-watcher.c\
         $(top_srcdir)/src/vala/gmpc-plugin.c\
+		$(top_srcdir)/src/MetaData/metadata-cache-sqlite.c\
 		$(top_srcdir)/src/MetaData/metadata-cache.c
 
 endif
