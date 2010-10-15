@@ -1,7 +1,7 @@
 /* Gnome Music Player Client (GMPC)
  * Copyright (C) 2004-2010 Qball Cow <qball@sarine.nl>
  * Project homepage: http://gmpc.wikia.com/
- 
+
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -38,6 +38,8 @@ static void pl3_file_browser_plugin_init(void);
 
 static gboolean pl3_file_browser_is_field_supported(int tag);
 static MpdData *pl3_file_browser_is_search(const int num_field, const gchar * search_string, GError ** error);
+
+static int pl3_file_browser_option_menu(GmpcMpdDataTreeview *tree, GtkMenu *menu);
 
 static void pl3_file_browser_destroy(void);
 static void pl3_file_browser_add(GtkWidget * cat_tree);
@@ -107,7 +109,8 @@ gmpcPlBrowserPlugin file_browser_gbp = {
 	.unselected = pl3_file_browser_unselected,
 	.add_go_menu = pl3_file_browser_add_go_menu,
 	.integrate_search_field_supported = pl3_file_browser_is_field_supported,
-	.integrate_search = pl3_file_browser_is_search
+	.integrate_search = pl3_file_browser_is_search,
+    .song_list_option_menu = pl3_file_browser_option_menu
 };
 
 gmpcPlugin file_browser_plug = {
@@ -883,7 +886,7 @@ static gboolean pl3_file_browser_button_release_event(GtkWidget * but, GdkEventB
 		return FALSE;
 	menu = gtk_menu_new();
 	sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_fb_tree));
-	/* don't show it when where listing custom streams... 
+	/* don't show it when where listing custom streams...
 	 * show always when version 12..  or when searching in playlist.
 	 */
 	if (gtk_tree_selection_count_selected_rows(sel) == 1)
@@ -1385,4 +1388,73 @@ static void pl3_file_browser_plugin_init(void)
 	gmpc_easy_command_add_entry(gmpc_easy_command,
 								_("search database"), ".*",
 								_("Search database <query>"), (GmpcEasyCommandCallback *) pl3_find2_ec_database, NULL);
+}
+
+/***  Integrates the file browser in the right mouse menu ****/
+
+/* Handle the click on the menu item */
+static void pl3_file_browser_option_menu_activate (GtkMenuItem *item, gpointer data)
+{
+    /* Get previously stored path from item */
+    const gchar *path = g_object_get_data(G_OBJECT(item), "path");
+    /* if there is one, act */
+    if(path != NULL)
+    {
+        /* This function calls the file browser and opens the path */
+        pl3_file_browser_open_path(path);
+    }
+}
+
+/* add item to menu */
+static int pl3_file_browser_option_menu(GmpcMpdDataTreeview *tree, GtkMenu *menu)
+{
+    int retv = 0;
+    GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(tree));
+    /* Only works on 1 song */
+    if(gtk_tree_selection_count_selected_rows(selection) == 1)
+    {
+        GList *list;
+        GtkTreeModel *model;
+        mpd_Song *song = NULL;
+        /* Get a list of selected rows (1) */
+        list = gtk_tree_selection_get_selected_rows(selection, &model);
+        if(list) {
+            GtkTreeIter iter;
+            GtkTreePath *path  = (GtkTreePath *)list->data;
+            /* Convert the path into an actual iter we can use to get values from the model */
+            if(gtk_tree_model_get_iter(model, &iter,path))
+            {
+                /* Get a pointer to the mpd_Song in the model. */
+                gtk_tree_model_get(model, &iter, MPDDATA_MODEL_COL_MPDSONG, &song, -1);
+                /* Only show if song exists and has a path */
+                if(song && song->file)
+                {
+                    gchar *scheme = g_uri_parse_scheme(song->file);
+                    /* If path has a scheme it is not in our db */
+                    if(!scheme)
+                    {
+                        GtkWidget *item = gtk_image_menu_item_new_with_label(_("Lookup directory in database"));
+                        /* Add folder icon */
+                        gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
+                                gtk_image_new_from_stock("gtk-open", GTK_ICON_SIZE_MENU));
+
+                        /* Attach a copy of the path to open, so we don't have to look it up again */
+                        g_object_set_data_full(G_OBJECT(item), "path", g_path_get_dirname(song->file), (GDestroyNotify)g_free);
+                        gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+
+                        /* Connect signal */
+                        g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_file_browser_option_menu_activate), NULL);
+                        retv++;
+                    }
+                    else g_free(scheme);
+
+                }
+            }
+        }
+        /* Free the list of rows */
+        g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);
+        g_list_free (list);
+    }
+
+    return retv;
 }
