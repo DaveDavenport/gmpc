@@ -162,6 +162,7 @@ public class Gmpc.Widget.SimilarSongs : Gtk.Alignment
             item.activate.connect(replace_clicked);
             menu.append(item);
 
+            (tree as Gmpc.MpdData.TreeView).right_mouse_integration(menu);
             menu.popup(null, null, null, event.button, event.time);
             menu.show_all();
             return true;
@@ -208,8 +209,9 @@ public class Gmpc.Widget.SimilarSongs : Gtk.Alignment
         }
         this.pchild.destroy();
         if(item != null)
-        {
+            {
             var model = new Gmpc.MpdData.Model();
+            item.remove_duplicate_songs();
             model.set_mpd_data((owned)item);
             Gmpc.MpdData.TreeView tree = new Gmpc.MpdData.TreeView("similar-song", true, model);
             tree.enable_click_fix();

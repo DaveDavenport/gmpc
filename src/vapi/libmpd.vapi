@@ -157,6 +157,10 @@ namespace MPD {
                 [ReturnsModifiedPointer ()]
                 public void sort_album_disc_track();
 
+                [CCode (cname="misc_mpddata_remove_duplicate_songs")]
+                [ReturnsModifiedPointer ()]
+                public void remove_duplicate_songs();
+
                 [CCode (cname="mpd_data_get_next_real")] 
                 [ReturnsModifiedPointer ()]
                 public void next(bool free);
