@@ -1502,6 +1502,13 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             {
                 this.add_entry(info_box, _("Codec"), extension,null, out i, "media-codec");
             }
+
+            string directory = GLib.Path.get_dirname(song.file);
+            if(directory != null)
+            {
+                this.add_entry(info_box, _("Directory"), directory, null, out i, "gtk-open");
+            }
+
         }
         /* Time*/
         if(song.time > 0) {
@@ -2166,32 +2173,6 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             alib.show();
             i++;
         }
-        /*{
-            var sw = new Gtk.ScrolledWindow(null, null);
-            sw.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.NEVER);
-            sw.set_shadow_type(Gtk.ShadowType.ETCHED_IN);
-            var song_tree = new Gmpc.MpdData.TreeView("metadata-album-songs", true, this.model_songs);
-            song_tree.enable_click_fix();
-            song_tree.button_release_event += album_song_tree_button_press_event;
-            song_tree.row_activated += album_song_tree_row_activated;
-            sw.add(song_tree);
-            var alib = new Gtk.Alignment(0f,0f,1f,0f);
-
-            alib.add(sw);
-            notebook.append_page(alib, new Gtk.Label(_("Song list")));
-            var rbutton = new Gtk.RadioButton.with_label(group,_("Song list"));
-            group = rbutton.get_group();
-            hboxje.pack_start(rbutton, false, false, 0);
-            var j = i;
-            rbutton.clicked.connect((source) => {
-                    debug("notebook page %i clicked", j);
-                    notebook.set_current_page(j);
-                    });
-
-            alib.show();
-            i++;
-        }
-        */
         /* Show web links */
         if(config.get_int_with_default("MetaData", "show-web-links",1) == 1)
         {
@@ -2516,77 +2497,56 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             label.set_alignment(0.0f, 0.5f);
             album_hbox.pack_start(label, false, false,0);
 
-            MPD.Database.search_field_start(server, MPD.Tag.Type.ALBUM);
-            MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, song.artist);
-            MPD.Data.Item list = null;
-            var data = MPD.Database.search_commit(server);
-            if(data != null){
-                unowned MPD.Data.Item iter = data.get_first();
+            /**
+             * Reuse the album browser view. 
+             */
+            Gtk.TreeIter titer;
+            if(this.model_albums.get_iter_first(out titer))
+            {
                 do{
-                    if(iter.tag == song.album){
-                        iter.next(false); 
-                        continue;
+                    weak MPD.Song asong  = null;
+                    this.model_albums.get(titer,0, &asong);
+                    if(song != null)
+                    {
+                        /* Make a copy of the song. Otherwise only a reference is added to the 
+                         * button clicked handler.
+                         * This reference can be invalid before click completed.
+                         */
+                        MPD.Song but_song = asong;
+
+                        /* Create button */
+                        button = new Gtk.Button();
+                        button.set_relief(Gtk.ReliefStyle.NONE);
+                        var but_hbox = new Gtk.HBox(false, 6);
+                        button.add(but_hbox);
+                        var image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ALBUM_ART, 48);
+                        image.set_squared(true);
+                        image.update_from_song_delayed(but_song);
+
+                        but_hbox.pack_start(image, false, false, 0);
+
+                        var but_label = new Gtk.Label(but_song.album);
+                        but_label.selectable = true;
+                        but_label.set_alignment(0.0f, 0.5f);
+                        /* Create label */
+                        var strlabel = "";
+                        if(but_song.date != null && but_song.date.length > 0) strlabel += "%s\n".printf(but_song.date);
+                        if(but_song.album != null) strlabel+= but_song.album;
+                        else strlabel += _("No Album");
+                        but_label.set_markup(GLib.Markup.printf_escaped("<b>%s</b>",strlabel)); 
+                        but_label.set_ellipsize(Pango.EllipsizeMode.END);
+                        /* add label */
+                        but_hbox.pack_start(but_label, true, true, 0);
+                        /* Add  button to view */
+                        album_hbox.pack_start(button, false, false,0);
+                        /* If clicked switch to browser */
+                        button.clicked.connect((source) => {
+                                stdout.printf("'%s' - '%s'\n", but_song.artist, but_song.album);
+                                set_album(but_song.artist, but_song.album);
+                                });
+                        albums++;
                     }
-                    list.append_new();
-                    list.type = MPD.Data.Type.SONG;
-                    list.song = new MPD.Song();
-                    list.song.artist = song.artist;
-                    list.song.album  = iter.tag;
-                    MPD.Database.search_field_start(server,MPD.Tag.Type.DATE);
-                    MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, song.artist);
-                    MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM, iter.tag);
-                    var ydata = MPD.Database.search_commit(server);
-                    if(ydata != null) {
-                        unowned MPD.Data.Item yi = ydata.get_first();
-                        while(list.song.date == null && yi != null)
-                        {
-                            if(yi.tag != null && yi.tag.length > 0) {
-                                list.song.date = yi.tag;
-                            }
-                            yi.next(false);
-                        }
-                    }
-                    iter.next(false);
-                }while(iter != null);
-            }
-
-            list.sort_album_disc_track();
-            if(list != null) {
-                unowned MPD.Data.Item iter = list.get_first();
-                do{
-                    button = new Gtk.Button();
-                    button.set_relief(Gtk.ReliefStyle.NONE);
-                    var but_hbox = new Gtk.HBox(false, 6);
-                    button.add(but_hbox);
-                    var image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ALBUM_ART, 48);
-                    var but_song = iter.song; 
-                    //                            but_song.artist = song.artist;
-                    //                          but_song.album = iter.tag;
-                    image.set_squared(true);
-                    image.update_from_song_delayed(but_song);
-
-                    but_hbox.pack_start(image, false, false, 0);
-
-                    var but_label = new Gtk.Label(iter.song.album);
-                    but_label.selectable = true;
-                    but_label.set_alignment(0.0f, 0.5f);
-                    var strlabel = "";
-                    if(iter.song.date != null && iter.song.date.length > 0) strlabel += "%s\n".printf(iter.song.date);
-                    if(iter.song.album != null) strlabel+= iter.song.album;
-                    else strlabel += _("No Album");
-                    but_label.set_markup(GLib.Markup.printf_escaped("<b>%s</b>",strlabel)); 
-                    but_label.set_ellipsize(Pango.EllipsizeMode.END);
-                    but_hbox.pack_start(but_label, true, true, 0);
-
-                    album_hbox.pack_start(button, false, false,0);
-
-                    button.clicked.connect((source) => {
-                            Gmpc.Browser.Metadata.show_album(song.artist, but_song.album);
-                            });
-                    albums++;
-
-                    iter.next(false);
-                }while(iter!= null);
+                }while(this.model_albums.iter_next(ref titer));
             }
 
             if(albums == 0) {
@@ -2610,6 +2570,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
 
 
     private uint update_timeout = 0;
+    /* If we get an update, wait for idle time, then do it.*/
     private void metadata_box_update()
     {
         if(this.update_timeout > 0) {
@@ -2722,6 +2683,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         if((what&MPD.Status.Changed.DATABASE) != 0)
         {
             this.reload_browsers();
+            /* Restore old selection */
             if(this.current != null) {
                 this.show_hitem(this.current.data);
             }
