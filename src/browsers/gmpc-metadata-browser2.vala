@@ -1352,8 +1352,11 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
          label.set_markup(Markup.printf_escaped("<b>%s:</b>",entry_label));
          if(image != null)
          {
+            /* Make sure the icon always lines out to the top */
+             var ali = new Gtk.Alignment (0f, 0f, 0f, 0f);
              var wimage = new Gtk.Image.from_icon_name(image, Gtk.IconSize.MENU);
-             box.pack_start(wimage, false, false, 0);
+             ali.add(wimage);
+             box.pack_start(ali, false, false, 0);
          }
          box.pack_start(label, true, true, 0);
          table.attach(box, j,(j+1),i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
@@ -1534,17 +1537,20 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         var control_hbox = new Gtk.HBox (false, 6);
 
         var abutton = new Gtk.Button.from_stock("gtk-add");
+        abutton.set_tooltip_text(_("Add the item to the play queue"));
         abutton.set_relief(Gtk.ReliefStyle.NONE);
         abutton.clicked.connect(add_selected_song);
         control_hbox.pack_start(abutton, false, false,0);
 
         abutton = new Gtk.Button.with_mnemonic(_("_Replace"));
+        abutton.set_tooltip_text(_("Replace the current play queue with this item"));
         abutton.set_image(new Gtk.Image.from_stock("gtk-redo", Gtk.IconSize.BUTTON));
         abutton.set_relief(Gtk.ReliefStyle.NONE);
         abutton.clicked.connect(replace_selected_song);
         control_hbox.pack_start(abutton, false, false,0);
 
         abutton = new Gtk.Button.from_stock("gtk-media-play");
+        abutton.set_tooltip_text(_("Play this item"));
         abutton.set_relief(Gtk.ReliefStyle.NONE);
         abutton.clicked.connect(play_selected_song);
         control_hbox.pack_start(abutton, false, false,0);
@@ -1750,7 +1756,6 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             if(song != null)
             {
                     this.set_song(song);
-//                Gmpc.MpdInteraction.play_path(song.file);
             }
         }
 
@@ -1850,7 +1855,14 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             }
 
         }
-        hbox.pack_start(MetadataBoxShowBaseEntry, false, false, 0);
+        /* Add clear icon */
+        MetadataBoxShowBaseEntry.set_icon_from_stock(Gtk.EntryIconPosition.SECONDARY, "gtk-clear");
+        MetadataBoxShowBaseEntry.icon_press.connect((source, pos, event) => {
+            source.set_text("");
+        });
+
+
+        hbox.pack_start(MetadataBoxShowBaseEntry, true, true, 0);
 
         vbox.pack_start(hbox, false, false, 0);
         /** 
@@ -1858,10 +1870,11 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
          */
         var sw = new Gtk.ScrolledWindow(null, null);
         sw.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC);
-        sw.set_shadow_type(Gtk.ShadowType.ETCHED_IN);
+        sw.set_shadow_type(Gtk.ShadowType.NONE);
         var base_model_filter_artist = new Gtk.TreeModelFilter(this.model_artist, null);
         base_model_filter_artist.set_visible_func(metadata_box_show_base_visible_func_artist);
         var base_tree_artist = new Gtk.TreeView.with_model(base_model_filter_artist);
+        base_tree_artist.headers_visible = false;
         base_tree_artist.rules_hint = true;
         new Gmpc.MpdData.Treeview.Tooltip(base_tree_artist, Gmpc.MetaData.Type.ARTIST_ART);
 
@@ -1889,7 +1902,6 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         sw.add(base_tree_artist);
         sw.set_size_request(-1, 400);
         vbox.pack_start(sw, false, false);
-
 
 
         MetadataBoxShowBaseEntry.changed.connect((source) => {
@@ -2071,11 +2083,13 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         hbox = new Gtk.HBox (false, 6);
 
         var button = new Gtk.Button.from_stock("gtk-add");
+        button.set_tooltip_text(_("Add the item to the play queue"));
         button.set_relief(Gtk.ReliefStyle.NONE);
         button.clicked.connect(add_selected_song);
         hbox.pack_start(button, false, false,0);
 
         button = new Gtk.Button.with_mnemonic(_("_Replace"));
+        button.set_tooltip_text(_("Replace the current play queue with this item"));
         button.set_image(new Gtk.Image.from_stock("gtk-redo", Gtk.IconSize.BUTTON));
         button.set_relief(Gtk.ReliefStyle.NONE);
         button.clicked.connect(replace_selected_song);
@@ -2310,11 +2324,13 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         hbox = new Gtk.HBox (false, 6);
 
         var button = new Gtk.Button.from_stock("gtk-add");
+        button.set_tooltip_text(_("Add the item to the play queue"));
         button.set_relief(Gtk.ReliefStyle.NONE);
         button.clicked.connect(add_selected_song);
         hbox.pack_start(button, false, false,0);
 
         button = new Gtk.Button.with_mnemonic(_("_Replace"));
+        button.set_tooltip_text(_("Replace the current play queue with this item"));
         button.set_image(new Gtk.Image.from_stock("gtk-redo", Gtk.IconSize.BUTTON));
         button.set_relief(Gtk.ReliefStyle.NONE);
         button.clicked.connect(replace_selected_song);
@@ -2694,7 +2710,6 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
      * History 
      */
      private enum HitemType {
-        CLEAR,
         BASE,
         ARTIST,
         ALBUM,
