@@ -379,6 +379,8 @@ static void mod_fill_clear_search_entry(GtkEntry * entry, GtkEntryIconPosition i
 		gtk_entry_set_text(GTK_ENTRY(entry), "");
 	}
 }
+
+
 static void pl3_current_playlist_browser_init(PlayQueuePlugin * self)
 {
 	GtkWidget *entry = NULL, *tree = NULL, *sw = NULL, *pl3_cp_sw;
@@ -392,6 +394,10 @@ static void pl3_current_playlist_browser_init(PlayQueuePlugin * self)
 	g_signal_connect(G_OBJECT(tree), "paste_after", G_CALLBACK(pl3_current_playlist_browser_paste_after_songs), self);
 	g_signal_connect_swapped(G_OBJECT(tree), "cut", G_CALLBACK(pl3_current_playlist_browser_delete_selected_songs),
 							 self);
+
+
+    /* Enable this for this model only */
+    gtk_tree_view_enable_model_drag_dest(GTK_TREE_VIEW(tree), gmt_targetentries, 1, GDK_ACTION_DEFAULT|GDK_ACTION_MOVE|GDK_ACTION_COPY);
 
 	/* filter */
 	self->priv->mod_fill = (GtkTreeModel *) gmpc_mpddata_model_new();
@@ -409,7 +415,6 @@ static void pl3_current_playlist_browser_init(PlayQueuePlugin * self)
 	g_signal_connect(G_OBJECT(entry), "key-press-event", G_CALLBACK(mod_fill_entry_key_press_event), self);
 	g_signal_connect(G_OBJECT(entry), "activate", G_CALLBACK(mod_fill_entry_activate), self);
 
-	gtk_tree_view_set_reorderable(GTK_TREE_VIEW(tree), TRUE);
 	sw = gtk_scrolled_window_new(NULL, NULL);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 	gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(sw), GTK_SHADOW_ETCHED_IN);

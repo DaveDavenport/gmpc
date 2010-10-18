@@ -39,7 +39,6 @@ requires 2.0.0
 
 class Gmpc:MpdData:Model:Playlist from Gmpc:MpdData:Model 
         (interface Gtk:Tree:Model)
-		(interface Gtk:Tree:Drag:Source)
 		(interface Gtk:Tree:Drag:Dest)
 {
     private GmpcConnection *conn = {NULL};
@@ -438,26 +437,6 @@ override (G:Object)
     /**
      * Moving interface 
      */
-		interface Gtk:Tree:Drag:Source
-		private 
-		gboolean row_draggable (Gtk:Tree:Drag:Source *drag_source, Gtk:Tree:Path *path)
-		{
-				return TRUE;
-		}
-
-        interface Gtk:Tree:Drag:Source
-        private 
-		gboolean drag_data_delete (Gtk:Tree:Drag:Source *drag_source, Gtk:Tree:Path *path) 
-		{
-			return TRUE;
-		}
-		interface Gtk:Tree:Drag:Source
-			private 
-		gboolean drag_data_get (Gtk:Tree:Drag:Source *drag_source, Gtk:Tree:Path *path, Gtk:Selection:Data *selection_data)
-		{
-			return FALSE;
-		}
-
         interface Gtk:Tree:Drag:Dest
             private gboolean row_drop_possible 
 					(Gtk:Tree:Drag:Dest *drag_dest,
@@ -466,7 +445,6 @@ override (G:Object)
 		{
 			return TRUE;
 		}
-   
 		interface Gtk:Tree:Drag:Dest
 		private gboolean drag_data_received 
 				(Gtk:Tree:Drag:Dest *drag_dest, 
@@ -482,6 +460,23 @@ override (G:Object)
            {
                return FALSE;
            }
+           if(model != GTK_TREE_MODEL(drag_dest)) {
+                GtkTreeIter iter;
+                mpd_Song *song = NULL;
+               ind = gtk_tree_path_get_indices(dest);
+               if(gtk_tree_model_get_iter(model, &iter, path)) 
+               {
+                   gtk_tree_model_get(model, &iter,MPDDATA_MODEL_COL_MPDSONG, &song, -1);
+                   if(song && song->file) {
+                       int destp = ind[0];
+                       int length = mpd_playlist_get_playlist_length(connection); 
+                       mpd_playlist_add(connection,song->file);
+                       if(destp >= 0)
+                           mpd_playlist_move_pos(connection, length, destp);
+                   }
+               }
+               return FALSE;
+           }
            if(GMPC_MPDDATA_MODEL(model)->num_rows < 2)
            {
                gtk_tree_path_free(path);
@@ -494,13 +489,14 @@ override (G:Object)
            {
                int original = ind2[0];
                int destination = ind[0];
-               /*		if(destination >0 && ind[1] != '\0') destination--; */
+     /*		if(destination >0 && ind[1] != '\0') destination--; */
                if(destination > original) destination--;
                mpd_playlist_move_pos(self->_priv->mi,original,destination);
            }
            gtk_tree_path_free(path);
            return TRUE;
        } 
+       /** */
        public 
        void
        trigger_total_playtime_signal(self)

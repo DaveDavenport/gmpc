@@ -77,7 +77,8 @@ requires 2.0.0
 
  class Gmpc:MpdData:Model from G:Object
           (interface Gtk:Tree:Sortable)
-          (interface Gtk:Tree:Model)
+            (interface Gtk:Tree:Drag:Source)
+            (interface Gtk:Tree:Model)
 {
     private gint stamp 		= {g_random_int()};
     public	GType types[MPDDATA_MODEL_N_COLUMNS]; 
@@ -1376,4 +1377,38 @@ end:
 
         return mpd_data_get_first(data);
     }
+
+    /* Drag and stop handling */
+
+
+		interface Gtk:Tree:Drag:Source
+		private 
+		gboolean row_draggable (Gtk:Tree:Drag:Source *drag_source, Gtk:Tree:Path *path)
+		{
+            GtkTreeIter iter;
+            if(gtk_tree_model_get_iter(GTK_TREE_MODEL(drag_source), &iter, path))
+            {
+                MpdData *data = iter.user_data; 
+                if(data->type == MPD_DATA_TYPE_SONG) {
+                    return TRUE;
+                }
+            }
+            return FALSE;
+        }
+
+        interface Gtk:Tree:Drag:Source
+        private 
+		gboolean drag_data_delete (Gtk:Tree:Drag:Source *drag_source, Gtk:Tree:Path *path) 
+		{
+			return TRUE;
+		}
+		interface Gtk:Tree:Drag:Source
+			private 
+		gboolean drag_data_get (Gtk:Tree:Drag:Source *drag_source, Gtk:Tree:Path *path, Gtk:Selection:Data *selection_data)
+		{
+            if(!gtk_tree_set_row_drag_data(selection_data,GTK_TREE_MODEL(drag_source), path)) {
+                return FALSE;
+            }
+			return TRUE;
+		}
 }

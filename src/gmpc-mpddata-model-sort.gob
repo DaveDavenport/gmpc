@@ -78,6 +78,7 @@ class Gmpc:MpdData:Model:Sort from Gmpc:MpdData:Model
 			GtkTreePath *path=NULL;
 			GtkTreeModel *model=NULL;
 			gint *ind = NULL, *ind2 = NULL;
+            printf("Got drop\n");
 			if(dest == NULL || !gtk_tree_get_row_drag_data(selection_data, &model, &path))
 			{
 				return FALSE;
