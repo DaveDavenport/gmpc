@@ -29,9 +29,6 @@
 #include "gmpc-mpddata-treeview.h"
 #include "advanced-search.h"
 #include "playlist3-playlist-editor.h"
-#ifdef USE_SYSTEM_LIBSEXY
-#include <libsexy/sexy-icon-entry.h>
-#endif
 
 static void pl3_find2_browser_destroy(void);
 static void pl3_find2_browser_selected(GtkWidget *);
@@ -155,8 +152,6 @@ static void pl3_find2_browser_type_plugin_changed(GtkComboBox * box, gpointer us
 	gtk_combo_box_set_active(GTK_COMBO_BOX(search_combo), 0);
 }
 
-#ifndef USE_SYSTEM_LIBSEXY
-#if GTK_CHECK_VERSION(2,16,0)
 static void pl3_find2_browser_clear_search_entry(GtkEntry * entry, GtkEntryIconPosition icon_pos, GdkEvent * event,
 												 gpointer user_data)
 {
@@ -165,8 +160,7 @@ static void pl3_find2_browser_clear_search_entry(GtkEntry * entry, GtkEntryIconP
 		gtk_entry_set_text(GTK_ENTRY(entry), "");
 	}
 }
-#endif
-#endif
+
 /**
  * Construct the browser 
  */
@@ -259,16 +253,13 @@ static void pl3_find2_browser_init(void)
 	gtk_box_pack_start(GTK_BOX(hbox), search_combo, FALSE, TRUE, 0);
 	g_signal_connect(G_OBJECT(search_combo), "changed", G_CALLBACK(pl3_find2_combo_box_field_changed), pl3_find2_curpl);
 
-#ifdef USE_SYSTEM_LIBSEXY
-	search_entry = sexy_icon_entry_new();
-	sexy_icon_entry_add_clear_button(SEXY_ICON_ENTRY(search_entry));
-#else
+
+
 	search_entry = gtk_entry_new();
-#if GTK_CHECK_VERSION(2,16,0)
 	gtk_entry_set_icon_from_stock(GTK_ENTRY(search_entry), GTK_ENTRY_ICON_SECONDARY, GTK_STOCK_CLEAR);
 	g_signal_connect(GTK_ENTRY(search_entry), "icon-press", G_CALLBACK(pl3_find2_browser_clear_search_entry), NULL);
-#endif
-#endif
+
+
 	entrcomp = gtk_entry_completion_new();
 	gtk_entry_completion_set_text_column(entrcomp, 0);
 	gtk_entry_completion_set_inline_completion(entrcomp, TRUE);

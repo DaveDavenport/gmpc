@@ -120,9 +120,6 @@ LIBS= \
 	@libxspf_LIBS@\
     @sqlite3_LIBS@
 
-if USE_SYSTEM_LIBSEXY
-LIBS += @libsexy_LIBS@
-endif
 
 if HAVE_UNIQUE
     LIBS += @unique_LIBS@;
@@ -156,9 +153,6 @@ AM_CFLAGS = @CFLAGS@\
 	-DPACKAGE_LIB_DIR=\""$(pkglibdir)"\"\
 	-DPACKAGE_DATA_DIR=\""$(datarootdir)"\"
 
-if USE_SYSTEM_LIBSEXY
-AM_CFLAGS += @libsexy_CFLAGS@
-endif
 
 if HAVE_UNIQUE
     AM_CFLAGS += @unique_CFLAGS@ 

@@ -34,9 +34,6 @@
 #include "misc.h"
 #include "gmpc-mpddata-treeview.h"
 #include "gmpc-mpddata-model.h"
-#ifdef USE_SYSTEM_LIBSEXY
-#include <libsexy/sexy-icon-entry.h>
-#endif
 #include <libmpd/libmpd-internal.h>
 #include "playlist3.h"
 #include "playlist3-playlist-editor.h"
@@ -897,9 +894,6 @@ static void tag2_songlist_clear_selection(GtkWidget * button, tag_browser * brow
 		g_signal_handlers_unblock_by_func(G_OBJECT(te->sentry), tag2_sentry_changed, te);
 	}
 }
-
-#ifndef USE_SYSTEM_LIBSEXY
-#if GTK_CHECK_VERSION(2,16,0)
 static void tag_browser_clear_search_entry(GtkEntry * entry, GtkEntryIconPosition icon_pos, GdkEvent * event,
 										   gpointer user_data)
 {
@@ -909,8 +903,6 @@ static void tag_browser_clear_search_entry(GtkEntry * entry, GtkEntryIconPositio
 	}
 
 }
-#endif
-#endif
 
 static void tag2_songlist_add_tag(tag_browser * browser, const gchar * name, int type)
 {
@@ -924,18 +916,12 @@ static void tag2_songlist_add_tag(tag_browser * browser, const gchar * name, int
 	te->index = g_list_length(browser->tag_lists);
 	te->model = (GtkTreeModel *) gmpc_mpddata_model_new();
 
-#ifdef USE_SYSTEM_LIBSEXY
-	te->sentry = sexy_icon_entry_new();
-#else
 	te->sentry = gtk_entry_new();
-#if GTK_CHECK_VERSION(2,16,0)
 	gtk_entry_set_icon_from_stock(GTK_ENTRY(te->sentry), GTK_ENTRY_ICON_SECONDARY, GTK_STOCK_CLEAR);
 	g_signal_connect(GTK_ENTRY(te->sentry), "icon-press", G_CALLBACK(tag_browser_clear_search_entry), NULL);
 
 	gtk_entry_set_icon_from_stock(GTK_ENTRY(te->sentry), GTK_ENTRY_ICON_PRIMARY, GTK_STOCK_FIND);
 	gtk_entry_set_icon_activatable(GTK_ENTRY(te->sentry), GTK_ENTRY_ICON_PRIMARY, FALSE);
-#endif
-#endif
 	g_signal_connect_swapped(G_OBJECT(te->sentry), "activate", G_CALLBACK(tag2_sentry_changed_real), te);
 	te->sw = gtk_scrolled_window_new(NULL, NULL);
 	te->vbox = gtk_vbox_new(FALSE, 6);
@@ -957,9 +943,6 @@ static void tag2_songlist_add_tag(tag_browser * browser, const gchar * name, int
 	gtk_widget_set_no_show_all(te->sentry, TRUE);
 	gtk_widget_hide(te->sentry);
 
-#ifdef USE_SYSTEM_LIBSEXY
-	sexy_icon_entry_add_clear_button(SEXY_ICON_ENTRY(te->sentry));
-#endif
 
 	g_signal_connect(G_OBJECT(te->sentry), "changed", G_CALLBACK(tag2_sentry_changed), te);
 	g_signal_connect(G_OBJECT(te->sentry), "key-press-event", G_CALLBACK(tag2_key_entry_key_press_event), te);

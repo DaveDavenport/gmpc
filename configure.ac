@@ -246,27 +246,6 @@ PKG_CHECK_MODULES([sqlite3], sqlite3)
 AC_SUBST(sqlite3_LIBS)
 AC_SUBST(sqlite3_CFLAGS)
 
-# libsexy 
-AC_ARG_ENABLE([system-libsexy],
-              [--enable-system-libsexy Use system libsexy instead of bundles.], 
-	          [case "${enableval}" in
-		            yes)    system_libsexy=true;;
-		             no)    system_libsexy=false;;
-		              *)    AC_MSG_ERROR([bad value ${enableval} for --enable-system-libsexy]);;
-               esac],
-               [system_libsexy=detect])
-if test "x$system_libsexy" = "xdetect"; then
-	PKG_CHECK_MODULES([libsexy], libsexy, system_libsexy=true, system_libsexy=false)
-fi
-if test "x$system_libsexy" = "xtrue"; then
-	PKG_CHECK_MODULES([libsexy], libsexy)
-	AC_SUBST(libsexy_LIBS)
-	AC_SUBST(libsexy_CFLAGS)
-	AC_DEFINE([USE_SYSTEM_LIBSEXY], 1, [Use system libsexy instead of bundled])
-fi
-
-AM_CONDITIONAL(USE_SYSTEM_LIBSEXY, [test x$system_libsexy = xtrue])
-
 # installation paths
 AC_MSG_CHECKING(prefix)
 
@@ -515,11 +494,6 @@ if test x${enable_mmkeys} = xyes; then
 	echo "Multimedia keys support is:       enabled"
 else
 	echo "Multimedia keys support is:       disabled"
-fi
-if test "x$system_libsexy" = "xtrue"; then 
-	echo "Use system libsexy:               enabled"
-else
-	echo "Use system libsexy:               disabled"
 fi
 if test "x$macige" = "xyes"; then 
 	echo "Use mac integration library:      enabled"
