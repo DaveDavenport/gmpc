@@ -1250,6 +1250,14 @@ static void pl3_file_browser_status_changed(MpdObj * mi, ChangedStatusType what,
 	{
 		pl3_file_browser_reupdate();
 	}
+    /* We might not be able to read the data.
+     * because off insufficient permission.
+     * So if permission failed, lets reload things (it is fairly cheap.
+     */
+    else if (what & MPD_CST_PERMISSION)
+    {
+		pl3_file_browser_reupdate();
+    }
 }
 
 static void pl3_file_browser_destroy(void)
