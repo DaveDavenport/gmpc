@@ -2455,55 +2455,14 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             i++;
         }
 
-        /* Track changed pages */
-        notebook.notify["page"].connect((source,spec) => {
-                var page = notebook.get_current_page();
-                config.set_int("MetaData", "artist-last-page", (int)page);
-
-                });
-        /* Restore right page */
-        if(i > 0){
-            var page = config.get_int_with_default("MetaData", "artist-last-page", 0);
-            if(page > i)
-            {
-                notebook.set_current_page(0);
-            }else{
-                /* The list is in reversed order, compensate for that. */
-                var w = group.nth_data(i-page-1);
-                w.set_active(true);
-                notebook.set_current_page(page);
-            }
-        }
-
-
-        ali = new Gtk.Alignment(0.0f, 0.5f,0f,0f);
-        ali.add(hboxje);
-
-        /* Create pane in 2. */
-        var bottom_hbox = new Gtk.HBox(false, 6);
-        /* left pane */
-        var metadata_vbox = new Gtk.VBox(false, 6);
-        metadata_vbox.pack_start(ali, false, false, 0);
-        sep = new Gtk.HSeparator();
-        sep.set_size_request(-1, 1);
-        metadata_vbox.pack_start(sep, false, false, 0);
-        metadata_vbox.pack_start(notebook, false, false, 0);
-
-        bottom_hbox.pack_start(metadata_vbox, true, true, 0);
-        /* Create album list */
         if( song.artist != null)
         {
-            var sep2 = new Gtk.VSeparator();
-            sep2.set_size_request(-1, 4);
-            bottom_hbox.pack_start(sep2, false, false, 0);
             int albums =0;
             /* Create album list */
-            ali = new Gtk.Alignment(0.0f, 0.0f, 0.0f, 0.0f);
             var album_hbox = new Gtk.VBox(false, 6);
             album_hbox.set_size_request(250, -1);
-            ali.add(album_hbox);
-            bottom_hbox.pack_start(ali, false, false, 0);
-
+            //bottom_hbox.pack_start(ali, false, false, 0);
+/*
             label = new Gtk.Label(song.artist);
             label.selectable = true;
             label.set_size_request(240, -1);
@@ -2512,7 +2471,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             label.set_line_wrap(true);
             label.set_alignment(0.0f, 0.5f);
             album_hbox.pack_start(label, false, false,0);
-
+*/
             /**
              * Reuse the album browser view. 
              */
@@ -2565,13 +2524,55 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
                 }while(this.model_albums.iter_next(ref titer));
             }
 
-            if(albums == 0) {
-                album_hbox.destroy();
-                sep2.destroy();
+            notebook.append_page(album_hbox, new Gtk.Label(_("Albums")));
+            var button_sl = new Gtk.RadioButton.with_label(group,_("Albums"));
+            group = button_sl.get_group();
+            hboxje.pack_start(button_sl, false, false, 0);
+            var j = i;
+            button_sl.clicked.connect((source) => {
+                    if((source as Gtk.CheckButton).get_active()) {
+                        debug("notebook page %i clicked", j);
+                        notebook.set_current_page(j);
+                    }
+            });
+            album_hbox.show();
+            i++;
+        }
+
+        /* Track changed pages */
+        notebook.notify["page"].connect((source,spec) => {
+                var page = notebook.get_current_page();
+                config.set_int("MetaData", "artist-last-page", (int)page);
+
+                });
+        /* Restore right page */
+        if(i > 0){
+            var page = config.get_int_with_default("MetaData", "artist-last-page", 0);
+            if(page > i)
+            {
+                notebook.set_current_page(0);
+            }else{
+                /* The list is in reversed order, compensate for that. */
+                var w = group.nth_data(i-page-1);
+                w.set_active(true);
+                notebook.set_current_page(page);
             }
         }
 
-        vbox.pack_start(bottom_hbox, true, true, 0);
+
+        ali = new Gtk.Alignment(0.0f, 0.5f,0f,0f);
+        ali.add(hboxje);
+
+        /* left pane */
+        var metadata_vbox = new Gtk.VBox(false, 6);
+        metadata_vbox.pack_start(ali, false, false, 0);
+        sep = new Gtk.HSeparator();
+        sep.set_size_request(-1, 1);
+        metadata_vbox.pack_start(sep, false, false, 0);
+        metadata_vbox.pack_start(notebook, false, false, 0);
+
+
+        vbox.pack_start(metadata_vbox, true, true, 0);
 
 
         /**
@@ -2839,6 +2840,15 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         bc_ali.add(bc_box);
         hist_box.pack_start(bc_ali, false, false, 0);
         /* The 'BASE' button */
+        if(artist == null && album == null && title==null)
+        {
+            var ali = new Gtk.Alignment(0.5f,0.5f, 0f, 0f);
+            ali.set_padding(6,6,6,6);
+            var image = new Gtk.Image.from_icon_name("gmpc-metabrowser", Gtk.IconSize.MENU);
+            ali.add(image);
+            bc_box.pack_start(ali, true, true, 0);
+        }
+        else
         {
            var button = new Gtk.Button();
             button.set_relief(Gtk.ReliefStyle.NONE);
@@ -2916,7 +2926,9 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         box.pack_end(next_but, false, false, 0);
         if(current != null && (current.next != null || current.prev != null))
         {
-            var dd_but = new Gtk.Button.with_label("L");
+            var dd_but = new Gtk.Button();
+            var arrow = new Gtk.Arrow(Gtk.ArrowType.DOWN, Gtk.ShadowType.ETCHED_IN);
+            dd_but.add(arrow);
             dd_but.set_relief(Gtk.ReliefStyle.NONE);
             dd_but.clicked.connect(history_show_list);
             box.pack_end(dd_but, false, false, 0);
