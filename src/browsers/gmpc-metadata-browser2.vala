@@ -2142,30 +2142,6 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             var sw = new Gtk.ScrolledWindow(null, null);
             sw.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.NEVER);
             sw.set_shadow_type(Gtk.ShadowType.ETCHED_IN);
-            string albumartist = null;
-            if(Gmpc.server.tag_supported(MPD.Tag.Type.ALBUM_ARTIST))
-            {
-                MPD.Database.search_field_start(server, MPD.Tag.Type.ALBUM_ARTIST);
-                MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM, album);
-                MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, artist);
-                var ydata = MPD.Database.search_commit(server);
-                if(ydata != null)
-                {
-                    if(ydata.tag.length > 0)
-                        albumartist = ydata.tag;
-                }
-            } 
-            MPD.Database.search_start(server,true);
-            if(albumartist != null&& albumartist.length > 0)
-                MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM_ARTIST, albumartist);
-            else
-                MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, artist);
-
-            if(album != null)
-                MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM, album);
-            var data = MPD.Database.search_commit(server);
-            data.sort_album_disc_track();
-            songs.set_mpd_data((owned)data);
             song_tree = new Gmpc.MpdData.TreeView("metadata-album-songs", true,songs); 
             song_tree.enable_click_fix();
             song_tree.button_release_event.connect(album_song_tree_button_press_event);
@@ -2179,8 +2155,38 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             group = rbutton.get_group();
             hboxje.pack_start(rbutton, false, false, 0);
             var j = i;
+            bool seen = false;
             rbutton.clicked.connect((source) => {
                     debug("notebook page %i clicked", j);
+                    if(!seen) 
+                    {
+                        string albumartist = null;
+                        if(Gmpc.server.tag_supported(MPD.Tag.Type.ALBUM_ARTIST))
+                        {
+                            MPD.Database.search_field_start(server, MPD.Tag.Type.ALBUM_ARTIST);
+                            MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM, album);
+                            MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, artist);
+                            var ydata = MPD.Database.search_commit(server);
+                            if(ydata != null)
+                            {
+                                if(ydata.tag.length > 0)
+                                albumartist = ydata.tag;
+                            }
+                        } 
+                        MPD.Database.search_start(server,true);
+                        if(albumartist != null&& albumartist.length > 0)
+                            MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM_ARTIST, albumartist);
+                        else
+                            MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, artist);
+
+                        if(album != null)
+                            MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM, album);
+                        var data = MPD.Database.search_commit(server);
+                        data.sort_album_disc_track();
+                        songs.set_mpd_data((owned)data);
+
+                        seen = true;
+                    }
                     notebook.set_current_page(j);
                     });
 
@@ -2408,11 +2414,6 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             var sw = new Gtk.ScrolledWindow(null, null);
             sw.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.NEVER);
             sw.set_shadow_type(Gtk.ShadowType.ETCHED_IN);
-            MPD.Database.search_start(server,true);
-            MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, artist);
-            var data = MPD.Database.search_commit(server);
-            data.sort_album_disc_track();
-            songs.set_mpd_data((owned)data);
             song_tree = new Gmpc.MpdData.TreeView("metadata-artist-songs", true,songs); 
             song_tree.enable_click_fix();
             song_tree.button_release_event.connect(album_song_tree_button_press_event);
@@ -2426,9 +2427,18 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             group = rbutton.get_group();
             hboxje.pack_start(rbutton, false, false, 0);
             var j = i;
+            var seen = false;
             rbutton.clicked.connect((source) => {
                     if((source as Gtk.CheckButton).get_active()) {
                         debug("notebook page %i clicked", j);
+                        if(!seen) {
+                            MPD.Database.search_start(server,true);
+                            MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, artist);
+                            var data = MPD.Database.search_commit(server);
+                            data.sort_album_disc_track();
+                            songs.set_mpd_data((owned)data);
+                            seen = true;
+                        }
                         notebook.set_current_page(j);
                     }
                     });
@@ -2461,17 +2471,6 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             /* Create album list */
             var album_hbox = new Gtk.VBox(false, 6);
             album_hbox.set_size_request(250, -1);
-            //bottom_hbox.pack_start(ali, false, false, 0);
-/*
-            label = new Gtk.Label(song.artist);
-            label.selectable = true;
-            label.set_size_request(240, -1);
-            label.set_markup(GLib.Markup.printf_escaped("<span size='x-large' weight='bold' color='%s'>%s</span><span size='x-large' weight='bold'> %s</span>",this.item_color,_("Albums by"), song.artist));
-            label.set_line_wrap_mode(Pango.WrapMode.WORD_CHAR);
-            label.set_line_wrap(true);
-            label.set_alignment(0.0f, 0.5f);
-            album_hbox.pack_start(label, false, false,0);
-*/
             /**
              * Reuse the album browser view. 
              */
