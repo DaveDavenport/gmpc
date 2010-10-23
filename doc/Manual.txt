@@ -1,0 +1,453 @@
+GMPC Manual - The interface
+===========================
+:Author:  Qball
+:Email: Qball@gmpclient.org
+:Date: today
+:Revision: 0.01
+
+
+== The main interface
+
+The following image displays GMPC's main window:
+
+image:Images/main-window.png[]
+
+If you collapse the main window, parts of the window might be hidden. 
+Currently there are 2 collapsed views.
+
+Collapsed view 1:
+
+image:Images/main-window-collapsed1.png[]
+
+Collapsed view 2:
+
+image:Images/main-view-collapsed2.png[]
+
+Below we will explain each part of the window.
+
+
+=== The menu bar
+image:Images/menu-bar.png[]
+
+The menu bar gives you direct acces to every part of the program. You can control playback (control item), configure gmpc, enable outputs, switch to another profile, etc.
+
+
+NOTE: There  might be more or less menu items available depending on the number of plugins installed.
+
+* Music
+** 'Connect' - Connect to MPD.
+** 'Disconnect' - Disconnect from MPD.
+** 'Send password' - Send a new password to MPD. This can either increase or drop the permission level.
+** 'Profiles' - A submenu containing a list of possible profiles
+*** List of profiles
+** 'Preferences' - Opens the preferences pane. xref:preferences[(more here)] 
+** 'Quit' - Completely quits GMPC.
+* Server
+** 'Update database' - Tells MPD to update the complete database.
+** 'Information' - Opens a window with server information. xref:server-information[(more here)]
+** List of outputs available on the connected MPD. This allows you to enable and disable them.
+* Control
+** 'Play/Pause'
+** 'Stop'
+** 'Next'
+** 'Previous'
+** 'Mute' - Toggles mute state. (Set volume to 0, and restores it again.)
+** 'Repeat' - Enable/Disable repeat.
+** 'Random' - Enable/Disable random.
+** 'Single mode' - Enable/Disable single mode. Single mode makes MPD not progres to the next song.
+** 'Consume' - Enable/Disable consume mode. Consume mode makes MPD remove played songs from the play-queue.
+* View
+** 'Expand Interface' - Makes GMPC interface include more elements. 
+** 'Collapse Interface' - Hides elements from the GMPC interface.
+** 'Fullscreen' - Switch to fullscreen mode.
+** 'Show artist image' - Enable/Disable an artist image to be embedded below the sidebar.
+* Option
+** These show options for the current visible browser.
+* Tool
+** 'Add Url' - Add a remote URI  to the play-queue. xref:add-url[(see here)]
+** List of global options that are inserted by plugins.
+* Go
+** Gives a list of enabled browsers and allows you to switch between them quickly. 
+* Help
+** 'Show messages' - Shows you a list of messages, warnings and information that GMPC have shown in the past.
+** 'Visit website' - Opens GMPC's website.
+** 'Getting Help' - Opens GMPC's Wiki on the getting help page.
+** 'Bug information' -  Opens a dialog with information about your current GMPC. xref:bug-information[(more here)]
+** 'Easy command help' - Opens a list of possible commands for the easy-command dialog. More information can be found xref:easy-command[here].
+** 'About' - Opens about dialog.
+
+=== Playback Controls
+image:Images/playback-control.png[]
+
+
+I will explain the elements from left to right.
+
+==== Album Cover
+image:Images/pc-cover.png[]
+
+This shows cover of the currently playing album. If no cover is available, or the song has not information about it, an empty case or cd is shown.
+
+[TIP]
+=================================
+* Hovering the cover will show an enlarged version of the cover.
+* Right mouse click on the cover allows you to modify it.
+* You can modify the look of the cover art in the preferences pane. (With or withouth the casing)
+
+
+image:Images/pc-cover.png["With casing"]
+image:Images/pc-cover-plain.png["Withouth casing"]
+
+=================================
+
+==== Song information
+image:Images/pc-song-info.png[]
+
+Next to it is basic information about the song. This shows the Title, artist and album name.
+
+TIP: If you click on the title, artist or album name it will jump to that item in the Metadata Browser.
+
+
+==== Favorite 
+image:Images/pc-favorite-nhl.png[]
+
+The heart-shaped icon allows you to mark (or unmark) the song as favorite by clicking in on it.
+
+If the song is marked as favorite the icon is highlighted, if it is not a favorite, the icon is dimmed.
+
+* image:Images/pc-favorite-hl.png["Song is a favorite"]
+Marked as favorite:
+* image:Images/pc-favorite-nhl.png["Sog is not a favorite"]
+Not marked as favorite:
+
+
+Favorite songs are stored in a playlist called Favorite.
+
+
+TIP: Right click on the favorite icon allows you to add the current song to any playlist.
+
+WARNING: To make favorites work, MPD needs to be able to store and load playlists.
+
+
+
+==== Playback Control
+image:Images/pc-playback-control.png[]
+
+Offcourse the playback control buttons are also available: Play/Pause, Previous, Next, Stop and volume control.
+
+
+[CAUTION]
+=====================================================================
+* You need sufficient permission to control playback. If you do not have the permission, the buttons wil be made insensitive.
+* If there is no output mixer defined in MPD, or it is not currently available. The Volume control is made insensitive.
+====================================================================
+
+TIP: Hovering your mouse over the next button will show a tooltip with the title of the next song.
+
+==== Seek bar
+image:Images/pc-seek-bar.png[]
+
+Below is the progress/seek bar. This indicates how much of the song is allready played. 
+You can drag the bar to a certain position to seek. Pressing the middle mouse button will instantly jump to that position. 
+
+On the right off the seekbar is the progressed time (or remaining, see tip) and the total time of the song (if available).
+
+
+[TIP]
+=======================
+* Right mouse click on the seekbar changes the time indication from progressed time to remaining time and back.
+* Hovering the progress bar  will show you the time (or remaining) under the cursor. Allowing you to seek exactly to one point.
+=======================
+
+NOTE: Seeking is not instant, but the seek is done as you drop the handle. This is done so MPD is not spammed with seek requests.
+
+=== Message bar
+image:Images/message-bar.png[]
+
+The message bar is only visible when GMPC has to tell you something. The messsage bar can show information, warning and errors. 
+
+A list of previous shown (or hidden) messages can be seen in the Show messages window under Help->show messages.
+
+TIP: You can set what message should be shown in the message bar in the xref:preferences[preferences].
+
+=== Sidebar
+image:Images/sidebar.png[]
+
+The sidebar allows you to switch between different browsers. 
+You can reorder the browsers by drag and dropping them to there new place in the list.
+What browsers are visible depend on the plugins installed and settings.
+
+If you collapse the view the sidebar is turned into a horizontal selector:
+
+image:Images/sidebar-hori1.png[]
+
+Or if configured differently in the xref:preferences[preferences], a list of buttons:
+
+image:Images/sidebar-hori2.png[]
+
+
+TIP: The top browser is always selected when you connect to an MPD server.
+
+NOTE: When collapsing the view, the sidebar is turned into a horizontal view, below the playback controls and when collapsed further the sidebar is hidden.
+
+=== Browser window
+
+The browser window contains the actual browser, how this looks depends on the selected view. Browsers should (normally) follow the same generic layout.
+Either one large pane (like now playing, search, play-queue, etc). Or 2 panes (like database, metadata browser, etc), where the size of the panes is synced between the browsers. 
+
+One pane view:
+
+image:Images/browser-pane-single.png[]
+
+Two pane view:
+
+image:Images/browser-pane-double.png[]
+
+NOTE: When the view is completely collapsed the Browser window is hidden.
+
+=== Statusbar
+image:Images/status-bar.png[]
+
+At the bottom of the screen is the status bar. The statusbar is hidden when gmpc is fully collapsed.
+
+The status bar consists of 2 parts:
+
+On the left there is a message block. This shows feedback about changes, like 'repeat enabled', '10 songs added to play-queue'. It indicates if some action was succesful.
+
+On the right there are status icons. 
+
+==== Status icons
+image:Images/status-icons.png[]
+
+Status icons are small icons indicating the state of a setting, a plugin or shows that something is in progress. 
+
+Currently GMPC always shows the following status icons:
+
+* Repeat
+* Random
+* Single mode
+* Consume 
+
+Some icons only show when f.e. MPD is updating it database.
+All status icons should have a tooltip.
+
+NOTE: Clicking a status icon may change it state.
+
+NOTE: Some status icons, like from the gmpc-shout plugin, can have a context menu.
+
+[[preferences]]
+== Preferences
+
+=== Connection
+image:Images/preferences-connection.png[]
+
+=== Server Settings
+image:Images/preferences-server-settings.png[]
+
+=== Interface 
+image:Images/preferences-interface.png[]
+
+=== Tag Based Browser 
+image:Images/preferences-tag-based-browser.png[]
+
+=== Multimedia Keys
+image:Images/preferences-multimedia-keys.png[]
+
+=== Notification
+image:Images/preferences-notification.png[]
+
+=== Metadata Handler
+image:Images/preferences-metadata-handler.png[]
+
+=== Proxy
+image:Images/preferences-proxy.png[]
+
+=== Metadata Browser
+image:Images/preferences-metadata-browser.png[]
+
+== Metadata Selector
+image:Images/meta-data-selector-artist.png[]
+image:Images/meta-data-selector-lyrics.png[]
+
+If gmpc fails to find the right metadata, you can view all the results in the metadata selector.  You can edit the exact value off the query fields and retry the query.
+As you can see in the above screenshots you can see the results, where they came from and the size (if it is an image)
+
+The following items can be selected:
+
+* Artist art
+* Album cover
+* Song lyric
+* Album Information
+* Artist Biography
+* Guitar tab.
+
+You can open the metadata selector by right clicking on the metadata item, f.e. a lyrics and selecting 'metadata selector'.
+
+== Browsers
+
+=== Now Playing
+
+=== Database
+
+=== Play Queue
+
+=== Tag Browser
+
+=== Search
+
+=== Metadata Browser
+
+== Server Information
+
+[[query-syntax]]
+== Query Syntax
+
+The query syntax is used in the search browser, the playlist quick search and in easy command.
+
+The syntax consist of the following:
+
+---------------
+<field>=<value>
+---------------
+
+This will search for value in the field field.
+
+The following fields are supported:
+
+    artist
+    album
+    title
+    track
+    Name (applies to streams)
+    Genre
+    Date
+    Composer
+    Performer
+    Comment
+    Disc
+    Filename
+    AlbuArtist
+    Any (searches all the above fields) 
+
+If your MPD does not support any of these fields, they will be ignored and seen as part of the command.
+
+The search is tokenized and case insensitive, so for example:
+
+-------------------
+artist=eric clapton
+-------------------
+
+Will match both "eric clapton", "Clapton, Eric". To stop this tokenization wrap the values in (). For example:
+
+---------------------
+artist=(Eric Clapton)
+---------------------
+
+Will not match "Clapton, Eric".
+
+
+To refine you search multiple queries can be concattenated:
+
+for example:
+
+----------------------------------
+artist=Eric Clapton album=Slowhand
+----------------------------------
+
+
+There is also an option to run multiple queries at once by using the or operator ||:
+
+-----------------------------------------
+artist=Eric Clapton || artist=Norah Jones
+-----------------------------------------
+
+This will return all songs by Eric Clapton and Norah Jones.
+
+
+Note; if <field= > is ommited, all fields are searched. 
+
+
+== Easy Command
+image:Images/Gmpc-easy-command.png[]
+
+GMPC has an feature called "easy command". Easy command gives you a small command box, allowing you to quickly execute commands without having to use the mouse.
+
+For example, send the command to gmpc to search in the play queue for the song Holy Mother from the artist Eric Clapton and play that song immediately the following could easily be typed.
+
+First, start the "easy command" mode:
+
+----------
+ctrl-space
+----------
+
+Next, type the following command:
+
+------------------------------------------
+play title=Holy mother artist=Eric Clapton
+------------------------------------------
+
+You can also concattenate commands:
+
+--------------------------------------------
+clear; add artist=Strehli; play title=SRV
+--------------------------------------------
+
+You can also bind a global one in preferences->Multimedia Keys.
+
+Some commands use the xref:query-syntax[Query syntax]
+
+=== Implemented Easy Commands
+To get a more uptodate list of possible commands, see 'help->Easy command help' in gmpc.
+
+====  Switch
+
+*    switch play queue: Switch to play queue
+*    switch metadata browser: Switch to the metadata browser
+*    switch search: Switch to the search browser 
+
+==== Main
+
+*    quit: Quit gmpc
+*    hide: Hide gmpc
+*    show: Show gmpc
+*    show notification: Show the tray-icon notification. (if enabled) 
+
+==== Playback
+
+*    play: start playback
+*    pause: pause playback
+*    next: next song
+*    prev: previous song
+*    stop: stop playback
+*    random (on|off): Random (on|off)
+*    repeat (on|off): Repeat (on|off)
+*    volume [+-]?[0-9]+: Volume <level>
+*    mute: Mute
+*    play .*: Play <query> 
+
+*    seek hh:mm:ss: Seek to position
+*    seek +hh:mm:ss: Seek relative to current position
+*    seek -hh:mm:ss: Seek backwards relative to current position 
+
+
+*    repeat current song: Repeats the currently playing song forever
+*    stop after current song: Stops playback after current song.
+*    consume (on|off)
+*    single (on|off) 
+
+==== Play-Queue Manipulation
+
+*    add .*: Add <query>
+*    replace .*: Replace <query>
+*    Clear play queue: Clear play queue 
+*    Crop current song: Clears the whole play queue without removing the current playing song. 
+
+==== Search
+
+*    search database .*: Search database <query>
+*    search playlist .*: Search playlist <query> 
+
+==== Metadata Browser
+
+*    show current song: Show the page of the current playing song.
+*    show current artist: Show the page of the current playing artist.
+*    show current album: Show the page of the current playing album. 
