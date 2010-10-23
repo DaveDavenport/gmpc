@@ -48,6 +48,12 @@ void preferences_window_destroy(void);
 
 int plugin_last;
 
+gboolean preferences_window_expose_event_cb(GtkWidget *widget, GdkEventExpose *event, gpointer data)
+{
+
+
+    return TRUE;
+}
 static void pref_plugin_changed(void)
 {
 	GtkTreeSelection *sel =
@@ -230,6 +236,13 @@ void create_preferences_window(void)
 			}
 		}
 	}
+    {
+
+        GtkWidget *widget = (GtkWidget *) gtk_builder_get_object(xml_preferences_window,
+                "eventbox_background");
+
+        gtk_widget_modify_bg(widget, GTK_STATE_NORMAL, &(dialog->style->base[GTK_STATE_NORMAL]));
+    }
 
 	label = (GtkWidget *) gtk_builder_get_object(xml_preferences_window, "plugin_label_box");
 	gtk_widget_set_app_paintable(label, TRUE);

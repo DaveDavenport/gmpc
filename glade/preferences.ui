@@ -1,14 +1,14 @@
-<?xml version="1.0"?>
-<!--*- mode: xml -*-->
+<?xml version="1.0" encoding="UTF-8"?>
 <interface>
+  <!-- interface-requires gtk+ 2.12 -->
+  <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkDialog" id="preferences_window">
     <property name="title" translatable="yes">gmpc - Configuration</property>
     <property name="default_width">600</property>
     <property name="default_height">450</property>
-    <property name="type_hint">GDK_WINDOW_TYPE_HINT_NORMAL</property>
-    <property name="has_separator">False</property>
-    <signal handler="preferences_window_destroy" name="close"/>
-    <signal handler="preferences_window_destroy" name="response"/>
+    <property name="type_hint">normal</property>
+    <signal name="close" handler="preferences_window_destroy"/>
+    <signal name="response" handler="preferences_window_destroy"/>
     <child internal-child="vbox">
       <object class="GtkVBox" id="dialog-vbox1">
         <property name="visible">True</property>
@@ -21,9 +21,9 @@
               <object class="GtkScrolledWindow" id="scrolledwindow6">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="hscrollbar_policy">GTK_POLICY_NEVER</property>
-                <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
-                <property name="shadow_type">GTK_SHADOW_IN</property>
+                <property name="hscrollbar_policy">never</property>
+                <property name="vscrollbar_policy">automatic</property>
+                <property name="shadow_type">in</property>
                 <child>
                   <object class="GtkTreeView" id="plugin_tree">
                     <property name="visible">True</property>
@@ -35,47 +35,55 @@
               </object>
               <packing>
                 <property name="expand">False</property>
+                <property name="position">0</property>
               </packing>
             </child>
             <child>
-              <object class="GtkFrame" id="frame14">
+              <object class="GtkEventBox" id="eventbox_background">
                 <property name="visible">True</property>
-                <property name="label_xalign">0</property>
-                <property name="shadow_type">GTK_SHADOW_IN</property>
                 <child>
-                  <object class="GtkVBox" id="vbox28">
+                  <object class="GtkFrame" id="frame14">
                     <property name="visible">True</property>
+                    <property name="label_xalign">0</property>
+                    <property name="shadow_type">in</property>
                     <child>
-                      <object class="GtkEventBox" id="plugin_label_box">
+                      <object class="GtkVBox" id="vbox28">
                         <property name="visible">True</property>
                         <child>
-                          <object class="GtkLabel" id="plugin_label">
+                          <object class="GtkEventBox" id="plugin_label_box">
                             <property name="visible">True</property>
-                            <property name="xalign">0</property>
-                            <property name="xpad">6</property>
-                            <property name="ypad">6</property>
-                            <property name="label" translatable="yes">&lt;span size="x-large"&gt;&lt;b&gt;Plugins&lt;/b&gt;&lt;/span&gt;
+                            <child>
+                              <object class="GtkLabel" id="plugin_label">
+                                <property name="visible">True</property>
+                                <property name="xalign">0</property>
+                                <property name="xpad">6</property>
+                                <property name="ypad">6</property>
+                                <property name="label" translatable="yes">&lt;span size="x-large"&gt;&lt;b&gt;Plugins&lt;/b&gt;&lt;/span&gt;
 &lt;i&gt;None Selected&lt;/i&gt;</property>
-                            <property name="use_markup">True</property>
+                                <property name="use_markup">True</property>
+                              </object>
+                            </child>
                           </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">False</property>
+                            <property name="position">0</property>
+                          </packing>
                         </child>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">False</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkEventBox" id="plugin_container">
-                        <property name="visible">True</property>
-                        <property name="border_width">6</property>
                         <child>
-                          <placeholder/>
+                          <object class="GtkEventBox" id="plugin_container">
+                            <property name="visible">True</property>
+                            <property name="border_width">6</property>
+                            <property name="visible_window">False</property>
+                            <child>
+                              <placeholder/>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="position">1</property>
+                          </packing>
                         </child>
                       </object>
-                      <packing>
-                        <property name="position">1</property>
-                      </packing>
                     </child>
                   </object>
                 </child>
@@ -92,23 +100,30 @@
         <child internal-child="action_area">
           <object class="GtkHButtonBox" id="dialog-action_area1">
             <property name="visible">True</property>
-            <property name="layout_style">GTK_BUTTONBOX_END</property>
+            <property name="layout_style">end</property>
             <child>
               <object class="GtkButton" id="closebutton1">
+                <property name="label">gtk-close</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="can_default">True</property>
-                <property name="label">gtk-close</property>
+                <property name="receives_default">False</property>
                 <property name="use_stock">True</property>
-                <signal handler="preferences_window_destroy" name="clicked"/>
-                <accelerator key="w" modifiers="GDK_CONTROL_MASK" signal="clicked"/>
-                <accelerator key="Escape" modifiers="" signal="clicked"/>
+                <accelerator key="Escape" signal="clicked"/>
+                <accelerator key="w" signal="clicked" modifiers="GDK_CONTROL_MASK"/>
+                <signal name="clicked" handler="preferences_window_destroy"/>
               </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
+              </packing>
             </child>
           </object>
           <packing>
             <property name="expand">False</property>
-            <property name="pack_type">GTK_PACK_END</property>
+            <property name="pack_type">end</property>
+            <property name="position">0</property>
           </packing>
         </child>
       </object>
