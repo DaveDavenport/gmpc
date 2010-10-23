@@ -196,6 +196,7 @@ typedef struct _tag_element
 	GtkWidget *vbox;
 	GtkCellRenderer *image_renderer;
 	GtkTreeViewColumn *column;
+    GtkWidget *column_label;
 
 	GtkWidget *sentry;
 	int type;
@@ -711,6 +712,11 @@ static void tag2_destroy_browser(tag_browser * browser, gpointer user_data)
 	g_free(browser);
 }
 
+static void tag2_column_header_menu_item_search_clicked(GtkCheckMenuItem * item, tag_element * te)
+{
+    gtk_widget_grab_focus(te->sentry);
+    gtk_widget_show(te->sentry);
+}
 static void tag2_column_header_menu_item_clicked(GtkCheckMenuItem * item, tag_element * te)
 {
 	GList *list;
@@ -725,8 +731,9 @@ static void tag2_column_header_menu_item_clicked(GtkCheckMenuItem * item, tag_el
 	} else
 		te->tool->mtype = 0;
 
-	gtk_tree_view_column_set_title(te->column, _(mpdTagItemKeys[te->type]));
-	/* if the first is changed, refill the first.
+//	gtk_tree_view_column_set_title(te->column, _(mpdTagItemKeys[te->type]));
+    gtk_label_set_text(GTK_LABEL(te->column_label), _(mpdTagItemKeys[te->type]));
+    /* if the first is changed, refill the first.
 	 * if any other is changed, make the edited refill by triggering changed signal on the previous.
 	 */
 	/* clear the list, makes changing the tree layout better. */
@@ -798,6 +805,12 @@ static void tag2_column_header_clicked(GtkTreeViewColumn * column, tag_element *
 {
 	int i = 0;
 	GtkWidget *menu = gtk_menu_new();
+
+    {
+			GtkWidget *item = gtk_image_menu_item_new_from_stock(GTK_STOCK_FIND, NULL);
+            g_signal_connect(G_OBJECT(item),"activate", G_CALLBACK(tag2_column_header_menu_item_search_clicked), te);
+			gtk_menu_shell_append(GTK_MENU_SHELL(menu), GTK_WIDGET(item));
+    }
 	for (i = 0; i < MPD_TAG_ITEM_ANY; i++)
 	{
 		if (mpd_server_tag_supported(connection, i))
@@ -908,6 +921,7 @@ static void tag2_songlist_add_tag(tag_browser * browser, const gchar * name, int
 {
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column;
+    GtkWidget *hbox;
 	tag_element *te = g_malloc0(sizeof(*te));
 
 	browser->tag_lists = g_list_append(browser->tag_lists, te);
@@ -960,8 +974,22 @@ static void tag2_songlist_add_tag(tag_browser * browser, const gchar * name, int
 
 	/* Add the column, and set it up */
 	te->column = column = gtk_tree_view_column_new();
+
+
+    /* Set search icon next to the label */
+    hbox = gtk_hbox_new(FALSE, 6);
+    gtk_box_pack_start(GTK_BOX(hbox),
+            gtk_image_new_from_stock(GTK_STOCK_FIND, GTK_ICON_SIZE_MENU),
+            FALSE, FALSE, 0);
+
+    te->column_label = gtk_label_new(name);
+    gtk_box_pack_start(GTK_BOX(hbox),
+            te->column_label,
+            TRUE, TRUE, 0);
+    gtk_tree_view_column_set_widget(GTK_TREE_VIEW_COLUMN(te->column), hbox);
+    gtk_widget_show_all(hbox);
+
 	g_signal_connect(G_OBJECT(te->column), "clicked", G_CALLBACK(tag2_column_header_clicked), te);
-	gtk_tree_view_column_set_title(column, name);
 	gtk_tree_view_column_set_clickable(te->column, TRUE);
 	te->image_renderer = NULL;
 	if (cfg_get_single_value_as_int_with_default(config, "tag2-plugin", "show-image-column", 1))
@@ -1521,7 +1549,9 @@ static void tag2_pref_column_type_edited(GtkCellRendererText * text, gchar * pat
 			}
 		}
 
-		gtk_tree_view_column_set_title(te->column, _(mpdTagItemKeys[te->type]));
+        gtk_label_set_text(GTK_LABEL(te->column_label), _(mpdTagItemKeys[te->type]));
+
+		//gtk_tree_view_column_set_title(te->column, _(mpdTagItemKeys[te->type]));
 		tag2_songlist_clear_selection(NULL, te->browser);
 		tag2_save_browser(te->browser);
 	}
