@@ -169,6 +169,7 @@ A list of previous shown (or hidden) messages can be seen in the Show messages w
 
 TIP: You can set what message should be shown in the message bar in the xref:preferences[preferences].
 
+[[sidebar]]
 === Sidebar
 image:Images/sidebar.png[]
 
@@ -240,11 +241,42 @@ NOTE: Some status icons, like from the gmpc-shout plugin, can have a context men
 === Connection
 image:Images/preferences-connection.png[]
 
+In the connection pane you can configure the connection to MPD.
+You can define multiple connection profiles. GMPC allows you to quickly switch between the different profiles.
+
+* The 'Name' field holds the name GMPC shows for this connection.
+* The 'Host' field holds the hostname off the MPD machine. It may also holds the path to a socket.
+* The 'Port' field holds the port where MPD listens on. 
+* 'Use authentication' tells GMPC to send the 'Password' field on connection.
+* The 'Music Directory' allows you to tell GMPC where it can find the music.
+
+
 === Server Settings
 image:Images/preferences-server-settings.png[]
 
+When connected to MPD, you can configure several parameters in MPD:
+
+* 'Enable Crossfade': Tells MPD to fade the song out and the fade in the new song in 'fade time(s)' seconds.
+* 'Replaygain': Select the replaingain mode.
+* 'Output devices': Enable/disable output devices.
+
+
 === Interface 
 image:Images/preferences-interface.png[]
+
+Configure GMPC interface.
+
+* 'Hide on close': If the GMPC is closed, hide to the notification tray.  (If no notification tray is present, GMPC is minimized.)
+* 'Stylize album covers': Make covers look like it is placed inside a casing.
+  image:Images/pc-cover.png["With casing"]
+  image:Images/pc-cover-plain.png["Withouth casing"]
+  
+* 'Stop playing on exit':  If you quit GMPC, stop playback.
+* 'Show song tooltip': Enabled tooltips on the song list. Showing a information about the song under the mouse pointer.
+* 'Enable search as you type': Make GMPC search directly as you type. (Might be slow).
+* 'Show buttons instead of dropdown in collapsed view': Changes the dropdown to a button list. See xref:sidebar[Sidebar].
+* 'Center playing song': Make GMPC center the playing song in the play queue.
+* 'Save position and size between sessions': Make GMPC store and retstore it size between sessions.
 
 === Tag Based Browser 
 image:Images/preferences-tag-based-browser.png[]
@@ -297,6 +329,7 @@ You can open the metadata selector by right clicking on the metadata item, f.e. 
 === Metadata Browser
 
 == Server Information
+image:Images/server-information.png[]
 
 [[query-syntax]]
 == Query Syntax
