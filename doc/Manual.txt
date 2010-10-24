@@ -321,6 +321,16 @@ You can open the metadata selector by right clicking on the metadata item, f.e. 
 === Database
 
 === Play Queue
+image:Images/play-queue.png[]
+
+This is basically your master-playlist. Every title you want to listen to will appear here by rightclicking a file in the database or playlist-editor view and selecting "Add". 
+This works with every file, folder or playlist.
+
+If you do a right click on an entry of the play queue, you will get this popup:
+
+image:Images/play-queue-rightclick.png[]
+
+Note: This popup will depend on the plugins you have installed and activated. Some plugins cause an entry here, others don't.
 
 === Tag Browser
 
