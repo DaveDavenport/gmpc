@@ -699,12 +699,58 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             {
                 var menu = new Gtk.Menu();
                 var item = new Gtk.ImageMenuItem.from_stock("gtk-add",null);
-                item.activate.connect(artist_add_clicked);
+                item.activate.connect((source) => {
+                    Gtk.TreeModel model;
+                    Gtk.TreeIter iter;
+                    if(tree.get_selection().get_selected(out model, out iter)) {
+                        string artist;
+                        model.get(iter,7, out artist);
+                        if(artist != null) {
+                            MPD.Database.search_start(server,true);
+                            MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, artist);
+                            MPD.Data.Item data = MPD.Database.search_commit(server); 
+                            data.sort_album_disc_track();
+                            if(data != null)
+                            {
+                                    data.first();
+                                    do{
+                                        MPD.PlayQueue.queue_add_song(server, data.song.file);
+                                        data.next_free();
+                                    }while(data != null);
+                                    MPD.PlayQueue.queue_commit(server);
+                            }
+                        }
+                    }
+                });
                 menu.append(item);
 
                 item = new Gtk.ImageMenuItem.with_mnemonic(_("_Replace"));
                 item.set_image(new Gtk.Image.from_stock("gtk-redo", Gtk.IconSize.MENU));
-                item.activate.connect(artist_replace_clicked);
+                item.activate.connect((source) => {
+                    Gtk.TreeModel model;
+                    Gtk.TreeIter iter;
+                    if(tree.get_selection().get_selected(out model, out iter)) {
+                        string artist;
+                        model.get(iter,7, out artist);
+                        if(artist != null) {
+                            MPD.PlayQueue.clear(server);
+                            MPD.Database.search_start(server,true);
+                            MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, artist);
+                            MPD.Data.Item data = MPD.Database.search_commit(server); 
+                            data.sort_album_disc_track();
+                            if(data != null)
+                            {
+                                    data.first();
+                                    do{
+                                        MPD.PlayQueue.queue_add_song(server, data.song.file);
+                                        data.next_free();
+                                    }while(data != null);
+                                    MPD.PlayQueue.queue_commit(server);
+                                    MPD.Player.play(server);
+                            }
+                        }
+                    }
+                });
                 menu.append(item);
 
                 menu.popup(null, null, null, event.button, event.time);
@@ -1881,7 +1927,6 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         base_tree_artist.set_enable_search(false);
         //base_tree_artist.button_press_event.connect(browser_button_press_event);
         base_tree_artist.button_release_event.connect(artist_browser_button_release_event);
-        base_tree_artist.key_press_event.connect(browser_artist_key_press_event);
 
 
         /* setup the columns */ 
