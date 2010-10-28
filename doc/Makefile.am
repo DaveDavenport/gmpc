@@ -5,3 +5,4 @@ EXTRA_DIST = $(man_MANS)
 .PHONY: doc
 doc: Manual.txt
 	asciidoc --backend xhtml11 -a toc -a iconsdir=Images/icons/ -a icons  Manual.txt 
+	asciidoc --backend xhtml11 -a toc -a iconsdir=Images/icons/ -a icons  Manual_DE.txt 
