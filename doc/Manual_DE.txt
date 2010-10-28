@@ -5,93 +5,92 @@ GMPC Manual - The interface
 :Date: today
 :Revision: 0.01
 
+=== Die Hauptansicht
 
-== The main interface
-
-The following image displays GMPC's main window:
+Das folgende Bild zeigt das Hauptfenster von GMPC:
 
 image:Images/main-window.png[]
 
-If you collapse the main window, parts of the window might be hidden. 
-Currently there are 2 collapsed views.
+Wenn man das Hauptfenster verkleinert, können Teile davon vielleicht nicht angezeigt werden.
+Momentan gibts es zwei verkleinerte Ansichten.
 
-Collapsed view 1:
+Verkleinerte Ansicht 1:
 
 image:Images/main-window-collapsed1.png[]
 
-Collapsed view 2:
+Verkleinerte Ansicht 2:
 
-image:Images/main-view-collapsed2.png[]
+image:Images/main-window-collapsed2.png[]
 
-Below we will explain each part of the window.
+In dieser Anleitung werden wir jeden Teil der Anzeige erklären.
 
+=== Die Menüzeile
 
-=== The menu bar
 image:Images/menu-bar.png[]
 
-The menu bar gives you direct acces to every part of the program. You can control playback (control item), configure gmpc, enable outputs, switch to another profile, etc.
+Die Menüzeile ist der Zugang zu jedem Programmteil. Man kann das Playback steuern (Steuerung), GMPC konfigurieren, verschiedene Abspielgeräte ansteuern, andere Profile wählen, etc..
 
+Merke: Die Bestandteile der Menüs können unterschiedlich sein, je nach dem welche und wieviele Plugins installiert und aktiviert sind. 
 
-NOTE: There  might be more or less menu items available depending on the number of plugins installed.
-
-* Music
-** 'Connect' - Connect to MPD.
-** 'Disconnect' - Disconnect from MPD.
-** 'Send password' - Send a new password to MPD. This can either increase or drop the permission level.
-** 'Profiles' - A submenu containing a list of possible profiles
-*** List of profiles
-** 'Preferences' - Opens the preferences pane. xref:preferences[(more here)] 
-** 'Quit' - Completely quits GMPC.
+* Musik
+** 'Verbinden' - Verbindung mit MPD herstellen
+** 'Verbindung trennen' - Verbindung zu MPD trennen
+** 'Kennwort senden' - Ein neues Passwort zu MPD schicken, was die Erlaubnisstufe entweder erhöht oder verringert.
+** 'Profile' - Das Untermenü enthält eine Liste der vorhandenen Profile
+*** Liste der Profile
+** 'Preferences' - Öffnet das Einstellungen-Fenster xref:preferences[(Mehr)]
+** 'Quit' - Schließt GMPC komplett.
 * Server
-** 'Update database' - Tells MPD to update the complete database.
-** 'Information' - Opens a window with server information. xref:server-information[(more here)]
-** List of outputs available on the connected MPD. This allows you to enable and disable them.
-* Control
-** 'Play/Pause'
+** 'Aktualisiere Datenbank' - Veranlasst MPD dazu, die komplette Datenbank zu aktualisieren (Achtung: kann bei mehreren zehntausend Dateien >5 Minuten dauern)
+** 'Information' - Öffnet ein Fenster mit Informationen über den Server xref:server-information[(Mehr)]
+** Liste der für MPD verfügbaren Abspielgeräte (Soundkarten), können hier (de-)aktiviert werden.
+* Steuerung
+** 'Wiedergabe/Pause'
 ** 'Stop'
-** 'Next'
-** 'Previous'
-** 'Mute' - Toggles mute state. (Set volume to 0, and restores it again.)
-** 'Repeat' - Enable/Disable repeat.
-** 'Random' - Enable/Disable random.
-** 'Single mode' - Enable/Disable single mode. Single mode makes MPD not progres to the next song.
-** 'Consume' - Enable/Disable consume mode. Consume mode makes MPD remove played songs from the play-queue.
-* View
-** 'Expand Interface' - Makes GMPC interface include more elements. 
-** 'Collapse Interface' - Hides elements from the GMPC interface.
-** 'Fullscreen' - Switch to fullscreen mode.
-** 'Show artist image' - Enable/Disable an artist image to be embedded below the sidebar.
+** 'Nächster'
+** 'Vorheriger'
+** 'Stumm' - Schaltet den Stumm-Modus ein (verändert die Lautstärke auf 0 und stellt sie dann wieder her)
+** 'Endlosschleife' - (De-)Aktiviert die Endlosschleife
+** 'Zufall' - (De-)Aktiviert den Zufallsmodus
+** 'Einzelner Titel' - (De-)Aktiviert einzelne Titel, dann wird der nächste Titel nicht gestartet nachdem der Aktuelle fertig ist
+** 'Verbrauch' - (De-)Aktiviert den Verbrauchs-Modus, dann werden die gespielten Titel aus der Playliste genommen.
+* Ansicht
+** 'Oberfläche erweitern' - Mehr Elemente einblenden
+** 'Oberfläche beschränken' - Weniger Elemente einblenden
+** 'Vollbild' - Vollbild aktivieren
+** 'Zeige Künstlerbild' - (De-)Aktiviert die Anzeige des Künsterbildes in der Seitenleiste
 * Option
-** These show options for the current visible browser.
-* Tool
-** 'Add Url' - Add a remote URI  to the play-queue. xref:add-url[(see here)]
-** List of global options that are inserted by plugins.
-* Go
-** Gives a list of enabled browsers and allows you to switch between them quickly. 
-* Help
-** 'Show messages' - Shows you a list of messages, warnings and information that GMPC have shown in the past.
-** 'Visit website' - Opens GMPC's website.
-** 'Getting Help' - Opens GMPC's Wiki on the getting help page.
-** 'Bug information' -  Opens a dialog with information about your current GMPC. xref:bug-information[(more here)]
-** 'Easy command help' - Opens a list of possible commands for the easy-command dialog. More information can be found xref:easy-command[here].
-** 'About' - Opens about dialog.
+** Hier stehen Optionen für die momentane Ansicht
+* Extras
+** 'URL hinzufügen' - Fügt eine URL zur Wiedergabe-Warteschlange hinzu xref:add-url[(Siehe hier)]
+** Liste von globalen Optionen, die durch Plugins hinzugefügt wurden
+* Gehe zu
+** Liste von aktivierten Ansichten, ermöglicht schnellen Wechsel zwischen den Ansichten
+* Hilfe
+** 'Statusnachrichten anzeigen' - Zeigt eine Liste der letzten Nachrichten, Warnungen und Informationen
+** 'Webseite' - Öffnet den Internetauftritt von GMPC
+** 'Hilfe' - Öffnet die Online-Hilfe im GMPC-Wiki
+** 'Bug-Informationen' - Öffnet ein Fenster mit Informationen über die verwendete GMPC-Version xref:bug-information[(Mehr)]
+** 'Easy-Command Hilfe' - Öffnet eine Liste mit Befehlen für das Easy-Command-Fenter. xref:easy-command[
+** 'About' - Öffnet das Über-Fenster
 
-=== Playback Controls
+=== Playback Steuerung
 image:Images/playback-control.png[]
 
+Die Steuerungselemente werden von links nach rechts erklärt.
 
-I will explain the elements from left to right.
 
-==== Album Cover
+=== Album Cover
 image:Images/pc-cover.png[]
 
-This shows cover of the currently playing album. If no cover is available, or the song has not information about it, an empty case or cd is shown.
+Hier wird das Cover des aktuell gespielten Albums angezeigt. Wenn kein Cover vorhanden ist oder der Titel keine Informationen darüber hergibt, wird
+eine leere CD-Hülle angezeigt.
 
 [TIP]
 =================================
-* Hovering the cover will show an enlarged version of the cover.
-* Right mouse click on the cover allows you to modify it.
-* You can modify the look of the cover art in the preferences pane. (With or withouth the casing)
+* Das Cover wird vergrößert angezeigt, wenn man mit der Maus über das Cover fährt.
+* Klickt man mit der rechten Maustaste auf das Cover, kann man es bearbeiten.
+* Man kann die Coverdarstellung in den Einstellungen verändern (Mit oder ohne CD-Hülle).
 
 
 image:Images/pc-cover.png["With casing"]
@@ -99,96 +98,98 @@ image:Images/pc-cover-plain.png["Withouth casing"]
 
 =================================
 
-==== Song information
+
+==== Titelinformationen
 image:Images/pc-song-info.png[]
 
-Next to it is basic information about the song. This shows the Title, artist and album name.
+Rechts neben dem Cover befinden sich Informationen zum abgespielten Titel (Titel, Artist, Albumname).
 
-TIP: If you click on the title, artist or album name it will jump to that item in the Metadata Browser.
+TIP: Wenn man den Titel, den Artist oder den Albumnamen klickt, springt GMPC zum entsprechenden Eintrag im Metadaten-Browser.
 
 
-==== Favorite 
+==== Favoriten
 image:Images/pc-favorite-nhl.png[]
 
-The heart-shaped icon allows you to mark (or unmark) the song as favorite by clicking in on it.
+Ein Klick auf das Icon in Herzform erlaubt es, einen Titel als Favorit zu markieren oder die Markierung aufzuheben.
 
-If the song is marked as favorite the icon is highlighted, if it is not a favorite, the icon is dimmed.
+Wenn der Titel als Favorit markiert ist, wird das Herz-Icon hervorgehoben. Wenn ein Titel kein Favorit ist, ist das Icon blass.
 
 * image:Images/pc-favorite-hl.png["Song is a favorite"]
-Marked as favorite:
+Als Favorit markiert:
 * image:Images/pc-favorite-nhl.png["Sog is not a favorite"]
-Not marked as favorite:
+Nicht als Favorit markiert:
+
+Favorisierte Titel werden in einer extra Playlist gehalten, die "Favoriten" heißt.
+
+TIP: Mit einem Rechtsklick auf das Favoriten-Icon kann man den aktuellen Titel zu jeder existierenden Playlist hinzufügen.
+
+WARNING: Um Favoriten benutzen zu können, muss MPD Playlists speichern und laden (lesen) dürfen.
 
 
-Favorite songs are stored in a playlist called Favorite.
-
-
-TIP: Right click on the favorite icon allows you to add the current song to any playlist.
-
-WARNING: To make favorites work, MPD needs to be able to store and load playlists.
-
-
-
-==== Playback Control
+==== Playback Steuerung
 image:Images/pc-playback-control.png[]
 
-Of course the playback control buttons are also available: Play/Pause, Previous, Next, Stop and volume control.
+Natürlich verfügt GMPC auch über Steuerungs-Buttons für das Abspielen: Play/Pause, Vorheriger, Nächster, Stop und einen Lautstärkeregler.
 
 
 [CAUTION]
 =====================================================================
-* You need sufficient permission to control playback. If you do not have the permission, the buttons will be made insensitive.
-* If there is no output mixer defined in MPD, or it is not currently available, the Volume control is made insensitive.
+* Es werden genügende Zugriffsrechte benötigt, um das Playback zu steuern. Wenn diese Rechte fehlen, führen die Buttons nichts aus.
+* Wenn in MPD kein Ausgabegerät definiert ist oder verfügbar ist, funktioniert der Lautstärkeregler nicht.
 =====================================================================
 
-TIP: Hovering your mouse over the next button will show a tooltip with the title of the next song.
+TIP: Wenn man mit der Maus über den Nächster-Button fährt, erscheint der nächste Titel in einem Tooltip.
 
-==== Seek bar
+
+==== Statusleiste
 image:Images/pc-seek-bar.png[]
 
-Below is the progress/seek bar. This indicates how much of the song is allready played. 
-You can drag the bar to a certain position to seek. Pressing the middle mouse button will instantly jump to that position. 
+Unter der Playback Steuerung befindet sich die Status-/Fortschrittsanzeige. Sie zeigt an, wieviel von dem aktuellen Titel schon gespielt wurde.
+Ein doppelter Linksklick oder ein einfacher Klick mit der mittleren Maustaste irgendwo auf diese Anzeige lässt GMPC direkt zu der gewählten Stelle springen.
+Den kleinen mitlaufenden Pfeil kann mit der linken Maustaste festgehalten und verschoben werden.
 
-On the right of the seekbar is the progressed time (or remaining, see tip) and the total time of the song (if available).
+Rechts neben der Statusleiste befindet sich die verstrichene Zeit (oder verbleibende, siehe Tip) und die Dauer des Titel (sofern vorhanden).
 
 
 [TIP]
 =======================
-* Right mouse click on the seekbar changes the time indication from progressed time to remaining time and back.
-* Hovering the progress bar  will show you the time (or remaining) under the cursor. Allowing you to seek exactly to one point.
+* Ein Rechtsklick auf die Statusleiste ändert die Zeitanzeige von verstrichen zu verbleibend (und zurück).
+* Fährt man mit der Maus auf die Statusleiste, wird die Dauer des Titels und die Zeit an der Position des Mauszeiger angezeigt.
 =======================
 
-NOTE: Seeking is not instant, but the seek is done as you drop the handle. This is done so MPD is not spammed with seek requests.
+NOTE: Die Zeitsprünge geschehen nicht sofort, sie werden erst ausgeführt, wenn man den mitlaufenden Pfeil loslässt, andernfalls
+würde MPD mit Sprung-Anfragen zugemüllt.
 
-=== Message bar
+
+=== Nachrichtenleiste
 image:Images/message-bar.png[]
 
-The message bar is only visible when GMPC has to tell you something. The messsage bar can show information, warning and errors. 
+Die Nachrichtenleiste wird nur angezeogt, wenn GMPC etwas mitzuteilen hat. Sie kann Informationen, Warnungen und Fehler anzeigen.
 
-A list of previous shown (or hidden) messages can be seen in the Show messages window under Help->show messages.
+Eine Liste der zuletzt angezeigten (oder versteckten) Meldungen kann über Hilfe -> Statusnachrichten anzeigen eingesehen werden.
 
-TIP: You can set what message should be shown in the message bar in the xref:preferences[preferences].
+TIP: Man kann unter xref:preferences[preferences] Einstellen, welche Nachrichten in der Nachrichtenleiste angezeigt werden sollen.
 
 [[sidebar]]
-=== Sidebar
+=== Seitenleiste
 image:Images/sidebar.png[]
 
-The sidebar allows you to switch between different browsers. 
-You can reorder the browsers by drag and dropping them to there new place in the list.
-What browsers are visible depend on the plugins installed and settings.
+Über die Seitenleiste kann man zwischen den verschiedenen Fenstern wechseln.
+Per drag & drop kann die Anordnung der Elemente verändert werden.
+Welche Elemente vorhanden sind, hängt von den installierten/aktivierten Plugins und Einstellungen ab.
 
-If you collapse the view the sidebar is turned into a horizontal selector:
+Wenn man die Oberfläche beschränkt, wird die Seitenleiste zu einer horizontalen Dropdown-Auswahl:
 
 image:Images/sidebar-hori1.png[]
 
-Or if configured differently in the xref:preferences[preferences], a list of buttons:
+Oder aber, wenn über xref:preferences[preferences] anders definiert, eine Liste von Buttons:
 
 image:Images/sidebar-hori2.png[]
 
 
-TIP: The top browser is always selected when you connect to an MPD server.
+TIP: Die oberste Ansicht wird immer aktiviert, wenn man sich mit einem MPD Server verbindet.
 
-NOTE: When collapsing the view, the sidebar is turned into a horizontal view, below the playback controls and when collapsed further the sidebar is hidden.
+NOTE: Wird die Oberfläche beschränkt, wird die Seitenleiste horizontal angezeigt, oben drüber die Abspiel-Steuerung. Bei weiterer Beschränkung wird die Seitenleiste ausgeblendet.
 
 === Browser window
 
