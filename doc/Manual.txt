@@ -231,7 +231,7 @@ Currently GMPC always shows the following status icons:
 Some icons only show when f.e. MPD is updating it database.
 All status icons should have a tooltip.
 
-NOTE: Clicking a status icon may change it state.
+NOTE: Clicking a status icon may change its state.
 
 NOTE: Some status icons, like from the gmpc-shout plugin, can have a context menu.
 
@@ -247,8 +247,8 @@ You can define multiple connection profiles. GMPC allows you to quickly switch b
 * The 'Name' field holds the name GMPC shows for this connection.
 * The 'Host' field holds the hostname off the MPD machine. It may also holds the path to a socket.
 * The 'Port' field holds the port where MPD listens on. 
-* 'Use authentication' tells GMPC to send the 'Password' field on connection.
-* The 'Music Directory' allows you to tell GMPC where it can find the music.
+* 'Use authentication' tells GMPC to send the 'Password' field on connection. You need this, if you want an authentication with your MPD Server.
+* The 'Music Directory' field allows you to tell GMPC where it can find the music.
 
 
 === Server Settings
@@ -272,7 +272,7 @@ Configure GMPC interface.
   image:Images/pc-cover-plain.png["Withouth casing"]
   
 * 'Stop playing on exit':  If you quit GMPC, stop playback.
-* 'Show song tooltip': Enabled tooltips on the song list. Showing a information about the song under the mouse pointer.
+* 'Show song tooltip': Enabled tooltips on the song list. Showing an information about the song under the mouse pointer.
 * 'Enable search as you type': Make GMPC search directly as you type. (Might be slow).
 * 'Show buttons instead of dropdown in collapsed view': Changes the dropdown to a button list. See xref:sidebar[Sidebar].
 * 'Center playing song': Make GMPC center the playing song in the play queue.
@@ -297,10 +297,11 @@ image:Images/preferences-proxy.png[]
 image:Images/preferences-metadata-browser.png[]
 
 == Metadata Selector
+You can open the metadata selector by right clicking on the metadata item, f.e. a lyrics and selecting 'metadata selector'.
 image:Images/meta-data-selector-artist.png[]
 image:Images/meta-data-selector-lyrics.png[]
 
-If gmpc fails to find the right metadata, you can view all the results in the metadata selector.  You can edit the exact value off the query fields and retry the query.
+If gmpc fails to find the right metadata, you can view all the results in the metadata selector.  You can edit the exact value of the query fields and retry the query.
 As you can see in the above screenshots you can see the results, where they came from and the size (if it is an image)
 
 The following items can be selected:
@@ -311,8 +312,6 @@ The following items can be selected:
 * Album Information
 * Artist Biography
 * Guitar tab.
-
-You can open the metadata selector by right clicking on the metadata item, f.e. a lyrics and selecting 'metadata selector'.
 
 == Browsers
 

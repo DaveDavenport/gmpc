@@ -191,153 +191,154 @@ TIP: Die oberste Ansicht wird immer aktiviert, wenn man sich mit einem MPD Serve
 
 NOTE: Wird die Oberfläche beschränkt, wird die Seitenleiste horizontal angezeigt, oben drüber die Abspiel-Steuerung. Bei weiterer Beschränkung wird die Seitenleiste ausgeblendet.
 
-=== Browser window
+=== Hauptfenster
 
-The browser window contains the actual browser, how this looks depends on the selected view. Browsers should (normally) follow the same generic layout.
-Either one large pane (like now playing, search, play-queue, etc). Or 2 panes (like database, metadata browser, etc), where the size of the panes is synced between the browsers. 
+Das Hauptfenster beherbergt die aktuelle ausgewählte Ansicht. Die Ansichten hab (normalerweise) den gleichen Aufbau.
+Entweder gibt es eine große Leiste (z.B. die Seitenleiste) oder zwei Leisten (z.B. Datenbank, Metadaten-Browser etc.), wobei die Größe/Breite zwischen den Ansichten ausgeglichen ist.
 
-One pane view:
+Eine große Leiste:
 
 image:Images/browser-pane-single.png[]
 
-Two pane view:
+Zwei Leisten:
 
-image:Images/browser-pane-double.png[]
+image:Images/browser-pane-single.png[]
 
-NOTE: When the view is completely collapsed the Browser window is hidden.
+NOTE: Wenn die Oberfläche komplett eingeklappt ist, wird das Hauptfenster nicht angezeigt.
 
-=== Statusbar
+=== Statusleiste
 image:Images/status-bar.png[]
 
-At the bottom of the screen is the status bar. The statusbar is hidden when gmpc is fully collapsed.
+Am unteren Rand des GMPC-Fensters befindet sich die Statusleiste. Die Statusleiste wird nicht angezeigt, wenn die Oberfläche komplett eingeklappt ist.
 
-The status bar consists of 2 parts:
+Die Statusleiste besteht aus zwei Teilen:
 
-On the left there is a message block. This shows feedback about changes, like 'repeat enabled', '10 songs added to play-queue'. It indicates if some action was succesful.
+Links ist ein Anzeige-Block. Dieser zeigt Änderungen wie z.B. "Zufall: Ein/Aus", "10 Titel zur Warteschlange hinzugefügt" an.
 
-On the right there are status icons. 
+Rechts sind Status Symbole.
 
-==== Status icons
+==== Status Symbole
 image:Images/status-icons.png[]
 
-Status icons are small icons indicating the state of a setting, a plugin or shows that something is in progress. 
+Status Symbole sind kleine Icons, die den Status einer Einstellung, eines Plugins oder eines Vorgangs anzeigen.
 
-Currently GMPC always shows the following status icons:
+Momentan zeigt GMPC immer die folgenden Symbole:
 
-* Repeat
-* Random
-* Single mode
-* Consume 
+* Wiederholung
+* Zufall
+* Einzelmodus
+* Verbrauchsmodus
 
-Some icons only show when f.e. MPD is updating it database.
-All status icons should have a tooltip.
+Einige Symbole werden nur angezeigt, wenn z.B. MPD die Datenbank aktualisiert.
+Alle Symbole besitzen einen Tooltip.
 
-NOTE: Clicking a status icon may change it state.
+NOTE: Ein Klick auf ein Status Symbol ändert dessen Status.
 
-NOTE: Some status icons, like from the gmpc-shout plugin, can have a context menu.
+NOTE: Einige Status Symbole (wie das des GMPC-Shout-Plugins) haben ein Kontextmenü.
 
 [[preferences]]
-== Preferences
+== Einstellungen
 
-=== Connection
+=== Verbindung
 image:Images/preferences-connection.png[]
 
-In the connection pane you can configure the connection to MPD.
-You can define multiple connection profiles. GMPC allows you to quickly switch between the different profiles.
+Unter "Verbindung" kann die Verbindung zum MPD eingestellt werden.
+Man kann mehrere Verbindungsprofile konfigurieren, zwischen welchen GMPC einen schnellen Wechsel erlaubt.
 
-* The 'Name' field holds the name GMPC shows for this connection.
-* The 'Host' field holds the hostname off the MPD machine. It may also holds the path to a socket.
-* The 'Port' field holds the port where MPD listens on. 
-* 'Use authentication' tells GMPC to send the 'Password' field on connection.
-* The 'Music Directory' allows you to tell GMPC where it can find the music.
+* Das 'Name' Feld definiert den Namen, den GMPC für diese Verbindung anzeigt.
+* Das 'Host' Feld definiert den Hostnamen der MPD Maschine. Hier kann auch ein Pfad zu einem Socket angegeben werden.
+* Das 'Port' Feld definiert den Port, auf den MPD lauscht.
+* 'Authentifizierung verwenden' weist GMPC an, das 'Passwort' Feld bei der Verbindung an MPD zu übermitteln. Das Passwort wird gebraucht, wenn man sich am MPD Server explizit authentifizieren will (muss).
+* Das 'Musik-Ordner' Feld sagt GMPC, wo die Musik zu finden ist.
 
-
-=== Server Settings
+=== Servereinstellungen
 image:Images/preferences-server-settings.png[]
 
-When connected to MPD, you can configure several parameters in MPD:
+Wenn die Verbindung zu MPD steht, können verschiedene Parameter von MPD eingestellt werden:
 
-* 'Enable Crossfade': Tells MPD to fade the song out and the fade in the new song in 'fade time(s)' seconds.
-* 'Replaygain': Select the replaingain mode.
-* 'Output devices': Enable/disable output devices.
+* 'Überblenden einschalten': Aktiviert das Aus- und Einklingen eines Songs (fading in/out), die Überblendzeit kann eingestellt werden. Überblenden wird von MPD erledigt, nicht von GMPC!
+* 'Wiedergabeverstärkung': Hier kann der Verstärkunsmodus ausgewählt werden.
+*' Ausgabegerät': De-/Aktivieren von Ausgabegeräten.
 
 
-=== Interface 
+=== Oberfläche
 image:Images/preferences-interface.png[]
 
-Configure GMPC interface.
+Hier wird die Oberfläche von GMPC konfiguriert.
 
-* 'Hide on close': If the GMPC is closed, hide to the notification tray.  (If no notification tray is present, GMPC is minimized.)
-* 'Stylize album covers': Make covers look like it is placed inside a casing.
+* 'Beim Schließen verstecken': Wenn GMPC über das "x" rechts oben geschlossen wird, bleibt GMPC im Tray offen. (Wenn kein Tray existiert, wird GMPC minimiert.)
+* 'Stilisiere Alben Cover': Die Cover sehen aus, als ob sie in einer CD-Hülle stecken.
   image:Images/pc-cover.png["With casing"]
   image:Images/pc-cover-plain.png["Withouth casing"]
-  
-* 'Stop playing on exit':  If you quit GMPC, stop playback.
-* 'Show song tooltip': Enabled tooltips on the song list. Showing a information about the song under the mouse pointer.
-* 'Enable search as you type': Make GMPC search directly as you type. (Might be slow).
-* 'Show buttons instead of dropdown in collapsed view': Changes the dropdown to a button list. See xref:sidebar[Sidebar].
-* 'Center playing song': Make GMPC center the playing song in the play queue.
-* 'Save position and size between sessions': Make GMPC store and retstore it size between sessions.
 
-=== Tag Based Browser 
+* 'Beende Wiedergabe beim Verlassen': Wenn GMPC geschlossen wird, wird auch das Abspielen gestoppt.
+* 'Zeige Tooltip in der Song-Liste': Aktiviert Tooltips in der Titelliste. Zeigt eine Infobox über den aktiven Titel unter dem Mauszeiger.
+* 'Enable search as you type' (bisher nicht übersetzt): Aktiviert, dass direkt beim Tippen gesucht wird (im Suchmodus, über STRG+F, kann langsam sein).
+* 'Schaltflächen statt Listenfeld in verkleinerter Ansicht': Ändert das Dropdown-Auswahlmenü zu einer Reihe aus Buttons.
+* 'Aktuell spielenden Titel zentrieren': Der aktuell gespielte Titel steht immer in der Mitte der Playlist.
+* 'Fensterposition und -größe zwischen Sitzungen sichern': Die Größe und Position vom GMPC-Fenster wird gespeichert und beim nächsten Programmstart wiederhergestellt.
+
+
+=== Tag-basierter Browser 
 image:Images/preferences-tag-based-browser.png[]
 
-=== Multimedia Keys
+=== Multimediatasten
 image:Images/preferences-multimedia-keys.png[]
 
-=== Notification
+=== Benachrichtigung
 image:Images/preferences-notification.png[]
 
-=== Metadata Handler
+=== Metadaten-Verwaltung
 image:Images/preferences-metadata-handler.png[]
 
 === Proxy
 image:Images/preferences-proxy.png[]
 
-=== Metadata Browser
+=== Metadaten-Browser
 image:Images/preferences-metadata-browser.png[]
 
-== Metadata Selector
+== Metadaten-Wähler
+
+Der Metadaten-Wähler kann per Rechtsklick auf einen Titel bzw. ein Metadaten-Item geöffnet werden.
+
 image:Images/meta-data-selector-artist.png[]
 image:Images/meta-data-selector-lyrics.png[]
 
-If gmpc fails to find the right metadata, you can view all the results in the metadata selector.  You can edit the exact value off the query fields and retry the query.
-As you can see in the above screenshots you can see the results, where they came from and the size (if it is an image)
+Wenn GMPC nicht die richtigen Metadaten findet, kann man sich alle Daten im Metadaten-Wähler anschauen. Der Wert des entsprechenden Feldes kann editiert werden, dann kann die Abfrage neu abgesetzt werden.
+Wie man in den Screenshots erkennt, sieht man die Ergebnisse und wo sie herkommen. Zusätzlich wird die Größe der Cover angezeigt (sofern vorhanden).
 
-The following items can be selected:
+Die folgenden Daten können ausgewählt werden:
 
-* Artist art
-* Album cover
-* Song lyric
-* Album Information
-* Artist Biography
-* Guitar tab.
+* Künstlerbilder
+* Album Cover
+* Liedtexte
+* Album Informationen
+* Künstler Biographie
+* Gitarren-Tabs
 
-You can open the metadata selector by right clicking on the metadata item, f.e. a lyrics and selecting 'metadata selector'.
-
-== Browsers
+== Ansichten
 
 === Now Playing
 
-=== Database
+=== Datenbank
 
 === Play Queue
 image:Images/play-queue.png[]
 
-This is basically your master-playlist. Every title you want to listen to will appear here by rightclicking a file in the database or playlist-editor view and selecting "Add". 
-This works with every file, folder or playlist.
+Das ist im Prinzip die Haupt-Playlist. Jeder Titel der angehört werden soll erscheint hier. Hinzufügen per Rechtsklick und "Add" auf eine Datei in der Datenbank oder im Wiedergabelisten-Editor.
+Das funktioniert mit jeder Datei, Playlist oder jedem Ordner.
 
-If you do a right click on an entry of the play queue, you will get this popup:
+Wenn man auf einen Eintrag in der Wiedergabe-Warteschlange rechts klickt, bekommt man dieses Popup:
 
 image:Images/play-queue-rightclick.png[]
 
-Note: This popup will depend on the plugins you have installed and activated. Some plugins cause an entry here, others don't.
+NOTE: Das Aussehen dieses Popups hängt von den installierten/aktivierten Plugins ab. Einige Plugins erzeugen hier Einträge, andere nicht.
 
 === Tag Browser
 
-=== Search
+=== Suche
 
-=== Metadata Browser
+=== Metadaten-Browser
 
 == Server Information
 image:Images/server-information.png[]
