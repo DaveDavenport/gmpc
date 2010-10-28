@@ -9,14 +9,15 @@ msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-09-05 10:01+0200\n"
-"PO-Revision-Date: 2010-08-21 23:01+0300\n"
-"Last-Translator: mihkel <turakas gmail com>\n"
+"PO-Revision-Date: 2010-09-05 10:03+0000\n"
+"Last-Translator: Qball Cow <qball@gmpclient.org>\n"
 "Language-Team: Estonian <et@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Emacs\n"
+"X-Launchpad-Export-Date: 2010-10-28 20:20+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
 msgid "A gnome frontend for the mpd daemon"
@@ -768,7 +769,7 @@ msgstr "Ühendus katkestatud"
 
 #. *
 #. * Set paused in Window string
-#.
+#. 
 #: ../src/playlist3.c:1727 ../src/playlist3.c:1732
 msgid "paused"
 msgstr "pausitud"
@@ -923,11 +924,11 @@ msgstr "plugina metaandmete struktuur on vale"
 
 #: ../src/plugin.c:117
 msgid "plugin get_image api is deprecated "
-msgstr "plugina get_image api on iganenud"
+msgstr "plugina get_image api on iganenud "
 
 #: ../src/plugin.c:124
 msgid "plugin get_uris api is deprecated "
-msgstr "plugina get_uris api on iganenud"
+msgstr "plugina get_uris api on iganenud "
 
 #: ../src/plugin.c:153
 msgid "plugin preferences structure is incorrect"
@@ -1049,7 +1050,7 @@ msgstr "Teavitus"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:111
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -1068,7 +1069,7 @@ msgstr "Ühenduse seadistamine"
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:141
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1154,7 +1155,8 @@ msgstr "Copyright 2003-2007 Qball Cow"
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
-"  lyyser https://launchpad.net/~logard-1961"
+"  Qball Cow https://launchpad.net/~qball-qballcow\n"
+"  lyyser https://launchpad.net/~lyyser"
 
 #: ../glade/password-dialog.ui.h:1
 msgid "Enter your password for: '<hostname>'"
@@ -1331,9 +1333,8 @@ msgid "Album"
 msgstr "Album"
 
 #: ../glade/preferences-server.ui.h:7
-#, fuzzy
 msgid "Auto"
-msgstr "Tegevus"
+msgstr ""
 
 #: ../glade/preferences-server.ui.h:8
 msgid "Enable crossfade"
@@ -1893,7 +1894,7 @@ msgstr "Pole kättesaadav"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:851
 msgid "Fetching .. "
-msgstr "Tõmban ..."
+msgstr "Tõmban ... "
 
 #: ../src/browsers/gmpc-metadata-browser2.c:1059
 msgid "Fetching"

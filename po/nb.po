@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-09-05 10:01+0200\n"
-"PO-Revision-Date: 2010-08-29 16:03+0000\n"
+"PO-Revision-Date: 2010-09-28 08:22+0000\n"
 "Last-Translator: Espen Krømke <beamboom@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-09-05 07:40+0000\n"
+"X-Launchpad-Export-Date: 2010-10-28 20:21+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -785,7 +785,7 @@ msgstr "Frakoblet"
 
 #. *
 #. * Set paused in Window string
-#.
+#. 
 #: ../src/playlist3.c:1727 ../src/playlist3.c:1732
 msgid "paused"
 msgstr "midlertidig stoppet"
@@ -1066,7 +1066,7 @@ msgstr "Varsel"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:111
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -1085,7 +1085,7 @@ msgstr "Koblingsoppsett"
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:141
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1126,7 +1126,8 @@ msgstr "Kjenner ikke igjen oppstartsalternativ: %d"
 #: ../src/smclient/eggdesktopfile.c:1373
 #, c-format
 msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
-msgstr "Kan ikke gi dokument-URIer til en skrivebordsoppføring med «Type=Link»"
+msgstr ""
+"Kan ikke gi dokument-URIer til en skrivebordsoppføring med «Type=Link»"
 
 #: ../src/smclient/eggdesktopfile.c:1392
 #, c-format
@@ -1295,7 +1296,7 @@ msgstr "Sentrer avspillte sang"
 
 #: ../glade/preferences-playlist.ui.h:4
 msgid "Enable search as you type. (Might be slow)"
-msgstr ""
+msgstr "Aktiver søk mens du taster. (Kan være treg)"
 
 #: ../glade/preferences-playlist.ui.h:5
 msgid "Hide on close"
@@ -1354,9 +1355,8 @@ msgid "Album"
 msgstr "Album"
 
 #: ../glade/preferences-server.ui.h:7
-#, fuzzy
 msgid "Auto"
-msgstr "Handling"
+msgstr "Auto"
 
 #: ../glade/preferences-server.ui.h:8
 msgid "Enable crossfade"
@@ -2356,6 +2356,7 @@ msgstr "Music Tree tilbyder"
 #~ msgstr[0] "<b>Dato: </b>"
 #~ msgstr[1] "<b>Datoer: </b>"
 
+#, c-format
 #~ msgid "Only the first %i result displayed, please refine your search query"
 #~ msgstr ""
 #~ "Bare det første %i resultatet er synelig, Venligst endre på  Søket ditt"

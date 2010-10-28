@@ -8,19 +8,19 @@ msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-09-05 10:01+0200\n"
-"PO-Revision-Date: 2010-08-03 19:01+0000\n"
+"PO-Revision-Date: 2010-09-14 11:28+0000\n"
 "Last-Translator: David Bengtsson <Unknown>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-09-05 07:40+0000\n"
+"X-Launchpad-Export-Date: 2010-10-28 20:20+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
 msgid "A gnome frontend for the mpd daemon"
-msgstr ""
+msgstr "Ett GNOME-gränssnitt för MPD-demonen"
 
 #: ../data/gmpc.desktop.in.h:2 ../src/main.c:350 ../src/playlist3.c:1978
 #: ../src/tray-icon2.c:612 ../src/browsers/gmpc-nowplaying2.c:1802
@@ -31,7 +31,7 @@ msgstr "Gnome Music Player Client"
 #. Basic dialog with a close button
 #: ../glade/playlist3.glade.h:1 ../src/bug-information.c:231
 msgid "Bug information"
-msgstr "Bug information"
+msgstr "Felinformation"
 
 #: ../glade/playlist3.glade.h:2
 msgid "Consume"
@@ -47,7 +47,7 @@ msgstr "Få hjälp"
 
 #: ../glade/playlist3.glade.h:5 ../src/mpdinteraction.c:322
 msgid "Mute"
-msgstr "Tyst"
+msgstr "Tysta"
 
 #. * MM_PLAYPAUSE
 #: ../glade/playlist3.glade.h:6 ../src/mm-keys.c:74 ../src/tray-icon2.c:600
@@ -56,7 +56,7 @@ msgstr "Nästa"
 
 #: ../glade/playlist3.glade.h:7
 msgid "Play/Pause"
-msgstr "Spela/Pausa"
+msgstr "Spela upp/gör paus"
 
 #. * MM_NEXT
 #: ../glade/playlist3.glade.h:8 ../src/mm-keys.c:75
@@ -762,7 +762,7 @@ msgstr "Frånkopplad"
 
 #. *
 #. * Set paused in Window string
-#.
+#. 
 #: ../src/playlist3.c:1727 ../src/playlist3.c:1732
 msgid "paused"
 msgstr ""
@@ -1043,7 +1043,7 @@ msgstr "Rapport"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:111
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -1062,7 +1062,7 @@ msgstr "inrättar förbindelse"
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:141
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1329,9 +1329,8 @@ msgid "Album"
 msgstr "Album"
 
 #: ../glade/preferences-server.ui.h:7
-#, fuzzy
 msgid "Auto"
-msgstr "Åtgärd"
+msgstr ""
 
 #: ../glade/preferences-server.ui.h:8
 msgid "Enable crossfade"
@@ -2316,10 +2315,11 @@ msgstr ""
 #~ msgstr[0] "<b>Genre: </b>"
 #~ msgstr[1] "<b>Genrer: </b>"
 
+#, c-format
 #~ msgid "Only the first %i result displayed, please refine your search query"
 #~ msgstr ""
-#~ "Endast de första %i resultaten visas. Definiera om din sökfråga för "
-#~ "bättre resultat"
+#~ "Endast de första %i resultaten visas. Definiera om din sökfråga för bättre "
+#~ "resultat"
 
 #~ msgid "01/24"
 #~ msgstr "01/24"
@@ -2346,6 +2346,7 @@ msgstr ""
 #~ "Det gick inte att öppna gränssnittsbeskrivningen\n"
 #~ "Ominstallera gmpc\n"
 
+#, c-format
 #~ msgid "MPD Database refreshed at: %c"
 #~ msgstr "MPD Databasen uppdateras på:%c"
 

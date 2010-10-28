@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-09-05 10:01+0200\n"
-"PO-Revision-Date: 2010-01-25 17:09+0000\n"
+"PO-Revision-Date: 2010-09-17 09:46+0000\n"
 "Last-Translator: Konki <pavel.konkol@seznam.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2010-09-05 07:40+0000\n"
+"X-Launchpad-Export-Date: 2010-10-28 20:20+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -789,7 +789,7 @@ msgstr "Odpojen"
 
 #. *
 #. * Set paused in Window string
-#.
+#. 
 #: ../src/playlist3.c:1727 ../src/playlist3.c:1732
 msgid "paused"
 msgstr "pozastaveno"
@@ -1071,7 +1071,7 @@ msgstr "Oznámení"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:111
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -1090,7 +1090,7 @@ msgstr "Nastavení připojení"
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:141
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1294,7 +1294,7 @@ msgstr "Právě přehrávanou skladbu doprostřed"
 
 #: ../glade/preferences-playlist.ui.h:4
 msgid "Enable search as you type. (Might be slow)"
-msgstr ""
+msgstr "Zapnout vyhledávání během psaní. (Může být pomalé)"
 
 #: ../glade/preferences-playlist.ui.h:5
 msgid "Hide on close"
@@ -1354,9 +1354,8 @@ msgid "Album"
 msgstr "Album"
 
 #: ../glade/preferences-server.ui.h:7
-#, fuzzy
 msgid "Auto"
-msgstr "Akce"
+msgstr "Automaticky"
 
 #: ../glade/preferences-server.ui.h:8
 msgid "Enable crossfade"
@@ -2314,9 +2313,9 @@ msgstr "Strom hudby poskytovatele"
 #~ msgid "View"
 #~ msgstr "Zobrazení"
 
+#, c-format
 #~ msgid "Only the first %i result displayed, please refine your search query"
-#~ msgstr ""
-#~ "Zobrazeno je pouze prvních %i výsledků. Zkuste prosím zlepšit dotaz."
+#~ msgstr "Zobrazeno je pouze prvních %i výsledků. Zkuste prosím zlepšit dotaz."
 
 #~ msgid "kbit/sec"
 #~ msgstr "kbit/sec"
@@ -2351,6 +2350,7 @@ msgstr "Strom hudby poskytovatele"
 #~ msgid "MPD finished updating its database"
 #~ msgstr "MPD úspěšně ukončilo aktualizaci databáze"
 
+#, c-format
 #~ msgid "MPD Database refreshed at: %c"
 #~ msgstr "Databáze MPD aktualizována v: %c"
 
@@ -2408,6 +2408,7 @@ msgstr "Strom hudby poskytovatele"
 #~ msgid "Edit _Browser Markup"
 #~ msgstr "Úp_rava pravidla pro název"
 
+#, c-format
 #~ msgid ""
 #~ "Gnome Music Player Client\n"
 #~ "Options:\n"

@@ -10,13 +10,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-09-05 10:01+0200\n"
 "PO-Revision-Date: 2010-07-07 22:19+0000\n"
-"Last-Translator: Thibault Fevry <Unknown>\n"
+"Last-Translator: Thibault Févry <Unknown>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2010-09-05 07:40+0000\n"
+"X-Launchpad-Export-Date: 2010-10-28 20:21+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -558,7 +558,8 @@ msgstr ""
 
 #: ../src/mpdinteraction.c:299
 msgid "Update database: You have insufficient permission."
-msgstr "Mettre à jour la base de données : Vous n'avez pas assez de privilèges"
+msgstr ""
+"Mettre à jour la base de données : Vous n'avez pas assez de privilèges"
 
 #. Player control
 #. basic playlist commands
@@ -791,7 +792,7 @@ msgstr "Déconnecté"
 
 #. *
 #. * Set paused in Window string
-#.
+#. 
 #: ../src/playlist3.c:1727 ../src/playlist3.c:1732
 msgid "paused"
 msgstr "suspendu"
@@ -1072,7 +1073,7 @@ msgstr "Notification"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:111
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -1091,7 +1092,7 @@ msgstr "Configuration de la connexion"
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:141
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1202,7 +1203,7 @@ msgstr ""
 "  Qball Cow https://launchpad.net/~qball-qballcow\n"
 "  Raphaël Rigo https://launchpad.net/~devel-gmpc\n"
 "  Speredenn https://launchpad.net/~speredenn\n"
-"  Thibault Fevry https://launchpad.net/~thibaultfevry\n"
+"  Thibault Févry https://launchpad.net/~thibaultfevry\n"
 "  computerhelp https://launchpad.net/~comp-conf"
 
 #: ../glade/password-dialog.ui.h:1
@@ -1329,7 +1330,8 @@ msgstr "Masquer à la fermeture"
 
 #: ../glade/preferences-playlist.ui.h:6
 msgid "Save position and size between sessions"
-msgstr "Enregistrer la position et la taille de la fenêtre entre les sessions"
+msgstr ""
+"Enregistrer la position et la taille de la fenêtre entre les sessions"
 
 #: ../glade/preferences-playlist.ui.h:7
 msgid "Show buttons instead of dropdown in collapsed view"
@@ -1381,9 +1383,8 @@ msgid "Album"
 msgstr "Album"
 
 #: ../glade/preferences-server.ui.h:7
-#, fuzzy
 msgid "Auto"
-msgstr "Action"
+msgstr ""
 
 #: ../glade/preferences-server.ui.h:8
 msgid "Enable crossfade"
@@ -1484,7 +1485,8 @@ msgstr "<entrer le nom de la liste de lecture>"
 
 #: ../glade/playlist-save-dialog.ui.h:2
 msgid "<span size=\"x-small\"><i>Playlist already exists.</i></span>"
-msgstr "<span size=\"x-small\"><i>La liste de lecture existe déjà.</i></span>"
+msgstr ""
+"<span size=\"x-small\"><i>La liste de lecture existe déjà.</i></span>"
 
 #: ../glade/playlist-save-dialog.ui.h:3
 msgid "Save Playlist"
@@ -1611,8 +1613,9 @@ msgid ""
 "Then update the database. (Server->Update Database)"
 msgstr ""
 "Il semble que vous n'ayez pas de musique dans votre base de données.\n"
-"Pour ajouter de la musique, copiez là dans votre <i>répertoire_de_musique</"
-"i> comme spécifié dans le fichier de configuration mpd.\n"
+"Pour ajouter de la musique, copiez là dans votre "
+"<i>répertoire_de_musique</i> comme spécifié dans le fichier de configuration "
+"mpd.\n"
 "Puis, mettez à jour votre base de données. (Serveur->Mettre à jour la base "
 "de données)"
 
@@ -2328,6 +2331,7 @@ msgstr ""
 #~ msgid "The orientation of the tray."
 #~ msgstr "Orientation de la barre."
 
+#, c-format
 #~ msgid "Only the first %i result displayed, please refine your search query"
 #~ msgstr ""
 #~ "Seuls les %i premiers résultats sont affichés, Veuillez affiner votre "
@@ -2376,6 +2380,7 @@ msgstr ""
 #~ msgid "MPD finished updating its database"
 #~ msgstr "Mise à jour de la base de donnée de MPD terminée"
 
+#, c-format
 #~ msgid "MPD Database refreshed at: %c"
 #~ msgstr "Mise à jour de la base de donnée MPD à : %c"
 
@@ -2433,6 +2438,7 @@ msgstr ""
 #~ msgid "channels"
 #~ msgstr "canaux"
 
+#, c-format
 #~ msgid ""
 #~ "Gnome Music Player Client\n"
 #~ "Options:\n"

@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-09-05 07:40+0000\n"
+"X-Launchpad-Export-Date: 2010-10-28 20:20+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -768,7 +768,7 @@ msgstr "Прекъсване на връзката"
 
 #. *
 #. * Set paused in Window string
-#.
+#. 
 #: ../src/playlist3.c:1727 ../src/playlist3.c:1732
 msgid "paused"
 msgstr ""
@@ -1049,7 +1049,7 @@ msgstr "Известяване"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:111
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -1068,7 +1068,7 @@ msgstr "Настройка на свързване"
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:141
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1333,9 +1333,8 @@ msgid "Album"
 msgstr "Албум"
 
 #: ../glade/preferences-server.ui.h:7
-#, fuzzy
 msgid "Auto"
-msgstr "Действия"
+msgstr ""
 
 #: ../glade/preferences-server.ui.h:8
 msgid "Enable crossfade"
@@ -2237,6 +2236,7 @@ msgstr ""
 #~ msgid "Sing or Swing you want"
 #~ msgstr "Sing or Swing you want"
 
+#, c-format
 #~ msgid ""
 #~ "Gnome Music Player Client\n"
 #~ "Options:\n"
@@ -2265,13 +2265,13 @@ msgstr ""
 #~ "\t\t\t\t\t2 Съобщения за грешка + Предупреждения\n"
 #~ "\t\t\t\t\t3 Показвай всичко\n"
 #~ "\t--version\t\tПокажи версия и git revision\n"
-#~ "\t--config=<file>\t\tПосочи път до конфигурационен файл, по подразбиране "
-#~ "се използва ~/.gmpc/gmpc.cfg\n"
+#~ "\t--config=<file>\t\tПосочи път до конфигурационен файл, по подразбиране се "
+#~ "използва ~/.gmpc/gmpc.cfg\n"
 #~ "\t--clean-cover-db\tИзтрий файл с обложки.\n"
 #~ "\t--disable-plugins\tНе зареждай плъгини (добавки).\n"
 #~ "\t--replace\t\tСтатирай нова сесия и затвори вече стартираната.\n"
-#~ "\t--quit\t\t\tСпри стартираната сесия. Работи само, ако е излючена "
-#~ "опцията за стартиране на много сесии.\n"
+#~ "\t--quit\t\t\tСпри стартираната сесия. Работи само, ако е излючена опцията "
+#~ "за стартиране на много сесии.\n"
 
 #~ msgid " Total time: "
 #~ msgstr " Общо време: "
@@ -2285,6 +2285,7 @@ msgstr ""
 #~ msgid "MPD database is updating"
 #~ msgstr "Базата на MPD се обновява"
 
+#, c-format
 #~ msgid "MPD Database refreshed at: %c"
 #~ msgstr "Базата с данни на MPD беше обновена на: %c"
 
@@ -2337,6 +2338,7 @@ msgstr ""
 #~ msgstr[0] "<b>Дата: </b>"
 #~ msgstr[1] "<b>Дати: </b>"
 
+#, c-format
 #~ msgid "Only the first %i result displayed, please refine your search query"
 #~ msgstr ""
 #~ "Само първият %i резутат е показан, посочете по точно условие за търсене."

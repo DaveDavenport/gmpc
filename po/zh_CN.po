@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2010-09-05 07:40+0000\n"
+"X-Launchpad-Export-Date: 2010-10-28 20:21+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -434,8 +434,7 @@ msgid ""
 msgstr ""
 "检测到了重复的键映射\n"
 "\n"
-"检测到了某些重复的多媒体键映射，它们已经被禁用。请检查选项，并且确保所有设置"
-"正确。"
+"检测到了某些重复的多媒体键映射，它们已经被禁用。请检查选项，并且确保所有设置正确。"
 
 #: ../src/mm-keys.c:573
 msgid "Multimedia Keys"
@@ -466,8 +465,7 @@ msgstr ""
 "\n"
 "\t%s: %s\n"
 "\n"
-"请确保你的窗口管理器(以及其他软件)没有为其他功能而占用这个按键，之后重启 "
-"gmpc。"
+"请确保你的窗口管理器(以及其他软件)没有为其他功能而占用这个按键，之后重启 gmpc。"
 
 #: ../src/mm-keys.c:719
 msgid "Action"
@@ -774,7 +772,7 @@ msgstr "断开连接"
 
 #. *
 #. * Set paused in Window string
-#.
+#. 
 #: ../src/playlist3.c:1727 ../src/playlist3.c:1732
 msgid "paused"
 msgstr "已暂停"
@@ -1052,7 +1050,7 @@ msgstr "提示"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:111
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -1071,7 +1069,7 @@ msgstr "连接设置"
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:141
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1342,9 +1340,8 @@ msgid "Album"
 msgstr "专辑"
 
 #: ../glade/preferences-server.ui.h:7
-#, fuzzy
 msgid "Auto"
-msgstr "操作"
+msgstr ""
 
 #: ../glade/preferences-server.ui.h:8
 msgid "Enable crossfade"
@@ -2242,6 +2239,7 @@ msgstr ""
 #~ msgid_plural "<b>Dates: </b>"
 #~ msgstr[0] "<b>日期：</b>"
 
+#, c-format
 #~ msgid "Only the first %i result displayed, please refine your search query"
 #~ msgstr "仅显示前 %i 个结果，请改进你的搜索条件"
 
@@ -2303,6 +2301,7 @@ msgstr ""
 #~ msgid " Total time: "
 #~ msgstr " 总计时间： "
 
+#, c-format
 #~ msgid ""
 #~ "Gnome Music Player Client\n"
 #~ "Options:\n"
@@ -2337,8 +2336,7 @@ msgstr ""
 #~ "\t--clean-cover-db\t清理专辑封面数据文件.\n"
 #~ "\t--disable-plugins\t不加载插件.\n"
 #~ "\t--replace\t\t替换当前运行的会话\n"
-#~ "\t--quit\t\t\t退出当前运行的 gmpc 会话. 仅在禁止 multiple-instances 选项时"
-#~ "有效.\n"
+#~ "\t--quit\t\t\t退出当前运行的 gmpc 会话. 仅在禁止 multiple-instances 选项时有效.\n"
 
 #~ msgid "Error occurred during operation"
 #~ msgstr "操作时发生了错误"
@@ -2349,6 +2347,7 @@ msgstr ""
 #~ msgid "MPD finished updating its database"
 #~ msgstr "MPD 数据库更新完成"
 
+#, c-format
 #~ msgid "MPD Database refreshed at: %c"
 #~ msgstr "MPD 数据库刷新于: %c"
 

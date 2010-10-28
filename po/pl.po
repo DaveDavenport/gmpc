@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2010-09-05 07:40+0000\n"
+"X-Launchpad-Export-Date: 2010-10-28 20:20+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Country: Poland\n"
 
@@ -800,7 +800,7 @@ msgstr "Rozłączony"
 
 #. *
 #. * Set paused in Window string
-#.
+#. 
 #: ../src/playlist3.c:1727 ../src/playlist3.c:1732
 msgid "paused"
 msgstr "wstrzymane"
@@ -1082,7 +1082,7 @@ msgstr "Powiadamianie"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:111
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -1101,7 +1101,7 @@ msgstr "Ustawienia połączenia"
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:141
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1371,9 +1371,8 @@ msgid "Album"
 msgstr "Album"
 
 #: ../glade/preferences-server.ui.h:7
-#, fuzzy
 msgid "Auto"
-msgstr "Czynność"
+msgstr ""
 
 #: ../glade/preferences-server.ui.h:8
 msgid "Enable crossfade"
@@ -1603,9 +1602,9 @@ msgid ""
 "Then update the database. (Server->Update Database)"
 msgstr ""
 "Wygląda na to, że nie masz muzyki w swojej kolekcji.\n"
-"Aby dodać muzykę, skopiuj lub przenieś ją do katalogu <i>music_directory</"
-"i>, który ustawiłeś w pliku konfiguracyjnym MPD. Następnie zaktualizuj "
-"kolekcję. (Serwer->Aktualizuj kolekcję)"
+"Aby dodać muzykę, skopiuj lub przenieś ją do katalogu "
+"<i>music_directory</i>, który ustawiłeś w pliku konfiguracyjnym MPD. "
+"Następnie zaktualizuj kolekcję. (Serwer->Aktualizuj kolekcję)"
 
 #: ../src/browsers/playlist3-file-browser.c:257
 #, c-format
@@ -2360,6 +2359,7 @@ msgstr ""
 #~ msgid " Total time: "
 #~ msgstr " całkowity czas: "
 
+#, c-format
 #~ msgid "Only the first %i result displayed, please refine your search query"
 #~ msgstr "Wyświetlon tylko %i pierwszych wyników, sprecyzuj swoje zapytanie"
 
@@ -2406,6 +2406,7 @@ msgstr ""
 #~ "Otworzenie pliku opisu interfejsu nie powiodło się!\n"
 #~ "Proszę przeinstalować GMPC\n"
 
+#, c-format
 #~ msgid "MPD Database refreshed at: %c"
 #~ msgstr "Baza danych MPD odświeżona: %c"
 
@@ -2508,6 +2509,7 @@ msgstr ""
 #~ msgid "Song Lyrics"
 #~ msgstr "Słowa utworu"
 
+#, c-format
 #~ msgid ""
 #~ "Gnome Music Player Client\n"
 #~ "Options:\n"
@@ -2531,8 +2533,7 @@ msgstr ""
 #~ "Opcje:\n"
 #~ "\t--start-hidden\t\tUruchom ukryty\n"
 #~ "\t--help\t\t\tWyświetl ten komunikat.\n"
-#~ "\t--debug-level=<pozioml>\tKaż GMPC wyświetlać informacje do "
-#~ "odpluskwiania\n"
+#~ "\t--debug-level=<pozioml>\tKaż GMPC wyświetlać informacje do odpluskwiania\n"
 #~ "\t\t\t\tPoziomy:\n"
 #~ "\t\t\t\t\t0 Nic nie wyświetlaj\n"
 #~ "\t\t\t\t\t1 Tylko błędy\n"
@@ -2544,5 +2545,5 @@ msgstr ""
 #~ "\t--clean-cover-db\tOczyść bazę danych okładek\n"
 #~ "\t--disable-plugins\tNie ładuj wtyczek\n"
 #~ "\t--replace\t\tZastąp uruchomioną instancję\n"
-#~ "\t--quit\t\t\tZakończ uruchomioną instancję. Działa tylko gdy obsługa "
-#~ "wielu instancji jest wyłączona.\n"
+#~ "\t--quit\t\t\tZakończ uruchomioną instancję. Działa tylko gdy obsługa wielu "
+#~ "instancji jest wyłączona.\n"

@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n == 1 ? 0: (((n % 100 > 19) || ((n % 100 "
 "== 0) && (n != 0))) ? 2: 1));\n"
-"X-Launchpad-Export-Date: 2010-09-05 07:40+0000\n"
+"X-Launchpad-Export-Date: 2010-10-28 20:21+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -279,8 +279,8 @@ msgstr ""
 "* Suport tehnic;\n"
 "* Întreținerea pluginurilor;\n"
 "* Întreținerea proiectului GMPG în sine.\n"
-"Dacă sunteți interesat să ajutați, alăturați-vă canalului IRC (#gmpc pe irc."
-"freenode.net)\n"
+"Dacă sunteți interesat să ajutați, alăturați-vă canalului IRC (#gmpc pe "
+"irc.freenode.net)\n"
 "\n"
 "Mulțumim,\n"
 "<i>Qball Cow</i>"
@@ -790,7 +790,7 @@ msgstr "Deconectat"
 
 #. *
 #. * Set paused in Window string
-#.
+#. 
 #: ../src/playlist3.c:1727 ../src/playlist3.c:1732
 msgid "paused"
 msgstr "pauză"
@@ -1072,7 +1072,7 @@ msgstr "Notificare"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:111
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -1091,7 +1091,7 @@ msgstr "Setare conexiune"
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:141
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1359,9 +1359,8 @@ msgid "Album"
 msgstr "Album"
 
 #: ../glade/preferences-server.ui.h:7
-#, fuzzy
 msgid "Auto"
-msgstr "Acțiune"
+msgstr ""
 
 #: ../glade/preferences-server.ui.h:8
 msgid "Enable crossfade"
@@ -1589,8 +1588,8 @@ msgid ""
 "Then update the database. (Server->Update Database)"
 msgstr ""
 "Aparent nu aveţi melodii în baza de date.\n"
-"Pentru a adăuga melodii, copiaţi melodiile in directorul <i>music_directory</"
-"i> specificat in fişierul de configurare mpd.\n"
+"Pentru a adăuga melodii, copiaţi melodiile in directorul "
+"<i>music_directory</i> specificat in fişierul de configurare mpd.\n"
 "Apoi actualizaţi baza de date. (Server->Actualizare baza de date)"
 
 #: ../src/browsers/playlist3-file-browser.c:257
@@ -2322,6 +2321,7 @@ msgstr "Furnizor ierarhie muzică"
 #~ msgstr[1] "<b>Genuri: </b>"
 #~ msgstr[2] "<b>Genuri: </b>"
 
+#, c-format
 #~ msgid "Only the first %i result displayed, please refine your search query"
 #~ msgstr ""
 #~ "Se afișează doar primele %i rezultate, vă rugăm să rafinați termenii de "
@@ -2379,6 +2379,7 @@ msgstr "Furnizor ierarhie muzică"
 #~ msgid "MPD finished updating its database"
 #~ msgstr "MPD a terminat actualizarea bazei de date"
 
+#, c-format
 #~ msgid "MPD Database refreshed at: %c"
 #~ msgstr "Baza de data MPD a fost reactualizată la: %c"
 

@@ -13,9 +13,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
-"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2010-09-05 07:40+0000\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Launchpad-Export-Date: 2010-10-28 20:20+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -505,19 +505,23 @@ msgstr "Выключить"
 
 #: ../src/mpdinteraction.c:163
 msgid "Single: The used MPD server is to old and does not support this."
-msgstr "Одиночный: Используемый mpd сервер слишком стар и не поддерживает это."
+msgstr ""
+"Одиночный: Используемый mpd сервер слишком стар и не поддерживает это."
 
 #: ../src/mpdinteraction.c:165
 msgid "Single: You have insufficient permission to use this option."
-msgstr "Одиночный: У Вас недостаточно полномочий для использования этой опции."
+msgstr ""
+"Одиночный: У Вас недостаточно полномочий для использования этой опции."
 
 #: ../src/mpdinteraction.c:182
 msgid "Consume: The used MPD server is to old and does not support this."
-msgstr "Поглощать: Используемый mpd сервер слишком стар и не поддерживает это."
+msgstr ""
+"Поглощать: Используемый mpd сервер слишком стар и не поддерживает это."
 
 #: ../src/mpdinteraction.c:184
 msgid "Consume: You have insufficient permission to use this option."
-msgstr "Поглощать: У Вас недостаточно полномочий для использования этой опции."
+msgstr ""
+"Поглощать: У Вас недостаточно полномочий для использования этой опции."
 
 #: ../src/mpdinteraction.c:269
 msgid ""
@@ -792,7 +796,7 @@ msgstr "Соединение разорвано"
 
 #. *
 #. * Set paused in Window string
-#.
+#. 
 #: ../src/playlist3.c:1727 ../src/playlist3.c:1732
 msgid "paused"
 msgstr "приостановлен"
@@ -1074,7 +1078,7 @@ msgstr "Уведомление"
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:111
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -1093,7 +1097,7 @@ msgstr "Настройка соединения"
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:141
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1134,7 +1138,8 @@ msgstr "Неопознанный параметр запуска: %d"
 #: ../src/smclient/eggdesktopfile.c:1373
 #, c-format
 msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
-msgstr "Невозможно передать адреса документов записи 'Type=Link' файла desktop"
+msgstr ""
+"Невозможно передать адреса документов записи 'Type=Link' файла desktop"
 
 #: ../src/smclient/eggdesktopfile.c:1392
 #, c-format
@@ -1377,9 +1382,8 @@ msgid "Album"
 msgstr "Альбом"
 
 #: ../glade/preferences-server.ui.h:7
-#, fuzzy
 msgid "Auto"
-msgstr "Действие"
+msgstr ""
 
 #: ../glade/preferences-server.ui.h:8
 msgid "Enable crossfade"
@@ -2356,6 +2360,7 @@ msgstr "Дерево обеспечения музыкой"
 #~ msgid "MPD is updating its database"
 #~ msgstr "MPD обновляет базу данных"
 
+#, c-format
 #~ msgid "MPD Database refreshed at: %c"
 #~ msgstr "MPD база данных обновлена в %c"
 
@@ -2383,10 +2388,10 @@ msgstr "Дерево обеспечения музыкой"
 #~ msgid "Find Artist:"
 #~ msgstr "Найти исполнителя:"
 
+#, c-format
 #~ msgid "Only the first %i result displayed, please refine your search query"
 #~ msgstr ""
-#~ "Только первый %i результат отображен, пожалуйста очистите Ваш запрос "
-#~ "поиска"
+#~ "Только первый %i результат отображен, пожалуйста очистите Ваш запрос поиска"
 
 #~ msgid "kbit/sec"
 #~ msgstr "Кбит/сек."
@@ -2409,6 +2414,7 @@ msgstr "Дерево обеспечения музыкой"
 #~ msgid "--help"
 #~ msgstr "--help"
 
+#, c-format
 #~ msgid ""
 #~ "Gnome Music Player Client\n"
 #~ "Options:\n"
@@ -2439,8 +2445,8 @@ msgstr "Дерево обеспечения музыкой"
 #~ "\t\t\t\t\t2 Сообщения об ошибках и предупреждения\n"
 #~ "\t\t\t\t\t3 Все сообщения\n"
 #~ "\t--version\t\tВывести версию и ревизию git\n"
-#~ "\t--config=<file>\t\tУстановить путь до файла с конфигурацией, по "
-#~ "умолчанию: ~/.gmpc/gmpc.cfg\n"
+#~ "\t--config=<file>\t\tУстановить путь до файла с конфигурацией, по умолчанию: "
+#~ "~/.gmpc/gmpc.cfg\n"
 #~ "\t--clean-cover-db\tОчистить файл с обложками.\n"
 #~ "\t--disable-plugins\tНе загружать дополнения\n"
 #~ "\t--replace\t\tЗаменить запущенную сессию текущей\n"

@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
-"Report-Msgid-Bugs-To: \n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2010-09-05 10:01+0200\n"
 "PO-Revision-Date: 2010-07-07 10:02+0000\n"
 "Last-Translator: Andi Chandler <Unknown>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-09-05 07:40+0000\n"
+"X-Launchpad-Export-Date: 2010-10-28 20:20+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../data/gmpc.desktop.in.h:1
@@ -774,7 +774,7 @@ msgstr "Disconnected"
 
 #. *
 #. * Set paused in Window string
-#.
+#. 
 #: ../src/playlist3.c:1727 ../src/playlist3.c:1732
 msgid "paused"
 msgstr ""
@@ -1053,7 +1053,7 @@ msgstr ""
 
 #. *
 #. * Append an introduction page
-#.
+#. 
 #: ../src/setup-assistant.c:111
 msgid ""
 "It is the first time you have launched gmpc.\n"
@@ -1070,7 +1070,7 @@ msgstr ""
 
 #. *
 #. * End
-#.
+#. 
 #: ../src/setup-assistant.c:141
 msgid ""
 "Gmpc is now ready for use.\n"
@@ -1155,7 +1155,8 @@ msgstr ""
 "Launchpad Contributions:\n"
 "  Andi Chandler https://launchpad.net/~bing\n"
 "  Floris Douw https://launchpad.net/~fdouw\n"
-"  James Thorrold https://launchpad.net/~jthorrold"
+"  James Thorrold https://launchpad.net/~jthorrold\n"
+"  Murat DOGANCAY https://launchpad.net/~mdogancay"
 
 #: ../glade/password-dialog.ui.h:1
 msgid "Enter your password for: '<hostname>'"
@@ -1330,9 +1331,8 @@ msgid "Album"
 msgstr ""
 
 #: ../glade/preferences-server.ui.h:7
-#, fuzzy
 msgid "Auto"
-msgstr "Action"
+msgstr ""
 
 #: ../glade/preferences-server.ui.h:8
 msgid "Enable crossfade"
