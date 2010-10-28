@@ -5,7 +5,7 @@ GMPC Manual - The interface
 :Date: today
 :Revision: 0.01
 
-=== Die Hauptansicht
+== Die Hauptansicht
 
 Das folgende Bild zeigt das Hauptfenster von GMPC:
 
