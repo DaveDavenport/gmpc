@@ -345,24 +345,25 @@ image:Images/server-information.png[]
 
 [[query-syntax]]
 == Query Syntax
+Wörtlich übersetzt: Query = Abfrage
 
-The query syntax is used in the search browser, the playlist quick search and in easy command.
+Die Query Syntax wird im Suchfenster, in der Suchfunktion der Playlist und im EasyCommand verwendet.
 
-The syntax consist of the following:
+Sie besteht aus Folgendem:
 
 ---------------
-<field>=<value>
+<Feld>=<Wert>
 ---------------
 
-This will search for value in the field field.
+Dieses Beispielt sucht nach "Wert" im Feld mit dem Namen "Feld".
 
-The following fields are supported:
+Diese Felder werden unterstützt:
 
     artist
     album
     title
     track
-    Name (applies to streams)
+    Name (trifft auf Streams zu)
     Genre
     Date
     Composer
@@ -370,129 +371,125 @@ The following fields are supported:
     Comment
     Disc
     Filename
-    AlbuArtist
-    Any (searches all the above fields) 
+    AlbumArtist
+    Any (durchsucht alle Felder) 
 
-If your MPD does not support any of these fields, they will be ignored and seen as part of the command.
+Wenn MPD keins dieser Felder unterstützt, werden sie ignoriert und als Teil des Befehls angezeigt.
 
-The search is tokenized and case insensitive, so for example:
+Die Suche basiert auf Tokens (Stichworte) und unterscheidet Groß-/Kleinschreibung, zum Beispiel:
 
 -------------------
 artist=eric clapton
 -------------------
 
-Will match both "eric clapton", "Clapton, Eric". To stop this tokenization wrap the values in (). For example:
+Wird sowohl "eric clapton" als auch "Clapton, Eric" finden. Um die Suche per Stichworten zu umgehen, wird die Suche in () gestellt, z.B.:
 
 ---------------------
 artist=(Eric Clapton)
 ---------------------
 
-Will not match "Clapton, Eric".
+Wird nicht "Clapton, Eric" finden.
 
-
-To refine you search multiple queries can be concattenated:
-
-for example:
+Um die Suche zu verfeiner, können mehrere Werte angegeben werden, z.B.:
 
 ----------------------------------
 artist=Eric Clapton album=Slowhand
 ----------------------------------
 
-
-There is also an option to run multiple queries at once by using the or operator ||:
+Mit dem || Operator kann man auch mehrere Abfragen auf einmal absetzen:
 
 -----------------------------------------
 artist=Eric Clapton || artist=Norah Jones
 -----------------------------------------
 
-This will return all songs by Eric Clapton and Norah Jones.
+Diese Abfrage wird alle Titel von Eric Clapton und Norah Jones finden.
 
-
-Note; if <field= > is ommited, all fields are searched. 
+NOTE: Wenn <field= > abgesetzt wird, werden alle Felder durchsucht.
 
 
 == Easy Command
 image:Images/Gmpc-easy-command.png[]
 
-GMPC has an feature called "easy command". Easy command gives you a small command box, allowing you to quickly execute commands without having to use the mouse.
+GMPC besitzt ein Funktion, die "Easy Command" heißt. Easy Command stellt eine kleine Befehls-Box bereit, die die schnelle Ausführung von Befehlen ermöglicht, ohne die Maus benutzen zu müssen.
 
-For example, send the command to gmpc to search in the play queue for the song Holy Mother from the artist Eric Clapton and play that song immediately the following could easily be typed.
+Beispiel: GMPC soll die Wiedergabe-Warteschlange nach dem Titel Holy Mother von Eric Clapton durchsuchen und diesen dann direkt abspielen.
 
-First, start the "easy command" mode:
+Zuerst wird Easy Command gestartet:
 
 ----------
 ctrl-space
 ----------
 
-Next, type the following command:
+Als nächstes wird der Befehl eingetippt:
 
 ------------------------------------------
 play title=Holy mother artist=Eric Clapton
 ------------------------------------------
 
-You can also concattenate commands:
+Befehle können auch verbunden werden:
 
 --------------------------------------------
 clear; add artist=Strehli; play title=SRV
 --------------------------------------------
 
-You can also bind a global one in preferences->Multimedia Keys.
+Ein globaler Befehl kann in den Einstellungen unter Multimediatasten definiert werden.
 
-Some commands use the xref:query-syntax[Query syntax]
+Einige Befehle nutzen die xref:query-syntax[Query Syntax].
 
-=== Implemented Easy Commands
-To get a more uptodate list of possible commands, see 'help->Easy command help' in gmpc.
 
-====  Switch
+=== Eingebaute Easy Commands
 
-*    switch play queue: Switch to play queue
-*    switch metadata browser: Switch to the metadata browser
-*    switch search: Switch to the search browser 
+Um die aktuellste Liste der verfügbaren Befehle zu kommen, siehe Hilfe -> Easy Command Hilfe.
+
+====  Wechseln
+
+*    Wechsle Wiedergabeliste: Wechsle zur Wiedergabeliste
+*    switch now playing: Zu Now Playing wechseln 
+*    Suche Wechseln: Zum Suchbrowser wechseln 
 
 ==== Main
 
-*    quit: Quit gmpc
-*    hide: Hide gmpc
-*    show: Show gmpc
-*    show notification: Show the tray-icon notification. (if enabled) 
+*    Beenden: GMPC beenden
+*    Verstecken: GMPC verstecken
+*    Zeigen: GMPC zeigen
+*    Benachrichtigung anzeigen: Zeige Benachrichtigungen im Tray 
 
 ==== Playback
 
-*    play: start playback
-*    pause: pause playback
-*    next: next song
-*    prev: previous song
-*    stop: stop playback
-*    random (on|off): Random (on|off)
-*    repeat (on|off): Repeat (on|off)
-*    volume [+-]?[0-9]+: Volume <level>
-*    mute: Mute
-*    play .*: Play <query> 
+*    Wiedergabe: Wiedergabe starten
+*    Pause: Wiedergabe pausieren
+*    Weiter: Nächster Titel
+*    vorheriges: Vorheriger Titel
+*    Stop: Wiedergabe anhalten
+*    Zufall: Zufall (ein|aus)
+*    Wiederholen: Wiederholen (ein|aus)
+*    Laustärke: Laustärke (+-)<pegel>
+*    Stumm: Stumm
+*    Wiedergabe: Spiele <query> 
 
-*    seek hh:mm:ss: Seek to position
-*    seek +hh:mm:ss: Seek relative to current position
-*    seek -hh:mm:ss: Seek backwards relative to current position 
+*    seek hh:mm:ss: Seek to position (nicht in DE-Liste)
+*    seek +hh:mm:ss: Seek relative to current position (nicht in DE-Liste)
+*    seek -hh:mm:ss: Seek backwards relative to current position (nicht in DE-Liste)
 
+*    Wiederhole aktuelles Lied: Wieder das aktuelle Lied
+*    Stoppe nach dem aktuellen Lied: Stoppe Wiedergabe nach dem aktuellen Lied
+*    Verbrauch: Verbrauch (an|aus)
+*    Single: Single (an|aus) 
 
-*    repeat current song: Repeats the currently playing song forever
-*    stop after current song: Stops playback after current song.
-*    consume (on|off)
-*    single (on|off) 
+==== Wiedergabe-Warteschlange Manipulation
 
-==== Play-Queue Manipulation
+*    Hinzufügen: <query> hinuzfügen
+*    Ersetzen: Playlist mit <query> ersetzen
+*    Wiedergabeliste leeren: Wiedergabeliste leeren
+*    Aktuellen Titel abschneiden: Aktuelle Wiedergabeliste auf den aktuellen Titel zuschneiden 
 
-*    add .*: Add <query>
-*    replace .*: Replace <query>
-*    Clear play queue: Clear play queue 
-*    Crop current song: Clears the whole play queue without removing the current playing song. 
+==== Suche
 
-==== Search
-
-*    search database .*: Search database <query>
-*    search playlist .*: Search playlist <query> 
+*    Datenbank durchsuchen: Durchsuche Datenbank nach <query>
+*    Wiedergabeliste durchsuchen: Durchsuche Wiedergabeliste nach <query>
 
 ==== Metadata Browser
 
-*    show current song: Show the page of the current playing song.
-*    show current artist: Show the page of the current playing artist.
-*    show current album: Show the page of the current playing album. 
+*    show current song: Show the page of the current playing song (nicht in DE-Liste)
+*    show current artist: Show the page of the current playing artist (nicht in DE-Liste)
+*    show current album: Show the page of the current playing album (nicht in DE-Liste)

@@ -345,7 +345,7 @@ image:Images/server-information.png[]
 
 The query syntax is used in the search browser, the playlist quick search and in easy command.
 
-The syntax consist of the following:
+The syntax consists of the following:
 
 ---------------
 <field>=<value>
@@ -367,7 +367,7 @@ The following fields are supported:
     Comment
     Disc
     Filename
-    AlbuArtist
+    AlbumArtist
     Any (searches all the above fields) 
 
 If your MPD does not support any of these fields, they will be ignored and seen as part of the command.
@@ -387,14 +387,13 @@ artist=(Eric Clapton)
 Will not match "Clapton, Eric".
 
 
-To refine you search multiple queries can be concattenated:
+To refine your search multiple queries can be concatenated:
 
-for example:
+For example:
 
 ----------------------------------
 artist=Eric Clapton album=Slowhand
 ----------------------------------
-
 
 There is also an option to run multiple queries at once by using the or operator ||:
 
@@ -404,14 +403,13 @@ artist=Eric Clapton || artist=Norah Jones
 
 This will return all songs by Eric Clapton and Norah Jones.
 
-
-Note; if <field= > is ommited, all fields are searched. 
+NOTE: If <field= > is ommited, all fields are searched. 
 
 
 == Easy Command
 image:Images/Gmpc-easy-command.png[]
 
-GMPC has an feature called "easy command". Easy command gives you a small command box, allowing you to quickly execute commands without having to use the mouse.
+GMPC has an feature called "Easy Command". Easy command gives you a small command box, allowing you to quickly execute commands without having to use the mouse.
 
 For example, send the command to gmpc to search in the play queue for the song Holy Mother from the artist Eric Clapton and play that song immediately the following could easily be typed.
 
@@ -427,18 +425,18 @@ Next, type the following command:
 play title=Holy mother artist=Eric Clapton
 ------------------------------------------
 
-You can also concattenate commands:
+You can also concatenate commands:
 
 --------------------------------------------
 clear; add artist=Strehli; play title=SRV
 --------------------------------------------
 
-You can also bind a global one in preferences->Multimedia Keys.
+You can also bind a global one in preferences -> Multimedia Keys.
 
-Some commands use the xref:query-syntax[Query syntax]
+Some commands use the xref:query-syntax[Query syntax].
 
 === Implemented Easy Commands
-To get a more uptodate list of possible commands, see 'help->Easy command help' in gmpc.
+To get a more uptodate list of possible commands, see Help -> Easy command help in gmpc.
 
 ====  Switch
 
@@ -470,7 +468,6 @@ To get a more uptodate list of possible commands, see 'help->Easy command help' 
 *    seek +hh:mm:ss: Seek relative to current position
 *    seek -hh:mm:ss: Seek backwards relative to current position 
 
-
 *    repeat current song: Repeats the currently playing song forever
 *    stop after current song: Stops playback after current song.
 *    consume (on|off)
@@ -491,5 +488,5 @@ To get a more uptodate list of possible commands, see 'help->Easy command help' 
 ==== Metadata Browser
 
 *    show current song: Show the page of the current playing song.
-*    show current artist: Show the page of the current playing artist.
-*    show current album: Show the page of the current playing album. 
+*    show current artist: Show the page of the current playing artist
+*    show current album: Show the page of the current playing album
