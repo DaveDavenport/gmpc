@@ -230,7 +230,7 @@ message_received_cb (UniqueApp         *app,
 			break;
 		case UNIQUE_COMMAND_STREAM:
 		{
-			gchar *fn = unique_message_data_get_text(message);
+			gchar *fn = unique_message_data_get_filename(message);
 			res = UNIQUE_RESPONSE_FAIL;
 			if(fn)
 			{
@@ -242,7 +242,7 @@ message_received_cb (UniqueApp         *app,
 		}
 		case UNIQUE_COMMAND_EASYCOMMAND:
 		{
-			gchar *fn = unique_message_data_get_filename(message);
+			gchar *fn = unique_message_data_get_text(message);
 			res = UNIQUE_RESPONSE_FAIL;
 			if(fn)
 			{

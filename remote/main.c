@@ -208,7 +208,7 @@ int main ( int argc, char **argv )
         UniqueMessageData *message; /* the payload for the command */
 
         message = unique_message_data_new();
-        unique_message_data_set_filename(message, easycommand);
+        unique_message_data_set_text(message, easycommand,-1);
 
         response = unique_app_send_message(app, UNIQUE_COMMAND_EASYCOMMAND, message);
         if(response  == UNIQUE_RESPONSE_FAIL) printf("Failed to send EASYCOMMAND command\n");
