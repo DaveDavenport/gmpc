@@ -46,8 +46,6 @@ namespace MPD {
         public unowned MPD.Song copy ();
         [CCode (instance_pos = -1)]
         public void markup (char[] buffer, int length, string markup);
-        [CCode (cname = "mpd_freeSong")]
-        public static void free;
     }
     namespace Sticker {
         namespace Song {
