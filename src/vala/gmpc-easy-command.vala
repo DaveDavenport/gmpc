@@ -276,10 +276,11 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 
 			/* Setup window */
 			window.role = "easy command";
-			window.type_hint = Gdk.WindowTypeHint.DIALOG;
+			window.type_hint = Gdk.WindowTypeHint.UTILITY;
 			window.decorated = false;
 			window.modal = true;
 			window.set_keep_above(true);
+			window.stick();
 
 			window.border_width = 24;
 			entry.width_chars = 50;
