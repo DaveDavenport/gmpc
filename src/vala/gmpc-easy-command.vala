@@ -66,8 +66,7 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
     public override void set_enabled(bool state) {
 		/* if disabling and popup is open, close it */
 		if(!state && this.window != null) {
-			this.window.destroy();
-			this.window = null;
+			popup_destroy();
 		}
        config.set_int(this.get_name(), "enabled", (int)state); 
     }
@@ -146,8 +145,7 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 		Gtk.TreeIter iter;
 		if (value_unsplit.length == 0) {
 			if(this.window != null) {
-				this.window.destroy();
-				this.window = null;
+				popup_destroy();
 			}
 			return;
 		}
@@ -207,15 +205,13 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 		}
 
 		if(this.window != null) {
-			this.window.destroy();
-			this.window = null;
+			popup_destroy();
 		}
 	}
 	private bool key_press_event(Gtk.Widget widget, Gdk.EventKey event) {
 		/* Escape */
 		if (event.keyval == 0xff1b) {
-			this.window.destroy();
-			this.window = null;
+			popup_destroy();
 			return true;
 		}
 		/* Tab key */
@@ -259,6 +255,14 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 		return false;
 	}
 
+	public void
+	popup_destroy()
+	{
+		Gdk.keyboard_ungrab(Gtk.get_current_event_time());
+		Gdk.pointer_ungrab(Gtk.get_current_event_time());
+		this.window.destroy();
+		this.window = null;
+	}
 	/** 
      * Tell gmpc-easy-command to popup.
      * @param self The GmpcEasyCommand object to popup
@@ -276,7 +280,7 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 
 			/* Setup window */
 			window.role = "easy command";
-			window.type_hint = Gdk.WindowTypeHint.UTILITY;
+			window.type_hint = Gdk.WindowTypeHint.DIALOG;
 			window.decorated = false;
 			window.modal = true;
 			window.set_keep_above(true);
@@ -296,32 +300,56 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 			window.app_paintable = true;
 			window.expose_event.connect(popup_expose_handler);
 
-/*			Disable this as often gmpc is moved and bring to top, not desirable..
-			if (!Gmpc.Playlist.is_hidden()) {
-				window.set_transient_for(Gmpc.Playlist.get_window());
-				window.position = Gtk.WindowPosition.CENTER_ON_PARENT;
-			}
-*/
 			/* setup entry */
 			entry.set_completion(this.completion);
 			entry.activate.connect(this.activate);
 			entry.key_press_event.connect(this.key_press_event);
 
-			entry.focus_out_event.connect(this.focus_out_event);
 
+			window.button_press_event.connect((source, event) => {
+				popup_destroy();
+				return false;
+			});
 			window.show_all();
 			window.present();
+			window.window.raise();
 			entry.grab_focus();
 		} else {
 			this.window.present();
 		}
-	}
-	private bool
-	focus_out_event(Gtk.Widget entry, Gdk.EventFocus event)
-	{
-		this.window.destroy();
-		this.window = null;
-		return false;
+		{	
+			/* Make gmpc easy command grab the keyboard. Do this somewhat aggrasive. */
+			uint32 _time = Gtk.get_current_event_time();
+			int i = 10;
+			while(i>0 && this.window != null)
+			{
+				if(Gdk.keyboard_grab(this.window.window, true, _time) != Gdk.GrabStatus.SUCCESS) {
+					GLib.debug("Failed to grab keyboard\n");
+				}
+				else break;
+				GLib.Thread.usleep(100000);
+				i--;
+			}
+
+			/* Grab pointer too! */
+			while(i>0 && this.window != null)
+			{
+				if(Gdk.pointer_grab(this.window.window, true, 
+						Gdk.EventMask.BUTTON_PRESS_MASK |
+						Gdk.EventMask.BUTTON_RELEASE_MASK |
+						Gdk.EventMask.POINTER_MOTION_MASK,
+						null, null, _time) 
+						!= Gdk.GrabStatus.SUCCESS) 
+				{
+					GLib.debug("Failed to grab pointer\n");
+				}
+				else break;
+				GLib.Thread.usleep(100000);
+				i--;
+
+				
+			}
+		}
 	}
 	public static void 
 	help_window_destroy(Gtk.Dialog window,int response)
