@@ -76,12 +76,22 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 	 */
 	private bool completion_function(Gtk.EntryCompletion comp, string key, Gtk.TreeIter iter) {
 		string value;
+		string pattern;
 		var model = comp.model;
 
-		 model.get(iter, 1, out value);
+		 model.get(iter, 1, out value,2, out pattern);
 		if (value != null) {
-			string a = "^%s.*".printf(key);
-			 return GLib.Regex.match_simple(a, value, GLib.RegexCompileFlags.CASELESS, 0);
+			string a;
+			if(key.length < value.length) {
+				a= "^%s".printf(value.substring(0,(long)key.length));
+			}else{
+				a= "^%s".printf(value);
+				if(pattern != null && pattern.size() > 0) {
+					a+= "[ ]*(%s)".printf(pattern);
+				}
+			}
+			a+="$";
+			 return GLib.Regex.match_simple(a, key,GLib.RegexCompileFlags.CASELESS, 0);
 		}
 
 		return false;
@@ -176,7 +186,6 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 			/* If now exact match is found, use the partial matching that is
 			 * also used by the completion popup.
 			 * First, partial, match is taken.
-			 */
 			if(!found) {
 				if (model.get_iter_first(out iter)) {
 					do {
@@ -199,6 +208,7 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 					} while (model.iter_next(ref iter) && !found);
 				}
 			}
+			*/
 			/* If we still cannot match it, give a message */
 			if (!found)
 				Gmpc.Messages.show("Unknown command: '%s'".printf(value), Gmpc.Messages.Level.INFO);
@@ -290,6 +300,8 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 			entry.width_chars = 50;
 
 			window.add(entry);
+
+
 
 			/* Composite */
 			if (window.is_composited()) {
