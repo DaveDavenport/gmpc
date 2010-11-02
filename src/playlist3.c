@@ -1706,7 +1706,7 @@ static void playlist_zoom_level_changed(void)
 	case PLAYLIST_NO_ZOOM:
 		break;
 	case PLAYLIST_MINI:
-		gtk_widget_hide(glade_xml_get_widget(pl3_xml, "hbox1"));
+//		gtk_widget_hide(glade_xml_get_widget(pl3_xml, "hbox1"));
 		gtk_widget_hide(glade_xml_get_widget(pl3_xml, "hpaned1"));
 		gtk_widget_hide(glade_xml_get_widget(pl3_xml, "menu_option"));
 		gtk_widget_hide(glade_xml_get_widget(pl3_xml, "menu_go"));
