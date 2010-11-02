@@ -288,6 +288,16 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 			this.window = new Gtk.Window(Gtk.WindowType.TOPLEVEL);
 			var entry = new Gtk.Entry();
 
+
+			entry.set_icon_from_icon_name(Gtk.EntryIconPosition.PRIMARY, "gmpc");
+			entry.set_icon_from_stock(Gtk.EntryIconPosition.SECONDARY, "gtk-clear");
+			entry.icon_release.connect((source, pos, event) =>{
+				if(pos == Gtk.EntryIconPosition.SECONDARY) {
+					source.set_text("");
+				}else{
+					popup_destroy();
+				}
+			});
 			/* Setup window */
 			window.role = "easy command";
 			window.type_hint = Gdk.WindowTypeHint.DIALOG;
