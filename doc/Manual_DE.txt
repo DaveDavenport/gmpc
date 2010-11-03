@@ -20,7 +20,7 @@ image:Images/main-window-collapsed1.png[]
 
 Verkleinerte Ansicht 2:
 
-image:Images/main-window-collapsed2.png[]
+image:Images/main-view-collapsed2.png[]
 
 In dieser Anleitung werden wir jeden Teil der Anzeige erklären.
 
