@@ -322,14 +322,46 @@ The following items can be selected:
 === Play Queue
 image:Images/play-queue.png[]
 
-This is basically your master-playlist. Every title you want to listen to will appear here by rightclicking a file in the database or playlist-editor view and selecting "Add". 
-This works with every file, folder or playlist.
 
-If you do a right click on an entry of the play queue, you will get this popup:
+This is basically your master-playlist. Every title you want to listen to will appear here. You can add songs to the play-queue by opening the context menu (right mouse click) in either the file in the database or the playlist-editor and selecting "Add". 
+
+==== Sorting
+You can move a single song to a new location using drag and drop. You can move a single row by selecting it, and dragging it to the new location.
+To quickly move around multiple songs you can cut, copy and then paste songs within the play-queue. It is even possible to copy songs from other lists and insert them at a certain position in the play-queue.
+
+NOTE: GTK does not yet provide a method of moving multiple rows using drag and drop. Instead of adding this using dirty hacks, a more robust cut/copy/paste system was added.
+
+==== Filter
+You can filter the play-queue by pressing 'ctrl-f' or start typing when it is selecting. The playlist filter supports the xref:query-syntax[Query syntax]. 
+
+TIP: If the filter is slow in updating the playlist, because you are on a slow connection or MPD runs on a slow machine. You can disable search-as-you-type in the xref:preferences[preferences] pane.
+
+
+==== Editing columns
+You can edit what columns GMPC displays in the play-queue (or any song list), by opening the xref:play-queue-context-menu[context-menu] (right click) and selecting 'edit columns'
+
+[[play-queue-context-menu]]
+==== Context menu
+If you do a right click on an entry of the play queue, you will get this context-menu:
 
 image:Images/play-queue-rightclick.png[]
 
-Note: This popup will depend on the plugins you have installed and activated. Some plugins cause an entry here, others don't.
+
+NOTE: This context-menu will depend on the plugins you have installed and activated. Some plugins cause an entry here, others don't.
+
+
+==== Useful key-bindings
+
+* 'Center playing song': Hit the space bar.
+* 'Delete selected song':  Hit del.
+* 'Opening filter': Ctrl-f.
+* 'Empty filter': Escape.
+* 'Close filter':  Escape or backspace when empty.
+
+TIP: If you enable 'Enable songlist tooltip' in xref:preferences[preferences] pane. Gmpc will show a tooltip with the album cover and some information about the song you are hovering.
+
+
+
 
 === Tag Browser
 
