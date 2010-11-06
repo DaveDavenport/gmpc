@@ -141,7 +141,7 @@ void playlist3_message_show(Playlist3MessagePlugin * self, const gchar * message
 		GList *list, *siter;
 		label = gtk_image_new_from_stock(image_name, GTK_ICON_SIZE_BUTTON);
 
-		event = (GtkWidget *) glade_xml_get_widget(pl3_xml, "error_hbox");
+		event = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "error_hbox"));
 
 		/* right image */
 
@@ -154,7 +154,7 @@ void playlist3_message_show(Playlist3MessagePlugin * self, const gchar * message
 
 		list = gtk_container_get_children(GTK_CONTAINER(event));
 
-		event = (GtkWidget *) glade_xml_get_widget(pl3_xml, "error_event");
+		event = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "error_event"));
 		for (siter = list; siter; siter = g_list_next(siter))
 		{
 			gtk_widget_modify_fg(GTK_WIDGET(siter->data), GTK_STATE_NORMAL, &(event->style->fg[GTK_STATE_NORMAL]));
@@ -178,7 +178,7 @@ static gboolean widget_added = FALSE;
 
 void playlist3_message_add_widget(Playlist3MessagePlugin * self, GtkWidget * widget)
 {
-	GtkWidget *event = (GtkWidget *) glade_xml_get_widget(pl3_xml, "error_hbox");
+	GtkWidget *event = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "error_hbox"));
 	/* Avoid adding more then one widget */
 	if (widget_added)
 		return;
@@ -199,9 +199,9 @@ gboolean playlist3_message_close(Playlist3MessagePlugin * self)
 
 		if (pl3_xml)
 		{
-			GtkWidget *event = (GtkWidget *) glade_xml_get_widget(pl3_xml, "error_event");
+			GtkWidget *event = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "error_event"));
 			gtk_widget_hide(event);
-			event = (GtkWidget *) glade_xml_get_widget(pl3_xml, "error_hbox");
+			event =  GTK_WIDGET(gtk_builder_get_object(pl3_xml, "error_hbox"));
 			gtk_container_foreach(GTK_CONTAINER(event), (GtkCallback) (gtk_widget_destroy), NULL);
 		}
 	}
@@ -240,7 +240,7 @@ void message_window_destroy(GtkWidget * win, GdkEvent * event, GtkBuilder * mess
 
 void copy_to_clipboard(GtkButton * button, GtkBuilder * xml)
 {
-	GtkWidget *tree = (GtkWidget *) gtk_builder_get_object(xml, "message_tree");
+	GtkWidget *tree = GTK_WIDGET(gtk_builder_get_object(xml, "message_tree"));
 	GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(tree));
 	GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(tree));
 	GtkClipboard *gcb = NULL;
@@ -300,11 +300,11 @@ static void playlist3_message_window_open(Playlist3MessagePlugin * self)
 	playlist3_message_init(self);
 
 	/* set transient */
-	win = (GtkWidget *) gtk_builder_get_object(xml, "message_window");
+	win = GTK_WIDGET(gtk_builder_get_object(xml, "message_window"));
 	gtk_window_set_transient_for(GTK_WINDOW(win), GTK_WINDOW(pl3_win));
 	gtk_window_set_position(GTK_WINDOW(win), GTK_WIN_POS_CENTER_ON_PARENT);
 
-	tree = (GtkWidget *) gtk_builder_get_object(xml, "message_tree");
+	tree = GTK_WIDGET(gtk_builder_get_object(xml, "message_tree"));
 	renderer = gtk_cell_renderer_pixbuf_new();
 	gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(tree), -1, "", renderer, "stock-id", 1, NULL);
 	renderer = gtk_cell_renderer_text_new();

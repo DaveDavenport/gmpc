@@ -1,7 +1,6 @@
 # files added by intltool-prepare
 [encoding: UTF-8]
 data/gmpc.desktop.in
-glade/playlist3.glade
 src/config1.c
 src/gmpc_easy_download.c
 src/main.c
@@ -35,6 +34,7 @@ src/smclient/eggsmclient.c
 [type: gettext/glade]glade/playlist-message-window.ui
 [type: gettext/glade]glade/playlist-save-dialog.ui
 [type: gettext/glade]glade/gmpc-add-url.ui
+[type: gettext/glade]glade/playlist3.ui
 
 
 # Browsers

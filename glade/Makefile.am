@@ -13,7 +13,7 @@ appglade_DATA =\
 		password-dialog.ui\
 		playlist-save-dialog.ui\
 		playlist-message-window.ui\
-		playlist3.glade\
+		playlist3.ui\
         gmpc-add-url.ui
 
 EXTRA_DIST = ${appglade_DATA} 

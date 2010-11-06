@@ -1012,7 +1012,7 @@ static void pl3_current_playlist_save_playlist(void)
 	/* run the interface */
 	do
 	{
-		switch (gtk_dialog_run(GTK_DIALOG((GtkWidget *) gtk_builder_get_object(xml, "save_pl"))))
+		switch (gtk_dialog_run(GTK_DIALOG(gtk_builder_get_object(xml, "save_pl"))))
 		{
 		case GTK_RESPONSE_OK:
 			run = FALSE;
@@ -1114,7 +1114,7 @@ static void pl3_current_playlist_status_changed(GmpcConnection * conn, MpdObj * 
 
 static void pl3_current_playlist_browser_activate(PlayQueuePlugin * self)
 {
-	GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *) glade_xml_get_widget(pl3_xml, "cat_tree"));
+	GtkTreeSelection *selec = gtk_tree_view_get_selection(GTK_TREE_VIEW(gtk_builder_get_object(pl3_xml, "cat_tree")));
 
 	GtkTreePath *path = gtk_tree_row_reference_get_path(self->priv->pl3_curb_tree_ref);
 	if (path)

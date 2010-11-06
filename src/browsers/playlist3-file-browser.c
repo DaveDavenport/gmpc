@@ -1072,7 +1072,7 @@ static void pl3_file_browser_delete_playlist_from_right(GtkMenuItem * bt)
 	GtkTreeIter iter;
 	char *path = NULL;
 	/* create a warning message dialog */
-	GtkWidget *dialog = gtk_message_dialog_new(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")),
+	GtkWidget *dialog = gtk_message_dialog_new(GTK_WINDOW(playlist3_get_window()),
 											   GTK_DIALOG_MODAL,
 											   GTK_MESSAGE_WARNING,
 											   GTK_BUTTONS_NONE,
@@ -1117,7 +1117,7 @@ static void pl3_file_browser_delete_playlist(GtkMenuItem * bt)
 	char *path = NULL;
 	GtkTreeSelection *sel = NULL;
 	/* create a warning message dialog */
-	GtkWidget *dialog = gtk_message_dialog_new(GTK_WINDOW(glade_xml_get_widget(pl3_xml, "pl3_win")),
+	GtkWidget *dialog = gtk_message_dialog_new(GTK_WINDOW(playlist3_get_window()),
 											   GTK_DIALOG_MODAL,
 											   GTK_MESSAGE_WARNING,
 											   GTK_BUTTONS_NONE,

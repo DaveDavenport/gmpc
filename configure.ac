@@ -220,10 +220,6 @@ PKG_CHECK_MODULES([libmpd], libmpd >= 0.20.95)
 AC_SUBST(libmpd_LIBS)
 AC_SUBST(libmpd_CFLAGS)
 
-# libglade
-PKG_CHECK_MODULES([libglade], libglade-2.0)
-AC_SUBST(libglade_LIBS)
-AC_SUBST(libglade_CFLAGS)
 
 # gthread
 PKG_CHECK_MODULES([gthread], gthread-2.0)

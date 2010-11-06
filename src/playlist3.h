@@ -21,7 +21,6 @@
 #define __PLAYLIST3_H__
 
 #include <libmpd/libmpd.h>
-#include <glade/glade.h>
 
 extern GtkTreeModel *pl3_tree;
 extern GtkListStore *pl3_store;
@@ -52,7 +51,7 @@ void playlist_editor_fill_list(void);
 int pl3_window_key_press_event(GtkWidget *, GdkEventKey *);
 
 
-extern GladeXML *pl3_xml;
+extern GtkBuilder *pl3_xml;
 /**
  * Server information 
  */

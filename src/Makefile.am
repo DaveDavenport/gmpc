@@ -112,7 +112,6 @@ LIBS= \
 	@gobject_LIBS@\
 	@gtk_LIBS@\
 	@gmodule_LIBS@\
-	@libglade_LIBS@\
 	@gthread_LIBS@\
 	@libsoup_LIBS@\
 	@libgio_LIBS@\
@@ -144,7 +143,6 @@ AM_CFLAGS = @CFLAGS@\
 	@gtk_CFLAGS@\
 	@gmodule_CFLAGS@\
     @libxspf_CFLAGS@\
-	@libglade_CFLAGS@\
 	@gthread_CFLAGS@\
 	@libsoup_CFLAGS@\
 	@libgio_CFLAGS@\

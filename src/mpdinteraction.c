@@ -494,7 +494,7 @@ gboolean connecting_pulse_callback(void)
 {
 	if (pl3_xml)
 	{
-		GtkProgressBar *pb = (GtkProgressBar *) glade_xml_get_widget(pl3_xml, "pl3_progressbar");
+		GtkProgressBar *pb = GTK_PROGRESS_BAR(gtk_builder_get_object(pl3_xml, "pl3_progressbar"));
 		gtk_progress_bar_pulse(pb);
 	}
 	return TRUE;
@@ -513,7 +513,7 @@ int update_mpd_status(void)
 
 static int connected_to_mpd(mpd_Connection * mpd_conn)
 {
-	gtk_widget_hide(glade_xml_get_widget(pl3_xml, "pl3_progressbar"));
+	gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "pl3_progressbar")));
 	g_source_remove(connecting_pulse);
 	connecting_pulse = 0;
 	g_mutex_unlock(connecting_lock);
@@ -570,8 +570,8 @@ int connect_to_mpd(void)
 	}
 	g_thread_create((GThreadFunc) connection_thread, NULL, FALSE, NULL);
 	connecting_pulse = g_timeout_add(200, (GSourceFunc) (connecting_pulse_callback), NULL);
-	gtk_progress_bar_set_text(GTK_PROGRESS_BAR(glade_xml_get_widget(pl3_xml, "pl3_progressbar")), _("Connecting"));
-	gtk_widget_show(glade_xml_get_widget(pl3_xml, "pl3_progressbar"));
+	gtk_progress_bar_set_text(GTK_PROGRESS_BAR(gtk_builder_get_object(pl3_xml, "pl3_progressbar")), _("Connecting"));
+	gtk_widget_show(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "pl3_progressbar")));
 
 	/* Set the title
 	   update_mpd_status();
@@ -742,7 +742,7 @@ static void create_outputs_tree(void)
 	GtkTreeViewColumn *col;
 	GtkTreeView *tree;
 
-	tree = GTK_TREE_VIEW((GtkWidget *) gtk_builder_get_object(server_pref_xml, "tv_outputs"));
+	tree = GTK_TREE_VIEW(gtk_builder_get_object(server_pref_xml, "tv_outputs"));
 	model = gtk_list_store_new(3, G_TYPE_BOOLEAN, G_TYPE_STRING, G_TYPE_INT);
 	gtk_tree_view_set_model(tree, GTK_TREE_MODEL(model));
 	g_object_unref(G_OBJECT(model));
@@ -773,10 +773,10 @@ static void update_outputs_settings(void)
 	GtkListStore *store;
 	GtkFrame *frame;
 
-	frame = GTK_FRAME((GtkWidget *) gtk_builder_get_object(server_pref_xml, "frm_outputs"));
+	frame = GTK_FRAME(gtk_builder_get_object(server_pref_xml, "frm_outputs"));
 	store =
 		GTK_LIST_STORE(gtk_tree_view_get_model
-					   (GTK_TREE_VIEW((GtkWidget *) gtk_builder_get_object(server_pref_xml, "tv_outputs"))));
+					   (GTK_TREE_VIEW(gtk_builder_get_object(server_pref_xml, "tv_outputs"))));
 	gtk_list_store_clear(store);
 	if (mpd_check_connected(connection) && mpd_server_check_version(connection, 0, 12, 0))
 	{
@@ -801,12 +801,12 @@ void xfade_enable_toggled(GtkToggleButton * but)
 {
 
 	int bool1 = gtk_toggle_button_get_active(but);
-	gtk_widget_set_sensitive((GtkWidget *) gtk_builder_get_object(server_pref_xml, "sb_fade_time"), bool1);
+	gtk_widget_set_sensitive(GTK_WIDGET(gtk_builder_get_object(server_pref_xml, "sb_fade_time")), bool1);
 	if (bool1)
 	{
 		int fade_time =
 			gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON
-											 ((GtkWidget *) gtk_builder_get_object(server_pref_xml, "sb_fade_time")));
+											 (gtk_builder_get_object(server_pref_xml, "sb_fade_time")));
 		mpd_status_set_crossfade(connection, fade_time);
 	} else
 	{
@@ -818,7 +818,7 @@ void xfade_time_changed(GtkSpinButton * but)
 {
 	int fade_time =
 		gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON
-										 ((GtkWidget *) gtk_builder_get_object(server_pref_xml, "sb_fade_time")));
+										 (gtk_builder_get_object(server_pref_xml, "sb_fade_time")));
 	if (!gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(gtk_builder_get_object(server_pref_xml, "cb_fading"))))
 	{
 		return;
@@ -836,7 +836,7 @@ static void xfade_update(void)
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(gtk_builder_get_object(server_pref_xml, "cb_fading")),
 								 mpd_status_get_crossfade(connection) ? TRUE : FALSE);
 
-	gtk_widget_set_sensitive(GTK_WIDGET((GtkWidget *) gtk_builder_get_object(server_pref_xml, "sb_fade_time")),
+	gtk_widget_set_sensitive(GTK_WIDGET(gtk_builder_get_object(server_pref_xml, "sb_fade_time")),
 							 (mpd_status_get_crossfade(connection)) ? TRUE : FALSE);
 
 }
@@ -979,7 +979,7 @@ static void server_pref_destroy(GtkWidget * container)
 {
 	if (server_pref_xml)
 	{
-		GtkWidget *vbox = (GtkWidget *) gtk_builder_get_object(server_pref_xml, "server-vbox");
+		GtkWidget *vbox = GTK_WIDGET(gtk_builder_get_object(server_pref_xml, "server-vbox"));
 		gtk_container_remove(GTK_CONTAINER(container), vbox);
 		g_object_unref(server_pref_xml);
 		server_pref_xml = NULL;
@@ -1008,18 +1008,18 @@ static void server_pref_construct(GtkWidget * container)
 
 	if (server_pref_xml)
 	{
-		GtkWidget *vbox = (GtkWidget *) gtk_builder_get_object(server_pref_xml, "server-vbox");
-		GtkWidget *frame = (GtkWidget *) gtk_builder_get_object(server_pref_xml, "replay_gain_frame");
+		GtkWidget *vbox = GTK_WIDGET(gtk_builder_get_object(server_pref_xml, "server-vbox"));
+		GtkWidget *frame = GTK_WIDGET(gtk_builder_get_object(server_pref_xml, "replay_gain_frame"));
 		create_outputs_tree();
 		update_outputs_settings();
 		if (!mpd_check_connected(connection))
 		{
 			gtk_widget_set_sensitive(vbox, FALSE);
-			gtk_widget_show((GtkWidget *) gtk_builder_get_object(server_pref_xml, "hb_warning_mesg"));
+			gtk_widget_show(GTK_WIDGET(gtk_builder_get_object(server_pref_xml, "hb_warning_mesg")));
 		} else
 		{
 			gtk_widget_set_sensitive(vbox, TRUE);
-			gtk_widget_hide((GtkWidget *) gtk_builder_get_object(server_pref_xml, "hb_warning_mesg"));
+			gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(server_pref_xml, "hb_warning_mesg")));
 		}
 		switch (mpd_server_check_command_allowed(connection, "replay_gain_status"))
 		{
@@ -1047,16 +1047,16 @@ static void server_pref_construct(GtkWidget * container)
 
 		if (mpd_status_get_crossfade(connection) == 0)
 		{
-			gtk_toggle_button_set_active((GtkToggleButton *)
-										 gtk_builder_get_object(server_pref_xml, "cb_fading"), FALSE);
-			gtk_widget_set_sensitive((GtkWidget *) gtk_builder_get_object(server_pref_xml, "sb_fade_time"), FALSE);
+			gtk_toggle_button_set_active(
+										 GTK_TOGGLE_BUTTON(gtk_builder_get_object(server_pref_xml, "cb_fading")), FALSE);
+			gtk_widget_set_sensitive(GTK_WIDGET(gtk_builder_get_object(server_pref_xml, "sb_fade_time")), FALSE);
 		} else
 		{
-			gtk_toggle_button_set_active((GtkToggleButton *)
-										 gtk_builder_get_object(server_pref_xml, "cb_fading"), TRUE);
+			gtk_toggle_button_set_active(
+										GTK_TOGGLE_BUTTON(gtk_builder_get_object(server_pref_xml, "cb_fading")), TRUE);
 			gtk_spin_button_set_value(GTK_SPIN_BUTTON(gtk_builder_get_object(server_pref_xml, "sb_fade_time")),
 									  mpd_status_get_crossfade(connection));
-			gtk_widget_set_sensitive((GtkWidget *) gtk_builder_get_object(server_pref_xml, "sb_fade_time"), TRUE);
+			gtk_widget_set_sensitive(GTK_WIDGET(gtk_builder_get_object(server_pref_xml, "sb_fade_time")), TRUE);
 
 		}
 		gtk_container_add(GTK_CONTAINER(container), vbox);
@@ -1073,7 +1073,7 @@ static void gmpc_profiles_changed_pref_win(GmpcProfiles * prof, const int change
 {
 	if (changed == PROFILE_ADDED)
 	{
-		GtkComboBox *combo = (GtkComboBox *) gtk_builder_get_object(xml, "cb_profiles");
+		GtkComboBox *combo = GTK_COMBO_BOX(gtk_builder_get_object(xml, "cb_profiles"));
 		GtkTreeIter iter;
 		const char *name = gmpc_profiles_get_name(prof, id);
 		GtkTreeModel *store = gtk_combo_box_get_model(combo);
