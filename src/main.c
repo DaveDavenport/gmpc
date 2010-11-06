@@ -1022,8 +1022,11 @@ int main(int argc, char **argv)
 	/*
 	 * run the main loop
 	 */
+	url = gmpc_get_user_path("gmpc.key");
+	gtk_accel_map_load(url);
 	gtk_main();
-
+	gtk_accel_map_save(url);
+	g_free(url);
 	/**
      * Shutting Down
      *  cleaning up.

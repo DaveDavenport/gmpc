@@ -234,7 +234,7 @@ void bug_information_window_new(GtkWidget * window)
 
 	/* Basic dialog with a close button */
 	dialog = gtk_dialog_new_with_buttons(_("Bug information"),
-										 (window) ? (GtkWindow *) gtk_widget_get_toplevel(window) : NULL,
+										 (window) ? (GtkWindow *) playlist3_get_window() : NULL,
 										 GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_NO_SEPARATOR,
 										 GTK_STOCK_CLOSE, GTK_RESPONSE_YES, NULL);
 
