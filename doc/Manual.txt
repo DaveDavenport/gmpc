@@ -2,7 +2,7 @@ GMPC Manual - The interface
 ===========================
 :Author:  Qball
 :Email: Qball@gmpclient.org
-:Date: today
+:Date: 07/11/2010
 :Revision: 0.01
 
 
@@ -287,8 +287,27 @@ image:Images/preferences-multimedia-keys.png[]
 === Notification
 image:Images/preferences-notification.png[]
 
+* 'Show on song change': This will pop a notification as soon as the song changes with information about the new song.
+* 'Timeout': This is the time in seconds for which the notification lasts on the screen.
+* 'Position': There are five options.
+** 'At the notification area icon': Notification is at the gmpc icon in the notification area.
+** 'Upper Left Corner': Notification is in the upper left corner of the screen.
+** 'Upper Right Corner': Notification is in the upper right corner of the screen.
+** 'Lower Left Corner': Notification is in the lower left corner of the screen.
+** 'Lower Right Corner': Notification is in the lower right corner of the screen.
+* 'Enable': Tick box which enables the gmpc icon in the notification area when ticked.
+* 'Show severity': The amount of messages which will be displayed in the gmpc window. This dropdown has four options.
+** 'information and up': Information messages, warnings and errors will be displayed.
+** 'warnings and up': Warnings and errors will be displayed.
+** 'errors': Only errors will be displayed.
+** 'none': Nothing will be displayed.
+
 === Metadata Handler
 image:Images/preferences-metadata-handler.png[]
+
+The metadata handler is a function in GMPC to give priority to different plugins.
+You can give every plugin a number between 1 and 100 where 1 is the lowest and 100 the highest priority.
+GMPC will use these numbers to share the amount of resources between every plugin, this means the higher priority a plugin has, the more resources it gets allocated.
 
 === Proxy
 image:Images/preferences-proxy.png[]
@@ -316,6 +335,30 @@ The following items can be selected:
 == Browsers
 
 === Now Playing
+image:Images/nowplaying.png[]
+
+The now playing browser shows you all sorts of information about the song playing right now.
+Information found on the now playing page changes as soon as a new track starts. 
+
+* 'Album picture': The image in the upper left corner is the album picture.
+* 'Song title': The big headlining text is the song title.
+* 'Artist name': The performers of the current song.
+* 'Album name': The album name in which the current song is featured.
+* 'Genre': This displays the genre of the current playing song.
+* 'Format': Format is giving information about sound specific information, the amount of channels, the frequency of the song and the amount of kbps.
+* 'Codec': Codec used for decoding the song.
+* 'Length': Length of the song in minutes, rounded downwords (2:10 = 2 minutes, 1:59 = 1 minute)
+* 'Track number': Track number of the album it's featuring in.
+* 'Artist picture': Image in the upper right corner is a picture from the artist.
+
+Under the general information you can see a tabbed view of more information which we will explain now.
+
+* 'Lyrics': Fetches and displays them when possible. (Lyrics can only be fetched when lyrics plugins are installed)
+* 'Guitar Tabs': Fetches guitar tabs for the current playing song. (This only works with the Guitar Tabs plugin installed)
+* 'Similar Songs': Will find similar songs in your own database based on the genre of the song.
+* 'Similar Artists': Last.fm checks for similar artists and these results are displayed.
+* 'Web Links': Shows several links to different pages.
+* 'Artist Information': Shows information about the artist fetched from last.fm.
 
 === Database
 
@@ -522,3 +565,4 @@ To get a more uptodate list of possible commands, see Help -> Easy command help 
 *    show current song: Show the page of the current playing song.
 *    show current artist: Show the page of the current playing artist
 *    show current album: Show the page of the current playing album
+
