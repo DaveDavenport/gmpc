@@ -9,24 +9,24 @@ GMPC Manual - The interface
 
 Das folgende Bild zeigt das Hauptfenster von GMPC:
 
-image:Images/main-window_DE.png[]
+image:Images_DE/main-window_DE.png[]
 
 Wenn man das Hauptfenster verkleinert, können Teile davon vielleicht nicht angezeigt werden.
 Momentan gibts es zwei verkleinerte Ansichten.
 
 Verkleinerte Ansicht 1:
 
-image:Images/main-window-collapsed1_DE.png[]
+image:Images_DE/main-window-collapsed1_DE.png[]
 
 Verkleinerte Ansicht 2:
 
-image:Images/main-view-collapsed2_DE.png[]
+image:Images_DE/main-view-collapsed2_DE.png[]
 
 In dieser Anleitung werden wir jeden Teil der Anzeige erklären.
 
 === Die Menüzeile
 
-image:Images/menu-bar_DE.png[]
+image:Images_DE/menu-bar_DE.png[]
 
 Die Menüzeile ist der Zugang zu jedem Programmteil. Man kann das Playback steuern (Steuerung), GMPC konfigurieren, verschiedene Abspielgeräte ansteuern, andere Profile wählen, etc..
 
@@ -75,13 +75,13 @@ Merke: Die Bestandteile der Menüs können unterschiedlich sein, je nach dem wel
 ** 'About' - Öffnet das Über-Fenster
 
 === Playback Steuerung
-image:Images/playback-control_DE.png[]
+image:Images_DE/playback-control_DE.png[]
 
 Die Steuerungselemente werden von links nach rechts erklärt.
 
 
 === Album Cover
-image:Images/pc-cover_DE.png[]
+image:Images_DE/pc-cover_DE.png[]
 
 Hier wird das Cover des aktuell gespielten Albums angezeigt. Wenn kein Cover vorhanden ist oder der Titel keine Informationen darüber hergibt, wird
 eine leere CD-Hülle angezeigt.
@@ -93,14 +93,14 @@ eine leere CD-Hülle angezeigt.
 * Man kann die Coverdarstellung in den Einstellungen verändern (Mit oder ohne CD-Hülle).
 
 
-image:Images/pc-cover_DE.png["With casing"]
-image:Images/pc-cover-plain_DE.png["Withouth casing"]
+image:Images_DE/pc-cover_DE.png["With casing"]
+image:Images_DE/pc-cover-plain_DE.png["Withouth casing"]
 
 =================================
 
 
 ==== Titelinformationen
-image:Images/pc-song-info_DE.png[]
+image:Images_DE/pc-song-info_DE.png[]
 
 Rechts neben dem Cover befinden sich Informationen zum abgespielten Titel (Titel, Artist, Albumname).
 
@@ -108,15 +108,15 @@ TIP: Wenn man den Titel, den Artist oder den Albumnamen klickt, springt GMPC zum
 
 
 ==== Favoriten
-image:Images/pc-favorite-nhl_DE.png[]
+image:Images_DE/pc-favorite-nhl_DE.png[]
 
 Ein Klick auf das Icon in Herzform erlaubt es, einen Titel als Favorit zu markieren oder die Markierung aufzuheben.
 
 Wenn der Titel als Favorit markiert ist, wird das Herz-Icon hervorgehoben. Wenn ein Titel kein Favorit ist, ist das Icon blass.
 
-* image:Images/pc-favorite-hl_DE.png["Song is a favorite"]
+* image:Images_DE/pc-favorite-hl_DE.png["Song is a favorite"]
 Als Favorit markiert:
-* image:Images/pc-favorite-nhl_DE.png["Sog is not a favorite"]
+* image:Images_DE/pc-favorite-nhl_DE.png["Sog is not a favorite"]
 Nicht als Favorit markiert:
 
 Favorisierte Titel werden in einer extra Playlist gehalten, die "Favoriten" heißt.
@@ -127,7 +127,7 @@ WARNING: Um Favoriten benutzen zu können, muss MPD Playlists speichern und lade
 
 
 ==== Playback Steuerung
-image:Images/pc-playback-control_DE.png[]
+image:Images_DE/pc-playback-control_DE.png[]
 
 Natürlich verfügt GMPC auch über Steuerungs-Buttons für das Abspielen: Play/Pause, Vorheriger, Nächster, Stop und einen Lautstärkeregler.
 
@@ -142,7 +142,7 @@ TIP: Wenn man mit der Maus über den Nächster-Button fährt, erscheint der näc
 
 
 ==== Statusleiste
-image:Images/pc-seek-bar_DE.png[]
+image:Images_DE/pc-seek-bar_DE.png[]
 
 Unter der Playback Steuerung befindet sich die Status-/Fortschrittsanzeige. Sie zeigt an, wieviel von dem aktuellen Titel schon gespielt wurde.
 Ein doppelter Linksklick oder ein einfacher Klick mit der mittleren Maustaste irgendwo auf diese Anzeige lässt GMPC direkt zu der gewählten Stelle springen.
@@ -162,7 +162,7 @@ würde MPD mit Sprung-Anfragen zugemüllt.
 
 
 === Nachrichtenleiste
-image:Images/message-bar_DE.png[]
+image:Images_DE/message-bar_DE.png[]
 
 Die Nachrichtenleiste wird nur angezeogt, wenn GMPC etwas mitzuteilen hat. Sie kann Informationen, Warnungen und Fehler anzeigen.
 
@@ -172,7 +172,7 @@ TIP: Man kann unter xref:preferences[preferences] Einstellen, welche Nachrichten
 
 [[sidebar]]
 === Seitenleiste
-image:Images/sidebar_DE.png[]
+image:Images_DE/sidebar_DE.png[]
 
 Über die Seitenleiste kann man zwischen den verschiedenen Fenstern wechseln.
 Per drag & drop kann die Anordnung der Elemente verändert werden.
@@ -180,11 +180,11 @@ Welche Elemente vorhanden sind, hängt von den installierten/aktivierten Plugins
 
 Wenn man die Oberfläche beschränkt, wird die Seitenleiste zu einer horizontalen Dropdown-Auswahl:
 
-image:Images/sidebar-hori1_DE.png[]
+image:Images_DE/sidebar-hori1_DE.png[]
 
 Oder aber, wenn über xref:preferences[preferences] anders definiert, eine Liste von Buttons:
 
-image:Images/sidebar-hori2_DE.png[]
+image:Images_DE/sidebar-hori2_DE.png[]
 
 
 TIP: Die oberste Ansicht wird immer aktiviert, wenn man sich mit einem MPD Server verbindet.
@@ -198,16 +198,16 @@ Entweder gibt es eine große Leiste (z.B. die Seitenleiste) oder zwei Leisten (z
 
 Eine große Leiste:
 
-image:Images/browser-pane-single_DE.png[]
+image:Images_DE/browser-pane-single_DE.png[]
 
 Zwei Leisten:
 
-image:Images/browser-pane-single_DE.png[]
+image:Images_DE/browser-pane-single_DE.png[]
 
 NOTE: Wenn die Oberfläche komplett eingeklappt ist, wird das Hauptfenster nicht angezeigt.
 
 === Statusleiste
-image:Images/status-bar_DE.png[]
+image:Images_DE/status-bar_DE.png[]
 
 Am unteren Rand des GMPC-Fensters befindet sich die Statusleiste. Die Statusleiste wird nicht angezeigt, wenn die Oberfläche komplett eingeklappt ist.
 
@@ -218,7 +218,7 @@ Links ist ein Anzeige-Block. Dieser zeigt Änderungen wie z.B. "Zufall: Ein/Aus"
 Rechts sind Status Symbole.
 
 ==== Status Symbole
-image:Images/status-icons_DE.png[]
+image:Images_DE/status-icons_DE.png[]
 
 Status Symbole sind kleine Icons, die den Status einer Einstellung, eines Plugins oder eines Vorgangs anzeigen.
 
@@ -240,7 +240,7 @@ NOTE: Einige Status Symbole (wie das des GMPC-Shout-Plugins) haben ein Kontextme
 == Einstellungen
 
 === Verbindung
-image:Images/preferences-connection_DE.png[]
+image:Images_DE/preferences-connection_DE.png[]
 
 Unter "Verbindung" kann die Verbindung zum MPD eingestellt werden.
 Man kann mehrere Verbindungsprofile konfigurieren, zwischen welchen GMPC einen schnellen Wechsel erlaubt.
@@ -252,7 +252,7 @@ Man kann mehrere Verbindungsprofile konfigurieren, zwischen welchen GMPC einen s
 * Das 'Musik-Ordner' Feld sagt GMPC, wo die Musik zu finden ist.
 
 === Servereinstellungen
-image:Images/preferences-server-settings_DE.png[]
+image:Images_DE/preferences-server-settings_DE.png[]
 
 Wenn die Verbindung zu MPD steht, können verschiedene Parameter von MPD eingestellt werden:
 
@@ -262,14 +262,14 @@ Wenn die Verbindung zu MPD steht, können verschiedene Parameter von MPD eingest
 
 
 === Oberfläche
-image:Images/preferences-interface_DE.png[]
+image:Images_DE/preferences-interface_DE.png[]
 
 Hier wird die Oberfläche von GMPC konfiguriert.
 
 * 'Beim Schließen verstecken': Wenn GMPC über das "x" rechts oben geschlossen wird, bleibt GMPC im Tray offen. (Wenn kein Tray existiert, wird GMPC minimiert.)
 * 'Stilisiere Alben Cover': Die Cover sehen aus, als ob sie in einer CD-Hülle stecken.
-  image:Images/pc-cover_DE.png["With casing"]
-  image:Images/pc-cover-plain_DE.png["Withouth casing"]
+  image:Images_DE/pc-cover_DE.png["With casing"]
+  image:Images_DE/pc-cover-plain_DE.png["Withouth casing"]
 
 * 'Beende Wiedergabe beim Verlassen': Wenn GMPC geschlossen wird, wird auch das Abspielen gestoppt.
 * 'Zeige Tooltip in der Song-Liste': Aktiviert Tooltips in der Titelliste. Zeigt eine Infobox über den aktiven Titel unter dem Mauszeiger.
@@ -280,29 +280,29 @@ Hier wird die Oberfläche von GMPC konfiguriert.
 
 
 === Tag-basierter Browser 
-image:Images/preferences-tag-based-browser_DE.png[]
+image:Images_DE/preferences-tag-based-browser_DE.png[]
 
 === Multimediatasten
-image:Images/preferences-multimedia-keys_DE.png[]
+image:Images_DE/preferences-multimedia-keys_DE.png[]
 
 === Benachrichtigung
-image:Images/preferences-notification_DE.png[]
+image:Images_DE/preferences-notification_DE.png[]
 
 === Metadaten-Verwaltung
-image:Images/preferences-metadata-handler_DE.png[]
+image:Images_DE/preferences-metadata-handler_DE.png[]
 
 === Proxy
-image:Images/preferences-proxy_DE.png[]
+image:Images_DE/preferences-proxy_DE.png[]
 
 === Metadaten-Browser
-image:Images/preferences-metadata-browser_DE.png[]
+image:Images_DE/preferences-metadata-browser_DE.png[]
 
 == Metadaten-Wähler
 
 Der Metadaten-Wähler kann per Rechtsklick auf einen Titel bzw. ein Metadaten-Item geöffnet werden.
 
-image:Images/meta-data-selector-artist_DE.png[]
-image:Images/meta-data-selector-lyrics_DE.png[]
+image:Images_DE/meta-data-selector-artist_DE.png[]
+image:Images_DE/meta-data-selector-lyrics_DE.png[]
 
 Wenn GMPC nicht die richtigen Metadaten findet, kann man sich alle Daten im Metadaten-Wähler anschauen. Der Wert des entsprechenden Feldes kann editiert werden, dann kann die Abfrage neu abgesetzt werden.
 Wie man in den Screenshots erkennt, sieht man die Ergebnisse und wo sie herkommen. Zusätzlich wird die Größe der Cover angezeigt (sofern vorhanden).
@@ -323,14 +323,14 @@ Die folgenden Daten können ausgewählt werden:
 === Datenbank
 
 === Play Queue
-image:Images/play-queue_DE.png[]
+image:Images_DE/play-queue_DE.png[]
 
 Das ist im Prinzip die Haupt-Playlist. Jeder Titel der angehört werden soll erscheint hier. Hinzufügen per Rechtsklick und "Add" auf eine Datei in der Datenbank oder im Wiedergabelisten-Editor.
 Das funktioniert mit jeder Datei, Playlist oder jedem Ordner.
 
 Wenn man auf einen Eintrag in der Wiedergabe-Warteschlange rechts klickt, bekommt man dieses Popup:
 
-image:Images/play-queue-rightclick_DE.png[]
+image:Images_DE/play-queue-rightclick_DE.png[]
 
 NOTE: Das Aussehen dieses Popups hängt von den installierten/aktivierten Plugins ab. Einige Plugins erzeugen hier Einträge, andere nicht.
 
@@ -341,7 +341,7 @@ NOTE: Das Aussehen dieses Popups hängt von den installierten/aktivierten Plugin
 === Metadaten-Browser
 
 == Server Information
-image:Images/server-information_DE.png[]
+image:Images_DE/server-information_DE.png[]
 
 [[query-syntax]]
 == Query Syntax
@@ -408,7 +408,7 @@ NOTE: Wenn <field= > abgesetzt wird, werden alle Felder durchsucht.
 
 
 == Easy Command
-image:Images/Gmpc-easy-command_DE.png[]
+image:Images_DE/Gmpc-easy-command_DE.png[]
 
 GMPC besitzt ein Funktion, die "Easy Command" heißt. Easy Command stellt eine kleine Befehls-Box bereit, die die schnelle Ausführung von Befehlen ermöglicht, ohne die Maus benutzen zu müssen.
 
