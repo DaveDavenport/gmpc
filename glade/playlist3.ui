@@ -57,47 +57,40 @@
             <property name="label" translatable="true">_Visit Website</property>
             <property name="stock-id">gtk-home</property>
             <signal name="activate" handler="url_visit_website" swapped="no"/>
-            </object>
+          </object>
         </child>
         <child>
           <object class="GtkAction" id="ViewGettingHelp">
             <property name="label" translatable="true">_Getting Help</property>
             <property name="stock-id">gtk-help</property>
             <signal name="activate" handler="url_getting_help" swapped="no"/>
-            </object>
+          </object>
         </child>
         <child>
           <object class="GtkAction" id="ViewBugInformation">
             <property name="label" translatable="true">_Bug Information</property>
             <property name="stock-id">gtk-info</property>
             <signal name="activate" handler="bug_information_window_new" swapped="no"/>
-            </object>
+          </object>
         </child>
-
         <child>
           <object class="GtkAction" id="ViewEasyCommandHelp">
             <property name="label" translatable="true">_Easy Command Help</property>
             <signal name="activate" handler="easy_command_help_window" swapped="no"/>
             <property name="stock-id">gtk-help</property>
-            </object>
+          </object>
         </child>
-
         <child>
           <object class="GtkAction" id="ViewAbout">
             <property name="stock-id">gtk-about</property>
             <signal name="activate" handler="about_window" swapped="no"/>
-            </object>
+          </object>
         </child>
       </object>
       <!-- GMPCMAinWindow-->
     </child>
     <child>
       <object class="GtkActionGroup" id="MPDControl">
-        <child>
-          <object class="GtkAction" id="MPDUpdateDatabase">
-            <property name="label" translatable="true">Update the servers database</property>
-          </object>
-        </child>
         <child>
           <object class="GtkAction" id="MPDConnect">
             <property name="stock-id">gtk-connect</property>
@@ -225,7 +218,7 @@
         </child>
         <child>
           <object class="GtkAction" id="menu_server">
-            <property name="label" translatable="yes">_Server (todo)</property>
+            <property name="label" translatable="yes">_Server</property>
           </object>
         </child>
         <child>
@@ -287,7 +280,7 @@
           <menuitem action="MPDConsumeMode"/>
         </menu>
         <menu action="menu_server">
-          <menuitem action="MPDUpdateDatabase"/>
+          <menuitem action="Dummy"/>
         </menu>
         <menu action="menu_view">
           <menuitem action="ViewCollapse"/>
@@ -306,16 +299,15 @@
           <menuitem action="Dummy"/>
         </menu>
         <menu action="menu_help">
-            <menuitem action="ViewMessages"/>
-            <separator/>
-            <menuitem action="ViewWebsite"/>
-            <menuitem action="ViewGettingHelp"/>
-            <menuitem action="ViewBugInformation"/>
-            <menuitem action="ViewEasyCommandHelp"/>
-            <separator/>
-            <menuitem action="ViewAbout"/>
+          <menuitem action="ViewMessages"/>
+          <separator/>
+          <menuitem action="ViewWebsite"/>
+          <menuitem action="ViewGettingHelp"/>
+          <menuitem action="ViewBugInformation"/>
+          <menuitem action="ViewEasyCommandHelp"/>
+          <separator/>
+          <menuitem action="ViewAbout"/>
         </menu>
-
       </menubar>
     </ui>
   </object>

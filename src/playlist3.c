@@ -2314,10 +2314,10 @@ static void playlist3_server_update_db(void)
 
 static void playlist3_fill_server_menu(void)
 {
-	//GtkUIManager *ui = GTK_UI_MANAGER(gtk_builder_get_object(pl3_xml, "uimanager1"));
-	//GtkMenuItem *m_item = gtk_ui_manager_get_widget(ui, "/menubartest/menu_server");
+	GtkUIManager *ui = GTK_UI_MANAGER(gtk_builder_get_object(pl3_xml, "uimanager1"));
+	GtkMenuItem *m_item = gtk_ui_manager_get_widget(ui, "/menubartest/menu_server");
 	/** Clear old items */
-//	gtk_menu_item_set_submenu(m_item, NULL);
+	gtk_menu_item_set_submenu(m_item, NULL);
 
 	/* if connected fill with items */
 	if (mpd_check_connected(connection))
@@ -2362,7 +2362,7 @@ static void playlist3_fill_server_menu(void)
 			gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
 			i++;
 		}
-	//	gtk_menu_item_set_submenu(GTK_MENU_ITEM(gtk_builder_get_object(pl3_xml, "menuitem_server")), menu);
+		gtk_menu_item_set_submenu(m_item, menu);
 		gtk_widget_show_all(menu);
 		/* Server Menu Item */
 		gtk_action_set_sensitive(GTK_ACTION(gtk_builder_get_object(pl3_xml, "menu_server")), TRUE);
