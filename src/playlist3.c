@@ -151,6 +151,8 @@ static GtkWidget *si_consume = NULL;
 static GtkWidget *si_repeat_single = NULL;
 static GtkWidget *si_random = NULL;
 
+
+
 /* Get the type of the selected row..
  * -1 means no row selected
  */
@@ -170,6 +172,14 @@ void thv_row_reordered_signal(GtkTreeModel * model, GtkTreePath * path,
 							  GtkTreeIter * iter, gpointer arg3, gpointer data);
 
 void thv_set_button_state(int button);
+
+/**
+ * Extras for better integration
+ */
+
+void init_extra_playlist_state();
+void enable_extra_playlist(GtkToggleAction *action);
+
 /**************************************************
  * Category Tree
  */
@@ -1397,6 +1407,9 @@ void create_playlist3(void)
 	   G_CALLBACK(main_window_update_status_icons), NULL);
 	 */
 	main_window_update_status_icons();
+
+	/* Update extraś */
+	init_extra_playlist_state();
 }
 
 /**
@@ -3014,6 +3027,30 @@ void main_window_add_status_icon(GtkWidget * icon)
 	GtkWidget *hbox = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "status-icon-hbox"));
 	g_return_if_fail(icon != NULL);
 	gtk_box_pack_start(GTK_BOX(hbox), icon, FALSE, TRUE, 0);
+}
+
+
+
+/**
+ * Extra wrappings for menu 
+ */
+extern gmpcPlugin extraplaylist_plugin;
+void enable_extra_playlist(GtkToggleAction *action)
+{
+	gboolean state = gtk_toggle_action_get_active(action);
+	if(extraplaylist_plugin.set_enabled) {
+		if(extraplaylist_plugin.get_enabled() != state)
+		{
+			extraplaylist_plugin.set_enabled(state);
+		}
+	}
+}
+void init_extra_playlist_state()
+{
+	GtkToggleAction *action = GTK_TOGGLE_ACTION(gtk_builder_get_object(pl3_xml, "ViewExtraPlaylist"));
+	if(extraplaylist_plugin.get_enabled) {
+		gtk_toggle_action_set_active(action, extraplaylist_plugin.get_enabled());
+	}
 }
 
 /* vim: set noexpandtab ts=4 sw=4 sts=4 tw=120: */

@@ -77,4 +77,10 @@ void            gmpc_plugin_metadata_query_metadata_list    (gmpcPluginParent *p
         MetaDataType type, 
         void (*callback)(GList *uris, gpointer data), 
         gpointer data);
+
+typedef struct _gmpcPluginParent
+{
+	gmpcPlugin *old;
+	GmpcPluginBase *new;
+} _gmpcPluginParent;
 #endif

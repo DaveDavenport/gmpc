@@ -78,6 +78,7 @@ extern gmpcPlugin tray_icon2_plug;
 extern gmpcPlugin proxyplug;
 extern gmpcPlugin playlist_editor_plugin;
 extern gmpcPlugin statistics_plugin;
+extern gmpcPlugin extraplaylist_plugin;
 
 GmpcMetadataBrowser *metadata_browser = NULL;
 /**
@@ -831,6 +832,8 @@ int main(int argc, char **argv)
 	plugin_add(&statistics_plugin, 0, NULL);
 	plugin_add(&metadata_plug, 0, NULL);
 	plugin_add(&proxyplug, 0, NULL);
+
+	plugin_add(&extraplaylist_plugin, 0, NULL);
 
 	TEC("Loading internal plugins");
 	plugin_add_new(GMPC_PLUGIN_BASE(gmpc_test_plugin_new()), 0, NULL);

@@ -30,11 +30,6 @@
 gmpcPluginParent **plugins = NULL;
 int num_plugins = 0;
 
-typedef struct _gmpcPluginParent
-{
-	gmpcPlugin *old;
-	GmpcPluginBase *new;
-} _gmpcPluginParent;
 
 gmpcPluginParent *plugin_get_from_id(int id)
 {

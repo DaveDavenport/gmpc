@@ -16,6 +16,9 @@ VALA_VAPI_FILES=\
     vapi/config.vapi
 
 
+PLUGIN_FILES=\
+    Plugins/extraplaylist.c
+
 gmpc_SOURCES=\
     Widgets/pixbuf-cache.c\
     vala/gmpc-connection.vala\
@@ -57,7 +60,8 @@ gmpc_SOURCES=\
 	advanced-search.c\
 	bug-information.c\
     $(gmpc_egg_FILES)\
-    $(gmpc_browser_FILES)
+    $(gmpc_browser_FILES)\
+    $(PLUGIN_FILES)
 
 nodist_gmpc_SOURCES=\
     $(gmpc_GOBCFILES)
