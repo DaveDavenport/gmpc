@@ -330,7 +330,7 @@ void pl3_option_menu_activate(void)
 	GdkEventButton *event = NULL;
 	GtkWidget *menu = NULL;
 	GtkUIManager *ui = GTK_UI_MANAGER(gtk_builder_get_object(pl3_xml, "uimanager1"));
-	GtkMenuItem *m_item = gtk_ui_manager_get_widget(ui, "/menubartest/menu_option");
+	GtkMenuItem *m_item = GTK_MENU_ITEM(gtk_ui_manager_get_widget(ui, "/menubartest/menu_option"));
 
 	gtk_menu_item_set_submenu(m_item, NULL);
 
@@ -1016,7 +1016,7 @@ void create_playlist3(void)
 	{
 
 		GtkUIManager *ui = GTK_UI_MANAGER(gtk_builder_get_object(pl3_xml, "uimanager1"));
-		GtkMenuBar *m_item = gtk_ui_manager_get_widget(ui, "/menubartest");
+		GtkMenuBar *m_item = GTK_MENU_BAR(gtk_ui_manager_get_widget(ui, "/menubartest"));
 		GdkPixbuf *pb = NULL;
 		IgeMacDock *dock;
 		IgeMacMenuGroup *group;
@@ -1754,7 +1754,6 @@ static void playlist_zoom_level_changed(void)
 static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *userdata)
 {
 	char buffer[1024];
-	GtkWidget *image = NULL;
 	GtkWidget *pl3_win = playlist3_get_window();
 	/**
 	 * if the window isn't there yet, return
@@ -2001,55 +2000,85 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
 			gmpc_progress_set_time(GMPC_PROGRESS(new_pb), 0, 0);
 		}
 	}
+	if (what & MPD_CST_PERMISSION)
+	{
+		gtk_action_set_sensitive(GTK_ACTION(gtk_builder_get_object(pl3_xml, "MPDSingleMode")),
+				(
+				 mpd_check_connected(connection) && 
+				 mpd_server_check_command_allowed(connection, "single") == MPD_SERVER_COMMAND_ALLOWED
+				)
+				);
+		gtk_action_set_sensitive(GTK_ACTION(gtk_builder_get_object(pl3_xml, "MPDConsumeMode")),
+				(
+				 mpd_check_connected(connection) && 
+				 mpd_server_check_command_allowed(connection, "consume") == MPD_SERVER_COMMAND_ALLOWED
+				)
+				);
+		gtk_action_set_sensitive(GTK_ACTION(gtk_builder_get_object(pl3_xml, "MPDPlayPause")),
+				(
+				 mpd_check_connected(connection) && 
+				 mpd_server_check_command_allowed(connection, "play") == MPD_SERVER_COMMAND_ALLOWED
+				)
+				);
+		gtk_action_set_sensitive(GTK_ACTION(gtk_builder_get_object(pl3_xml, "MPDNext")),
+				(
+				 mpd_check_connected(connection) && 
+				 mpd_server_check_command_allowed(connection, "next") == MPD_SERVER_COMMAND_ALLOWED
+				)
+				);
+		gtk_action_set_sensitive(GTK_ACTION(gtk_builder_get_object(pl3_xml, "MPDPrevious")),
+				(
+				 mpd_check_connected(connection) && 
+				 mpd_server_check_command_allowed(connection, "previous") == MPD_SERVER_COMMAND_ALLOWED
+				)
+				);
+		gtk_action_set_sensitive(GTK_ACTION(gtk_builder_get_object(pl3_xml, "MPDStop")),
+				(
+				 mpd_check_connected(connection) && 
+				 mpd_server_check_command_allowed(connection, "stop") == MPD_SERVER_COMMAND_ALLOWED
+				)
+				);
+		gtk_action_set_sensitive(GTK_ACTION(gtk_builder_get_object(pl3_xml, "MPDRepeat")),
+				(
+				 mpd_check_connected(connection) &&
+				 mpd_server_check_command_allowed(connection, "repeat") == MPD_SERVER_COMMAND_ALLOWED
+				)
+				);
+		gtk_action_set_sensitive(GTK_ACTION(gtk_builder_get_object(pl3_xml, "MPDRandom")),
+				(
+				 mpd_check_connected(connection)&&
+				 mpd_server_check_command_allowed(connection, "random") == MPD_SERVER_COMMAND_ALLOWED
+				)
+				);
+		/* Also update volume stuff */
+		what = what|MPD_CST_VOLUME;
+	}
+
 	if (what & MPD_CST_VOLUME)
 	{
 		int volume = gtk_scale_button_get_value(GTK_SCALE_BUTTON(volume_button)) * 100;
 		int new_volume = mpd_status_get_volume(connection);
-		/* don't do anything if nothing is changed */
-		if (new_volume < 0)
+		if (new_volume >= 0 && 
+				mpd_server_check_command_allowed(connection, "setvol") == MPD_SERVER_COMMAND_ALLOWED
+		   )
 		{
-			gtk_widget_set_sensitive(volume_button, FALSE);
-		} else
-		{
+			gtk_action_set_sensitive(GTK_ACTION(gtk_builder_get_object(pl3_xml, "MPDMuted")),
+					TRUE
+					);
 			gtk_widget_set_sensitive(volume_button, TRUE);
+			/* don't do anything if nothing is changed */
 			if (new_volume != volume)
 			{
 				gtk_scale_button_set_value(GTK_SCALE_BUTTON(volume_button), new_volume / 100.0);
 			}
-		}
-
-	}
-	if (what & MPD_CST_PERMISSION)
-	{
-		/* Check for control */
-		if (mpd_server_check_command_allowed(connection, "single") == MPD_SERVER_COMMAND_ALLOWED
-			&& mpd_check_connected(connection))
+		} else 
 		{
-			gtk_action_set_sensitive(GTK_ACTION(gtk_builder_get_object(pl3_xml, "MPDSingleMode")), TRUE);
-		} else
-		{
-			gtk_action_set_sensitive(GTK_ACTION(gtk_builder_get_object(pl3_xml, "MPDSingleMode")), FALSE);
-		}
-		if (mpd_server_check_command_allowed(connection, "consume") == MPD_SERVER_COMMAND_ALLOWED
-			&& mpd_check_connected(connection))
-		{
-			gtk_action_set_sensitive(GTK_ACTION(gtk_builder_get_object(pl3_xml, "MPDConsumeMode")), TRUE);
-		} else
-		{
-			gtk_action_set_sensitive(GTK_ACTION(gtk_builder_get_object(pl3_xml, "MPDConsumeMode")), FALSE);
-		}
-		if (mpd_server_check_command_allowed(connection, "play") ==
-			MPD_SERVER_COMMAND_ALLOWED && mpd_check_connected(connection))
-		{
-			gtk_widget_set_sensitive(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "pl3_button_control_box")), TRUE);
-			gtk_action_set_sensitive(GTK_ACTION(gtk_builder_get_object(pl3_xml, "menu_control")), TRUE);
-		} else
-		{
-			gtk_widget_set_sensitive(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "pl3_button_control_box")), FALSE);
-			gtk_action_set_sensitive(GTK_ACTION(gtk_builder_get_object(pl3_xml, "menu_control")), FALSE);
+			gtk_action_set_sensitive(GTK_ACTION(gtk_builder_get_object(pl3_xml, "MPDMuted")),
+					FALSE
+					);
+			gtk_widget_set_sensitive(volume_button, FALSE);
 		}
 	}
-
 	if (what & MPD_CST_SERVER_ERROR)
 	{
 		gchar *error = mpd_status_get_mpd_error(mi);
@@ -2141,7 +2170,7 @@ void pl3_update_go_menu(void)
 	GtkWidget *menu = NULL;
 	GtkAccelGroup *group = gtk_accel_group_new();
 	GtkUIManager *ui = GTK_UI_MANAGER(gtk_builder_get_object(pl3_xml, "uimanager1"));
-	GtkMenuItem *m_item = gtk_ui_manager_get_widget(ui, "/menubartest/menu_go");
+	GtkMenuItem *m_item = GTK_MENU_ITEM(gtk_ui_manager_get_widget(ui, "/menubartest/menu_go"));
 	/***
 	 * Remove any old menu
 	 */
@@ -2228,7 +2257,7 @@ static void pl3_update_profiles_menu(GmpcProfiles * prof, const int changed, con
 	gchar *current = gmpc_profiles_get_current(gmpc_profiles);
 	GList *iter, *mult;
 	GtkUIManager *ui = GTK_UI_MANAGER(gtk_builder_get_object(pl3_xml, "uimanager1"));
-	GtkMenuItem *m_item = gtk_ui_manager_get_widget(ui, "/menubartest/menu_music/menu_profiles");
+	GtkMenuItem *m_item = GTK_MENU_ITEM(gtk_ui_manager_get_widget(ui, "/menubartest/menu_music/menu_profiles"));
 	/* check if there is anything changed that is important for us. */
 
 	if (changed == PROFILE_COL_CHANGED && col != PROFILE_COL_NAME)
@@ -2315,7 +2344,7 @@ static void playlist3_server_update_db(void)
 static void playlist3_fill_server_menu(void)
 {
 	GtkUIManager *ui = GTK_UI_MANAGER(gtk_builder_get_object(pl3_xml, "uimanager1"));
-	GtkMenuItem *m_item = gtk_ui_manager_get_widget(ui, "/menubartest/menu_server");
+	GtkMenuItem *m_item = GTK_MENU_ITEM(gtk_ui_manager_get_widget(ui, "/menubartest/menu_server"));
 	/** Clear old items */
 	gtk_menu_item_set_submenu(m_item, NULL);
 
@@ -2892,7 +2921,7 @@ void pl3_tool_menu_update(void)
 	GtkWidget *menu = NULL;
 	GtkAccelGroup *group = gtk_accel_group_new();
 	GtkUIManager *ui = GTK_UI_MANAGER(gtk_builder_get_object(pl3_xml, "uimanager1"));
-	GtkMenuItem *m_item = gtk_ui_manager_get_widget(ui, "/menubartest/menu_tool");
+	GtkMenuItem *m_item = GTK_MENU_ITEM(gtk_ui_manager_get_widget(ui, "/menubartest/menu_tool"));
 	gtk_menu_item_set_submenu(m_item, NULL);
 	gtk_action_set_sensitive(GTK_ACTION(gtk_builder_get_object(pl3_xml, "menu_tool")), FALSE);
 	if (!mpd_check_connected(connection))
