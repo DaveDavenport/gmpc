@@ -1,5 +1,5 @@
 GMPC Manual - Nederlands
-===========================
+========================
 :Author:  Qball
 :Email: Qball@gmpclient.org
 :Date: 08/11/2010
@@ -26,7 +26,7 @@ image:Images/main-view-collapsed2.png[]
 Wij zullen hieronder uitleggen wat elke deel van het scherm doet.
 
 
-=== The menu bar
+=== De menu balk
 image:Images/menu-bar.png[]
 
 De menu balk geeft directe toegang tot elk deel van gmpc. U kan er de playback bedienen, gmpc configureren, outputs aan zetten, naar een ander profiel gaan, enz.
@@ -76,12 +76,12 @@ NOTE: Er kunnen meer of minder menu items aanwezig zijn, dit hangt af van het aa
 ** 'Makkelijk commando hulp' - Opent een lijst met mogelijke commandos voor het makkelijk commando venster. xref:easy-command[meer].
 ** 'About' - Opent een venster met informatie over GMPC.
 
-=== Playback Controls
+=== Bedienings paneel
 image:Images/playback-control.png[]
 
 De verschillende elementen zullen van links naar rechts worden uitgelegd.
 
-==== Album Cover
+==== Album Hoes
 image:Images/pc-cover.png[]
 
 Dit laat het hoesje van het huidige afspelende album zien. Als er geen hoesje beschikbaar is, wordt er een leeg hoesje getoond.
@@ -108,7 +108,7 @@ Het laat de titel, artiest en album naam zien.
 TIP: Als u op de titel, artiest of albumnaam klikt, springt u in de Metadata browser naar het juiste item.
 
 
-==== Favorite 
+==== Favorieten 
 image:Images/pc-favorite-nhl.png[]
 
 Met het hartjes icoon, kunt u een nummer tot favoriet maken door er op te klikken.
