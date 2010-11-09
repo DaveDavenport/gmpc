@@ -360,7 +360,49 @@ Under the general information you can see a tabbed view of more information whic
 * 'Web Links': Shows several links to different pages.
 * 'Artist Information': Shows information about the artist fetched from last.fm.
 
+To the right of the tabbed view there is a list of other albums from the currently playing artist.
+When you click on one of the albums, it will give you information about the album in the metadata browser.
+
+NOTE: The album list will only be shown when there are actually other albums from the artist in your mpd database.
+
 === Database
+
+image:Images/database.png[]
+
+The database browser is a directory listing of all your music. With the browser you can browse through all your music currently in the mpd database.
+The folder tree looks like a real folder tree, but it actually is a copy of the music folder tree.
+In case you delete, add or change files, you must first update the database to update the folder/file tree.
+As you can see on the screenshot there are two parts of the window.
+To the left you can see the folder tree, this shows all folders in your music folder.
+Next to the folder tree are colums which show the files and folders from the currently selected folder (the one selected in the folder tree).
+
+When you right click on a folder in the folder tree, you get three options.
+
+* 'Add': Adds all music files in the selected folder to the playlist.
+* 'Replace': Empties the current playlist and adds all music files in the selected folder to the playlist.
+* 'Update': Updates the database (and the folder tree).
+
+You can also right click on a folder or file in the right window. The following options are available.
+
+* 'Add': Adds the specific file(s) and/or folder(s) to the playlist.
+* 'Replace': Empties the current playlist and adds the specific file(s) and/or folder(s) to the playlist.
+* 'Update': Updates the database and the left folder tree. (Only available when right clicking a folder)
+* 'Information': Shows information about the selected song. (Only available when right clicking one song)
+* 'Add to playlist': Gives a number of options to add the selected file or folder to a playlist. (Only works for one file or folder at a time)
+** 'New': Gives you the possibility to create a new playlist.
+** List of playlists: all available playlists are shown here.
+* 'Add more': Gives a number of options to add more files to the playlist. (Only showing up when right clicking one song)
+** 'All from album': Adds all songs from the same album to the playlist.
+** 'All from artist': Adds all songs from the same artist to the playlist.
+** 'All from genre': Adds all songs from the same genre to the playlist.
+** 'All from same directory': Adds all songs from the same directory to the playlist.
+* 'Tools': Gives a number of options for the selected folder(s) and/or file(s).
+** 'Metadata selector': Gives you the possibility to find information about the selected song. (Album cover, artist art, lyrics etc.)
+** 'Queue songs for tag edit': Tag Edit gives you the possibility to modify ID3 tags. (Only works with the Tag Edit plugin enabled)
+* 'Copy': Copies the selected folder(s) and/or file(s), you can paste them in the playlist.
+* 'Edit columns': With this function you can enable/disable columns from showing in the right window. (Check the image for available options)
+
+image:Images/database-columns.png[]
 
 === Play Queue
 image:Images/play-queue.png[]
