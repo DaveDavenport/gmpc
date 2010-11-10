@@ -324,8 +324,11 @@ namespace Gmpc {
                 var hbox = new Gtk.HBox(false, 6);
                 /* Album image */
                 var ali = new Gtk.Alignment(0f,0f,0f,0f);
-                ali.set_size_request(200,200);
-                var album_image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ALBUM_ART, 200);
+                /* get size based on alloc */ 
+                int meta_size = (int)(this.container.allocation.width*0.20);
+                meta_size = int.min(int.max(100, meta_size), 250);
+                //ali.set_size_request(meta_size,meta_size);
+                var album_image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ALBUM_ART, meta_size);
                 album_image.set_scale_up(true);
                 album_image.set_squared(false);
                 ali.add(album_image);
@@ -334,8 +337,7 @@ namespace Gmpc {
 
                 /* Artist image */
                 ali = new Gtk.Alignment(1f,0f,0f,0f);
-                ali.set_size_request(200,200);
-                var artist_image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ARTIST_ART, 200);
+                var artist_image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ARTIST_ART, meta_size);
                 artist_image.set_scale_up(true);
                 artist_image.set_squared(false);
                 artist_image.update_from_song(song);
