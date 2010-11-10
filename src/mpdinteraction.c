@@ -421,10 +421,10 @@ static void mpd_interaction_init(void)
 								(GmpcEasyCommandCallback *) set_consume, NULL,"media-consume");
 
 	/* volume commands */
-	gmpc_easy_command_add_entry(gmpc_easy_command, _("volume"), "[+-]?[0-9]+", _("Volume (+-)<level>"),
-								(GmpcEasyCommandCallback *) volume_set, NULL);
-	gmpc_easy_command_add_entry(gmpc_easy_command, _("mute"), "", _("Mute"),
-								(GmpcEasyCommandCallback *) volume_toggle_mute, NULL);
+	gmpc_easy_command_add_entry_icon_name(gmpc_easy_command, _("volume"), "[+-]?[0-9]+", _("Volume (+-)<level>"),
+								(GmpcEasyCommandCallback *) volume_set, NULL, "audio-volume_high");
+	gmpc_easy_command_add_entry_icon_name(gmpc_easy_command, _("mute"), "", _("Mute"),
+								(GmpcEasyCommandCallback *) volume_toggle_mute, NULL, "audio-volume-mute");
 
 	gmpc_easy_command_add_entry(gmpc_easy_command, _("crossfade"),
 								C_("Regex for matching crossfade, translate off", "([0-9]+|Off)"),
@@ -435,12 +435,12 @@ static void mpd_interaction_init(void)
 								_("output X enable or disable or select"), (GmpcEasyCommandCallback *) output_set,
 								NULL);
 	/* basic playlist commands */
-	gmpc_easy_command_add_entry(gmpc_easy_command, _("play"), ".*", _("Play <query>"),
-								(GmpcEasyCommandCallback *) play_command, NULL);
-	gmpc_easy_command_add_entry(gmpc_easy_command, _("add"), ".*", _("Add <query>"),
-								(GmpcEasyCommandCallback *) add_command, NULL);
-	gmpc_easy_command_add_entry(gmpc_easy_command, _("replace"), ".*", _("Replace <query>"),
-								(GmpcEasyCommandCallback *) replace_command, NULL);
+	gmpc_easy_command_add_entry_stock_id(gmpc_easy_command, _("play"), ".*", _("Play <query>"),
+								(GmpcEasyCommandCallback *) play_command, NULL, "gtk-media-play");
+	gmpc_easy_command_add_entry_stock_id(gmpc_easy_command, _("add"), ".*", _("Add <query>"),
+								(GmpcEasyCommandCallback *) add_command, NULL, GTK_STOCK_ADD);
+	gmpc_easy_command_add_entry_stock_id(gmpc_easy_command, _("replace"), ".*", _("Replace <query>"),
+								(GmpcEasyCommandCallback *) replace_command, NULL, GTK_STOCK_REDO);
 
 	/* Basic seek commands */
 	gmpc_easy_command_add_entry(gmpc_easy_command, _("seek"), "[+-]?[0-9:]+", _("Seek within the current song"),
