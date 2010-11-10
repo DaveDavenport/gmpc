@@ -394,26 +394,31 @@ static void update_database_command(gpointer user_data, const char *param)
 static void mpd_interaction_init(void)
 {
 	/* Player control */
-	gmpc_easy_command_add_entry(gmpc_easy_command, _("play"), "", _("start playback"),
-								(GmpcEasyCommandCallback *) mpd_player_play, connection);
-	gmpc_easy_command_add_entry(gmpc_easy_command, _("pause"), "", _("pause playback"),
-								(GmpcEasyCommandCallback *) mpd_player_pause, connection);
-	gmpc_easy_command_add_entry(gmpc_easy_command, _("next"), "", _("next song"), (GmpcEasyCommandCallback *) next_song,
-								NULL);
-	gmpc_easy_command_add_entry(gmpc_easy_command, _("prev"), "", _("previous song"),
-								(GmpcEasyCommandCallback *) prev_song, NULL);
-	gmpc_easy_command_add_entry(gmpc_easy_command, _("stop"), "", _("stop playback"),
-								(GmpcEasyCommandCallback *) stop_song, NULL);
+	gmpc_easy_command_add_entry_stock_id(gmpc_easy_command, _("play"), "", _("start playback"),
+								(GmpcEasyCommandCallback *) mpd_player_play, connection,
+								"gtk-media-play");
+	gmpc_easy_command_add_entry_stock_id(gmpc_easy_command, _("pause"), "", _("pause playback"),
+								(GmpcEasyCommandCallback *) mpd_player_pause, connection,
+								"gtk-media-pause");
+	gmpc_easy_command_add_entry_stock_id(gmpc_easy_command, _("next"), "", _("next song"), (GmpcEasyCommandCallback *) next_song,
+								NULL,
+								GTK_STOCK_MEDIA_NEXT);
+	gmpc_easy_command_add_entry_stock_id(gmpc_easy_command, _("prev"), "", _("previous song"),
+								(GmpcEasyCommandCallback *) prev_song, NULL,
+								GTK_STOCK_MEDIA_PREVIOUS);
+	gmpc_easy_command_add_entry_stock_id(gmpc_easy_command, _("stop"), "", _("stop playback"),
+								(GmpcEasyCommandCallback *) stop_song, NULL,
+								"gtk-media-stop");
 
-	gmpc_easy_command_add_entry(gmpc_easy_command, _("random"), "(on|off|)", _("Random (on|off)"),
-								(GmpcEasyCommandCallback *) set_random, NULL);
-	gmpc_easy_command_add_entry(gmpc_easy_command, _("repeat"), "(on|off|)", _("Repeat (on|off)"),
-								(GmpcEasyCommandCallback *) set_repeat, NULL);
+	gmpc_easy_command_add_entry_icon_name(gmpc_easy_command, _("random"), "(on|off|)", _("Random (on|off)"),
+								(GmpcEasyCommandCallback *) set_random, NULL, "stock_shuffle");
+	gmpc_easy_command_add_entry_icon_name(gmpc_easy_command, _("repeat"), "(on|off|)", _("Repeat (on|off)"),
+								(GmpcEasyCommandCallback *) set_repeat, NULL, "stock_repeat");
 
-	gmpc_easy_command_add_entry(gmpc_easy_command, _("single"), "(on|off|)", _("Single (on|off)"),
-								(GmpcEasyCommandCallback *) set_single, NULL);
-	gmpc_easy_command_add_entry(gmpc_easy_command, _("consume"), "(on|off|)", _("Consume (on|off)"),
-								(GmpcEasyCommandCallback *) set_consume, NULL);
+	gmpc_easy_command_add_entry_icon_name(gmpc_easy_command, _("single"), "(on|off|)", _("Single (on|off)"),
+								(GmpcEasyCommandCallback *) set_single, NULL, "media-repeat-single");
+	gmpc_easy_command_add_entry_icon_name(gmpc_easy_command, _("consume"), "(on|off|)", _("Consume (on|off)"),
+								(GmpcEasyCommandCallback *) set_consume, NULL,"media-consume");
 
 	/* volume commands */
 	gmpc_easy_command_add_entry(gmpc_easy_command, _("volume"), "[+-]?[0-9]+", _("Volume (+-)<level>"),

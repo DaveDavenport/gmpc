@@ -91,7 +91,7 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 				}
 			}
 			a+="$";
-			 return GLib.Regex.match_simple(a, key,GLib.RegexCompileFlags.CASELESS, 0);
+			return GLib.Regex.match_simple(a.down(), key.down(),GLib.RegexCompileFlags.CASELESS, 0);
 		}
 
 		return false;
@@ -102,8 +102,8 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
         this.plugin_type = 8+4;
 
 		this.store =
-			new Gtk.ListStore(6, typeof(uint), typeof(string), typeof(string), typeof(void *), typeof(void *),
-							  typeof(string));
+			new Gtk.ListStore(8, typeof(uint), typeof(string), typeof(string), typeof(void *), typeof(void *),
+							  typeof(string), typeof(string),typeof(string));
 		this.completion = new Gtk.EntryCompletion();
 		this.completion.model = this.store;
 		this.completion.text_column = 1;
@@ -112,13 +112,22 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 		this.completion.popup_completion = true;
 
 		this.completion.set_match_func(completion_function);
+		var rpixbuf = new Gtk.CellRendererPixbuf();
+		this.completion.pack_start(rpixbuf, false);
+		/* Make sure it is at the start */
+		this.completion.reorder(rpixbuf, 0);
+
+		rpixbuf.set("stock-size", Gtk.IconSize.MENU,null);
+		this.completion.add_attribute(rpixbuf, "icon-name",6);
+		this.completion.add_attribute(rpixbuf, "stock-id", 7);
 
 		var renderer = new Gtk.CellRendererText();
 		this.completion.pack_end(renderer, false);
 		this.completion.add_attribute(renderer, "text", 5);
 		renderer.set("foreground", "grey", null);
 
-		this.add_entry(_("Help"), "", _("Get a list of available commands"), (Callback *)help_window,this);
+		this.add_entry_stock_id(_("Help"), "", _("Get a list of available commands"), (Callback *)help_window,this,
+		"gtk-info");
 	}
 
 	/**
@@ -146,8 +155,34 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 		return this.signals;
 	}
 
+	/**
+     * Add a match entry to the Easy command object.
+     * param self the GmpcEasyCommand object.
+     * param name the name of the command. This is the "prefix" that needs to be matched.
+     * param pattern the pattern where the parameters need to match.
+     * param callback a GmpcEasyCommandCallback that returns when a entry is matched.
+     * param userdata a pointer that is passed to callback.
+	 * param icon a icon-name to be displayed
+     *
+     * return an unique id for the entry.
+     */
+	public uint add_entry_stock_id(string name, string pattern, string hint, Callback * callback, void *userdata, string icon) {
+		Gtk.TreeIter iter;
+		this.signals++;
+		this.store.append(out iter);
+		this.store.set(iter, 0, this.signals, 1, name, 2, pattern, 3, callback, 4, userdata, 5, hint, 7, icon);
+		return this.signals;
+	}
+	public uint add_entry_icon_name(string name, string pattern, string hint, Callback * callback, void *userdata, string icon) {
+		Gtk.TreeIter iter;
+		this.signals++;
+		this.store.append(out iter);
+		this.store.set(iter, 0, this.signals, 1, name, 2, pattern, 3, callback, 4, userdata, 5, hint, 6, icon);
+		return this.signals;
+	}
 	private void activate(Gtk.Entry entry) {
 		string value_unsplit = entry.get_text();
+		popup_destroy();
 		this.do_query(value_unsplit);
 	}
 	public void do_query(string value_unsplit) {
@@ -236,30 +271,43 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 		var ctx = Gdk.cairo_create(widget.window);
 		int width = widget.allocation.width;
 		int height = widget.allocation.height;
+		Gdk.Color light = widget.style.bg[Gtk.StateType.ACTIVE];
+		Gdk.Color dark = widget.style.dark[Gtk.StateType.ACTIVE];
+
+		ctx.set_antialias(Cairo.Antialias.DEFAULT);
+		ctx.set_line_width(1.1);
 
 		if (widget.is_composited()) {
 			ctx.set_operator(Cairo.Operator.SOURCE);
 			ctx.set_source_rgba(1.0, 1.0, 1.0, 0.0);
 		} else {
-			ctx.set_source_rgb(1.0, 1.0, 1.0);
+			Gdk.cairo_set_source_color(ctx,widget.style.bg[Gtk.StateType.ACTIVE]);
 		}
 
 		ctx.paint();
 		/* */
+		if (widget.is_composited()) {
+			ctx.move_to(0.5, 20.5);
+			ctx.arc(20+0.5,20+0.5,20, -GLib.Math.PI, -GLib.Math.PI/2.0); 
+			ctx.line_to(width-20-0.5, 0.5);
+			ctx.arc(width-20-0.5, 20+0.5, 20,-GLib.Math.PI/2.0,0);
+			ctx.line_to(width-0.5, height-20-0.5);
+			ctx.arc(width-20-0.5, height-20-0.5, 20, 0, GLib.Math.PI/2.0);
+			ctx.line_to(20-0.5,height-0.5);
+			ctx.arc(20+0.5, height-20-0.5, 20, GLib.Math.PI/2.0, -GLib.Math.PI);
+			ctx.close_path();
 
-		ctx.rectangle(1.0, 1.0, width - 2, height - 2);
-		var pattern = new Cairo.Pattern.linear(0.0, 0.0, 0.0, height);
-
-		pattern.add_color_stop_rgba(0.0, 0.0, 0.0, 0.2, 0.5);
-		pattern.add_color_stop_rgba(0.5, 0.0, 0.0, 0.0, 1.0);
-		pattern.add_color_stop_rgba(1.0, 0.0, 0.0, 0.2, 0.5);
+		}else{
+			ctx.rectangle(1.0, 1.0, width - 2, height - 2);
+		}
+		var pattern = new Cairo.Pattern.linear(0.0, 0.0, 0.0, (double)height);
+		pattern.add_color_stop_rgb(0.4,light.red/65535.0, light.green/65535.0,light.blue/65535.0);
+		pattern.add_color_stop_rgb(0.8,dark.red/65535.0, dark.green/65535.0,dark.blue/65535.0);
 		ctx.set_source(pattern);
 		ctx.fill_preserve();
-		ctx.set_source_rgba(1.0, 1.0, 1.0, 1.0);
-		ctx.stroke();
 
-		ctx.rectangle(0.0, 0.0, width, height);
-		ctx.set_source_rgba(0.0, 0.0, 0.0, 1.0);
+
+		Gdk.cairo_set_source_color(ctx,widget.style.fg[Gtk.StateType.ACTIVE]);
 		ctx.stroke();
 
 		return false;
@@ -300,7 +348,8 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 			});
 			/* Setup window */
 			window.role = "easy command";
-			window.type_hint = Gdk.WindowTypeHint.DIALOG;
+			window.type_hint = Gdk.WindowTypeHint.UTILITY;
+			window.set_position(Gtk.WindowPosition.CENTER_ALWAYS);
 			window.decorated = false;
 			window.modal = true;
 			window.set_keep_above(true);
@@ -410,9 +459,16 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 		/* add sw */
 		sw.add(tree);
 		/* Add columns */
+		var prenderer = new Gtk.CellRendererPixbuf();
+		var column = new Gtk.TreeViewColumn ();
+		tree.append_column(column);
+		column.set_title(_(""));
+		column.pack_start(prenderer, false);
+		column.add_attribute(prenderer, "icon-name", 6);
+		column.add_attribute(prenderer, "stock-id", 7);
 		/* Command column */
 		var renderer = new Gtk.CellRendererText();
-		var column = new Gtk.TreeViewColumn ();
+		column = new Gtk.TreeViewColumn ();
 		tree.append_column(column);
 		column.set_title(_("Command"));
 		column.pack_start(renderer, false);
