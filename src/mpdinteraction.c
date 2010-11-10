@@ -422,9 +422,9 @@ static void mpd_interaction_init(void)
 
 	/* volume commands */
 	gmpc_easy_command_add_entry_icon_name(gmpc_easy_command, _("volume"), "[+-]?[0-9]+", _("Volume (+-)<level>"),
-								(GmpcEasyCommandCallback *) volume_set, NULL, "audio-volume_high");
+								(GmpcEasyCommandCallback *) volume_set, NULL, "audio-volume-high");
 	gmpc_easy_command_add_entry_icon_name(gmpc_easy_command, _("mute"), "", _("Mute"),
-								(GmpcEasyCommandCallback *) volume_toggle_mute, NULL, "audio-volume-mute");
+								(GmpcEasyCommandCallback *) volume_toggle_mute, NULL, "audio-volume-muted");
 
 	gmpc_easy_command_add_entry(gmpc_easy_command, _("crossfade"),
 								C_("Regex for matching crossfade, translate off", "([0-9]+|Off)"),
