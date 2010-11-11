@@ -155,6 +155,7 @@ public class Gmpc.PixbufLoaderAsync : GLib.Object
                           Gmpc.Fix.write_loader(loader,(string)data, result);
                       }catch ( Error erro) {
                           warning("Error trying to fetch image: %s::%s", erro.message,uri);
+                          cancel.cancel();
                       }
                   }while(!cancel.is_cancelled() && result > 0);
             }      

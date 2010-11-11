@@ -8,8 +8,8 @@ public class Gmpc.Volume : Gtk.DrawingArea
     private const string some_unique_name = Config.VERSION;
     private static const int BORDER_WIDTH = 1;
     private static const int DEFAULT_HEIGHT = 32;
-    private static const int DEFAULT_WIDTH  = 28;
-    private static const int BLOCK_SPACING  = 1;
+    private static const int DEFAULT_WIDTH  = 24;
+    private static const double BLOCK_SPACING  = 2;
     private static const int mute_size = 1;            
     private int num_blocks = 8;
     public int _volume_level =0;
@@ -119,7 +119,7 @@ public class Gmpc.Volume : Gtk.DrawingArea
         base.size_allocate (allocation);
 
         // Calculate how much blocks we can have visible.
-        num_blocks = int.max((int)GLib.Math.ceil(allocation.height/(8.0*BLOCK_SPACING)),4);
+        num_blocks = int.max((int)GLib.Math.ceil(allocation.height/(8.0)),4);
     }
 
     /*
@@ -138,7 +138,7 @@ public class Gmpc.Volume : Gtk.DrawingArea
 	cr.paint();
 
 
-        Gdk.cairo_set_source_color (cr, this.style.fg[this.state]);
+        Gdk.cairo_set_source_color (cr, this.style.text[this.state]);
 
 
         /* Calculate the height of one block */
@@ -179,7 +179,7 @@ public class Gmpc.Volume : Gtk.DrawingArea
             cr.set_source_rgb(1.0,0.0,0.0);
             cr.stroke_preserve();
             cr.clip();
-            Gdk.cairo_set_source_color (cr, this.style.fg[this.state]);
+            Gdk.cairo_set_source_color (cr, this.style.text[this.state]);
             cr.new_path ();  /* current path is not
                                      consumed by cairo_clip() */       
             cr.move_to(BORDER_WIDTH+4, this.allocation.height-BORDER_WIDTH-3);
