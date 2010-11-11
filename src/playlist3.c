@@ -88,7 +88,7 @@ void pl3_pb_seek_event(GtkWidget * pb, guint seek_time, gpointer user_data);
 void set_browser_format(void);
 void set_playlist_format(void);
 
-static void playlist_player_volume_changed(GtkWidget * vol_but);
+static gboolean playlist_player_volume_changed(GtkWidget * vol_but, int new_vol);
 
 /* Glade declarations, otherwise these would be static */
 void about_window(void);
@@ -966,7 +966,7 @@ static void playlist_connection_changed(MpdObj * mi, int connect, gpointer data)
 
 void create_playlist3(void)
 {
-	GtkWidget *pb;
+	GtkWidget *pb,*ali;
 	GtkListStore *pl3_crumbs = NULL;
 	conf_mult_obj *list = NULL;
 	GtkCellRenderer *renderer;
@@ -1148,17 +1148,20 @@ void create_playlist3(void)
 
 	/* Add volume slider. */
 
-	volume_button = gtk_volume_button_new();
-	gtk_button_set_relief(GTK_BUTTON(volume_button), GTK_RELIEF_NORMAL);
-	gtk_box_pack_end(GTK_BOX(gtk_builder_get_object(pl3_xml, "hbox12" /*playlist_player" */ )),
-					 volume_button, FALSE, FALSE, 0);
+	volume_button = gtk_builder_get_object(pl3_xml, "volume_button");//gmpc_volume_new();//gtk_volume_button_new();
+	//gtk_button_set_relief(GTK_BUTTON(volume_button), GTK_RELIEF_NORMAL);
+	//gtk_box_pack_end(GTK_BOX(gtk_builder_get_object(pl3_xml, "hbox_playlist_player" /*playlist_player" */ )),
+	//				 volume_button, FALSE, FALSE, 0);
 	gtk_widget_show_all(volume_button);
 	/* Make sure change is applied */
 
 	playlist3_new_header();
+	
 	favorites_button = gmpc_favorites_button_new();
-	gtk_box_pack_start(GTK_BOX(gtk_builder_get_object(pl3_xml, "hbox10")), GTK_WIDGET(favorites_button), FALSE, FALSE, 0);
-	gtk_widget_show(GTK_WIDGET(favorites_button));
+	ali = gtk_alignment_new(0.0, 0.0, 0.0, 0.0);
+	gtk_container_add(GTK_CONTAINER(ali), GTK_WIDGET(favorites_button));
+	gtk_box_pack_start(GTK_BOX(gtk_builder_get_object(pl3_xml, "hbox10")), GTK_WIDGET(ali), FALSE, FALSE, 0);
+	gtk_widget_show_all(GTK_WIDGET(ali));
 
 	playlist_status_changed(connection,
 							MPD_CST_STATE | MPD_CST_SONGID | MPD_CST_NEXTSONG |
@@ -2069,7 +2072,7 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
 
 	if (what & MPD_CST_VOLUME)
 	{
-		int volume = gtk_scale_button_get_value(GTK_SCALE_BUTTON(volume_button)) * 100;
+		int volume = gmpc_volume_get_volume_level(GMPC_VOLUME(volume_button));//gtk_scale_button_get_value(GTK_SCALE_BUTTON(volume_button)) * 100;
 		int new_volume = mpd_status_get_volume(connection);
 		if (new_volume >= 0 && 
 				mpd_server_check_command_allowed(connection, "setvol") == MPD_SERVER_COMMAND_ALLOWED
@@ -2082,7 +2085,7 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
 			/* don't do anything if nothing is changed */
 			if (new_volume != volume)
 			{
-				gtk_scale_button_set_value(GTK_SCALE_BUTTON(volume_button), new_volume / 100.0);
+				gmpc_volume_set_volume_level(GMPC_VOLUME(volume_button), new_volume );
 			}
 		} else 
 		{
@@ -2132,14 +2135,16 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
 	}
 }
 
-static void playlist_player_volume_changed(GtkWidget * vol_but)
+static gboolean playlist_player_volume_changed(GtkWidget * vol_but, int new_vol)
 {
-	int volume = gtk_scale_button_get_value(GTK_SCALE_BUTTON(vol_but)) * 100;
+	int volume = new_vol;//gtk_scale_button_get_value(GTK_SCALE_BUTTON(vol_but)) * 100;
 	int new_volume = mpd_status_get_volume(connection);
 	if (new_volume >= 0 && new_volume != volume)
 	{
 		mpd_status_set_volume(connection, volume);
+		return FALSE;
 	}
+	return FALSE;
 }
 
 void about_window(void)
