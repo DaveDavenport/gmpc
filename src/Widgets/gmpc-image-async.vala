@@ -104,8 +104,10 @@ public class Gmpc.PixbufLoaderAsync : GLib.Object
 
     public new void set_from_file(string uri, int size, bool border)
     {
-        if(this.pcancel != null)
+        /*  If running cancel the current action. */
+        if(this.pcancel != null && !this.pcancel.is_cancelled()) {
             this.pcancel.cancel();
+        }
         this.pcancel = null;
         this.uri = uri;
         
@@ -164,6 +166,9 @@ public class Gmpc.PixbufLoaderAsync : GLib.Object
         }catch (Error err) {
             warning("Error trying to parse image: %s::%s", err.message,uri);
             pixbuf_update(null);
+            call_row_changed();
+            loader = null;
+            this.pcancel = null;
             /* Failed to load the image */
             return;
         }
@@ -171,7 +176,10 @@ public class Gmpc.PixbufLoaderAsync : GLib.Object
         if(cancel.is_cancelled())
         {
             GLib.log(LOG_DOMAIN,GLib.LogLevelFlags.LEVEL_DEBUG,"Cancelled loading of image");
+            pixbuf_update(null);
             cancel.reset();
+            loader = null;
+            this.pcancel = null;
             return;
         }
 
