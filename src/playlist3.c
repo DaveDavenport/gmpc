@@ -113,7 +113,7 @@ gboolean playlist3_leave_notify_event(GtkWidget * wid, GdkEventCrossing * event,
 static void pl3_profiles_changed(GmpcProfiles * prof, const int changed, const int col, const gchar * id);
 static void playlist3_server_output_changed(GtkWidget * item, gpointer data);
 static void playlist3_fill_server_menu(void);
-static void playlist3_server_update_db(void);
+void playlist3_server_update_db(void);
 
 void easy_command_help_window(void);
 
@@ -137,8 +137,6 @@ static void playlist_pref_construct(GtkWidget * container);
 static void playlist_pref_destroy(GtkWidget * container);
 
 static GtkBuilder *playlist_pref_xml = NULL;
-
-static GtkWidget *volume_button = NULL;
 
 void ck_search_as_you_type(GtkToggleButton * but);
 /**
@@ -1146,13 +1144,7 @@ void create_playlist3(void)
 
 	new_pb = pb;
 
-	/* Add volume slider. */
 
-	volume_button = gtk_builder_get_object(pl3_xml, "volume_button");//gmpc_volume_new();//gtk_volume_button_new();
-	//gtk_button_set_relief(GTK_BUTTON(volume_button), GTK_RELIEF_NORMAL);
-	//gtk_box_pack_end(GTK_BOX(gtk_builder_get_object(pl3_xml, "hbox_playlist_player" /*playlist_player" */ )),
-	//				 volume_button, FALSE, FALSE, 0);
-	gtk_widget_show_all(volume_button);
 	/* Make sure change is applied */
 
 	playlist3_new_header();
@@ -1168,7 +1160,8 @@ void create_playlist3(void)
 							MPD_CST_ELAPSED_TIME | MPD_CST_VOLUME |
 							MPD_CST_REPEAT | MPD_CST_RANDOM | MPD_CST_PERMISSION
 							| MPD_CST_SINGLE_MODE | MPD_CST_CONSUME_MODE, NULL);
-	g_signal_connect(G_OBJECT(volume_button), "value_changed", G_CALLBACK(playlist_player_volume_changed), NULL);
+	g_signal_connect(G_OBJECT(gtk_builder_get_object(pl3_xml, "volume_button")),
+		"value_changed", G_CALLBACK(playlist_player_volume_changed), NULL);
 
 	/* Restore values from config */
 	gtk_toggle_action_set_active(GTK_TOGGLE_ACTION
@@ -2072,6 +2065,7 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
 
 	if (what & MPD_CST_VOLUME)
 	{
+		GtkWidget *volume_button = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "volume_button"));
 		int volume = gmpc_volume_get_volume_level(GMPC_VOLUME(volume_button));//gtk_scale_button_get_value(GTK_SCALE_BUTTON(volume_button)) * 100;
 		int new_volume = mpd_status_get_volume(connection);
 		if (new_volume >= 0 && 
@@ -2354,62 +2348,53 @@ static void playlist3_server_output_changed(GtkWidget * item, gpointer data)
 
 }
 
-static void playlist3_server_update_db(void)
+void playlist3_server_update_db(void)
 {
 	mpd_database_update_dir(connection, "/");
 }
 
+
+
+static GList *server_menu_items = NULL; 
 static void playlist3_fill_server_menu(void)
 {
 	GtkUIManager *ui = GTK_UI_MANAGER(gtk_builder_get_object(pl3_xml, "uimanager1"));
 	GtkMenuItem *m_item = GTK_MENU_ITEM(gtk_ui_manager_get_widget(ui, "/menubartest/menu_server"));
 	/** Clear old items */
-	gtk_menu_item_set_submenu(m_item, NULL);
+	if(server_menu_items != NULL) {
+		g_list_foreach(server_menu_items, gtk_widget_destroy, NULL);
+		g_list_free(server_menu_items);
+		server_menu_items = NULL;
+	}
 
 	/* if connected fill with items */
 	if (mpd_check_connected(connection))
 	{
-		GtkWidget *menu = gtk_menu_new();
+		GtkWidget *menu = gtk_menu_item_get_submenu(GTK_MENU_ITEM(m_item));
 		GtkWidget *menu_item = NULL;
-		GtkAccelGroup *group = gtk_accel_group_new();
 		int i = 0;
 		MpdData *data = NULL;
-		gtk_menu_set_accel_group(GTK_MENU(menu), group);
-		/* todo, does this needs to be removed, or does that go automatically when the accell group get destroyed?  */
-		gtk_window_add_accel_group(GTK_WINDOW(playlist3_get_window()), group);
-
-		/* Update DB */
-		menu_item = gtk_image_menu_item_new_with_label(_("Update Database"));
-		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(menu_item),
-									  gtk_image_new_from_stock(GTK_STOCK_REFRESH, GTK_ICON_SIZE_MENU));
-		g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(playlist3_server_update_db), NULL);
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
-
-		menu_item = gtk_separator_menu_item_new();
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
-		/* Server Information */
-		menu_item = gtk_image_menu_item_new_with_label(_("Information"));
-		gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(menu_item),
-									  gtk_image_new_from_icon_name("mpd", GTK_ICON_SIZE_MENU));
-		g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(serverinformation_show_popup), NULL);
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
-
-		menu_item = gtk_separator_menu_item_new();
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
 
 		data = mpd_server_get_output_devices(connection);
+		if(data) {
+			menu_item = gtk_separator_menu_item_new();
+			server_menu_items = g_list_append(server_menu_items, menu_item);
+			gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
+		}
 		for (; data; data = mpd_data_get_next(data))
 		{
 			menu_item = gtk_check_menu_item_new_with_label(data->output_dev->name);
+			server_menu_items = g_list_append(server_menu_items, menu_item);
 			gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(menu_item), data->output_dev->enabled ? TRUE : FALSE);
-			gtk_widget_add_accelerator(menu_item, "activate", group, GDK_1 + i, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+			gtk_widget_add_accelerator(menu_item, "activate", 
+					gtk_ui_manager_get_accel_group(GTK_UI_MANAGER(ui)), 
+					GDK_1 + i, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
 			g_signal_connect(G_OBJECT(menu_item), "toggled", G_CALLBACK(playlist3_server_output_changed), NULL);
 			g_object_set_data(G_OBJECT(menu_item), "id", GINT_TO_POINTER(data->output_dev->id));
 			gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
 			i++;
 		}
-		gtk_menu_item_set_submenu(m_item, menu);
 		gtk_widget_show_all(menu);
 		/* Server Menu Item */
 		gtk_action_set_sensitive(GTK_ACTION(gtk_builder_get_object(pl3_xml, "menu_server")), TRUE);
@@ -2647,6 +2632,7 @@ void playlist3_insert_browser(GtkTreeIter * iter, gint position)
 void playlist3_destroy(void)
 {
 	GtkWidget *win = playlist3_get_window();
+	if(server_menu_items) g_list_free(server_menu_items);
 	gtk_widget_destroy(win);
 	g_object_unref(pl3_xml);
 }
