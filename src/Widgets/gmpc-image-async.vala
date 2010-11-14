@@ -98,7 +98,7 @@ public class Gmpc.PixbufLoaderAsync : GLib.Object
         
         Gmpc.Fix.add_border(pix);
         /* used to try to track leak */
-        return pix.copy();
+        return pix;
     }
 
 

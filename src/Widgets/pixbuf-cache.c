@@ -93,7 +93,6 @@ static void destroy_cache_entry(DCE * entry)
 {
 	g_return_if_fail(entry != NULL);
 	g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "%i: Destroy cache entry: %p", g_hash_table_size(pb_cache) - 1, entry);
-
 	g_object_remove_toggle_ref(G_OBJECT(entry->pb), (GToggleNotify) pixbuf_cache_entry_toggle_ref,
 							   (gpointer) entry->key);
 	g_slice_free(DCE, entry);
@@ -171,6 +170,7 @@ void pixbuf_cache_add_icon(int size, const gchar * url, GdkPixbuf * pb)
 		g_hash_table_insert(pb_cache, key, e);
 		g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "%i Add entry: %s", g_hash_table_size(pb_cache), key);
 	}
+    else g_free(key);
 	g_timer_stop(t);
 	g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Add icon took %.6f", g_timer_elapsed(t, NULL));
 	g_timer_destroy(t);

@@ -1,1 +1,1 @@
-SUBDIRS = config MpdDataModel GmpcEasyDownload MetaDataCache PixbufCache
+SUBDIRS = config MpdDataModel GmpcEasyDownload MetaDataCache PixbufCache AsyncImage
