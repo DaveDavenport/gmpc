@@ -21,7 +21,7 @@ async_image_test_SOURCES = \
 		async_image_test.c 
 
 nodist_async_image_test_SOURCES = \        
-        $(top_srcdir)/src/Widgets/gmpc-image-async.vala\
+        $(top_srcdir)/src/Widgets/gmpc-image-async.c\
         $(top_srcdir)/src/Widgets/pixbuf-cache.c\
         $(top_srcdir)/src/misc.c
 
