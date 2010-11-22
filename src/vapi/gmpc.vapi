@@ -55,6 +55,7 @@ namespace Gmpc {
             public Gmpc.MetaData.Type type; 
            public unowned string plugin_name;
            public int size;
+           public void * content;
            public Gmpc.MetaData.ContentType content_type;
 
            [CCode (cname="meta_data_is_empty")]
@@ -346,6 +347,8 @@ namespace Gmpc {
             public void set_db_update_time(string id, int value);
             public int get_db_update_time(string id);
             public unowned string? get_music_directory(string id); 
+            [CCode (cname="connection_get_hostname", cheader_filename="mpdinteraction.h")]
+            public string? get_hostname();
 
     }
 

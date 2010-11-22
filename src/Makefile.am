@@ -41,6 +41,7 @@ gmpc_SOURCES=\
     vala/gmpc-test-plugin.vala\
     vala/gmpc-paned-size-group.vala\
     Providers/music-tree.vala\
+    Providers/gmc-plugin.vala\
     Widgets/GmpcVolume.vala\
 	main.c\
 	plugin.c\
