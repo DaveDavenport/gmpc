@@ -86,3 +86,4 @@ src/Widgets/GmpcVolume.c
 
 #Providers
 src/Providers/music-tree.c
+src/Providers/gmc-plugin.c

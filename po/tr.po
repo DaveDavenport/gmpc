@@ -3,11 +3,12 @@
 # This file is distributed under the same license as the gmpc package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 #
+#: ../src/vala/gmpc-easy-command.c:694
 msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-06 20:06+0100\n"
+"POT-Creation-Date: 2010-11-24 20:49+0100\n"
 "PO-Revision-Date: 2010-10-24 01:01+0000\n"
 "Last-Translator: Engin BAHADIR <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
@@ -23,9 +24,9 @@ msgstr ""
 msgid "A gnome frontend for the mpd daemon"
 msgstr "Mpd süreci için bir gnome arayüzü"
 
-#: ../data/gmpc.desktop.in.h:2 ../src/main.c:399 ../src/playlist3.c:2124
-#: ../src/tray-icon2.c:642 ../src/browsers/gmpc-nowplaying2.c:1831
-#: ../src/browsers/gmpc-nowplaying2.c:1833
+#: ../data/gmpc.desktop.in.h:2 ../src/main.c:400 ../src/playlist3.c:2164
+#: ../src/tray-icon2.c:642 ../src/browsers/gmpc-nowplaying2.c:1832
+#: ../src/browsers/gmpc-nowplaying2.c:1834
 msgid "Gnome Music Player Client"
 msgstr "Gnome Muzik Çalıcı İstemcisi"
 
@@ -33,100 +34,100 @@ msgstr "Gnome Muzik Çalıcı İstemcisi"
 msgid "Proxy"
 msgstr "Vekil Sunucu (proxy)"
 
-#: ../src/main.c:336
+#: ../src/main.c:337
 msgid "Start the program in full screen"
 msgstr "Programı tam ekran başlat"
 
-#: ../src/main.c:338
+#: ../src/main.c:339
 msgid "Show program version and revision"
 msgstr "Program sürüm ve düzeltim bilgisini göster"
 
-#: ../src/main.c:340
+#: ../src/main.c:341
 msgid "Quits the running gmpc"
 msgstr "Çalışan gmpc' yi kapatır"
 
-#: ../src/main.c:342
+#: ../src/main.c:343
 msgid "Don't load the plugins"
 msgstr "Eklentiler yüklenmesin"
 
-#: ../src/main.c:344
+#: ../src/main.c:345
 msgid "Load alternative config file"
 msgstr "Başka ayar dosyası yükle"
 
-#: ../src/main.c:346
+#: ../src/main.c:347
 msgid "Set the debug level"
 msgstr "Hata seviyesini ayarla"
 
-#: ../src/main.c:348
+#: ../src/main.c:349
 msgid "Start gmpc hidden to tray"
 msgstr "Gmpc'yi sistem tepsisine saklayarak başlat"
 
-#: ../src/main.c:350
+#: ../src/main.c:351
 msgid "Remove all failed hits from metadata cache"
 msgstr "Tüm başarısız denemeleri metadata önbelleğinden kaldır"
 
-#: ../src/main.c:352
+#: ../src/main.c:353
 msgid "Show redraw events in GTK+"
 msgstr "GTK+ daki tekrar çizme olaylarını göster"
 
-#: ../src/main.c:354
+#: ../src/main.c:355
 #, fuzzy
 msgid "Show bug information"
 msgstr "Hata bilgi diyaloğunu göster"
 
-#: ../src/main.c:356
+#: ../src/main.c:357
 msgid "Shows all output from a certain log domain"
 msgstr "Tüm çıktıyı belirli bir kayıt günlüğü alanında göster"
 
-#: ../src/main.c:358
+#: ../src/main.c:359
 msgid "Select a profile"
 msgstr "Bir profil seç"
 
-#: ../src/main.c:498
+#: ../src/main.c:499
 msgid "quit"
 msgstr "çık"
 
-#: ../src/main.c:499
+#: ../src/main.c:500
 msgid "Quit gmpc"
 msgstr "Gmpc' den çık"
 
-#: ../src/main.c:500
+#: ../src/main.c:501
 msgid "hide"
 msgstr "sakla"
 
-#: ../src/main.c:501
+#: ../src/main.c:502
 msgid "Hide gmpc"
 msgstr "Gmpc' yi sakla"
 
-#: ../src/main.c:502
+#: ../src/main.c:503
 msgid "show"
 msgstr "göster"
 
-#: ../src/main.c:503
+#: ../src/main.c:504
 msgid "Show gmpc"
 msgstr "Gmpc' yi göster"
 
-#: ../src/main.c:504
+#: ../src/main.c:505
 msgid "show notification"
 msgstr "bildirileri göster"
 
-#: ../src/main.c:505
+#: ../src/main.c:506
 msgid "Show trayicon notification"
 msgstr "Sistem tepsisi simgesinde bildiri göster"
 
-#: ../src/main.c:565
+#: ../src/main.c:566
 msgid "Failed to load the configuration system."
 msgstr "Yapılandırma dizgesi yüklenmesi başarılamadı."
 
-#: ../src/main.c:587
+#: ../src/main.c:588
 msgid "Failed to load debug-log file."
 msgstr "debug-log dosyası yüklenmesi başarılamadı."
 
-#: ../src/main.c:771
+#: ../src/main.c:772
 msgid "Failed to setup libmpd"
 msgstr "libmpd ayarlanması başarılamadı."
 
-#: ../src/main.c:913
+#: ../src/main.c:917
 msgid ""
 "The GMPC  team is looking for help maintaining and developing GMPC\n"
 "Help is needed with the following:\n"
@@ -152,11 +153,11 @@ msgstr ""
 "Teşekkürler. \n"
 "<i>Qball Cow</i>"
 
-#: ../src/main.c:1239
+#: ../src/main.c:1246
 msgid "GMPC has insufficient permissions on the mpd server."
 msgstr "GMPC için mpd sunucunda  izinler yetersiz."
 
-#: ../src/main.c:1265
+#: ../src/main.c:1272
 #, c-format
 msgid ""
 "Failed to set password on: '%s'\n"
@@ -165,29 +166,29 @@ msgstr ""
 "'%s' için şifre ayarlanamadı.\n"
 "Lütfen tekrar deneyin"
 
-#: ../src/main.c:1268
+#: ../src/main.c:1275
 #, c-format
 msgid "Please enter your password for: '%s'"
 msgstr "Lütfen parolana gir:'%s'"
 
-#: ../src/main.c:1298 ../src/main.c:1324
+#: ../src/main.c:1305 ../src/main.c:1331
 msgid "error code"
 msgstr "hata kodu"
 
-#: ../src/main.c:1310
+#: ../src/main.c:1317
 msgid "Insufficient permission to connect to mpd. Check password"
 msgstr ""
 "Mpd sunucusuna bağlanmak için izinler yetersiz. Şifrenizi kontrol edin."
 
-#: ../src/main.c:1349
+#: ../src/main.c:1356
 msgid "MPD versions before 0.13.0 are not supported"
 msgstr "0.13.0 dem önceki MPD sürümleri desteklenmez"
 
-#: ../src/main.c:1412
+#: ../src/main.c:1419
 msgid "Connected to mpd"
 msgstr "Mpd' ye bağlanıldı"
 
-#: ../src/main.c:1415
+#: ../src/main.c:1422
 msgid "Disconnected from mpd"
 msgstr "Mpd' ye bağlantı kesildi."
 
@@ -231,17 +232,17 @@ msgid "PlayPause"
 msgstr "ÇalDurakla"
 
 #. * MM_PLAYPAUSE
-#: ../src/mm-keys.c:74 ../src/tray-icon2.c:629
+#: ../src/mm-keys.c:74 ../src/tray-icon2.c:629 ../glade/playlist3.ui.h:5
 msgid "Next"
 msgstr "Sonraki"
 
 #. * MM_NEXT
-#: ../src/mm-keys.c:75
+#: ../src/mm-keys.c:75 ../glade/playlist3.ui.h:9
 msgid "Previous"
 msgstr "Önceki"
 
 #. * MM_PREV
-#: ../src/mm-keys.c:76
+#: ../src/mm-keys.c:76 ../glade/playlist3.ui.h:18
 msgid "Stop"
 msgstr "Durdur"
 
@@ -256,12 +257,12 @@ msgid "Fast Backward"
 msgstr "Geri Sar"
 
 #. * MM_FASTBACKWARD
-#: ../src/mm-keys.c:79 ../glade/playlist3.ui.h:3
+#: ../src/mm-keys.c:79 ../glade/playlist3.ui.h:12
 msgid "Repeat"
 msgstr "Tekrarla"
 
 #. * MM_REPEAT
-#: ../src/mm-keys.c:80 ../glade/playlist3.ui.h:2
+#: ../src/mm-keys.c:80 ../glade/playlist3.ui.h:10
 msgid "Random"
 msgstr "Rastgele"
 
@@ -388,8 +389,8 @@ msgstr "etkinleştir"
 msgid "disable"
 msgstr "etkisizleştir"
 
-#: ../src/mpdinteraction.c:147 ../src/playlist3.c:1935 ../src/playlist3.c:1950
-#: ../src/playlist3.c:1968 ../src/playlist3.c:1983
+#: ../src/mpdinteraction.c:147 ../src/playlist3.c:1946 ../src/playlist3.c:1960
+#: ../src/playlist3.c:1977 ../src/playlist3.c:1991
 #: ../glade/preferences-server.ui.h:9
 msgid "Off"
 msgstr "Kapat"
@@ -459,7 +460,7 @@ msgstr "Veritabanını güncelle: Yeterli izniniz yok."
 
 #. Player control
 #. basic playlist commands
-#: ../src/mpdinteraction.c:397 ../src/mpdinteraction.c:433
+#: ../src/mpdinteraction.c:397 ../src/mpdinteraction.c:438
 msgid "play"
 msgstr "çal"
 
@@ -467,334 +468,324 @@ msgstr "çal"
 msgid "start playback"
 msgstr "Kayıttan yürütmeyi başlat"
 
-#: ../src/mpdinteraction.c:399
+#: ../src/mpdinteraction.c:400
 msgid "pause"
 msgstr "duraklat"
 
-#: ../src/mpdinteraction.c:399
+#: ../src/mpdinteraction.c:400
 msgid "pause playback"
 msgstr "çalmayı duraklat"
 
-#: ../src/mpdinteraction.c:401
+#: ../src/mpdinteraction.c:403
 msgid "next"
 msgstr "sonraki"
 
-#: ../src/mpdinteraction.c:401
+#: ../src/mpdinteraction.c:403
 msgid "next song"
 msgstr "sonraki şarkı"
 
-#: ../src/mpdinteraction.c:403
+#: ../src/mpdinteraction.c:406
 msgid "prev"
 msgstr "önceki"
 
-#: ../src/mpdinteraction.c:403
+#: ../src/mpdinteraction.c:406
 msgid "previous song"
 msgstr "önceki şarkı"
 
-#: ../src/mpdinteraction.c:405
+#: ../src/mpdinteraction.c:409
 msgid "stop"
 msgstr "dur"
 
-#: ../src/mpdinteraction.c:405
+#: ../src/mpdinteraction.c:409
 msgid "stop playback"
 msgstr "kayıttan yürütmeyi durdur"
 
-#: ../src/mpdinteraction.c:408
+#: ../src/mpdinteraction.c:413
 msgid "random"
 msgstr "rasgele"
 
-#: ../src/mpdinteraction.c:408
+#: ../src/mpdinteraction.c:413
 msgid "Random (on|off)"
 msgstr "Rasgele (açık|kapalı)"
 
-#: ../src/mpdinteraction.c:410
+#: ../src/mpdinteraction.c:415
 msgid "repeat"
 msgstr "tekrar"
 
-#: ../src/mpdinteraction.c:410
+#: ../src/mpdinteraction.c:415
 msgid "Repeat (on|off)"
 msgstr "Tekrar (açık|kapalı)"
 
-#: ../src/mpdinteraction.c:413
+#: ../src/mpdinteraction.c:418
 msgid "single"
 msgstr "tek"
 
-#: ../src/mpdinteraction.c:413
+#: ../src/mpdinteraction.c:418
 msgid "Single (on|off)"
 msgstr "Tekil (Açık|Kapalı)"
 
-#: ../src/mpdinteraction.c:415
+#: ../src/mpdinteraction.c:420
 msgid "consume"
 msgstr ""
 
-#: ../src/mpdinteraction.c:415
+#: ../src/mpdinteraction.c:420
 msgid "Consume (on|off)"
 msgstr ""
 
 #. volume commands
-#: ../src/mpdinteraction.c:419
+#: ../src/mpdinteraction.c:424
 msgid "volume"
 msgstr "ses"
 
-#: ../src/mpdinteraction.c:419
+#: ../src/mpdinteraction.c:424
 msgid "Volume (+-)<level>"
 msgstr "Ses(+-)<düzey>"
 
-#: ../src/mpdinteraction.c:421
+#: ../src/mpdinteraction.c:426
 msgid "mute"
 msgstr "sessiz"
 
-#: ../src/mpdinteraction.c:421
+#: ../src/mpdinteraction.c:426 ../glade/playlist3.ui.h:3
 msgid "Mute"
 msgstr "Sessiz"
 
-#: ../src/mpdinteraction.c:424
+#: ../src/mpdinteraction.c:429
 msgid "crossfade"
 msgstr "Çapraz geçiş"
 
-#: ../src/mpdinteraction.c:425
+#: ../src/mpdinteraction.c:430
 msgctxt "Regex for matching crossfade, translate off"
 msgid "([0-9]+|Off)"
 msgstr "([0-9]+|Kapalı)"
 
-#: ../src/mpdinteraction.c:426
+#: ../src/mpdinteraction.c:431
 msgid "Set Crossfade <seconds>"
 msgstr "Çapraz Geçişi Ayarla <saniyeler>"
 
-#: ../src/mpdinteraction.c:428
+#: ../src/mpdinteraction.c:433
 msgid "output"
 msgstr "çıkış"
 
-#: ../src/mpdinteraction.c:429
+#: ../src/mpdinteraction.c:434
 #, fuzzy
 msgctxt "Regex for matching output"
 msgid "[0-9]+[ ]*(Enable|Disable|Select|)"
 msgstr "[0-9]+ (Etkinleştir|Etkisizleştir)"
 
-#: ../src/mpdinteraction.c:430
+#: ../src/mpdinteraction.c:435
 #, fuzzy
 msgid "output X enable or disable or select"
 msgstr "Çıktı X aktif yada pasif"
 
-#: ../src/mpdinteraction.c:433
+#: ../src/mpdinteraction.c:438
 msgid "Play <query>"
 msgstr "Çal <sorgu>"
 
-#: ../src/mpdinteraction.c:435
+#: ../src/mpdinteraction.c:440
 msgid "add"
 msgstr "ekle"
 
-#: ../src/mpdinteraction.c:435
+#: ../src/mpdinteraction.c:440
 msgid "Add <query>"
 msgstr "Ekle <sorgu>"
 
-#: ../src/mpdinteraction.c:437
+#: ../src/mpdinteraction.c:442
 msgid "replace"
 msgstr "değiştir"
 
-#: ../src/mpdinteraction.c:437
+#: ../src/mpdinteraction.c:442
 msgid "Replace <query>"
 msgstr "Değiştir <sorgu>"
 
 #. Basic seek commands
-#: ../src/mpdinteraction.c:441
+#: ../src/mpdinteraction.c:446
 msgid "seek"
 msgstr "ara"
 
-#: ../src/mpdinteraction.c:441
+#: ../src/mpdinteraction.c:446
 msgid "Seek within the current song"
 msgstr "Geçerli şarkı içinde ara"
 
-#: ../src/mpdinteraction.c:445
+#: ../src/mpdinteraction.c:450
 msgid "stop after current song"
 msgstr "geçerli şarkıdan sonra dur"
 
-#: ../src/mpdinteraction.c:447
+#: ../src/mpdinteraction.c:452
 msgid "Stop playback after the current song"
 msgstr "Geçerli şarkıdan sonra çalmayı durdur"
 
-#: ../src/mpdinteraction.c:451
+#: ../src/mpdinteraction.c:456
 msgid "repeat current song"
 msgstr "geçerli şarkıyı tekrar et"
 
-#: ../src/mpdinteraction.c:453
+#: ../src/mpdinteraction.c:458
 msgid "Repeat the current song"
 msgstr "Geçerli şarkıyı tekrar et"
 
-#: ../src/mpdinteraction.c:457
+#: ../src/mpdinteraction.c:462
 msgid "update database"
 msgstr "veritabanını güncelle"
 
-#: ../src/mpdinteraction.c:459
+#: ../src/mpdinteraction.c:464
 msgid "Update the database"
 msgstr "Veritabanını güncelle"
 
-#: ../src/mpdinteraction.c:463
+#: ../src/mpdinteraction.c:468
 msgid "Server Settings"
 msgstr "Sunucu Ayarları"
 
-#: ../src/mpdinteraction.c:485
+#: ../src/mpdinteraction.c:490
 msgid "Connection"
 msgstr "Bağlantı"
 
-#: ../src/mpdinteraction.c:573
+#: ../src/mpdinteraction.c:578
 msgid "Connecting"
 msgstr "Bağlanıyor"
 
 #. Add all from album
-#: ../src/mpdinteraction.c:1674
+#: ../src/mpdinteraction.c:1679
 msgid "All from album"
 msgstr "Albümün tamamı"
 
 #. Add all from artist
-#: ../src/mpdinteraction.c:1687
+#: ../src/mpdinteraction.c:1692
 msgid "All from artist"
 msgstr "Sanatçıdan tamamı"
 
 #. Add all from genre
-#: ../src/mpdinteraction.c:1698
+#: ../src/mpdinteraction.c:1703
 msgid "All from genre"
 msgstr "Türün tamamı"
 
 #. Add all from file
-#: ../src/mpdinteraction.c:1706
+#: ../src/mpdinteraction.c:1711
 msgid "All from same directory"
 msgstr "Aynı dizindekilerin tamamı"
 
 #. Create sub menu
 #. Add
-#: ../src/mpdinteraction.c:1715
+#: ../src/mpdinteraction.c:1720
 msgid "Add more"
 msgstr "Daha fazla ekle"
 
-#: ../src/mpdinteraction.c:1724
+#: ../src/mpdinteraction.c:1729
 msgid "Set Rating"
 msgstr "Derecelendirme Ata"
 
-#: ../src/playlist3.c:872
+#: ../src/playlist3.c:879
 msgid "Connected"
 msgstr "Bağlandı"
 
-#: ../src/playlist3.c:882 ../src/playlist3.c:2531
+#: ../src/playlist3.c:890 ../src/playlist3.c:2568
 msgid "Not Connected"
 msgstr "Bağlı Değil"
 
-#: ../src/playlist3.c:902 ../src/playlist3.c:908 ../src/playlist3.c:921
-#: ../src/playlist3.c:927 ../src/playlist3.c:1888 ../src/playlist3.c:1894
+#: ../src/playlist3.c:910 ../src/playlist3.c:916 ../src/playlist3.c:929
+#: ../src/playlist3.c:935 ../src/playlist3.c:1899 ../src/playlist3.c:1905
 msgid "GMPC"
 msgstr "GMPC"
 
-#: ../src/playlist3.c:903 ../src/playlist3.c:908
+#: ../src/playlist3.c:911 ../src/playlist3.c:916
 msgid "Connected to"
 msgstr "Bağlanılan:"
 
-#: ../src/playlist3.c:922 ../src/playlist3.c:927
+#: ../src/playlist3.c:930 ../src/playlist3.c:935
 msgid "Disconnected"
 msgstr "Bağlantı Kesildi"
 
 #. *
 #. * Set paused in Window string
 #.
-#: ../src/playlist3.c:1839 ../src/playlist3.c:1843
+#: ../src/playlist3.c:1851 ../src/playlist3.c:1855
 msgid "paused"
 msgstr "duraklatıldı"
 
-#: ../src/playlist3.c:1934
+#: ../src/playlist3.c:1945
 #, c-format
 msgid "Repeat: %s"
 msgstr "Tekrarla: %s"
 
-#: ../src/playlist3.c:1935 ../src/playlist3.c:1950 ../src/playlist3.c:1968
-#: ../src/playlist3.c:1983
+#: ../src/playlist3.c:1946 ../src/playlist3.c:1960 ../src/playlist3.c:1977
+#: ../src/playlist3.c:1991
 msgid "On"
 msgstr "Açık"
 
-#: ../src/playlist3.c:1949
+#: ../src/playlist3.c:1959
 #, c-format
 msgid "Random: %s"
 msgstr "Rastgele: %s"
 
-#: ../src/playlist3.c:1967
+#: ../src/playlist3.c:1976
 #, c-format
 msgid "Single mode: %s"
 msgstr "Tekil kip: %s"
 
-#: ../src/playlist3.c:1982
+#: ../src/playlist3.c:1990
 #, c-format
 msgid "Consume: %s"
 msgstr ""
 
-#: ../src/playlist3.c:2060
+#: ../src/playlist3.c:2098
 msgid "MPD Reported the following error"
 msgstr "MPD Takip eden hatayı raporladı"
 
-#: ../src/playlist3.c:2203 ../src/playlist3.c:2210
+#: ../src/playlist3.c:2245 ../src/playlist3.c:2252
 msgid "Profile"
 msgstr "Profil"
 
-#: ../src/playlist3.c:2204
+#: ../src/playlist3.c:2246
 msgid "added"
 msgstr "eklendi"
 
-#: ../src/playlist3.c:2212
+#: ../src/playlist3.c:2254
 msgid "changed hostname to:"
 msgstr "sunucu ismi şöyle değiştirildi:"
 
-#. Update DB
-#: ../src/playlist3.c:2330
-msgid "Update Database"
-msgstr "Veritabanını Güncelle"
-
-#. Server Information
-#: ../src/playlist3.c:2339
-msgid "Information"
-msgstr "Bilgi"
-
-#: ../src/playlist3.c:2451
+#: ../src/playlist3.c:2488
 msgid "By"
 msgstr ""
 
-#: ../src/playlist3.c:2457
+#: ../src/playlist3.c:2494
 msgid "From"
 msgstr ""
 
-#: ../src/playlist3.c:2523
+#: ../src/playlist3.c:2560
 msgid "Not Playing"
 msgstr "Çalınmıyor"
 
-#: ../src/playlist3.c:2644
+#: ../src/playlist3.c:2682
 msgid "Interface"
 msgstr "Arayüz"
 
-#: ../src/playlist3.c:2930
+#: ../src/playlist3.c:2968
 msgid "Single Mode enabled"
 msgstr "Tekil Mod etkin"
 
-#: ../src/playlist3.c:2934
+#: ../src/playlist3.c:2972
 msgid "Single Mode disabled"
 msgstr "Tekil Kip devre dışı"
 
-#: ../src/playlist3.c:2943
+#: ../src/playlist3.c:2981
 msgid "Consume Mode enabled"
 msgstr ""
 
-#: ../src/playlist3.c:2947
+#: ../src/playlist3.c:2985
 msgid "Consume Mode disabled"
 msgstr ""
 
-#: ../src/playlist3.c:2956
+#: ../src/playlist3.c:2994
 msgid "Repeat enabled"
 msgstr "Tekrarlama etkinleştirildi"
 
-#: ../src/playlist3.c:2960
+#: ../src/playlist3.c:2998
 msgid "Repeat disabled"
 msgstr "Tekrarlama etkisizleştirildi"
 
-#: ../src/playlist3.c:2969
+#: ../src/playlist3.c:3007
 msgid "Random enabled"
 msgstr "Rastgele kipi etkin"
 
-#: ../src/playlist3.c:2973
+#: ../src/playlist3.c:3011
 msgid "Random disabled"
 msgstr "Rastgele kipi devre dışı"
 
@@ -818,66 +809,66 @@ msgstr "Süre"
 msgid "Message"
 msgstr "Mesaj"
 
-#: ../src/plugin.c:61 ../src/plugin.c:69 ../src/plugin.c:77 ../src/plugin.c:87
-#: ../src/plugin.c:95 ../src/plugin.c:105 ../src/plugin.c:113
-#: ../src/plugin.c:121 ../src/plugin.c:129 ../src/plugin.c:137
-#: ../src/plugin.c:145 ../src/plugin.c:158 ../src/plugin.c:170
-#: ../src/plugin.c:240
+#: ../src/plugin.c:56 ../src/plugin.c:64 ../src/plugin.c:72 ../src/plugin.c:82
+#: ../src/plugin.c:90 ../src/plugin.c:100 ../src/plugin.c:108
+#: ../src/plugin.c:116 ../src/plugin.c:124 ../src/plugin.c:132
+#: ../src/plugin.c:140 ../src/plugin.c:153 ../src/plugin.c:165
+#: ../src/plugin.c:235
 msgid "Failed to load plugin"
 msgstr "Eklenti yüklenemedi"
 
-#: ../src/plugin.c:61
+#: ../src/plugin.c:56
 msgid "plugin has no name"
 msgstr "Eklentinin ismi yok"
 
-#: ../src/plugin.c:70
+#: ../src/plugin.c:65
 msgid "plugin with same name already exists"
 msgstr "aynı isimde bir eklenti zaten var"
 
-#: ../src/plugin.c:78
+#: ../src/plugin.c:73
 msgid "plugin is missing set/get enable function"
 msgstr "eklentide ayarla/al etkinleştir fonksiyonu eksik"
 
-#: ../src/plugin.c:88 ../src/plugin.c:96 ../src/plugin.c:159
+#: ../src/plugin.c:83 ../src/plugin.c:91 ../src/plugin.c:154
 msgid "plugin browser structure is incorrect"
 msgstr "eklenti tarayıcı yapısı hatalı"
 
-#: ../src/plugin.c:106 ../src/plugin.c:114 ../src/plugin.c:122
-#: ../src/plugin.c:146
+#: ../src/plugin.c:101 ../src/plugin.c:109 ../src/plugin.c:117
+#: ../src/plugin.c:141
 msgid "plugin metadata structure is incorrect"
 msgstr "eklenti üstveri yapısı hatalı"
 
-#: ../src/plugin.c:130
+#: ../src/plugin.c:125
 msgid "plugin get_image api is deprecated "
 msgstr ""
 
-#: ../src/plugin.c:138
+#: ../src/plugin.c:133
 msgid "plugin get_uris api is deprecated "
 msgstr ""
 
-#: ../src/plugin.c:171
+#: ../src/plugin.c:166
 msgid "plugin preferences structure is incorrect"
 msgstr "eklenti özellikleri yapısı hatalı"
 
-#: ../src/plugin.c:253
+#: ../src/plugin.c:248
 msgid "Failed to create plugin instance"
 msgstr "Eklenti örneği oluşturma başarısız oldu"
 
-#: ../src/plugin.c:267
+#: ../src/plugin.c:262
 msgid "Failed to bind symbol in plugin"
 msgstr "Eklentide simge bindirilemedi"
 
-#: ../src/plugin.c:280
+#: ../src/plugin.c:275
 #, c-format
 msgid "Plugin %s has wrong api version: %i"
 msgstr "%s eklentisinin api sürümü yanlış: %i"
 
-#: ../src/plugin.c:291 ../src/plugin.c:299
+#: ../src/plugin.c:286 ../src/plugin.c:294
 #, c-format
 msgid "Plugin %s has wrong no plugin structure: %s"
 msgstr "%s Eklentisi hatalı. Eklenti yapısı yok: %s"
 
-#: ../src/plugin.c:319
+#: ../src/plugin.c:314
 msgid ""
 "One or more plugins failed to load, see help->messages for more information"
 msgstr ""
@@ -933,10 +924,10 @@ msgstr "Üstveri Sağlayıcısı ve Tarayıcı Genişlemesi"
 msgid "Misc."
 msgstr "Çeşitli"
 
-#: ../src/preferences.c:397 ../src/browsers/gmpc-metadata-browser2.c:4413
-#: ../src/browsers/gmpc-metadata-browser2.c:4423
-#: ../src/browsers/gmpc-metadata-browser2.c:4920
-#: ../src/browsers/gmpc-metadata-browser2.c:5531
+#: ../src/preferences.c:397 ../src/browsers/gmpc-metadata-browser2.c:4416
+#: ../src/browsers/gmpc-metadata-browser2.c:4426
+#: ../src/browsers/gmpc-metadata-browser2.c:4923
+#: ../src/browsers/gmpc-metadata-browser2.c:5534
 msgid "Unknown"
 msgstr "Bilinmeyen"
 
@@ -1246,8 +1237,8 @@ msgstr ""
 
 #: ../glade/preferences-server.ui.h:6
 #: ../src/browsers/gmpc-metadata-browser2.c:2463
-#: ../src/browsers/gmpc-metadata-browser2.c:3460
-#: ../src/browsers/gmpc-metadata-browser2.c:4428
+#: ../src/browsers/gmpc-metadata-browser2.c:3463
+#: ../src/browsers/gmpc-metadata-browser2.c:4431
 #: ../src/gmpc-mpddata-treeview.gob:81 ../src/gmpc-mpddata-treeview.gob:664
 #: ../src/vala/gmpc-test-plugin.c:1156
 msgid "Album"
@@ -1263,7 +1254,7 @@ msgstr "Çapraz geçişi etkinleştir"
 
 #: ../glade/preferences-server.ui.h:10
 #: ../src/browsers/gmpc-metadata-browser2.c:2486
-#: ../src/browsers/gmpc-metadata-browser2.c:3507
+#: ../src/browsers/gmpc-metadata-browser2.c:3510
 #: ../src/gmpc-mpddata-treeview.gob:85
 msgid "Track"
 msgstr "Parça"
@@ -1378,47 +1369,118 @@ msgstr "gtk-kapat"
 msgid "Consume"
 msgstr "Tüketim"
 
-#: ../glade/playlist3.ui.h:4
-msgid "Se_rver"
-msgstr "Su_nucu"
+#: ../glade/playlist3.ui.h:2
+#, fuzzy
+msgid "Consume Mode"
+msgstr "Tüketim"
 
-#: ../glade/playlist3.ui.h:5
-msgid "Single mode"
-msgstr "Tekil kip"
+#: ../glade/playlist3.ui.h:4
+msgid "Mute the output"
+msgstr ""
 
 #: ../glade/playlist3.ui.h:6
+#, fuzzy
+msgid "Play"
+msgstr "Oynatma süresi"
+
+#: ../glade/playlist3.ui.h:7
+msgid "Play/Pause"
+msgstr "Oynat/Duraklat"
+
+#: ../glade/playlist3.ui.h:8
+#, fuzzy
+msgid "Prev"
+msgstr "Önceki"
+
+#: ../glade/playlist3.ui.h:11
+#, fuzzy
+msgid "Random Mode"
+msgstr "Rastgele"
+
+#: ../glade/playlist3.ui.h:13
+#, fuzzy
+msgid "Repeat Mode"
+msgstr "Tekrarla"
+
+#: ../glade/playlist3.ui.h:14
+#, fuzzy
+msgid "Single"
+msgstr "tek"
+
+#: ../glade/playlist3.ui.h:15
+#, fuzzy
+msgid "Single Mode"
+msgstr "Tekil kip"
+
+#: ../glade/playlist3.ui.h:16
+#, fuzzy
+msgid "Skip to the next song"
+msgstr "Geçerli şarkı içinde ara"
+
+#: ../glade/playlist3.ui.h:17
+#, fuzzy
+msgid "Skip to the previous song"
+msgstr "önceki şarkı"
+
+#: ../glade/playlist3.ui.h:19
+#, fuzzy
+msgid "Toggle consume mode"
+msgstr "Sesi Kapat / Aç"
+
+#: ../glade/playlist3.ui.h:20
+#, fuzzy
+msgid "Toggle random mode"
+msgstr "Pencereyi sevket"
+
+#: ../glade/playlist3.ui.h:21
+#, fuzzy
+msgid "Toggle repeat mode"
+msgstr "Sesi Kapat / Aç"
+
+#: ../glade/playlist3.ui.h:22
+#, fuzzy
+msgid "Toggle single mode"
+msgstr "Tekil kip"
+
+#: ../glade/playlist3.ui.h:23
 msgid "_Control"
 msgstr "_Kontrol"
 
-#: ../glade/playlist3.ui.h:7
+#: ../glade/playlist3.ui.h:24
 msgid "_Go"
 msgstr "_Git"
 
-#: ../glade/playlist3.ui.h:8
-msgid "_Help"
-msgstr "_Yardım"
-
-#: ../glade/playlist3.ui.h:9
+#: ../glade/playlist3.ui.h:25
 msgid "_Music"
 msgstr "_Müzik"
 
-#: ../glade/playlist3.ui.h:10
+#: ../glade/playlist3.ui.h:26
 msgid "_Option"
 msgstr "_Seçenek"
 
-#: ../glade/playlist3.ui.h:11
-msgid "_Show Artist Image"
-msgstr "_Sanatçı Resmini Göster"
+#: ../glade/playlist3.ui.h:27
+#, fuzzy
+msgid "_Profiles"
+msgstr "Profiller"
 
-#: ../glade/playlist3.ui.h:12
+#: ../glade/playlist3.ui.h:28
+msgid "_Server"
+msgstr "_Sunucu"
+
+#: ../glade/playlist3.ui.h:29
 msgid "_Tools"
 msgstr "_Aletler"
 
-#: ../glade/playlist3.ui.h:13
+#: ../glade/playlist3.ui.h:30
 msgid "_View"
 msgstr "_Görünüm"
 
-#: ../glade/playlist3.ui.h:14
+#: ../glade/playlist3.ui.h:31
+#, fuzzy
+msgid "_help"
+msgstr "--yardım"
+
+#: ../glade/playlist3.ui.h:32
 msgid "gmpc - Playlist Manager"
 msgstr "gmpc - Çalma Listesi Yöneticisi"
 
@@ -1743,116 +1805,116 @@ msgid "Tag statistics"
 msgstr "Etiket istatistikleri"
 
 #: ../src/browsers/gmpc-nowplaying2.c:226
-#: ../src/browsers/gmpc-nowplaying2.c:1910
+#: ../src/browsers/gmpc-nowplaying2.c:1911
 msgid "Now Playing"
 msgstr "Şimdi Çalıyor"
 
 #: ../src/browsers/gmpc-nowplaying2.c:323
-#: ../src/browsers/gmpc-nowplaying2.c:1297
+#: ../src/browsers/gmpc-nowplaying2.c:1298
 msgid "Format"
 msgstr "Biçim"
 
 #: ../src/browsers/gmpc-nowplaying2.c:323
-#: ../src/browsers/gmpc-nowplaying2.c:1297
+#: ../src/browsers/gmpc-nowplaying2.c:1298
 msgid "Channel"
 msgstr "Kanal"
 
 #: ../src/browsers/gmpc-nowplaying2.c:323
-#: ../src/browsers/gmpc-nowplaying2.c:1297
+#: ../src/browsers/gmpc-nowplaying2.c:1298
 msgid "Channels"
 msgstr "Kanallar"
 
 #: ../src/browsers/gmpc-nowplaying2.c:323
-#: ../src/browsers/gmpc-nowplaying2.c:1297
+#: ../src/browsers/gmpc-nowplaying2.c:1298
 msgid "kHz"
 msgstr "kHz"
 
 #: ../src/browsers/gmpc-nowplaying2.c:323
-#: ../src/browsers/gmpc-nowplaying2.c:1297
+#: ../src/browsers/gmpc-nowplaying2.c:1298
 msgid "kbps"
 msgstr ""
 
-#: ../src/browsers/gmpc-nowplaying2.c:1270
-#: ../src/browsers/gmpc-metadata-browser2.c:3463
+#: ../src/browsers/gmpc-nowplaying2.c:1271
+#: ../src/browsers/gmpc-metadata-browser2.c:3466
 #: ../src/gmpc-mpddata-treeview.gob:84 ../src/gmpc-mpddata-treeview.gob:676
 msgid "Genre"
 msgstr "Tarz"
 
-#: ../src/browsers/gmpc-nowplaying2.c:1321
-#: ../src/browsers/gmpc-metadata-browser2.c:3475
+#: ../src/browsers/gmpc-nowplaying2.c:1322
+#: ../src/browsers/gmpc-metadata-browser2.c:3478
 msgid "Codec"
 msgstr ""
 
-#: ../src/browsers/gmpc-nowplaying2.c:1342
-#: ../src/browsers/gmpc-metadata-browser2.c:3486
+#: ../src/browsers/gmpc-nowplaying2.c:1343
+#: ../src/browsers/gmpc-metadata-browser2.c:3489
 msgid "Length"
 msgstr "Uzunluk"
 
-#: ../src/browsers/gmpc-nowplaying2.c:1372
+#: ../src/browsers/gmpc-nowplaying2.c:1373
 msgid "Track number"
 msgstr "İz Numarası"
 
-#: ../src/browsers/gmpc-nowplaying2.c:1439
-#: ../src/browsers/gmpc-nowplaying2.c:1441
-#: ../src/browsers/gmpc-metadata-browser2.c:3587
-#: ../src/browsers/gmpc-metadata-browser2.c:3589
-#: ../src/browsers/gmpc-metadata-browser2.c:6190
+#: ../src/browsers/gmpc-nowplaying2.c:1440
+#: ../src/browsers/gmpc-nowplaying2.c:1442
+#: ../src/browsers/gmpc-metadata-browser2.c:3590
+#: ../src/browsers/gmpc-metadata-browser2.c:3592
+#: ../src/browsers/gmpc-metadata-browser2.c:6193
 msgid "Guitar Tabs"
 msgstr "Gitar tabları"
 
-#: ../src/browsers/gmpc-nowplaying2.c:1466
-#: ../src/browsers/gmpc-nowplaying2.c:1468
-#: ../src/browsers/gmpc-metadata-browser2.c:3613
-#: ../src/browsers/gmpc-metadata-browser2.c:3615
-#: ../src/browsers/gmpc-metadata-browser2.c:6194
+#: ../src/browsers/gmpc-nowplaying2.c:1467
+#: ../src/browsers/gmpc-nowplaying2.c:1469
+#: ../src/browsers/gmpc-metadata-browser2.c:3616
+#: ../src/browsers/gmpc-metadata-browser2.c:3618
+#: ../src/browsers/gmpc-metadata-browser2.c:6197
 msgid "Similar Songs"
 msgstr "Benzer Şarkılar"
 
-#: ../src/browsers/gmpc-nowplaying2.c:1501
-#: ../src/browsers/gmpc-nowplaying2.c:1503
-#: ../src/browsers/gmpc-metadata-browser2.c:3647
-#: ../src/browsers/gmpc-metadata-browser2.c:3649
-#: ../src/browsers/gmpc-metadata-browser2.c:5006
-#: ../src/browsers/gmpc-metadata-browser2.c:5008
-#: ../src/browsers/gmpc-metadata-browser2.c:6182
+#: ../src/browsers/gmpc-nowplaying2.c:1502
+#: ../src/browsers/gmpc-nowplaying2.c:1504
+#: ../src/browsers/gmpc-metadata-browser2.c:3650
+#: ../src/browsers/gmpc-metadata-browser2.c:3652
+#: ../src/browsers/gmpc-metadata-browser2.c:5009
+#: ../src/browsers/gmpc-metadata-browser2.c:5011
+#: ../src/browsers/gmpc-metadata-browser2.c:6185
 msgid "Similar Artist"
 msgstr "Benzer Sanatçılar"
 
-#: ../src/browsers/gmpc-nowplaying2.c:1523
-#: ../src/browsers/gmpc-nowplaying2.c:1525
-#: ../src/browsers/gmpc-metadata-browser2.c:3668
-#: ../src/browsers/gmpc-metadata-browser2.c:3670
-#: ../src/browsers/gmpc-metadata-browser2.c:4546
-#: ../src/browsers/gmpc-metadata-browser2.c:4548
-#: ../src/browsers/gmpc-metadata-browser2.c:5063
-#: ../src/browsers/gmpc-metadata-browser2.c:5065
+#: ../src/browsers/gmpc-nowplaying2.c:1524
+#: ../src/browsers/gmpc-nowplaying2.c:1526
+#: ../src/browsers/gmpc-metadata-browser2.c:3671
+#: ../src/browsers/gmpc-metadata-browser2.c:3673
+#: ../src/browsers/gmpc-metadata-browser2.c:4549
+#: ../src/browsers/gmpc-metadata-browser2.c:4551
+#: ../src/browsers/gmpc-metadata-browser2.c:5066
+#: ../src/browsers/gmpc-metadata-browser2.c:5068
 #: ../src/vala/gmpc-song-links.c:118
 msgid "Web Links"
 msgstr ""
 
-#: ../src/browsers/gmpc-nowplaying2.c:1552
-#: ../src/browsers/gmpc-nowplaying2.c:1554
-#: ../src/browsers/gmpc-metadata-browser2.c:4984
-#: ../src/browsers/gmpc-metadata-browser2.c:4986
-#: ../src/browsers/gmpc-metadata-browser2.c:6174
+#: ../src/browsers/gmpc-nowplaying2.c:1553
+#: ../src/browsers/gmpc-nowplaying2.c:1555
+#: ../src/browsers/gmpc-metadata-browser2.c:4987
+#: ../src/browsers/gmpc-metadata-browser2.c:4989
+#: ../src/browsers/gmpc-metadata-browser2.c:6177
 msgid "Artist information"
 msgstr "Sanatçı bilgisi"
 
-#: ../src/browsers/gmpc-nowplaying2.c:1622
+#: ../src/browsers/gmpc-nowplaying2.c:1623
 msgid "Other albums by"
 msgstr ""
 
-#: ../src/browsers/gmpc-nowplaying2.c:1716
-#: ../src/browsers/gmpc-metadata-browser2.c:5144
+#: ../src/browsers/gmpc-nowplaying2.c:1717
+#: ../src/browsers/gmpc-metadata-browser2.c:5147
 msgid "No Album"
 msgstr "Albüm Yok"
 
-#: ../src/browsers/gmpc-nowplaying2.c:1978
+#: ../src/browsers/gmpc-nowplaying2.c:1979
 #, fuzzy
 msgid "switch now playing"
 msgstr "Çalma kuyruğuna geç"
 
-#: ../src/browsers/gmpc-nowplaying2.c:1978
+#: ../src/browsers/gmpc-nowplaying2.c:1979
 #, fuzzy
 msgid "Switch to Now Playing"
 msgstr "Şimdi Çalıyor"
@@ -1861,10 +1923,10 @@ msgstr "Şimdi Çalıyor"
 #: ../src/browsers/gmpc-metadata-browser2.c:1818
 #: ../src/browsers/gmpc-metadata-browser2.c:2021
 #: ../src/browsers/gmpc-metadata-browser2.c:2176
-#: ../src/browsers/gmpc-metadata-browser2.c:3520
-#: ../src/browsers/gmpc-metadata-browser2.c:4128
-#: ../src/browsers/gmpc-metadata-browser2.c:4455
-#: ../src/browsers/gmpc-metadata-browser2.c:4952
+#: ../src/browsers/gmpc-metadata-browser2.c:3523
+#: ../src/browsers/gmpc-metadata-browser2.c:4131
+#: ../src/browsers/gmpc-metadata-browser2.c:4458
+#: ../src/browsers/gmpc-metadata-browser2.c:4955
 msgid "_Replace"
 msgstr ""
 
@@ -1884,15 +1946,15 @@ msgid "Fetching"
 msgstr "Getiriliyor"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:1481
-#: ../src/browsers/gmpc-metadata-browser2.c:5536
+#: ../src/browsers/gmpc-metadata-browser2.c:5539
 msgid "Metadata Browser"
 msgstr "Üstveri Tarayıcısı"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:2414
-#: ../src/browsers/gmpc-metadata-browser2.c:3457
-#: ../src/browsers/gmpc-metadata-browser2.c:4056
-#: ../src/browsers/gmpc-metadata-browser2.c:4418
-#: ../src/browsers/gmpc-metadata-browser2.c:4925
+#: ../src/browsers/gmpc-metadata-browser2.c:3460
+#: ../src/browsers/gmpc-metadata-browser2.c:4059
+#: ../src/browsers/gmpc-metadata-browser2.c:4421
+#: ../src/browsers/gmpc-metadata-browser2.c:4928
 #: ../src/gmpc-mpddata-treeview.gob:80 ../src/gmpc-mpddata-treeview.gob:650
 #: ../src/vala/gmpc-test-plugin.c:1145
 msgid "Artist"
@@ -1903,101 +1965,101 @@ msgid "Year"
 msgstr "Yıl"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:2494
-#: ../src/browsers/gmpc-metadata-browser2.c:4440
-#: ../src/browsers/gmpc-metadata-browser2.c:4937
+#: ../src/browsers/gmpc-metadata-browser2.c:4443
+#: ../src/browsers/gmpc-metadata-browser2.c:4940
 msgid "Songs"
 msgstr "Şarkılar"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:3262
+#: ../src/browsers/gmpc-metadata-browser2.c:3265
 msgid "Rating"
 msgstr "Beğeni"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:3466
+#: ../src/browsers/gmpc-metadata-browser2.c:3469
 #: ../src/gmpc-mpddata-treeview.gob:89 ../src/gmpc-mpddata-treeview.gob:688
 msgid "Date"
 msgstr "Tarih"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:3479
+#: ../src/browsers/gmpc-metadata-browser2.c:3482
 #: ../src/gmpc-mpddata-treeview.gob:97
 msgid "Directory"
 msgstr "Dizin"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:3516
-#: ../src/browsers/gmpc-metadata-browser2.c:4451
-#: ../src/browsers/gmpc-metadata-browser2.c:4948
+#: ../src/browsers/gmpc-metadata-browser2.c:3519
+#: ../src/browsers/gmpc-metadata-browser2.c:4454
+#: ../src/browsers/gmpc-metadata-browser2.c:4951
 #, fuzzy
 msgid "Add the item to the play queue"
 msgstr "Çalma kuyruğuna geç"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:3521
-#: ../src/browsers/gmpc-metadata-browser2.c:4456
-#: ../src/browsers/gmpc-metadata-browser2.c:4953
+#: ../src/browsers/gmpc-metadata-browser2.c:3524
+#: ../src/browsers/gmpc-metadata-browser2.c:4459
+#: ../src/browsers/gmpc-metadata-browser2.c:4956
 msgid "Replace the current play queue with this item"
 msgstr ""
 
-#: ../src/browsers/gmpc-metadata-browser2.c:3528
+#: ../src/browsers/gmpc-metadata-browser2.c:3531
 #, fuzzy
 msgid "Play this item"
 msgstr "Oynatma süresi"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:3958
-#: ../src/browsers/gmpc-metadata-browser2.c:4064
+#: ../src/browsers/gmpc-metadata-browser2.c:3961
+#: ../src/browsers/gmpc-metadata-browser2.c:4067
 msgid "Show sidebar"
 msgstr ""
 
-#: ../src/browsers/gmpc-metadata-browser2.c:3961
-#: ../src/browsers/gmpc-metadata-browser2.c:4062
+#: ../src/browsers/gmpc-metadata-browser2.c:3964
+#: ../src/browsers/gmpc-metadata-browser2.c:4065
 #, fuzzy
 msgid "Hide sidebar"
 msgstr "Pencereyi sakla"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:4013
+#: ../src/browsers/gmpc-metadata-browser2.c:4016
 #, fuzzy
 msgid "<b>Search artist:</b>"
 msgstr "<b>Çalma listesi:</b>"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:4432
-#: ../src/browsers/gmpc-metadata-browser2.c:4929
+#: ../src/browsers/gmpc-metadata-browser2.c:4435
+#: ../src/browsers/gmpc-metadata-browser2.c:4932
 msgid "Genres"
 msgstr "Tarzlar"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:4436
-#: ../src/browsers/gmpc-metadata-browser2.c:4933
+#: ../src/browsers/gmpc-metadata-browser2.c:4439
+#: ../src/browsers/gmpc-metadata-browser2.c:4936
 msgid "Dates"
 msgstr "Tarihler"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:4444
-#: ../src/browsers/gmpc-metadata-browser2.c:4941
+#: ../src/browsers/gmpc-metadata-browser2.c:4447
+#: ../src/browsers/gmpc-metadata-browser2.c:4944
 msgid "Playtime"
 msgstr "Oynatma süresi"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:4487
-#: ../src/browsers/gmpc-metadata-browser2.c:4489
-#: ../src/browsers/gmpc-metadata-browser2.c:6178
+#: ../src/browsers/gmpc-metadata-browser2.c:4490
+#: ../src/browsers/gmpc-metadata-browser2.c:4492
+#: ../src/browsers/gmpc-metadata-browser2.c:6181
 msgid "Album information"
 msgstr "Albüm bilgisi"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:4522
-#: ../src/browsers/gmpc-metadata-browser2.c:4524
-#: ../src/browsers/gmpc-metadata-browser2.c:5039
-#: ../src/browsers/gmpc-metadata-browser2.c:5041
+#: ../src/browsers/gmpc-metadata-browser2.c:4525
+#: ../src/browsers/gmpc-metadata-browser2.c:4527
+#: ../src/browsers/gmpc-metadata-browser2.c:5042
+#: ../src/browsers/gmpc-metadata-browser2.c:5044
 msgid "Song list"
 msgstr "Şarkı listesi"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:5162
-#: ../src/browsers/gmpc-metadata-browser2.c:5164
+#: ../src/browsers/gmpc-metadata-browser2.c:5165
+#: ../src/browsers/gmpc-metadata-browser2.c:5167
 msgid "Albums"
 msgstr "Albümler"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:6171
+#: ../src/browsers/gmpc-metadata-browser2.c:6174
 msgid "Enable/disable metadata options"
 msgstr ""
 
-#: ../src/browsers/gmpc-metadata-browser2.c:6186
+#: ../src/browsers/gmpc-metadata-browser2.c:6189
 msgid "Lyrics"
 msgstr "Şarkı Sözleri"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:6198
+#: ../src/browsers/gmpc-metadata-browser2.c:6201
 msgid "Web links"
 msgstr ""
 
@@ -2154,19 +2216,19 @@ msgstr "MPD Veritabanı şu tarihte güncellendi:"
 msgid "Gmpc Easy Command"
 msgstr "Gmpc Kolay Komut"
 
-#: ../src/vala/gmpc-easy-command.c:612
+#: ../src/vala/gmpc-easy-command.c:679
 msgid "Easy Command help"
 msgstr "Kolay Komut yardımı"
 
-#: ../src/vala/gmpc-easy-command.c:627
+#: ../src/vala/gmpc-easy-command.c:701
 msgid "Command"
 msgstr "Komut"
 
-#: ../src/vala/gmpc-easy-command.c:635
+#: ../src/vala/gmpc-easy-command.c:709
 msgid "Usage"
 msgstr "Kullanım"
 
-#: ../src/vala/gmpc-easy-command.c:639
+#: ../src/vala/gmpc-easy-command.c:713
 msgid ""
 "The following commands can be used in the easy command window.\n"
 "The easy command window can be opened by pressing ctrl-space"
@@ -2174,11 +2236,11 @@ msgstr ""
 "Aşağıdaki komutlar kolay komut penceresinde kullanılabilir.\n"
 "Kolay komut penceresini ctrl-boşluk tuşlarına basarak açabilirsiniz"
 
-#: ../src/vala/gmpc-easy-command.c:700
+#: ../src/vala/gmpc-easy-command.c:782
 msgid "Help"
 msgstr "Yardım"
 
-#: ../src/vala/gmpc-easy-command.c:700
+#: ../src/vala/gmpc-easy-command.c:782
 msgid "Get a list of available commands"
 msgstr "Mevcut komutların listesini al"
 
@@ -2239,21 +2301,45 @@ msgstr ""
 msgid "Rating:"
 msgstr ""
 
+#: ../src/Widgets/GmpcVolume.c:264 ../src/Widgets/GmpcVolume.c:268
+#, fuzzy
+msgid "Volume"
+msgstr "ses"
+
+#: ../src/Widgets/GmpcVolume.c:268
+#, fuzzy
+msgid "Muted"
+msgstr "Sessiz"
+
 #: ../src/Providers/music-tree.c:188
 msgid "Music Tree Provider"
 msgstr ""
+
+#: ../src/Providers/gmc-plugin.c:363
+#, fuzzy
+msgid "GMC Provider"
+msgstr "Sağlayıcı"
+
+#~ msgid "Update Database"
+#~ msgstr "Veritabanını Güncelle"
+
+#~ msgid "Information"
+#~ msgstr "Bilgi"
+
+#~ msgid "Se_rver"
+#~ msgstr "Su_nucu"
+
+#~ msgid "_Help"
+#~ msgstr "_Yardım"
+
+#~ msgid "_Show Artist Image"
+#~ msgstr "_Sanatçı Resmini Göster"
 
 #~ msgid "Easy Command Help"
 #~ msgstr "Kolay Komut Yardımı"
 
 #~ msgid "Getting help"
 #~ msgstr "Yardım almak"
-
-#~ msgid "Play/Pause"
-#~ msgstr "Oynat/Duraklat"
-
-#~ msgid "Profiles"
-#~ msgstr "Profiller"
 
 #~ msgid "Show Messages"
 #~ msgstr "Mesajları Göster"
@@ -2289,17 +2375,11 @@ msgstr ""
 #~ msgid "Albums by"
 #~ msgstr "Şu sanatçının albümleri"
 
-#~ msgid "_Server"
-#~ msgstr "_Sunucu"
-
 #~ msgid "01/24"
 #~ msgstr "01/24"
 
 #~ msgid "2 Feb 2006"
 #~ msgstr "2 şubat 2006"
-
-#~ msgid "--help"
-#~ msgstr "--yardım"
 
 #~ msgid " Total time: "
 #~ msgstr " Toplam süre "
