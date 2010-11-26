@@ -65,6 +65,32 @@ class Gmpc.Provider.GMC : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIface
 		return config.get_int_with_default(this.get_name(),"priority",0);
 	}
 
+    private void get_metadata_artist_txt(MPD.Song song, MetaDataCallback callback)
+	{
+		if(song == null) {
+			GLib.log(LOG_DOMAIN_GMC, GLib.LogLevelFlags.LEVEL_DEBUG,"no song");
+			callback(null);
+			return;
+		}
+		if(song.file == null) {
+			GLib.log(LOG_DOMAIN_GMC, GLib.LogLevelFlags.LEVEL_DEBUG,"no file");
+			callback(null);
+			return;
+		}
+		if(song.artist == null) {
+			GLib.log(LOG_DOMAIN_GMC, GLib.LogLevelFlags.LEVEL_DEBUG,"no artist");
+			callback(null);
+			return;
+		}
+		GLib.log(LOG_DOMAIN_GMC, GLib.LogLevelFlags.LEVEL_DEBUG,"Create header");
+		Header h = new Header();
+		h.type = Header.Type.ARTIST_BIOGRAPHY;
+		h.artist = song.artist;
+		h.file = song.file;
+		process_request(h,song, callback);
+
+	}
+    
 	private void get_metadata_artist(MPD.Song song, MetaDataCallback callback)
 	{
 		if(song == null) {
@@ -115,14 +141,45 @@ class Gmpc.Provider.GMC : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIface
 		process_request(h,song, callback);
 
 	}
+	private void get_metadata_album_txt(MPD.Song song, MetaDataCallback callback)
+	{
+		if(song == null) {
+			GLib.log(LOG_DOMAIN_GMC, GLib.LogLevelFlags.LEVEL_DEBUG,"no song");
+			callback(null);
+			return;
+		}
+		if(song.file == null) {
+			GLib.log(LOG_DOMAIN_GMC, GLib.LogLevelFlags.LEVEL_DEBUG,"no file");
+			callback(null);
+			return;
+		}
+		if(song.album == null) {
+			GLib.log(LOG_DOMAIN_GMC, GLib.LogLevelFlags.LEVEL_DEBUG,"no album");
+			callback(null);
+			return;
+		}
+		GLib.log(LOG_DOMAIN_GMC, GLib.LogLevelFlags.LEVEL_DEBUG,"Create header");
+		Header h = new Header();
+		h.type = Header.Type.ALBUM_INFORMATION;
+		h.album = song.album;
+		h.file = song.file;
+		process_request(h,song, callback);
+
+	}
 	public void get_metadata(MPD.Song song, Gmpc.MetaData.Type type, MetaDataCallback callback)
 	{
 		GLib.log(LOG_DOMAIN_GMC, GLib.LogLevelFlags.LEVEL_DEBUG,"query GMC");
 		if(type == Gmpc.MetaData.Type.ALBUM_ART) {
 			this.get_metadata_album(song, callback);
 			return;
+        } else if(type == Gmpc.MetaData.Type.ALBUM_TXT) {
+			this.get_metadata_album_txt(song, callback);
+			return;
 		}else if (type == Gmpc.MetaData.Type.ARTIST_ART) {
 			this.get_metadata_artist(song, callback);
+			return;
+		}else if (type == Gmpc.MetaData.Type.ARTIST_TXT) {
+			this.get_metadata_artist_txt(song, callback);
 			return;
 		}
 		GLib.log(LOG_DOMAIN_GMC, GLib.LogLevelFlags.LEVEL_DEBUG,"Wrong type");
