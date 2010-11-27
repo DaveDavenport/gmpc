@@ -65,6 +65,50 @@ class Gmpc.Provider.GMC : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIface
 		return config.get_int_with_default(this.get_name(),"priority",0);
 	}
 
+	private void get_metadata_song_txt(MPD.Song song, MetaDataCallback callback)
+	{
+		if(song == null) {
+			GLib.log(LOG_DOMAIN_GMC, GLib.LogLevelFlags.LEVEL_DEBUG,"no song");
+			callback(null);
+			return;
+		}
+		if(song.file == null) {
+			GLib.log(LOG_DOMAIN_GMC, GLib.LogLevelFlags.LEVEL_DEBUG,"no file");
+			callback(null);
+			return;
+		}
+		GLib.log(LOG_DOMAIN_GMC, GLib.LogLevelFlags.LEVEL_DEBUG,"Create header");
+		Header h = new Header();
+		h.type = Header.Type.SONG_LYRICS;
+		h.artist = song.artist;
+		h.title = song.title;
+		h.file = song.file;
+		process_request(h,song, callback, Gmpc.MetaData.Type.SONG_TXT);
+	}
+	private void get_metadata_artist_biography(MPD.Song song, MetaDataCallback callback)
+	{
+		if(song == null) {
+			GLib.log(LOG_DOMAIN_GMC, GLib.LogLevelFlags.LEVEL_DEBUG,"no song");
+			callback(null);
+			return;
+		}
+		if(song.file == null) {
+			GLib.log(LOG_DOMAIN_GMC, GLib.LogLevelFlags.LEVEL_DEBUG,"no file");
+			callback(null);
+			return;
+		}
+		if(song.artist == null) {
+			GLib.log(LOG_DOMAIN_GMC, GLib.LogLevelFlags.LEVEL_DEBUG,"no artist");
+			callback(null);
+			return;
+		}
+		GLib.log(LOG_DOMAIN_GMC, GLib.LogLevelFlags.LEVEL_DEBUG,"Create header");
+		Header h = new Header();
+		h.type = Header.Type.ARTIST_BIOGRAPHY;
+		h.artist = song.artist;
+		h.file = song.file;
+		process_request(h,song, callback, Gmpc.MetaData.Type.ARTIST_TXT);
+	}
 	private void get_metadata_artist(MPD.Song song, MetaDataCallback callback)
 	{
 		if(song == null) {
@@ -87,7 +131,7 @@ class Gmpc.Provider.GMC : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIface
 		h.type = Header.Type.ARTIST_ART;
 		h.artist = song.artist;
 		h.file = song.file;
-		process_request(h,song, callback);
+		process_request(h,song, callback, Gmpc.MetaData.Type.ARTIST_ART);
 	}
 
 	private void get_metadata_album(MPD.Song song, MetaDataCallback callback)
@@ -112,7 +156,32 @@ class Gmpc.Provider.GMC : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIface
 		h.type = Header.Type.ALBUM_ART;
 		h.album = song.album;
 		h.file = song.file;
-		process_request(h,song, callback);
+		process_request(h,song, callback, Gmpc.MetaData.Type.ALBUM_ART);
+
+	}
+	private void get_metadata_album_information(MPD.Song song, MetaDataCallback callback)
+	{
+		if(song == null) {
+			GLib.log(LOG_DOMAIN_GMC, GLib.LogLevelFlags.LEVEL_DEBUG,"no song");
+			callback(null);
+			return;
+		}
+		if(song.file == null) {
+			GLib.log(LOG_DOMAIN_GMC, GLib.LogLevelFlags.LEVEL_DEBUG,"no file");
+			callback(null);
+			return;
+		}
+		if(song.album == null) {
+			GLib.log(LOG_DOMAIN_GMC, GLib.LogLevelFlags.LEVEL_DEBUG,"no album");
+			callback(null);
+			return;
+		}
+		GLib.log(LOG_DOMAIN_GMC, GLib.LogLevelFlags.LEVEL_DEBUG,"Create header");
+		Header h = new Header();
+		h.type = Header.Type.ALBUM_INFORMATION;
+		h.album = song.album;
+		h.file = song.file;
+		process_request(h,song, callback, Gmpc.MetaData.Type.ALBUM_TXT);
 
 	}
 	public void get_metadata(MPD.Song song, Gmpc.MetaData.Type type, MetaDataCallback callback)
@@ -121,16 +190,27 @@ class Gmpc.Provider.GMC : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIface
 		if(type == Gmpc.MetaData.Type.ALBUM_ART) {
 			this.get_metadata_album(song, callback);
 			return;
+        } else if(type == Gmpc.MetaData.Type.ALBUM_TXT) {
+            this.get_metadata_album_information(song, callback);
+            return;
 		}else if (type == Gmpc.MetaData.Type.ARTIST_ART) {
 			this.get_metadata_artist(song, callback);
 			return;
+		}else if (type == Gmpc.MetaData.Type.ARTIST_TXT) {
+			this.get_metadata_artist_biography(song, callback);
+			return;
+		} else if (type == Gmpc.MetaData.Type.SONG_TXT) {
+			this.get_metadata_song_txt(song, callback);
+			return;
 		}
+
+
 		GLib.log(LOG_DOMAIN_GMC, GLib.LogLevelFlags.LEVEL_DEBUG,"Wrong type");
 		callback(null);
 	}
 
 
-	private async void process_request(Header h, MPD.Song song, MetaDataCallback callback)
+	private async void process_request(Header h, MPD.Song song, MetaDataCallback callback, Gmpc.MetaData.Type gmt_type)
 	{
 		GLib.log(LOG_DOMAIN_GMC, GLib.LogLevelFlags.LEVEL_DEBUG,"Process request");
 		GLib.SocketClient client = new GLib.SocketClient();
@@ -259,7 +339,7 @@ class Gmpc.Provider.GMC : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIface
 		List<Gmpc.MetaData.Item> list = null;
 
 		Gmpc.MetaData.Item item = new MetaData.Item();
-		item.type = Gmpc.MetaData.Type.ALBUM_ART;
+		item.type = gmt_type; 
 		item.plugin_name = "GMC Fetcher";
 		item.content_type = MetaData.ContentType.RAW;
 		item.content = (void *)(owned)buffer;
