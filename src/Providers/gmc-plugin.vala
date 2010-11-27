@@ -1,7 +1,7 @@
 /* Gnome Music Player Client (GMPC)
  * Copyright (C) 2004-2010 Qball Cow <qball@sarine.nl>
  * Project homepage: http://gmpc.wikia.com/
- 
+
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -28,18 +28,18 @@ private const string some_unique_name_gmc = Config.VERSION;
 
 public class Header
 {
-        public enum Type {
-                ALBUM_ART,
-		ALBUM_INFORMATION,
-                ARTIST_ART,
-		ARTIST_BIOGRAPHY,
-		SONG_LYRICS
-        }
-        public Type type;
-        public string  artist = "";
-        public string  album  = "";
-        public string  title  = "";
-        public string  file   = "";
+    public enum Type {
+        ALBUM_ART,
+            ALBUM_INFORMATION,
+            ARTIST_ART,
+            ARTIST_BIOGRAPHY,
+            SONG_LYRICS
+    }
+    public Type type;
+    public string  artist = "";
+    public string  album  = "";
+    public string  title  = "";
+    public string  file   = "";
 }
 
 class Gmpc.Provider.GMC : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIface
@@ -64,7 +64,9 @@ class Gmpc.Provider.GMC : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIface
 	{
 		return config.get_int_with_default(this.get_name(),"priority",0);
 	}
-
+    /**
+     * Fetch lyrics
+     */
 	private void get_metadata_song_txt(MPD.Song song, MetaDataCallback callback)
 	{
 		if(song == null) {
@@ -85,6 +87,10 @@ class Gmpc.Provider.GMC : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIface
 		h.file = song.file;
 		process_request(h,song, callback, Gmpc.MetaData.Type.SONG_TXT);
 	}
+
+    /**
+     * Artist Biography
+     */
 	private void get_metadata_artist_biography(MPD.Song song, MetaDataCallback callback)
 	{
 		if(song == null) {
@@ -97,11 +103,7 @@ class Gmpc.Provider.GMC : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIface
 			callback(null);
 			return;
 		}
-		if(song.artist == null) {
-			GLib.log(LOG_DOMAIN_GMC, GLib.LogLevelFlags.LEVEL_DEBUG,"no artist");
-			callback(null);
-			return;
-		}
+
 		GLib.log(LOG_DOMAIN_GMC, GLib.LogLevelFlags.LEVEL_DEBUG,"Create header");
 		Header h = new Header();
 		h.type = Header.Type.ARTIST_BIOGRAPHY;
@@ -109,7 +111,10 @@ class Gmpc.Provider.GMC : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIface
 		h.file = song.file;
 		process_request(h,song, callback, Gmpc.MetaData.Type.ARTIST_TXT);
 	}
-    
+
+   /**
+    * Artist photo
+    */
 	private void get_metadata_artist(MPD.Song song, MetaDataCallback callback)
 	{
 		if(song == null) {
@@ -135,6 +140,10 @@ class Gmpc.Provider.GMC : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIface
 		process_request(h,song, callback, Gmpc.MetaData.Type.ARTIST_ART);
 	}
 
+
+    /**
+     * Album cover
+     */
 	private void get_metadata_album(MPD.Song song, MetaDataCallback callback)
 	{
 		if(song == null) {
@@ -160,6 +169,10 @@ class Gmpc.Provider.GMC : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIface
 		process_request(h,song, callback, Gmpc.MetaData.Type.ALBUM_ART);
 
 	}
+
+    /**
+     * Album information
+     */
 	private void get_metadata_album_information(MPD.Song song, MetaDataCallback callback)
 	{
 		if(song == null) {
@@ -185,21 +198,32 @@ class Gmpc.Provider.GMC : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIface
 		process_request(h,song, callback, Gmpc.MetaData.Type.ALBUM_TXT);
 
 	}
+
+
 	public void get_metadata(MPD.Song song, Gmpc.MetaData.Type type, MetaDataCallback callback)
 	{
 		GLib.log(LOG_DOMAIN_GMC, GLib.LogLevelFlags.LEVEL_DEBUG,"query GMC");
+        /* Fetch album art */
 		if(type == Gmpc.MetaData.Type.ALBUM_ART) {
 			this.get_metadata_album(song, callback);
 			return;
+
+        /* Fetch album information */
         } else if(type == Gmpc.MetaData.Type.ALBUM_TXT) {
             this.get_metadata_album_information(song, callback);
             return;
+
+        /* Artist image */
 		}else if (type == Gmpc.MetaData.Type.ARTIST_ART) {
 			this.get_metadata_artist(song, callback);
 			return;
+
+        /* Artist biography */
 		}else if (type == Gmpc.MetaData.Type.ARTIST_TXT) {
 			this.get_metadata_artist_biography(song, callback);
 			return;
+
+        /* Song lyrics */
 		} else if (type == Gmpc.MetaData.Type.SONG_TXT) {
 			this.get_metadata_song_txt(song, callback);
 			return;
@@ -233,7 +257,7 @@ class Gmpc.Provider.GMC : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIface
 			out_data.put_uint32(type);
 		}catch (Error err0) {
 			callback(null);
-			GLib.debug("failed to serialize header");                
+			GLib.debug("failed to serialize header");
             return;
 		}
 		/*  Artist */
@@ -242,7 +266,7 @@ class Gmpc.Provider.GMC : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIface
 			out_data.put_uint32(size);
 		}catch (Error err1) {
 			callback(null);
-			GLib.debug("failed to serialize header");                
+			GLib.debug("failed to serialize header");
             return;
 		}
 		if(size > 0) {
@@ -254,7 +278,7 @@ class Gmpc.Provider.GMC : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIface
 			out_data.put_uint32(size);
 		}catch (Error err2) {
 			callback(null);
-			GLib.debug("failed to serialize header");                
+			GLib.debug("failed to serialize header");
             return;
 		}
 		if(size > 0) {
@@ -266,7 +290,7 @@ class Gmpc.Provider.GMC : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIface
 			out_data.put_uint32(size);
 		}catch (Error err3) {
 			callback(null);
-			GLib.debug("failed to serialize header");                
+			GLib.debug("failed to serialize header");
             return;
 		}
 		if(size > 0) {
@@ -279,7 +303,7 @@ class Gmpc.Provider.GMC : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIface
 			out_data.put_uint32(size);
 		}catch (Error err4) {
 			callback(null);
-			GLib.debug("failed to serialize header");                
+			GLib.debug("failed to serialize header");
             return;
 		}
 		if(size > 0) {
@@ -290,25 +314,25 @@ class Gmpc.Provider.GMC : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIface
 		var in_data = new GLib.DataInputStream(input);
         in_data.set_byte_order(GLib.DataStreamByteOrder.LITTLE_ENDIAN);
 		try{
-			uint32 rsize = 0; 
+			uint32 rsize = 0;
 			ssize_t rs2 = yield in_data.read_async(&rsize, 4,0);
             /* TODO: why does the async read_async fail? seems hussled byte order.. */
             //int rs2 = 4;
             //rsize = in_data.read_uint32();
             GLib.log(LOG_DOMAIN_GMC, GLib.LogLevelFlags.LEVEL_DEBUG,"Read size: %u:%i",rsize,
                 (int)in_data.get_byte_order()
-            );                
+            );
             if(rs2  == 4) {
                 /* Why need to convert endianess? */
 				size = uint32.from_little_endian(rsize);
 			}else {
-                GLib.log(LOG_DOMAIN_GMC, GLib.LogLevelFlags.LEVEL_DEBUG,"failed to read size");                
+                GLib.log(LOG_DOMAIN_GMC, GLib.LogLevelFlags.LEVEL_DEBUG,"failed to read size");
                 callback(null);
                 return;
             }
 
 		}catch (Error err6) {
-			GLib.log(LOG_DOMAIN_GMC, GLib.LogLevelFlags.LEVEL_DEBUG,"failed to read size");                
+			GLib.log(LOG_DOMAIN_GMC, GLib.LogLevelFlags.LEVEL_DEBUG,"failed to read size");
 			callback(null);
 			return;
 		}
@@ -324,8 +348,8 @@ class Gmpc.Provider.GMC : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIface
 		try{
 			ssize_t rs=0, total=0;
 			do{
-				rs = yield in_data.read_async(&buffer[total], 
-						(size-total >1024)?1024:(size-total),0); 
+				rs = yield in_data.read_async(&buffer[total],
+						(size-total >1024)?1024:(size-total),0);
 
 				total+=rs;
 				GLib.log(LOG_DOMAIN_GMC, GLib.LogLevelFlags.LEVEL_DEBUG,"read : %u:%u\n",(uint32)size, (uint32)total);
@@ -340,9 +364,15 @@ class Gmpc.Provider.GMC : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIface
 		List<Gmpc.MetaData.Item> list = null;
 
 		Gmpc.MetaData.Item item = new MetaData.Item();
-		item.type = gmt_type; 
+		item.type = gmt_type;
 		item.plugin_name = "GMC Fetcher";
-		item.content_type = MetaData.ContentType.RAW;
+        if(gmt_type == Gmpc.MetaData.Type.ALBUM_TXT || gmt_type == Gmpc.MetaData.Type.ARTIST_TXT)
+        {
+            item.content_type = MetaData.ContentType.TEXT;
+        }else
+        {
+            item.content_type = MetaData.ContentType.RAW;
+        }
 		item.content = (void *)(owned)buffer;
 		item.size = (int)size;
 		list.append((owned)item);
