@@ -109,6 +109,7 @@ class Gmpc.Provider.GMC : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIface
 		h.file = song.file;
 		process_request(h,song, callback, Gmpc.MetaData.Type.ARTIST_TXT);
 	}
+    
 	private void get_metadata_artist(MPD.Song song, MetaDataCallback callback)
 	{
 		if(song == null) {
