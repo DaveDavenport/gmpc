@@ -96,6 +96,9 @@ public class Gmpc.Widget.Albumview : Gtk.Container
     }
     public override void size_allocate(Gdk.Rectangle alloc)
     {
+        stdout.printf("alloc.width: %i\n", alloc.width);
+        /* Hack to avvoid pointless resizes, I get this "1" size when a child widget changes */
+        if(alloc.width == 1) return;
         int new_columns = int.max(alloc.width/cover_width, 1);
         int x = 0;
         int y = 0;
