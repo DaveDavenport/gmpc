@@ -35,6 +35,107 @@ using Gmpc.MpdData.Treeview.Tooltip;
 private const bool use_transition_mdb = Gmpc.use_transition;
 private const string some_unique_name_mdb = Config.VERSION;
 
+public class Gmpc.Widget.Albumview : Gtk.Container
+{
+    private int cover_width = 220;
+    private int cover_height = 220+50;
+    private int num_items = 0;
+    private int columns = 3;
+    private weak List<weak Gtk.Widget> children = null;
+
+    public Albumview()
+    {
+        this.set_has_window(false);
+        this.set_redraw_on_allocate(false);
+
+    }
+    ~Albumview()
+    {
+        stdout.printf("Destroy");
+    }
+
+    public override void size_request(out Gtk.Requisition req)
+    {
+        req = Gtk.Requisition();
+        /* request minimum of 1 column */
+        int width = cover_width*1; 
+        int height = cover_height*((int)GLib.Math.ceil(num_items/(double)columns));
+    
+        req.width = width;
+        req.height =height; 
+    }
+
+    public override void add(Gtk.Widget widget)
+    {
+        if(widget != null) {
+            children.append(widget);
+            widget.set_parent(this);
+            num_items++;
+            this.queue_resize();
+        }
+    }
+
+    public override GLib.Type child_type()
+    {
+        return typeof(Gtk.Widget);
+    }
+
+    public override void remove(Gtk.Widget widget)
+    {
+        if(widget != null ) {
+            if(children.find(widget) == null) {
+                GLib.error("Failed to find widget in container");
+            }
+            bool visible = widget.get_visible();
+            widget.unparent();
+            children.remove(widget);
+            num_items--;
+            if(visible) 
+                this.queue_resize();
+        }
+    }
+    public override void size_allocate(Gdk.Rectangle alloc)
+    {
+        int new_columns = int.max(alloc.width/cover_width, 1);
+        int x = 0;
+        int y = 0;
+        int item = 0;
+        foreach ( var child in children) {
+            if(child.get_visible())
+            {
+                Gdk.Rectangle ca = {0,0,0,0};
+                Gtk.Requisition cr = {0,0};
+                child.size_request(out cr);
+                ca.x = alloc.x + (item%columns)*cover_width;
+                ca.y = alloc.y + (int)GLib.Math.floor(item/(double)columns)*cover_height;
+                ca.width = cover_width;
+                ca.height = cover_height;
+
+                child.size_allocate(ca);
+                item++;
+            }
+        }
+        if(new_columns != columns) {
+            stdout.printf("Columns: %i->%i\n", columns, new_columns);
+            columns = new_columns;
+            this.queue_resize();
+        }
+
+    }
+    public override void forall_internal(bool include_internals, Gtk.Callback callback) 
+    {
+        weak List<weak Gtk.Widget> iter = children;
+        /* Somehow it fails when doing a foreach() construction, weird vala bug I guess */
+        while(iter != null) {
+            weak Gtk.Widget child = iter.data;
+            iter = iter.next;
+            callback(child);
+        }
+    }
+
+}
+
+
 
 public class Gmpc.Widget.SimilarSongs : Gtk.Alignment
 {
@@ -1038,6 +1139,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
 
             box = new Gtk.VBox(false, 6);
             this.browser_box.pack_start(box, true, true, 0);
+
 
             this.album_filter_entry = new Gtk.Entry();
 
@@ -2517,7 +2619,9 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             int albums =0;
             /* Create album list */
             var album_hbox = new Gtk.VBox(false, 6);
-            album_hbox.set_size_request(250, -1);
+
+            var album_view = new Gmpc.Widget.Albumview();
+            album_hbox.pack_start(album_view, false, true, 0);
             /**
              * Reuse the album browser view. 
              */
@@ -2538,9 +2642,9 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
                         /* Create button */
                         button = new Gtk.Button();
                         button.set_relief(Gtk.ReliefStyle.NONE);
-                        var but_hbox = new Gtk.HBox(false, 6);
+                        var but_hbox = new Gtk.VBox(false, 6);
                         button.add(but_hbox);
-                        var image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ALBUM_ART, 48);
+                        var image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ALBUM_ART, 200);
                         image.set_squared(true);
                         image.update_from_song_delayed(but_song);
 
@@ -2559,10 +2663,12 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
                         /* add label */
                         but_hbox.pack_start(but_label, true, true, 0);
                         /* Add  button to view */
-                        album_hbox.pack_start(button, false, false,0);
+//                        album_hbox.pack_start(button, false, false,0);
+                        album_view.add(button);
                         /* If clicked switch to browser */
                         button.clicked.connect((source) => {
                                 stdout.printf("'%s' - '%s'\n", but_song.artist, but_song.album);
+                                /* Hack to avoid crash */
                                 set_album(but_song.artist, but_song.album);
                                 });
                         albums++;
