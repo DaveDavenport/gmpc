@@ -3,7 +3,7 @@ using Gdk;
 using Cairo;
 using Gmpc;
 
-public class Gmpc.Volume : Gtk.DrawingArea
+public class Gmpc.Volume : Gtk.EventBox
 {
     private const string some_unique_name = Config.VERSION;
     private static const int BORDER_WIDTH = 1;
@@ -13,7 +13,10 @@ public class Gmpc.Volume : Gtk.DrawingArea
     private static const int mute_size = 1;            
     private int num_blocks = 8;
     public int _volume_level =0;
-    public int volume_level { 
+
+
+    public int volume_level 
+    { 
         get { return _volume_level; }
         set {
             int temp = (value > 100)? 100: (value < 0)?0:value;
@@ -40,7 +43,8 @@ public class Gmpc.Volume : Gtk.DrawingArea
     }
 
     construct {
-	
+        this.set_app_paintable(true);	
+        this.set_has_window(false);
         // Enable the events you wish to get notified about.
         add_events (Gdk.EventMask.BUTTON_PRESS_MASK
                   | Gdk.EventMask.BUTTON_RELEASE_MASK
@@ -134,9 +138,6 @@ public class Gmpc.Volume : Gtk.DrawingArea
 
         cr.set_line_width (1.0);
         cr.set_line_join (LineJoin.ROUND);
-        Gdk.cairo_set_source_color (cr, this.style.bg[this.state]);
-	cr.paint();
-
 
         Gdk.cairo_set_source_color (cr, this.style.text[this.state]);
 
@@ -153,10 +154,11 @@ public class Gmpc.Volume : Gtk.DrawingArea
             double bvolume_level = (1.0-i/(double)num_blocks);
             int bw = (int)(block_width*(bvolume_level)+BLOCK_SPACING);
             cr.rectangle (
-                    this.allocation.width-BORDER_WIDTH-bw+0.5,
-                    GLib.Math.ceil(BORDER_WIDTH+block_height*i)+0.5+BLOCK_SPACING,
+                    this.allocation.x + this.allocation.width-BORDER_WIDTH-bw+0.5,
+                    this.allocation.y +GLib.Math.ceil(BORDER_WIDTH+block_height*i)+0.5+BLOCK_SPACING,
                     bw,
-                    block_height-2*BLOCK_SPACING);
+                    block_height-2*BLOCK_SPACING
+                    );
 
             /* if selected, draw it filled in */
             if(volume_level > 0&& bvolume_level-1/(1.0*num_blocks) <= svol) {
@@ -169,10 +171,12 @@ public class Gmpc.Volume : Gtk.DrawingArea
         if(volume_level == 0)
         {
             cr.arc (
-                    0.5+BORDER_WIDTH+mute_size*block_height+4,
-                    0.5+this.allocation.height-BORDER_WIDTH-mute_size*block_height-4,
+                    this.allocation.x +0.5+BORDER_WIDTH+mute_size*block_height+4,
+                    this.allocation.y +0.5+this.allocation.height-BORDER_WIDTH-mute_size*block_height-4,
                     mute_size*block_height,
-                    0, 2 * GLib.Math.PI);
+                    0, 2 * GLib.Math.PI
+                   );
+
             cr.set_line_width(3.5);
             cr.stroke_preserve();
             cr.set_line_width(2.0);
@@ -182,9 +186,14 @@ public class Gmpc.Volume : Gtk.DrawingArea
             Gdk.cairo_set_source_color (cr, this.style.text[this.state]);
             cr.new_path ();  /* current path is not
                                      consumed by cairo_clip() */       
-            cr.move_to(BORDER_WIDTH+4, this.allocation.height-BORDER_WIDTH-3);
-            cr.line_to(BORDER_WIDTH+2*mute_size*block_height+4, 
-                    this.allocation.height-BORDER_WIDTH-2*mute_size*block_height-3);
+            cr.move_to(
+                    this.allocation.x + BORDER_WIDTH+4, 
+                    this.allocation.y + this.allocation.height-BORDER_WIDTH-3
+                    );
+            cr.line_to(
+                    this.allocation.x +BORDER_WIDTH+2*mute_size*block_height+4, 
+                    this.allocation.y + this.allocation.height-BORDER_WIDTH-2*mute_size*block_height-3
+                    );
             cr.set_line_width(3.5);
             cr.stroke_preserve();        
             cr.set_line_width(2.0);
