@@ -38,7 +38,7 @@ private const string some_unique_name_mdb = Config.VERSION;
 public class Gmpc.Widget.Albumview : Gtk.Container
 {
     private int cover_width = 220;
-    private int cover_height = 220+50;
+    private int cover_height = 220+20;
     private int num_items = 0;
     private int columns = 3;
     private weak List<weak Gtk.Widget> children = null;
@@ -2655,13 +2655,13 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
 
                         var but_label = new Gtk.Label(but_song.album);
                         but_label.selectable = true;
-                        but_label.set_alignment(0.0f, 0.5f);
+                        but_label.set_alignment(0.5f, 0.0f);
                         /* Create label */
                         var strlabel = "";
-                        if(but_song.date != null && but_song.date.length > 0) strlabel += "%s\n".printf(but_song.date);
+                        if(but_song.date != null && but_song.date.length > 0) strlabel += "%s - ".printf(but_song.date);
                         if(but_song.album != null) strlabel+= but_song.album;
                         else strlabel += _("No Album");
-                        but_label.set_markup(GLib.Markup.printf_escaped("<b>%s</b>",strlabel)); 
+                        but_label.set_text(strlabel); 
                         but_label.set_ellipsize(Pango.EllipsizeMode.END);
                         /* add label */
                         but_hbox.pack_start(but_label, true, true, 0);
