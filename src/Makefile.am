@@ -21,8 +21,8 @@ PLUGIN_FILES=\
 
 gmpc_SOURCES=\
     Widgets/pixbuf-cache.c\
+    Widgets/gmpc-clicklabel.vala\
     vala/gmpc-connection.vala\
-    gmpc-clicklabel.vala\
     Widgets/gmpc-progress.vala\
     vala/gmpc-easy-command.vala\
     vala/gmpc-favorites.vala\
