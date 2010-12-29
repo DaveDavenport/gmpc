@@ -27,6 +27,10 @@ void advanced_search_init(void)
 {
 	int i = 0;
 	GString *string = g_string_new("(");
+	if (search_regex) {
+		g_regex_unref(search_regex);
+		search_regex = NULL;
+	}
 	for (i = 0; i < MPD_TAG_NUM_OF_ITEM_TYPES; i++)
 	{
 		if (mpd_server_tag_supported(connection, i))
@@ -43,7 +47,6 @@ void advanced_search_init(void)
 
 void advanced_search_update_taglist(void)
 {
-	g_regex_unref(search_regex);
 	advanced_search_init();
 }
 
