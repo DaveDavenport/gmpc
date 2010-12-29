@@ -22,6 +22,7 @@ PLUGIN_FILES=\
 gmpc_SOURCES=\
     Widgets/pixbuf-cache.c\
     vala/gmpc-connection.vala\
+    gmpc-clicklabel.vala\
     Widgets/gmpc-progress.vala\
     vala/gmpc-easy-command.vala\
     vala/gmpc-favorites.vala\
@@ -245,7 +246,6 @@ gmpc_GOBFILES = \
 		gmpc-mpddata-model-playlist.gob\
 		gmpc-mpddata-model-sort.gob\
 		gmpc-mpddata-treeview.gob\
-		gmpc-clicklabel.gob\
 		gmpc-stats-label.gob
 
 gmpc_GOBSTAMPFILES=\

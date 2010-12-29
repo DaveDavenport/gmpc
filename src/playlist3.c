@@ -28,7 +28,6 @@
 #include "playlist3.h"
 /* every part split out over multiple files */
 #include "revision.h"
-#include "gmpc-clicklabel.h"
 #include "gmpc-metaimage.h"
 #include "gmpc-extras.h"
 #ifdef ENABLE_IGE
