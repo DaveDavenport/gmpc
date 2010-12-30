@@ -59,8 +59,6 @@ src/gmpc-mpddata-treeview.gob
 src/gmpc-profiles.gob
 src/gmpc-meta-text-view.gob
 src/gmpc-metaimage.gob
-src/gmpc-clicklabel.gob
-src/gmpc-clicklabel.gob
 src/gmpc-meta-watcher.gob
 src/gmpc-stats-label.gob
 
