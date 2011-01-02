@@ -38,7 +38,7 @@ private const string some_unique_name_mdb = Config.VERSION;
 public class Gmpc.Widget.Albumview : Gtk.Container
 {
     private int cover_width = 220;
-    private int cover_height = 220+20;
+    private int cover_height = 220+30;
     private int num_items = 0;
     private int columns = 3;
     private weak List<weak Gtk.Widget> children = null;
@@ -2053,7 +2053,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
 
         sw.add(base_tree_artist);
         sw.set_size_request(-1, 400);
-        vbox.pack_start(sw, false, false);
+        //vbox.pack_start(sw, false, false);
 
 
         MetadataBoxShowBaseEntry.changed.connect((source) => {
@@ -2106,6 +2106,113 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         var ali = new Gtk.Alignment(0.0f, 0.5f, 0f,0f);
         ali.add(show_button);
         vbox.pack_start(ali, false, false);
+
+
+        var result_hbox = new Gmpc.Widget.Albumview();
+        MetadataBoxShowBaseEntry.activate.connect((source) => {
+            string value = source.get_text();
+            MPD.Data.Item? list = Gmpc.Query.search(value, false); 
+            foreach(Gtk.Widget w in result_hbox.get_children())
+            {
+                w.destroy();
+            }
+
+            if(list != null) {
+                list.sort_album_disc_track();
+                string album = null;
+                string artist = null;
+                do{
+                    weak MPD.Song? but_song = list.song;
+                    if(but_song != null && but_song.album != null) {
+                        if(album == null || but_song.album != album) {
+                            album = but_song.album;
+
+                            if(artist == null || artist != but_song.artist)
+                            {
+                                /* Create button */
+                                var button = new Gtk.Button();
+                                button.set_relief(Gtk.ReliefStyle.NONE);
+                                var but_hbox = new Gtk.VBox(false, 6);
+                                button.add(but_hbox);
+                                var image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ARTIST_ART, 200);
+                                image.set_squared(true);
+                                image.update_from_song_delayed(but_song);
+
+                                but_hbox.pack_start(image, false, false, 0);
+
+                                var but_label = new Gtk.Label(but_song.album);
+                                but_label.selectable = true;
+                                but_label.set_alignment(0.5f, 0.0f);
+                                /* Create label */
+                                var strlabel = "";
+                                if(but_song.artist != null) strlabel += "%s\n".printf(but_song.artist);
+                                but_label.set_text(strlabel); 
+                                but_label.set_ellipsize(Pango.EllipsizeMode.END);
+                                /* add label */
+                                but_hbox.pack_start(but_label, true, true, 0);
+                                /* Add  button to view */
+                                //                        album_hbox.pack_start(button, false, false,0);
+                                result_hbox.add(button);
+                                /* If clicked switch to browser */
+                                string a = but_song.artist;
+                                button.clicked.connect((source) => {
+                                        /* Hack to avoid crash */
+                                        set_artist(a);
+                                    });
+
+                                artist = but_song.artist;
+                            }
+                            /* Make a copy of the song. Otherwise only a reference is added to the 
+                             * button clicked handler.
+                             * This reference can be invalid before click completed.
+                             */
+
+                            /* Create button */
+                            var button = new Gtk.Button();
+                            button.set_relief(Gtk.ReliefStyle.NONE);
+                            var but_hbox = new Gtk.VBox(false, 6);
+                            button.add(but_hbox);
+                            var image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ALBUM_ART, 200);
+                            image.set_squared(true);
+                            image.update_from_song_delayed(but_song);
+
+                            but_hbox.pack_start(image, false, false, 0);
+
+                            var but_label = new Gtk.Label(but_song.album);
+                            but_label.selectable = true;
+                            but_label.set_alignment(0.5f, 0.0f);
+                            /* Create label */
+                            var strlabel = "";
+                            if(but_song.artist != null) strlabel += "%s\n".printf(but_song.artist);
+                            if(but_song.date != null && but_song.date.length > 0) strlabel += "%s - ".printf(but_song.date);
+                            if(but_song.album != null) strlabel+= but_song.album;
+                            else strlabel += _("No Album");
+                            but_label.set_text(strlabel); 
+                            but_label.set_ellipsize(Pango.EllipsizeMode.END);
+                            /* add label */
+                            but_hbox.pack_start(but_label, true, true, 0);
+                            /* Add  button to view */
+                            //                        album_hbox.pack_start(button, false, false,0);
+                            result_hbox.add(button);
+
+                            string a = but_song.artist;
+                            string b = but_song.album;
+                            /* If clicked switch to browser */
+                            button.clicked.connect((source) => {
+                                    /* Hack to avoid crash */
+                                    set_album(a, b);
+                            });
+                        }
+                    }
+
+                    list.next(true);
+                }while(list != null);
+            }
+            result_hbox.show_all();
+        });
+        vbox.pack_start(result_hbox, false, false);
+
+
         /**
          * Add it to the view
          */

@@ -367,4 +367,10 @@ namespace Gmpc {
             public void add_icon(int size, string url, Gdk.Pixbuf pb);
 
     }
+    [CCode (cheader_filename="advanced-search.h")]
+    namespace Query{
+        [CCode (cname="advanced_search")]     
+        public MPD.Data.Item? search(string query, bool playlist);
+
+    }
 }
