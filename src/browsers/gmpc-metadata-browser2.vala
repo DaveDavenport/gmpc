@@ -173,11 +173,13 @@ public class Gmpc.Widget.Albumview : Gtk.Container
                     child.widget.size_allocate(ca);
                     item++;
                 }else{
-                    rows = rows + ((int)GLib.Math.floor(item/(double)columns))*cover_height;
 
                     if(item != 0)
+                    {
+                        rows = rows + ((int)GLib.Math.floor((item-1)/(double)columns))*cover_height;
                         rows+=cover_height;
-                        item = 0;
+                    }
+                    item = 0;
 
                     Gdk.Rectangle ca = {0,0,0,0};
                     Gtk.Requisition cr = {0,0};
