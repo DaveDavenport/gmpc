@@ -35,13 +35,26 @@ using Gmpc.MpdData.Treeview.Tooltip;
 private const bool use_transition_mdb = Gmpc.use_transition;
 private const string some_unique_name_mdb = Config.VERSION;
 
+[compact]
+private class AlbumviewEntry 
+{
+    public enum Type { 
+        HEADER,
+        ITEM
+    }
+    public  Type type;
+    public  weak Gtk.Widget widget;
+
+}
+
 public class Gmpc.Widget.Albumview : Gtk.Container
 {
     private int cover_width = 220;
     private int cover_height = 220+30;
+    private int header_height  = 150;
     private int num_items = 0;
     private int columns = 3;
-    private weak List<weak Gtk.Widget> children = null;
+    private List<AlbumviewEntry> children = null;
 
     public Albumview()
     {
@@ -59,7 +72,21 @@ public class Gmpc.Widget.Albumview : Gtk.Container
         req = Gtk.Requisition();
         /* request minimum of 1 column */
         int width = cover_width*1; 
-        int height = cover_height*((int)GLib.Math.ceil(num_items/(double)columns));
+        int height = 0;//cover_height*((int)GLib.Math.ceil(num_items/(double)columns));
+        int items = 0;
+        foreach (AlbumviewEntry e in children) {
+            if(e.type == AlbumviewEntry.Type.ITEM) { 
+                items++;
+            }else if (e.type == AlbumviewEntry.Type.HEADER) {
+                height += header_height;
+                height += cover_height* ((int)GLib.Math.ceil(items/(double)columns));
+                items = 0;
+            }
+        }
+        if(items > 0) {
+                height += cover_height* ((int)GLib.Math.ceil(items/(double)columns));
+                items = 0;
+        }
     
         req.width = width;
         req.height =height; 
@@ -68,7 +95,22 @@ public class Gmpc.Widget.Albumview : Gtk.Container
     public override void add(Gtk.Widget widget)
     {
         if(widget != null) {
-            children.append(widget);
+            AlbumviewEntry a = new AlbumviewEntry();
+            a.type = AlbumviewEntry.Type.ITEM;
+            a.widget = widget;
+            children.append(a);
+            widget.set_parent(this);
+            num_items++;
+            this.queue_resize();
+        }
+    }
+    public void add_header(Gtk.Widget widget)
+    {
+        if(widget != null) {
+            AlbumviewEntry a = new AlbumviewEntry();
+            a.type = AlbumviewEntry.Type.HEADER;
+            a.widget = widget;
+            children.append(a);
             widget.set_parent(this);
             num_items++;
             this.queue_resize();
@@ -83,12 +125,24 @@ public class Gmpc.Widget.Albumview : Gtk.Container
     public override void remove(Gtk.Widget widget)
     {
         if(widget != null ) {
-            if(children.find(widget) == null) {
+            AlbumviewEntry a = null; 
+            /*
+            if((a = children.find_custom(widget,compare)) == null) {
                 GLib.error("Failed to find widget in container");
             }
+            */
+            foreach(AlbumviewEntry f in this.children) {
+                if(f.widget == widget) {
+                    a = f;
+                    break;
+                }
+            }
+            if(a == null) 
+                GLib.error("Failed to find widget in container");
             bool visible = widget.get_visible();
             widget.unparent();
-            children.remove(widget);
+            /* TODO this leaks memory */
+            children.remove(a);
             num_items--;
             if(visible) 
                 this.queue_resize();
@@ -100,22 +154,45 @@ public class Gmpc.Widget.Albumview : Gtk.Container
         /* Hack to avvoid pointless resizes, I get this "1" size when a child widget changes */
         if(alloc.width == 1) return;
         int new_columns = int.max(alloc.width/cover_width, 1);
-        int x = 0;
+        int rows = 0;
         int y = 0;
         int item = 0;
-        foreach ( var child in children) {
-            if(child.get_visible())
-            {
-                Gdk.Rectangle ca = {0,0,0,0};
-                Gtk.Requisition cr = {0,0};
-                child.size_request(out cr);
-                ca.x = alloc.x + (item%columns)*cover_width;
-                ca.y = alloc.y + (int)GLib.Math.floor(item/(double)columns)*cover_height;
-                ca.width = cover_width;
-                ca.height = cover_height;
 
-                child.size_allocate(ca);
-                item++;
+        foreach ( var child in children) {
+            if(child.widget.get_visible())
+            {
+                if(child.type == AlbumviewEntry.Type.ITEM) {
+                    Gdk.Rectangle ca = {0,0,0,0};
+                    Gtk.Requisition cr = {0,0};
+                    child.widget.size_request(out cr);
+                    ca.x = alloc.x + (item%columns)*cover_width;
+                    ca.y = rows+alloc.y + (int)GLib.Math.floor(item/(double)columns)*cover_height;
+                    ca.width = cover_width;
+                    ca.height = cover_height;
+
+                    child.widget.size_allocate(ca);
+                    item++;
+                }else{
+                    rows = rows + ((int)GLib.Math.floor(item/(double)columns))*cover_height;
+
+                    if(item != 0)
+                        rows+=cover_height;
+                        item = 0;
+
+                    Gdk.Rectangle ca = {0,0,0,0};
+                    Gtk.Requisition cr = {0,0};
+                    child.widget.size_request(out cr);
+                    ca.x = alloc.x; 
+                    ca.y = alloc.y+rows;
+                    ca.width = cover_width*columns;
+                    ca.height = header_height;
+
+                    child.widget.size_allocate(ca);
+                    rows+=header_height;
+
+
+
+                }
             }
         }
         if(new_columns != columns) {
@@ -127,15 +204,23 @@ public class Gmpc.Widget.Albumview : Gtk.Container
     }
     public override void forall_internal(bool include_internals, Gtk.Callback callback) 
     {
-        weak List<weak Gtk.Widget> iter = children;
+        weak List<AlbumviewEntry> iter = children.first();
         /* Somehow it fails when doing a foreach() construction, weird vala bug I guess */
         while(iter != null) {
-            weak Gtk.Widget child = iter.data;
+            weak AlbumviewEntry child = iter.data;
             iter = iter.next;
-            callback(child);
+            callback(child.widget);
         }
     }
-
+    public void clear()
+    {
+        foreach(var a in children) {
+            a.widget.unparent();
+            num_items--;
+        }
+        children = null;
+        this.queue_resize();
+    }
 }
 
 
@@ -2112,10 +2197,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         MetadataBoxShowBaseEntry.activate.connect((source) => {
             string value = source.get_text();
             MPD.Data.Item? list = Gmpc.Query.search(value, false); 
-            foreach(Gtk.Widget w in result_hbox.get_children())
-            {
-                w.destroy();
-            }
+            result_hbox.clear();
 
             if(list != null) {
                 list.sort_album_disc_track();
@@ -2126,37 +2208,29 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
                     if(but_song != null && but_song.album != null) {
                         if(album == null || but_song.album != album) {
                             album = but_song.album;
-
                             if(artist == null || artist != but_song.artist)
                             {
-                                /* Create button */
                                 var button = new Gtk.Button();
                                 button.set_relief(Gtk.ReliefStyle.NONE);
-                                var but_hbox = new Gtk.VBox(false, 6);
+                                var but_hbox = new Gtk.HBox(false, 6);
                                 button.add(but_hbox);
-                                var image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ARTIST_ART, 200);
-                                image.set_squared(true);
+                                var image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ARTIST_ART, 140);
+                                image.set_squared(false);
                                 image.update_from_song_delayed(but_song);
 
                                 but_hbox.pack_start(image, false, false, 0);
 
                                 var but_label = new Gtk.Label(but_song.album);
+
                                 but_label.selectable = true;
-                                but_label.set_alignment(0.5f, 0.0f);
-                                /* Create label */
-                                var strlabel = "";
-                                if(but_song.artist != null) strlabel += "%s\n".printf(but_song.artist);
-                                but_label.set_text(strlabel); 
+                                but_label.set_alignment(0.0f, 0.5f);
+                                if(but_song.artist != null) 
+                                    but_label.set_markup(Markup.printf_escaped("<b>%s:</b>",but_song.artist));
                                 but_label.set_ellipsize(Pango.EllipsizeMode.END);
-                                /* add label */
                                 but_hbox.pack_start(but_label, true, true, 0);
-                                /* Add  button to view */
-                                //                        album_hbox.pack_start(button, false, false,0);
-                                result_hbox.add(button);
-                                /* If clicked switch to browser */
+                                result_hbox.add_header(button);
                                 string a = but_song.artist;
                                 button.clicked.connect((source) => {
-                                        /* Hack to avoid crash */
                                         set_artist(a);
                                     });
 
@@ -2183,7 +2257,8 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
                             but_label.set_alignment(0.5f, 0.0f);
                             /* Create label */
                             var strlabel = "";
-                            if(but_song.artist != null) strlabel += "%s\n".printf(but_song.artist);
+                            if(but_song.albumartist != null ) strlabel += "%s\n".printf(but_song.albumartist);
+                            else if(but_song.artist != null) strlabel += "%s\n".printf(but_song.artist);
                             if(but_song.date != null && but_song.date.length > 0) strlabel += "%s - ".printf(but_song.date);
                             if(but_song.album != null) strlabel+= but_song.album;
                             else strlabel += _("No Album");
