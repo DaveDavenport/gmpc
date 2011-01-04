@@ -439,6 +439,27 @@ static gint __add_sort(gpointer aa, gpointer bb, gpointer data)
 	}
 	if (a->type == MPD_DATA_TYPE_SONG && b->type == MPD_DATA_TYPE_SONG)
 	{
+        const char *artista = NULL;
+        const char *artistb = NULL;
+        if(a->song->albumartist) artista = a->song->albumartist;
+        else artista = a->song->artist;
+        if(b->song->albumartist) artistb = b->song->albumartist;
+        else artistb = b->song->artist;
+        /* Artist  (prefer albumartist, if not use artist field */
+		if (artista == NULL && artistb != NULL)
+			return -1;
+		else if (artistb == NULL && artista != NULL)
+			return 1;
+		else if (artista && artistb)
+		{
+			int compv = g_utf8_collate(artista, artistb);
+			if (compv != 0)
+			{
+				return compv;
+			}
+		}
+
+        /* Date */
 		if (a->song->date == NULL && b->song->date != NULL)
 			return -1;
 		else if (b->song->date == NULL && a->song->date != NULL)
@@ -449,18 +470,7 @@ static gint __add_sort(gpointer aa, gpointer bb, gpointer data)
 			if (compv != 0)
 				return compv;
 		}
-		if (a->song->albumartist == NULL && b->song->albumartist != NULL)
-			return -1;
-		else if (b->song->albumartist == NULL && a->song->albumartist != NULL)
-			return 1;
-		else if (a->song->albumartist && b->song->albumartist)
-		{
-			int compv = g_utf8_collate(a->song->albumartist, b->song->albumartist);
-			if (compv != 0)
-			{
-				return compv;
-			}
-		}
+        /* Album name */
 		if (a->song->album == NULL && b->song->album != NULL)
 			return -1;
 		else if (b->song->album == NULL && a->song->album != NULL)
