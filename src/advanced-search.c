@@ -1,5 +1,5 @@
 /* Gnome Music Player Client (GMPC)
- * Copyright (C) 2004-2010 Qball Cow <qball@sarine.nl>
+ * Copyright (C) 2004-2011 Qball Cow <qball@sarine.nl>
  * Project homepage: http://gmpc.wikia.com/
 
  * This program is free software; you can redistribute it and/or modify
@@ -17,7 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 #include <config.h>
-#include <gtk/gtk.h>
+#include <glib.h>
 #include "main.h"
 #include "misc.h"
 #include "advanced-search.h"

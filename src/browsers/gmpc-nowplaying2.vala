@@ -1,5 +1,5 @@
 /* Gnome Music Player Client Multimedia Keys plugin (gmpc-mmkeys)
- * Copyright (C) 2010 Qball Cow <qball@sarine.nl>
+ * Copyright (C) 2011 Qball Cow <qball@sarine.nl>
  * Project homepage: http://gmpc.wikia.com/
  
  * This program is free software; you can redistribute it and/or modify
