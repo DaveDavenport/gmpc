@@ -132,7 +132,6 @@ public class Gmpc.Clicklabel : Gtk.EventBox
      private void update()
      {
         /* TODO: Broken by vala */
-        return;
         Pango.Attribute attr    = null;
 
         /* Set style  */
@@ -143,13 +142,14 @@ public class Gmpc.Clicklabel : Gtk.EventBox
         }
         attr.start_index        = 0;
         attr.end_index          = -1;
-        attributes.change((owned)attr);
+        Gmpc.Fix.change(attributes,(owned)attr);
 
         /* Set size */
         attr                    = new Pango.AttrSize(this.size);
         attr.start_index        = 0;
         attr.end_index          = -1;
-        attributes.change((owned)attr);
+        //attributes.change((owned)attr);
+        Gmpc.Fix.change(attributes,(owned)attr);
 
      }
 }

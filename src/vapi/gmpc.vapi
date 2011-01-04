@@ -358,6 +358,9 @@ namespace Gmpc {
 
         [CCode (cname="screenshot_add_border", cheader_filename="misc.h")]
             public void add_border(Gdk.Pixbuf image);
+
+        [CCode (cname="pango_attr_list_change", cheader_filename="pango/pango.h")] 
+            public void change (Pango.AttrList list,owned Pango.Attribute attr);
     }
     [CCode (cheader_filename="Widgets/pixbuf-cache.h")]
     namespace PixbufCache {
@@ -373,4 +376,5 @@ namespace Gmpc {
         public MPD.Data.Item? search(string query, bool playlist);
 
     }
+
 }

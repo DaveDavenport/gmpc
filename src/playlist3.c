@@ -2482,7 +2482,7 @@ void playlist3_new_header(void)
 		gtk_widget_set_size_request(hbox, 250, -1);
 		/** Title */
 		header_labels[0] = gmpc_clicklabel_new("");
-		gmpc_clicklabel_font_size(GMPC_CLICKLABEL(header_labels[0]), 4);
+		gmpc_clicklabel_font_size(GMPC_CLICKLABEL(header_labels[0]), 18);
 
 		header_labels[1] = gtk_label_new(_("By"));
 		/** Artist */
