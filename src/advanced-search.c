@@ -23,6 +23,10 @@
 #include "advanced-search.h"
 
 static GRegex *search_regex = NULL;
+
+/**
+ * Initialize the advanced_search system.
+ */
 void advanced_search_init(void)
 {
 	int i = 0;
@@ -45,11 +49,17 @@ void advanced_search_init(void)
 	g_string_free(string, TRUE);
 }
 
+/**
+ * Update the advanced_search regex to include only the supported tags
+ */
 void advanced_search_update_taglist(void)
 {
 	advanced_search_init();
 }
 
+/**
+ * Destroy all the advanced_search system and clean all allocated memory.
+ */
 void advanced_search_destroy(void)
 {
 	if (search_regex)
@@ -57,28 +67,40 @@ void advanced_search_destroy(void)
 	search_regex = NULL;
 }
 
+/**
+ * Execute query.
+ * @param query the query to execute.
+ * @param playlist set to TRUE to search only songs in the playlist.
+ *
+ * @returns the search result in a #MpdData list.
+ */
 MpdData *advanced_search(const gchar * query, int in_playlist)
 {
-	MpdData *data = NULL, *data_t = NULL;
+	MpdData *data_return = NULL;
 	gchar **text = g_regex_split(search_regex, query, 0);
-	int i = 0, found = 0, type;
+	int i = 0;
+	gboolean found = FALSE;
 	for (i = 0; text && text[i]; i++)
 	{
+		int type;
+		/* Or sign, if hit, a new query is started */
 		if (strcmp(text[i], "||") == 0)
 		{
+			MpdData *data;
+			/* Commit the currently in active search and append the results */
 			if (in_playlist)
 				data = mpd_playlist_search_commit(connection);
 			else
 				data = mpd_database_search_commit(connection);
-			data_t = mpd_data_concatenate(data_t, data);
-			data = NULL;
+			data_return = mpd_data_concatenate(data_return, data);
 			found = FALSE;
 			continue;
 		}
-
+		/* empty element */
 		if (text[i][0] == '\0')
 			continue;
 
+		/* Parse the tag name. */
 		type = mpd_misc_get_tag_by_name(g_strstrip(text[i]));
 		if (type != MPD_TAG_NOT_FOUND && text[i + 1])
 		{
@@ -92,12 +114,12 @@ MpdData *advanced_search(const gchar * query, int in_playlist)
 						mpd_playlist_search_start(connection, FALSE);
 					else
 						mpd_database_search_start(connection, FALSE);
-					found = 1;
+					found = TRUE;
 				}
 				if (in_playlist)
-					mpd_playlist_search_add_constraint(connection, type, split[j]);
+					mpd_playlist_search_add_constraint(connection, type, g_strstrip(split[j]));
 				else
-					mpd_database_search_add_constraint(connection, type, split[j]);
+					mpd_database_search_add_constraint(connection, type, g_strstrip(split[j]));
 			}
 			if (split)
 				g_strfreev(split);
@@ -114,7 +136,7 @@ MpdData *advanced_search(const gchar * query, int in_playlist)
 						mpd_playlist_search_start(connection, FALSE);
 					else
 						mpd_database_search_start(connection, FALSE);
-					found = 1;
+					found = TRUE;
 				}
 				if (in_playlist)
 					mpd_playlist_search_add_constraint(connection, MPD_TAG_ITEM_ANY, split[j]);
@@ -127,17 +149,18 @@ MpdData *advanced_search(const gchar * query, int in_playlist)
 	}
 	if (text)
 		g_strfreev(text);
+	/* Execute the active search and append the results */
 	if (found)
 	{
+		MpdData *data;
 		if (in_playlist)
 			data = mpd_playlist_search_commit(connection);
 		else
 			data = mpd_database_search_commit(connection);
-		data_t = mpd_data_concatenate(data_t, data);
+		data_return = mpd_data_concatenate(data_return, data);
 	}
-
-	data_t = misc_mpddata_remove_duplicate_songs(data_t);
-	return data_t;
+	/* remove possible duplicates (because of concatenating queries) */
+	return misc_mpddata_remove_duplicate_songs(data_return);
 }
 
 /* vim: set noexpandtab ts=4 sw=4 sts=4 tw=120: */
