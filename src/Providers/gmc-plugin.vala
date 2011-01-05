@@ -49,7 +49,7 @@ class Gmpc.Provider.GMC : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIface
 		return this.version;
 	}
 	public override unowned string get_name() {
-		return N_("GMC Provider");
+		return N_("GMPC Metadata Daemon Provider");
 	}
 	construct {
 		this.plugin_type = 32;
@@ -64,10 +64,23 @@ class Gmpc.Provider.GMC : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIface
 	{
 		return config.get_int_with_default(this.get_name(),"priority",0);
 	}
+
+
+    /**
+     * Function used by gmpc to check if the plugin is enabled.
+     * By default it is stored in the get_name() category under the enabled key.
+     * 
+     * @return The state (true or false)
+     */
+    public virtual bool get_enabled ()
+    {
+        if(this.get_name() == null) return false;
+        return (bool)Gmpc.config.get_int_with_default(this.get_name(), "enabled", 0);
+    }
     /**
      * Fetch lyrics
      */
-	private void get_metadata_song_txt(MPD.Song song, MetaDataCallback callback)
+    private void get_metadata_song_txt(MPD.Song song, MetaDataCallback callback)
 	{
 		if(song == null) {
 			GLib.log(LOG_DOMAIN_GMC, GLib.LogLevelFlags.LEVEL_DEBUG,"no song");
