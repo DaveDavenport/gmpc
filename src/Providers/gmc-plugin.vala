@@ -72,7 +72,7 @@ class Gmpc.Provider.GMC : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIface
      * 
      * @return The state (true or false)
      */
-    public virtual bool get_enabled ()
+    public override bool get_enabled ()
     {
         if(this.get_name() == null) return false;
         return (bool)Gmpc.config.get_int_with_default(this.get_name(), "enabled", 0);
@@ -263,8 +263,42 @@ class Gmpc.Provider.GMC : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIface
 		}
 		var output = conn.get_output_stream();
 		var input = conn.get_input_stream();
+        /* setup input/output */
 		var out_data = new GLib.DataOutputStream(output);
         out_data.set_byte_order(GLib.DataStreamByteOrder.LITTLE_ENDIAN);
+		var in_data = new GLib.DataInputStream(input);
+        in_data.set_byte_order(GLib.DataStreamByteOrder.LITTLE_ENDIAN);
+        /* Read header! */
+
+		try{
+			uint32 magic_code_o = 0;
+            /* Read the magic startup code: 32 bit*/
+			ssize_t magic_code_size = yield in_data.read_async(&magic_code_o, 4,0);
+
+            if(magic_code_size == 4) {
+                /* convert */
+                uint32 magic_code = uint32.from_little_endian(magic_code_o);
+
+                if(magic_code != 0xF1F1) {
+                    GLib.log(LOG_DOMAIN_GMC, GLib.LogLevelFlags.LEVEL_DEBUG,"failed to read header code");
+                    callback(null);
+                    return;
+                }
+            }else {
+                    GLib.log(LOG_DOMAIN_GMC, GLib.LogLevelFlags.LEVEL_DEBUG,"failed to read header code");
+                    callback(null);
+                    return;
+
+            }
+
+		}catch (Error err_mc) {
+			GLib.log(LOG_DOMAIN_GMC, GLib.LogLevelFlags.LEVEL_DEBUG,"failed to read size");
+			callback(null);
+			return;
+		}
+
+
+
 		uint32 type = h.type;
 		try{
 			out_data.put_uint32(type);
@@ -324,8 +358,6 @@ class Gmpc.Provider.GMC : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIface
 		}
 		size = 0;
 
-		var in_data = new GLib.DataInputStream(input);
-        in_data.set_byte_order(GLib.DataStreamByteOrder.LITTLE_ENDIAN);
 		try{
 			uint32 rsize = 0;
 			ssize_t rs2 = yield in_data.read_async(&rsize, 4,0);
@@ -358,21 +390,28 @@ class Gmpc.Provider.GMC : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIface
         GLib.log(LOG_DOMAIN_GMC, GLib.LogLevelFlags.LEVEL_DEBUG, "File size is: %u\n", size);
 
 		uchar[] buffer= new uchar[size];
+        ssize_t total = 0;
 		try{
-			ssize_t rs=0, total=0;
+			ssize_t rs=0;
 			do{
 				rs = yield in_data.read_async(&buffer[total],
 						(size-total >1024)?1024:(size-total),0);
 
 				total+=rs;
 				GLib.log(LOG_DOMAIN_GMC, GLib.LogLevelFlags.LEVEL_DEBUG,"read : %u:%u\n",(uint32)size, (uint32)total);
-			}while(rs>0);
+                /* do not read more then 15 mb. */
+			}while(rs>0 && total <= 15*1024*1024);
 		}catch(Error err) {
 			GLib.log(LOG_DOMAIN_GMC, GLib.LogLevelFlags.LEVEL_DEBUG,"Failed to recieve image.");
 			callback(null);
 			return;
 		}
-        GLib.log(LOG_DOMAIN_GMC, GLib.LogLevelFlags.LEVEL_DEBUG,"read done: %u:",(uint32)size);
+        /* more then 15 mb is ignored */
+        if(total > 15*1024*1024) {
+            callback(null);
+            return;
+        }
+        GLib.log(LOG_DOMAIN_GMC, GLib.LogLevelFlags.LEVEL_DEBUG,"read done: %u:",(uint32)total);
 
 		List<Gmpc.MetaData.Item> list = null;
 
