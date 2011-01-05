@@ -155,7 +155,7 @@ public class Gmpc.Widget.Albumview : Gtk.Container
             bool visible = widget.get_visible();
             widget.unparent();
             /* TODO this leaks memory */
-            children.remove(a);
+            children.remove((owned)a);
             num_items--;
             if(visible) 
                 this.queue_resize();
