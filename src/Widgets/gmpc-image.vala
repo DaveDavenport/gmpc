@@ -54,6 +54,7 @@ public class Gmpc.Image:Gtk.EventBox {
 
 	}
 	private bool on_expose(Image img, Gdk.EventExpose event) {
+        GLib.Timer t = new GLib.Timer();
 		var ctx = Gdk.cairo_create(img.window);
 		int width = 0;
 		int height = 0;
@@ -141,6 +142,8 @@ public class Gmpc.Image:Gtk.EventBox {
 			ctx.set_source_rgba(1, 1, 1, 1);
 			ctx.fill();
 		}
+
+        stdout.printf("elapsed_time gmpc-image-expose event: %f\n", t.elapsed());
 		return false;
 	}
 	private bool timeout_test() {

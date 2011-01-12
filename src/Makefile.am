@@ -30,6 +30,7 @@ gmpc_SOURCES=\
     Widgets/mpd-async-request.c\
     vala/gmpc-liststore-sort.vala\
     Widgets/gmpc-menu-item-rating.vala\
+    Widgets/gmpc-album-view.vala\
     browsers/gmpc-metadata-browser2.vala\
     vala/gmpc-metadata-prefetcher.vala\
     vala/gmpc-mpddata-treeview-tooltip.vala\
@@ -168,7 +169,7 @@ INCLUDES+=-DOSX=1
 endif
 
 if MAINTAINER_MODE
-AM_CFLAGS+=-Wall -Wdeclaration-after-statement -Wshadow -fno-common -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wold-style-definition -Wmissing-declarations -Wredundant-decls -Wmissing-noreturn -Wpointer-arith -Wcast-align -Wwrite-strings -Winline -Wnested-externs -Wmissing-format-attribute -Waggregate-return -Wundef -Wmissing-include-dirs -Winit-self -Wswitch-default -Wswitch-enum
+AM_CFLAGS+=-Wall -Wdeclaration-after-statement -Wshadow -fno-common -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wold-style-definition -Wmissing-declarations -Wredundant-decls -Wmissing-noreturn -Wpointer-arith -Wcast-align -Wwrite-strings -Winline -Wnested-externs -Wmissing-format-attribute -Waggregate-return -Wundef -Wmissing-include-dirs -Winit-self -Wswitch-default -Wswitch-enum -g -O1
 endif
 
 
