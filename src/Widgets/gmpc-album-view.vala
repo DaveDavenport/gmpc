@@ -49,11 +49,13 @@ private class AlbumviewEntry
 
 public class Gmpc.Widget.Albumview : Gtk.Container
 {
-    private int cover_width = 220;
-    private int cover_height = 220+30;
-    private int header_height  = 150;
-    private int num_items = 0;
-    private int columns = 3;
+    private int cover_width     = 220;
+    private int cover_height    = 220+30;
+    private int header_height   = 150;
+    private int num_items       = 0;
+    private int columns         = 3;
+
+
     private List<AlbumviewEntry> children = null;
 
     /** Accessor */
@@ -73,8 +75,8 @@ public class Gmpc.Widget.Albumview : Gtk.Container
     {
         this.set_has_window(false);
         this.set_redraw_on_allocate(false);
-
     }
+
     ~Albumview()
     {
         stdout.printf("Destroy");
@@ -98,10 +100,10 @@ public class Gmpc.Widget.Albumview : Gtk.Container
             }
         }
         if(items > 0) {
-                height += cover_height* ((int)GLib.Math.ceil(items/(double)columns));
-                items = 0;
+            height += cover_height* ((int)GLib.Math.ceil(items/(double)columns));
+            items = 0;
         }
-    
+
         req.width = width;
         req.height =height; 
         stdout.printf("elapsed_time size_request: %f\n", t.elapsed());
@@ -141,10 +143,10 @@ public class Gmpc.Widget.Albumview : Gtk.Container
         if(widget != null ) {
             AlbumviewEntry a = null; 
             /*
-            if((a = children.find_custom(widget,compare)) == null) {
-                GLib.error("Failed to find widget in container");
-            }
-            */
+               if((a = children.find_custom(widget,compare)) == null) {
+               GLib.error("Failed to find widget in container");
+               }
+             */
             foreach(AlbumviewEntry f in this.children) {
                 if(f.widget == widget) {
                     a = f;
@@ -155,7 +157,8 @@ public class Gmpc.Widget.Albumview : Gtk.Container
                 GLib.error("Failed to find widget in container");
             bool visible = widget.get_visible();
             widget.unparent();
-            /* TODO this leaks memory */
+
+            /* owned is needed to avoid leak */
             children.remove((owned)a);
             num_items--;
             if(visible) 
@@ -165,7 +168,6 @@ public class Gmpc.Widget.Albumview : Gtk.Container
     public override void size_allocate(Gdk.Rectangle alloc)
     {
         GLib.Timer t = new GLib.Timer();
-        stdout.printf("alloc.width: %i\n", alloc.width);
         /* Hack to avvoid pointless resizes, I get this "1" size when a child widget changes */
         if(alloc.width == 1) return;
         int new_columns = int.max(alloc.width/cover_width, 1);
@@ -173,7 +175,8 @@ public class Gmpc.Widget.Albumview : Gtk.Container
         int y = 0;
         int item = 0;
 
-        foreach ( var child in children) {
+        foreach ( var child in children)
+        {
             if(child.widget.get_visible())
             {
                 if(child.type == AlbumviewEntry.Type.ITEM) {
@@ -223,9 +226,7 @@ public class Gmpc.Widget.Albumview : Gtk.Container
     public override void forall_internal(bool include_internals, Gtk.Callback callback) 
     {
         GLib.Timer t = new GLib.Timer();
-        stdout.printf("forall internal\n");
         weak List<AlbumviewEntry> iter = children.first();
-        double time = 0;
         /* Somehow it fails when doing a foreach() construction, weird vala bug I guess */
         /* would be  nice if I could filter out say only the visible ones */
         while(iter != null) {
