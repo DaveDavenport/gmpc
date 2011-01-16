@@ -646,7 +646,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
         label.set_alignment(0.0f, 0.5f);
         group.add_widget(label);
         qhbox.pack_start(label, false, false, 0);
-        image =  new Gtk.Image.from_icon_name("media-title", Gtk.IconSize.BUTTON);
+        image =  new Gtk.Image.from_icon_name("media-audiofile", Gtk.IconSize.BUTTON);
         qhbox.pack_start(image, false, false, 0);
         this.title_entry = new Gtk.Entry();
         if(song.title != null)

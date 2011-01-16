@@ -2993,7 +2993,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         if(title != null)
         {
             var label = new Gtk.Label(title);
-            var image = new Gtk.Image.from_icon_name("media-title", Gtk.IconSize.MENU);
+            var image = new Gtk.Image.from_icon_name("media-audiofile", Gtk.IconSize.MENU);
             label.set_ellipsize(Pango.EllipsizeMode.END);
             label.set_alignment(0.0f, 0.5f);
             hist_box.pack_start(image, false, false, 0);
