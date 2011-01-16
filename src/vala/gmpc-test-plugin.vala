@@ -690,6 +690,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
         else if(type == Gmpc.MetaData.Type.ALBUM_TXT)  this.combo.set_active(3);
         else if(type == Gmpc.MetaData.Type.ARTIST_TXT)this.combo.set_active(4);
         else if(type == Gmpc.MetaData.Type.SONG_GUITAR_TAB)this.combo.set_active(5);
+        refresh_query(button);
     }
     public void b_cancel(){
         if(this.handle != null){
