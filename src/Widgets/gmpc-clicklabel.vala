@@ -124,7 +124,7 @@ public class Gmpc.Clicklabel : Gtk.EventBox
         update();
     }
 
-    signal void clicked ();
+    public signal void clicked ();
 
     /**
      * Private functions

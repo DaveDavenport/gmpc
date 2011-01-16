@@ -22,19 +22,19 @@ PLUGIN_FILES=\
 gmpc_SOURCES=\
     Widgets/pixbuf-cache.c\
     Widgets/gmpc-clicklabel.vala\
-    vala/gmpc-connection.vala\
+    Widgets/gmpc-song-list.vala\
     Widgets/gmpc-progress.vala\
-    vala/gmpc-easy-command.vala\
-    vala/gmpc-favorites.vala\
     Widgets/gmpc-image-async.vala\
     Widgets/mpd-async-request.c\
-    vala/gmpc-liststore-sort.vala\
     Widgets/gmpc-menu-item-rating.vala\
     Widgets/gmpc-album-view.vala\
-    browsers/gmpc-metadata-browser2.vala\
+    Widgets/GmpcVolume.vala\
+    vala/gmpc-connection.vala\
+    vala/gmpc-easy-command.vala\
+    vala/gmpc-favorites.vala\
+    vala/gmpc-liststore-sort.vala\
     vala/gmpc-metadata-prefetcher.vala\
     vala/gmpc-mpddata-treeview-tooltip.vala\
-    browsers/gmpc-nowplaying2.vala\
     vala/gmpc-plugin.vala\
     vala/gmpc-rating.vala\
     vala/gmpc-song-links.vala\
@@ -42,9 +42,10 @@ gmpc_SOURCES=\
     vala/gmpc-database-update-tracker.vala\
     vala/gmpc-test-plugin.vala\
     vala/gmpc-paned-size-group.vala\
+    browsers/gmpc-nowplaying2.vala\
+    browsers/gmpc-metadata-browser2.vala\
     Providers/music-tree.vala\
     Providers/gmc-plugin.vala\
-    Widgets/GmpcVolume.vala\
 	main.c\
 	plugin.c\
 	mpdinteraction.c\

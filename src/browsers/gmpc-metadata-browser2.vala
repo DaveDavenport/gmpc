@@ -343,6 +343,7 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table
         else if(result == Gmpc.MetaData.Result.FETCHING){
             var label = new Gtk.Label(_("Fetching"));
             this.attach(label, 0,1,0,1,Gtk.AttachOptions.SHRINK, Gtk.AttachOptions.SHRINK, 0,0);
+        
         }
         /* Set result */
         else {
@@ -2225,19 +2226,28 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             alib.show();
         }
         {
-            Gmpc.MpdData.Model songs = new Gmpc.MpdData.Model();
-            var sw = new Gtk.ScrolledWindow(null, null);
-            sw.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.NEVER);
-            sw.set_shadow_type(Gtk.ShadowType.ETCHED_IN);
-            song_tree = new Gmpc.MpdData.TreeView("metadata-album-songs", true,songs); 
-            song_tree.enable_click_fix();
-            song_tree.button_release_event.connect(album_song_tree_button_press_event);
-            song_tree.row_activated.connect(album_song_tree_row_activated);
-            sw.add(song_tree);
-            var alib = new Gtk.Alignment(0f,0f,1f,0f);
+            var slhbox = new Gtk.VBox(false, 6);
 
-            alib.add(sw);
-            notebook.append_page(alib, new Gtk.Label(_("Song list")));
+            var sl = new Gmpc.Widget.Songlist();
+            slhbox.pack_start(sl, false, false, 0);
+
+            sl.album_song_clicked.connect((source, song) => {
+                if(song.artist != null && song.album != null) {
+                    this.set_album(song.artist, song.album);   
+                }
+            });
+            sl.song_clicked.connect((source, song) => {
+                this.set_song(song);
+
+            });
+            sl.play_song_clicked.connect((source, song) => {
+                if(song.file != null) {
+                    Gmpc.MpdInteraction.play_path(song.file);
+                }
+            });
+            
+
+            notebook.append_page(slhbox, new Gtk.Label(_("Song list")));
             var rbutton = new Gtk.RadioButton.with_label(group,_("Song list"));
             group = rbutton.get_group();
             hboxje.pack_start(rbutton, false, false, 0);
@@ -2270,14 +2280,14 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
                             MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM, album);
                         var data = MPD.Database.search_commit(server);
                         data.sort_album_disc_track();
-                        songs.set_mpd_data((owned)data);
+
+                        sl.set_from_data(data,false);
 
                         seen = true;
                     }
                     notebook.set_current_page(j);
                     });
-
-            alib.show();
+            slhbox.show();
             i++;
         }
         /* Show web links */
@@ -2312,6 +2322,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
                 /* The list is in reversed order, compensate for that. */
                 var w = group.nth_data(i-page-1);
                 w.set_active(true);
+                stdout.printf("selecting page: %i\n",page);
                 notebook.set_current_page(page);
             }
         }
@@ -2497,6 +2508,52 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         }
 
         {
+            var slhbox = new Gtk.VBox(false, 6);
+
+            var sl = new Gmpc.Widget.Songlist();
+            slhbox.pack_start(sl, false, false, 0);
+
+            sl.album_song_clicked.connect((source, song) => {
+                if(song.artist != null && song.album != null) {
+                    this.set_album(song.artist, song.album);   
+                }
+            });
+            sl.song_clicked.connect((source, song) => {
+                this.set_song(song);
+
+            });
+            sl.play_song_clicked.connect((source, song) => {
+                if(song.file != null) {
+                    Gmpc.MpdInteraction.play_path(song.file);
+                }
+            });
+            
+
+            notebook.append_page(slhbox, new Gtk.Label(_("Song list")));
+            var rbutton = new Gtk.RadioButton.with_label(group,_("Song list"));
+            group = rbutton.get_group();
+            hboxje.pack_start(rbutton, false, false, 0);
+            var j = i;
+            bool seen = false;
+            rbutton.clicked.connect((source) => {
+                    debug("notebook page %i clicked", j);
+                    if(!seen) 
+                    {
+                        MPD.Database.search_start(server,true);
+                        MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, artist);
+                        var data = MPD.Database.search_commit(server);
+                        data.sort_album_disc_track();
+
+                        sl.set_from_data(data, true);
+
+                        seen  = true;
+                    }
+                    notebook.set_current_page(j);
+                    });
+            slhbox.show();
+            i++;
+        }
+        if(false){
             Gmpc.MpdData.Model songs = new Gmpc.MpdData.Model();
             var sw = new Gtk.ScrolledWindow(null, null);
             sw.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.NEVER);

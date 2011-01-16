@@ -31,7 +31,6 @@
 using Config;
 using Gtk;
 using Gmpc;
-using Gmpc.MpdData.Treeview.Tooltip;
 
 private const bool use_transition_gav = Gmpc.use_transition;
 private const string some_unique_name_gav = Config.VERSION;
