@@ -77,10 +77,12 @@ src/vala/gmpc-song-links.c
 src/vala/gmpc-test-plugin.c
 src/vala/gmpc-url-fetching-gui.c
 
+
 #Widgets
 src/Widgets/gmpc-progress.c
 src/Widgets/gmpc-menu-item-rating.c
 src/Widgets/GmpcVolume.c
+src/Widgets/gmpc-song-list.c
 
 #Providers
 src/Providers/music-tree.c
