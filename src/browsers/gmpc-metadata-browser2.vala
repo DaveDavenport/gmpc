@@ -1428,6 +1428,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         /* Album image */
         var ali = new Gtk.Alignment(0f,0f,0f,0f);
         int meta_size =  (int)(this.metadata_box.allocation.width*0.20);
+        meta_size = int.min(meta_size, (int)(this.metadata_sw.allocation.height*0.30));
         meta_size = int.min(int.max(100, meta_size), 250);
         var album_image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ALBUM_ART, meta_size);
         album_image.set_scale_up(true);
@@ -1961,7 +1962,11 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         /* Artist image */
         var hbox = new Gtk.HBox(false, 6);
         var ali = new Gtk.Alignment(0f,0f,0f,0f);
-        var artist_image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ALBUM_ART, 250);
+
+        int meta_size =  (int)(this.metadata_box.allocation.width*0.20);
+        meta_size = int.min(meta_size, (int)(this.metadata_sw.allocation.height*0.30));
+        meta_size = int.min(int.max(100, meta_size), 250);
+        var artist_image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ALBUM_ART, meta_size);
         artist_image.set_squared(false);
         MPD.Song song = new MPD.Song();
         song.artist = artist;
@@ -2225,7 +2230,10 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         /* Artist image */
         var hbox = new Gtk.HBox(false, 6);
         var ali = new Gtk.Alignment(0f,0f,0f,0f);
-        var artist_image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ARTIST_ART, 250);
+        int meta_size =  (int)(this.metadata_box.allocation.width*0.20);
+        meta_size = int.min(meta_size, (int)(this.metadata_sw.allocation.height*0.30));
+        meta_size = int.min(int.max(100, meta_size), 250);
+        var artist_image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ARTIST_ART, meta_size);
         artist_image.set_squared(false);
         artist_image.update_from_song(song);
         ali.add(artist_image);
