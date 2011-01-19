@@ -53,6 +53,7 @@ public class Gmpc.Widget.Songlist : Gtk.VBox
     {
         /* Event box */
         var event = new Gtk.EventBox();
+        event.set_visible_window(false);
 
         var box = new Gtk.HBox(false, 6);
         /* Disc image */
@@ -94,7 +95,7 @@ public class Gmpc.Widget.Songlist : Gtk.VBox
 
 
         /* Create lLabel */
-        string label = "<b>%s: %s</b>".printf(_("Artist"), song.artist);
+        string label = GLib.Markup.printf_escaped("<b>%s: %s</b>",_("Artist"), song.artist);
         var wlabel = new Gtk.Label("");
         wlabel.set_markup(label);
 
@@ -113,6 +114,7 @@ public class Gmpc.Widget.Songlist : Gtk.VBox
     {
         /* Event box */
         var event = new Gtk.EventBox();
+        event.set_visible_window(false);
 
         var box = new Gtk.HBox(false, 6);
         /* Disc image */
@@ -152,7 +154,7 @@ public class Gmpc.Widget.Songlist : Gtk.VBox
 
 
         /* Create lLabel */
-        string label = "<b>%s: %s</b>".printf(_("Album"), song.album);
+        string label = GLib.Markup.printf_escaped("<b>%s: %s</b>",_("Album"), song.album);
         var wlabel = new Gtk.Label("");
         wlabel.set_markup(label);
 
@@ -307,7 +309,7 @@ public class Gmpc.Widget.Songlist : Gtk.VBox
 
              stdout.printf("song iter: %s\n", iter.song.disc);
              if(show_artist) {
-                if(iter.song.artist != null && (album == null || album != iter.song.album))
+                if(iter.song.artist != null && (artist == null || artist != iter.song.artist))
                 {
                     this.add_artist_entry(iter.song,0);
                     artist = iter.song.artist;
