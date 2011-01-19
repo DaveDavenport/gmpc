@@ -413,6 +413,7 @@
                                             <property name="related-action">MPDPrevious</property>
                                             <property name="can_focus">True</property>
                                             <property name="receives_default">False</property>
+                                            <property name="relief">none</property>
                                             <property name="use_action_appearance">False</property>
                                             <child>
                                               <object class="GtkImage" id="image10">
@@ -433,6 +434,7 @@
                                             <property name="related-action">MPDStop</property>
                                             <property name="can_focus">True</property>
                                             <property name="receives_default">True</property>
+                                            <property name="relief">none</property>
                                             <property name="use_action_appearance">False</property>
                                             <child>
                                               <object class="GtkImage" id="stop_button_image">
@@ -453,6 +455,7 @@
                                             <property name="related-action">MPDPlayPause</property>
                                             <property name="can_focus">True</property>
                                             <property name="receives_default">False</property>
+                                            <property name="relief">none</property>
                                             <child>
                                               <object class="GtkImage" id="play_button_image">
                                                 <property name="visible">True</property>
@@ -473,6 +476,7 @@
                                             <property name="can_focus">True</property>
                                             <property name="receives_default">False</property>
                                             <property name="use_action_appearance">False</property>
+                                            <property name="relief">none</property>
                                             <child>
                                               <object class="GtkImage" id="image11">
                                                 <property name="visible">True</property>
