@@ -140,6 +140,10 @@ namespace Gmpc {
             public void set_squared(bool squared);
             [CCode (cname="gmpc_metaimage_set_hide_on_na")]
             public void set_hide_on_na(bool hide);
+            [CCode (cname="gmpc_metaimage_set_no_cover_icon")]
+            public void set_no_cover_icon(string name);
+            [CCode (cname="gmpc_metaimage_set_loading_cover_icon")]
+            public void set_loading_cover_icon(string name);
 
             [CCode (cname="gmpc_metaimage_set_scale_up")]
             public void set_scale_up(bool scale);

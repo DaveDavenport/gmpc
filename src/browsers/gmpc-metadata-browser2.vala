@@ -453,6 +453,8 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table
         event.set_size_request(button_width-20,60);
 
         var image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ARTIST_ART, 48);
+        image.set_no_cover_icon("no-artist");
+        image.set_loading_cover_icon("fetching-artist");
         var song = new MPD.Song();
         song.artist = artist;
         image.set_squared(true);
@@ -1440,7 +1442,11 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         /* Artist image */
         ali = new Gtk.Alignment(1f,0f,0f,0f);
         var artist_image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ARTIST_ART, meta_size);
+
+        artist_image.set_no_cover_icon("no-artist");
+        artist_image.set_loading_cover_icon("fetching-artist");
         artist_image.set_scale_up(true);
+        artist_image.set_hide_on_na(true);
         artist_image.set_squared(false);
         artist_image.update_from_song(song);
         ali.add(artist_image);
@@ -1809,15 +1815,36 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         vbox.pack_start(hbox, false, false, 0);
 
 
-        var result_hbox = new Gmpc.Widget.Albumview();
-        result_hbox.set_cover_size(150,170);
+        var result_hbox = new Gmpc.Widget.Songlist();//new Gmpc.Widget.Albumview();
+
+        result_hbox.artist_song_clicked.connect((source, song) => {
+                if(song.artist != null) { 
+                this.set_artist(song.artist);   
+                }
+                });
+        result_hbox.album_song_clicked.connect((source, song) => {
+                if(song.artist != null && song.album != null) {
+                this.set_album(song.artist, song.album);   
+                }
+                });
+        result_hbox.song_clicked.connect((source, song) => {
+                this.set_song(song);
+
+                });
+        result_hbox.play_song_clicked.connect((source, song) => {
+                if(song.file != null) {
+                    Gmpc.MpdInteraction.play_path(song.file);
+                }
+            });
+//        result_hbox.set_cover_size(150,170);
         MetadataBoxShowBaseEntry.activate.connect((source) => {
             string value = source.get_text();
             current.data.search_string = value; 
             MPD.Data.Item? list = Gmpc.Query.search(value, false); 
-            result_hbox.clear();
-
-            if(list != null) {
+//            result_hbox.clear();
+            result_hbox.set_from_data(list,true,true);
+            /*
+            if(list != null && false) {
                 list.sort_album_disc_track();
                 string album = null;
                 string artist = null;
@@ -1856,12 +1883,14 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
 
                                 artist = but_song.artist;
                             }
+                            */
                             /* Make a copy of the song. Otherwise only a reference is added to the 
                              * button clicked handler.
                              * This reference can be invalid before click completed.
                              */
 
                             /* Create button */
+                            /*
                             var button = new Gtk.Button();
                             button.set_relief(Gtk.ReliefStyle.NONE);
                             var but_hbox = new Gtk.VBox(false, 6);
@@ -1875,24 +1904,27 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
                             var but_label = new Gtk.Label(but_song.album);
                             but_label.selectable = true;
                             but_label.set_alignment(0.5f, 0.0f);
+                            */
                             /* Create label */
+                            /*
                             var strlabel = "";
                             if(but_song.date != null && but_song.date.length > 0) strlabel += "%s - ".printf(but_song.date);
                             if(but_song.album != null) strlabel+= but_song.album;
                             else strlabel += _("No Album");
                             but_label.set_text(strlabel); 
                             but_label.set_ellipsize(Pango.EllipsizeMode.END);
+                            */
                             /* add label */
-                            but_hbox.pack_start(but_label, true, true, 0);
+//                            but_hbox.pack_start(but_label, true, true, 0);
                             /* Add  button to view */
                             //                        album_hbox.pack_start(button, false, false,0);
-                            result_hbox.add(button);
+  /*                          result_hbox.add(button);
 
                             string a = but_song.artist;
                             string b = but_song.album;
-                            /* If clicked switch to browser */
-                            button.clicked.connect((source) => {
-                                    /* Hack to avoid crash */
+    */                        /* If clicked switch to browser */
+      /*                      button.clicked.connect((source) => {
+        
                                     set_album(a, b);
                             });
                         }
@@ -1901,6 +1933,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
                     list.next(true);
                 }while(list != null);
             }
+            */
             result_hbox.show_all();
         });
         vbox.pack_start(result_hbox, false, false);
@@ -2234,6 +2267,9 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         meta_size = int.min(meta_size, (int)(this.metadata_sw.allocation.height*0.30));
         meta_size = int.min(int.max(100, meta_size), 250);
         var artist_image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ARTIST_ART, meta_size);
+
+        artist_image.set_no_cover_icon("no-artist");
+        artist_image.set_loading_cover_icon("fetching-artist");
         artist_image.set_squared(false);
         artist_image.update_from_song(song);
         ali.add(artist_image);

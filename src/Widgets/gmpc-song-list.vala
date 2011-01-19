@@ -46,6 +46,65 @@ public class Gmpc.Widget.Songlist : Gtk.VBox
         this.set_spacing(6);
 
     }
+    /**
+     * Add a artist entry
+     */
+    private void add_artist_entry(MPD.Song song, int level=0)
+    {
+        /* Event box */
+        var event = new Gtk.EventBox();
+
+        var box = new Gtk.HBox(false, 6);
+        /* Disc image */
+        /* add padding */
+        var ali = new Gtk.Alignment(0.0f, 0.5f,0f,0f);
+        ali.set_padding(0,0,level*24,0);
+        box.pack_start(ali, false, false, 0);
+
+        
+        //var image = new Gtk.Image.from_icon_name("media-album", Gtk.IconSize.BUTTON);
+        var image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ARTIST_ART, 24);
+        image.set_no_cover_icon("no-artist");
+        image.set_loading_cover_icon("fetching-artist");
+        image.set_squared(false);
+        image.update_from_song(song);
+        /* add the image */
+        ali.add(image);
+
+        /* setup handling off clicks */
+        event.enter_notify_event.connect((source, event) => {
+            this.window.set_cursor(hand_cursor);
+            return false;
+
+        });
+
+        event.leave_notify_event.connect((source, event) => {
+            this.window.set_cursor(null);
+            return false;
+        });
+
+        MPD.Song song_file = song;
+        event.button_press_event.connect((source, event) => {
+            if(event.button == 1) {
+                artist_song_clicked(song_file);
+                return true;
+                }
+            return false;
+        });
+
+
+        /* Create lLabel */
+        string label = "<b>%s: %s</b>".printf(_("Artist"), song.artist);
+        var wlabel = new Gtk.Label("");
+        wlabel.set_markup(label);
+
+        /* add the label */
+        box.pack_start(wlabel, false, false, 0);
+
+        /* Add the entry */
+        event.add(box);
+        this.pack_start(event, false, false, 0); 
+    }
 
     /**
      * Add a album entry
@@ -61,7 +120,12 @@ public class Gmpc.Widget.Songlist : Gtk.VBox
         var ali = new Gtk.Alignment(0.0f, 0.5f,0f,0f);
         ali.set_padding(0,0,level*24,0);
         box.pack_start(ali, false, false, 0);
-        var image = new Gtk.Image.from_icon_name("media-album", Gtk.IconSize.BUTTON);
+
+        
+        //var image = new Gtk.Image.from_icon_name("media-album", Gtk.IconSize.BUTTON);
+        var image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ALBUM_ART, 24);
+        image.set_squared(false);
+        image.update_from_song(song);
         /* add the image */
         ali.add(image);
 
@@ -212,16 +276,18 @@ public class Gmpc.Widget.Songlist : Gtk.VBox
      public signal void play_song_clicked(MPD.Song song);
      /* user clicked on the album */
      public signal void album_song_clicked(MPD.Song song);
+     /* user clicked on the artist */
+     public signal void artist_song_clicked(MPD.Song song);
 
      /**
       * Fill the widget from a song list 
       */
-     public void set_from_data(MPD.Data.Item list, bool show_album)
+     public void set_from_data(MPD.Data.Item list, bool show_album, bool show_artist=false)
      {
          stdout.printf("set from data\n");
 
          /* Removing everything it contains */
-         foreach(var child in this.children) {
+         foreach(var child in this.get_children()) {
              child.destroy();
          }
 
@@ -231,6 +297,7 @@ public class Gmpc.Widget.Songlist : Gtk.VBox
          /* itterating items */
          string disc = null;
          string album = null;
+         string artist = null;
          /* Itterate over the songs */
          int level = -1;
          for(;iter != null; iter.next(false))
@@ -239,11 +306,19 @@ public class Gmpc.Widget.Songlist : Gtk.VBox
              if(iter.song == null ) continue;
 
              stdout.printf("song iter: %s\n", iter.song.disc);
+             if(show_artist) {
+                if(iter.song.artist != null && (album == null || album != iter.song.album))
+                {
+                    this.add_artist_entry(iter.song,0);
+                    artist = iter.song.artist;
+                    disc = null;
+                    album = null;
+                }
+             }
              if(show_album) {
                 if(iter.song.album != null && (album == null || album != iter.song.album))
                 {
-                    if(album == null) level++;
-                    this.add_album_entry(iter.song,0);
+                    this.add_album_entry(iter.song,(artist != null)?1:0);
                     album = iter.song.album;
                     disc = null;
                 }
@@ -251,16 +326,17 @@ public class Gmpc.Widget.Songlist : Gtk.VBox
              /* Check for a new disc */
              if(iter.song.disc != null && (disc == null  || disc != iter.song.disc))
              {
-                 this.add_disc_entry(iter.song.disc,level+1);
+                 this.add_disc_entry(iter.song.disc,((artist != null)?1:0)+((album!=null)?1:0));
                  /* Add a  new disc button */
                  disc = iter.song.disc;
              }
              /* add song row */
+             level = 0;
              if(disc != null) 
-                 this.add_song_entry(iter.song,level+2); 
-             else 
-                 this.add_song_entry(iter.song,level+1); 
-
+                level++;
+             if(artist != null) level++;
+             if(album != null) level++;
+             this.add_song_entry(iter.song,level); 
          }
 
          /* show everything */
