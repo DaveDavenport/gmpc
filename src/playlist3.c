@@ -2483,6 +2483,7 @@ void playlist3_new_header(void)
 		/** Title */
 		header_labels[0] = gmpc_clicklabel_new("");
 		gmpc_clicklabel_font_size(GMPC_CLICKLABEL(header_labels[0]), 18);
+		gmpc_clicklabel_set_ellipsize(GMPC_CLICKLABEL(header_labels[0]), PANGO_ELLIPSIZE_END);
 
 		header_labels[1] = gtk_label_new(_("By"));
 		/** Artist */
@@ -2494,6 +2495,7 @@ void playlist3_new_header(void)
 		/** Albumr */
 		header_labels[4] = gmpc_clicklabel_new("");
 		gmpc_clicklabel_set_do_italic(GMPC_CLICKLABEL(header_labels[4]), TRUE);
+		gmpc_clicklabel_set_ellipsize(GMPC_CLICKLABEL(header_labels[2]), PANGO_ELLIPSIZE_END);
 
 		gtk_box_pack_start(GTK_BOX(vbox), header_labels[0], FALSE, TRUE, 0);
 		gtk_box_pack_start(GTK_BOX(vbox), hbox, FALSE, TRUE, 0);
