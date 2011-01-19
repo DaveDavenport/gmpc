@@ -59,12 +59,12 @@ public class Gmpc.Widget.Songlist : Gtk.VBox
         /* Disc image */
         /* add padding */
         var ali = new Gtk.Alignment(0.0f, 0.5f,0f,0f);
-        ali.set_padding(0,0,level*24,0);
+        ali.set_padding(0,0,level*32,0);
         box.pack_start(ali, false, false, 0);
 
         
         //var image = new Gtk.Image.from_icon_name("media-album", Gtk.IconSize.BUTTON);
-        var image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ARTIST_ART, 24);
+        var image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ARTIST_ART, 32);
         image.set_no_cover_icon("no-artist");
         image.set_loading_cover_icon("fetching-artist");
         image.set_squared(false);
@@ -120,12 +120,12 @@ public class Gmpc.Widget.Songlist : Gtk.VBox
         /* Disc image */
         /* add padding */
         var ali = new Gtk.Alignment(0.0f, 0.5f,0f,0f);
-        ali.set_padding(0,0,level*24,0);
+        ali.set_padding(0,0,level*32,0);
         box.pack_start(ali, false, false, 0);
 
         
         //var image = new Gtk.Image.from_icon_name("media-album", Gtk.IconSize.BUTTON);
-        var image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ALBUM_ART, 24);
+        var image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ALBUM_ART, 32);
         image.set_squared(false);
         image.update_from_song(song);
         /* add the image */
@@ -178,7 +178,7 @@ public class Gmpc.Widget.Songlist : Gtk.VBox
 
         /* add padding */
         var ali = new Gtk.Alignment(0.0f, 0.5f,0f,0f);
-        ali.set_padding(0,0,level*24,0);
+        ali.set_padding(0,0,level*32,0);
         box.pack_start(ali, false, false, 0);
 
         /* Disc image */
@@ -213,7 +213,7 @@ public class Gmpc.Widget.Songlist : Gtk.VBox
 
         /* add padding */
         var ali = new Gtk.Alignment(0.0f, 0.5f,0f,0f);
-        ali.set_padding(0,0,level*24,0);
+        ali.set_padding(0,0,level*32,0);
         box.pack_start(ali, false, false, 0);
 
         /* Title image */
@@ -284,7 +284,7 @@ public class Gmpc.Widget.Songlist : Gtk.VBox
      /**
       * Fill the widget from a song list 
       */
-     public void set_from_data(MPD.Data.Item list, bool show_album, bool show_artist=false)
+     public void set_from_data(MPD.Data.Item? list, bool show_album=false, bool show_artist=false)
      {
          stdout.printf("set from data\n");
 
@@ -292,6 +292,8 @@ public class Gmpc.Widget.Songlist : Gtk.VBox
          foreach(var child in this.get_children()) {
              child.destroy();
          }
+
+         if(list == null) return;
 
          /* Sort the list so we can display it correctly */
          list.sort_album_disc_track();
