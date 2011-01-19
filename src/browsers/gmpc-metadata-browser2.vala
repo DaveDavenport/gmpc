@@ -1840,9 +1840,11 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         MetadataBoxShowBaseEntry.activate.connect((source) => {
             string value = source.get_text();
             current.data.search_string = value; 
+            stdout.printf("query: %s\n", value);
             MPD.Data.Item? list = Gmpc.Query.search(value, false); 
 //            result_hbox.clear();
-            result_hbox.set_from_data(list,true,true);
+            stdout.printf("data pointer: %p\n", list);
+            result_hbox.set_from_data((owned)list,true,true);
             /*
             if(list != null && false) {
                 list.sort_album_disc_track();
@@ -2165,7 +2167,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
                         var data = MPD.Database.search_commit(server);
                         data.sort_album_disc_track();
 
-                        sl.set_from_data(data,false);
+                        sl.set_from_data((owned)data,false);
 
                         seen = true;
                     }
@@ -2432,7 +2434,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
                         var data = MPD.Database.search_commit(server);
                         data.sort_album_disc_track();
 
-                        sl.set_from_data(data, true);
+                        sl.set_from_data((owned)data, true);
 
                         seen  = true;
                     }

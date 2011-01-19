@@ -284,7 +284,7 @@ public class Gmpc.Widget.Songlist : Gtk.VBox
      /**
       * Fill the widget from a song list 
       */
-     public void set_from_data(MPD.Data.Item? list, bool show_album=false, bool show_artist=false)
+     public void set_from_data(owned MPD.Data.Item? list, bool show_album=false, bool show_artist=false)
      {
          stdout.printf("set from data\n");
 
@@ -309,7 +309,6 @@ public class Gmpc.Widget.Songlist : Gtk.VBox
              /* if it is no MPD.Song, skip */
              if(iter.song == null ) continue;
 
-             stdout.printf("song iter: %s\n", iter.song.disc);
              if(show_artist) {
                 if(iter.song.artist != null && (artist == null || artist != iter.song.artist))
                 {
