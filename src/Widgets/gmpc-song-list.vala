@@ -39,6 +39,7 @@ private const string some_unique_name_gsl = Config.VERSION;
 
 public class Gmpc.Widget.Songlist : Gtk.VBox
 {
+    private const int MAX_RESULTS           = 500;
     private Gdk.Cursor hand_cursor          = new Gdk.Cursor(Gdk.CursorType.HAND2);
     /* Constructor function  */
     public Songlist()
@@ -178,9 +179,8 @@ public class Gmpc.Widget.Songlist : Gtk.VBox
     {
         GLib.debug("Disc entry add: %s", entry);
 
+        /* */
         var box = new Gtk.HBox(false, 6);
-
-
 
         /* add padding */
         var ali = new Gtk.Alignment(0.0f, 0.5f,0f,0f);
@@ -252,9 +252,6 @@ public class Gmpc.Widget.Songlist : Gtk.VBox
             return false;
         });
 
-
-
-
         /* add title label */
         string label = null;
         if(song.track != null && song.title != null) {
@@ -292,8 +289,7 @@ public class Gmpc.Widget.Songlist : Gtk.VBox
       */
      public void set_from_data(owned MPD.Data.Item? list, bool show_album=false, bool show_artist=false)
      {
-         stdout.printf("set from data\n");
-
+        int results = 0;
          /* Removing everything it contains */
          foreach(var child in this.get_children()) {
              child.destroy();
@@ -314,13 +310,23 @@ public class Gmpc.Widget.Songlist : Gtk.VBox
          {
              /* if it is no MPD.Song, skip */
              if(iter.song == null ) continue;
+             if(results > this.MAX_RESULTS) {
+                var bar = new Gtk.InfoBar();
+                var label = new Gtk.Label(_("Only the first %i results are shown. Please refine your search.".printf(MAX_RESULTS)));
+                label.set_alignment(0.0f,0.5f);
+                bar.set_message_type(Gtk.MessageType.WARNING);
+                (bar.get_content_area() as Gtk.Container).add(label);
+
+                this.pack_start(bar, false, false);
+                break;
+             }
+             results++;
 
              if(show_artist) {
                 if(iter.song.albumartist != null && 
                         iter.song.albumartist.size() > 0)
                 {
-                    if( 
-                            (artist == null || artist != iter.song.albumartist))
+                    if(artist == null || artist != iter.song.albumartist)
                     {
                         stdout.printf("albumartist: %s\n", iter.song.albumartist);
                         this.add_artist_entry(iter.song,0);
@@ -354,8 +360,7 @@ public class Gmpc.Widget.Songlist : Gtk.VBox
              }
              /* add song row */
              level = 0;
-             if(disc != null) 
-                level++;
+             if(disc != null) level++;
              if(artist != null) level++;
              if(album != null) level++;
              this.add_song_entry(iter.song,level); 
