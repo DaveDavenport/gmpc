@@ -1377,7 +1377,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
       * then increments i 
       */
 
-     private void add_entry(Gtk.Table table, string entry_label, string? value,Gtk.Widget? extra,  out int i, string ? image = null)
+     private void add_entry(Gtk.Table table, string entry_label, string? value,Gtk.Widget? extra,  ref int i, string ? image = null)
      {
          int j=0;
          if(value == null && extra == null) return;
@@ -1483,7 +1483,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
                 ali = new Gtk.Alignment(0.0f, 0.5f,0f,0f);
                 ali.add(rating_button);
                 //hist_box.pack_start(ali, false, false, 0); 
-                this.add_entry(info_box, _("Rating"), null,ali,out i, "rating");
+                this.add_entry(info_box, _("Rating"), null,ali,ref i, "rating");
             }
         }else if (song.name!= null) {
             var label = new Gtk.Label(song.name);
@@ -1523,19 +1523,19 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         }
         /* Artist */
         if(song.artist != null) {
-            this.add_entry(info_box, _("Artist"), song.artist, null,out i, "media-artist");
+            this.add_entry(info_box, _("Artist"), song.artist, null,ref i, "media-artist");
         }
         /* Album */
         if(song.album != null) {
-            this.add_entry(info_box, _("Album"), song.album,null, out i, "media-album");
+            this.add_entry(info_box, _("Album"), song.album,null, ref i, "media-album");
         }
         /* Genre */
         if(song.genre != null) {
-            this.add_entry(info_box, _("Genre"), song.genre,null, out i, "media-genre");
+            this.add_entry(info_box, _("Genre"), song.genre,null, ref i, "media-genre");
         }
         /* Genre */
         if(song.date != null) {
-            this.add_entry(info_box, _("Date"), song.date,null, out i, "media-date");
+            this.add_entry(info_box, _("Date"), song.date,null, ref i, "media-date");
         }
         if(song.file != null)
         {
@@ -1544,19 +1544,19 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             extension = get_extension(song.file);
             if(extension != null)
             {
-                this.add_entry(info_box, _("Codec"), extension,null, out i, "media-codec");
+                this.add_entry(info_box, _("Codec"), extension,null, ref i, "media-codec");
             }
 
             string directory = GLib.Path.get_dirname(song.file);
             if(directory != null)
             {
-                this.add_entry(info_box, _("Directory"), directory, null, out i, "gtk-open");
+                this.add_entry(info_box, _("Directory"), directory, null, ref i, "gtk-open");
             }
 
         }
         /* Time*/
         if(song.time > 0) {
-            this.add_entry(info_box, _("Length"),Gmpc.Misc.format_time((ulong) song.time, ""),null, out i, "media-track-length");
+            this.add_entry(info_box, _("Length"),Gmpc.Misc.format_time((ulong) song.time, ""),null, ref i, "media-track-length");
         }
 
         if(song.track != null) {
@@ -1568,7 +1568,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
                         (song.disc != null)? "[%s]".printf(song.disc):""
                         ));
             label.set_alignment(0.0f, 0.5f);
-            this.add_entry(info_box, _("Track"),null,label, out i, "media-num-tracks");
+            this.add_entry(info_box, _("Track"),null,label, ref i, "media-num-tracks");
         }
 
 
@@ -2019,34 +2019,34 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         var label = new Gtk.Label(artist != null?artist:_("Unknown"));
         label.set_alignment(0.0f, 0.5f);
         label.set_line_wrap(true);
-        this.add_entry(info_box, _("Artist"), null, label, out i, "media-artist");
+        this.add_entry(info_box, _("Artist"), null, label, ref i, "media-artist");
 
         label = new Gtk.Label(album != null?album:_("Unknown"));
         label.set_alignment(0.0f, 0.5f);
         label.set_line_wrap(true);
-        this.add_entry(info_box, _("Album"), null, label, out i, "media-album");
+        this.add_entry(info_box, _("Album"), null, label, ref i, "media-album");
 
         /* Genres of songs */ 
         var pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ALBUM_GENRES_SONGS, song);
         pt_label.set_alignment(0.0f, 0.5f);
         pt_label.set_line_wrap(true);
-        this.add_entry(info_box, _("Genres"), null, pt_label, out i, "media-genre");
+        this.add_entry(info_box, _("Genres"), null, pt_label, ref i, "media-genre");
 
         /* Dates of songs */ 
         pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ALBUM_DATES_SONGS, song);
         pt_label.set_line_wrap(true);
         pt_label.set_alignment(0.0f, 0.5f);
-        this.add_entry(info_box, _("Dates"), null, pt_label, out i,"media-date");
+        this.add_entry(info_box, _("Dates"), null, pt_label, ref i,"media-date");
         /* Total number of songs */ 
         pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ALBUM_NUM_SONGS, song);
         pt_label.set_line_wrap(true);
         pt_label.set_alignment(0.0f, 0.5f);
-        this.add_entry(info_box, _("Songs"), null, pt_label, out i, "media-num-tracks");
+        this.add_entry(info_box, _("Songs"), null, pt_label, ref i, "media-num-tracks");
         /* Total playtime */
         pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ALBUM_PLAYTIME_SONGS, song);
         pt_label.set_line_wrap(true);
         pt_label.set_alignment(0.0f, 0.5f);
-        this.add_entry(info_box, _("Playtime"), null, pt_label, out i, "media-track-length");
+        this.add_entry(info_box, _("Playtime"), null, pt_label, ref i, "media-track-length");
 
         vbox.pack_start(hbox , false, false, 0);
 
@@ -2285,28 +2285,28 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         var label = new Gtk.Label((artist != null)?artist:_("Unknown"));
         label.set_selectable(true);
         label.set_alignment(0.0f, 0.5f);
-        this.add_entry(info_box, _("Artist"), null, label, out i, "media-artist");
+        this.add_entry(info_box, _("Artist"), null, label, ref i, "media-artist");
 
         /* Genres of songs */ 
         var pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ARTIST_GENRES_SONGS, song);
         pt_label.set_alignment(0.0f, 0.5f);
         pt_label.set_line_wrap(true);
-        this.add_entry(info_box, _("Genres"), null, pt_label, out i, "media-genre");
+        this.add_entry(info_box, _("Genres"), null, pt_label, ref i, "media-genre");
         /* Dates of songs */ 
         pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ARTIST_DATES_SONGS, song);
         pt_label.set_line_wrap(true);
         pt_label.set_alignment(0.0f, 0.5f);
-        this.add_entry(info_box, _("Dates"), null, pt_label, out i,"media-date");
+        this.add_entry(info_box, _("Dates"), null, pt_label, ref i,"media-date");
         /* Total number of songs */ 
         pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ARTIST_NUM_SONGS, song);
         pt_label.set_line_wrap(true);
         pt_label.set_alignment(0.0f, 0.5f);
-        this.add_entry(info_box, _("Songs"), null, pt_label, out i, "media-num-tracks");
+        this.add_entry(info_box, _("Songs"), null, pt_label, ref i, "media-num-tracks");
         /* Total playtime */
         pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ARTIST_PLAYTIME_SONGS, song);
         pt_label.set_line_wrap(true);
         pt_label.set_alignment(0.0f, 0.5f);
-        this.add_entry(info_box, _("Playtime"), null, pt_label, out i, "media-track-length");
+        this.add_entry(info_box, _("Playtime"), null, pt_label, ref i, "media-track-length");
 
         vbox.pack_start(hbox , false, false, 0);
 
