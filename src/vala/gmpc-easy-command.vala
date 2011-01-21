@@ -86,7 +86,7 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 				a= "^%s".printf(value.substring(0,(long)key.length));
 			}else{
 				a= "^%s".printf(value);
-				if(pattern != null && pattern.size() > 0) {
+				if(pattern != null && pattern.length > 0) {
 					a+= "[ ]*(%s)".printf(pattern);
 				}
 			}

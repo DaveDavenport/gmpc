@@ -151,7 +151,7 @@ public class Gmpc.PixbufLoaderAsync : GLib.Object
                 do{
                     try {
                           uchar data[1024]; 
-                          result = yield stream.read_async(data,1024, 0, cancel);
+                          result = yield stream.read_async(data,0, cancel);
                           Gmpc.Fix.write_loader(loader,(string)data, result);
                       }catch ( Error erro) {
                           warning("Error trying to fetch image: %s::%s", erro.message,uri);

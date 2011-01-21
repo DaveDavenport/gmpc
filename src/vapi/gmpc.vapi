@@ -1,4 +1,3 @@
-using Gmpc.PanedSizeGroup;
 
 namespace Gmpc {
     [CCode (cname="TRUE",cheader_filename="gtk/gtk.h,gtktransition.h")]

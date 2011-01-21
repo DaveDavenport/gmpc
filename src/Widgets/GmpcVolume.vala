@@ -50,6 +50,9 @@ public class Gmpc.Volume : Gtk.EventBox
                   | Gdk.EventMask.BUTTON_RELEASE_MASK
                   | Gdk.EventMask.POINTER_MOTION_MASK
                   | Gdk.EventMask.SCROLL_MASK);
+        this.scroll_event.connect((source, event) => {
+            return this.b_scroll_event(event);
+        });
     }
 
     private void set_volume_level_from_y_pos(double y)
@@ -65,7 +68,7 @@ public class Gmpc.Volume : Gtk.EventBox
     }
 
     /* Scrolling */
-    private override bool scroll_event(Gdk.EventScroll event)
+    private bool b_scroll_event(Gdk.EventScroll event)
     {
         int tvolume_level = _volume_level;
         if(event.direction ==  Gdk.ScrollDirection.UP) {

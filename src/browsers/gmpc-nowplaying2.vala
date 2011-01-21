@@ -20,8 +20,6 @@ using GLib;
 using Gmpc;
 using Gmpc.Plugin;
 using Gmpc.Favorites;
-using Gmpc.Rating;
-using Gmpc.Widget;
 
 private const bool use_transition_mb2 = Gmpc.use_transition;
 private const string some_unique_name_mb2 = Config.VERSION;
@@ -388,15 +386,15 @@ namespace Gmpc {
                     var label = new Gtk.Label(song.name);
                     label.selectable = true;
                     try {
-                    var regex = new GLib.Regex ("\\.[0-9a-zA-Z]*$");
-                        filename = regex.replace_literal (filename, -1, 0, "");
+                    var regex_a = new GLib.Regex ("\\.[0-9a-zA-Z]*$");
+                        filename = regex_a.replace_literal (filename, -1, 0, "");
                     } catch (GLib.RegexError e) {
                         stdout.printf("%s", e.message);
                         GLib.assert_not_reached ();
                     }
                     try {
-                    var regex = new GLib.Regex ("_");
-                        filename = regex.replace_literal (filename, -1, 0, " ");
+                    var regex_b = new GLib.Regex ("_");
+                        filename = regex_b.replace_literal (filename, -1, 0, " ");
                     } catch (GLib.RegexError e) {
                         stdout.printf("%s", e.message);
                         GLib.assert_not_reached ();

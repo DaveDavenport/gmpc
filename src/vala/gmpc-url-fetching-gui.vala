@@ -20,7 +20,6 @@
 using GLib;
 using Gtk;
 using Gdk;
-using Module;
 
 
 private const bool use_transition_ufg = Gmpc.use_transition;

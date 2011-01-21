@@ -199,7 +199,7 @@ namespace MPD {
         public void pause(MPD.Server server);
         public void stop(MPD.Server server);
         public MPD.Player.State get_state(MPD.Server server);
-        [CCode (cprefix="MPD_STATUS_STATE_")]
+        [CCode (cprefix="MPD_STATUS_STATE_", cname="int")]
         public enum State{
             UNKNOWN = 0,
             STOP    = 1,

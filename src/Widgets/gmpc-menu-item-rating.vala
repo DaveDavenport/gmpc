@@ -25,7 +25,6 @@ using Gdk;
 using Cairo;
 using MPD;
 using Gmpc;
-using Gmpc.Rating;
 
 
 private const bool use_transition_mir = Gmpc.use_transition;

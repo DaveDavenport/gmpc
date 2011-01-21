@@ -85,7 +85,7 @@ public class Gmpc.Widget.Songlist : Gtk.VBox
 
         /* Create lLabel */
         string label = null;
-        if(song.albumartist != null && song.albumartist.size() > 0 ) 
+        if(song.albumartist != null && song.albumartist.length > 0 ) 
         {
             label = GLib.Markup.printf_escaped("<b>%s: %s</b>",_("Artist"), song.albumartist);
         }else{
@@ -312,7 +312,7 @@ public class Gmpc.Widget.Songlist : Gtk.VBox
 
              if(show_artist) {
                 if(iter.song.albumartist != null && 
-                        iter.song.albumartist.size() > 0)
+                        iter.song.albumartist.length > 0)
                 {
                     if(artist == null || artist != iter.song.albumartist)
                     {

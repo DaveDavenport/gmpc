@@ -30,7 +30,6 @@
 using Config;
 using Gtk;
 using Gmpc;
-using Gmpc.MpdData.Treeview.Tooltip;
 
 private const bool use_transition_mdb = Gmpc.use_transition;
 private const string some_unique_name_mdb = Config.VERSION;
@@ -659,7 +658,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
      private void browser_artist_entry_changed(Gtk.Editable entry)
      {
         string text = (entry as Gtk.Entry).get_text();
-        if(text.size() > 0) {
+        if(text.length > 0) {
             (entry as Gtk.Widget).show();
             (entry as Gtk.Widget).grab_focus();
         }else{
@@ -883,7 +882,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
      {
         Gtk.Entry entry = (pentry as Gtk.Entry);
         string text = entry.get_text();
-        if(text.size() > 0) {
+        if(text.length > 0) {
             entry.show();
             entry.grab_focus();
         }else{
@@ -1502,15 +1501,15 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             var label = new Gtk.Label(song.name);
             label.selectable = true;
             try {
-                var regex = new GLib.Regex ("\\.[0-9a-zA-Z]*$");
-                filename = regex.replace_literal (filename, -1, 0, "");
+                var regex_a = new GLib.Regex ("\\.[0-9a-zA-Z]*$");
+                filename = regex_a.replace_literal (filename, -1, 0, "");
             } catch (GLib.RegexError e) {
                 stdout.printf("%s", e.message);
                 GLib.assert_not_reached ();
             }
             try {
-                var regex = new GLib.Regex ("_");
-                filename = regex.replace_literal (filename, -1, 0, " ");
+                var regex_b = new GLib.Regex ("_");
+                filename = regex_b.replace_literal (filename, -1, 0, " ");
             } catch (GLib.RegexError e) {
                 stdout.printf("%s", e.message);
                 GLib.assert_not_reached ();

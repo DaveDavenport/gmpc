@@ -178,7 +178,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
                 try{
                     var load = new Gdk.PixbufLoader();
                     try {
-                        load.write(data, data.length);
+                        load.write(data);
                     }catch (Error e) {
                         stdout.printf("Failed to load file: %s::%s\n",e.message,handle.get_uri());
                     }
@@ -270,7 +270,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
                   var data = md.get_raw();  
                     var load = new Gdk.PixbufLoader();
                     try {
-                        load.write(data, data.length);
+                        load.write(data);
                     }catch (Error e) {
                         stdout.printf("Failed to load raw data: %s\n",e.message);
                     }

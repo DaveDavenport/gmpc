@@ -45,7 +45,6 @@ gmpc_SOURCES=\
     browsers/gmpc-nowplaying2.vala\
     browsers/gmpc-metadata-browser2.vala\
     Providers/music-tree.vala\
-    Providers/gmc-plugin.vala\
 	main.c\
 	plugin.c\
 	mpdinteraction.c\
