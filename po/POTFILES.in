@@ -86,4 +86,4 @@ src/Widgets/gmpc-song-list.c
 
 #Providers
 src/Providers/music-tree.c
-src/Providers/gmc-plugin.c
+#src/Providers/gmc-plugin.c
