@@ -10,7 +10,7 @@ mpd_data_model_CFLAGS = @CFLAGS@\
 		-I$(top_srcdir)/src/vala\
         -I$(top_srcdir)/src/MetaData\
 		-DPIXMAP_PATH=\""$(pkgdatadir)/icons/"\" \
-		-DGLADE_PATH=\""$(pkgdatadir)"\" 
+		-DGLADE_PATH=\""$(pkgdatadir)"\"
 
 mpd_data_model_LDADD = @LIBS@\
 		@libmpd_LIBS@\
@@ -18,9 +18,9 @@ mpd_data_model_LDADD = @LIBS@\
 		@gtk_LIBS@
 
 mpd_data_model_SOURCES = \
-		mpd_data_model.c 
+		mpd_data_model.c
 
-nodist_mpd_data_model_SOURCES = \        
+nodist_mpd_data_model_SOURCES = \
 		$(top_srcdir)/src/misc.c\
 		$(top_srcdir)/src/gmpc-mpddata-model.c\
         $(top_srcdir)/src/Widgets/gmpc-image-async.c\

@@ -10,7 +10,7 @@ async_image_test_CFLAGS = @CFLAGS@\
 		-I$(top_srcdir)/src/vala\
         -I$(top_srcdir)/src/MetaData\
 		-DPIXMAP_PATH=\""$(pkgdatadir)/icons/"\" \
-		-DGLADE_PATH=\""$(pkgdatadir)"\" 
+		-DGLADE_PATH=\""$(pkgdatadir)"\"
 
 async_image_test_LDADD = @LIBS@\
 		@libmpd_LIBS@\
@@ -18,9 +18,9 @@ async_image_test_LDADD = @LIBS@\
 		@gtk_LIBS@
 
 async_image_test_SOURCES = \
-		async_image_test.c 
+		async_image_test.c
 
-nodist_async_image_test_SOURCES = \        
+nodist_async_image_test_SOURCES = \
         $(top_srcdir)/src/Widgets/gmpc-image-async.c\
         $(top_srcdir)/src/Widgets/pixbuf-cache.c\
         $(top_srcdir)/src/misc.c

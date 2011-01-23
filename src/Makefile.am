@@ -360,13 +360,6 @@ EXTRA_DIST+=\
 	smclient/eggsmclient-private.h            \
 	smclient/eggdesktopfile.h
 
-
-egg_session_end_LDADD =                  \
-	libeggsmclient.la
-
-egg_session_end_LDFLAGS =                \
-	$(platform_session_end_ldflags)
-
 EXTRA_DIST +=                             \
 	smclient/eggsmclient-osx.c                \
 	smclient/eggsmclient-win32.c              \
