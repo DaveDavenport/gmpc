@@ -1147,13 +1147,16 @@ void create_playlist3(void)
 	/* Make sure change is applied */
 
 	playlist3_new_header();
-	
-	favorites_button = gmpc_favorites_button_new();
-	ali = gtk_alignment_new(0.0, 0.0, 0.0, 0.0);
-	gtk_container_add(GTK_CONTAINER(ali), GTK_WIDGET(favorites_button));
-	gtk_box_pack_start(GTK_BOX(gtk_builder_get_object(pl3_xml, "hbox10")), GTK_WIDGET(ali), FALSE, FALSE, 0);
-	gtk_widget_show_all(GTK_WIDGET(ali));
 
+	
+	if (!cfg_get_single_value_as_int_with_default(config, "Interface", "hide-favorites-icon", FALSE))
+	{
+		favorites_button = gmpc_favorites_button_new();
+		ali = gtk_alignment_new(0.0, 0.0, 0.0, 0.0);
+		gtk_container_add(GTK_CONTAINER(ali), GTK_WIDGET(favorites_button));
+		gtk_box_pack_start(GTK_BOX(gtk_builder_get_object(pl3_xml, "hbox10")), GTK_WIDGET(ali), FALSE, FALSE, 0);
+		gtk_widget_show_all(GTK_WIDGET(ali));
+	}
 	playlist_status_changed(connection,
 							MPD_CST_STATE | MPD_CST_SONGID | MPD_CST_NEXTSONG |
 							MPD_CST_ELAPSED_TIME | MPD_CST_VOLUME |
@@ -1182,16 +1185,24 @@ void create_playlist3(void)
 	 * Insert new custom widget
 	 */
 	metaimage_album_art = gmpc_metaimage_new(META_ALBUM_ART);
+
+	/* Hide when requested. */
+	if (cfg_get_single_value_as_int_with_default(config, "Interface", "hide-album-art", FALSE))
+	{
+		gmpc_metaimage_set_is_visible(GMPC_METAIMAGE(metaimage_album_art), FALSE);
+	}
 	gtk_box_pack_start(GTK_BOX
-					   (gtk_builder_get_object(pl3_xml, "hbox_playlist_player")), metaimage_album_art, FALSE, TRUE, 0);
-	metaimage_artist_art = gmpc_metaimage_new(META_ARTIST_ART);
-	gtk_box_pack_start(GTK_BOX(gtk_builder_get_object(pl3_xml, "vbox5")), metaimage_artist_art, FALSE, TRUE, 0);
+			(gtk_builder_get_object(pl3_xml, "hbox_playlist_player")), metaimage_album_art, FALSE, TRUE, 0);
 
 	gmpc_metaimage_set_size(GMPC_METAIMAGE(metaimage_album_art), ALBUM_SIZE_LARGE);
 	gmpc_metaimage_set_no_cover_icon(GMPC_METAIMAGE(metaimage_album_art), (char *)"gmpc");
 	gmpc_metaimage_set_connection(GMPC_METAIMAGE(metaimage_album_art), connection);
 	/** make sure size is updated */
 	gmpc_metaimage_set_cover_na(GMPC_METAIMAGE(metaimage_album_art));
+
+
+	metaimage_artist_art = gmpc_metaimage_new(META_ARTIST_ART);
+	gtk_box_pack_start(GTK_BOX(gtk_builder_get_object(pl3_xml, "vbox5")), metaimage_artist_art, FALSE, TRUE, 0);
 
 	gmpc_metaimage_set_no_cover_icon(GMPC_METAIMAGE(metaimage_artist_art), (char *)"no-artist");
 	gmpc_metaimage_set_loading_cover_icon(GMPC_METAIMAGE(metaimage_artist_art), (char *)"fetching-artist");
@@ -1370,7 +1381,7 @@ void create_playlist3(void)
 	g_signal_connect(G_OBJECT(playlist3_get_window()), "window-state-event", G_CALLBACK(pl3_win_state_event), NULL);
 
 	/**
-	 * Add status icons 
+	 * Add status icons
 	 */
 	si_repeat = gtk_event_box_new();
 	g_signal_connect(G_OBJECT(si_repeat), "button-release-event", G_CALLBACK(repeat_toggle), NULL);
@@ -1397,7 +1408,7 @@ void create_playlist3(void)
 	gtk_widget_show_all(si_consume);
 	main_window_add_status_icon(si_consume);
 
-	/* Listen for icon changed 
+	/* Listen for icon changed
 	   g_object_connect(gtk_icon_theme_get_default(), "changed",
 	   G_CALLBACK(main_window_update_status_icons), NULL);
 	 */
@@ -1574,7 +1585,7 @@ void playlist_pref_construct(GtkWidget * container)
 
 void playlist_menu_repeat_changed(GtkToggleAction * action)
 {
-	int active = gtk_toggle_action_get_active(action); 
+	int active = gtk_toggle_action_get_active(action);
 	if (active != mpd_player_get_repeat(connection))
 	{
 		mpd_player_set_repeat(connection, active);
@@ -1583,7 +1594,7 @@ void playlist_menu_repeat_changed(GtkToggleAction * action)
 
 void playlist_menu_random_changed(GtkToggleAction *action)
 {
-	int active = gtk_toggle_action_get_active(action); 
+	int active = gtk_toggle_action_get_active(action);
 	if (active != mpd_player_get_random(connection))
 	{
 		mpd_player_set_random(connection, active);
@@ -1592,7 +1603,7 @@ void playlist_menu_random_changed(GtkToggleAction *action)
 
 void playlist_menu_single_mode_changed(GtkToggleAction * action)
 {
-	int active = gtk_toggle_action_get_active(action); 
+	int active = gtk_toggle_action_get_active(action);
 	if (active != mpd_player_get_single(connection))
 	{
 		mpd_player_set_single(connection, active);
@@ -1601,7 +1612,7 @@ void playlist_menu_single_mode_changed(GtkToggleAction * action)
 
 void playlist_menu_consume_changed(GtkToggleAction * action)
 {
-	int active = gtk_toggle_action_get_active(action); 
+	int active = gtk_toggle_action_get_active(action);
 	if (active != mpd_player_get_consume(connection))
 	{
 		mpd_player_set_consume(connection, active);
@@ -1671,8 +1682,12 @@ static void playlist_zoom_level_changed(void)
 		gtk_widget_show(box);
 		gmpc_progress_set_hide_text(GMPC_PROGRESS(new_pb), FALSE);
 
-		gmpc_metaimage_set_size(GMPC_METAIMAGE(metaimage_album_art), ALBUM_SIZE_LARGE);
-		gmpc_metaimage_reload_image(GMPC_METAIMAGE(metaimage_album_art));
+		/* Album image only if enabled. */
+		if(metaimage_album_art != NULL)
+		{
+			gmpc_metaimage_set_size(GMPC_METAIMAGE(metaimage_album_art), ALBUM_SIZE_LARGE);
+			gmpc_metaimage_reload_image(GMPC_METAIMAGE(metaimage_album_art));
+		}
 
 	}
 	if (pl3_old_zoom != PLAYLIST_MINI && pl3_zoom == PLAYLIST_MINI)
@@ -1689,8 +1704,12 @@ static void playlist_zoom_level_changed(void)
 		gtk_widget_show(box);
 
 		gmpc_progress_set_hide_text(GMPC_PROGRESS(new_pb), TRUE);
-		gmpc_metaimage_set_size(GMPC_METAIMAGE(metaimage_album_art), ALBUM_SIZE_SMALL);
-		gmpc_metaimage_reload_image(GMPC_METAIMAGE(metaimage_album_art));
+
+		/* Album image only if enabled. */
+		if(metaimage_album_art != NULL) {
+			gmpc_metaimage_set_size(GMPC_METAIMAGE(metaimage_album_art), ALBUM_SIZE_SMALL);
+			gmpc_metaimage_reload_image(GMPC_METAIMAGE(metaimage_album_art));
+		}
 
 	}
 
@@ -1916,12 +1935,15 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
 		}
 		playlist3_update_header();
 
-		if (state == MPD_PLAYER_PLAY || state == MPD_PLAYER_PAUSE)
+		if(favorites_button != NULL)
 		{
-			gmpc_favorites_button_set_song(favorites_button, song);
-		} else
-		{
-			gmpc_favorites_button_set_song(favorites_button, NULL);
+			if (state == MPD_PLAYER_PLAY || state == MPD_PLAYER_PAUSE)
+			{
+				gmpc_favorites_button_set_song(favorites_button, song);
+			} else
+			{
+				gmpc_favorites_button_set_song(favorites_button, NULL);
+			}
 		}
 	}
 	/**
@@ -1976,7 +1998,7 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
 										   (mpd_player_get_single(connection)) ? _("On") : _("Off"));
 			pl3_push_statusbar_message(string);
 			g_free(string);
-			
+
 			gtk_toggle_action_set_active(GTK_TOGGLE_ACTION(gtk_builder_get_object(pl3_xml, "MPDSingleMode")),
 											 mpd_player_get_single(connection));
 		}
@@ -2012,37 +2034,37 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
 	{
 		gtk_action_set_sensitive(GTK_ACTION(gtk_builder_get_object(pl3_xml, "MPDSingleMode")),
 				(
-				 mpd_check_connected(connection) && 
+				 mpd_check_connected(connection) &&
 				 mpd_server_check_command_allowed(connection, "single") == MPD_SERVER_COMMAND_ALLOWED
 				)
 				);
 		gtk_action_set_sensitive(GTK_ACTION(gtk_builder_get_object(pl3_xml, "MPDConsumeMode")),
 				(
-				 mpd_check_connected(connection) && 
+				 mpd_check_connected(connection) &&
 				 mpd_server_check_command_allowed(connection, "consume") == MPD_SERVER_COMMAND_ALLOWED
 				)
 				);
 		gtk_action_set_sensitive(GTK_ACTION(gtk_builder_get_object(pl3_xml, "MPDPlayPause")),
 				(
-				 mpd_check_connected(connection) && 
+				 mpd_check_connected(connection) &&
 				 mpd_server_check_command_allowed(connection, "play") == MPD_SERVER_COMMAND_ALLOWED
 				)
 				);
 		gtk_action_set_sensitive(GTK_ACTION(gtk_builder_get_object(pl3_xml, "MPDNext")),
 				(
-				 mpd_check_connected(connection) && 
+				 mpd_check_connected(connection) &&
 				 mpd_server_check_command_allowed(connection, "next") == MPD_SERVER_COMMAND_ALLOWED
 				)
 				);
 		gtk_action_set_sensitive(GTK_ACTION(gtk_builder_get_object(pl3_xml, "MPDPrevious")),
 				(
-				 mpd_check_connected(connection) && 
+				 mpd_check_connected(connection) &&
 				 mpd_server_check_command_allowed(connection, "previous") == MPD_SERVER_COMMAND_ALLOWED
 				)
 				);
 		gtk_action_set_sensitive(GTK_ACTION(gtk_builder_get_object(pl3_xml, "MPDStop")),
 				(
-				 mpd_check_connected(connection) && 
+				 mpd_check_connected(connection) &&
 				 mpd_server_check_command_allowed(connection, "stop") == MPD_SERVER_COMMAND_ALLOWED
 				)
 				);
@@ -2067,7 +2089,7 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
 		GtkWidget *volume_button = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "volume_button"));
 		int volume = gmpc_volume_get_volume_level(GMPC_VOLUME(volume_button));//gtk_scale_button_get_value(GTK_SCALE_BUTTON(volume_button)) * 100;
 		int new_volume = mpd_status_get_volume(connection);
-		if (new_volume >= 0 && 
+		if (new_volume >= 0 &&
 				mpd_server_check_command_allowed(connection, "setvol") == MPD_SERVER_COMMAND_ALLOWED
 		   )
 		{
@@ -2080,7 +2102,7 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
 			{
 				gmpc_volume_set_volume_level(GMPC_VOLUME(volume_button), new_volume );
 			}
-		} else 
+		} else
 		{
 			gtk_action_set_sensitive(GTK_ACTION(gtk_builder_get_object(pl3_xml, "MPDMuted")),
 					FALSE
@@ -2354,7 +2376,7 @@ void playlist3_server_update_db(void)
 
 
 
-static GList *server_menu_items = NULL; 
+static GList *server_menu_items = NULL;
 static void playlist3_fill_server_menu(void)
 {
 	GtkUIManager *ui = GTK_UI_MANAGER(gtk_builder_get_object(pl3_xml, "uimanager1"));
@@ -2385,8 +2407,8 @@ static void playlist3_fill_server_menu(void)
 			menu_item = gtk_check_menu_item_new_with_label(data->output_dev->name);
 			server_menu_items = g_list_append(server_menu_items, menu_item);
 			gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(menu_item), data->output_dev->enabled ? TRUE : FALSE);
-			gtk_widget_add_accelerator(menu_item, "activate", 
-					gtk_ui_manager_get_accel_group(GTK_UI_MANAGER(ui)), 
+			gtk_widget_add_accelerator(menu_item, "activate",
+					gtk_ui_manager_get_accel_group(GTK_UI_MANAGER(ui)),
 					GDK_1 + i, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
 			g_signal_connect(G_OBJECT(menu_item), "toggled", G_CALLBACK(playlist3_server_output_changed), NULL);
@@ -2916,7 +2938,7 @@ void thv_row_inserted_signal(GtkTreeModel * model, GtkTreePath * path, GtkTreeIt
 }
 
 /**
- * Tool menu 
+ * Tool menu
  */
 
 void pl3_tool_menu_update(void)
@@ -3024,7 +3046,7 @@ void main_window_add_status_icon(GtkWidget * icon)
 
 
 /**
- * Extra wrappings for menu 
+ * Extra wrappings for menu
  */
 extern gmpcPlugin extraplaylist_plugin;
 void enable_extra_playlist(GtkToggleAction *action)

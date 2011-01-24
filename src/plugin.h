@@ -259,4 +259,14 @@ extern GObject *paned_size_group;
  */
 
 void main_window_add_status_icon(GtkWidget *icon);
+
+/**
+* show the main window 
+*/
+void create_playlist3(void);
+
+/**
+* hide the main window 
+*/
+int pl3_hide(void);
 #endif

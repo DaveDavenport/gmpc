@@ -886,6 +886,25 @@ static void pl3_find2_plugin_init(void)
 								(GmpcEasyCommandCallback *) pl3_find2_browser_activate, NULL);
 }
 
+
+static int pl3_find2_get_enabled(void)
+{
+	return cfg_get_single_value_as_int_with_default(config, "find2-browser", "enable", TRUE);
+}
+
+
+static void pl3_find2_set_enabled(int enabled)
+{
+	cfg_set_single_value_as_int(config, "find2-browser", "enable", enabled);
+	if (enabled && !pl3_find2_ref)
+	{
+		GtkTreeView *tree = playlist3_get_category_tree_view();
+		pl3_find2_browser_add((GtkWidget *) tree);
+	} else if (!enabled && pl3_find2_ref)
+	{
+		pl3_find2_browser_destroy();
+	}
+}
 /**
  * Plugin structure
  */
@@ -906,4 +925,6 @@ gmpcPlugin find2_browser_plug = {
 	.mpd_status_changed = pl3_find2_browser_status_changed,
 	.mpd_connection_changed = pl3_find2_browser_connection_changed,
 	.save_yourself = pl3_find2_save_myself,
+	.get_enabled = pl3_find2_get_enabled,
+	.set_enabled = pl3_find2_set_enabled,
 };

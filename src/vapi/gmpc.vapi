@@ -243,6 +243,11 @@ namespace Gmpc {
 [CCode (cname="playlist3_window_is_hidden", cheader_filename="plugin.h")]
         public bool is_hidden();
 
+[CCode (cname="pl3_hide", cheader_filename="plugin.h")]
+        public void hide();
+
+[CCode (cname="create_playlist3", cheader_filename="plugin.h")]
+        public void show();
     }
 
 
