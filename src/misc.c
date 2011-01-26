@@ -86,6 +86,10 @@ void mpd_song_markup_escaped(char *buffer, int size, char *markup, mpd_Song * so
 	{
 		song->artist = g_markup_escape_text(song2->artist, -1);
 	}
+	if (song2->albumartist)
+	{
+		song->albumartist = g_markup_escape_text(song2->albumartist, -1);
+	}
 	if (song2->album)
 	{
 		song->album = g_markup_escape_text(song2->album, -1);
@@ -173,7 +177,7 @@ void screenshot_add_border(GdkPixbuf * src)
  * @param: The filename or empty, to get dir path.
  *
  * Function to get the full user of filename for gmpc. 
- * On unix this is ~/.gmpc/filename 
+ * On unix this is ~/.config/gmpc/filename 
  *
  * returns: an allocated string.
  */
@@ -192,7 +196,7 @@ gchar *gmpc_get_user_path(const gchar * filename)
  * @param: The filename or empty, to get dir path.
  *
  * Function to get the full user of filename for gmpc's cover. 
- * On unix this is ~/.covers/filename 
+ * On unix this is ~/.cache/gmpc/metadata/filename 
  *
  * returns: an allocated string.
  */
@@ -206,6 +210,15 @@ gchar *gmpc_get_covers_path(const gchar * filename)
 	return ret;
 }
 
+
+/**
+ * @param: The filename or empty, to get dir path.
+ *
+ * Function to get the cache directory 
+ * On unix this is ~/.cache/gmpc/filename 
+ *
+ * returns: an allocated string.
+ */
 gchar *gmpc_get_cache_directory(const gchar * filename)
 {
 	const gchar *homedir = g_get_user_cache_dir();
