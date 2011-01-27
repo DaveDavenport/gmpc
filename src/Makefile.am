@@ -29,6 +29,9 @@ gmpc_SOURCES=\
     Widgets/gmpc-menu-item-rating.vala\
     Widgets/gmpc-album-view.vala\
     Widgets/GmpcVolume.vala\
+    Widgets/playlist3-messages.c\
+    Widgets/gmpc-rating.vala\
+    Widgets/gmpc-song-links.vala\
     vala/gmpc-connection.vala\
     vala/gmpc-easy-command.vala\
     vala/gmpc-favorites.vala\
@@ -36,8 +39,6 @@ gmpc_SOURCES=\
     vala/gmpc-metadata-prefetcher.vala\
     vala/gmpc-mpddata-treeview-tooltip.vala\
     vala/gmpc-plugin.vala\
-    vala/gmpc-rating.vala\
-    vala/gmpc-song-links.vala\
     vala/gmpc-url-fetching-gui.vala\
     vala/gmpc-database-update-tracker.vala\
     vala/gmpc-test-plugin.vala\
@@ -45,25 +46,24 @@ gmpc_SOURCES=\
     browsers/gmpc-nowplaying2.vala\
     browsers/gmpc-metadata-browser2.vala\
     Providers/music-tree.vala\
-	main.c\
-	plugin.c\
-	mpdinteraction.c\
-	preferences.c\
-	tray-icon2.c\
-	misc.c\
-	playlist3.c\
-	playlist3-messages.c\
-	mm-keys.c\
-	config1.c\
-	MetaData/metadata.c\
-	MetaData/metadata-cache.c\
-	MetaData/metadata-cache-sqlite.c\
-	gmpc_easy_download.c\
-	setup-assistant.c\
-	url-fetcher.c\
-	advanced-search.c\
-	bug-information.c\
-	ipc.c\
+    MetaData/metadata.c\
+    MetaData/metadata-cache.c\
+    MetaData/metadata-cache-sqlite.c\
+    Tools/gmpc_easy_download.c\
+    Tools/advanced-search.c\
+    Tools/setup-assistant.c\
+    Tools/bug-information.c\
+    Tools/mpdinteraction.c\
+    Tools/url-fetcher.c\
+    Tools/mm-keys.c\
+    Tools/misc.c\
+    Tools/ipc.c\
+    main.c\
+    plugin.c\
+    preferences.c\
+    tray-icon2.c\
+    playlist3.c\
+    config1.c\
 	$(gmpc_egg_FILES)\
     $(gmpc_browser_FILES)\
     $(PLUGIN_FILES)
@@ -108,8 +108,12 @@ INCLUDES=\
 	-I$(top_builddir)/src\
 	-I$(top_srcdir)/src/egg\
 	-I$(top_builddir)/src/egg\
+	-I$(top_srcdir)/src/Tools\
+	-I$(top_builddir)/src/Tools\
 	-I$(top_srcdir)/src/vala\
 	-I$(top_builddir)/src/vala\
+	-I$(top_srcdir)/src/Widgets\
+	-I$(top_builddir)/src/Widgets\
 	-I$(top_srcdir)/src/MetaData/\
 	-I$(top_builddir)/src/MetaData/
 
@@ -186,12 +190,12 @@ nodist_gmpcinclude_HEADERS=\
 gmpcinclude_HEADERS = \
 		plugin.h	\
 		config1.h	\
-		misc.h\
-		mpdinteraction.h\
         Widgets/mpd-async-request.h\
-		gmpc_easy_download.h\
-        gmpc-extras.h\
-        playlist3-messages.h\
+	Widgets/playlist3-messages.h\
+	Tools/gmpc_easy_download.h\
+	Tools/mpdinteraction.h\
+	Tools/misc.h\
+	gmpc-extras.h\
 		gmpc-version.h\
 		MetaData/metadata.h
 
@@ -201,8 +205,6 @@ EXTRA_DIST=\
 		playlist3.h\
 		playlist3-keybindings.h\
 		main.h\
-		mm-keys.h\
-		misc.h\
         Widgets/mpd-async-request.h\
 		config-defaults.h\
 		browsers/playlist3-tag2-browser.h\
@@ -212,16 +214,21 @@ EXTRA_DIST=\
 		browsers/playlist3-playlist-editor.h\
         gtktransition.h\
         plugin-internal.h\
-		setup-assistant.h\
+		Tools/setup-assistant.h\
+		Tools/bug-information.h\
+		Tools/mm-keys.h\
+		Tools/misc.h\
 		MetaData/metadata.h\
 		MetaData/metadata-cache.h\
 		MetaData/metadata-cache-sqlite.h\
 		egg/eggcolumnchooserdialog.h\
 		egg/eggcolumnmodel.h\
+		Tools/advanced-search.h\
+		Tools/setup-assistant.h\
+		Tools/ipc.h\
 		revision.h\
-		advanced-search.h\
 		gmpc-version.h.in\
-		bug-information.h\
+		Tools/bug-information.h\
         gmpc-win32.rc\
         Widgets/pixbuf-cache.h\
         $(VALA_VAPI_FILES)\

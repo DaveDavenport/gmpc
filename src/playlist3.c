@@ -174,7 +174,7 @@ void thv_set_button_state(int button);
  * Extras for better integration
  */
 
-void init_extra_playlist_state();
+void init_extra_playlist_state(void);
 void enable_extra_playlist(GtkToggleAction *action);
 
 /**************************************************
@@ -2382,7 +2382,7 @@ static void playlist3_fill_server_menu(void)
 	GtkMenuItem *m_item = GTK_MENU_ITEM(gtk_ui_manager_get_widget(ui, "/menubartest/menu_server"));
 	/** Clear old items */
 	if(server_menu_items != NULL) {
-		g_list_foreach(server_menu_items, gtk_widget_destroy, NULL);
+		g_list_foreach(server_menu_items, (GFunc)gtk_widget_destroy, NULL);
 		g_list_free(server_menu_items);
 		server_menu_items = NULL;
 	}
@@ -2499,19 +2499,19 @@ void playlist3_new_header(void)
 
 		gtk_widget_set_size_request(hbox, 250, -1);
 		/** Title */
-		header_labels[0] = gmpc_clicklabel_new("");
+		header_labels[0] = (GtkWidget *)gmpc_clicklabel_new("");
 		gmpc_clicklabel_font_size(GMPC_CLICKLABEL(header_labels[0]), 18);
 		gmpc_clicklabel_set_ellipsize(GMPC_CLICKLABEL(header_labels[0]), PANGO_ELLIPSIZE_END);
 
 		header_labels[1] = gtk_label_new(_("By"));
 		/** Artist */
-		header_labels[2] = gmpc_clicklabel_new("");
+		header_labels[2] = (GtkWidget *)gmpc_clicklabel_new("");
 		gmpc_clicklabel_set_ellipsize(GMPC_CLICKLABEL(header_labels[2]), PANGO_ELLIPSIZE_NONE);
 		gmpc_clicklabel_set_do_italic(GMPC_CLICKLABEL(header_labels[2]), TRUE);
 
 		header_labels[3] = gtk_label_new(_("From"));
 		/** Albumr */
-		header_labels[4] = gmpc_clicklabel_new("");
+		header_labels[4] = (GtkWidget *)gmpc_clicklabel_new("");
 		gmpc_clicklabel_set_do_italic(GMPC_CLICKLABEL(header_labels[4]), TRUE);
 		gmpc_clicklabel_set_ellipsize(GMPC_CLICKLABEL(header_labels[4]), PANGO_ELLIPSIZE_END);
 
@@ -3055,7 +3055,7 @@ void enable_extra_playlist(GtkToggleAction *action)
 		}
 	}
 }
-void init_extra_playlist_state()
+void init_extra_playlist_state(void)
 {
 	GtkToggleAction *action = GTK_TOGGLE_ACTION(gtk_builder_get_object(pl3_xml, "ViewExtraPlaylist"));
 	if(extraplaylist_plugin.get_enabled) {

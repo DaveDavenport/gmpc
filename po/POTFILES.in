@@ -2,20 +2,12 @@
 [encoding: UTF-8]
 data/gmpc.desktop.in
 src/config1.c
-src/gmpc_easy_download.c
 src/main.c
 src/MetaData/metadata.c
-src/misc.c
-src/mm-keys.c
-src/mpdinteraction.c
 src/playlist3.c
-src/playlist3-messages.c
 src/plugin.c
 src/preferences.c
-src/url-fetcher.c
 src/tray-icon2.c
-src/setup-assistant.c
-src/bug-information.c
 src/smclient/eggdesktopfile.c
 src/smclient/eggsmclient.c
 
@@ -72,17 +64,27 @@ src/vala/gmpc-metadata-prefetcher.c
 src/vala/gmpc-mpddata-treeview-tooltip.c
 src/vala/gmpc-paned-size-group.c
 src/vala/gmpc-plugin.c
-src/vala/gmpc-rating.c
-src/vala/gmpc-song-links.c
 src/vala/gmpc-test-plugin.c
 src/vala/gmpc-url-fetching-gui.c
 
+# Tools
+src/Tools/gmpc_easy_download.c
+src/Tools/bug-information.c
+src/Tools/setup-assistant.c
+src/Tools/mpdinteraction.c
+src/Tools/url-fetcher.c
+src/Tools/mm-keys.c
+src/Tools/misc.c
+src/Tools/ipc.c
 
 #Widgets
 src/Widgets/gmpc-progress.c
 src/Widgets/gmpc-menu-item-rating.c
 src/Widgets/GmpcVolume.c
 src/Widgets/gmpc-song-list.c
+src/Widgets/gmpc-rating.c
+src/Widgets/gmpc-song-links.c
+src/Widgets/playlist3-messages.c
 
 #Providers
 src/Providers/music-tree.c

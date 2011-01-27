@@ -73,7 +73,6 @@ UniqueMessageData *message,
 guint              time_,
 gpointer           user_data)
 {
-	GmpcToolsIPC *self = GMPC_TOOLS_IPC(user_data); 
 	UniqueResponse res;
 
 	/* Cast to (int) to avoid stupid compile warning */

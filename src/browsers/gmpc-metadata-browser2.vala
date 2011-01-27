@@ -854,7 +854,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
          if(text[0] == '\0') return true;
 
          model.get (iter, 6, out str, -1);
-         if (str != null && str.casefold().normalize().str(text.casefold().normalize()) != null)
+         if (str != null && str.casefold().normalize().index_of(text.casefold().normalize()) >= 0)
              visible = true;
 
          return visible;

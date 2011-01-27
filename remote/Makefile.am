@@ -4,7 +4,7 @@ bin_PROGRAMS=gmpc-remote
 bin_SCRIPTS=gmpc-remote-stream
 
 gmpc_remote_SOURCES=\
-		    $(top_srcdir)/src/ipc.c\
+		    $(top_srcdir)/src/Tools/ipc.c\
 		    main.c
 
 
@@ -15,6 +15,8 @@ INCLUDES= @EXTRA_CFLAGS@ -Wall\
 	-DCLIENT_ONLY\
 	-I$(top_srcdir)\
 	-I$(top_builddir)\
+	-I$(top_srcdir)/src/Tools\
+	-I$(top_builddir)/src/Tools\
 	-I$(top_srcdir)/src\
 	-I$(top_builddir)/src
 
