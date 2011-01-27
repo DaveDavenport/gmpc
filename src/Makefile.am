@@ -63,7 +63,8 @@ gmpc_SOURCES=\
 	url-fetcher.c\
 	advanced-search.c\
 	bug-information.c\
-    $(gmpc_egg_FILES)\
+	ipc.c\
+	$(gmpc_egg_FILES)\
     $(gmpc_browser_FILES)\
     $(PLUGIN_FILES)
 

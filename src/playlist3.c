@@ -1739,7 +1739,6 @@ static void playlist_zoom_level_changed(void)
 	case PLAYLIST_NO_ZOOM:
 		break;
 	case PLAYLIST_MINI:
-//		gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "hbox1"));
 		gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "hpaned1")));
 		gtk_action_set_visible(GTK_ACTION(gtk_builder_get_object(pl3_xml, "menu_option")),FALSE);
 		gtk_action_set_visible(GTK_ACTION(gtk_builder_get_object(pl3_xml, "menu_go")),FALSE);
@@ -1801,77 +1800,112 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
 		int state = mpd_player_get_state(mi);
 		switch (state)
 		{
-		case MPD_PLAYER_PLAY:
-			{
-				gchar *markup = cfg_get_single_value_as_string_with_default(config,
-																			"playlist",	/* Category */
-																			"window-markup",	/* Key */
-																			"[%title% - &[%artist%]]|%name%|%shortfile%"	/* default value */
-					);
+			case MPD_PLAYER_PLAY:
+				{
+					gchar *markup = cfg_get_single_value_as_string_with_default(config,
+							"playlist",	/* Category */
+							"window-markup",	/* Key */
+							"[%title% - &[%artist%]]|%name%|%shortfile%"	/* default value */
+							);
 					/**
 					 * Update the image in the menu
 					 */
-				gtk_action_set_stock_id(GTK_ACTION(gtk_builder_get_object(pl3_xml, "MPDPlayPause")), "gtk-media-pause");
-				gtk_image_set_from_stock(GTK_IMAGE
-										 (gtk_builder_get_object
-										  (pl3_xml, "play_button_image")), "gtk-media-pause", GTK_ICON_SIZE_BUTTON);
+					gtk_action_set_stock_id(GTK_ACTION(gtk_builder_get_object(pl3_xml, "MPDPlayPause")), "gtk-media-pause");
+					gtk_image_set_from_stock(GTK_IMAGE
+							(gtk_builder_get_object
+							 (pl3_xml, "play_button_image")), "gtk-media-pause", GTK_ICON_SIZE_BUTTON);
 
 					/**
 					 * Update window title
 					 */
-				mpd_song_markup(buffer, 1024, markup, mpd_playlist_get_current_song(connection));
+					mpd_song_markup(buffer, 1024, markup, mpd_playlist_get_current_song(connection));
 
-				if (gmpc_profiles_get_number_of_profiles(gmpc_profiles) > 1)
-				{
-					gchar *id = gmpc_profiles_get_current(gmpc_profiles);
-					if (id)
+					if (gmpc_profiles_get_number_of_profiles(gmpc_profiles) > 1)
 					{
-						gchar *string = g_strdup_printf("[%s] %s", gmpc_profiles_get_name(gmpc_profiles,
-																						  id), buffer);
-						gtk_window_set_title(GTK_WINDOW(pl3_win), string);
-						g_free(id);
-						g_free(string);
-					}
-				} else
-					gtk_window_set_title(GTK_WINDOW(pl3_win), buffer);
+						gchar *id = gmpc_profiles_get_current(gmpc_profiles);
+						if (id)
+						{
+							gchar *string = g_strdup_printf("[%s] %s", gmpc_profiles_get_name(gmpc_profiles,
+										id), buffer);
+							gtk_window_set_title(GTK_WINDOW(pl3_win), string);
+							g_free(id);
+							g_free(string);
+						}
+					} else
+						gtk_window_set_title(GTK_WINDOW(pl3_win), buffer);
 
-				g_free(markup);
+					g_free(markup);
 
 #ifdef ENABLE_IGE
-				pb = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gmpc-tray-play", 64, 0, NULL);
-				if (pb)
-				{
-					ige_mac_dock_set_icon_from_pixbuf(dock, pb);
-				} else
-				{
-					g_log(LOG_DOMAIN, G_LOG_LEVEL_WARNING, "failed to get icon\n");
-				}
+					pb = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gmpc-tray-play", 64, 0, NULL);
+					if (pb)
+					{
+						ige_mac_dock_set_icon_from_pixbuf(dock, pb);
+					} else
+					{
+						g_log(LOG_DOMAIN, G_LOG_LEVEL_WARNING, "failed to get icon\n");
+					}
 #endif
-				break;
-			}
-		case MPD_PLAYER_PAUSE:
-			{
-				gchar *markup = cfg_get_single_value_as_string_with_default(config,
-																			"playlist",	/* Category */
-																			"window-markup",	/* Key */
-																			"[%title% - &[%artist%]]|%name%|%shortfile%"	/* default value */
-					);
+					break;
+				}
+			case MPD_PLAYER_PAUSE:
+				{
+					gchar *markup = cfg_get_single_value_as_string_with_default(config,
+							"playlist",	/* Category */
+							"window-markup",	/* Key */
+							"[%title% - &[%artist%]]|%name%|%shortfile%"	/* default value */
+							);
 					/** Update menu and button images */
 
-				gtk_action_set_stock_id(GTK_ACTION(gtk_builder_get_object(pl3_xml, "MPDPlayPause")), "gtk-media-play");
-				gtk_image_set_from_stock(GTK_IMAGE
-										 (gtk_builder_get_object
-										  (pl3_xml, "play_button_image")), "gtk-media-play", GTK_ICON_SIZE_BUTTON);
+					gtk_action_set_stock_id(GTK_ACTION(gtk_builder_get_object(pl3_xml, "MPDPlayPause")), "gtk-media-play");
+					gtk_image_set_from_stock(GTK_IMAGE
+							(gtk_builder_get_object
+							 (pl3_xml, "play_button_image")), "gtk-media-play", GTK_ICON_SIZE_BUTTON);
 
 					/**
 					 * Set paused in Window string
 					 */
-				mpd_song_markup(buffer, 1024 - strlen(_("paused") - 4),
-								markup, mpd_playlist_get_current_song(connection));
-				/* Append translated paused */
-				strcat(buffer, " (");
-				strcat(buffer, _("paused"));
-				strcat(buffer, ")");
+					mpd_song_markup(buffer, 1024 - strlen(_("paused") - 4),
+							markup, mpd_playlist_get_current_song(connection));
+					/* Append translated paused */
+					strcat(buffer, " (");
+					strcat(buffer, _("paused"));
+					strcat(buffer, ")");
+
+					if (gmpc_profiles_get_number_of_profiles(gmpc_profiles) > 1)
+					{
+						gchar *id = gmpc_profiles_get_current(gmpc_profiles);
+						if (id)
+						{
+							gchar *string = g_strdup_printf("[%s] %s", gmpc_profiles_get_name(gmpc_profiles,
+										id), buffer);
+							gtk_window_set_title(GTK_WINDOW(pl3_win), string);
+							g_free(id);
+							g_free(string);
+						}
+					} else
+						gtk_window_set_title(GTK_WINDOW(pl3_win), buffer);
+#ifdef ENABLE_IGE
+					pb = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gmpc-tray-pause", 64, 0, NULL);
+					if (pb)
+					{
+						ige_mac_dock_set_icon_from_pixbuf(dock, pb);
+					} else
+					{
+						g_log(LOG_DOMAIN, G_LOG_LEVEL_WARNING, "failed to get icon\n");
+					}
+#endif
+					g_free(markup);
+					break;
+				}
+			default:
+				gtk_action_set_stock_id(GTK_ACTION(gtk_builder_get_object(pl3_xml, "MPDPlayPause")), "gtk-media-play");
+				/* Make sure it's reset correctly */
+				gmpc_progress_set_time(GMPC_PROGRESS(new_pb), 0, 0);
+
+				gtk_image_set_from_stock(GTK_IMAGE
+						(gtk_builder_get_object
+						 (pl3_xml, "play_button_image")), "gtk-media-play", GTK_ICON_SIZE_BUTTON);
 
 				if (gmpc_profiles_get_number_of_profiles(gmpc_profiles) > 1)
 				{
@@ -1879,15 +1913,15 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
 					if (id)
 					{
 						gchar *string = g_strdup_printf("[%s] %s", gmpc_profiles_get_name(gmpc_profiles,
-																						  id), buffer);
+									id), _("GMPC"));
 						gtk_window_set_title(GTK_WINDOW(pl3_win), string);
 						g_free(id);
 						g_free(string);
 					}
 				} else
-					gtk_window_set_title(GTK_WINDOW(pl3_win), buffer);
+					gtk_window_set_title(GTK_WINDOW(pl3_win), _("GMPC"));
 #ifdef ENABLE_IGE
-				pb = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gmpc-tray-pause", 64, 0, NULL);
+				pb = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gmpc", 64, 0, NULL);
 				if (pb)
 				{
 					ige_mac_dock_set_icon_from_pixbuf(dock, pb);
@@ -1895,41 +1929,6 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
 				{
 					g_log(LOG_DOMAIN, G_LOG_LEVEL_WARNING, "failed to get icon\n");
 				}
-#endif
-				g_free(markup);
-				break;
-			}
-		default:
-			gtk_action_set_stock_id(GTK_ACTION(gtk_builder_get_object(pl3_xml, "MPDPlayPause")), "gtk-media-play");
-			/* Make sure it's reset correctly */
-			gmpc_progress_set_time(GMPC_PROGRESS(new_pb), 0, 0);
-
-			gtk_image_set_from_stock(GTK_IMAGE
-									 (gtk_builder_get_object
-									  (pl3_xml, "play_button_image")), "gtk-media-play", GTK_ICON_SIZE_BUTTON);
-
-			if (gmpc_profiles_get_number_of_profiles(gmpc_profiles) > 1)
-			{
-				gchar *id = gmpc_profiles_get_current(gmpc_profiles);
-				if (id)
-				{
-					gchar *string = g_strdup_printf("[%s] %s", gmpc_profiles_get_name(gmpc_profiles,
-																					  id), _("GMPC"));
-					gtk_window_set_title(GTK_WINDOW(pl3_win), string);
-					g_free(id);
-					g_free(string);
-				}
-			} else
-				gtk_window_set_title(GTK_WINDOW(pl3_win), _("GMPC"));
-#ifdef ENABLE_IGE
-			pb = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gmpc", 64, 0, NULL);
-			if (pb)
-			{
-				ige_mac_dock_set_icon_from_pixbuf(dock, pb);
-			} else
-			{
-				g_log(LOG_DOMAIN, G_LOG_LEVEL_WARNING, "failed to get icon\n");
-			}
 #endif
 
 		}
@@ -1964,12 +1963,12 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
 		if (mpd_check_connected(connection))
 		{
 			char *string = g_strdup_printf(_("Repeat: %s"),
-										   (mpd_player_get_repeat(connection)) ? _("On") : _("Off"));
+					(mpd_player_get_repeat(connection)) ? _("On") : _("Off"));
 			pl3_push_statusbar_message(string);
 			g_free(string);
 
 			gtk_toggle_action_set_active(GTK_TOGGLE_ACTION(gtk_builder_get_object(pl3_xml, "MPDRepeat")),
-											 mpd_player_get_repeat(connection));
+					mpd_player_get_repeat(connection));
 		}
 
 	}
@@ -1978,12 +1977,12 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
 		if (mpd_check_connected(connection))
 		{
 			char *string = g_strdup_printf(_("Random: %s"),
-										   (mpd_player_get_random(connection)) ? _("On") : _("Off"));
+					(mpd_player_get_random(connection)) ? _("On") : _("Off"));
 			pl3_push_statusbar_message(string);
 			g_free(string);
 
 			gtk_toggle_action_set_active(GTK_TOGGLE_ACTION(gtk_builder_get_object(pl3_xml, "MPDRandom")),
-											 mpd_player_get_random(connection));
+					mpd_player_get_random(connection));
 		}
 	}
 	if (what & (MPD_CST_RANDOM | MPD_CST_REPEAT | MPD_CST_SINGLE_MODE | MPD_CST_CONSUME_MODE))
@@ -1995,12 +1994,12 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
 		if (mpd_check_connected(connection))
 		{
 			char *string = g_strdup_printf(_("Single mode: %s"),
-										   (mpd_player_get_single(connection)) ? _("On") : _("Off"));
+					(mpd_player_get_single(connection)) ? _("On") : _("Off"));
 			pl3_push_statusbar_message(string);
 			g_free(string);
 
 			gtk_toggle_action_set_active(GTK_TOGGLE_ACTION(gtk_builder_get_object(pl3_xml, "MPDSingleMode")),
-											 mpd_player_get_single(connection));
+					mpd_player_get_single(connection));
 		}
 	}
 
@@ -2009,12 +2008,12 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
 		if (mpd_check_connected(connection))
 		{
 			char *string = g_strdup_printf(_("Consume: %s"),
-										   (mpd_player_get_consume(connection)) ? _("On") : _("Off"));
+					(mpd_player_get_consume(connection)) ? _("On") : _("Off"));
 			pl3_push_statusbar_message(string);
 			g_free(string);
 
 			gtk_toggle_action_set_active(GTK_TOGGLE_ACTION(gtk_builder_get_object(pl3_xml, "MPDConsumeMode")),
-											 mpd_player_get_consume(connection));
+					mpd_player_get_consume(connection));
 		}
 	}
 	if (what & MPD_CST_ELAPSED_TIME)
@@ -2116,8 +2115,8 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
 		if (error)
 		{
 			gchar *mes = g_markup_printf_escaped("%s: '%s'",
-												 _("MPD Reported the following error"),
-												 error);
+					_("MPD Reported the following error"),
+					error);
 			playlist3_show_error_message(mes, ERROR_WARNING);
 			g_free(mes);
 			g_free(error);
@@ -2465,7 +2464,6 @@ static void playlist3_header_song(void)
 		GtkTreeView *tree = (GtkTreeView *) gtk_builder_get_object(pl3_xml, "cat_tree");
 		gmpc_metadata_browser_select_browser(metadata_browser, tree);
 		gmpc_metadata_browser_set_song(metadata_browser, song);
-		//info2_fill_song_view(song);
 	}
 }
 
@@ -2477,8 +2475,6 @@ static void playlist3_header_artist(void)
 		GtkTreeView *tree = (GtkTreeView *) gtk_builder_get_object(pl3_xml, "cat_tree");
 		gmpc_metadata_browser_select_browser(metadata_browser, tree);
 		gmpc_metadata_browser_set_artist(metadata_browser, song->artist);
-//      info2_activate();
-//      info2_fill_artist_view(song->artist);
 	}
 }
 
@@ -2623,9 +2619,9 @@ static void playlist3_error_style_set(GtkWidget * parent, GtkStyle * style_new, 
 static gboolean playlist3_error_expose(GtkWidget * wid, GdkEventExpose * event, gpointer data)
 {
 	gtk_paint_flat_box(wid->style,
-					   wid->window,
-					   GTK_STATE_NORMAL,
-					   GTK_SHADOW_OUT, NULL, wid, "tooltip", 0, 0, wid->allocation.width, wid->allocation.height);
+			wid->window,
+			GTK_STATE_NORMAL,
+			GTK_SHADOW_OUT, NULL, wid, "tooltip", 0, 0, wid->allocation.width, wid->allocation.height);
 
 	return FALSE;
 }
