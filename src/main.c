@@ -385,6 +385,8 @@ int main(int argc, char **argv)
 								_("Hide gmpc"), (GmpcEasyCommandCallback *) pl3_hide, NULL);
 	gmpc_easy_command_add_entry(gmpc_easy_command, _("show"), "",
 								_("Show gmpc"), (GmpcEasyCommandCallback *) create_playlist3, NULL);
+	gmpc_easy_command_add_entry(gmpc_easy_command, _("toggle"), "",
+								_("Toogle gmpc visibility"), (GmpcEasyCommandCallback *) pl3_toggle_hidden, NULL);
 	gmpc_easy_command_add_entry(gmpc_easy_command, _("show notification"), "",
 								_("Show trayicon notification"), (GmpcEasyCommandCallback *) tray_icon2_create_tooltip,
 								NULL);
@@ -536,9 +538,9 @@ int main(int argc, char **argv)
 		if(gmpc_tools_ipc_is_running(ipc)) 
 		{
 			if(quit) {
-				gmpc_tools_ipc_send(ipc, COMMAND_QUIT,NULL);
+				gmpc_tools_ipc_send(ipc, COMMAND_EASYCOMMAND,"quit");
 			}else {
-				gmpc_tools_ipc_send(ipc, COMMAND_VIEW_SHOW,NULL);
+				gmpc_tools_ipc_send(ipc, COMMAND_EASYCOMMAND,"show");
 			}
 
 			cfg_close(config);

@@ -124,39 +124,44 @@ int main ( int argc, char **argv )
 
 
 
-	if(play || pause)
+	if(play)
 	{
-		response = gmpc_tools_ipc_send(ipc, COMMAND_PLAY, NULL);
+		response = gmpc_tools_ipc_send(ipc, COMMAND_EASYCOMMAND, "play");
 		if(!response) printf("Failed to send PLAY command\n");
+	}
+	if (pause)
+	{
+		response = gmpc_tools_ipc_send(ipc, COMMAND_EASYCOMMAND, "pause");
+		if(!response) printf("Failed to send PAUSE command\n");
 	}
 	if(prev)
 	{
-		response = gmpc_tools_ipc_send(ipc, COMMAND_PREV, NULL);
+		response = gmpc_tools_ipc_send(ipc, COMMAND_EASYCOMMAND, "prev");
 		if(!response) printf("Failed to send PREV command\n");
 	}
 	if(next)
 	{
-		response = gmpc_tools_ipc_send(ipc, COMMAND_NEXT, NULL);
+		response = gmpc_tools_ipc_send(ipc, COMMAND_EASYCOMMAND, "next");
 		if(!response) printf("Failed to send NEXT command\n");
 	}
 	if(stop)
 	{
-		response = gmpc_tools_ipc_send(ipc, COMMAND_STOP, NULL);
+		response = gmpc_tools_ipc_send(ipc, COMMAND_EASYCOMMAND, "stop");
 		if(!response) printf("Failed to send STOP command\n");
 	}
 	if(toggle_view)
 	{
-		response = gmpc_tools_ipc_send(ipc, COMMAND_VIEW_TOGGLE, NULL);
+		response = gmpc_tools_ipc_send(ipc, COMMAND_EASYCOMMAND, "toggle");
 		if(!response) printf("Failed to send VIEW_TOGGLE command\n");
 	}
 	if(hide_view)
 	{
-		response = gmpc_tools_ipc_send(ipc, COMMAND_VIEW_HIDE, NULL);
+		response = gmpc_tools_ipc_send(ipc, COMMAND_EASYCOMMAND, "hide");
 		if(!response) printf("Failed to send VIEW_HIDE command\n");
 	}
 	if(show_view)
 	{
-		response = gmpc_tools_ipc_send(ipc, COMMAND_VIEW_SHOW, NULL);
+		response = gmpc_tools_ipc_send(ipc, COMMAND_EASYCOMMAND, "show");
 		if(!response) printf("Failed to send VIEW_SHOW command\n");
 	}
 	if(stream)
@@ -171,8 +176,8 @@ int main ( int argc, char **argv )
 	}
 	if(quit)
 	{
-		response = gmpc_tools_ipc_send(ipc, COMMAND_QUIT, NULL);
-		if(!response) printf("Failed to send QUIT command\n");
+		response = gmpc_tools_ipc_send(ipc, COMMAND_EASYCOMMAND, "quit");
+		if(!response) printf("Failed to send EASYCOMMAND command\n");
 	}
 	g_object_unref(ipc);
 	return EXIT_SUCCESS;

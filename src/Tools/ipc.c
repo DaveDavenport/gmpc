@@ -36,9 +36,13 @@
 #include <unique/unique.h>
 
 #define LOG_DOMAIN_IPC "IPC"
+
+
 static GType gmpc_tools_ipc_get_type(void);
 
+/* For easy casting and type checking */
 #define GMPC_TOOLS_IPC(obj)	G_TYPE_CHECK_INSTANCE_CAST((obj), gmpc_tools_ipc_get_type(), GmpcToolsIPC)
+
 /**
  * Private data structure
  */
@@ -83,44 +87,6 @@ gpointer           user_data)
 			gtk_window_set_screen (GTK_WINDOW (playlist3_get_window()),
 				unique_message_data_get_screen (message));
 			gtk_window_present_with_time (GTK_WINDOW (playlist3_get_window()), time_);
-			res = UNIQUE_RESPONSE_OK;
-			break;
-		case COMMAND_QUIT:
-			printf("I've been told to quit, doing this now\n");
-			main_quit();
-			res = UNIQUE_RESPONSE_OK;
-			break;
-		case COMMAND_PLAY:
-		case COMMAND_PAUSE:
-			play_song();
-			res = UNIQUE_RESPONSE_OK;
-			break;
-		case COMMAND_NEXT:
-			next_song();
-			res = UNIQUE_RESPONSE_OK;
-			break;
-		case COMMAND_PREV:
-			prev_song();
-			res = UNIQUE_RESPONSE_OK;
-			break;
-		case COMMAND_STOP:
-			stop_song();
-			res = UNIQUE_RESPONSE_OK;
-			break;
-		case COMMAND_VIEW_TOGGLE:
-			pl3_toggle_hidden();
-			res = UNIQUE_RESPONSE_OK;
-			break;
-		case COMMAND_VIEW_HIDE:
-			pl3_hide();
-			res = UNIQUE_RESPONSE_OK;
-			break;
-		case COMMAND_VIEW_SHOW:
-			create_playlist3();
-			res = UNIQUE_RESPONSE_OK;
-			break;
-		case COMMAND_CONNECT:
-			connect_to_mpd();
 			res = UNIQUE_RESPONSE_OK;
 			break;
 		case COMMAND_STREAM:
@@ -169,18 +135,8 @@ static void gmpc_tools_ipc_init(GmpcToolsIPC *self)
 {
 	/* Setup the unique app */
 	self->priv->app = unique_app_new_with_commands ("org.gmpclient.GMPC", NULL,
-		"quit",         COMMAND_QUIT,
-		"play",         COMMAND_PLAY,
-		"pause",        COMMAND_PAUSE,
-		"next",         COMMAND_NEXT,
-		"prev",         COMMAND_PREV,
-		"stop",         COMMAND_STOP,
-		"view-toggle",      COMMAND_VIEW_TOGGLE,
-		"view-hide",        COMMAND_VIEW_HIDE,
-		"view-show",        COMMAND_VIEW_SHOW,
 		"stream",       COMMAND_STREAM,
-		"connect",      COMMAND_CONNECT,
-		"easycommand",      COMMAND_EASYCOMMAND,
+		"easycommand",  COMMAND_EASYCOMMAND,
 		NULL);
 	/* using this signal we get notifications from the newly launched instances
 	 * and we can reply to them; the default signal handler will just return
@@ -298,25 +254,6 @@ gboolean gmpc_tools_ipc_send(GObject *ipc, GmpcToolsIPCCommands command,const ch
 	UniqueResponse response;	 /* the response to our command */
 	switch(command)
 	{
-		case COMMAND_QUIT:
-		case COMMAND_PLAY:
-		case COMMAND_PAUSE:
-		case COMMAND_NEXT:
-		case COMMAND_PREV:
-		case COMMAND_STOP:
-		case COMMAND_VIEW_TOGGLE:
-		case COMMAND_VIEW_HIDE:
-		case COMMAND_CONNECT:
-		case COMMAND_VIEW_SHOW:
-			response = unique_app_send_message(self->priv->app, command, NULL);
-			if(response !=  UNIQUE_RESPONSE_OK)
-			{
-				g_log(LOG_DOMAIN_IPC, G_LOG_LEVEL_WARNING,
-					"Failed to send %i command",
-					command);
-				return FALSE;
-			}
-			break;
 		case COMMAND_STREAM:
 		{
 			/* the payload for the command */
