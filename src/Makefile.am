@@ -58,6 +58,7 @@ gmpc_SOURCES=\
     Tools/mm-keys.c\
     Tools/misc.c\
     Tools/ipc.c\
+    options.c\
     main.c\
     plugin.c\
     preferences.c\
@@ -229,7 +230,8 @@ EXTRA_DIST=\
 		revision.h\
 		gmpc-version.h.in\
 		Tools/bug-information.h\
-        gmpc-win32.rc\
+		options.h\
+		gmpc-win32.rc\
         Widgets/pixbuf-cache.h\
         $(VALA_VAPI_FILES)\
         $(gmpc_GOBFILES)

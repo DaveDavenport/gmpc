@@ -8,6 +8,7 @@ src/playlist3.c
 src/plugin.c
 src/preferences.c
 src/tray-icon2.c
+src/options.c
 src/smclient/eggdesktopfile.c
 src/smclient/eggsmclient.c
 

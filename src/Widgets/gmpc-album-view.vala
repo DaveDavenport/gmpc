@@ -171,7 +171,6 @@ public class Gmpc.Widget.Albumview : Gtk.Container
         if(alloc.width == 1) return;
         int new_columns = int.max(alloc.width/cover_width, 1);
         int rows = 0;
-        int y = 0;
         int item = 0;
 
         foreach ( var child in children)

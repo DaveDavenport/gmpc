@@ -28,6 +28,8 @@
 #define __USE_BSD
 #endif
 #include <math.h>
+
+#define LOG_DOMAIN "Gmpc.Misc"
 /**
  * format time into 
  * Total time: %i days %i hours %i minutes
@@ -67,7 +69,7 @@ gchar *format_time_real(unsigned long seconds, const gchar * data)
 	}
 	if((seconds%60) != 0)
 	{
-		g_string_append_printf(str, "%i %s ", (seconds%60), ngettext("second", "seconds", (seconds%60)));
+		g_string_append_printf(str, "%lu %s ", (seconds%60), ngettext("second", "seconds", (seconds%60)));
 	}
 
 	ret = str->str;
@@ -756,4 +758,49 @@ void colorshift_pixbuf(GdkPixbuf * dest, GdkPixbuf * src, int shift)
 				*(pix_dest++) = *(pix_src++);
 		}
 	}
+}
+
+
+void create_directory(gchar * url)
+{
+	/**
+	 * Check if ~/.gmpc/ exists
+	 * If not try to create it.
+	 */
+	if (!g_file_test(url, G_FILE_TEST_EXISTS))
+	{
+		if (g_mkdir_with_parents(url, 0700) < 0)
+		{
+			g_log(LOG_DOMAIN, G_LOG_LEVEL_ERROR, "Failed to create: %s\n", url);
+			show_error_message("Failed to create config directory.");
+			abort();
+		}
+	}
+	/**
+	 * if it exists, check if it's a directory
+	 */
+	if (!g_file_test(url, G_FILE_TEST_IS_DIR))
+	{
+		show_error_message("The config directory is not a directory.");
+		abort();
+	} else
+	{
+		g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "%s exist and is directory", url);
+	}
+}
+
+/**
+ * Create needed directories for mpd.
+ */
+void create_gmpc_paths(void)
+{
+	/** create path */
+	gchar *url = gmpc_get_user_path(NULL);
+	create_directory(url);
+	q_free(url);
+
+	url = gmpc_get_covers_path(NULL);
+	create_directory(url);
+	/* Free the path */
+	q_free(url);
 }
