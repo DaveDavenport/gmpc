@@ -23,7 +23,7 @@
 #include <strings.h>
 #include <glib.h>
 #include <gdk/gdk.h>
-#include "Widgets/pixbuf-cache.h"
+#include "pixbuf-cache.h"
 
 #define LOG_DOMAIN "PixbufCache"
 
