@@ -25,7 +25,7 @@
 #include "metadata.h"
 #include "config1.h"
 #include "metadata-cache-sqlite.h"
-#include "Widgets/pixbuf-cache.h"
+#include "pixbuf-cache.h"
 
 #define CACHE_NAME "Metadata cache sqlite"
 #define MDC_LOG_DOMAIN "MetaDataCacheSqlite"
