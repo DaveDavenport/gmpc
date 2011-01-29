@@ -17,10 +17,12 @@ VALA_VAPI_FILES=\
 
 
 PLUGIN_FILES=\
+    Providers/music-tree.vala\
     Plugins/extraplaylist.c
 
-gmpc_SOURCES=\
-    Widgets/pixbuf-cache.c\
+
+
+gmpc_WIDGETS_FILES=\
     Widgets/gmpc-clicklabel.vala\
     Widgets/gmpc-song-list.vala\
     Widgets/gmpc-progress.vala\
@@ -31,7 +33,39 @@ gmpc_SOURCES=\
     Widgets/GmpcVolume.vala\
     Widgets/playlist3-messages.c\
     Widgets/gmpc-rating.vala\
-    Widgets/gmpc-song-links.vala\
+    Widgets/gmpc-song-links.vala
+
+gmpc_TOOLS_FILES=\
+    Tools/gmpc_easy_download.c\
+    Tools/advanced-search.c\
+    Tools/setup-assistant.c\
+    Tools/bug-information.c\
+    Tools/mpdinteraction.c\
+    Tools/pixbuf-cache.c\
+    Tools/url-fetcher.c\
+    Tools/mm-keys.c\
+    Tools/misc.c\
+    Tools/ipc.c
+
+## 
+# Browsers
+##
+gmpc_BROWSERS_FILES=\
+	browsers/playlist3-current-playlist-browser.c\
+    browsers/gmpc-metadata-browser2.vala\
+	browsers/playlist3-playlist-editor.c\
+	browsers/playlist3-find2-browser.c\
+	browsers/playlist3-tag2-browser.c\
+	browsers/playlist3-file-browser.c\
+    browsers/gmpc-nowplaying2.vala\
+	browsers/server-information.c
+
+gmpc_SOURCES=\
+    $(gmpc_WIDGETS_FILES)\
+    $(gmpc_BROWSERS_FILES)\
+    $(gmpc_TOOLS_FILES)\
+	$(gmpc_egg_FILES)\
+    $(PLUGIN_FILES)\
     vala/gmpc-connection.vala\
     vala/gmpc-easy-command.vala\
     vala/gmpc-favorites.vala\
@@ -43,31 +77,16 @@ gmpc_SOURCES=\
     vala/gmpc-database-update-tracker.vala\
     vala/gmpc-test-plugin.vala\
     vala/gmpc-paned-size-group.vala\
-    browsers/gmpc-nowplaying2.vala\
-    browsers/gmpc-metadata-browser2.vala\
-    Providers/music-tree.vala\
-    MetaData/metadata.c\
-    MetaData/metadata-cache.c\
     MetaData/metadata-cache-sqlite.c\
-    Tools/gmpc_easy_download.c\
-    Tools/advanced-search.c\
-    Tools/setup-assistant.c\
-    Tools/bug-information.c\
-    Tools/mpdinteraction.c\
-    Tools/url-fetcher.c\
-    Tools/mm-keys.c\
-    Tools/misc.c\
-    Tools/ipc.c\
-    options.c\
-    main.c\
-    plugin.c\
+    MetaData/metadata-cache.c\
+    MetaData/metadata.c\
     preferences.c\
     tray-icon2.c\
     playlist3.c\
     config1.c\
-	$(gmpc_egg_FILES)\
-    $(gmpc_browser_FILES)\
-    $(PLUGIN_FILES)
+    options.c\
+    plugin.c\
+    main.c
 
 nodist_gmpc_SOURCES=\
     $(gmpc_GOBCFILES)
@@ -131,7 +150,9 @@ LIBS= \
 	@libgio_LIBS@\
 	@SPIFF_LIBS@\
 	@libxspf_LIBS@\
-    @sqlite3_LIBS@
+	@libxml2_LIBS@\
+	@libx11_LIBS@\
+	@sqlite3_LIBS@
 
 
 if HAVE_UNIQUE
@@ -161,7 +182,9 @@ AM_CFLAGS = @CFLAGS@\
 	@libsoup_CFLAGS@\
 	@libgio_CFLAGS@\
     @sqlite3_CFLAGS@\
-	@EXTRA_CFLAGS@\
+    @libxml2_CFLAGS@\
+    @libx11_CFLAGS@\
+    @EXTRA_CFLAGS@\
 	-DPACKAGE_LIB_DIR=\""$(pkglibdir)"\"\
 	-DPACKAGE_DATA_DIR=\""$(datarootdir)"\"
 
@@ -192,12 +215,12 @@ gmpcinclude_HEADERS = \
 		plugin.h	\
 		config1.h	\
         Widgets/mpd-async-request.h\
-	Widgets/playlist3-messages.h\
-	Tools/gmpc_easy_download.h\
-	Tools/mpdinteraction.h\
-	Tools/misc.h\
-	gmpc-extras.h\
-		gmpc-version.h\
+        Widgets/playlist3-messages.h\
+        Tools/gmpc_easy_download.h\
+        Tools/mpdinteraction.h\
+        Tools/misc.h\
+        gmpc-extras.h\
+        gmpc-version.h\
 		MetaData/metadata.h
 
 gmpcincludedir =$(includedir)/gmpc/
@@ -232,7 +255,7 @@ EXTRA_DIST=\
 		Tools/bug-information.h\
 		options.h\
 		gmpc-win32.rc\
-        Widgets/pixbuf-cache.h\
+        Tools/pixbuf-cache.h\
         $(VALA_VAPI_FILES)\
         $(gmpc_GOBFILES)
 
@@ -274,38 +297,6 @@ gmpc_GOBHFILES=\
 	@GOB2@ --always-private-header $<
 	@touch $(top_builddir)/src/$@
 
-## 
-# Browsers
-##
-
-gmpc_browser_FILES=\
-	browsers/playlist3-tag2-browser.c\
-	browsers/playlist3-file-browser.c\
-	browsers/playlist3-current-playlist-browser.c\
-	browsers/playlist3-find2-browser.c\
-	browsers/server-information.c\
-	browsers/playlist3-playlist-editor.c
-
-##
-# Vala files
-##
-#gmpc_vala_FILES=\
-#	vala/gmpc-image.c\
-#	vala/gmpc-rating.c\
-#	vala/gmpc_menu_item_rating.c\
-#	vala/gmpc-easy-command.c\
-#	vala/gmpc-song-links.c\
-#	vala/gmpc-plugin.c\
-#	vala/gmpc-test-plugin.c\
-#    vala/gmpc-mpddata-treeview-tooltip.c\
-#	vala/gmpc-metadata-browser2.c\
-#    vala/gmpc-nowplaying2.c\
-#    vala/gmpc-favorites.c\
-#    vala/gmpc-liststore-sort.c\
-#    vala/gmpc-connection.c\
-#    vala/gmpc-url-fetching-gui.c\
-#    vala/gmpc-database-update-tracker.c\
-#    vala/gmpc-metadata-prefetcher.c
 
 ##
 # Embedded egg

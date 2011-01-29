@@ -49,7 +49,7 @@
 #include "metadata-cache.h"
 #include "bug-information.h"
 
-#include "Widgets/pixbuf-cache.h"
+#include "pixbuf-cache.h"
 #include <libmpd/debug_printf.h>
 #include "options.h"
 
@@ -146,11 +146,13 @@ void send_password(void);
 /**
  * Set paths
  */
-static void move_old_gmpc_data(void);
 static void print_version(void);
 
 static GLogLevelFlags global_log_level = G_LOG_LEVEL_MESSAGE;
 
+/**
+ * Forward libxml errors into GLib.log errors with LibXML error domain 
+ */
 static void xml_error_func(void *ctx, const char *msg, ...)
 {
     va_list ap;
@@ -324,31 +326,11 @@ int main(int argc, char **argv)
     g_signal_connect(egg_sm_client_get(), "quit", G_CALLBACK(main_quit), NULL);
 
     TEC("EggSmClient");
-    gmpc_easy_command = gmpc_easy_command_new();
-    /* Add it to the plugin command */
-    plugin_add_new(GMPC_PLUGIN_BASE(gmpc_easy_command), 0, NULL);
 
-    gmpc_easy_command_add_entry(gmpc_easy_command, _("quit"), "",
-        _("Quit gmpc"), (GmpcEasyCommandCallback *) main_quit, NULL);
-    gmpc_easy_command_add_entry(gmpc_easy_command, _("hide"), "",
-        _("Hide gmpc"), (GmpcEasyCommandCallback *) pl3_hide, NULL);
-    gmpc_easy_command_add_entry(gmpc_easy_command, _("show"), "",
-        _("Show gmpc"), (GmpcEasyCommandCallback *) create_playlist3, NULL);
-    gmpc_easy_command_add_entry(gmpc_easy_command, _("toggle"), "",
-        _("Toogle gmpc visibility"), (GmpcEasyCommandCallback *) pl3_toggle_hidden, NULL);
-    gmpc_easy_command_add_entry(gmpc_easy_command, _("show notification"), "",
-        _("Show trayicon notification"), (GmpcEasyCommandCallback *) tray_icon2_create_tooltip,
-        NULL);
-
-    TEC("Init easy command");
-
-    advanced_search_init();
-    TEC("Init advanced search");
     /**
      * Call create_gmpc_paths();
      * This function checks if the path needed path are available, if not, create them
      */
-    move_old_gmpc_data();
     create_gmpc_paths();
     TEC("Check version and create paths");
 
@@ -508,6 +490,29 @@ int main(int argc, char **argv)
         cfg_close(config);
         return EXIT_SUCCESS;
     }
+
+
+    gmpc_easy_command = gmpc_easy_command_new();
+    /* Add it to the plugin command */
+    plugin_add_new(GMPC_PLUGIN_BASE(gmpc_easy_command), 0, NULL);
+
+	/* Add some basic commands */
+    gmpc_easy_command_add_entry(gmpc_easy_command, _("quit"), "",
+        _("Quit gmpc"), (GmpcEasyCommandCallback *) main_quit, NULL);
+    gmpc_easy_command_add_entry(gmpc_easy_command, _("hide"), "",
+        _("Hide gmpc"), (GmpcEasyCommandCallback *) pl3_hide, NULL);
+    gmpc_easy_command_add_entry(gmpc_easy_command, _("show"), "",
+        _("Show gmpc"), (GmpcEasyCommandCallback *) create_playlist3, NULL);
+    gmpc_easy_command_add_entry(gmpc_easy_command, _("toggle"), "",
+        _("Toogle gmpc visibility"), (GmpcEasyCommandCallback *) pl3_toggle_hidden, NULL);
+    gmpc_easy_command_add_entry(gmpc_easy_command, _("show notification"), "",
+        _("Show trayicon notification"), (GmpcEasyCommandCallback *) tray_icon2_create_tooltip,
+        NULL);
+
+    TEC("Init easy command");
+
+    advanced_search_init();
+    TEC("Init advanced search");
     /* PanedSizeGroup */
     paned_size_group = (GObject *) gmpc_paned_size_group_new();
     /** Signals */
@@ -1221,56 +1226,6 @@ void show_error_message(const gchar * string)
 }
 
 
-static void move_old_gmpc_data(void)
-{
-    gchar *url;
-    const gchar *old = g_get_home_dir();
-    gchar *path;
-
-    url = gmpc_get_user_path(NULL);
-    if (!g_file_test(url, G_FILE_TEST_EXISTS))
-    {
-        path = g_build_filename(old, ".gmpc", NULL);
-        if (g_file_test(path, G_FILE_TEST_IS_DIR))
-        {
-            GDir *dir;
-            const gchar *iter;
-            /* Create the directory */
-            create_gmpc_paths();
-            dir = g_dir_open(path, 0, NULL);
-            if (dir)
-            {
-                while ((iter = g_dir_read_name(dir)) != NULL)
-                {
-                    gchar *dest_path = g_build_filename(url, iter, NULL);
-                    gchar *src_path = g_build_filename(path, iter, NULL);
-                    printf("move %s %s\n", src_path, dest_path);
-                    g_rename(src_path, dest_path);
-                    g_free(src_path);
-                    g_free(dest_path);
-                }
-                g_dir_close(dir);
-            }
-        }
-        g_free(path);
-    }
-    g_free(url);
-
-    url = gmpc_get_covers_path("covers.sql");
-    if (!g_file_test(url, G_FILE_TEST_EXISTS))
-    {
-        path = g_build_filename(old, ".covers", "covers.sql", NULL);
-        if (g_file_test(path, G_FILE_TEST_EXISTS))
-        {
-            /* Create the directory */
-            create_gmpc_paths();
-            printf("move %s %s\n", path, url);
-            g_rename(path, url);
-        }
-        g_free(path);
-    }
-    g_free(url);
-}
 
 static void print_version(void)
 {

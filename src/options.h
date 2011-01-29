@@ -19,6 +19,7 @@
 #ifndef __OPTIONS_h__
 #define __OPTIONS_H__
 
+/* see options.h entries[]  to see the use of every entry. */
 typedef struct _Options
 {
 	gboolean show_version;

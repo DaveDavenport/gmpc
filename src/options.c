@@ -23,6 +23,7 @@
 #include "main.h"
 #include "options.h"
 
+/* Set default values */
 Options settings = 
 {
 	.show_version = FALSE,
@@ -37,8 +38,6 @@ Options settings =
 	.debug_level = -1,
 	.profile_name = NULL
 };
-/* TODO: move this to better point */
-gboolean set_log_filter(const gchar * option_name, const gchar * value, gpointer data, GError ** error);
 gboolean parse_options(int *argc, char ***argv)
 {
     GError *error = NULL;
@@ -108,6 +107,7 @@ gboolean parse_options(int *argc, char ***argv)
     {
         g_log(NULL, G_LOG_LEVEL_ERROR, "Failed to parse commandline options: %s", error->message);
         g_error_free(error);
+        return FALSE;
     }
-
+    return TRUE;
 }

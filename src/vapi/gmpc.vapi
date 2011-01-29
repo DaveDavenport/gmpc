@@ -370,7 +370,7 @@ namespace Gmpc {
         [CCode (cname="pango_attr_list_change", cheader_filename="pango/pango.h")] 
             public void change (Pango.AttrList list,owned Pango.Attribute attr);
     }
-    [CCode (cheader_filename="Widgets/pixbuf-cache.h")]
+    [CCode (cheader_filename="pixbuf-cache.h")]
     namespace PixbufCache {
         [CCode (cname="pixbuf_cache_lookup_icon")]
             public Gdk.Pixbuf? lookup_icon(int size, string url);
