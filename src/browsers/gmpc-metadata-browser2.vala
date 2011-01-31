@@ -3247,4 +3247,35 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
          }
          return retv;
      }
+
+     public override void set_enabled(bool state) {
+	     if(state) {
+		     if(paned == null) {
+			     browser_add( Gmpc.Playlist3.get_category_tree_view());
+			     browser_init();
+		     }
+	     }else {
+		     if(this.rref != null) {
+			     var path = rref.get_path();
+			     if(path != null) {
+				     unowned int[] indices  = path.get_indices();
+				     config.set_int(this.get_name(), "position", indices[0]);
+				     Gtk.ListStore model = (Gtk.ListStore)rref.get_model();
+				     Gtk.TreeIter iter;
+				     if(model.get_iter(out iter, path))
+				     {
+					     model.remove(iter);
+				     }
+			     }
+			     rref = null;
+		     }
+		     if(this.paned != null) {
+			     this.paned.destroy();
+			     this.paned = null;
+		     }
+	     }
+
+	     if(this.get_name() != null)
+		     Gmpc.config.set_int(this.get_name(), "enabled", (int)state); 
+     }
 }

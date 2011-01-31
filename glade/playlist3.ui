@@ -25,6 +25,12 @@
           <accelerator key="minus" modifiers="GDK_CONTROL_MASK"/>
         </child>
         <child>
+          <object class="GtkAction" id="AdvancedSettings">
+            <property name="label" translatable="true">_Advanced Settings</property>
+            <signal name="activate" handler="advanced_settings" swapped="no"/>
+          </object>
+        </child>
+        <child>
           <object class="GtkAction" id="ViewExpand">
             <property name="label" translatable="true">_Expand interface</property>
             <property name="stock-id">gtk-zoom-in</property>
@@ -319,7 +325,10 @@
           <separator/>
           <menuitem action="ViewShowArtistImage"/>
           <menuitem action="ViewExtraPlaylist"/>
-        </menu>
+	  <separator/>
+	  <!-- move this -->
+	  <menuitem action="AdvancedSettings"/>
+	</menu>
         <menu action="menu_option">
           <menuitem action="Dummy"/>
         </menu>

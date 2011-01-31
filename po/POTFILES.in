@@ -79,6 +79,7 @@ src/Tools/misc.c
 src/Tools/ipc.c
 
 #Widgets
+src/Widgets/advanced_settings.c
 src/Widgets/gmpc-progress.c
 src/Widgets/gmpc-menu-item-rating.c
 src/Widgets/GmpcVolume.c

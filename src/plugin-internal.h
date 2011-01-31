@@ -39,6 +39,8 @@ void            gmpc_plugin_save_yourself                   (gmpcPluginParent *p
 
 gboolean        gmpc_plugin_get_enabled                     (gmpcPluginParent *plug);           
 void            gmpc_plugin_set_enabled                     (gmpcPluginParent *plug, gboolean enabled);
+gboolean	gmpc_plugin_has_enabled			    (gmpcPluginParent *plug);           
+
 
 const gchar * gmpc_plugin_get_translation_domain(gmpcPluginParent *plug);
 const char *    gmpc_plugin_get_name                        (gmpcPluginParent *plug);

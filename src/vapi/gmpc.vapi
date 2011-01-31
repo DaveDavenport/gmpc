@@ -385,4 +385,20 @@ namespace Gmpc {
 
     }
 
+	[CCode (cname="gmpcPluginParent",cprefix="gmpc_plugin_",cheader_filename="plugin-internal.h")]
+        [Compact]
+        [Immutable]
+	public class parentPlugin 
+	{
+		public int get_id();
+		public unowned string get_name();
+		public int get_enabled();
+		public bool has_enabled();
+		public void set_enabled(int e);
+		public bool is_browser();
+	}
+	[CCode (cheader_filename="main.h", cname="plugins")]
+	static weak parentPlugin[] plugins; 
+	[CCode (cheader_filename="main.h", cname="num_plugins")]
+	static int num_plugins;
 }

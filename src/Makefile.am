@@ -33,7 +33,8 @@ gmpc_WIDGETS_FILES=\
     Widgets/GmpcVolume.vala\
     Widgets/playlist3-messages.c\
     Widgets/gmpc-rating.vala\
-    Widgets/gmpc-song-links.vala
+    Widgets/gmpc-song-links.vala\
+    Widgets/advanced_settings.vala
 
 gmpc_TOOLS_FILES=\
     Tools/gmpc_easy_download.c\

@@ -874,3 +874,13 @@ gint gmpc_plugin_tool_menu_integration(gmpcPluginParent * plug, GtkMenu * menu)
     }
     return 0;
 }
+
+gboolean	gmpc_plugin_has_enabled			    (gmpcPluginParent *plug)           
+{
+    if (plug->new)
+    {
+	return TRUE;
+    }
+    if(plug->old && plug->old->get_enabled && plug->old->set_enabled) return TRUE;
+    return FALSE;
+}
