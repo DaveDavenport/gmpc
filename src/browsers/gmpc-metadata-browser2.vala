@@ -514,7 +514,8 @@ public class Gmpc.Widget.SimilarArtist : Gtk.Table
     }
 }
 
-public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface, Gmpc.Plugin.PreferencesIface {
+public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface, Gmpc.Plugin.PreferencesIface 
+{
     private int block_update = 0;
     /* Stores the location in the cat_tree */
     private Gtk.TreeRowReference rref = null;
@@ -3250,7 +3251,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
 
      public override void set_enabled(bool state) {
 	     if(state) {
-		     if(paned == null) {
+		     if(rref == null) {
 			     browser_add( Gmpc.Playlist3.get_category_tree_view());
 			     browser_init();
 		     }
@@ -3268,10 +3269,6 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
 				     }
 			     }
 			     rref = null;
-		     }
-		     if(this.paned != null) {
-			     this.paned.destroy();
-			     this.paned = null;
 		     }
 	     }
 

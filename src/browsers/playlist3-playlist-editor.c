@@ -64,6 +64,14 @@ static int playlist_editor_get_enabled(void)
 static void playlist_editor_set_enabled(int enabled)
 {
 	cfg_set_single_value_as_int(config, "playlist-plugin", "enable", enabled);
+	if (enabled && !playlist_editor_browser_ref)
+	{
+		GtkTreeView *tree = playlist3_get_category_tree_view();
+        playlist_editor_browser_add((GtkWidget *) tree);
+    } else if (!enabled && playlist_editor_browser_ref)
+	{
+		playlist_editor_destroy();
+	}
 };
 
 /**
@@ -104,6 +112,23 @@ void playlist_editor_init(void)
 static gchar *old_playlist = NULL;
 void playlist_editor_destroy(void)
 {
+    if(playlist_editor_browser_ref != NULL)
+    {
+		GtkTreeIter iter;
+		GtkTreePath *path;
+		path = gtk_tree_row_reference_get_path(playlist_editor_browser_ref);
+		if (path)
+		{
+			if (gtk_tree_model_get_iter(GTK_TREE_MODEL(gtk_tree_row_reference_get_model(playlist_editor_browser_ref)), &iter, path))
+			{
+				gtk_list_store_remove(GTK_LIST_STORE(gtk_tree_row_reference_get_model(playlist_editor_browser_ref)), &iter);
+			}
+			gtk_tree_path_free(path);
+		}
+		gtk_tree_row_reference_free(playlist_editor_browser_ref);
+        playlist_editor_browser_ref = NULL;
+    }
+
 	if (playlist_editor_browser)
 	{
 		gtk_widget_destroy(playlist_editor_browser);
