@@ -1482,14 +1482,6 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             //vbox.pack_start(box, true, true, 0); 
             info_box.attach(box, 0,2, i, i+1,Gtk.AttachOptions.FILL,Gtk.AttachOptions.FILL,0,0);
             i++;
-            if(MPD.Sticker.supported(server))
-            {
-                var rating_button = new Gmpc.Rating(server, song);
-                ali = new Gtk.Alignment(0.0f, 0.5f,0f,0f);
-                ali.add(rating_button);
-                //hist_box.pack_start(ali, false, false, 0); 
-                this.add_entry(info_box, _("Rating"), null,ali,ref i, "rating");
-            }
         }else if (song.name!= null) {
             var label = new Gtk.Label(song.name);
             label.selectable = true;

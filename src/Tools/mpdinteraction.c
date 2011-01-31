@@ -1722,19 +1722,6 @@ void submenu_for_song(GtkWidget * menu, mpd_Song * song)
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 	gtk_widget_show(item);
 
-	if (mpd_sticker_supported(connection) && song->file)
-	{
-		smenu = gtk_menu_new();
-
-		item = gtk_menu_item_new_with_label(_("Set Rating"));
-		gtk_menu_item_set_submenu(GTK_MENU_ITEM(item), smenu);
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-		gtk_widget_show(item);
-
-		sitem = (GtkWidget *) gmpc_menu_item_rating_new(connection, song);
-		gtk_menu_shell_append(GTK_MENU_SHELL(smenu), sitem);
-	}
-
 	gtk_widget_show(smenu);
 
 }

@@ -373,14 +373,6 @@ namespace Gmpc {
                     box.pack_start(label, true, true, 0); 
                     info_vbox.pack_start(box, false, false, 0); 
 
-                    if(MPD.Sticker.supported(server))
-                    {
-                        /* Favored button */
-                        var rating_button = new Gmpc.Rating(server, song);
-                        ali = new Gtk.Alignment(0.0f, 0.5f,0f,0f);
-                        ali.add(rating_button);
-                        info_vbox.pack_start(ali, false, false, 0); 
-                    }
                 }else if (song.name!= null) {
                     var label = new Gtk.Label(song.name);
                     label.selectable = true;

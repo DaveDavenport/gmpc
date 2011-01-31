@@ -28,11 +28,9 @@ gmpc_WIDGETS_FILES=\
     Widgets/gmpc-progress.vala\
     Widgets/gmpc-image-async.vala\
     Widgets/mpd-async-request.c\
-    Widgets/gmpc-menu-item-rating.vala\
     Widgets/gmpc-album-view.vala\
     Widgets/GmpcVolume.vala\
     Widgets/playlist3-messages.c\
-    Widgets/gmpc-rating.vala\
     Widgets/gmpc-song-links.vala\
     Widgets/advanced_settings.vala
 
