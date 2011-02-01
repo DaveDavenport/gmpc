@@ -864,11 +864,4 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 					break;
 		}
 	}
-
-    public
-    void
-    set_image_text(self, gchar *text)
-    {
-
-    }
 }
