@@ -31,8 +31,6 @@ static Gmpc.Favorites.List favorites = null;
 namespace Gmpc.Favorites{
     /**
      * This class is created, and stays active until the last GmpcFavoritesButton gets removed
-     * POSSIBLE ISSUE: setting favorites list back to NULL seems to fail. It is no issue as 
-     * I know atleast one will be active.
      */
     private class List : GLib.Object {
         private MPD.Data.Item? list = null; 
@@ -158,6 +156,8 @@ namespace Gmpc.Favorites{
             }
             if(favorites == null){
                 favorites = new List();
+		/* make sure favorites is set to NULL again when destroyed */
+		favorites.add_weak_pointer(&favorites);
             } else {
                 favorites.ref();
             }

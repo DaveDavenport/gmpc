@@ -1463,12 +1463,15 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         if(song.title != null) {
 
             var box = new Gtk.HBox(false, 6);
-            var fav_button = new Gmpc.Favorites.Button();
-            fav_button.set_song(song);
-            ali = new Gtk.Alignment(0.0f, 0.5f,0f,0f);
-            ali.add(fav_button);
-            box.pack_start(ali, false, false, 0); 
-            var label = new Gtk.Label(song.title);
+
+	    if(config.get_int_with_default("Interface", "hide-favorites-icon",0) == 0){
+		    var fav_button = new Gmpc.Favorites.Button();
+		    fav_button.set_song(song);
+		    ali = new Gtk.Alignment(0.0f, 0.5f,0f,0f);
+		    ali.add(fav_button);
+		    box.pack_start(ali, false, false, 0); 
+	    }
+	    var label = new Gtk.Label(song.title);
             label.selectable = true;
             label.set_markup(GLib.Markup.printf_escaped("<span color='%s' size='%i' weight='bold'>%s</span>", 
                         this.title_color,Pango.SCALE*20 ,song.title));

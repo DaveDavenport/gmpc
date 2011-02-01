@@ -29,6 +29,7 @@
 
 /* The hash table looking up the entries */
 static GHashTable *pb_cache = NULL;
+guint32 total_size = 0;
 
 /* The structure holding the cache entry */
 typedef struct
@@ -43,6 +44,9 @@ static guint timeout = 0;
 static DCE *create_cache_entry(void)
 {
 	DCE *e = g_slice_new(DCE);
+	total_size+=sizeof(DCE);
+	g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG,"pixbuf-cache size: %u\n", total_size);
+
 	e->last_used = time(NULL);
 	return e;
 }
@@ -92,11 +96,11 @@ static void pixbuf_cache_entry_toggle_ref(const gchar * key, GdkPixbuf * pb, gbo
 static void destroy_cache_entry(DCE * entry)
 {
 	g_return_if_fail(entry != NULL);
-	g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "%i: Destroy cache entry: %p", g_hash_table_size(pb_cache) - 1, entry);
 	g_object_remove_toggle_ref(G_OBJECT(entry->pb), (GToggleNotify) pixbuf_cache_entry_toggle_ref,
 							   (gpointer) entry->key);
 	g_slice_free(DCE, entry);
-
+	total_size-=sizeof(DCE);
+	g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "%i: Destroy cache entry: %p size: %u", g_hash_table_size(pb_cache) - 1, entry,total_size);
 }
 
 void pixbuf_cache_invalidate_pixbuf_entry(const gchar * url)
@@ -150,6 +154,7 @@ void pixbuf_cache_destroy(void)
 	timeout = 0;
 	g_hash_table_destroy(pb_cache);
 	pb_cache = NULL;
+	g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG,"remaining size: %u\n", total_size);
 }
 
 void pixbuf_cache_add_icon(int size, const gchar * url, GdkPixbuf * pb)
