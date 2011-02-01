@@ -320,34 +320,40 @@ namespace Gmpc {
                 /* Start building the gui */
                 /* Artist image */
                 var hbox = new Gtk.HBox(false, 6);
-                /* Album image */
-                var ali = new Gtk.Alignment(0f,0f,0f,0f);
-                /* get size based on alloc */ 
-                int meta_size = (int)(this.container.allocation.width*0.20);
-                meta_size = int.min(int.max(100, meta_size), 250);
-                //ali.set_size_request(meta_size,meta_size);
-                var album_image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ALBUM_ART, meta_size);
-                album_image.set_scale_up(true);
-                album_image.set_squared(false);
-                ali.add(album_image);
-                album_image.update_from_song(song);
-                hbox.pack_start(ali, false, false, 0);
+		Gtk.Alignment ali = null;
+
+		int meta_size = (int)(this.container.allocation.width*0.20);
+		/* get size based on alloc */ 
+		meta_size = int.min(int.max(100, meta_size), 250);
+		if(config.get_int_with_default("Interface", "hide-album-art", 0) == 0)
+		{
+			/* Album image */
+			ali = new Gtk.Alignment(0f,0f,0f,0f);
+			//ali.set_size_request(meta_size,meta_size);
+			var album_image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ALBUM_ART, meta_size);
+			album_image.set_scale_up(true);
+			album_image.set_squared(false);
+			ali.add(album_image);
+			album_image.update_from_song(song);
+			hbox.pack_start(ali, false, false, 0);
+		}
 
                 /* Artist image */
-                ali = new Gtk.Alignment(1f,0f,0f,0f);
-                var artist_image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ARTIST_ART, meta_size);
-                artist_image.set_scale_up(true);
-                artist_image.set_squared(false);
-                artist_image.update_from_song(song);
-                ali.add(artist_image);
-                hbox.pack_end(ali, false, false, 0);
-
+		if(config.get_int_with_default("Interface", "hide-album-art", 0) == 0)
+		{
+			ali = new Gtk.Alignment(1f,0f,0f,0f);
+			var artist_image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ARTIST_ART, meta_size);
+			artist_image.set_scale_up(true);
+			artist_image.set_squared(false);
+			artist_image.update_from_song(song);
+			ali.add(artist_image);
+			hbox.pack_end(ali, false, false, 0);
+		}
 
                 /* Information box */
                 var info_vbox = new Gtk.VBox(false, 6);
                 /* Title */
                 if(song.title != null) {
-
                     var box = new Gtk.HBox(false, 6);
                     /* Favored button */
                     var fav_button = new Gmpc.Favorites.Button();
