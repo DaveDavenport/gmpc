@@ -20,7 +20,6 @@ using Config;
 using Gtk;
 using Gmpc;
 
-
 private const bool use_transition_as = Gmpc.use_transition;
 private const string some_unique_name_as = Config.VERSION;
 /**
@@ -35,38 +34,45 @@ static void advanced_settings()
 			"gtk-close", Gtk.ResponseType.CLOSE);
 	
 	/* Settings */
-	var vbox = new Gtk.VBox(false, 6);
+	var vbox = new Gmpc.Widget.Albumview();//new Gtk.VBox(false, 6);
+    win.set_size_request(400, -1);
+    vbox.set_cover_size(180,32);
+    vbox.set_header_size(32);
 	win.vbox.add(vbox);
 	/* TODO: Warning */
 
 	vbox.border_width=8;
 	/* Interface */	
 	var label = new Gtk.Label(_("Interface"));
+    label.set_ellipsize(Pango.EllipsizeMode.END);
 	label.set_markup(GLib.Markup.printf_escaped("<b>%s</b>", _("Interface")));
 	label.set_alignment(0.0f, 0.5f);
-	vbox.pack_start(label, false, false, 0);
+//	vbox.pack_start(label, false, false, 0);
+    vbox.add_header(label);
 	/* Album art */
 	var ck = new Gtk.CheckButton.with_label("Hide album art");	
 	ck.set_active((bool)config.get_int_with_default("Interface", "hide-album-art", 0));
 	ck.toggled.connect((source) => {
 		config.set_int("Interface", "hide-album-art",(int)source.get_active());
 			});
-	vbox.pack_start(ck, false, false, 0);
-
+//	vbox.pack_start(ck, false, false, 0);
+    vbox.add(ck);
 	/* Favorites icon */
 	ck = new Gtk.CheckButton.with_label("Hide favorite icon");	
 	ck.set_active((bool)config.get_int_with_default("Interface", "hide-favorites-icon", 0));
 	ck.toggled.connect((source) => {
 		config.set_int("Interface", "hide-favorites-icon",(int)source.get_active());
 			});
-	vbox.pack_start(ck, false, false, 0);
+	//vbox.pack_start(ck, false, false, 0);
+    vbox.add(ck);
 
 	/* Browsers */
 	label = new Gtk.Label(_("Browsers"));
+    label.set_ellipsize(Pango.EllipsizeMode.END);
 	label.set_markup(GLib.Markup.printf_escaped("<b>%s</b>", _("Browsers")));
 	label.set_alignment(0.0f, 0.5f);
-	vbox.pack_start(label, false, false, 0);
-	
+//	vbox.pack_start(label, false, false, 0);
+    vbox.add_header(label);	
 
 	for(int i =0; i< Gmpc.num_plugins;i++) {
 		unowned Gmpc.parentPlugin p = Gmpc.plugins[i];
@@ -77,8 +83,9 @@ static void advanced_settings()
 			ck.toggled.connect((source) => {
 					p.set_enabled((int)source.get_active());
 					});
-			vbox.pack_start(ck, false, false, 0);
-		}
+	//		vbox.pack_start(ck, false, false, 0);
+            vbox.add(ck);
+        }
 	}
 	win.show_all();
 	win.run();
