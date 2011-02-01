@@ -80,8 +80,6 @@ static void playlist_zoom_level_changed(void);
 void playlist_zoom_in(void);
 void playlist_zoom_out(void);
 
-static gboolean playlist3_error_expose(GtkWidget * wid, GdkEventExpose * event, gpointer data);
-static void playlist3_error_style_set(GtkWidget * parent, GtkStyle * style_new, GtkWidget * wid);
 
 void pl3_pb_seek_event(GtkWidget * pb, guint seek_time, gpointer user_data);
 
@@ -1292,18 +1290,6 @@ void create_playlist3(void)
     g_signal_connect(G_OBJECT
         (gtk_builder_get_object(pl3_xml, "hbox_playlist_player")),
         "drag_data_received", GTK_SIGNAL_FUNC(playlist3_source_drag_data_recieved), NULL);
-
-    /**
-     * Setup error box
-     */
-    {
-        GtkWidget *event = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "error_event"));
-        gtk_widget_set_app_paintable(event, TRUE);
-        g_signal_connect(G_OBJECT(event), "expose-event", G_CALLBACK(playlist3_error_expose), NULL);
-        g_signal_connect(G_OBJECT(gtk_widget_get_parent(event)), "style-set",
-            G_CALLBACK(playlist3_error_style_set), event);
-        playlist3_error_style_set(gtk_widget_get_parent(event), NULL, event);
-    }
 
     /* A signal that responses on change of pane position */
     g_signal_connect(G_OBJECT(gtk_builder_get_object(pl3_xml, "hpaned1")),
@@ -2658,40 +2644,6 @@ void playlist3_update_header(void)
 
         }
     }
-}
-
-
-/**
- * This code makes gmpc-playlist-messages look like a tooltip window
- */
-static void playlist3_error_style_set(GtkWidget * parent, GtkStyle * style_new, GtkWidget * wid)
-{
-
-    GList *list, *iter;
-    GtkStyle *style = gtk_rc_get_style_by_paths(gtk_widget_get_settings(wid),
-        "gtk-tooltips", "GtkWindow",
-        GTK_TYPE_WINDOW);
-    if (style)
-    {
-        gtk_widget_set_style(wid, style);
-        list = gtk_container_get_children(GTK_CONTAINER(gtk_builder_get_object(pl3_xml, "error_hbox")));
-        for (iter = list; iter; iter = g_list_next(iter))
-        {
-            gtk_widget_modify_fg(GTK_WIDGET(iter->data), GTK_STATE_NORMAL, &(style->fg[GTK_STATE_NORMAL]));
-            gtk_widget_modify_text(GTK_WIDGET(iter->data), GTK_STATE_NORMAL, &(style->text[GTK_STATE_NORMAL]));
-        }
-    }
-}
-
-
-static gboolean playlist3_error_expose(GtkWidget * wid, GdkEventExpose * event, gpointer data)
-{
-    gtk_paint_flat_box(wid->style,
-        wid->window,
-        GTK_STATE_NORMAL,
-        GTK_SHADOW_OUT, NULL, wid, "tooltip", 0, 0, wid->allocation.width, wid->allocation.height);
-
-    return FALSE;
 }
 
 

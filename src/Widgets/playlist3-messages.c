@@ -79,10 +79,9 @@ static void playlist3_message_init(Playlist3MessagePlugin * self)
 
 void playlist3_message_show(Playlist3MessagePlugin * self, const gchar * message, ErrorLevel el)
 {
+	GtkMessageType m;
 	gchar text[64];
 	struct tm *lt;
-	GtkWidget *event;
-	GtkWidget *label = NULL;
 	GtkTreeIter iter;
 	time_t t = time(NULL);
 	ErrorLevel level;
@@ -105,13 +104,16 @@ void playlist3_message_show(Playlist3MessagePlugin * self, const gchar * message
 	{
 	case ERROR_CRITICAL:
 		image_name = GTK_STOCK_DIALOG_ERROR;
+		m = GTK_MESSAGE_ERROR;
 		break;
 	case ERROR_WARNING:
 		image_name = GTK_STOCK_DIALOG_WARNING;
+		m = GTK_MESSAGE_WARNING;
 		break;
 	case ERROR_INFO:
 	default:
 		image_name = GTK_STOCK_DIALOG_INFO;
+		m = GTK_MESSAGE_INFO;
 		break;
 	}
 	gtk_list_store_set(self->priv->message_list, &iter, 1, image_name, -1);
@@ -138,34 +140,42 @@ void playlist3_message_show(Playlist3MessagePlugin * self, const gchar * message
 	self->priv->last_error_level = el;
 	if (pl3_xml && pl3_zoom != PLAYLIST_MINI)
 	{
-		GList *list, *siter;
-		label = gtk_image_new_from_stock(image_name, GTK_ICON_SIZE_BUTTON);
+		GtkWidget *event;
+		GtkWidget *label = NULL;
+		GtkWidget *box = gtk_info_bar_new();
+		GtkWidget *ca = gtk_info_bar_get_content_area(GTK_INFO_BAR(box));
+		GtkWidget *hbox = gtk_hbox_new(FALSE, 6);
+		GtkWidget *image = gtk_image_new_from_stock(image_name, GTK_ICON_SIZE_BUTTON);
 
-		event = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "error_hbox"));
+		/* Get placeholder */
+		event = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "error_event"));
+		/* Add infobar to place holder */
+		gtk_container_add(GTK_CONTAINER(event), box);
 
-		/* right image */
+		/* Add close button */
+		gtk_info_bar_add_button(GTK_INFO_BAR(box), GTK_STOCK_CLOSE, GTK_RESPONSE_CLOSE);
+		/* Set message type, so bg color changes accordingly */
+		gtk_info_bar_set_message_type(GTK_INFO_BAR(box), m);
 
-		gtk_box_pack_start(GTK_BOX(event), label, FALSE, TRUE, 0);
+		/* Add image to box */
+		gtk_box_pack_start(GTK_BOX(hbox), image, FALSE, FALSE, 0);
+		/* Add label */
 		label = gtk_label_new("");
 		gtk_label_set_markup(GTK_LABEL(label), message);
 		gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
 		gtk_label_set_ellipsize(GTK_LABEL(label), PANGO_ELLIPSIZE_END);
-		gtk_box_pack_start(GTK_BOX(event), label, TRUE, TRUE, 0);
-
-		list = gtk_container_get_children(GTK_CONTAINER(event));
-
-		event = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "error_event"));
-		for (siter = list; siter; siter = g_list_next(siter))
-		{
-			gtk_widget_modify_fg(GTK_WIDGET(siter->data), GTK_STATE_NORMAL, &(event->style->fg[GTK_STATE_NORMAL]));
-			gtk_widget_modify_text(GTK_WIDGET(siter->data), GTK_STATE_NORMAL, &(event->style->text[GTK_STATE_NORMAL]));
-		}
-		if (list)
-			g_list_free(list);
-
+		gtk_box_pack_start(GTK_BOX(hbox), label, TRUE, TRUE, 0);
+		
+		/* Add image + label to info bar */
+		gtk_container_add(GTK_CONTAINER(ca), hbox);
+		/* show it */
 		gtk_widget_show_all(event);
+		/* Watch signals, like user input */
+		g_signal_connect_swapped(G_OBJECT(box), "response", G_CALLBACK(playlist3_message_close), self);
+
 		/* Error */
 		self->priv->error_visible = TRUE;
+		/* Close it after 5 seconds */
 		self->priv->timeout_callback = g_timeout_add_seconds(5, (GSourceFunc) playlist3_message_close, self);
 	} else
 	{
@@ -178,13 +188,14 @@ static gboolean widget_added = FALSE;
 
 void playlist3_message_add_widget(Playlist3MessagePlugin * self, GtkWidget * widget)
 {
-	GtkWidget *event = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "error_hbox"));
+	GtkWidget *event = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "error_event"));
+	GtkWidget *box = gtk_bin_get_child(GTK_BIN(event));
 	/* Avoid adding more then one widget */
 	if (widget_added)
 		return;
 	widget_added = TRUE;
 
-	gtk_box_pack_end(GTK_BOX(event), widget, FALSE, TRUE, 0);
+	gtk_info_bar_add_action_widget(GTK_INFO_BAR(box), widget, GTK_RESPONSE_CLOSE);
 	gtk_widget_show_all(event);
 }
 
@@ -201,7 +212,6 @@ gboolean playlist3_message_close(Playlist3MessagePlugin * self)
 		{
 			GtkWidget *event = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "error_event"));
 			gtk_widget_hide(event);
-			event =  GTK_WIDGET(gtk_builder_get_object(pl3_xml, "error_hbox"));
 			gtk_container_foreach(GTK_CONTAINER(event), (GtkCallback) (gtk_widget_destroy), NULL);
 		}
 	}
