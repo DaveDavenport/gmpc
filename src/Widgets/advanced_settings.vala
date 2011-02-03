@@ -30,8 +30,8 @@ static void advanced_settings()
 	var win = new Gtk.Dialog.with_buttons(
 			_("Advanced settings"),
 			null,
-			Gtk.DialogFlags.MODAL,
-			"gtk-close", Gtk.ResponseType.CLOSE);
+            0,	
+            "gtk-close", Gtk.ResponseType.CLOSE);
 	
 	/* Settings */
 	var vbox = new Gmpc.Widget.Albumview();//new Gtk.VBox(false, 6);
