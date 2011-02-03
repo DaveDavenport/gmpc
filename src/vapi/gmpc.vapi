@@ -303,6 +303,9 @@ namespace Gmpc {
 
         [CCode (cname="main_window_add_status_icon")]
         public void add_status_icon(Gtk.Widget widget);
+
+        [CCode (cname="pl3_update_go_menu",cheader_filename="plugin.h")]
+        public void update_go_menu();
     }
 
     /* objects */

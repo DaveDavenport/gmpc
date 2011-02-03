@@ -82,6 +82,7 @@ static void advanced_settings()
 			ck.set_active((bool)p.get_enabled());
 			ck.toggled.connect((source) => {
 					p.set_enabled((int)source.get_active());
+                    Gmpc.Playlist3.update_go_menu();
 					});
 	//		vbox.pack_start(ck, false, false, 0);
             vbox.add(ck);
