@@ -81,10 +81,8 @@ src/Tools/ipc.c
 #Widgets
 src/Widgets/advanced_settings.c
 src/Widgets/gmpc-progress.c
-src/Widgets/gmpc-menu-item-rating.c
 src/Widgets/GmpcVolume.c
 src/Widgets/gmpc-song-list.c
-src/Widgets/gmpc-rating.c
 src/Widgets/gmpc-song-links.c
 src/Widgets/playlist3-messages.c
 
