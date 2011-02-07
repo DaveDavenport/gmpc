@@ -48,12 +48,6 @@ void preferences_window_destroy(void);
 
 int plugin_last;
 
-gboolean preferences_window_expose_event_cb(GtkWidget *widget, GdkEventExpose *event, gpointer data)
-{
-
-    return TRUE;
-}
-
 
 static void pref_plugin_changed(void)
 {
