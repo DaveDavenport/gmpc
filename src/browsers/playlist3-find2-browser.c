@@ -390,24 +390,6 @@ static void pl3_find2_browser_search(void)
 		}
 	}
 	gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_find2_tree), GTK_TREE_MODEL(pl3_find2_store2));
-	/* Update the row counter */
-	if (pl3_find2_ref)
-	{
-		GtkTreePath *path;
-		path = gtk_tree_row_reference_get_path(pl3_find2_ref);
-		if (path)
-		{
-			if (gtk_tree_model_get_iter(GTK_TREE_MODEL(gtk_tree_row_reference_get_model(pl3_find2_ref)), &iter, path))
-			{
-				gchar *title = g_strdup_printf("<span color='grey'>(%i)</span>",
-											   gtk_tree_model_iter_n_children(GTK_TREE_MODEL(pl3_find2_store2), NULL));
-				gtk_list_store_set(GTK_LIST_STORE(gtk_tree_row_reference_get_model(pl3_find2_ref)), &iter,
-								   PL3_CAT_NUM_ITEMS, title, -1);
-				g_free(title);
-			}
-			gtk_tree_path_free(path);
-		}
-	}
 }
 
 static void pl3_find2_browser_show_info(void)

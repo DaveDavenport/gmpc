@@ -183,19 +183,9 @@ static void pl3_initialize_tree(void)
     int i;
     GtkTreePath *path;
     GtkTreeSelection *sel;
-    if (pl3_xml == NULL)
-        return;
 
     path = gtk_tree_path_new_from_string("0");
     sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(gtk_builder_get_object(pl3_xml, "cat_tree")));
-    if (old_type >= 0)
-    {
-        GtkWidget *container = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "browser_container"));
-        gmpc_plugin_browser_unselected(plugins[plugin_get_pos(old_type)], container);
-        old_type = -1;
-    }
-
-    gtk_list_store_clear(GTK_LIST_STORE(pl3_tree));
 
     for (i = 0; i < num_plugins; i++)
     {
@@ -1142,15 +1132,9 @@ void create_playlist3(void)
     gtk_cell_layout_add_attribute(GTK_CELL_LAYOUT
         (gtk_builder_get_object(pl3_xml, "cb_cat_selector")), renderer, "text", PL3_CAT_TITLE);
 
-    renderer = gtk_cell_renderer_text_new();
-    gtk_cell_layout_pack_end(GTK_CELL_LAYOUT(gtk_builder_get_object(pl3_xml, "cb_cat_selector")), renderer, FALSE);
-    gtk_cell_layout_add_attribute(GTK_CELL_LAYOUT
-        (gtk_builder_get_object
-        (pl3_xml, "cb_cat_selector")), renderer, "markup", PL3_CAT_NUM_ITEMS);
-    g_object_set(renderer, "xalign", 1.0, NULL);
-
     g_signal_connect(gtk_builder_get_object(pl3_xml, "cb_cat_selector"),
         "changed", G_CALLBACK(pl3_cat_combo_changed), NULL);
+
     /* initialize the category view */
     pl3_initialize_tree();
 
@@ -2750,7 +2734,7 @@ typedef struct _TabButton
     guint handler;
 } TabButton;
 
-int last_button = -1;
+static int last_button = -1;
 void thv_set_button_state(int button)
 {
     TabButton *tb = NULL;
