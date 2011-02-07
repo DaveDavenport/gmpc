@@ -133,7 +133,6 @@ void create_preferences_window(void)
     GtkCellRenderer *renderer;
     GtkTreeViewColumn *column;
     GtkWidget *label;
-    int plugs = 0;
     int i = 0;
     char *string = NULL;
 
@@ -186,7 +185,8 @@ void create_preferences_window(void)
     {
         if (gmpc_plugin_has_preferences(plugins[i]))
         {
-            if (gmpc_plugin_is_internal(plugins[i]))
+            if (gmpc_plugin_is_internal(plugins[i]) &&
+                gmpc_plugin_get_enabled(plugins[i]))
             {
                 GtkTreeIter iter;
                 const gchar *translation_domain = gmpc_plugin_get_translation_domain(plugins[i]);
@@ -207,10 +207,7 @@ void create_preferences_window(void)
                         (gtk_builder_get_object(xml_preferences_window, "plugin_tree"))),
                         &iter);
                 }
-            } else
-            {
-                plugs++;
-            }
+            } 
         }
     }
     /* plugins */
