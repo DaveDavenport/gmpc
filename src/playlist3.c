@@ -3089,5 +3089,60 @@ void init_extra_playlist_state(void)
     }
 }
 
+/**
+ * Easy command interface 
+ */
+/* Define to make gtkbuilder happy */
+void show_command_line(void);
+gboolean show_command_line_key_press_event(GtkWidget *entry, GdkEventKey *event, gpointer data);
+void show_command_line_activate(GtkWidget *entry, gpointer data);
+
+/* On activate */
+void show_command_line_activate(GtkWidget *entry, gpointer data)
+{
+	const char *command  = gtk_entry_get_text(GTK_ENTRY(entry));	
+
+	gmpc_easy_command_do_query(GMPC_EASY_COMMAND(gmpc_easy_command),
+			command);
+	gtk_widget_hide(entry);
+	/* Clear the entry */
+	gtk_entry_set_text(GTK_ENTRY(entry), "");
+}
+
+/* On escape close and backspace when empty */
+gboolean show_command_line_key_press_event(GtkWidget *entry, GdkEventKey *event, gpointer data)
+{
+	if(event->keyval == GDK_Escape)
+	{
+		gtk_widget_hide(entry);
+		/* Clear the entry */
+		gtk_entry_set_text(GTK_ENTRY(entry), "");
+		return TRUE;
+	}
+	if(gtk_entry_get_text_length(GTK_ENTRY(entry)) == 0 && event->keyval == GDK_BackSpace) 
+	{
+		gtk_widget_hide(entry);
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+ /* Call from the menu */
+void show_command_line(void)
+ {
+	static int init = 1;
+	GtkWidget *entry =  GTK_WIDGET(gtk_builder_get_object(pl3_xml, "special_command_entry"));
+	if(init)
+	{
+		/* Does not work */
+//		gtk_entry_set_completion(GTK_ENTRY(entry), gmpc_easy_command->completion);
+		init = 0;
+	}
+	/* Show the entry and grab focus */
+	gtk_widget_show(entry);
+	gtk_widget_grab_focus(entry);
+
+ }
 
 /* vim: set noexpandtab ts=4 sw=4 sts=4 tw=120: */

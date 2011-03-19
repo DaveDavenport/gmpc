@@ -35,7 +35,7 @@ private const bool use_transition_ec = Gmpc.use_transition;
 private const string some_unique_name_ec = Config.VERSION;
 public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 	/* hack to make gettext happy */
-	private Gtk.EntryCompletion completion = null;
+	public Gtk.EntryCompletion completion = null;
 	private Gtk.ListStore store = null;
 	private uint signals = 0;
 	private Gtk.Window window = null;
