@@ -369,13 +369,13 @@ AC_SUBST(EXTRA_LDFLAGS)
 GOB2_CHECK(2.0.0)
 # Make the gob2 check fatal
 if test x${GOB2} = x""; then
-	exit 0;
+	exit 1;
 fi
 
 AM_PROG_VALAC([0.11.0])
 
 if test x${VALAC} = x""; then
-    exit 0;
+    exit 1;
 fi
 
 
