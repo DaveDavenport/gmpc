@@ -3096,6 +3096,27 @@ void init_extra_playlist_state(void)
 void show_command_line(void);
 gboolean show_command_line_key_press_event(GtkWidget *entry, GdkEventKey *event, gpointer data);
 void show_command_line_activate(GtkWidget *entry, gpointer data);
+void show_command_line_icon_release(GtkWidget *entry, GtkEntryIconPosition pos, GdkEvent *event, gpointer data);
+
+/* icon release */
+void show_command_line_icon_release(GtkWidget *entry, GtkEntryIconPosition pos, GdkEvent *event, gpointer data)
+{
+
+	/* The clear icon */
+	if ( pos == GTK_ENTRY_ICON_SECONDARY )
+	{
+		/* clear and hide */
+		gtk_widget_hide(entry);
+		gtk_entry_set_text(GTK_ENTRY(entry), "");
+	}
+	/* Primary */
+	else if ( pos == GTK_ENTRY_ICON_PRIMARY )
+	{
+		/* open the help window */
+		gmpc_easy_command_help_window(gmpc_easy_command, NULL);
+
+	}
+}
 
 /* On activate */
 void show_command_line_activate(GtkWidget *entry, gpointer data)

@@ -669,8 +669,14 @@
             <object class="GtkEntry" id="special_command_entry">
                 <property name="visible">False</property>
                 <property name="no-show-all">True</property>
+                <!-- left icon -->
+                <property name="primary-icon-name">gmpc</property>
+                <!-- right icon -->
+                <property name="secondary-icon-stock">gtk-clear</property>
+                <!-- Signals -->
                 <signal name="key-press-event" handler="show_command_line_key_press_event" swapped="no"/> 
                 <signal name="activate" handler="show_command_line_activate" swapped="no"/>
+                <signal name="icon-release" handler="show_command_line_icon_release" swapped="no"/>
             </object>
             <packing>
             <property name="expand">false</property>
