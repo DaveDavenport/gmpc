@@ -30,6 +30,9 @@ GObject *config = NULL;
 GObject *gmw = NULL;
 GObject *gmpc_signals = NULL;
 
+void show_error_message(void)
+{
+}
 const gchar *meta_data_get_uri(gpointer input)
 {
     return NULL;

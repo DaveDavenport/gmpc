@@ -9,6 +9,8 @@ gmpc_easy_download_CFLAGS = @CFLAGS@\
         @libsoup_CFLAGS@\
 		-I$(top_srcdir)/src\
 		-I$(top_srcdir)/src/vala\
+		-I$(top_srcdir)/src/Tools\
+		-I$(top_srcdir)/src/Widgets\
 		-I$(top_srcdir)/src/gob\
 		-I$(top_srcdir)/src/MetaData\
 		-DPIXMAP_PATH=\""$(pkgdatadir)/icons/"\" \
@@ -24,7 +26,7 @@ gmpc_easy_download_SOURCES = \
 		ged.c 
 
 nodist_gmpc_easy_download_SOURCES = \
-		$(top_srcdir)/src/misc.c\
-		$(top_srcdir)/src/gmpc_easy_download.c
+		$(top_srcdir)/src/Tools/misc.c\
+		$(top_srcdir)/src/Tools/gmpc_easy_download.c
 
 endif

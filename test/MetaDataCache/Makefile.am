@@ -13,6 +13,7 @@ mtc_test_CFLAGS = @CFLAGS@\
         -DGLADE_PATH="\"\""\
 		-I$(top_srcdir)/src/gob\
 		-I$(top_srcdir)/src/vala\
+		-I$(top_srcdir)/src/Tools\
 		-I$(top_srcdir)/src/Widgets\
 		-I$(top_srcdir)/src/MetaData\
 		-I$(top_srcdir)/src

@@ -2,9 +2,14 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <glib.h>
-#include "../../src/gmpc_easy_download.h"
+#include "gmpc_easy_download.h"
 
 gpointer config = NULL;
+
+void show_error_message(void)
+{
+
+}
 
 void playlist3_show_error_message(const char *message, int el)
 {
