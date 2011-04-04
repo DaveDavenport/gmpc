@@ -506,6 +506,18 @@ int main(int argc, char **argv)
         _("Show preferences window"), (GmpcEasyCommandCallback *) create_preferences_window,
         NULL, GTK_STOCK_PREFERENCES);
 
+    gmpc_easy_command_add_entry(gmpc_easy_command, _("bug information"), "",
+        _("Show bug information"), (GmpcEasyCommandCallback *) bug_information_window_new,
+        NULL);
+
+    gmpc_easy_command_add_entry_icon_name(gmpc_easy_command, _("url"), "",
+        _("Show add url window"), (GmpcEasyCommandCallback *) url_start,
+        NULL,"add-url");
+
+    gmpc_easy_command_add_entry_icon_name(gmpc_easy_command, _("url"), ".*://.*",
+        _("Add url <scheme>://<path>"), (GmpcEasyCommandCallback *) url_start_easy_command,
+        NULL,"add-url");
+
     TEC("Init easy command");
 
     advanced_search_init();

@@ -76,6 +76,7 @@ void meta_data_add_plugin(gmpcPluginParent *plug);
  * TODO move this 
  */
 void url_start_real(const gchar *url);
+void url_start_easy_command(void *data,char *param, void *d );
 void url_start(void);
 
 void url_start_custom(const gchar *url, 

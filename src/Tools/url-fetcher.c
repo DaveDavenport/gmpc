@@ -536,6 +536,11 @@ static void gufg_parse_callback_0160(GmpcUrlFetchingGui * a, const gchar * url, 
 	gmpc_url_fetching_gui_set_completed(a);
 }
 
+void url_start_easy_command(void *data,char *param, void *d )
+{
+	g_debug("Url easy command received: %s\n", param);
+	url_start_real(param);
+}
 void url_start(void)
 {
 	if (mpd_server_check_version(connection, 0, 16, 0))
