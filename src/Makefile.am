@@ -255,6 +255,8 @@ EXTRA_DIST=\
 		options.h\
 		gmpc-win32.rc\
         Tools/pixbuf-cache.h\
+        preferences.h\
+        internal-plugins.h\
         $(VALA_VAPI_FILES)\
         $(gmpc_GOBFILES)
 

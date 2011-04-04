@@ -457,7 +457,7 @@ int pl3_window_key_press_event(GtkWidget * mw, GdkEventKey * event)
     {
         return FALSE;
     }
-    if (event->keyval == GDK_e && (event->state & GDK_CONTROL_MASK) != 0)
+    if (event->keyval == GDK_a && (event->state & GDK_CONTROL_MASK) != 0)
     {
         gmpc_easy_command_popup(gmpc_easy_command);
         return FALSE;

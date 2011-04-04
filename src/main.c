@@ -68,15 +68,7 @@
 #define RESET "\x1b[0m"
 #define BOLD  "\x1b[1m"
 
-extern gmpcPlugin connection_plug;
-extern gmpcPlugin metadata_plug;
-extern gmpcPlugin playlist_plug;
-extern gmpcPlugin cover_art_plug;
-extern gmpcPlugin tray_icon2_plug;
-extern gmpcPlugin proxyplug;
-extern gmpcPlugin playlist_editor_plugin;
-extern gmpcPlugin statistics_plugin;
-extern gmpcPlugin extraplaylist_plugin;
+#include "internal-plugins.h"
 
 GmpcMetadataBrowser *metadata_browser = NULL;
 /**
@@ -244,6 +236,7 @@ int main(int argc, char **argv)
     TEC("Setting up locale");
 
     parse_options(&argc, &argv);
+
     /* Show the version, if requested */
     if (settings.show_version)
     {
@@ -498,8 +491,8 @@ int main(int argc, char **argv)
     plugin_add_new(GMPC_PLUGIN_BASE(gmpc_easy_command), 0, NULL);
 
 	/* Add some basic commands */
-    gmpc_easy_command_add_entry(gmpc_easy_command, _("quit"), "",
-        _("Quit gmpc"), (GmpcEasyCommandCallback *) main_quit, NULL);
+    gmpc_easy_command_add_entry_stock_id(gmpc_easy_command, _("quit"), "",
+        _("Quit gmpc"), (GmpcEasyCommandCallback *) main_quit, NULL,GTK_STOCK_QUIT);
     gmpc_easy_command_add_entry(gmpc_easy_command, _("hide"), "",
         _("Hide gmpc"), (GmpcEasyCommandCallback *) pl3_hide, NULL);
     gmpc_easy_command_add_entry(gmpc_easy_command, _("show"), "",
@@ -509,9 +502,9 @@ int main(int argc, char **argv)
     gmpc_easy_command_add_entry(gmpc_easy_command, _("show notification"), "",
         _("Show trayicon notification"), (GmpcEasyCommandCallback *) tray_icon2_create_tooltip,
         NULL);
-    gmpc_easy_command_add_entry(gmpc_easy_command, _("preferences"), "",
+    gmpc_easy_command_add_entry_stock_id(gmpc_easy_command, _("preferences"), "",
         _("Show preferences window"), (GmpcEasyCommandCallback *) create_preferences_window,
-        NULL);
+        NULL, GTK_STOCK_PREFERENCES);
 
     TEC("Init easy command");
 
