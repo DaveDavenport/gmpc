@@ -52,6 +52,7 @@
 #include "pixbuf-cache.h"
 #include <libmpd/debug_printf.h>
 #include "options.h"
+#include "preferences.h"
 
 #define LOG_DOMAIN "Gmpc"
 /**
@@ -507,6 +508,9 @@ int main(int argc, char **argv)
         _("Toogle gmpc visibility"), (GmpcEasyCommandCallback *) pl3_toggle_hidden, NULL);
     gmpc_easy_command_add_entry(gmpc_easy_command, _("show notification"), "",
         _("Show trayicon notification"), (GmpcEasyCommandCallback *) tray_icon2_create_tooltip,
+        NULL);
+    gmpc_easy_command_add_entry(gmpc_easy_command, _("preferences"), "",
+        _("Show preferences window"), (GmpcEasyCommandCallback *) create_preferences_window,
         NULL);
 
     TEC("Init easy command");
