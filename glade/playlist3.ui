@@ -113,7 +113,7 @@
                 <property name="label">Show _command line</property>
                 <signal name="activate" handler="show_command_line" swapped="no"/>
             </object>
-            <accelerator key="a" modifiers="GDK_CONTROL_MASK"/>
+            <accelerator key="space" modifiers="GDK_CONTROL_MASK"/>
             </child>
       </object>
       <!-- GMPCMAinWindow-->

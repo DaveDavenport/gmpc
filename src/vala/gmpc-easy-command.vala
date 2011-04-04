@@ -35,8 +35,8 @@ private const bool use_transition_ec = Gmpc.use_transition;
 private const string some_unique_name_ec = Config.VERSION;
 public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 	/* hack to make gettext happy */
-	public Gtk.EntryCompletion completion = null;
-	private Gtk.ListStore store = null;
+	private Gtk.EntryCompletion completion = null;
+	public Gtk.ListStore store = null;
 	private uint signals = 0;
 	private Gtk.Window window = null;
 
@@ -74,7 +74,7 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 	/************************************************
 	 * private
 	 */
-	private bool completion_function(Gtk.EntryCompletion comp, string key, Gtk.TreeIter iter) {
+	public static bool completion_function(Gtk.EntryCompletion comp, string key, Gtk.TreeIter iter) {
 		string value;
 		string pattern;
 		var model = comp.model;
@@ -102,8 +102,11 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
         this.plugin_type = 8+4;
 
 		this.store =
-			new Gtk.ListStore(8, typeof(uint), typeof(string), typeof(string), typeof(void *), typeof(void *),
-							  typeof(string), typeof(string),typeof(string));
+			new Gtk.ListStore(8,
+				typeof(uint),   typeof(string), 
+				typeof(string), typeof(void *), 
+				typeof(void *), typeof(string),
+				typeof(string), typeof(string));
 		this.completion = new Gtk.EntryCompletion();
 		this.completion.model = this.store;
 		this.completion.text_column = 1;

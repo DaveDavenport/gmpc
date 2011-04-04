@@ -457,7 +457,7 @@ int pl3_window_key_press_event(GtkWidget * mw, GdkEventKey * event)
     {
         return FALSE;
     }
-    if (event->keyval == GDK_space && (event->state & GDK_CONTROL_MASK) != 0)
+    if (event->keyval == GDK_e && (event->state & GDK_CONTROL_MASK) != 0)
     {
         gmpc_easy_command_popup(gmpc_easy_command);
         return FALSE;
@@ -3154,11 +3154,57 @@ void show_command_line(void)
  {
 	static int init = 1;
 	GtkWidget *entry =  GTK_WIDGET(gtk_builder_get_object(pl3_xml, "special_command_entry"));
-	if(init)
+
+	/* Tell gcc this is not likely to happen (only once) */
+	if(G_UNLIKELY(init == 1))
 	{
-		/* Does not work */
-//		gtk_entry_set_completion(GTK_ENTRY(entry), gmpc_easy_command->completion);
-		init = 0;
+		GtkTreeModel		*model;
+		GtkCellRenderer		*ren;
+		GtkEntryCompletion	*comp;
+		/**
+		 * Setup completion on the entry box.
+		 * Completion should match what is done in the Easycommand popup 
+		 */
+
+		/* steal pointer to model from easycommand */
+		model = (GtkTreeModel *)gmpc_easy_command->store;
+
+		/* Create completion */
+		comp = gtk_entry_completion_new();
+
+		/* Attach model to completion */	
+		gtk_entry_completion_set_model(comp, model);
+		/* Column 1 holds the 'to match' text */
+		gtk_entry_completion_set_text_column(comp, 1);
+		/* Enable all features that might be usefull to the user */
+		gtk_entry_completion_set_inline_completion(comp, TRUE);
+		gtk_entry_completion_set_inline_selection(comp, TRUE);
+		gtk_entry_completion_set_popup_completion(comp, TRUE);
+		/* Use the match function from GmpcEasyCommand */
+		gtk_entry_completion_set_match_func(comp, 
+				(GtkEntryCompletionMatchFunc)gmpc_easy_command_completion_function, 
+				g_object_ref(gmpc_easy_command),
+				g_object_unref);
+
+
+		/* setup looks */
+		/* Icon */
+		ren = gtk_cell_renderer_pixbuf_new();
+		gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(comp), ren, FALSE);
+		gtk_cell_layout_reorder(GTK_CELL_LAYOUT(comp),ren, 0);
+		/* Support both icon-name and stock-id. */
+		gtk_cell_layout_add_attribute(GTK_CELL_LAYOUT(comp),ren, "icon-name", 6);
+		gtk_cell_layout_add_attribute(GTK_CELL_LAYOUT(comp),ren, "stock-id", 7);
+		/* hint */
+		ren = gtk_cell_renderer_text_new();
+		gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(comp), ren, FALSE);
+		gtk_cell_layout_add_attribute(GTK_CELL_LAYOUT(comp),ren, "text", 5);
+		g_object_set(G_OBJECT(ren), "foreground", "grey", NULL);
+
+		/* Add completion to the entry */
+		gtk_entry_set_completion(GTK_ENTRY(entry),comp); 
+		/* Only need todo this once */
+		init = 1;
 	}
 	/* Show the entry and grab focus */
 	gtk_widget_show(entry);
