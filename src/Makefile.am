@@ -44,6 +44,7 @@ gmpc_TOOLS_FILES=\
     Tools/url-fetcher.c\
     Tools/mm-keys.c\
     Tools/misc.c\
+    Tools/plugin-man.c\
     Tools/ipc.c
 
 ## 
@@ -239,6 +240,7 @@ EXTRA_DIST=\
         plugin-internal.h\
 		Tools/setup-assistant.h\
 		Tools/bug-information.h\
+        Tools/plugin-man.h\
 		Tools/mm-keys.h\
 		Tools/misc.h\
 		MetaData/metadata.h\

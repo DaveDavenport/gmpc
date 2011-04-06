@@ -38,12 +38,6 @@
 #include "gmpc_easy_download.h"
 
 #include "setup-assistant.h"
-/* as internall plugin */
-#include "browsers/playlist3-playlist-editor.h"
-#include "browsers/playlist3-file-browser.h"
-#include "browsers/playlist3-find2-browser.h"
-#include "browsers/playlist3-tag2-browser.h"
-#include "browsers/playlist3-current-playlist-browser.h"
 
 #include "gmpc-mpddata-model-playlist.h"
 #include "metadata-cache.h"
@@ -54,14 +48,17 @@
 #include "options.h"
 #include "preferences.h"
 
+#include "plugin-man.h"
+
+#ifdef ENABLE_MMKEYS
+#include "mm-keys.h"
+#endif
+
 #define LOG_DOMAIN "Gmpc"
 /**
  * Get revision
  */
 #include "revision.h"
-#ifdef ENABLE_MMKEYS
-#include "mm-keys.h"
-#endif
 
 #include "ipc.h"
 
@@ -70,7 +67,6 @@
 
 #include "internal-plugins.h"
 
-GmpcMetadataBrowser *metadata_browser = NULL;
 /**
  * Global objects that give signals
  */
@@ -187,7 +183,6 @@ static gboolean hide_on_start(void)
 int main(int argc, char **argv)
 {
     static xmlGenericErrorFunc handler = (xmlGenericErrorFunc) xml_error_func;
-    int i;
 
     #ifdef WIN32
     gchar *packagedir;
@@ -487,8 +482,6 @@ int main(int argc, char **argv)
 
 
     gmpc_easy_command = gmpc_easy_command_new();
-    /* Add it to the plugin command */
-    plugin_add_new(GMPC_PLUGIN_BASE(gmpc_easy_command), 0, NULL);
 
 	/* Add some basic commands */
     gmpc_easy_command_add_entry_stock_id(gmpc_easy_command, _("quit"), "",
@@ -592,9 +585,7 @@ int main(int argc, char **argv)
     gmw = gmpc_meta_watcher_new();
     TEC("Initializing metadata watcher");
 
-    /**
-     * Add the internall plugins
-     */
+
 
     /** init the error messages */
     pl3_messages = playlist3_message_plugin_new();
@@ -602,47 +593,12 @@ int main(int argc, char **argv)
     playlist = (GtkTreeModel *) gmpc_mpddata_model_playlist_new(gmpcconn, connection);
     gmpc_mpddata_model_disable_image(GMPC_MPDDATA_MODEL(playlist));
 
-    /** file browser */
-    plugin_add(&file_browser_plug, 0, NULL);
-    /** current playlist */
-    plugin_add_new((GmpcPluginBase *) play_queue_plugin_new("current-pl"), 0, NULL);
-    plugin_add_new((GmpcPluginBase *) gmpc_provider_music_tree_new(), 0, NULL);
-    //	plugin_add_new((GmpcPluginBase *) gmpc_provider_gmc_new(), 0, NULL);
+    /**
+     * Add the internall plugins
+     */
+	 plugin_manager_load_internal_plugins();
 
-    /** Find Browser */
-    plugin_add(&find2_browser_plug, 0, NULL);
-    /* this shows the connection preferences */
-    plugin_add(&connection_plug, 0, NULL);
-    /* this the server preferences */
-    plugin_add(&server_plug, 0, NULL);
-    /* this shows the playlist preferences */
-    plugin_add(&playlist_plug, 0, NULL);
-    /* this shows the markup stuff */
-    plugin_add(&tag2_plug, 0, NULL);
-    #ifdef ENABLE_MMKEYS
-    plugin_add(&mmkeys_plug, 0, NULL);
-    #endif
-    /* the tray icon */
-    plugin_add(&tray_icon2_plug, 0, NULL);
 
-    /* Info3 data browser */
-    /* Playlist editor */
-    plugin_add(&playlist_editor_plugin, 0, NULL);
-
-    plugin_add(&statistics_plugin, 0, NULL);
-    plugin_add(&metadata_plug, 0, NULL);
-    plugin_add(&proxyplug, 0, NULL);
-
-    plugin_add(&extraplaylist_plugin, 0, NULL);
-
-    TEC("Loading internal plugins");
-    plugin_add_new(GMPC_PLUGIN_BASE(gmpc_test_plugin_new()), 0, NULL);
-    metadata_browser = gmpc_metadata_browser_new();
-    plugin_add_new(GMPC_PLUGIN_BASE(metadata_browser), 0, NULL);
-    plugin_add_new(GMPC_PLUGIN_BASE(gmpc_plugin_metadata_prefetcher_new()), 0, NULL);
-    plugin_add_new(GMPC_PLUGIN_BASE(gmpc_plugin_database_update_tracker_new()), 0, NULL);
-    plugin_add_new(GMPC_PLUGIN_BASE(gmpc_plugin_mockup_new()), 0, NULL);
-    TEC("Loading new plugins");
     /**
      *  load dynamic plugins
      */
@@ -688,11 +644,7 @@ int main(int argc, char **argv)
         q_free(url);
     }
     /* time todo some initialisation of plugins */
-    for (i = 0; i < num_plugins && plugins[i] != NULL; i++)
-    {
-        gmpc_plugin_init(plugins[i]);
-        TEC("Initializing plugin: %s", gmpc_plugin_get_name(plugins[i]));
-    }
+	plugin_manager_initialize_plugins();
 
     /**
      * Ask user about added/removed provider plugins
@@ -717,9 +669,6 @@ int main(int argc, char **argv)
         TEC("Setup unique app to watch main window");
     }
     #endif
-    /* Initialize the message system */
-    plugin_add_new(GMPC_PLUGIN_BASE(pl3_messages), 0, NULL);
-    TEC("Add pl3_messages");
 
     /**
      * First run dialog
@@ -824,11 +773,8 @@ int main(int argc, char **argv)
     gmpc_easy_async_quit();
 
     /* tell the plugins to save themself. */
-    for (i = 0; i < num_plugins && plugins[i] != NULL; i++)
-    {
-        g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Telling '%s' to save itself\n", gmpc_plugin_get_name(plugins[i]));
-        gmpc_plugin_save_yourself(plugins[i]);
-    }
+	plugin_manager_save_state();
+
     /* Should fix some possible crashes */
     gtk_tree_view_set_model(playlist3_get_category_tree_view(), NULL);
 
@@ -838,11 +784,7 @@ int main(int argc, char **argv)
     meta_data_destroy();
 
     /* time todo some destruction of plugins */
-    for (i = 0; i < num_plugins && plugins[i] != NULL; i++)
-    {
-        g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Telling '%s' to destroy itself\n", gmpc_plugin_get_name(plugins[i]));
-        gmpc_plugin_destroy(plugins[i]);
-    }
+	plugin_manager_destroy_plugins();
 
     playlist3_destroy();
 
@@ -983,7 +925,6 @@ void GmpcStatusChangedCallback(MpdObj * mi, ChangedStatusType what, void *userda
 /* The actual handling of the status changed signal */
 static void gmpc_status_changed_callback_real(GmpcConnection * conn, MpdObj * mi, ChangedStatusType what, gpointer data)
 {
-    int i;
     /* When permission changes, update the advanced search regex */
     if (what & MPD_CST_PERMISSION)
     {
@@ -992,10 +933,7 @@ static void gmpc_status_changed_callback_real(GmpcConnection * conn, MpdObj * mi
     /**
      * Make the plugins recieve the signals
      */
-    for (i = 0; i < num_plugins; i++)
-    {
-        gmpc_plugin_status_changed(plugins[i], mi, what);
-    }
+	 plugin_manager_status_changed(mi, what);
 }
 
 
@@ -1181,20 +1119,15 @@ static void connection_changed(MpdObj * mi, int connected, gpointer data)
 
 static void connection_changed_real(GmpcConnection * obj, MpdObj * mi, int connected, gpointer data)
 {
-    int i = 0;
-    INIT_TIC_TAC();
-
     /**
      * propegate signals
      */
-    g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Connection changed %i-%i \n", connected, mpd_check_connected(mi));
-    for (i = 0; i < num_plugins; i++)
-    {
-        g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Connection changed plugin: %s\n", gmpc_plugin_get_name(plugins[i]));
-        gmpc_plugin_mpd_connection_changed(plugins[i], mi, connected, NULL);
-        TEC("Connection changed plugin: %s", gmpc_plugin_get_name(plugins[i]));
-
-    }
+    g_log(LOG_DOMAIN, 
+			G_LOG_LEVEL_DEBUG,
+			"Connection changed %i-%i \n",
+			connected,
+			mpd_check_connected(mi));
+	plugin_manager_connection_changed(mi, connected);
 
     /**
      * force an update of status
