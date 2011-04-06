@@ -115,8 +115,6 @@ void gmpc_easy_async_quit(void);
 /**Hack Handle status changed */
 void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userdata);
 
-/* */ 
-gboolean set_log_filter(const gchar * option_name, const gchar * value, gpointer data, GError ** error);
 
 #ifdef DEBUG_TIMING
 /* Tic Tac system */

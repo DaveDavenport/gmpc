@@ -28,6 +28,7 @@
 #include <gtk/gtk.h>
 #include <glib/gstdio.h>
 
+#include <libmpd/debug_printf.h>
 /* header files */
 #include "main.h"
 #include "playlist3.h"
@@ -44,7 +45,6 @@
 #include "bug-information.h"
 
 #include "pixbuf-cache.h"
-#include <libmpd/debug_printf.h>
 #include "options.h"
 #include "preferences.h"
 
@@ -66,6 +66,7 @@
 #define BOLD  "\x1b[1m"
 
 #include "internal-plugins.h"
+#include "log.h"
 
 /**
  * Global objects that give signals
@@ -99,6 +100,8 @@ MpdObj * mi, ChangedStatusType what, gpointer data);
  * Define some local functions
  */
 
+static void gmpc_easy_command_set_default_entries(void);
+static void  gmpc_mmkeys_connect_signals(GObject *keys);
 /** handle connection changed */
 static void connection_changed(MpdObj * mi, int connect, gpointer data);
 
@@ -137,7 +140,6 @@ void send_password(void);
  */
 static void print_version(void);
 
-static GLogLevelFlags global_log_level = G_LOG_LEVEL_MESSAGE;
 
 /**
  * Forward libxml errors into GLib.log errors with LibXML error domain 
@@ -149,28 +151,8 @@ static void xml_error_func(void *ctx, const char *msg, ...)
     g_logv("LibXML", G_LOG_LEVEL_DEBUG, msg, ap);
     va_end(ap);
 }
-
-
-static void gmpc_log_func(const gchar * log_domain, GLogLevelFlags log_level, const gchar * message, gpointer user_data)
-{
-    if (log_level <= global_log_level)
-    {
-        g_log_default_handler(log_domain, log_level, message, user_data);
-    }
-}
-
-
-gboolean set_log_filter(const gchar * option_name, const gchar * value, gpointer data, GError ** error)
-{
-    if (value == NULL || value[0] == 0)
-    {
-        g_set_error(error, 0, 0, "--log-filter requires a log domain as argument");
-        return FALSE;
-    }
-
-    g_log_set_handler(value, G_LOG_LEVEL_MASK | G_LOG_FLAG_FATAL | G_LOG_FLAG_RECURSION, g_log_default_handler, NULL);
-    return TRUE;
-}
+/* \todo why is this here? */
+static xmlGenericErrorFunc handler = (xmlGenericErrorFunc) xml_error_func;
 
 
 static gboolean hide_on_start(void)
@@ -182,7 +164,6 @@ static gboolean hide_on_start(void)
 
 int main(int argc, char **argv)
 {
-    static xmlGenericErrorFunc handler = (xmlGenericErrorFunc) xml_error_func;
 
     #ifdef WIN32
     gchar *packagedir;
@@ -201,22 +182,12 @@ int main(int argc, char **argv)
 
     INIT_TIC_TAC();
 
-    g_log_set_default_handler(gmpc_log_func, NULL);
-    /* *
-     * Set the default debug level
-     * Depending if it is a git build or not
-     */
-    if (revision && revision[0] != '\0')
-    {
-        /* We run a svn version, so we want more default debug output */
-        debug_set_level(DEBUG_ERROR);
-    } else
-    {
-        /* Ok, release version... no debug */
-        debug_set_level(0);
-    }
+
+
+	log_init();
 
     egg_sm_client_set_mode(EGG_SM_CLIENT_MODE_NO_RESTART);
+
     /**
      * Setup NLS
      */
@@ -239,36 +210,15 @@ int main(int argc, char **argv)
         return EXIT_SUCCESS;
     }
 
-    /**
-     * Set debug level, options are
-     * 0 = No debug
-     * 1 = Error messages
-     * 2 = Error + Warning messages
-     * 3 = All messages
-     */
-    if (settings.debug_level >= 0)
-    {
-        if (settings.debug_level == 3)
-        {
-            global_log_level = G_LOG_LEVEL_DEBUG;
-        } else if (settings.debug_level == 2)
-        {
-            global_log_level = G_LOG_LEVEL_INFO;
-        }
-        debug_set_level(settings.debug_level);
-    }
+	log_set_debug_level(settings.debug_level);
     /* Show the bug-information dialog */
     if (settings.show_bug_information)
     {
         bug_information_file_new(stdout);
         return EXIT_SUCCESS;
     }
-    TEC("Parsing command line options");
 
-    /**
-     *  initialize threading
-     */
-    g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Initializing threading");
+    TEC("Parsing command line options");
 
     /**
      * Init libxml.
@@ -280,8 +230,8 @@ int main(int argc, char **argv)
      * This fixes the plugin crasher bug on windows.
      */
     xmlInitParser();
-
     initGenericErrorDefaultFunc(&handler);
+
     /**
      * Check if threading is supported, if so, start it.
      * Don't fail here, stuff like can cause that it is allready initialized.
@@ -311,9 +261,9 @@ int main(int argc, char **argv)
     /* initialize gtk */
     gtk_init(&argc, &argv);
     TEC("Gtk init");
+
     /* connect signal to Session manager to quit */
     g_signal_connect(egg_sm_client_get(), "quit", G_CALLBACK(main_quit), NULL);
-
     TEC("EggSmClient");
 
     /**
@@ -355,12 +305,12 @@ int main(int argc, char **argv)
     {
         url = g_strdup(settings.config_path);
     }
+
     /**
      * Open it
      */
     g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Trying to open the config file: %s", url);
     config = cfg_open(url);
-    q_free(url);
 
     /** test if config opened correct  */
     if (config == NULL)
@@ -371,12 +321,9 @@ int main(int argc, char **argv)
         g_log(LOG_DOMAIN, G_LOG_LEVEL_ERROR, "Failed to save/load configuration:\n%s\n", url);
         show_error_message(_("Failed to load the configuration system."));
         /* this is an error so bail out correctly */
-        abort();
+		return EXIT_FAILURE;
     }
     TEC("Opening config file: %s", url);
-    /**
-     * cleanup
-     */
     q_free(url);
 
     /**
@@ -387,69 +334,27 @@ int main(int argc, char **argv)
         url = gmpc_get_user_path("debug-info.log");
         if (url)
         {
-            FILE *fp = g_fopen(url, "a");
-            if (!fp)
-            {
-                g_log(LOG_DOMAIN, G_LOG_LEVEL_ERROR, "Failed to open debug-log file: \"%s\"\n", url);
-                show_error_message(_("Failed to load debug-log file."));
-                abort();
-            }
-            /* Set the output */
-            debug_set_output(fp);
-            /* Force highest level */
-            debug_set_level(DEBUG_INFO);
-            g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "***** Opened debug log file\n");
-            q_free(url);
-            TEC("Enabled Debug log");
+			log_redirect_to_file(url);
+			q_free(url);
         }
     }
+
     /**
-     * TODO, Check if version changed, then say something about it
+     * \TODO, Check if version changed, then say something about it
      */
     url = cfg_get_single_value_as_string(config, "Default", "version");
     if (url == NULL || strcmp(url, VERSION))
     {
         int *new_version = split_version(VERSION);
-        if (url)
-        {
-            int *old_version = split_version((const char *)url);
-            g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Welcome to a new version of gmpc.\n");
-            /* Do possible cleanup of config files and stuff */
-            /* old version older then 0.1.15.4.98 */
-            if ((old_version[0] <= 0 && old_version[1] <= 15 && old_version[2] <= 4 && old_version[3] <= 98))
-            {
-                conf_mult_obj *iter, *cmo = cfg_get_class_list(config);
-                g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Purging old keys from the config file.\n");
-                for (iter = cmo; iter; iter = iter->next)
-                {
-                    if (strstr(iter->key, "colpos") || strstr(iter->key, "colshow") || strstr(iter->key, "colsize"))
-                    {
-                        g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Removing entry: %s\n", iter->key);
-                        cfg_remove_class(config, iter->key);
-                    }
-                }
-                cfg_free_multiple(cmo);
-
-            }
-            /* old version older then 0.17.0-beta1 */
-            if ((old_version[0] <= 0 && old_version[1] <= 16 && old_version[2] <= 95))
-            {
-                printf("** Correct icon-size\n");
-                cfg_set_single_value_as_int(config, "gmpc-mpddata-model", "icon-size", 32);
-            }
-            q_free(old_version);
-        }
-        /* set new */
+		g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Welcome to a new version of gmpc.\n");
+		/* set new */
         cfg_set_single_value_as_string(config, "Default", "version", VERSION);
         q_free(new_version);
     }
-    if (url)
-    {
-        q_free(url);
-    }
+    if (url) q_free(url);
+
     TEC("New version check");
     #ifdef HAVE_IPC
-
     if (cfg_get_single_value_as_int_with_default(config,
         "Default",
         "allow-multiple",
@@ -480,52 +385,29 @@ int main(int argc, char **argv)
         return EXIT_SUCCESS;
     }
 
-
+	/* Easy command */
     gmpc_easy_command = gmpc_easy_command_new();
-
-	/* Add some basic commands */
-    gmpc_easy_command_add_entry_stock_id(gmpc_easy_command, _("quit"), "",
-        _("Quit gmpc"), (GmpcEasyCommandCallback *) main_quit, NULL,GTK_STOCK_QUIT);
-    gmpc_easy_command_add_entry(gmpc_easy_command, _("hide"), "",
-        _("Hide gmpc"), (GmpcEasyCommandCallback *) pl3_hide, NULL);
-    gmpc_easy_command_add_entry(gmpc_easy_command, _("show"), "",
-        _("Show gmpc"), (GmpcEasyCommandCallback *) create_playlist3, NULL);
-    gmpc_easy_command_add_entry(gmpc_easy_command, _("toggle"), "",
-        _("Toogle gmpc visibility"), (GmpcEasyCommandCallback *) pl3_toggle_hidden, NULL);
-    gmpc_easy_command_add_entry(gmpc_easy_command, _("show notification"), "",
-        _("Show trayicon notification"), (GmpcEasyCommandCallback *) tray_icon2_create_tooltip,
-        NULL);
-    gmpc_easy_command_add_entry_stock_id(gmpc_easy_command, _("preferences"), "",
-        _("Show preferences window"), (GmpcEasyCommandCallback *) create_preferences_window,
-        NULL, GTK_STOCK_PREFERENCES);
-
-    gmpc_easy_command_add_entry(gmpc_easy_command, _("bug information"), "",
-        _("Show bug information"), (GmpcEasyCommandCallback *) bug_information_window_new,
-        NULL);
-
-    gmpc_easy_command_add_entry_icon_name(gmpc_easy_command, _("url"), "",
-        _("Show add url window"), (GmpcEasyCommandCallback *) url_start,
-        NULL,"add-url");
-
-    gmpc_easy_command_add_entry_icon_name(gmpc_easy_command, _("url"), ".*://.*",
-        _("Add url <scheme>://<path>"), (GmpcEasyCommandCallback *) url_start_easy_command,
-        NULL,"add-url");
-
+	gmpc_easy_command_set_default_entries();
     TEC("Init easy command");
 
+	
+	/* Advanced search */
     advanced_search_init();
     TEC("Init advanced search");
+
     /* PanedSizeGroup */
     paned_size_group = (GObject *) gmpc_paned_size_group_new();
-    /** Signals */
 
+    /** Signals */
     gmpc_profiles = gmpc_profiles_new();
     if (settings.profile_name)
     {
         GList *iter, *items = gmpc_profiles_get_profiles_ids(gmpc_profiles);
         for (iter = g_list_first(items); iter; iter = g_list_next(iter))
         {
-            if (g_utf8_collate(settings.profile_name, gmpc_profiles_get_name(gmpc_profiles, (const gchar *)iter->data)) == 0)
+			const char *pname = gmpc_profiles_get_name(gmpc_profiles, 
+					(const gchar *)iter->data);
+			if (pname != NULL && g_utf8_collate(settings.profile_name, pname) == 0)
             {
                 connection_set_current_profile((const gchar *)iter->data);
                 break;
@@ -731,33 +613,21 @@ int main(int argc, char **argv)
     /**
      * Connect the wanted key's
      */
-    g_signal_connect(G_OBJECT(keys), "mm_playpause", G_CALLBACK(play_song), NULL);
-    g_signal_connect(G_OBJECT(keys), "mm_next", G_CALLBACK(next_song), NULL);
-    g_signal_connect(G_OBJECT(keys), "mm_prev", G_CALLBACK(prev_song), NULL);
-    g_signal_connect(G_OBJECT(keys), "mm_stop", G_CALLBACK(stop_song), NULL);
-    g_signal_connect(G_OBJECT(keys), "mm_fastforward", G_CALLBACK(song_fastforward), NULL);
-    g_signal_connect(G_OBJECT(keys), "mm_fastbackward", G_CALLBACK(song_fastbackward), NULL);
-    g_signal_connect(G_OBJECT(keys), "mm_repeat", G_CALLBACK(repeat_toggle), NULL);
-    g_signal_connect(G_OBJECT(keys), "mm_random", G_CALLBACK(random_toggle), NULL);
-    g_signal_connect(G_OBJECT(keys), "mm_raise", G_CALLBACK(create_playlist3), NULL);
-    g_signal_connect(G_OBJECT(keys), "mm_hide", G_CALLBACK(pl3_hide), NULL);
-    g_signal_connect(G_OBJECT(keys), "mm_toggle_hidden", G_CALLBACK(pl3_toggle_hidden), NULL);
-    g_signal_connect(G_OBJECT(keys), "mm_volume_up", G_CALLBACK(volume_up), NULL);
-    g_signal_connect(G_OBJECT(keys), "mm_volume_down", G_CALLBACK(volume_down), NULL);
-    g_signal_connect(G_OBJECT(keys), "mm_toggle_mute", G_CALLBACK(volume_toggle_mute), NULL);
-    g_signal_connect(G_OBJECT(keys), "mm_show_notification", G_CALLBACK(tray_icon2_create_tooltip), NULL);
-    g_signal_connect_swapped(G_OBJECT(keys), "mm_show_easy_command", G_CALLBACK(gmpc_easy_command_popup),
-        gmpc_easy_command);
-    TEC("Setting up multimedia keys");
+	gmpc_mmkeys_connect_signals(G_OBJECT(keys));
+	TEC("Setting up multimedia keys");
     #endif
+
+    url = gmpc_get_user_path("gmpc.key");
+    gtk_accel_map_load(url);
+	q_free(url);
     /*
      * run the main loop
      */
-    url = gmpc_get_user_path("gmpc.key");
-    gtk_accel_map_load(url);
     gtk_main();
+
+    url = gmpc_get_user_path("gmpc.key");
     gtk_accel_map_save(url);
-    g_free(url);
+    q_free(url);
     /**
      * Shutting Down
      *  cleaning up.
@@ -1175,10 +1045,141 @@ static void print_version(void)
 
     printf(GMPC_COPYRIGHT "\n\n" RESET);
     printf("%-25s: %s\n", ("Tagline"), GMPC_TAGLINE);
-    printf("%-25s: %i.%i.%i\n", ("Version"), GMPC_MAJOR_VERSION, GMPC_MINOR_VERSION, GMPC_MICRO_VERSION);
-    if (revision && revision[0] != '\0')
-    {
+    printf("%-25s: %i.%i.%i\n", ("Version"),
+			GMPC_MAJOR_VERSION,
+			GMPC_MINOR_VERSION,
+			GMPC_MICRO_VERSION);
+	if (revision && revision[0] != '\0')
+	{
         printf("%-25s: %s\n", ("Revision"), revision);
     }
 }
+
+/**
+ * Set a basic set of easycommand handlers.
+ */
+static void gmpc_easy_command_set_default_entries(void)
+{
+	gmpc_easy_command_add_entry_stock_id(gmpc_easy_command, 
+			_("quit"), "",
+			_("Quit gmpc"), 
+			(GmpcEasyCommandCallback *) main_quit,
+			NULL,GTK_STOCK_QUIT);
+
+	gmpc_easy_command_add_entry(gmpc_easy_command,
+			_("hide"), "",
+			_("Hide gmpc"),
+			(GmpcEasyCommandCallback *) pl3_hide, 
+			NULL);
+
+	gmpc_easy_command_add_entry(gmpc_easy_command,
+			_("show"), "",
+			_("Show gmpc"),
+			(GmpcEasyCommandCallback *) create_playlist3,
+			NULL);
+
+	gmpc_easy_command_add_entry(gmpc_easy_command,
+			_("toggle"), "",
+			_("Toogle gmpc visibility"),
+			(GmpcEasyCommandCallback *) pl3_toggle_hidden,
+			NULL);
+
+	gmpc_easy_command_add_entry(gmpc_easy_command,
+			_("show notification"), "",
+			_("Show trayicon notification"),
+			(GmpcEasyCommandCallback *) tray_icon2_create_tooltip,
+			NULL);
+	gmpc_easy_command_add_entry_stock_id(gmpc_easy_command,
+			_("preferences"), "",
+			_("Show preferences window"),
+			(GmpcEasyCommandCallback *) create_preferences_window,
+			NULL, GTK_STOCK_PREFERENCES);
+
+	gmpc_easy_command_add_entry(gmpc_easy_command,
+			_("bug information"), "",
+			_("Show bug information"),
+			(GmpcEasyCommandCallback *) bug_information_window_new,
+			NULL);
+
+	gmpc_easy_command_add_entry_icon_name(gmpc_easy_command,
+			_("url"), "",
+			_("Show add url window"),
+			(GmpcEasyCommandCallback *) url_start,
+			NULL,"add-url");
+
+	gmpc_easy_command_add_entry_icon_name(gmpc_easy_command,
+			_("url"), ".*://.*",
+			_("Add url <scheme>://<path>"),
+			(GmpcEasyCommandCallback *) url_start_easy_command,
+			NULL,"add-url");
+}
+
+static void  gmpc_mmkeys_connect_signals(GObject *keys)
+{
+	g_signal_connect(keys,
+			"mm_playpause",
+			G_CALLBACK(play_song), NULL);
+
+	g_signal_connect(keys,
+			"mm_next", 
+			G_CALLBACK(next_song), NULL);
+
+	g_signal_connect(keys,
+			"mm_prev", 
+			G_CALLBACK(prev_song), NULL);
+
+	g_signal_connect(keys,
+			"mm_stop",
+			G_CALLBACK(stop_song), NULL);
+
+	g_signal_connect(keys,
+			"mm_fastforward",
+			G_CALLBACK(song_fastforward), NULL);
+
+	g_signal_connect(keys,
+			"mm_fastbackward",
+			G_CALLBACK(song_fastbackward), NULL);
+
+	g_signal_connect(keys, 
+			"mm_repeat",
+			G_CALLBACK(repeat_toggle), NULL);
+
+	g_signal_connect(keys,
+			"mm_random",
+			G_CALLBACK(random_toggle), NULL);
+
+	g_signal_connect(keys,
+			"mm_raise",
+			G_CALLBACK(create_playlist3), NULL);
+
+	g_signal_connect(keys, 
+			"mm_hide",
+			G_CALLBACK(pl3_hide), NULL);
+
+	g_signal_connect(keys,
+			"mm_toggle_hidden",
+			G_CALLBACK(pl3_toggle_hidden), NULL);
+
+	g_signal_connect(keys,
+			"mm_volume_up", 
+			G_CALLBACK(volume_up), NULL);
+
+	g_signal_connect(keys,
+			"mm_volume_down", 
+			G_CALLBACK(volume_down), NULL);
+
+	g_signal_connect(keys,
+			"mm_toggle_mute",
+			G_CALLBACK(volume_toggle_mute), NULL);
+
+	g_signal_connect(keys,
+			"mm_show_notification",
+			G_CALLBACK(tray_icon2_create_tooltip), NULL);
+
+	g_signal_connect_swapped(keys, 
+			"mm_show_easy_command",
+			G_CALLBACK(gmpc_easy_command_popup),
+			gmpc_easy_command);
+}
+
 /* vim: set noexpandtab ts=4 sw=4 sts=4 tw=120: */

@@ -42,9 +42,10 @@ gmpc_TOOLS_FILES=\
     Tools/mpdinteraction.c\
     Tools/pixbuf-cache.c\
     Tools/url-fetcher.c\
+    Tools/plugin-man.c\
     Tools/mm-keys.c\
     Tools/misc.c\
-    Tools/plugin-man.c\
+    Tools/log.c\
     Tools/ipc.c
 
 ## 
@@ -241,6 +242,7 @@ EXTRA_DIST=\
 		Tools/setup-assistant.h\
 		Tools/bug-information.h\
         Tools/plugin-man.h\
+        Tools/log.h\
 		Tools/mm-keys.h\
 		Tools/misc.h\
 		MetaData/metadata.h\

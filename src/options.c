@@ -21,6 +21,7 @@
 #include <config.h>
 #include <plugin.h>
 #include "main.h"
+#include "log.h"
 #include "options.h"
 
 /* Set default values */
@@ -87,7 +88,7 @@ gboolean parse_options(int *argc, char ***argv)
         },
         {
             "log-filter", 'f', 0, G_OPTION_ARG_CALLBACK,
-            set_log_filter, N_("Shows all output from a certain log domain"), "<Log domain>"
+            log_add_filter, N_("Shows all output from a certain log domain"), "<Log domain>"
         },
         {
             "profile", 'p', 0, G_OPTION_ARG_STRING,
