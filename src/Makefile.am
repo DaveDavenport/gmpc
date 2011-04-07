@@ -32,7 +32,8 @@ gmpc_WIDGETS_FILES=\
     Widgets/GmpcVolume.vala\
     Widgets/playlist3-messages.c\
     Widgets/gmpc-song-links.vala\
-    Widgets/advanced_settings.vala
+    Widgets/advanced_settings.vala\
+    GUI/thv.c
 
 gmpc_TOOLS_FILES=\
     Tools/gmpc_easy_download.c\
@@ -261,6 +262,7 @@ EXTRA_DIST=\
         Tools/pixbuf-cache.h\
         preferences.h\
         internal-plugins.h\
+        GUI/thv.h\
         $(VALA_VAPI_FILES)\
         $(gmpc_GOBFILES)
 
