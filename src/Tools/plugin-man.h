@@ -51,4 +51,8 @@ void plugin_manager_connection_changed(MpdObj *mi, const int connected);
  */
 void plugin_manager_status_changed(MpdObj *mi, const ChangedStatusType what);
 
+/**
+ * Loads the external plugins in gmpc.
+ */
+void plugin_manager_load_plugins(void);
 #endif

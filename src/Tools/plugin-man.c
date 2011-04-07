@@ -1,6 +1,6 @@
 /* Gnome Music Player Client (GMPC)
- * Copyright (C) 2004-2011 Qball Cow <qball@sarine.nl>
- * Project homepage: http://gmpc.wikia.com/
+ * Copyright (C) 2011-2011 Qball Cow <qball@sarine.nl>
+ * Project homepage: http://gmpclient.org/
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -151,7 +151,6 @@ void plugin_manager_save_state(void)
 
 }
 
-
 void plugin_manager_connection_changed(MpdObj *mi, const int connected)
 {
     int i = 0;
@@ -182,3 +181,63 @@ void plugin_manager_status_changed(MpdObj *mi, const ChangedStatusType what)
         TEC("Status changed plugin: %s", gmpc_plugin_get_name(plugins[i]));
     }
 }
+
+/* \todo change this away from ~/.config/*/
+static void plugin_manager_load_userspace_plugins(void)
+{
+	char *url = gmpc_get_user_path("plugins");
+    /**
+     * if dir exists, try to load the plugins.
+     */
+    if (g_file_test(url, G_FILE_TEST_IS_DIR))
+    {
+        g_log(LOG_DOMAIN, 
+				G_LOG_LEVEL_DEBUG,
+				"Trying to load plugins in: %s", url);
+  		plugin_load_dir(url);
+    }
+    g_free(url);
+}
+static void plugin_manager_load_env_path(void)
+{
+	/* Load plugin from $PLUGIN_DIR if set */
+    if (g_getenv("PLUGIN_DIR") != NULL)
+    {
+        gchar *path = g_build_filename(g_getenv("PLUGIN_DIR"), NULL);
+        if (path && g_file_test(path, G_FILE_TEST_IS_DIR))
+        {
+            plugin_load_dir(path);
+        }
+        if (path)
+            g_free(path);
+    }
+}
+static void plugin_manager_load_global_plugins(void)
+{
+	gchar *url = NULL;
+#ifdef WIN32
+    gchar *packdir = g_win32_get_package_installation_directory_of_module(NULL);
+    g_log(LOG_DOMAIN,
+	    G_LOG_LEVEL_DEBUG,
+		"Got %s as package installation dir", packdir);
+    url = g_build_filename(packdir, "lib", "gmpc", "plugins", NULL);
+    g_free(packdir);
+
+    plugin_load_dir(url);
+    g_free(url);
+#else
+    /* This is the right location to load gmpc plugins */
+    url = g_build_path(G_DIR_SEPARATOR_S, PACKAGE_LIB_DIR, "plugins", NULL);
+    plugin_load_dir(url);
+    g_free(url);
+#endif
+}
+
+void plugin_manager_load_plugins(void)
+{
+	plugin_manager_load_global_plugins();
+	plugin_manager_load_env_path();
+	plugin_manager_load_userspace_plugins();
+}
+
+/* vim: set noexpandtab ts=4 sw=4 sts=4 tw=80: */

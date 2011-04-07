@@ -1,6 +1,6 @@
 /* Gnome Music Player Client (GMPC)
  * Copyright (C) 2004-2011 Qball Cow <qball@sarine.nl>
- * Project homepage: http://gmpc.wikia.com/
+ * Project homepage: http://gmpclient.org/
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,7 +33,6 @@
 #include "main.h"
 #include "playlist3.h"
 
-/** session support */
 #include "misc.h"
 #include "advanced-search.h"
 #include "gmpc_easy_download.h"
@@ -92,9 +91,17 @@ GObject *paned_size_group = NULL;
  **/
 int gmpc_connected = FALSE;
 
-static void connection_changed_real(GmpcConnection * gmpcconn, MpdObj * mi, int connect, gpointer data);
-static void gmpc_status_changed_callback_real(GmpcConnection * gmpcconn,
-MpdObj * mi, ChangedStatusType what, gpointer data);
+static void connection_changed_real(
+    GmpcConnection * gmpcconn,
+    MpdObj * mi,
+    int connect,
+    gpointer data);
+
+static void gmpc_status_changed_callback_real(
+	GmpcConnection * gmpcconn,
+    MpdObj * mi,
+    ChangedStatusType what,
+    gpointer data);
 
 /**
  * Define some local functions
@@ -106,7 +113,10 @@ static void  gmpc_mmkeys_connect_signals(GObject *keys);
 static void connection_changed(MpdObj * mi, int connect, gpointer data);
 
 /** Error callback */
-static int error_callback(MpdObj * mi, int error_id, char *error_msg, gpointer data);
+static int error_callback(MpdObj * mi,
+	int error_id,
+	char *error_msg,
+	gpointer data);
 
 /** init stock icons */
 static void init_stock_icons(void);
@@ -164,9 +174,8 @@ static gboolean hide_on_start(void)
 
 int main(int argc, char **argv)
 {
-
     #ifdef WIN32
-    gchar *packagedir;
+    gchar *packagedir = NULL;
     #endif
     #ifdef ENABLE_MMKEYS
     MmKeys *keys = NULL;
@@ -175,14 +184,10 @@ int main(int argc, char **argv)
     GObject *ipc = NULL;
     #endif
 
-    /**
-     * A string used severall times to create a path
-     */
+    /* A string used severall times to create a path  */
     gchar *url = NULL;
 
     INIT_TIC_TAC();
-
-
 
 	log_init();
 
@@ -197,6 +202,7 @@ int main(int argc, char **argv)
     bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
     textdomain(GETTEXT_PACKAGE);
     #endif
+
     gtk_set_locale();
 
     TEC("Setting up locale");
@@ -248,11 +254,13 @@ int main(int argc, char **argv)
     #ifdef WIN32
     /**
      * This loads an extra gtk rc file on windows.
-     * This is used to re-enable rule-hint in the treeview. (this is forced off on windows).
+     * This is used to re-enable rule-hint in the treeview.
+	 * (this is forced off on windows).
      */
     packagedir = g_win32_get_package_installation_directory_of_module(NULL);
-    g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Got %s as package installation dir", packagedir);
-    url = g_build_filename(packagedir, "share", "gmpc", "gmpc-gtk-win32.rc", NULL);
+    url = g_build_filename(packagedir, 
+			"share", "gmpc",
+			"gmpc-gtk-win32.rc", NULL);
     q_free(packagedir);
     gtk_rc_add_default_file(url);
     g_free(url);
@@ -263,12 +271,15 @@ int main(int argc, char **argv)
     TEC("Gtk init");
 
     /* connect signal to Session manager to quit */
-    g_signal_connect(egg_sm_client_get(), "quit", G_CALLBACK(main_quit), NULL);
+    g_signal_connect(
+		egg_sm_client_get(), "quit", 
+		G_CALLBACK(main_quit), NULL);
     TEC("EggSmClient");
 
     /**
      * Call create_gmpc_paths();
-     * This function checks if the path needed path are available, if not, create them
+     * This function checks if the path needed path are available
+	 * and creates them if needed.
      */
     create_gmpc_paths();
     TEC("Check version and create paths");
@@ -288,7 +299,7 @@ int main(int argc, char **argv)
         /* Destroy the meta data system and exit. */
         meta_data_destroy();
         TEC("Database cleanup");
-        return 1;
+        return EXIT_SUCCESS;
     }
 
     /**
@@ -309,7 +320,9 @@ int main(int argc, char **argv)
     /**
      * Open it
      */
-    g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Trying to open the config file: %s", url);
+    g_log(LOG_DOMAIN,
+			G_LOG_LEVEL_DEBUG,
+			"Trying to open the config file: %s", url);
     config = cfg_open(url);
 
     /** test if config opened correct  */
@@ -318,7 +331,9 @@ int main(int argc, char **argv)
         /**
          * Show gtk error message and quit
          */
-        g_log(LOG_DOMAIN, G_LOG_LEVEL_ERROR, "Failed to save/load configuration:\n%s\n", url);
+        g_log(LOG_DOMAIN, 
+			G_LOG_LEVEL_ERROR, 
+			"Failed to save/load configuration:\n%s\n", url);
         show_error_message(_("Failed to load the configuration system."));
         /* this is an error so bail out correctly */
 		return EXIT_FAILURE;
@@ -329,7 +344,9 @@ int main(int argc, char **argv)
     /**
      * If requested, output debug info to file
      */
-    if (cfg_get_single_value_as_int_with_default(config, "Default", "Debug-log", FALSE))
+    if (cfg_get_single_value_as_int_with_default(config,
+			"Default",
+			"Debug-log", FALSE))
     {
         url = gmpc_get_user_path("debug-info.log");
         if (url)
@@ -346,8 +363,10 @@ int main(int argc, char **argv)
     if (url == NULL || strcmp(url, VERSION))
     {
         int *new_version = split_version(VERSION);
-		g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Welcome to a new version of gmpc.\n");
-		/* set new */
+		g_log(LOG_DOMAIN,
+			G_LOG_LEVEL_DEBUG,
+			"Welcome to a new version of gmpc.\n");
+		/* set news */
         cfg_set_single_value_as_string(config, "Default", "version", VERSION);
         q_free(new_version);
     }
@@ -407,7 +426,8 @@ int main(int argc, char **argv)
         {
 			const char *pname = gmpc_profiles_get_name(gmpc_profiles, 
 					(const gchar *)iter->data);
-			if (pname != NULL && g_utf8_collate(settings.profile_name, pname) == 0)
+			if (pname != NULL && 
+				g_utf8_collate(settings.profile_name, pname) == 0)
             {
                 connection_set_current_profile((const gchar *)iter->data);
                 break;
@@ -442,7 +462,9 @@ int main(int argc, char **argv)
         /**
          * if failed, print error message
          */
-        g_log(LOG_DOMAIN, G_LOG_LEVEL_ERROR, "Failed to create connection object\n");
+        g_log(LOG_DOMAIN,
+			 G_LOG_LEVEL_ERROR,
+			 "Failed to create connection object\n");
         show_error_message(_("Failed to setup libmpd"));
         abort();
     }
@@ -450,15 +472,22 @@ int main(int argc, char **argv)
     /**
      * Connect signals to the connection object
      */
-    mpd_signal_connect_status_changed(connection, GmpcStatusChangedCallback, NULL);
-    mpd_signal_connect_error(connection, error_callback, NULL);
-    mpd_signal_connect_connection_changed(connection, connection_changed, NULL);
+    mpd_signal_connect_status_changed(connection, 
+			GmpcStatusChangedCallback, NULL);
+    mpd_signal_connect_error(connection,
+			error_callback, NULL);
+    mpd_signal_connect_connection_changed(connection,
+			connection_changed, NULL);
     /**
      * Just some trick to provide glib signals
      */
     gmpcconn = (GmpcConnection *) gmpc_connection_new();
-    g_signal_connect(G_OBJECT(gmpcconn), "connection_changed", G_CALLBACK(connection_changed_real), NULL);
-    g_signal_connect(G_OBJECT(gmpcconn), "status_changed", G_CALLBACK(gmpc_status_changed_callback_real), NULL);
+    g_signal_connect(G_OBJECT(gmpcconn), 
+			"connection_changed",
+			G_CALLBACK(connection_changed_real), NULL);
+    g_signal_connect(G_OBJECT(gmpcconn),
+			"status_changed",
+			G_CALLBACK(gmpc_status_changed_callback_real), NULL);
 
     TEC("Setting up mpd object signal system");
     /**
@@ -472,7 +501,9 @@ int main(int argc, char **argv)
     /** init the error messages */
     pl3_messages = playlist3_message_plugin_new();
 
-    playlist = (GtkTreeModel *) gmpc_mpddata_model_playlist_new(gmpcconn, connection);
+    playlist = (GtkTreeModel*)gmpc_mpddata_model_playlist_new(
+												gmpcconn,
+												connection);
     gmpc_mpddata_model_disable_image(GMPC_MPDDATA_MODEL(playlist));
 
     /**
@@ -486,44 +517,7 @@ int main(int argc, char **argv)
      */
     if (!settings.disable_plugins)
     {
-        #ifdef WIN32
-        packagedir = g_win32_get_package_installation_directory_of_module(NULL);
-        g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Got %s as package installation dir", packagedir);
-        url = g_build_filename(packagedir, "lib", "gmpc", "plugins", NULL);
-        q_free(packagedir);
-
-        plugin_load_dir(url);
-        q_free(url);
-        #else
-        /* This is the right location to load gmpc plugins */
-        url = g_build_path(G_DIR_SEPARATOR_S, PACKAGE_LIB_DIR, "plugins", NULL);
-        plugin_load_dir(url);
-        q_free(url);
-        #endif
-        /* Load plugin from $PLUGIN_DIR if set */
-        if (g_getenv("PLUGIN_DIR") != NULL)
-        {
-            gchar *path = g_build_filename(g_getenv("PLUGIN_DIR"), NULL);
-            if (path && g_file_test(path, G_FILE_TEST_IS_DIR))
-            {
-                plugin_load_dir(path);
-            }
-            if (path)
-                g_free(path);
-        }
-        /* user space dynamic plugins */
-        url = gmpc_get_user_path("plugins");
-        /**
-         * if dir exists, try to load the plugins.
-         */
-        if (g_file_test(url, G_FILE_TEST_IS_DIR))
-        {
-            g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Trying to load plugins in: %s", url);
-            if (!settings.disable_plugins)
-                plugin_load_dir(url);
-        }
-        TEC("Loading plugins from %s", url);
-        q_free(url);
+		plugin_manager_load_plugins();
     }
     /* time todo some initialisation of plugins */
 	plugin_manager_initialize_plugins();
@@ -558,7 +552,10 @@ int main(int argc, char **argv)
      * If gmpc is ran for the first time, we want to show a wizard that helps
      * the user getting started.
      */
-    if (cfg_get_single_value_as_int_with_default(config, "Default", "first-run", 1))
+    if (cfg_get_single_value_as_int_with_default(config,
+			"Default",
+			"first-run",
+			1))
     {
         setup_assistant();
         cfg_set_single_value_as_int(config, "Default", "first-run", 0);
@@ -568,7 +565,10 @@ int main(int argc, char **argv)
     /**
      * If autoconnect is enabled, tell gmpc that it's in state it should connect
      */
-    if (cfg_get_single_value_as_int_with_default(config, "connection", "autoconnect", DEFAULT_AUTOCONNECT))
+    if (cfg_get_single_value_as_int_with_default(config,
+			"connection",
+			"autoconnect",
+			DEFAULT_AUTOCONNECT))
     {
         gmpc_connected = TRUE;
     }
@@ -581,22 +581,30 @@ int main(int argc, char **argv)
         "mpd-update-speed",
         500), (GSourceFunc) update_mpd_status, NULL);
     /**
-     * create the autoconnect timeout, if autoconnect enable, it will check every 5 seconds
+     * create the autoconnect timeout, 
+     * if autoconnect enable, it will check every 5 seconds
      * if you are still connected, and reconnects you if not.
      */
-    autoconnect_timeout = g_timeout_add_seconds(5, (GSourceFunc) autoconnect_callback, NULL);
+    autoconnect_timeout = g_timeout_add_seconds(5,
+			(GSourceFunc) autoconnect_callback, NULL);
 
     /**
-     * Call this when entering the main loop, so you are connected on startup, not 5 seconds later
+     * Call this when entering the main loop, 
+     *  so you are connected on startup, not 5 seconds later
      */
     gtk_init_add((GSourceFunc) autoconnect_callback, NULL);
     if (settings.fullscreen)
         gtk_init_add((GSourceFunc) pl3_window_fullscreen, NULL);
 
     /**
-     * If the user wants gmpc to be started hidden, call pl3_hide after the mainloop started running
+     * If the user wants gmpc to be started hidden,
+     * call pl3_hide after the mainloop started running
      */
-    if (cfg_get_single_value_as_int_with_default(config, "Default", "start-hidden", FALSE) || settings.start_hidden)
+    if (cfg_get_single_value_as_int_with_default(config,
+			"Default",
+			"start-hidden",
+			FALSE) ||
+			settings.start_hidden)
     {
         g_timeout_add(250, (GSourceFunc) hide_on_start, NULL);
     }
@@ -682,13 +690,14 @@ int main(int argc, char **argv)
      */
     mpd_free(connection);
 
+	/* Reset xml error function and cleanup */
     initGenericErrorDefaultFunc((xmlGenericErrorFunc *) NULL);
     xmlCleanupParser();
     /* cleanup */
     gmpc_mpddata_treeview_cleanup();
 
     g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Quit....\n");
-    return 0;
+    return EXIT_SUCCESS;
 }
 
 
@@ -719,7 +728,8 @@ void main_quit(void)
      */
     if (mpd_check_connected(connection))
     {
-        if (cfg_get_single_value_as_int_with_default(config, "connection", "stop-on-exit", FALSE))
+        if (cfg_get_single_value_as_int_with_default(config,
+    				"connection", "stop-on-exit", FALSE))
         {
             mpd_player_stop(connection);
         }
@@ -748,7 +758,8 @@ static int autoconnect_callback(void)
         /* connect when autoconnect is enabled, the user wants to be connected
          */
         if (gmpc_connected
-            && cfg_get_single_value_as_int_with_default(config, "connection", "autoconnect", DEFAULT_AUTOCONNECT))
+            && cfg_get_single_value_as_int_with_default(config,
+        			"connection", "autoconnect", DEFAULT_AUTOCONNECT))
         {
             connect_to_mpd();
         }
@@ -758,7 +769,8 @@ static int autoconnect_callback(void)
     /* keep the timeout running */
     if (autoconnect_timeout)
         g_source_remove(autoconnect_timeout);
-    autoconnect_timeout = g_timeout_add_seconds(5 + autoconnect_backoff, (GSourceFunc) autoconnect_callback, NULL);
+    autoconnect_timeout = g_timeout_add_seconds(5 + autoconnect_backoff,
+			(GSourceFunc) autoconnect_callback, NULL);
     return FALSE;
 }
 
@@ -775,7 +787,8 @@ static void init_stock_icons(void)
 
     #ifdef WIN32
     /* The Windows gtkrc sets this to 0, so images don't work on buttons */
-    gtk_settings_set_long_property(gtk_settings_get_default(), "gtk-button-images", TRUE, "main");
+    gtk_settings_set_long_property(gtk_settings_get_default(),
+				"gtk-button-images", TRUE, "main");
     #endif
 
     return;
@@ -786,14 +799,19 @@ static void init_stock_icons(void)
  * Handle status changed callback from the libmpd object
  * This involves propegating the signal
  */
-void GmpcStatusChangedCallback(MpdObj * mi, ChangedStatusType what, void *userdata)
+void GmpcStatusChangedCallback(MpdObj * mi,
+								ChangedStatusType what, 
+								void *userdata)
 {
     g_signal_emit_by_name(gmpcconn, "status-changed", mi, what);
 }
 
 
 /* The actual handling of the status changed signal */
-static void gmpc_status_changed_callback_real(GmpcConnection * conn, MpdObj * mi, ChangedStatusType what, gpointer data)
+static void gmpc_status_changed_callback_real(GmpcConnection * conn,
+											MpdObj * mi,
+											ChangedStatusType what,
+											gpointer data)
 {
     /* When permission changes, update the advanced search regex */
     if (what & MPD_CST_PERMISSION)
@@ -812,7 +830,10 @@ static void gmpc_status_changed_callback_real(GmpcConnection * conn, MpdObj * mi
  * TODO: Needs to be redone/rethought
  */
 
-static void password_dialog_response(GtkWidget * dialog, gint response, gpointer data)
+static void password_dialog_response(
+				GtkWidget * dialog, 
+				gint response,
+				gpointer data)
 {
     gchar *path;
     switch (response)
@@ -821,10 +842,14 @@ static void password_dialog_response(GtkWidget * dialog, gint response, gpointer
             return;
         case GTK_RESPONSE_OK:
         {
-            path = (char *)gtk_entry_get_text(GTK_ENTRY(gtk_builder_get_object(xml_password_window, "pass_entry")));
+            path = (char *)gtk_entry_get_text(
+        				GTK_ENTRY(gtk_builder_get_object(xml_password_window,
+        				"pass_entry")));
             mpd_set_password(connection, path);
             if (gtk_toggle_button_get_active
-                (GTK_TOGGLE_BUTTON(gtk_builder_get_object(xml_password_window, "ck_save_pass"))))
+                (GTK_TOGGLE_BUTTON(gtk_builder_get_object(
+            		xml_password_window,
+            		"ck_save_pass"))))
             {
                 connection_set_password(path);
             }
@@ -832,14 +857,19 @@ static void password_dialog_response(GtkWidget * dialog, gint response, gpointer
         }
         break;
         default:
-            if (mpd_server_check_command_allowed(connection, "status") != MPD_SERVER_COMMAND_ALLOWED)
+            if (mpd_server_check_command_allowed(connection, "status") !=
+        					 MPD_SERVER_COMMAND_ALLOWED)
             {
-                playlist3_show_error_message(_("GMPC has insufficient permissions on the mpd server."), ERROR_CRITICAL);
+                playlist3_show_error_message(
+            		_("GMPC has insufficient permissions on the mpd server."),
+            		ERROR_CRITICAL);
                 mpd_disconnect(connection);
             }
             break;
     }
-    gtk_widget_destroy((GtkWidget *) gtk_builder_get_object(xml_password_window, "password-dialog"));
+    gtk_widget_destroy(
+		(GtkWidget *) gtk_builder_get_object(xml_password_window,
+		"password-dialog"));
     g_object_unref(xml_password_window);
     xml_password_window = NULL;
 }
@@ -855,18 +885,25 @@ static void password_dialog(int failed)
     xml_password_window = gtk_builder_new();
     gtk_builder_add_from_file(xml_password_window, path, NULL);
     gtk_window_set_transient_for(GTK_WINDOW
-        (gtk_builder_get_object(xml_password_window, "password-dialog")), GTK_WINDOW(pl3_win));
+        (gtk_builder_get_object(xml_password_window, "password-dialog")),
+        GTK_WINDOW(pl3_win));
     q_free(path);
     if (!xml_password_window)
         return;
     if (failed)
     {
-        path = g_strdup_printf(_("Failed to set password on: '%s'\nPlease try again"), mpd_get_hostname(connection));
+        path = g_strdup_printf(
+    		_("Failed to set password on: '%s'\nPlease try again"), 
+    		mpd_get_hostname(connection));
     } else
     {
-        path = g_strdup_printf(_("Please enter your password for: '%s'"), mpd_get_hostname(connection));
+        path = g_strdup_printf(
+    		_("Please enter your password for: '%s'"),
+    		mpd_get_hostname(connection));
     }
-    gtk_label_set_text(GTK_LABEL(gtk_builder_get_object(xml_password_window, "pass_label")), path);
+    gtk_label_set_text(
+		GTK_LABEL(gtk_builder_get_object(xml_password_window, "pass_label")),
+		path);
     q_free(path);
 
     g_signal_connect(G_OBJECT
@@ -882,9 +919,13 @@ void send_password(void)
 }
 
 
-static int error_callback(MpdObj * mi, int error_id, char *error_msg, gpointer data)
+static int error_callback(MpdObj * mi,
+				int error_id,
+				char *error_msg,
+				gpointer data)
 {
-    int autoconnect = cfg_get_single_value_as_int_with_default(config, "connection",
+    int autoconnect = cfg_get_single_value_as_int_with_default(config, 
+		"connection",
         "autoconnect",
         DEFAULT_AUTOCONNECT);
     /* if we are not connected we show a reconnect */
@@ -896,16 +937,22 @@ static int error_callback(MpdObj * mi, int error_id, char *error_msg, gpointer d
         if (error_id == 15 && autoconnect)
             return FALSE;
 
-        str = g_markup_printf_escaped("<b>%s %i: %s</b>", _("error code"), error_id, error_msg);
+        str = g_markup_printf_escaped("<b>%s %i: %s</b>",
+    				_("error code"),
+    				error_id,
+    				error_msg);
         playlist3_show_error_message(str, ERROR_CRITICAL);
         button = gtk_button_new_from_stock(GTK_STOCK_CONNECT);
-        g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(connect_to_mpd), NULL);
+        g_signal_connect(G_OBJECT(button),
+    				"clicked",
+    				G_CALLBACK(connect_to_mpd), NULL);
         playlist3_error_add_widget(button);
         g_free(str);
     } else
     {
         if (setup_assistant_is_running()
-            && (error_id == MPD_ACK_ERROR_PERMISSION || error_id == MPD_ACK_ERROR_PASSWORD))
+            && (error_id == MPD_ACK_ERROR_PERMISSION || 
+        		error_id == MPD_ACK_ERROR_PASSWORD))
         {
             gchar *str = g_markup_printf_escaped("<b>%s</b>",
                 _("Insufficient permission to connect to mpd. Check password"));
@@ -940,7 +987,10 @@ static void connection_changed(MpdObj * mi, int connected, gpointer data)
     /* propagate the signal to the connection object */
     if (mpd_check_connected(mi) != connected)
     {
-        g_log(LOG_DOMAIN, G_LOG_LEVEL_ERROR, "Connection state differs from actual state: act: %i\n", !connected);
+        g_log(LOG_DOMAIN, 
+    			G_LOG_LEVEL_ERROR,
+    			"Connection state differs from actual state: act: %i\n",
+    			!connected);
     }
     /**
      * Check version
@@ -983,11 +1033,18 @@ static void connection_changed(MpdObj * mi, int connected, gpointer data)
     }
 
     /* remove this when it does not fix it */
-    g_signal_emit_by_name(gmpcconn, "connection-changed", mi, mpd_check_connected(mi));
+    g_signal_emit_by_name(gmpcconn,
+				"connection-changed",
+				mi,
+				mpd_check_connected(mi));
 }
 
 
-static void connection_changed_real(GmpcConnection * obj, MpdObj * mi, int connected, gpointer data)
+static void connection_changed_real(
+						GmpcConnection * obj,
+						MpdObj * mi,
+						int connected,
+						gpointer data)
 {
     /**
      * propegate signals
@@ -1017,7 +1074,8 @@ static void connection_changed_real(GmpcConnection * obj, MpdObj * mi, int conne
     {
         if (autoconnect_timeout)
             g_source_remove(autoconnect_timeout);
-        autoconnect_timeout = g_timeout_add_seconds(5, (GSourceFunc) autoconnect_callback, NULL);
+        autoconnect_timeout = g_timeout_add_seconds(5, 
+    			(GSourceFunc) autoconnect_callback, NULL);
         autoconnect_backoff = 0;
     }
 }
@@ -1182,4 +1240,4 @@ static void  gmpc_mmkeys_connect_signals(GObject *keys)
 			gmpc_easy_command);
 }
 
-/* vim: set noexpandtab ts=4 sw=4 sts=4 tw=120: */
+/* vim: set noexpandtab ts=4 sw=4 sts=4 tw=80: */
