@@ -32,7 +32,6 @@ Options settings =
 	.start_hidden = FALSE,
 	.clean_config = FALSE,
 	.quit = FALSE,
-	.do_debug_updates = FALSE,
 	.show_bug_information = FALSE,
 	.fullscreen = FALSE,
 	.config_path = NULL,
@@ -77,10 +76,6 @@ gboolean parse_options(int *argc, char ***argv)
         {
             "clean-cover-db", 0, 0, G_OPTION_ARG_NONE,
             &(settings.clean_config), N_("Remove all failed hits from metadata cache"), NULL
-        },
-        {
-            "debug-updates", 0, G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_NONE,
-            &(settings.do_debug_updates), N_("Show redraw events in GTK+"), NULL
         },
         {
             "bug-information", 'b', 0, G_OPTION_ARG_NONE,

@@ -26,7 +26,6 @@
 
 /** Gtk/glib glade stuff */
 #include <gtk/gtk.h>
-#include <glib/gstdio.h>
 
 #include <libmpd/debug_printf.h>
 /* header files */
@@ -58,11 +57,7 @@
  * Get revision
  */
 #include "revision.h"
-
 #include "ipc.h"
-
-#define RESET "\x1b[0m"
-#define BOLD  "\x1b[1m"
 
 #include "internal-plugins.h"
 #include "log.h"
@@ -317,22 +312,18 @@ int main(int argc, char **argv)
     /**
      * Open it
      */
-    g_log(LOG_DOMAIN,
-			G_LOG_LEVEL_DEBUG,
+    g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG,
 			"Trying to open the config file: %s", url);
     config = cfg_open(url);
 
-    /** test if config opened correct  */
+   /**
+    * Show gtk error message and quit if config failed to open.
+    */
     if (config == NULL)
     {
-        /**
-         * Show gtk error message and quit
-         */
-        g_log(LOG_DOMAIN, 
-			G_LOG_LEVEL_ERROR, 
+        g_log(LOG_DOMAIN, G_LOG_LEVEL_ERROR, 
 			"Failed to save/load configuration:\n%s\n", url);
         show_error_message(_("Failed to load the configuration system."));
-        /* this is an error so bail out correctly */
 		return EXIT_FAILURE;
     }
     TEC("Opening config file: %s", url);
@@ -340,21 +331,20 @@ int main(int argc, char **argv)
 
     /**
      * \TODO, Check if version changed, then say something about it
-     */
+     *
+     * Enable this function if we need todo some upgrading on version change.
+     * Removal of this current content destroys config conversion from 0.17 and 
+     * up 
+     */     
     url = cfg_get_single_value_as_string(config, "Default", "version");
     if (url == NULL || strcmp(url, VERSION))
     {
-        int *new_version = split_version(VERSION);
-		g_log(LOG_DOMAIN,
-			G_LOG_LEVEL_DEBUG,
-			"Welcome to a new version of gmpc.\n");
-		/* set news */
         cfg_set_single_value_as_string(config, "Default", "version", VERSION);
-        q_free(new_version);
     }
     if (url) q_free(url);
-
     TEC("New version check");
+    
+
     #ifdef HAVE_IPC
     if (cfg_get_single_value_as_int_with_default(config,
         "Default",
@@ -365,18 +355,14 @@ int main(int argc, char **argv)
         if(gmpc_tools_ipc_is_running(ipc))
         {
             if(settings.quit)
-            {
                 gmpc_tools_ipc_send(ipc, COMMAND_EASYCOMMAND,"quit");
-            }
             else
-            {
                 gmpc_tools_ipc_send(ipc, COMMAND_EASYCOMMAND,"show");
-            }
 
             cfg_close(config);
             config = NULL;
             TEC("IPC setup and quitting");
-            exit(0);
+            return EXIT_SUCCESS;
         }
     }
     #endif
@@ -399,25 +385,12 @@ int main(int argc, char **argv)
     /* PanedSizeGroup */
     paned_size_group = (GObject *) gmpc_paned_size_group_new();
 
-    /** Signals */
     gmpc_profiles = gmpc_profiles_new();
+    /* If user requested a profile, look it up and set it active */
     if (settings.profile_name)
     {
-        GList *iter, *items = gmpc_profiles_get_profiles_ids(gmpc_profiles);
-        for (iter = g_list_first(items); iter; iter = g_list_next(iter))
-        {
-			const char *pname = gmpc_profiles_get_name(gmpc_profiles, 
-					(const gchar *)iter->data);
-			if (pname != NULL && 
-				g_utf8_collate(settings.profile_name, pname) == 0)
-            {
-                connection_set_current_profile((const gchar *)iter->data);
-                break;
-            }
-        }
-        g_list_foreach(items, (GFunc) g_free, NULL);
-        g_list_free(items);
-
+       gmpc_profiles_set_profile_from_name(gmpc_profiles,
+   											settings.profile_name);
     }
     TEC("Setting up gmpc idle,signals and profiles");
     /**
@@ -511,10 +484,6 @@ int main(int argc, char **argv)
         meta_data_check_plugin_changed();
     TEC("Metadata plugin changed check");
 
-    /* Set window debug, this is used for developers to visualize redraws */
-    g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Create main window\n");
-    gdk_window_set_debug_updates(settings.do_debug_updates);
-
     /**
      * Create the main window
      */
@@ -576,7 +545,9 @@ int main(int argc, char **argv)
      */
     gtk_init_add((GSourceFunc) autoconnect_callback, NULL);
     if (settings.fullscreen)
+    {
         gtk_init_add((GSourceFunc) pl3_window_fullscreen, NULL);
+    }
 
     /**
      * If the user wants gmpc to be started hidden,
@@ -596,39 +567,33 @@ int main(int argc, char **argv)
     /**
      * Setup Multimedia Keys
      */
-    /**
-     * Create mmkeys object
-     */
     keys = mmkeys_new();
-    /**
-     * Connect the wanted key's
-     */
 	gmpc_mmkeys_connect_signals(G_OBJECT(keys));
 	TEC("Setting up multimedia keys");
     #endif
 
     url = gmpc_get_user_path("gmpc.key");
     gtk_accel_map_load(url);
-	q_free(url);
+    q_free(url);
     /*
      * run the main loop
      */
     gtk_main();
 
-    url = gmpc_get_user_path("gmpc.key");
-    gtk_accel_map_save(url);
-    q_free(url);
     /**
      * Shutting Down
      *  cleaning up.
      */
+    url = gmpc_get_user_path("gmpc.key");
+    gtk_accel_map_save(url);
+    q_free(url);
 
-    #ifdef HAVE_IPC
+#ifdef HAVE_IPC
     if(ipc != NULL)
     {
         g_object_unref(ipc);
     }
-    #endif
+#endif
     /* Quit _all_ downloads */
     gmpc_easy_async_quit();
 
@@ -716,7 +681,6 @@ void main_quit(void)
             mpd_player_stop(connection);
         }
         mpd_disconnect(connection);
-
     }
     /**
      * Exit main loop
@@ -1077,21 +1041,18 @@ void show_error_message(const gchar * string)
     gtk_dialog_run(GTK_DIALOG(dialog));
 }
 
-
-
 static void print_version(void)
 {
-    printf(BOLD "%s\n", ("Gnome Music Player Client"));
-
-    printf(GMPC_COPYRIGHT "\n\n" RESET);
-    printf("%-25s: %s\n", ("Tagline"), GMPC_TAGLINE);
-    printf("%-25s: %i.%i.%i\n", ("Version"),
+    printf("%s\n", _("Gnome Music Player Client"));
+    printf(GMPC_COPYRIGHT "\n\n");
+    printf("%-25s: %s\n", _("Tagline"), GMPC_TAGLINE);
+    printf("%-25s: %i.%i.%i\n", _("Version"),
 			GMPC_MAJOR_VERSION,
 			GMPC_MINOR_VERSION,
 			GMPC_MICRO_VERSION);
 	if (revision && revision[0] != '\0')
 	{
-        printf("%-25s: %s\n", ("Revision"), revision);
+        printf("%-25s: %s\n", _("Revision"), revision);
     }
 }
 
