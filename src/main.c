@@ -145,9 +145,6 @@ MpdObj *connection = NULL;
 /* Glade prototypes, these would be static otherwise */
 void send_password(void);
 
-/**
- * Set paths
- */
 static void print_version(void);
 
 
@@ -340,21 +337,6 @@ int main(int argc, char **argv)
     }
     TEC("Opening config file: %s", url);
     q_free(url);
-
-    /**
-     * If requested, output debug info to file
-     */
-    if (cfg_get_single_value_as_int_with_default(config,
-			"Default",
-			"Debug-log", FALSE))
-    {
-        url = gmpc_get_user_path("debug-info.log");
-        if (url)
-        {
-			log_redirect_to_file(url);
-			q_free(url);
-        }
-    }
 
     /**
      * \TODO, Check if version changed, then say something about it

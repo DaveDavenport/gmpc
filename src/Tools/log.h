@@ -19,13 +19,4 @@ gboolean log_add_filter(
         const gchar * value,
         gpointer data,
         GError ** error);
-
-
-/**
- * Redirect the log output to a file
- * 
- * \todo (This function is incomplete and should no longer be used.)
- */
-void log_redirect_to_file(const char *url);
-
 #endif

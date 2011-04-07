@@ -95,21 +95,3 @@ void log_set_debug_level(int debug_level)
         debug_set_level(debug_level);
     }
 }
-
-void log_redirect_to_file(const char *url)
-{
-    FILE *fp = g_fopen(url, "a");
-    if (!fp)
-    {
-        g_log(LOG_DOMAIN,
-                G_LOG_LEVEL_ERROR,
-                "Failed to open debug-log file: \"%s\"",
-                url);
-        abort();
-    }
-    /* Set the output */
-    debug_set_output(fp);
-    /* Force highest level */
-    log_set_debug_level(DEBUG_INFO);
-    g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "***** Opened debug log file\n");
-}
