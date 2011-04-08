@@ -1,6 +1,6 @@
 /* gmpc-serverstats (GMPC plugin)
  * Copyright (C) 2006-2011 Qball Cow <qball@sarine.nl>
- * Project homepage: http://gmpc.wikia.com/
+ * Project homepage: http://gmpclient.org/
  
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

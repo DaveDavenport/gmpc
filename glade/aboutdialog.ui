@@ -9,7 +9,7 @@
     <property name="destroy_with_parent">True</property>
     <property name="type_hint">normal</property>
     <property name="copyright" translatable="yes">Copyright 2003-2007 Qball Cow</property>
-    <property name="website">http://gmpc.wikia.com/</property>
+    <property name="website">http://gmpclient.org/</property>
     <property name="license">		    GNU GENERAL PUBLIC LICENSE
 		       Version 2, June 1991
 

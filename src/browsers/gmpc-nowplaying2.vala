@@ -1,6 +1,6 @@
 /* Gnome Music Player Client Multimedia Keys plugin (gmpc-mmkeys)
  * Copyright (C) 2011 Qball Cow <qball@sarine.nl>
- * Project homepage: http://gmpc.wikia.com/
+ * Project homepage: http://gmpclient.org/
  
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@ private const string np2_LOG_DOMAIN = "NowPlaying";
 
 /** 
  * This plugin implements an 'improved' now playing interface, modeled after the mockup found here
- * http://gmpc.wikia.com/wiki/GMPC_Mocup
+ * http://gmpclient.org/wiki/GMPC_Mocup
  */
 
 /* create teh plugin of type Gmpc.Plugin.Base that implements the Browser interface */
