@@ -19,7 +19,6 @@
  
 #include <gtk/gtk.h>
 #include "playlist3.h"
-#include "main.h"
 #include "thv.h"
 
 /***
@@ -37,6 +36,7 @@ typedef struct _TabButton
     guint handler;
 } TabButton;
 
+
 static int last_button = -1;
 void thv_set_button_state(int button)
 {
@@ -48,7 +48,11 @@ void thv_set_button_state(int button)
         {
             g_signal_handler_block(G_OBJECT(tb->button), tb->handler);
             if (!gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(tb->button)))
-                gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tb->button), TRUE);
+            {
+                gtk_toggle_button_set_active(
+                            GTK_TOGGLE_BUTTON(tb->button),
+                            TRUE);
+            }
             g_signal_handler_unblock(G_OBJECT(tb->button), tb->handler);
 
             last_button = button;
@@ -63,8 +67,11 @@ void thv_set_button_state(int button)
 
                 g_signal_handler_block(G_OBJECT(tb->button), tb->handler);
                 if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(tb->button)))
-                    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tb->button), FALSE);
-
+                {
+                    gtk_toggle_button_set_active(
+                            GTK_TOGGLE_BUTTON(tb->button),
+                            FALSE);
+                }
                 g_signal_handler_unblock(G_OBJECT(tb->button), tb->handler);
             }
             last_button = -1;
@@ -73,8 +80,14 @@ void thv_set_button_state(int button)
 }
 
 
-/* if a row in the sidebar changed (f.e. title or icon) update the button accordingly */
-void thv_row_changed_signal(GtkTreeModel * model, GtkTreePath * path, GtkTreeIter * iter, gpointer data)
+/* if a row in the sidebar changed (f.e. title or icon)
+ * update the button accordingly
+ */
+static void thv_row_changed_signal(
+        GtkTreeModel * model,
+        GtkTreePath * path,
+        GtkTreeIter * iter,
+        gpointer data)
 {
     gint *ind = gtk_tree_path_get_indices(path);
     TabButton *tb = g_list_nth_data(thv_list, ind[0]);
@@ -102,7 +115,10 @@ void thv_row_changed_signal(GtkTreeModel * model, GtkTreePath * path, GtkTreeIte
 }
 
 
-void thv_row_deleted_signal(GtkTreeModel * model, GtkTreePath * path, gpointer data)
+static void thv_row_deleted_signal(
+                    GtkTreeModel * model,
+                    GtkTreePath * path,
+                    gpointer data)
 {
     gint *ind = gtk_tree_path_get_indices(path);
     TabButton *tb = g_list_nth_data(thv_list, ind[0]);
@@ -126,8 +142,11 @@ static int thv_sort_func(gconstpointer a, gconstpointer b)
 }
 
 
-void thv_row_reordered_signal(GtkTreeModel * model, GtkTreePath * path,
-GtkTreeIter * titer, gpointer arg3, gpointer data)
+static void thv_row_reordered_signal(GtkTreeModel * model,
+        GtkTreePath * path,
+        GtkTreeIter * titer,
+        gpointer arg3,
+        gpointer data)
 {
     gint *r = arg3;
     int length = gtk_tree_model_iter_n_children(model, NULL);
@@ -139,7 +158,10 @@ GtkTreeIter * titer, gpointer arg3, gpointer data)
     {
         TabButton *tb = g_list_nth_data(thv_list, r[i]);
         tb->pos = i;
-        gtk_container_remove(GTK_CONTAINER(gtk_builder_get_object(pl3_xml, "box_tab_bar")), GTK_WIDGET(tb->button));
+        gtk_container_remove(
+                    GTK_CONTAINER(
+                            gtk_builder_get_object(pl3_xml, "box_tab_bar")),
+                    GTK_WIDGET(tb->button));
     }
     /* Add the buttons to the header in the right order */
     thv_list = g_list_sort(thv_list, thv_sort_func);
@@ -147,19 +169,26 @@ GtkTreeIter * titer, gpointer arg3, gpointer data)
     {
         TabButton *tb = iter->data;
         gtk_box_pack_start(GTK_BOX
-            (gtk_builder_get_object(pl3_xml, "box_tab_bar")), GTK_WIDGET(tb->button), FALSE, TRUE, 0);
+            (gtk_builder_get_object(pl3_xml, "box_tab_bar")),
+            GTK_WIDGET(tb->button),
+            FALSE,
+            TRUE,
+            0);
     }
 }
 
 
 /**
- * If the button is clicked, trigger an update by calling a select on the sidebar
+ * If the button is clicked,
+ * trigger an update by calling a select on the sidebar
  */
 static void thv_button_clicked(GtkToggleButton * button, TabButton * tb)
 {
     if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(button)))
     {
-        GtkTreeSelection *selec = gtk_tree_view_get_selection(GTK_TREE_VIEW(gtk_builder_get_object(pl3_xml, "cat_tree")));
+        GtkTreeView *tree = (GtkTreeView*)gtk_builder_get_object(pl3_xml,
+                                                            "cat_tree");
+        GtkTreeSelection *selec = gtk_tree_view_get_selection(tree);
         GtkTreePath *path = gtk_tree_path_new_from_indices(tb->pos, -1);
         gtk_tree_selection_select_path(selec, path);
         gtk_tree_path_free(path);
@@ -172,7 +201,11 @@ static void thv_button_clicked(GtkToggleButton * button, TabButton * tb)
 }
 
 
-void thv_row_inserted_signal(GtkTreeModel * model, GtkTreePath * path, GtkTreeIter * iter, gpointer data)
+static void thv_row_inserted_signal(
+                    GtkTreeModel * model,
+                    GtkTreePath * path,
+                    GtkTreeIter * iter,
+                    gpointer data)
 {
     TabButton *tb;
     GtkToggleButton *button = (GtkToggleButton *) gtk_toggle_button_new();
@@ -188,7 +221,9 @@ void thv_row_inserted_signal(GtkTreeModel * model, GtkTreePath * path, GtkTreeIt
     tb = g_malloc0(sizeof(*tb));
     tb->button = button;
 
-    tb->handler = g_signal_connect(G_OBJECT(button), "toggled", G_CALLBACK(thv_button_clicked), tb);
+    tb->handler = g_signal_connect(G_OBJECT(button),
+                                "toggled",
+                                G_CALLBACK(thv_button_clicked), tb);
 
     /* Create image for in button at menu size */
     if (image)
@@ -218,13 +253,18 @@ void thv_row_inserted_signal(GtkTreeModel * model, GtkTreePath * path, GtkTreeIt
     /* Show everything */
     gtk_widget_show_all(GTK_WIDGET(button));
 
-    /* Add an extra reference to the widget, so when it is removed from the heading
+    /* Add an extra reference to the widget,
+     * so when it is removed from the heading
      * box it does not get free'ed
      */
     g_object_ref(G_OBJECT(button));
 
     /* Add it to the heading */
-    gtk_box_pack_start(GTK_BOX(gtk_builder_get_object(pl3_xml, "box_tab_bar")), GTK_WIDGET(button), FALSE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(gtk_builder_get_object(pl3_xml, "box_tab_bar")),
+                    GTK_WIDGET(button),
+                    FALSE,
+                    TRUE,
+                    0);
 
     /* Set the position in the TabButton */
     {
@@ -246,7 +286,10 @@ void thv_row_inserted_signal(GtkTreeModel * model, GtkTreePath * path, GtkTreeIt
         }
     }
     /* Move the button in the correct position */
-    gtk_box_reorder_child(GTK_BOX(gtk_builder_get_object(pl3_xml, "box_tab_bar")), GTK_WIDGET(button), tb->pos);
+    gtk_box_reorder_child(
+                GTK_BOX(gtk_builder_get_object(pl3_xml, "box_tab_bar")),
+                GTK_WIDGET(button),
+                tb->pos);
 
     /* free (possible) results from gtk_tree_model_get */
     if (title)
@@ -254,3 +297,21 @@ void thv_row_inserted_signal(GtkTreeModel * model, GtkTreePath * path, GtkTreeIt
     if (image)
         g_free(image);
 }
+
+void thv_init(GtkTreeModel *model)
+{
+    g_signal_connect(G_OBJECT(model), 
+            "row_inserted",
+            G_CALLBACK(thv_row_inserted_signal), NULL);
+    g_signal_connect(G_OBJECT(model),
+            "row_changed",
+            G_CALLBACK(thv_row_changed_signal), NULL);
+    g_signal_connect(G_OBJECT(model),
+            "row_deleted",
+            G_CALLBACK(thv_row_deleted_signal), NULL);
+    g_signal_connect(G_OBJECT(model),
+            "rows_reordered",
+            G_CALLBACK(thv_row_reordered_signal), NULL);
+}
+
+/* vim: set noexpandtab ts=4 sw=4 sts=4 tw=80: */

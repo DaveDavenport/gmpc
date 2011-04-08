@@ -5,28 +5,19 @@
  * THV
  */
 
-/* These signals allow us to copy the state of the Model. */
-void thv_row_inserted_signal(GtkTreeModel * model, 
-            GtkTreePath * path,
-            GtkTreeIter * iter,
-            gpointer data);
 
-void thv_row_changed_signal(GtkTreeModel * model,
-            GtkTreePath * path,
-            GtkTreeIter * iter,
-            gpointer data);
-
-void thv_row_deleted_signal(GtkTreeModel * model,
-            GtkTreePath * path,
-            gpointer data);
-
-void thv_row_reordered_signal(
-            GtkTreeModel * model,
-            GtkTreePath * path,
-            GtkTreeIter * iter,
-            gpointer arg3,
-            gpointer data);
-
+/**
+ * @param button the index of the button to be active. -1 is no selection.
+ *
+ * Set the active button.
+ */ 
 void thv_set_button_state(int button);
 
+/**
+ * @param model a #GtkTreeModel
+ *
+ * Initialize the the button bar.
+ * Use model as backend
+ */
+void thv_init(GtkTreeModel *model);
 #endif
