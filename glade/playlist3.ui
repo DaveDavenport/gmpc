@@ -677,6 +677,7 @@
                 <signal name="key-press-event" handler="show_command_line_key_press_event" swapped="no"/> 
                 <signal name="activate" handler="show_command_line_activate" swapped="no"/>
                 <signal name="icon-release" handler="show_command_line_icon_release" swapped="no"/>
+                <signal name="changed" handler="show_command_line_entry_changed" swapped="no" />
             </object>
             <packing>
             <property name="expand">false</property>

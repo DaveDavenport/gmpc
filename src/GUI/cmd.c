@@ -21,6 +21,9 @@
 #include "playlist3.h"
 #include "main.h"
 #include "cmd.h"
+
+
+#define LOG_DOMAIN "GUI.cmd"
 /**
  * Easy command interface 
  */
@@ -49,6 +52,28 @@ void show_command_line_icon_release(
 	}
 }
 
+
+/* List<string> history */
+static GList *history = NULL;
+
+/* weak List<string> current */
+static GList *current = NULL;
+static GList *last = NULL;
+static gint history_length = 0;
+static gchar *entry_current = NULL;
+
+static void show_command_line_history_destroy(void)
+{
+    current = NULL;
+    last = NULL;
+    g_list_foreach(history, (GFunc)g_free, NULL);
+    g_list_free(history);
+    history = NULL;
+    g_free(entry_current);
+    entry_current = NULL;
+    g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Cleanup Command Line history");
+}
+
 /* On activate */
 void show_command_line_activate(GtkWidget *entry, gpointer data)
 {
@@ -56,9 +81,45 @@ void show_command_line_activate(GtkWidget *entry, gpointer data)
 
 	gmpc_easy_command_do_query(GMPC_EASY_COMMAND(gmpc_easy_command),
 			command);
+
+    /*  Update history */
+    history = g_list_prepend(history, g_strdup(command));
+    /* if no last, current is last */ 
+    if(last == NULL) {
+        last = history;
+    }
+
+    history_length++;
+    /* Clear the current selected entry */
+    current = NULL;
+    if(history_length > 100) {
+        GList *temp;
+        temp = g_list_previous(last);;
+        g_free(last->data);
+        history = g_list_delete_link(history, last);
+        last = temp;
+        history_length--;
+    }
+
 	gtk_widget_hide(entry);
 	/* Clear the entry */
 	gtk_entry_set_text(GTK_ENTRY(entry), "");
+
+}
+
+void show_command_line_entry_changed( 
+                    GtkWidget *entry,
+                    gpointer data)
+{
+    const gchar *text = gtk_entry_get_text(GTK_ENTRY(entry));
+
+    if(current != NULL && g_utf8_collate(text, current->data) == 0) return;
+
+
+    if(entry_current) g_free(entry_current);
+    entry_current = NULL;
+    if(text) entry_current = g_strdup(text);
+    current = NULL;
 }
 
 /* On escape close and backspace when empty */
@@ -67,6 +128,36 @@ gboolean show_command_line_key_press_event(
                     GdkEventKey *event,
                     gpointer data)
 {
+
+    /* Go back in history */
+    if(event->keyval == GDK_Up)
+    {
+        if(current == NULL) current = g_list_first(history);
+        else if(current->next != NULL) current = g_list_next(current);
+
+        if(current != NULL) {
+            gtk_entry_set_text(GTK_ENTRY(entry), (char *)(current->data));
+        }
+        return TRUE;
+    }
+    /* Go forward in history */
+    else if (event->keyval == GDK_Down)
+    {
+        if(current != NULL) {
+            current = g_list_previous(current);
+
+            if(current) {
+                gtk_entry_set_text(GTK_ENTRY(entry), (char *)(current->data));
+            }else if (entry_current) {
+                gtk_entry_set_text(GTK_ENTRY(entry), entry_current); 
+            }else{
+                /* Fallback */
+                gtk_entry_set_text(GTK_ENTRY(entry),""); 
+            }
+        }
+        return TRUE;
+    }
+    else
 	if(event->keyval == GDK_Escape)
 	{
 		gtk_widget_hide(entry);
@@ -146,8 +237,14 @@ void show_command_line(void)
 
 		/* Add completion to the entry */
 		gtk_entry_set_completion(GTK_ENTRY(entry),comp); 
+
+        /* Make sure the history gets cleaned on destroy */
+        g_signal_connect(G_OBJECT(entry), 
+                        "destroy", 
+                        G_CALLBACK(show_command_line_history_destroy),
+                        NULL);
 		/* Only need todo this once */
-		init = 1;
+		init = 0;
 	}
 	/* Show the entry and grab focus */
 	gtk_widget_show(entry);

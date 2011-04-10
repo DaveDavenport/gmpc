@@ -16,4 +16,7 @@ void show_command_line_icon_release(
                             GdkEvent *event,
                             gpointer data);
 
+void show_command_line_entry_changed( 
+                            GtkWidget *entry,
+                            gpointer data);
 #endif
