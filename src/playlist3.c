@@ -42,6 +42,8 @@
 #include "playlist3-keybindings.h"
 #include "GUI/thv.h"
 #include "GUI/cmd.h"
+#include "GUI/status_icon.h"
+#include "GUI/title_header.h"
 
 #define ALBUM_SIZE_SMALL 48
 #define ALBUM_SIZE_LARGE 80
@@ -67,10 +69,6 @@ GmpcFavoritesButton *favorites_button = NULL;
  * and the new progresbar
  */
 static GtkWidget *new_pb = NULL;
-static GtkWidget *header_labels[5];
-
-void playlist3_new_header(void);
-void playlist3_update_header(void);
 
 /**
  * Indicates the zoom level and the previous zoom level.
@@ -139,15 +137,7 @@ static void playlist_pref_destroy(GtkWidget * container);
 static GtkBuilder *playlist_pref_xml = NULL;
 
 void ck_search_as_you_type(GtkToggleButton * but);
-/**
- * Status icons
- */
 
-static void main_window_update_status_icons(void);
-static GtkWidget *si_repeat = NULL;
-static GtkWidget *si_consume = NULL;
-static GtkWidget *si_repeat_single = NULL;
-static GtkWidget *si_random = NULL;
 
 /* Get the type of the selected row..
  * -1 means no row selected
@@ -1365,35 +1355,7 @@ void create_playlist3(void)
     /**
      * Add status icons
      */
-    si_repeat = gtk_event_box_new();
-    g_signal_connect(G_OBJECT(si_repeat), "button-release-event", G_CALLBACK(repeat_toggle), NULL);
-    gtk_container_add(GTK_CONTAINER(si_repeat), gtk_image_new_from_icon_name("stock_repeat", GTK_ICON_SIZE_MENU));
-    gtk_widget_show_all(si_repeat);
-    main_window_add_status_icon(si_repeat);
-
-    si_random = gtk_event_box_new();
-    g_signal_connect(G_OBJECT(si_random), "button-release-event", G_CALLBACK(random_toggle), NULL);
-    gtk_container_add(GTK_CONTAINER(si_random), gtk_image_new_from_icon_name("stock_shuffle", GTK_ICON_SIZE_MENU));
-    gtk_widget_show_all(si_random);
-    main_window_add_status_icon(si_random);
-
-    si_repeat_single = gtk_event_box_new();
-    g_signal_connect(G_OBJECT(si_repeat_single), "button-release-event", G_CALLBACK(repeat_single_toggle), NULL);
-    gtk_container_add(GTK_CONTAINER(si_repeat_single),
-        gtk_image_new_from_icon_name("media-repeat-single", GTK_ICON_SIZE_MENU));
-    gtk_widget_show_all(si_repeat_single);
-    main_window_add_status_icon(si_repeat_single);
-
-    si_consume = gtk_event_box_new();
-    g_signal_connect(G_OBJECT(si_consume), "button-release-event", G_CALLBACK(consume_toggle), NULL);
-    gtk_container_add(GTK_CONTAINER(si_consume), gtk_image_new_from_icon_name("media-consume", GTK_ICON_SIZE_MENU));
-    gtk_widget_show_all(si_consume);
-    main_window_add_status_icon(si_consume);
-
-    /* Listen for icon changed
-       g_object_connect(gtk_icon_theme_get_default(), "changed",
-       G_CALLBACK(main_window_update_status_icons), NULL);
-     */
+    main_window_init_default_status_icons();
     main_window_update_status_icons();
 
     /* Update extra */
@@ -2477,149 +2439,6 @@ void info2_fill_album_view(const gchar * artist, const gchar * album)
 }
 
 
-static void playlist3_header_song(void)
-{
-    mpd_Song *song = mpd_playlist_get_current_song(connection);
-    if (song)
-    {
-        GtkTreeView *tree = (GtkTreeView *) gtk_builder_get_object(pl3_xml, "cat_tree");
-        gmpc_metadata_browser_select_browser(metadata_browser, tree);
-        gmpc_metadata_browser_set_song(metadata_browser, song);
-    }
-}
-
-
-static void playlist3_header_artist(void)
-{
-    mpd_Song *song = mpd_playlist_get_current_song(connection);
-    if (song && song->artist)
-    {
-        GtkTreeView *tree = (GtkTreeView *) gtk_builder_get_object(pl3_xml, "cat_tree");
-        gmpc_metadata_browser_select_browser(metadata_browser, tree);
-        gmpc_metadata_browser_set_artist(metadata_browser, song->artist);
-    }
-}
-
-
-static void playlist3_header_album(void)
-{
-    mpd_Song *song = mpd_playlist_get_current_song(connection);
-    if (song && song->artist && song->album)
-    {
-        GtkTreeView *tree = (GtkTreeView *) gtk_builder_get_object(pl3_xml, "cat_tree");
-        gmpc_metadata_browser_select_browser(metadata_browser, tree);
-        gmpc_metadata_browser_set_album(metadata_browser, song->artist, song->album);
-    }
-}
-
-
-void playlist3_new_header(void)
-{
-    GtkWidget *hbox10 = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "hbox10"));
-    if (hbox10)
-    {
-        GtkWidget *hbox = gtk_hbox_new(FALSE, 6);
-        GtkWidget *vbox = gtk_vbox_new(FALSE, 0);
-
-        gtk_widget_set_size_request(hbox, 250, -1);
-        /** Title */
-        header_labels[0] = (GtkWidget *)gmpc_clicklabel_new("");
-        gmpc_clicklabel_font_size(GMPC_CLICKLABEL(header_labels[0]), 18);
-        gmpc_clicklabel_set_ellipsize(GMPC_CLICKLABEL(header_labels[0]), PANGO_ELLIPSIZE_END);
-
-        header_labels[1] = gtk_label_new(_("By"));
-        /** Artist */
-        header_labels[2] = (GtkWidget *)gmpc_clicklabel_new("");
-        gmpc_clicklabel_set_ellipsize(GMPC_CLICKLABEL(header_labels[2]), PANGO_ELLIPSIZE_NONE);
-        gmpc_clicklabel_set_do_italic(GMPC_CLICKLABEL(header_labels[2]), TRUE);
-
-        header_labels[3] = gtk_label_new(_("From"));
-        /** Albumr */
-        header_labels[4] = (GtkWidget *)gmpc_clicklabel_new("");
-        gmpc_clicklabel_set_do_italic(GMPC_CLICKLABEL(header_labels[4]), TRUE);
-        gmpc_clicklabel_set_ellipsize(GMPC_CLICKLABEL(header_labels[4]), PANGO_ELLIPSIZE_END);
-
-        gtk_box_pack_start(GTK_BOX(vbox), header_labels[0], FALSE, TRUE, 0);
-        gtk_box_pack_start(GTK_BOX(vbox), hbox, FALSE, TRUE, 0);
-
-        gtk_box_pack_start(GTK_BOX(hbox), header_labels[1], FALSE, TRUE, 0);
-        gtk_box_pack_start(GTK_BOX(hbox), header_labels[2], FALSE, TRUE, 0);
-        gtk_box_pack_start(GTK_BOX(hbox), header_labels[3], FALSE, TRUE, 0);
-        gtk_box_pack_start(GTK_BOX(hbox), header_labels[4], TRUE, TRUE, 0);
-
-        g_signal_connect(G_OBJECT(header_labels[0]), "clicked", G_CALLBACK(playlist3_header_song), NULL);
-        g_signal_connect(G_OBJECT(header_labels[2]), "clicked", G_CALLBACK(playlist3_header_artist), NULL);
-        g_signal_connect(G_OBJECT(header_labels[4]), "clicked", G_CALLBACK(playlist3_header_album), NULL);
-        gtk_box_pack_start(GTK_BOX(hbox10), vbox, TRUE, TRUE, 0);
-        gtk_widget_show_all(hbox10);
-    }
-}
-
-
-void playlist3_update_header(void)
-{
-    if (header_labels[0] != NULL)
-    {
-        char buffer[1024];
-        if (mpd_check_connected(connection))
-        {
-            mpd_Song *song = mpd_playlist_get_current_song(connection);
-            /** Set new header */
-            if (mpd_player_get_state(connection) != MPD_STATUS_STATE_STOP && song)
-            {
-                mpd_song_markup(buffer, 1024, "[%title%|%shortfile%][ (%name%)]", song);
-                gmpc_clicklabel_set_text(GMPC_CLICKLABEL(header_labels[0]), buffer);
-                if (song->artist)
-                {
-                    gtk_widget_show(header_labels[1]);
-                    gtk_widget_show(header_labels[2]);
-                    gmpc_clicklabel_set_text(GMPC_CLICKLABEL(header_labels[2]), song->artist);
-                } else
-                {
-                    gtk_widget_hide(header_labels[1]);
-                    gtk_widget_hide(header_labels[2]);
-                }
-                if (song->album)
-                {
-                    gtk_widget_show(header_labels[3]);
-                    gtk_widget_show(header_labels[4]);
-                    if (song->date)
-                    {
-                        gchar *text = g_strdup_printf("%s (%s)", song->album, song->date);
-                        gmpc_clicklabel_set_text(GMPC_CLICKLABEL(header_labels[4]), text);
-                        g_free(text);
-                    } else
-                    {
-                        gmpc_clicklabel_set_text(GMPC_CLICKLABEL(header_labels[4]), song->album);
-                    }
-
-                } else
-                {
-                    gtk_widget_hide(header_labels[3]);
-                    gtk_widget_hide(header_labels[4]);
-                }
-
-            } else
-            {
-                gmpc_clicklabel_set_text(GMPC_CLICKLABEL(header_labels[0]), _("Not Playing"));
-                gtk_widget_hide(header_labels[1]);
-                gtk_widget_hide(header_labels[2]);
-                gtk_widget_hide(header_labels[3]);
-                gtk_widget_hide(header_labels[4]);
-            }
-        } else
-        {
-            gmpc_clicklabel_set_text(GMPC_CLICKLABEL(header_labels[0]), _("Not Connected"));
-            gtk_widget_hide(header_labels[1]);
-            gtk_widget_hide(header_labels[2]);
-            gtk_widget_hide(header_labels[3]);
-            gtk_widget_hide(header_labels[4]);
-
-        }
-    }
-}
-
-
 void playlist3_insert_browser(GtkTreeIter * iter, gint position)
 {
     GtkTreeIter it, *sib = NULL;
@@ -2753,70 +2572,6 @@ void easy_command_help_window(void)
         gmpc_easy_command_help_window(gmpc_easy_command, NULL);
 }
 
-
-static void main_window_update_status_icons(void)
-{
-    if (si_repeat_single)
-    {
-        GtkWidget *image = gtk_bin_get_child(GTK_BIN(si_repeat_single));
-        if (mpd_check_connected(connection) && mpd_player_get_single(connection))
-        {
-            gtk_widget_set_sensitive(GTK_WIDGET(image), TRUE);
-            gtk_widget_set_tooltip_text(si_repeat_single, _("Single Mode enabled"));
-        } else
-        {
-            gtk_widget_set_sensitive(GTK_WIDGET(image), FALSE);
-            gtk_widget_set_tooltip_text(si_repeat_single, _("Single Mode disabled"));
-        }
-    }
-    if (si_consume)
-    {
-        GtkWidget *image = gtk_bin_get_child(GTK_BIN(si_consume));
-        if (mpd_check_connected(connection) && mpd_player_get_consume(connection))
-        {
-            gtk_widget_set_sensitive(GTK_WIDGET(image), TRUE);
-            gtk_widget_set_tooltip_text(si_consume, _("Consume Mode enabled"));
-        } else
-        {
-            gtk_widget_set_sensitive(GTK_WIDGET(image), FALSE);
-            gtk_widget_set_tooltip_text(si_consume, _("Consume Mode disabled"));
-        }
-    }
-    if (si_repeat)
-    {
-        GtkWidget *image = gtk_bin_get_child(GTK_BIN(si_repeat));
-        if (mpd_check_connected(connection) && mpd_player_get_repeat(connection))
-        {
-            gtk_widget_set_sensitive(GTK_WIDGET(image), TRUE);
-            gtk_widget_set_tooltip_text(si_repeat, _("Repeat enabled"));
-        } else
-        {
-            gtk_widget_set_sensitive(GTK_WIDGET(image), FALSE);
-            gtk_widget_set_tooltip_text(si_repeat, _("Repeat disabled"));
-        }
-    }
-    if (si_random)
-    {
-        GtkWidget *image = gtk_bin_get_child(GTK_BIN(si_random));
-        if (mpd_check_connected(connection) && mpd_player_get_random(connection))
-        {
-            gtk_widget_set_sensitive(GTK_WIDGET(image), TRUE);
-            gtk_widget_set_tooltip_text(si_random, _("Random enabled"));
-        } else
-        {
-            gtk_widget_set_sensitive(GTK_WIDGET(image), FALSE);
-            gtk_widget_set_tooltip_text(si_random, _("Random disabled"));
-        }
-    }
-}
-
-
-void main_window_add_status_icon(GtkWidget * icon)
-{
-    GtkWidget *hbox = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "status-icon-hbox"));
-    g_return_if_fail(icon != NULL);
-    gtk_box_pack_start(GTK_BOX(hbox), icon, FALSE, TRUE, 0);
-}
 
 
 /**

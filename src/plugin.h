@@ -257,7 +257,6 @@ extern GObject *paned_size_group;
  *
  * Add an icon to the status bar.
  */
-
 void main_window_add_status_icon(GtkWidget *icon);
 
 /**
