@@ -108,9 +108,10 @@ void playlist3_new_header(void)
 
 void playlist3_update_header(void)
 {
+    char buffer[1024];
     if (header_labels[0] == NULL)
+        return;
 
-        char buffer[1024];
     if (mpd_check_connected(connection))
     {
         mpd_Song *song = mpd_playlist_get_current_song(connection);
