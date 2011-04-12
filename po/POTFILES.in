@@ -85,6 +85,9 @@ src/Widgets/GmpcVolume.c
 src/Widgets/gmpc-song-list.c
 src/Widgets/gmpc-song-links.c
 src/Widgets/playlist3-messages.c
+src/GUI/status_icon.c
+src/GUI/title_header.c
+
 
 #Providers
 src/Providers/music-tree.c
