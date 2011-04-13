@@ -12,11 +12,7 @@ audio-volume-muted.png\
 emblem-favorite.png\
 fetching-artist.png\
 frame-artist.png\
-gmpc-tray-disconnected.png\
-gmpc-tray-pause.png\
-gmpc-tray-play.png\
-gmpc-tray.png\
-                  media-date.png\
+media-date.png\
 media-artist.png\
 media-codec.png\
 media-album.png\

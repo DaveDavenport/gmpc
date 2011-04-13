@@ -12,10 +12,6 @@ audio-volume-muted.svg\
 emblem-favorite.svg\
 fetching-artist.svg\
 frame-artist.svg\
-gmpc-tray-disconnected.svg\
-gmpc-tray-pause.svg\
-gmpc-tray-play.svg\
-gmpc-tray.svg\
     media-date.svg\
     media-album.svg\
 media-artist.svg\
