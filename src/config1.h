@@ -78,31 +78,18 @@ conf_mult_obj *cfg_get_key_list(config_obj *data, const char *class);
 
 /* multiple */
 void cfg_free_multiple(conf_mult_obj *data);
-conf_mult_obj * cfg_get_multiple_as_string(config_obj *cfg, const char *class, const char *key);
-void cfg_set_multiple_value_as_string(config_obj *cfg, const char *class, const char *key, const char *id, const char *value);
-void cfg_del_multiple_value(config_obj *cfg, const char *class, const char *key, const char *id);
+
+
 void cfg_free_string(char *string);
 
 
 void cfg_remove_class(config_obj *cfg, const char *class);
 
-void cfg_do_special_cleanup(config_obj *cfg);
 
 
 
 #define cfg_free_string(a)  g_free(a);a=NULL;
 
-
-
-
-void cfg_del_single_value_mm(config_obj *cfg, const char *class, const char *sclass, const char *ssclass, const char *key);
-void cfg_set_single_value_as_int_mm(config_obj *cfg, const char *class, const char *sclass, const char *ssclass, const char *key, int value);
-int cfg_get_single_value_as_int_with_default_mm(config_obj *cfg, const char *class, const char *sclass, const char *ssclass, const char *key, int def);
-float cfg_get_single_value_as_float_mm(config_obj *cfg, const char *class, const char *sclass, const char *ssclass, const char *key);
-/* String */
-void cfg_set_single_value_as_string_mm(config_obj *cfg, const char *class, const char *sclass, const char *ssclass, const char *key, const char *value);
-char * cfg_get_single_value_as_string_mm(config_obj *cfg, const char *class, const char *sclass, const char *ssclass, const char *key);
-char * cfg_get_single_value_as_string_with_default_mm(config_obj *cfg, const char *class, const char *sclass, const char *ssclass, const char *key , const char *def);
 
 
 
