@@ -33,6 +33,7 @@
 #define PLUGIN_ID_MARK 1024
 #define PLUGIN_ID_INTERNALL 2048
 /* Usefull signal objects. */
+extern config_obj *config;
 extern MpdObj *connection;
 extern GmpcProfiles *gmpc_profiles;
 extern GmpcConnection 	*gmpcconn;

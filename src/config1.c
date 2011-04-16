@@ -55,7 +55,7 @@ typedef struct _config_node
     {
         /* TYPE_CATEGORY */
         struct _config_node *children;
-        gchar *value;            /* TYPE_ITEM* */
+        gchar *value;   /* TYPE_ITEM* */
     };
 } config_node;
 
@@ -68,25 +68,22 @@ typedef struct _config_obj
 } _config_obj;
 
 static void __int_cfg_set_single_value_as_string(config_obj * cfg,
-const char *class,
-const char *key,
-const char *value);
+                                                 const char *class,
+                                                 const char *key,
+                                                 const char *value);
 
 static gboolean cfg_save_real(config_obj *);
 static void __int_cfg_remove_node(config_obj *, config_node *);
 static config_node *cfg_get_class_multiple(config_obj * cfg,
-config_node * root,
-const char *class);
-static config_node *cfg_add_class(config_obj *,
-config_node *,
-const char *);
+                                           config_node * root,
+                                           const char *class);
+static config_node *cfg_add_class(config_obj *, config_node *, const char *);
 static config_node *cfg_new_node(void);
 static void cfg_add_child(config_node *, config_node *);
 static void cfg_save_delayed(config_obj * cfg);
 
-void cfg_del_single_value_mm(config_obj *cfg,
-const char *class,
-const char *key);
+void cfg_del_single_value_mm(config_obj * cfg,
+                             const char *class, const char *key);
 
 static void cfg_open_parse_file(config_obj * cfgo, FILE * fp)
 {
@@ -212,8 +209,7 @@ static void cfg_open_parse_file(config_obj * cfgo, FILE * fp)
                     }
                     c = fgetc(fp);
                 } while ((c != '\n' || quote)
-                    && c != EOF
-                    && quote >= 0 && len < 1023);
+                         && c != EOF && quote >= 0 && len < 1023);
                 new->value = g_strndup(buffer, len);
                 cfgo->total_size += len;
                 if (multiple)
@@ -228,13 +224,12 @@ static void cfg_open_parse_file(config_obj * cfgo, FILE * fp)
             while (c != EOF && c != '\n')
                 c = fgetc(fp);
         } else
-        while (c != EOF && c != '\n')
-            c = fgetc(fp);
+            while (c != EOF && c != '\n')
+                c = fgetc(fp);
     }
 }
 
-
-config_obj *cfg_open(gchar * url)
+config_obj *cfg_open(const gchar * url)
 {
     config_obj *cfgo = NULL;
     /* check if there is an url passed */
@@ -264,11 +259,9 @@ config_obj *cfg_open(gchar * url)
         }
     }
     g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG,
-        "Config %s: allocated: %i\n",
-        cfgo->url, cfgo->total_size);
+          "Config %s: allocated: %i\n", cfgo->url, cfgo->total_size);
     return cfgo;
 }
-
 
 void cfg_close(config_obj * cfgo)
 {
@@ -278,8 +271,8 @@ void cfg_close(config_obj * cfgo)
     }
     cfg_save_real(cfgo);
     g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG,
-        "Closing config '%s' with %i bytes allocated\n",
-        cfgo->url, cfgo->total_size);
+          "Closing config '%s' with %i bytes allocated\n",
+          cfgo->url, cfgo->total_size);
     if (cfgo->url != NULL)
     {
         cfgo->total_size -= strlen(cfgo->url);
@@ -287,14 +280,12 @@ void cfg_close(config_obj * cfgo)
     }
     while (cfgo->root)
         __int_cfg_remove_node(cfgo, cfgo->root);
-    cfgo->total_size -=  sizeof(config_obj);
+    cfgo->total_size -= sizeof(config_obj);
     g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG,
-        "Memory remaining: %i\n",
-        cfgo->total_size);
+          "Memory remaining: %i\n", cfgo->total_size);
     g_free(cfgo);
     cfgo = NULL;
 }
-
 
 static config_node *cfg_new_node(void)
 {
@@ -309,10 +300,8 @@ static config_node *cfg_new_node(void)
     return newnode;
 }
 
-
 static config_node *cfg_add_class(config_obj * cfg,
-config_node * parent,
-const char *class)
+                                  config_node * parent, const char *class)
 {
     config_node *newnode = cfg_new_node();
     newnode->type = TYPE_CATEGORY;
@@ -351,7 +340,6 @@ const char *class)
     return newnode;
 }
 
-
 void cfg_add_child(config_node * parent, config_node * child)
 {
     if (parent == NULL || child == NULL)
@@ -374,7 +362,6 @@ void cfg_add_child(config_node * parent, config_node * child)
         child->parent = parent;
     }
 }
-
 
 static void cfg_save_category(config_obj * cfg, config_node * node, FILE * fp)
 {
@@ -430,7 +417,6 @@ static void cfg_save_category(config_obj * cfg, config_node * node, FILE * fp)
     }
 }
 
-
 static gboolean cfg_save_real(config_obj * cfgo)
 {
     if (cfgo == NULL)
@@ -446,13 +432,9 @@ static gboolean cfg_save_real(config_obj * cfgo)
     {
         return FALSE;
     }
+    g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Save triggered:%s", cfgo->url);
     g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG,
-        "Save triggered:%s",
-        cfgo->url);
-    g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG,
-        "Saving config file: %s (%i bytes)",
-        cfgo->url,
-        cfgo->total_size);
+          "Saving config file: %s (%i bytes)", cfgo->url, cfgo->total_size);
     if (cfgo->root != NULL)
     {
         FILE *fp = g_fopen(cfgo->url, "w");
@@ -461,24 +443,22 @@ static gboolean cfg_save_real(config_obj * cfgo)
         fputs("# Do not edit this file!!!\n", fp);
         cfg_save_category(cfgo, cfgo->root, fp);
         fclose(fp);
-        #ifndef WIN32
+#ifndef WIN32
         chmod(cfgo->url, 0600);
-        #endif
+#endif
 
     }
     return FALSE;
 }
-
 
 static config_node *cfg_get_class(config_obj * cfg, const char *class)
 {
     return cfg_get_class_multiple(cfg, NULL, class);
 }
 
-
 static config_node *cfg_get_class_multiple(config_obj * cfg,
-config_node * root,
-const char *class)
+                                           config_node * root,
+                                           const char *class)
 {
     config_node *node = NULL;
     if (root != NULL)
@@ -506,8 +486,8 @@ const char *class)
     return NULL;
 }
 
-
-static config_node *cfg_get_single_value(config_obj * cfg, const char *class,const char *key)
+static config_node *cfg_get_single_value(config_obj * cfg, const char *class,
+                                         const char *key)
 {
     /* take children */
     config_node *cur = NULL;
@@ -527,8 +507,9 @@ static config_node *cfg_get_single_value(config_obj * cfg, const char *class,con
     return NULL;
 }
 
-
-static char *__int_cfg_get_single_value_as_string(config_obj * cfg, const char *class, const char *key)
+static char *__int_cfg_get_single_value_as_string(config_obj * cfg,
+                                                  const char *class,
+                                                  const char *key)
 {
     config_node *cur = cfg_get_single_value(cfg, class, key);
     if (cur != NULL)
@@ -541,14 +522,16 @@ static char *__int_cfg_get_single_value_as_string(config_obj * cfg, const char *
     return NULL;
 }
 
-
-char *cfg_get_single_value_as_string(config_obj * cfg, const char *class, const char *key)
+char *cfg_get_single_value_as_string(config_obj * cfg, const char *class,
+                                     const char *key)
 {
     return __int_cfg_get_single_value_as_string(cfg, class, key);
 }
 
-
-char *cfg_get_single_value_as_string_with_default(config_obj * cfg, const char *class, const char *key, const char *def)
+char *cfg_get_single_value_as_string_with_default(config_obj * cfg,
+                                                  const char *class,
+                                                  const char *key,
+                                                  const char *def)
 {
     char *retv = NULL;
     retv = __int_cfg_get_single_value_as_string(cfg, class, key);
@@ -560,8 +543,9 @@ char *cfg_get_single_value_as_string_with_default(config_obj * cfg, const char *
     return retv;
 }
 
-
-static int __int_cfg_get_single_value_as_int_mm(config_obj * cfg, const char *class, const char *key)
+static int __int_cfg_get_single_value_as_int_mm(config_obj * cfg,
+                                                const char *class,
+                                                const char *key)
 {
     config_node *cur = NULL;
     int retv = CFG_INT_NOT_DEFINED;
@@ -578,16 +562,16 @@ static int __int_cfg_get_single_value_as_int_mm(config_obj * cfg, const char *cl
     return retv;
 }
 
-
-int cfg_get_single_value_as_int(config_obj * cfg, const char *class, const char *key)
+int cfg_get_single_value_as_int(config_obj * cfg, const char *class,
+                                const char *key)
 {
     int retv = 0;
     retv = __int_cfg_get_single_value_as_int_mm(cfg, class, key);
     return retv;
 }
 
-
-void cfg_set_single_value_as_int(config_obj * cfg, const char *class, const char *key, int value)
+void cfg_set_single_value_as_int(config_obj * cfg, const char *class,
+                                 const char *key, int value)
 {
     gchar *temp = NULL;
     temp = g_strdup_printf("%i", value);
@@ -595,8 +579,9 @@ void cfg_set_single_value_as_int(config_obj * cfg, const char *class, const char
     cfg_free_string(temp);
 }
 
-
-static void __int_cfg_set_single_value_as_int(config_obj * cfg, const char *class,const char *key, int value)
+static void __int_cfg_set_single_value_as_int(config_obj * cfg,
+                                              const char *class,
+                                              const char *key, int value)
 {
     gchar *temp = NULL;
     temp = g_strdup_printf("%i", value);
@@ -604,8 +589,9 @@ static void __int_cfg_set_single_value_as_int(config_obj * cfg, const char *clas
     cfg_free_string(temp);
 }
 
-
-int cfg_get_single_value_as_int_with_default(config_obj * cfg, const char *class, const char *key, int def)
+int cfg_get_single_value_as_int_with_default(config_obj * cfg,
+                                             const char *class, const char *key,
+                                             int def)
 {
     int retv = CFG_INT_NOT_DEFINED;
     retv = __int_cfg_get_single_value_as_int_mm(cfg, class, key);
@@ -617,9 +603,10 @@ int cfg_get_single_value_as_int_with_default(config_obj * cfg, const char *class
     return retv;
 }
 
-
 /* float */
-static float __int_cfg_get_single_value_as_float(config_obj * cfg, const char *class, const char *key)
+static float __int_cfg_get_single_value_as_float(config_obj * cfg,
+                                                 const char *class,
+                                                 const char *key)
 {
     float result = 0;
     config_node *cur = NULL;
@@ -634,16 +621,16 @@ static float __int_cfg_get_single_value_as_float(config_obj * cfg, const char *c
     return result;
 }
 
-
-float cfg_get_single_value_as_float(config_obj * cfg, const char *class, const char *key)
+float cfg_get_single_value_as_float(config_obj * cfg, const char *class,
+                                    const char *key)
 {
     float retv = 0;
     retv = __int_cfg_get_single_value_as_float(cfg, class, key);
     return retv;
 }
 
-
-void cfg_set_single_value_as_float(config_obj * cfg, const char *class, const char *key, float value)
+void cfg_set_single_value_as_float(config_obj * cfg, const char *class,
+                                   const char *key, float value)
 {
     char *value1 = NULL;
     value1 = g_strdup_printf("%f", value);
@@ -651,8 +638,9 @@ void cfg_set_single_value_as_float(config_obj * cfg, const char *class, const ch
     cfg_free_string(value1);
 }
 
-
-float cfg_get_single_value_as_float_with_default(config_obj * cfg, const char *class, const char *key, float def)
+float cfg_get_single_value_as_float_with_default(config_obj * cfg,
+                                                 const char *class,
+                                                 const char *key, float def)
 {
     float retv = 0;
     retv = __int_cfg_get_single_value_as_float(cfg, class, key);
@@ -666,7 +654,6 @@ float cfg_get_single_value_as_float_with_default(config_obj * cfg, const char *c
     /* make it return an error */
     return retv;
 }
-
 
 static void __int_cfg_remove_node(config_obj * cfg, config_node * node)
 {
@@ -730,8 +717,8 @@ static void __int_cfg_remove_node(config_obj * cfg, config_node * node)
     g_slice_free(config_node, node);
 }
 
-
-void cfg_del_single_value_mm(config_obj * cfg, const char *class, const char *key)
+void cfg_del_single_value_mm(config_obj * cfg, const char *class,
+                             const char *key)
 {
     config_node *node = NULL;
     node = cfg_get_single_value(cfg, class, key);
@@ -739,16 +726,15 @@ void cfg_del_single_value_mm(config_obj * cfg, const char *class, const char *ke
     {
         __int_cfg_remove_node(cfg, node);
         cfg_save_delayed(cfg);
-        g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "triggered save delay: del: %s, %s", class, key);
+        g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG,
+              "triggered save delay: del: %s, %s", class, key);
     }
 }
-
 
 void cfg_del_single_value(config_obj * cfg, const char *class, const char *key)
 {
     cfg_del_single_value_mm(cfg, class, key);
 }
-
 
 void cfg_remove_class(config_obj * cfg, const char *class)
 {
@@ -762,11 +748,14 @@ void cfg_remove_class(config_obj * cfg, const char *class)
         __int_cfg_remove_node(cfg, node);
     }
     cfg_save_delayed(cfg);
-    g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "triggered save delay: del: %s", class);
+    g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "triggered save delay: del: %s",
+          class);
 }
 
-
-static void __int_cfg_set_single_value_as_string(config_obj * cfg, const char *class, const char *key, const char *value)
+static void __int_cfg_set_single_value_as_string(config_obj * cfg,
+                                                 const char *class,
+                                                 const char *key,
+                                                 const char *value)
 {
     config_node *newnode = cfg_get_single_value(cfg, class, key);
     if (newnode == NULL)
@@ -785,8 +774,9 @@ static void __int_cfg_set_single_value_as_string(config_obj * cfg, const char *c
         cfg_add_child(node, newnode);
 
     } else if ((value == NULL && newnode->value == NULL) ||
-        (value != NULL && newnode->value != NULL && strlen(newnode->value) == strlen(value)
-        && !memcmp(newnode->value, value, strlen(newnode->value))))
+               (value != NULL && newnode->value != NULL
+                && strlen(newnode->value) == strlen(value)
+                && !memcmp(newnode->value, value, strlen(newnode->value))))
     {
         /* Check if the content is the same, if it is, do nothing */
         return;
@@ -806,15 +796,15 @@ static void __int_cfg_set_single_value_as_string(config_obj * cfg, const char *c
         newnode->value = NULL;
     }
     cfg_save_delayed(cfg);
-    g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "triggered save delay: set: %s,%s -> %s", class, key, value);
+    g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG,
+          "triggered save delay: set: %s,%s -> %s", class, key, value);
 }
 
-
-void cfg_set_single_value_as_string(config_obj * cfg, const char *class, const char *key, const char *value)
+void cfg_set_single_value_as_string(config_obj * cfg, const char *class,
+                                    const char *key, const char *value)
 {
     __int_cfg_set_single_value_as_string(cfg, class, key, value);
 }
-
 
 /* multiple values */
 void cfg_free_multiple(conf_mult_obj * data)
@@ -847,7 +837,6 @@ void cfg_free_multiple(conf_mult_obj * data)
     }
 }
 
-
 conf_mult_obj *cfg_get_class_list(config_obj * data)
 {
     conf_mult_obj *list = NULL;
@@ -878,7 +867,6 @@ conf_mult_obj *cfg_get_class_list(config_obj * data)
 
     return list;
 }
-
 
 conf_mult_obj *cfg_get_key_list(config_obj * data, const char *class)
 {
@@ -915,7 +903,6 @@ conf_mult_obj *cfg_get_key_list(config_obj * data, const char *class)
     return list;
 }
 
-
 static void cfg_save_delayed(config_obj * cfg)
 {
     if (cfg->save_timeout)
@@ -924,5 +911,5 @@ static void cfg_save_delayed(config_obj * cfg)
         cfg->save_timeout = 0;
     }
     cfg->save_timeout = g_timeout_add_seconds(5,
-        (GSourceFunc) cfg_save_real, cfg);
+                                              (GSourceFunc) cfg_save_real, cfg);
 }
