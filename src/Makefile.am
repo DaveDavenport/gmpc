@@ -139,6 +139,8 @@ INCLUDES=\
 	-I$(top_builddir)/src/vala\
 	-I$(top_srcdir)/src/Widgets\
 	-I$(top_builddir)/src/Widgets\
+	-I$(top_srcdir)/src/GUI\
+	-I$(top_builddir)/src/GUI\
 	-I$(top_srcdir)/src/MetaData/\
 	-I$(top_builddir)/src/MetaData/
 
@@ -226,6 +228,7 @@ gmpcinclude_HEADERS = \
         Tools/misc.h\
         gmpc-extras.h\
         gmpc-version.h\
+        GUI/status_icon.h\
 		MetaData/metadata.h
 
 gmpcincludedir =$(includedir)/gmpc/
@@ -266,7 +269,6 @@ EXTRA_DIST=\
         preferences.h\
         internal-plugins.h\
         GUI/title_header.h\
-        GUI/status_icon.h\
         GUI/cmd.h\
         GUI/thv.h\
         $(VALA_VAPI_FILES)\

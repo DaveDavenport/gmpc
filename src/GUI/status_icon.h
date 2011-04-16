@@ -12,11 +12,11 @@ void main_window_update_status_icons(void);
  * random, repeat, single, consume
  */
 void main_window_init_default_status_icons(void);
+
 /**
  * @param icon  The #GtkWidget to add
  *
  * Add an icon to the status bar.
- * Function is defined in plugin.h
  */
-//void main_window_add_status_icon(GtkWidget * icon);
+void main_window_add_status_icon(GtkWidget * icon);
 #endif
