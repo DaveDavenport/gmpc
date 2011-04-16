@@ -1,5 +1,5 @@
 /* gmpc-extraplaylist (GMPC plugin)
- * Copyright (C) 2006-2009 Qball Cow <qball@sarine.nl>
+ * Copyright (C) 2006-2009 Qball Cow <qball@gmpclient.org>
  * Project homepage: http://gmpcwiki.sarine.nl/
  
  * This program is free software; you can redistribute it and/or modify

@@ -1,5 +1,5 @@
 /* Gnome Music Player Client (GMPC)
- * Copyright (C) 2011-2011 Qball Cow <qball@sarine.nl>
+ * Copyright (C) 2011-2011 Qball Cow <qball@gmpclient.org>
  * Project homepage: http://gmpclient.org/
 
  * This program is free software; you can redistribute it and/or modify

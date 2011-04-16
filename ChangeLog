@@ -1,5 +1,5 @@
 commit 17f462bdce8588d1f72e169d29bbe7a1ceee4723
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sun Nov 23 22:40:13 2008 +0100
 
     Revert "Convert about dialog to gtk-builder"
@@ -7,7 +7,7 @@ Date:   Sun Nov 23 22:40:13 2008 +0100
     This reverts commit 5dea934d413e713752ff83aba1ee8d9a16441e60.
 
 commit 080ec93794a27f1c296563d99fca0e8d821a654d
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sun Nov 23 22:40:02 2008 +0100
 
     Revert "Add conversion script"
@@ -15,7 +15,7 @@ Date:   Sun Nov 23 22:40:02 2008 +0100
     This reverts commit fd7db3de1d002df585566a6ab3c62f368319b2a9.
 
 commit 019e20f4fe72b036bdcbf70b18aad43cb9721a1d
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sun Nov 23 22:39:37 2008 +0100
 
     Revert "Add another .ui file"
@@ -23,103 +23,103 @@ Date:   Sun Nov 23 22:39:37 2008 +0100
     This reverts commit 95077cd63e2eb331586dab025cec326e72ce8a9e.
 
 commit 95077cd63e2eb331586dab025cec326e72ce8a9e
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sun Nov 23 21:27:29 2008 +0100
 
     Add another .ui file
 
 commit fd7db3de1d002df585566a6ab3c62f368319b2a9
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sun Nov 23 21:05:51 2008 +0100
 
     Add conversion script
 
 commit 5dea934d413e713752ff83aba1ee8d9a16441e60
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sun Nov 23 21:05:16 2008 +0100
 
     Convert about dialog to gtk-builder
 
 commit f87e749e3de5dbe8aa31b77e2c7c9c15910d7064
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sun Nov 23 16:31:42 2008 +0100
 
     Change signal priority so i can massifly improve the extra playlist plugin
 
 commit 1cf2d932cadd59da722a937c1b8ae05ea6b83c77
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sun Nov 23 14:56:32 2008 +0100
 
     Don't allow the last search criteria to be removed
 
 commit 6d395b6baaa96047de2b58b74ae1f501dcaf73d4
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sat Nov 22 00:56:58 2008 +0100
 
     Add tool menu in tag2, file and find browser
 
 commit c2b145a26e871b8ab722f12713f68e20007aaa68
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Fri Nov 21 21:40:13 2008 +0100
 
     Don't foolishly call fields the same name
 
 commit e0b73b7b7791ec5bb8d7787885eb719d51cd06ce
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Fri Nov 21 21:38:31 2008 +0100
 
     Break plugin abi and add padding so it won't break next time.
 
 commit 2689df5f561865b22794933532a5106e3b84ea2b
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Fri Nov 21 21:24:31 2008 +0100
 
     Extend vala a bit
 
 commit d1e04196d60da74fdf89ed63a03920083131bd4a
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Fri Nov 21 20:14:23 2008 +0100
 
     aarg
 
 commit c3964df4aa471ee97d1bfe0a5ab2405f81444ca9
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Fri Nov 21 14:41:48 2008 +0100
 
     Fix a memory leak
 
 commit b1ba0ed0873b09b01b29bceaf7ff2e3cfc93b859
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Thu Nov 20 14:00:17 2008 +0100
 
     Add pl3_update_go_menu to plugin header
 
 commit 46730e38a2430f163d38133ca056d34c5e6d4e28
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Thu Nov 20 10:25:13 2008 +0100
 
     Log if db actually updated
 
 commit 75ad9bd5fa322cff40c7963142a02d27f5ba0edb
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Wed Nov 19 21:08:25 2008 +0100
 
     Fix vala generated files
 
 commit 8b9874c68379a3d58ffa4fc3253ca31f5d7a9dbc
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Wed Nov 19 21:07:26 2008 +0100
 
     add test plugin object + interfaces
 
 commit 3ccc1776dda184587c67fef27dd6a3ccbc3693ec
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Wed Nov 19 14:11:12 2008 +0100
 
     On upgrade set icon-size to something slower, to fix old settings
 
 commit 20dc4cb76333f5fbecf354b42d2442973da906c0
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Wed Nov 19 11:47:08 2008 +0100
 
     Clean up the reset function in the tag browser.
@@ -128,123 +128,123 @@ Date:   Wed Nov 19 11:47:08 2008 +0100
     3. Add item in option menu.
 
 commit 2ffc07ccbf426509b6c896f26548ab52e4a39601
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Tue Nov 18 13:17:58 2008 +0100
 
     Possible fix for bug 1814
 
 commit 4ea7108a13d522e6e771ed27abe4296badbcc04e
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sun Nov 16 13:34:08 2008 +0100
 
     Allow the user to change to 'button view' from preferences pane'
 
 commit bea3a37d223c85a2ffe83172c3729ba3ff33a14d
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sun Nov 16 10:22:03 2008 +0100
 
     Make the button bar a config option
 
 commit b45f49a3034f9a96bc3da2c01edf8f3bea54a410
 Merge: 0e4065d... b1dc5a6...
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sat Nov 15 22:33:49 2008 +0100
 
     Merge branch 'master' into tabbed-heading
 
 commit b1dc5a6217304e5bf88cbfe2c0e0306615a83ed6
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sat Nov 15 22:33:21 2008 +0100
 
     Add 'add more' menu to tag browser
 
 commit 0e4065d3d3b1125e5e6a5d8019aeae64121dbc3f
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sat Nov 15 22:04:14 2008 +0100
 
     Add tooltip
 
 commit b094289731c4696d641fccf4b487d30d52ec52a4
 Merge: cd3918e... 38d0fbf...
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sat Nov 15 21:44:10 2008 +0100
 
     Merge branch 'master' into tabbed-heading
 
 commit 38d0fbf00851ff7635857d94911712303ce8095c
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sat Nov 15 14:04:37 2008 +0100
 
     Return to old sync update for progresbar
 
 commit cd3918e7bac91ec2ff2fe8f57ca7ef1f2164d2fb
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sat Nov 15 13:38:26 2008 +0100
 
     Add some code that does some tab like stuff
 
 commit 8c22fc2e6ab59136f832278fd5ef8b4794e6086b
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Fri Nov 14 21:34:35 2008 +0100
 
     Fix progresbar colors so they work in tooltip
 
 commit 15b03a0eea656d75a0780cf0be27634a3f5d4f2e
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Fri Nov 14 20:07:36 2008 +0100
 
     Change back some vala code
 
 commit cdf1ddcf6ed4cc22e7705f2b4ea45fe5aac14bc6
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Fri Nov 14 16:26:15 2008 +0100
 
     Resize progresbar correctly on hide_text
 
 commit 1f8afa652d1429bcc9e9c7bcf0afe5284725221c
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Fri Nov 14 12:24:50 2008 +0100
 
     Other way to queue update
 
 commit 5b2fc90beae7c1d8a7df3e7500ebbb6e0ded97a5
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Thu Nov 13 16:28:22 2008 +0100
 
     Don't do resize, just force repaint
 
 commit 71181e03a0818fb38eb8056f81a896696ede7107
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Thu Nov 13 13:37:10 2008 +0100
 
     Add 3rd pb code and set default pb back
 
 commit aa7b82ae4e0f22dd1d69836e612b995c28453bd1
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Thu Nov 13 13:17:39 2008 +0100
 
     Make other pb scroll + sseek
 
 commit 9f45bfc29b66ae72a19e4c65f72101a6db5eee91
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Thu Nov 13 13:13:45 2008 +0100
 
     Add code that returns old progressbar
 
 commit d1e8356b37930e93dbce2eaaf8c68f4207188571
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Thu Nov 13 13:12:19 2008 +0100
 
     Add code that returns old progressbar
 
 commit 4a4e16bd1911eeb19e9259fb6b032cf4ecbc440f
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Thu Nov 13 10:03:34 2008 +0100
 
     Fix an assertion only used in one plugin
 
 commit ce05ee3fdd6aa767a79826701913287230915a57
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Wed Nov 12 16:41:58 2008 +0100
 
     Use audio-volume-muted icon instead off stock_volume-mute.
@@ -252,353 +252,353 @@ Date:   Wed Nov 12 16:41:58 2008 +0100
     system missing the icon.
 
 commit b535057be2f863eb0efdb39607337b5d1bf3eed6
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Tue Nov 11 23:13:58 2008 +0100
 
     Updating
 
 commit e32bfa0d18a23dd0b357c51ec5c77630ade0100d
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Tue Nov 11 18:13:15 2008 +0100
 
     Add a --debug-updates comandline option that shows redraws
 
 commit 12ad82d4e41f9e10e4ceef893887236c8880933f
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Tue Nov 11 14:43:41 2008 +0100
 
     Possible fix for play queue getting stuck in search view
 
 commit 2465e0387f797c029cd88cffc6a4f99ef3cb10e0
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Tue Nov 11 13:25:54 2008 +0100
 
     Fix small memory leak in gmpc-clicklabel and add assert.
 
 commit ddd9fddbb6233810de6fb0d41abb5cc3d0a9ed6d
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Tue Nov 11 11:44:22 2008 +0100
 
     Hackish option added to get old "left to right" tag browser behauviour.
     People can't wrap there head around the current filter way.
 
 commit b4f0ee4aae09c4e5abb7b777e4762897808f304a
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Mon Nov 10 21:36:19 2008 +0100
 
     Bump version
 
 commit d129c8ce2cded88c1913530b6e5c1b5dbd2f7590
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Mon Nov 10 18:54:35 2008 +0100
 
     fix possible buffer overflow
 
 commit 154295064f70d0a2d9bf595f5a56b8a976c95cfb
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Mon Nov 10 18:31:13 2008 +0100
 
     Update some stuff
 
 commit 218133d8b0a5a8642c16fcf14c02f1345a4381e6
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Mon Nov 10 15:50:35 2008 +0100
 
     Remove printf from gmpc-progress.
 
 commit 1f82ab474eabcf594379b31258d50ff6d5f061f0
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Mon Nov 10 12:45:26 2008 +0100
 
     Fix copyright years
 
 commit 4f6be49bdc1e8d3460ee18c8d8071a31b1bc6863
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Mon Nov 10 12:43:30 2008 +0100
 
     Cleanup+moving code around
 
 commit b1683a299a5d661d675e2420cdd400351c89ea58
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Mon Nov 10 12:26:39 2008 +0100
 
     Use plugin system to send connection changed to playlist.
     Reducing main<->playlist3 direct function call.
 
 commit 0d62fbb7bef6b850516d523ccbdb7825e888e117
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Mon Nov 10 12:17:39 2008 +0100
 
     Remove hack that caused invalid model to be checked.
     Instead of blocking changed signal, Check if treeview has model.
 
 commit 4c70eca38af1066716b98f0fb612d7fa06977196
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Mon Nov 10 12:10:53 2008 +0100
 
     Put the default keybinding set in it owh header file.
 
 commit 06e597e0ea9a67a9b4e3f196089f4f046c567612
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Mon Nov 10 12:02:35 2008 +0100
 
     Fix bug 1794: Don't set non-zero page-size on spinbuttons.
 
 commit 1858d407188c41caaf1365fa780ce4dedc15849e
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Mon Nov 10 11:59:38 2008 +0100
 
     Always save/restore zoomlevel between session.
 
 commit dce3def0f81e096bd510ef5d090b23154ce2ec40
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sun Nov 9 22:37:57 2008 +0100
 
     Make gmpc remember progresbar state
 
 commit 30c4b8c6031440363f718cdd13cd7736680075e1
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sun Nov 9 21:25:17 2008 +0100
 
     Updated progress bar, right click to get remaining time
 
 commit 4688f82bfe2efa4efe997bd0f48d8602fb669a38
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Thu Nov 6 17:52:42 2008 +0100
 
     ADd stupid new tagline
 
 commit 65d70ee6d30e688b56338ef50171fb1c94878363
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Tue Nov 4 23:23:24 2008 +0100
 
     Automatically import old db if old version is < 0.16.1
 
 commit 64e5580a22489dca7442540b217ac0b38afe7242
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Tue Nov 4 23:13:27 2008 +0100
 
     Write some import code for old db
 
 commit cc9666d86967edbbffe44bc5d9524ebbb4fb295a
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Tue Nov 4 22:16:58 2008 +0100
 
     Add a script that can be used in a browser, gmpc-remote-stream
 
 commit 82dcc7f07a19ff3b6a7617ca6fbc1d18f7f02cf7
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Tue Nov 4 22:04:06 2008 +0100
 
     Don't check if local file exists when url starts with http://
 
 commit fdc6a06beae258c1e62a73895b4edd48d0233ec4
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Tue Nov 4 22:00:54 2008 +0100
 
     Make easy download also support local files
 
 commit 5d5828bb0d5d8c776d72463a2837daccb8e29842
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Tue Nov 4 21:34:07 2008 +0100
 
     Update man page
 
 commit c6d16e3bb739205a024cda0515b2073f6b91d168
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Tue Nov 4 21:32:43 2008 +0100
 
     Add the --stream option to gmpc-remote
 
 commit e98a564eca415b1c0336b9151f8f2a18f6e329ed
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Tue Nov 4 21:17:42 2008 +0100
 
     Fix Volume change behauviour
 
 commit 7744e5e58c3b85b856885284e46160b8521327f1
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Tue Nov 4 21:04:35 2008 +0100
 
     Move dark spot down
 
 commit 4d69ccb905060c0d17b07c2dbed0289affdbf9cb
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Tue Nov 4 20:40:34 2008 +0100
 
     Add a gradient to the progressbar
 
 commit 7585a33e8336993a4be4e03490080cda3378f0c9
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Tue Nov 4 14:44:26 2008 +0100
 
     Don't draw a border around the bar, the clip will make the border of the underlying draw visible
 
 commit c17ce27d6cc87ea6e901172e20e90ef65ebf961f
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Tue Nov 4 14:41:37 2008 +0100
 
     Don't draw curved corners if we have the 'clip' doing that already.
 
 commit a1bc65c33f8ba662216b87d5c28db570f440e5a5
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Tue Nov 4 14:35:48 2008 +0100
 
     Clip the regon of the progresbar, so the bar does not draw outside that.
 
 commit 4037166284525fc0ba8b2fbb1bdd583127f4c247
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Mon Nov 3 15:09:39 2008 +0100
 
     update hungarian translation
 
 commit 96570db8135eef7c26c6c1800b3ff88e23725c27
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sat Nov 1 22:32:52 2008 +0100
 
     Color background better in tooltip
 
 commit 461372e0ff6d23592a3d76c0a5b2ed24a594618d
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sat Nov 1 22:26:14 2008 +0100
 
     Improve curving and curve progresbar
 
 commit 044a0c6c1413046c5efc53f5b9497e9cff34b5b4
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sat Nov 1 21:59:21 2008 +0100
 
     Sharper lining around image
 
 commit 97a25fa8bd818a4c851f6fcff11699189e1dcf5a
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sat Nov 1 17:30:28 2008 +0100
 
     Remove a printf
 
 commit 4f0fb8e8aa3afc713e3cf479f07f6b05824695da
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sat Nov 1 17:27:46 2008 +0100
 
     New Cover db format, needs testing
 
 commit 7199bc16c3dd46c4244ae426876569004866414c
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sat Nov 1 12:54:48 2008 +0100
 
     Let tooltip use new progress bar
 
 commit 7d70868c9c7399d047dcc146d4f0e5fa09d75c5d
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sat Nov 1 12:38:47 2008 +0100
 
     Update color
 
 commit 0fe7f5d1ed8a92ff7006e8287e5d11c4ccad3200
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sat Nov 1 00:57:25 2008 +0100
 
     Add test new progress bar to main window
 
 commit f091fbdc636547a107d46c00b59c67a00a3facac
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Wed Oct 29 21:51:59 2008 +0100
 
     Fix not correctly updating meta-art
 
 commit 365cc1d4d1efc056881d5e8e76f2b7ccc2e0f544
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Wed Oct 29 15:15:14 2008 +0100
 
     Add 2 initial man pages
 
 commit 21d5d350f368f9549e23485b8e009db8a09fb3b9
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Wed Oct 29 14:53:33 2008 +0100
 
     Fix building in maintainer mode
 
 commit a91378257afba82a95fc08b2483fe49563914abf
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Tue Oct 28 23:21:38 2008 +0100
 
     Show items in combobox (in minimizedm mode)
 
 commit 9c8538a054c0c5b8059fb43f1692b5e713548a88
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Tue Oct 28 18:36:12 2008 +0100
 
     Fix wrong update
 
 commit 7393971b7db6b914f4bc8ba8fc29aaa103a6fb8b
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Tue Oct 28 18:06:03 2008 +0100
 
     Fix alignment of items col
 
 commit 642068f3b9c97818e06049000011509871f576fc
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Tue Oct 28 17:47:57 2008 +0100
 
     Do the same for the Search browser
 
 commit 0958595c7705cd92a7b46a63e86fc96ddff7fabb
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Tue Oct 28 17:41:05 2008 +0100
 
     Show number of songs in play queue in left pane
 
 commit 80f4329c31e659190155e99d6f90432852a3a8ab
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Tue Oct 28 13:34:49 2008 +0100
 
     remove comments
 
 commit 8b16ed7a736af63462407f06a21681c1c7716670
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Tue Oct 28 13:32:08 2008 +0100
 
     Speed up the saving of the config file.
 
 commit 3f6a2ed7177d36fa7a35023cf32b82dea7e2b346
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Tue Oct 28 12:56:37 2008 +0100
 
     Speedup saving config by using fputs instead of fprintf
 
 commit e9d2338e438e9f8605aa4d342e30486a3351e45e
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Tue Oct 28 12:47:16 2008 +0100
 
     Only close config on save, this saves times, making the db issue less problematic
 
 commit bb774a61571886d74089346de37f956187a6229e
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Mon Oct 27 17:11:24 2008 +0100
 
     Allow drag and drop of images on metaimage
 
 commit 7eb01595058c641410a93b6cc80b33d93afb41a4
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Mon Oct 27 14:23:51 2008 +0100
 
     Fix page size
 
 commit fa1b4d3c7238bda4a506d4f67d77487d57db0175
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Mon Oct 27 12:25:41 2008 +0100
 
     Bump plugin api version. (Added plug->metadata->set_priority
     Move plugin errors to the playlist3-messages system.
 
 commit eccfc4a0912235fc229e04d6cb9c7615c52287de
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sun Oct 26 21:52:01 2008 +0100
 
     Fix bug 1765. Check before accepting a drop if file:// is supported and if http:// is support
 
 commit 2e3a6b301f24df43304d8ff547b2ecea11208202
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sun Oct 26 21:19:59 2008 +0100
 
     Fix for bug 1604.
@@ -607,7 +607,7 @@ Date:   Sun Oct 26 21:19:59 2008 +0100
     Added multimedia key entry for muting.
 
 commit 899df60c2ecf683d4275a03ad6e32a9ff5b3324b
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sun Oct 26 10:21:21 2008 +0100
 
     A fix for bug 1767.
@@ -615,37 +615,37 @@ Date:   Sun Oct 26 10:21:21 2008 +0100
     * Fixed that expand keybinding does not collapse.
 
 commit bd94d297f5b42f28954ba87e283e8e9be86c972a
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Wed Oct 22 21:39:26 2008 +0200
 
     Support for the new playlist command in mpd
 
 commit 4360c83c27347790bad821f2a332ad06299a5fb3
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Wed Oct 22 17:43:09 2008 +0200
 
     make it so  you can drag and drop files on gmpc, and it tries to play them using mpd
 
 commit e1b4e5f4c7741b71a99073e030a63d6cbed54067
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sun Oct 19 22:47:03 2008 +0200
 
     Add Romanian translation
 
 commit 0d4712db16b9ccecbdaa48be9199962d329c8a88
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sun Oct 19 17:16:40 2008 +0200
 
     Fix compiling with maintainermode
 
 commit 65f35cb6ad06b6475957d14f5580cb0eeb0d2799
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sun Oct 19 16:43:32 2008 +0200
 
     Avoid updating when skipping between songs of same artist/album
 
 commit 0149ff896a1e6b31a235e6da458c2822e90ea042
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sun Oct 19 16:39:08 2008 +0200
 
     Avoid false updating of
@@ -657,86 +657,86 @@ Date:   Sun Oct 19 16:39:08 2008 +0200
         song)
 
 commit 75f9998fb8de66f94ad6cf6369ea0adcf393e66c
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sun Oct 19 16:01:11 2008 +0200
 
     Change sorting so it does not sort on artist
 
 commit 1b60418b3c7e5f1242cac6992e87914541845fdd
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sun Oct 19 13:00:24 2008 +0200
 
     Put a border around the songs lists in metadata browser.
 
 commit d7a2682fcb395269aa479a49cb3c4656a7262dc4
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sun Oct 19 00:17:30 2008 +0200
 
     read out signal from mpd
 
 commit a4106f016024d28262b77357de31b9b9e796c7f5
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sat Oct 18 20:40:07 2008 +0200
 
     moving stuff
 
 commit 57b4b6b18e71121224f550212288d91a403f74c2
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sat Oct 18 17:01:21 2008 +0200
 
     Fix sorting fallthrough
 
 commit 6546c8d233c1c9c18651e724b352576e3967b6c9
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Fri Oct 17 22:43:15 2008 +0200
 
     fix typo in autogen.sh
 
 commit 0d5c967ea56ea06c750c4d8efd8d5871aa79939f
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Thu Oct 16 23:20:27 2008 +0200
 
     Fix bug where similar artist/similar song updates when new metadata for other song is found
 
 commit 4544ca19c847b432b52afe00d0a7fcb85b612d63
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Thu Oct 16 23:07:36 2008 +0200
 
     Fix showing off similar songs when first queried
 
 commit 495319ad97709427f0ce85da67218e9d5b574de6
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Thu Oct 16 16:56:16 2008 +0200
 
     Fix rasi's quatro-click frenzy
 
 commit 0eaf1c3ea59f4f7592400680361284dd37b7fb5c
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Thu Oct 16 13:32:20 2008 +0200
 
     Show keybindings in gui as configured in the config file.
     Add repeat/random to configurable keys.
 
 commit dad4f23bac4cbb0daf93ec2d58e155cb0070e5bf
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Wed Oct 15 23:00:37 2008 +0200
 
     remove old code
 
 commit d495e41d39a95dfe96f52c44dd49eaa7d71b85a5
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Wed Oct 15 22:56:16 2008 +0200
 
     Make songs with same title use treeview too
 
 commit 5efd10a0d83519c81a5be290782185cf55d90ecc
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Wed Oct 15 16:14:30 2008 +0200
 
     Move similar song list to a treeview
 
 commit b9ae00b1a75ce3dbec7c0d49584c4fcd133b56d8
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Wed Oct 15 15:51:38 2008 +0200
 
     Moving right mouse click fix to GmpcMpdDataTreeview to reduce duplicate code.
@@ -744,275 +744,275 @@ Date:   Wed Oct 15 15:51:38 2008 +0200
     Metadata, currentplaylist, find and file moved.
 
 commit 4c0ccc62e0c7b0f47ef5d52ebeea8faaa17583b4
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Wed Oct 15 14:33:29 2008 +0200
 
     Test code in metadata browser and fix rasi mouse click bug
 
 commit a1e32129baa8a2e72655c15152c1a671dff928b3
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Mon Oct 13 21:27:11 2008 +0200
 
     Cleaning up similar artists.
 
 commit d70962f00cbdebd0d283915714a58e8703d3d76e
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Mon Oct 13 16:45:54 2008 +0200
 
     Uber first-prototyping-testing similar song code
 
 commit 890eb29340586da8d4957fbe8c24069f90b3a18a
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Mon Oct 13 15:15:54 2008 +0200
 
     Add the META_SONG_SIMILAR type to metadata.h.
 
 commit d84ec8200c2f7068da2eff594e92d1fb3fb7a590
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Mon Oct 13 15:03:11 2008 +0200
 
     Fix for bug 1745, now sort year/artist/album/disc/track
 
 commit 8b6b84f176ee79a9ddd07cc8427c2b5efa382a53
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Fri Oct 10 11:14:18 2008 +0200
 
     test new ssh key
 
 commit 198b4a82293f1554a123917adb4b116cec5768eb
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Wed Oct 8 12:13:10 2008 +0200
 
     Fix icon mess
 
 commit eb70dc27870256df7cd4ff8beb52b88a38d75b5a
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Wed Oct 8 11:59:38 2008 +0200
 
     missing Icon fix
 
 commit 97a797f511f0c549be7e48236a315b0a67a442cc
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Tue Oct 7 11:20:04 2008 +0200
 
     fix a screwup of yesterday
 
 commit 8e7e7ef043eb1f9ce1d3ca61ceb9902f2fe3a99c
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Mon Oct 6 20:13:27 2008 +0200
 
     Add version string to config file, hopefully fixing stuff.
 
 commit 9267e6faa853803c82ffadcb25228639c835a830
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Mon Oct 6 19:46:02 2008 +0200
 
     Fix c90 somewhat compile stuff
 
 commit 4fb826f7a7f119dcbc51b130ac951839f363af93
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Mon Oct 6 19:34:33 2008 +0200
 
     Make the config parser recursive, support better trees.
 
 commit 24cb400372a80fa98b1270ba96a27465955654bd
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Mon Oct 6 17:33:18 2008 +0200
 
     Sort keybindings
 
 commit 64738fdb6e2c5da32b662eb5bcba374349a82676
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Mon Oct 6 15:06:49 2008 +0200
 
     Fix default keybinding for stop
 
 commit a99ac971d34d09a84a96ed716f9165df63d71ff8
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Mon Oct 6 15:04:21 2008 +0200
 
     Some moving around of code.
 
 commit ead8ddcb35fcd0a1790681857bf3138db472b671
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Mon Oct 6 14:52:13 2008 +0200
 
     Improve keybinding system,
     Multiple keybindings for one action is supported, also actions _can_ be chained.
 
 commit 161bc4f0c7afda1bf89fc54aecc3e1df54f9bc95
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Mon Oct 6 13:05:55 2008 +0200
 
     Adding initial support for user definable keybindings.
 
 commit dbaa9f06c8fa8813c3b1c4aa620a305adf48d146
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Wed Oct 1 16:28:41 2008 +0200
 
     Hack to make pref window update with tag browser column change
 
 commit 620445db0d056b63f4c5e90a57bb0ef2c8195843
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Wed Oct 1 16:09:44 2008 +0200
 
     Possible fix for the "missorting" after removing a tag browser column
 
 commit 77c24b95f45ecda95729e16215d2b583693b87bd
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Mon Sep 29 13:25:18 2008 +0200
 
     More configure.ac cleanups
 
 commit e2be011335a2134e93e95495f6ae3abc8029069c
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Mon Sep 29 12:52:26 2008 +0200
 
     Support albums with no title in tag browser
 
 commit db0b6038d740374fe68465fb4decd67ff98dca2d
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Mon Sep 29 12:34:24 2008 +0200
 
     Start at cleaning configure.ac
 
 commit bb1fbba5075e250e2299e262ff1305c5546db0ea
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Mon Sep 29 09:37:44 2008 +0200
 
     Disable fortran,c++ check. Possible fix for not working images on packages
 
 commit 7b7d21f7c2ff86d08658b3a353523707841393a9
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sat Sep 27 19:48:47 2008 +0200
 
     Remove  text between () in album and tile when searching for metadata
 
 commit 5a30dd25289e7b3789a97e389aa2be75dfbc98c0
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sat Sep 27 10:11:41 2008 +0200
 
     improve some debug output
 
 commit bd134c711ea6472569406686eda3072dd3a94cab
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Thu Sep 25 16:28:00 2008 +0200
 
     Fix asserts from false->true
 
 commit 1d16a15222b2b15f094b720f4ff80acb2714cc98
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Thu Sep 25 15:21:57 2008 +0200
 
     Bump version so plugin can  depend on that
 
 commit a49ef2f7e72f65471099970a17dfe912f7200e79
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Thu Sep 25 15:21:30 2008 +0200
 
     Add function to get metadata filename
 
 commit 1ad02087873eeca19f6469ae9930d75ad9f915cb
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Thu Sep 25 09:46:55 2008 +0200
 
     Add debug
 
 commit 7684d0dec1cc58e8d70527ae9df620ffd286687d
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Thu Sep 25 00:46:55 2008 +0200
 
     fix possible resize issue
 
 commit df9e9a0d2d7a66d375cf44f6f0ff1bfe5190550d
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Thu Sep 25 00:25:12 2008 +0200
 
     Add restore printfs
 
 commit 3089a35ba7a96fac8273ccdbd4b675728eb135e5
 Merge: eaf57b1... 050c193...
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Wed Sep 24 23:25:13 2008 +0200
 
     Merge branch 'master' of git://repo.or.cz/gmpc
 
 commit eaf57b133b793784af435bd90aaee40340e8bc59
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Wed Sep 24 23:25:04 2008 +0200
 
     Trying fix bulding with NLS disabled
 
 commit 050c1939528b2d484f93c0832b21e0f1df086a20
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Wed Sep 24 21:13:19 2008 +0200
 
     Bump version
 
 commit db0e83cf14ae17f30a896280fadcfdb63de7c365
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Wed Sep 24 12:59:50 2008 +0200
 
     Reduce memory usage a little by avoiding the cover-art array to be initialized in models that don't need it
 
 commit 36cdf41e8b299e0cf8b141853441b3fbcdb037e7
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Wed Sep 24 12:38:38 2008 +0200
 
     Add a compile option that prints out timing output on gmpc's startup and connection.
 
 commit 989a7b413ac56e8abeefb3adef3d4e13a9815a32
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Wed Sep 24 11:34:41 2008 +0200
 
     Enable keybindings for copy/cut/paste before/paste after: ctrl-c/x/v/b
 
 commit 2144778c5e0eb01726adb7c274c22ce57626d896
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Wed Sep 24 11:19:04 2008 +0200
 
     Fix re-updating tag browser on db change... Now also maintain selection after update/reconnect.
 
 commit ec3a33e7e2da7ecc4fe1919f6cc923e52713018a
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Wed Sep 24 01:32:20 2008 +0200
 
     Add paste-before to the play queue.
 
 commit 18c82b36a04d893cdbfd4e9a98e35ef9b6e76e7d
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Tue Sep 23 23:43:22 2008 +0200
 
     Fixing a crash and reduce memory usage. Also remove printfs.
 
 commit 57f2af4a09e9ec2922e1d381bb48049cb938eae6
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Tue Sep 23 22:32:31 2008 +0200
 
     Change title
 
 commit c58fc2adc94225920fbc4220a60e36c19d6215f3
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Tue Sep 23 22:30:05 2008 +0200
 
     Add cut/paste support in the playlist, to move larger blocks around.
     This however is broken in git, or in stable.. Don't ya love mpd.
 
 commit 28e65f30d0b1bceb4fedc3d917c3a9be46ab800c
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Tue Sep 23 17:08:26 2008 +0200
 
     Fix bug when entered a incorrect/insufficient password in setup assistant.
     bump libmpd requirment.
 
 commit 27435c6834b253340d56a5cd47acf0eb59b4d803
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Tue Sep 23 13:48:34 2008 +0200
 
     Fix compile warnings
 
 commit 354612c54f5b6c2e795da8b2f333d938ffa8aabf
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Tue Sep 23 10:47:02 2008 +0200
 
     Show "finished updating" in messages.
@@ -1472,62 +1472,62 @@ Date:   Sat Jul 19 17:39:15 2008 +0200
     Make artist image resize when pane is dragged
 
 commit 4f52356069edc8e2cda3152810e0810c3561fc3d
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sat Jul 12 23:39:46 2008 +0200
 
     update
 
 commit ece3cd98542c527f871ed312e7816134fa3510e1
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sat Jul 12 22:59:43 2008 +0200
 
     Some cleanups
 
 commit 49202622ad2dfe661ba3058b4042b0d8d7a0eef2
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sat Jul 12 22:40:03 2008 +0200
 
     Add check for intltool version, so make dist works for intltool 0.40.0 too
 
 commit e1dd166a323b6db024e896e8983bb1a18ec2b14f
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sat Jul 12 20:26:19 2008 +0200
 
     Improve pause icon and fix install location.
     Run make uninstall before updating/installing this one.
 
 commit fc034dc47cf2ae94eb7a1b3d92b35380b397dee8
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sat Jul 12 00:03:19 2008 +0200
 
     Improve pause icon a bit..
 
 commit e6dd8e5fea8c4f7e113592a52e675c3d6d65f696
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Mon Jul 7 23:37:21 2008 +0200
 
     Destroy the metadata system, BEFORE destroying the plugins it uses, avoiding race conditions.
 
 commit 91d5293493dc0f2d5d0c5f82dfaf4f76a367ab03
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sun Jul 6 23:27:26 2008 +0200
 
     Updates
 
 commit 4a0627c88c3d283ecb7c3d99285b477930f276ba
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sat Jul 5 17:36:32 2008 +0200
 
     Improve quick search
 
 commit 70729db381b9f1e9d7ef1f5fd232d23aeff2043c
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Fri Jul 4 23:03:14 2008 +0200
 
     Fix mac linkage
 
 commit 9eb4b3db6ed4a5af3a1c9a983bf1041ee1bb0a99
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Fri Jul 4 15:48:17 2008 +0200
 
     Add scalable icons
@@ -1539,19 +1539,19 @@ Date:   Fri Jul 4 09:51:37 2008 +0200
     Make subdir use strict build flags too
 
 commit a327ccb9519bf209c8d344187ae7691ae18fc8a8
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Thu Jul 3 23:45:54 2008 +0200
 
     Moving icons
 
 commit b8d7a3ec691fb9dc763973125635b22e17a0c0db
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Thu Jul 3 23:27:21 2008 +0200
 
     update copyright
 
 commit 98c9b2d897afb54049b77c23f390ebb2c33d6fa1
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Thu Jul 3 23:24:56 2008 +0200
 
     Adding new tray-icons.
@@ -1582,7 +1582,7 @@ Date:   Wed Jul 2 08:25:38 2008 +0200
     Avoid that crop on a not-filtered list queries all the not selected and not-yet-fetched songs.  for large playlist, this is going to make a difference.
 
 commit 0ee8e302195beb88e144f31685ec615c8ee48638
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Tue Jul 1 22:36:43 2008 +0200
 
     Remove Makefile.arch
@@ -1606,7 +1606,7 @@ Date:   Tue Jul 1 08:10:41 2008 +0200
     Fix connect in menu
 
 commit 0d4f2404f0b82c030e323ee863d9177406a2541f
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Mon Jun 30 21:55:01 2008 +0200
 
     Typo fix. causing 2 signals using same id
@@ -1630,43 +1630,43 @@ Date:   Mon Jun 30 01:40:05 2008 +0200
     Fix make distcheck on ubuntu (leading), fix icon in assistant
 
 commit d1f0883154fbbe1e2201df0747127cbe2a4ec60a
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Mon Jun 30 00:37:49 2008 +0200
 
     Update translation files.
 
 commit ef62d6ce45e3cfcef857fa2c95f394164d76e616
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Mon Jun 30 00:36:25 2008 +0200
 
     Add a setup assistant.
 
 commit cf4528d764df1f1b5e47702b71dae5a63b8eb4df
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sun Jun 29 21:20:28 2008 +0200
 
     Add scalable version of the gmpc icon.
 
 commit 40f7b29bbee1287e3066b8ad4a3aa36864850137
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sun Jun 29 20:03:31 2008 +0200
 
     Update the iconcache for the global theme directory
 
 commit 9df7973fe5a6dd700b30b5bcf1089679eac6ba46
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sun Jun 29 19:04:52 2008 +0200
 
     Update translation files
 
 commit 66a1bca728e99fe78475a27ca2546e98573538cf
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sun Jun 29 18:02:18 2008 +0200
 
     Close the quick search when a song is selected.
 
 commit c95a3ca093cc73df2e011fb5e91007563e8bc9f9
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sat Jun 28 17:39:27 2008 +0200
 
     Fixing installing of headers.
@@ -1684,25 +1684,25 @@ Date:   Fri Jun 27 14:04:11 2008 +0200
     New gmpc icon.
 
 commit b8e263e490bf4d81d782878e0883dbbac24acc88
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sun Jun 22 21:30:02 2008 +0200
 
     The id3 browser now centers on the selected row, improves usability
 
 commit 0fbafec54c63c6907d076843e399a8e45f85ea44
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sat Jun 21 23:45:23 2008 +0200
 
     Do some black-ish voodoo to make gmpc pass make distcheck on archlinux
 
 commit 786834ff1c74b9a06122794f6796cc1c824b2611
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Wed Jun 18 21:38:37 2008 +0200
 
     Update what's new
 
 commit f7ed392575f9f72459164d8f0ca9b6dcab146a32
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Tue Jun 17 21:48:09 2008 +0200
 
     fix typo
@@ -1720,79 +1720,79 @@ Date:   Tue Jun 17 14:26:02 2008 +0200
     Fix compile warning
 
 commit bb741a1e3e2118e7d11325003eca04bc6a5a0edd
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sun Jun 15 22:02:07 2008 +0200
 
     Adding 'Duration' to the tooltip
 
 commit 864d0437b622a427e08efd5b5956db3a5f02af2d
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sun Jun 15 14:54:36 2008 +0200
 
     Re-order keybindings
 
 commit 2f9b0b04f920972b290e559db8a5eea8d5e04eef
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sat Jun 14 12:45:07 2008 +0200
 
     Remove deprecated gmpc-volume icon
 
 commit bbe88aae05804e76d85df54c1e55df0e96374213
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sat Jun 14 12:31:17 2008 +0200
 
     Add missing scalable directory.
 
 commit 5d29db2fd5095cf7c215a06803521f8abc6fee20
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sat Jun 14 12:27:55 2008 +0200
 
     Add icons that are missing in gtk. (while used by gtk stock widgets), I hate doing it, but it's faster then trying to get it fixed in gtk.
 
 commit 19edc9bba34fcecb055391c72eedef2fc39ffd19
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Thu Jun 12 14:53:03 2008 +0200
 
     Make the tooltip a bit more pretty
 
 commit 3a84b6a119a0b6c3e75f11282ca7327303d40c02
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Wed Jun 11 21:02:16 2008 +0200
 
     Change from 4 digit version to 2 digit and bump to 0.15.6, next release version will be 0.16.0
 
 commit 5733ad4f76110903724fb32374fc45b2219540e0
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sun Jun 8 21:34:06 2008 +0200
 
     Make the tooltip global for all GmpcTreeView's, add an option to gmpc.cfg to disable the tooltip.
 
 commit fd302dbcc56ae7ddd32d1f087093cb24b8b36d0c
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sun Jun 8 20:30:04 2008 +0200
 
     Fix arch workaround fix update
 
 commit 71fb3a166470b2c5f0fc823e70774c5a78171f99
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sun Jun 8 16:49:13 2008 +0200
 
     Testing tooltip in currentplaylist
 
 commit a3613982f5371bcd0340a4f5f56bb803765cd6c4
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sun Jun 8 11:51:07 2008 +0200
 
     Fix weird total song time when having streams
 
 commit 8346e581b40acb41bc1a6281a05d79a6867d27ef
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sat Jun 7 16:05:45 2008 +0200
 
     * Add an option that gmpc stops mpd playback on exit.
 
 commit 3260faf4ccf29d6b7e0a58c5adc838e7e3794421
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sat Jun 7 15:30:13 2008 +0200
 
     Cleaned up mini view
@@ -1818,205 +1818,205 @@ Date:   Fri Jun 6 17:50:38 2008 +0200
     * Remove BaconVolume in favor of GtkVolumeButton
 
 commit abae31878691bcbc0e44a4e5c5ada0aaf15be240
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Wed May 28 20:38:36 2008 +0200
 
     Fix string
 
 commit 2e144413b584b0d8047cea64c0635536d3e64b8b
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Tue May 27 21:26:24 2008 +0200
 
     Show total playlist time in all gmpc native browsers
 
 commit fef8a7990f0247380a70daa71d2ad82774ac875f
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Mon May 26 21:38:53 2008 +0200
 
     Fix windows hang
 
 commit e3c3077295613331f0bdc252287c824d13808645
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sun May 25 21:38:12 2008 +0200
 
     small cleanup
 
 commit c0cfbdd3013792798824780fd3274d79c4366b64
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sun May 25 20:33:44 2008 +0200
 
     Change current playlist to play queue
 
 commit 73c703305c3cf0907dd411cfed3bf9cd6277af88
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sat May 24 22:14:14 2008 +0200
 
     Updated PL translation
 
 commit 1e16a9c3e82f003d3ba042e5eda4617b53d39e6e
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sat May 17 16:23:31 2008 +0200
 
     Remove 'info' icon in upper right corner
 
 commit 2fe65f0df34e3cc44a262f55ff2ef0a530b204b4
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sun May 11 14:35:07 2008 +0200
 
     Allow, in config file, setting of window title markup
 
 commit fd73384b307fed844951f4d7ea4e84f44a5c2ac8
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sun May 11 11:47:10 2008 +0200
 
     Fix possible strcmp NULL pointer crash
 
 commit e18c2f81fdcc7e6a4e052e2ddb705d5efe9cfdae
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Tue May 6 10:18:40 2008 +0200
 
     Forcing downloads using gmpc_easy_download to quit when quitting gmpc.
 
 commit ed0aa5fa592f86c82b3eb299ec46bf583fc6be21
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Tue May 6 10:05:55 2008 +0200
 
     Add g_threads_init()
 
 commit 590648e00fbc77eead48232ca79e6db905219cb1
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Mon May 5 18:50:20 2008 +0200
 
     Cleanup and fix compile warnings
 
 commit 87cd52db1adeb2e954967f99446d0db2073d06ad
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Mon May 5 18:25:03 2008 +0200
 
     Add an option to enable/disable stylized covers
 
 commit c6b51cb5bf48d2ee3c546bcb479406c5fbbca671
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Mon May 5 18:15:34 2008 +0200
 
     Fix some deprecation warnings
 
 commit f7f479b70f4078e7998e70d0309a10c5b124cd61
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Mon May 5 18:08:19 2008 +0200
 
     Remove another unconnected preferences option
 
 commit 0adee45e3a8f1283421088c06b1e0d85ab014f76
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Mon May 5 18:00:20 2008 +0200
 
     Remove find3 files
 
 commit 8b770cd3e3fa13fb22cf29b0e68f1569809e3560
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Mon May 5 17:58:13 2008 +0200
 
     Merge Playlist search and database search
 
 commit 7dfb61bd29d328814df7e9c8ab7f6854b4ebc21e
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sat Apr 26 21:27:46 2008 +0200
 
     remove a few stray printfs
 
 commit d6ab071888689d1ebc79c0114457bbda75c44a4c
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sat Apr 26 21:25:13 2008 +0200
 
     Small update
 
 commit b0d30816254247aa5b20693c2a827f86f2cfb879
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sat Apr 26 20:52:07 2008 +0200
 
     Remove events_pending
 
 commit 4f010bd7901f9f47bb79cdaae73733c6e44c0200
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sat Apr 26 20:48:43 2008 +0200
 
     fix a few small things
 
 commit 285801608386c6bad4eca68b8661740a2ab017c1
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sat Apr 26 20:25:08 2008 +0200
 
     Fix 162. Use the right functions for getting uris
 
 commit 786d07c5279e887bdb5cfebdc72345f2a53d637c
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sat Apr 26 20:21:52 2008 +0200
 
     fix it for real
 
 commit 7456337426d3301d6907bf58a747bf3910c34bf1
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sat Apr 26 20:21:16 2008 +0200
 
     fix it for read
 
 commit 878c22a57991187790d4c441d0ff0548576f7e43
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sat Apr 26 20:20:13 2008 +0200
 
     Trying to fix 161
 
 commit 67dd005e97973ead60db7cf0549c155c94e5b882
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Tue Apr 22 17:18:35 2008 +0200
 
     Add stopbutton
 
 commit 146fea20f293e59aacc8654dec2aafa12e3d1fe4
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sat Apr 12 16:00:13 2008 +0200
 
     code cleanups
 
 commit c1b2b505db73a167d3b21787c3d60edb9edc2fd2
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sat Apr 12 15:52:31 2008 +0200
 
     More smaller speedups
 
 commit cc31463952db9185c2749aacccde8529f0dfb57f
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sat Apr 12 09:16:49 2008 +0200
 
     Replace gettimeofday by glib (portable) version
 
 commit 62b443a38a4caf315a40ea64d2009df557f08c67
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Sat Apr 12 08:41:27 2008 +0200
 
     Add fancy pancy gmpc_idle
 
 commit ac9037a1839dd5edf8c2f8e48f8b772d59df2319
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Fri Apr 11 22:59:30 2008 +0200
 
     Allow setting of overflow value
 
 commit 5497d1477eb2a0d9ad1de4e74c972bdc5b0d7566
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Fri Apr 11 22:57:33 2008 +0200
 
     remove printf, and limit to 50 items now
 
 commit 225f66b4a6b1517ed0383fede6e0e78a46bc69a8
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Fri Apr 11 22:52:42 2008 +0200
 
     Speedup metadata browser
 
 commit ba61d7153ccd6ddefddd3e4728db9336f3465326
-Author: Qball Cow <qball@sarine.nl>
+Author: Qball Cow <qball@gmpclient.org>
 Date:   Fri Apr 11 22:04:03 2008 +0200
 
     Remove genre and dates from artist button
