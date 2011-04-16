@@ -184,6 +184,7 @@
             <property name="icon-name">audio-volume-muted</property>
             <signal name="activate" handler="volume_toggle_mute" swapped="no"/>
           </object>
+          <accelerator key="m" modifiers="GDK_CONTROL_MASK"/>
         </child>
         <child>
           <object class="GtkToggleAction" id="MPDConsumeMode">

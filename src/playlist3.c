@@ -36,10 +36,7 @@
 #include "ige-mac-bundle.h"
 #endif
 
-/**
- * Default keybinding settings are defined here:
- */
-#include "playlist3-keybindings.h"
+
 #include "GUI/thv.h"
 #include "GUI/cmd.h"
 #include "GUI/status_icon.h"
@@ -429,8 +426,6 @@ void pl3_window_fullscreen(void)
 int pl3_window_key_press_event(GtkWidget * mw, GdkEventKey * event)
 {
     int i = 0;
-    int found = 0;
-    conf_mult_obj *list;
     gint type = pl3_cat_get_selected_browser();
     /**
      * Following key's are only valid when connected
@@ -451,120 +446,9 @@ int pl3_window_key_press_event(GtkWidget * mw, GdkEventKey * event)
             gmpc_plugin_browser_key_press_event(plugins[i], mw, event, type);
         }
     }
-    if (event->keyval > 0)
-    {
-        list = cfg_get_key_list(config, KB_GLOBAL);
-        /* If no keybindings are found, add the default ones */
-        if (list == NULL)
-        {
-            for (i = 0; i < KB_NUM; i++)
-            {
-                cfg_set_single_value_as_int(config, KB_GLOBAL, Keybindname[i], KeybindingDefault[i][0]);
-                cfg_set_single_value_as_int(config, MK_GLOBAL, Keybindname[i], KeybindingDefault[i][1]);
-                cfg_set_single_value_as_int(config, AC_GLOBAL, Keybindname[i], KeybindingDefault[i][2]);
-            }
-            list = cfg_get_key_list(config, KB_GLOBAL);
-        }
-        /* Walk through the keybinding list */
-        if (list)
-        {
-            int edited = 0;
-            conf_mult_obj *iter = NULL;
-            /* Sort list on name. so chains can be defined */
-            do
-            {
-                edited = 0;
-                iter = list;
-                do
-                {
-                    if (iter->next)
-                    {
-                        if (strcmp(iter->key, iter->next->key) > 0)
-                        {
-                            char *temp = iter->key;
-                            iter->key = iter->next->key;
-                            iter->next->key = temp;
-                            edited = 1;
-                        }
-                    }
-                    iter = iter->next;
-                } while (iter);
-            } while (edited);
-
-            for (iter = list; iter; iter = iter->next)
-            {
-                guint keycode = (guint) cfg_get_single_value_as_int_with_default(config, KB_GLOBAL,
-                    iter->key, -1);
-                guint keymask = (guint) cfg_get_single_value_as_int_with_default(config, MK_GLOBAL,
-                    iter->key, 0);
-
-                /* ignore numpad and caps lock */
-                if (keycode > 0 && ((event->state & (GDK_SHIFT_MASK | GDK_CONTROL_MASK | GDK_MOD1_MASK)) == (keymask))
-                    && (keycode == event->keyval))
-                {
-                    int action = cfg_get_single_value_as_int_with_default(config, AC_GLOBAL,
-                        iter->key, -1);
-                    found = 1;
-                    /* Play control */
-                    if (action == KB_ACTION_PLAY)
-                        play_song();
-                    else if (action == KB_ACTION_NEXT)
-                        next_song();
-                    else if (action == KB_ACTION_PREV)
-                        prev_song();
-                    else if (action == KB_ACTION_STOP)
-                        stop_song();
-                    else if (action == KB_ACTION_FF)
-                        seek_ps(5);
-                    else if (action == KB_ACTION_REW)
-                        seek_ps(-5);
-                    /* Other actions */
-                    else if (action == KB_ACTION_CLEAR_PLAYLIST)
-                        mpd_playlist_clear(connection);
-                    else if (action == KB_ACTION_FULL_ADD_PLAYLIST)
-                        mpd_playlist_add(connection, "/");
-                    /* View control */
-                    else if (action == KB_ACTION_INTERFACE_COLLAPSE)
-                        playlist_zoom_out();
-                    else if (action == KB_ACTION_INTERFACE_EXPAND)
-                        playlist_zoom_in();
-                    else if (action == KB_ACTION_FULLSCREEN)
-                        pl3_window_fullscreen();
-                    /* Program control */
-                    else if (action == KB_ACTION_QUIT)
-                        main_quit();
-                    else if (action == KB_ACTION_CLOSE)
-                        pl3_close();
-                    else if (action == KB_ACTION_SINGLE_MODE)
-                    {
-                        mpd_player_set_single(connection, !mpd_player_get_single(connection));
-                    } else if (action == KB_ACTION_CONSUME)
-                    {
-                        mpd_player_set_consume(connection, !mpd_player_get_consume(connection));
-                    } else if (action == KB_ACTION_REPEAT)
-                    mpd_player_set_repeat(connection, !mpd_player_get_repeat(connection));
-                    else if (action == KB_ACTION_RANDOM)
-                        mpd_player_set_random(connection, !mpd_player_get_random(connection));
-                    else if (action == KB_ACTION_TOGGLE_MUTE)
-                        volume_toggle_mute();
-                    else
-                    {
-                        g_log(LOG_DOMAIN, G_LOG_LEVEL_WARNING,
-                            "Keybinding action (%i) for: %i %i is invalid\n", action, event->state, event->keyval);
-                        found = 0;
-                    }
-                }
-            }
-            cfg_free_multiple(list);
-        }
-        if (!found)
-        {
-            return FALSE;
-        }
-    }
 
     /* don't propagate */
-    return TRUE;
+    return FALSE;
 }
 
 
@@ -958,7 +842,6 @@ void create_playlist3(void)
 {
     GtkWidget *pb,*ali;
     GtkListStore *pl3_crumbs = NULL;
-    conf_mult_obj *list = NULL;
     GtkCellRenderer *renderer;
     GtkWidget *tree;
     GtkTreeSelection *sel;
@@ -1264,92 +1147,7 @@ void create_playlist3(void)
      *
      */
     playlist_connection_changed(connection, FALSE, NULL);
-    /**
-     * Update keybindings
-     */
-    list = cfg_get_key_list(config, KB_GLOBAL);
-    /* If no keybindings are found, add the default ones */
-    if (list == NULL)
-    {
-        int i;
-        for (i = 0; i < KB_NUM; i++)
-        {
-            cfg_set_single_value_as_int(config, KB_GLOBAL, Keybindname[i], KeybindingDefault[i][0]);
-            cfg_set_single_value_as_int(config, MK_GLOBAL, Keybindname[i], KeybindingDefault[i][1]);
-            cfg_set_single_value_as_int(config, AC_GLOBAL, Keybindname[i], KeybindingDefault[i][2]);
-        }
-        list = cfg_get_key_list(config, KB_GLOBAL);
-    }
-    //if (list)
-    if(0)
-    {
-        GtkAccelGroup *ac = gtk_accel_group_new();
-        GtkWidget *pl3_win = playlist3_get_window();
-        int action_seen = 0;
-        conf_mult_obj *conf_iter = list;
-        gtk_window_add_accel_group(GTK_WINDOW(pl3_win), ac);
-        while (conf_iter)
-        {
-            int action = cfg_get_single_value_as_int_with_default(config, AC_GLOBAL,
-                conf_iter->key, -1);
-            int keycode = cfg_get_single_value_as_int_with_default(config, KB_GLOBAL,
-                conf_iter->key, -1);
-            int keymask = cfg_get_single_value_as_int_with_default(config, MK_GLOBAL,
-                conf_iter->key, 0);
-            if (keycode >= 0 && action >= 0)
-            {
-                GObject *item = NULL;
-                int state = (((action_seen) & (1 << action)) == 0) ? GTK_ACCEL_VISIBLE : 0;
-                action_seen |= (1 << action);
 
-                if (action == KB_ACTION_PLAY)
-                {
-                    item = gtk_builder_get_object(pl3_xml, "menu_play");
-                } else if (action == KB_ACTION_STOP)
-                {
-                    item = gtk_builder_get_object(pl3_xml, "menu_stop");
-                } else if (action == KB_ACTION_NEXT)
-                {
-                    item = gtk_builder_get_object(pl3_xml, "menu_next");
-                } else if (action == KB_ACTION_PREV)
-                {
-                    item = gtk_builder_get_object(pl3_xml, "menu_prev");
-                } else if (action == KB_ACTION_FULLSCREEN)
-                {
-                    item = gtk_builder_get_object(pl3_xml, "fullscreen2");
-                } else if (action == KB_ACTION_INTERFACE_EXPAND)
-                {
-                    item = gtk_builder_get_object(pl3_xml, "zoom_in2");
-                } else if (action == KB_ACTION_INTERFACE_COLLAPSE)
-                {
-                    item = gtk_builder_get_object(pl3_xml, "zoom_out2");
-                } else if (action == KB_ACTION_REPEAT)
-                {
-                    item = gtk_builder_get_object(pl3_xml, "menu_repeat");
-                } else if (action == KB_ACTION_RANDOM)
-                {
-                    item = gtk_builder_get_object(pl3_xml, "menu_random");
-                } else if (action == KB_ACTION_TOGGLE_MUTE)
-                {
-                    item = gtk_builder_get_object(pl3_xml, "menu_mute_toggle");
-                } else if (action == KB_ACTION_SINGLE_MODE)
-                {
-                    item = gtk_builder_get_object(pl3_xml, "menu_single_mode_toggle");
-                } else if (action == KB_ACTION_CONSUME)
-                {
-                    item = gtk_builder_get_object(pl3_xml, "menu_consume_toggle");
-                }
-
-                if (item)
-                {
-                    gtk_widget_add_accelerator(GTK_WIDGET(item), "activate", ac, keycode, keymask, state);
-                }
-            }
-            conf_iter = conf_iter->next;
-        }
-    }
-
-    if(list)cfg_free_multiple(list);
     g_signal_connect(G_OBJECT(playlist3_get_window()), "window-state-event", G_CALLBACK(pl3_win_state_event), NULL);
 
     /**

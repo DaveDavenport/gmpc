@@ -235,7 +235,6 @@ gmpcincludedir =$(includedir)/gmpc/
 
 EXTRA_DIST=\
 		playlist3.h\
-		playlist3-keybindings.h\
 		main.h\
         Widgets/mpd-async-request.h\
 		config-defaults.h\
