@@ -1114,7 +1114,8 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
             /* The right view */
             this.metadata_sw = new Gtk.ScrolledWindow(null, null);
             this.metadata_sw.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC);
-//            this.metadata_sw.style_set += browser_bg_style_changed;
+            this.metadata_sw.set_shadow_type(Gtk.ShadowType.ETCHED_IN);
+            //            this.metadata_sw.style_set += browser_bg_style_changed;
             this.metadata_box = new Gtk.EventBox();
             this.metadata_box.set_visible_window(true);
             this.metadata_sw.add_with_viewport(this.metadata_box);

@@ -255,7 +255,7 @@ namespace Gmpc {
                 {
                     this.paned = new Gtk.ScrolledWindow(null,null);
                     this.paned.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC);
-                    this.paned.set_shadow_type(Gtk.ShadowType.NONE);
+                    this.paned.set_shadow_type(Gtk.ShadowType.ETCHED_IN);
                     this.container = new Gtk.EventBox();
                     this.container.set_visible_window(true);
                     this.paned.style_set.connect(browser_bg_style_changed);
