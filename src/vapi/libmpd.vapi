@@ -139,7 +139,6 @@ namespace MPD {
                 free_function = "mpd_data_free", 
                 cheader_filename = "libmpd/libmpd.h")]
             [Compact]
-            [Immutable]
             public class Item {
                 public Data.Type type;
                 public MPD.Song  song;
