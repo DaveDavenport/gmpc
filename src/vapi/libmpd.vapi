@@ -159,7 +159,7 @@ namespace MPD {
                 [ReturnsModifiedPointer ()]
                 public void remove_duplicate_songs();
 
-                [CCode (cname="mpd_data_get_next_real")] 
+                [CCode (cname="mpd_data_get_next_real", cheader_filename="libmpd/libmpd-internal.h")] 
                 [ReturnsModifiedPointer ()]
                 public void next(bool free);
 

@@ -384,7 +384,7 @@ MpdData *misc_sort_mpddata(MpdData * data, GCompareDataFunc func, void *user_dat
 		node = (MpdData_real *) mpd_data_get_next_real((MpdData *) node, FALSE);
 	}
 	TEC("Created array");
-	g_qsort_with_data(nodes, i, sizeof(*nodes), func, user_data);
+	g_qsort_with_data(nodes, i, sizeof(MpdData_real *), func, user_data);
 	TEC("Sorted array");
 	nodes[0]->prev = NULL;
 	nodes[0]->next = NULL;
