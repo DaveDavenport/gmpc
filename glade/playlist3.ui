@@ -17,6 +17,12 @@
           </object>
         </child>
         <child>
+          <object class="GtkAction" id="Close">
+            <property name="stock-id">gtk-close</property>
+            <signal name="activate" handler="pl3_close" swapped="no"/>
+          </object>
+        </child>
+        <child>
           <object class="GtkAction" id="ViewCollapse">
             <property name="label" translatable="true">_Collapse interface</property>
             <property name="stock-id">gtk-zoom-out</property>
@@ -300,6 +306,7 @@
           <separator/>
           <menuitem action="Preferences"/>
           <separator/>
+          <menuitem action="Close"/>
           <menuitem action="Quit"/>
         </menu>
         <menu action="menu_control">
