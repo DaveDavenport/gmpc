@@ -61,4 +61,5 @@ void
 colorshift_pixbuf(GdkPixbuf *dest, GdkPixbuf *src, int shift);
 
 void create_gmpc_paths(void);
+mpd_Song * mpd_songDup0(const mpd_Song *song);
 #endif

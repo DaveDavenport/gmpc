@@ -804,3 +804,8 @@ void create_gmpc_paths(void)
 	/* Free the path */
 	q_free(url);
 }
+
+mpd_Song * mpd_songDup0(const mpd_Song *song)
+{
+    return (song == NULL)? NULL: mpd_songDup(song);
+}

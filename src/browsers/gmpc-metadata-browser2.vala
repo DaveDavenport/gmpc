@@ -2725,7 +2725,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
      }
     private struct Hitem {
         public HitemType type;
-        public MPD.Song song;
+        public MPD.Song? song;
         public string search_string ;
     }
     private List<Hitem?> history = null;

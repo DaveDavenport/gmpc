@@ -21,7 +21,7 @@ namespace MPD {
     [CCode (cname = "mpd_Song",
     free_function = "mpd_freeSong",
     copy_function = "mpd_songDup",
-    cheader_filename = "libmpd/libmpdclient.h,libmpd/libmpd.h")]
+    cheader_filename = "libmpd/libmpdclient.h,libmpd/libmpd.h,misc.h")]
     [Compact]
     [Immutable]
     public class Song {
@@ -42,8 +42,8 @@ namespace MPD {
         public int    time;
         public int    pos;
         public int    id;
-        [CCode (cname="mpd_songDup")]
-        public unowned MPD.Song copy ();
+        [CCode (cname="mpd_songDup0")]
+        public static Song copy (Song? s);
         [CCode (instance_pos = -1)]
         public void markup (char[] buffer, int length, string markup);
     }

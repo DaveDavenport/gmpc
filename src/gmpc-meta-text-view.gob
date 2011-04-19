@@ -70,7 +70,7 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 	}
 	
 	public 
-	GtkWidget * new (int type)
+	Gmpc:Meta:Text:View * new (int type)
 	{
 		Self *gmi =  GET_NEW;
 		gmi->_priv->type = type;
@@ -82,7 +82,7 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
                 "family", "Monospace",
                 "family-set", TRUE,
                 NULL);
-		return (GtkWidget *)gmi;
+		return gmi;
 	}
 
 	private 

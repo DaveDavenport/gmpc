@@ -296,7 +296,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
         }
 
         public
-        GtkWidget *new_size(int type, int size)
+        Gmpc:Meta:Image *new_size(int type, int size)
         {
             Self *gmi =  GET_NEW;
             gmi->image_type = type;
@@ -314,7 +314,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 
             gmi->_priv->metadata_force_reload = g_signal_connect_swapped(G_OBJECT(gmw), "force-reload", G_CALLBACK(self_reload_image), gmi);
 
-            return (GtkWidget *)gmi;
+            return gmi;
         }
 	public 
 		GtkWidget * new (int type)
@@ -404,7 +404,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 
 	public 
 		void
-		update_cover_from_song(self, mpd_Song *song)
+		update_cover_from_song(self, const mpd_Song *song)
 		{
 			MetaDataResult ret;
             MetaData *met= NULL;
@@ -421,7 +421,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 			}
             self->_priv->song = mpd_songDup(song);
 
-			ret = gmpc_meta_watcher_get_meta_path(gmw,song, self->image_type, &met);
+			ret = gmpc_meta_watcher_get_meta_path(gmw,self->_priv->song, self->image_type, &met);
 			if(ret == META_DATA_FETCHING)
 			{
 				self_set_cover_fetching(self);

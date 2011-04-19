@@ -52,7 +52,7 @@ extern GtkTargetEntry gmt_targetentries[];
 %{
 GtkTargetEntry gmt_targetentries[] =
 {
-	{ (const gchar *)"GTK_TREE_MODEL_ROW",					GTK_TARGET_SAME_APP		, DND_SONG}
+	{ (gchar *)"GTK_TREE_MODEL_ROW",					GTK_TARGET_SAME_APP		, DND_SONG}
 };
 static int col_ids[NUM_COLS] = {
     MPDDATA_MODEL_COL_MARKUP,
