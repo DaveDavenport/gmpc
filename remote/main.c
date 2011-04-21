@@ -25,6 +25,7 @@
 #include "ipc.h"
 int main ( int argc, char **argv )
 {
+    int i =0;
 	GObject *ipc = NULL;
 	gboolean response = FALSE;
 
@@ -116,13 +117,10 @@ int main ( int argc, char **argv )
 
 	ipc = gmpc_tools_ipc_new();
 	if(!gmpc_tools_ipc_is_running(ipc)) {
-		printf("Error: GMPC is not running");
+		fprintf(stderr, "Error: GMPC is not running\n");
 		g_object_unref(ipc);
 		return EXIT_FAILURE;
 	}
-
-
-
 
 	if(play)
 	{
@@ -179,6 +177,10 @@ int main ( int argc, char **argv )
 		response = gmpc_tools_ipc_send(ipc, COMMAND_EASYCOMMAND, "quit");
 		if(!response) printf("Failed to send EASYCOMMAND command\n");
 	}
+    for ( i=1; i < argc ; i++ ) {
+		response = gmpc_tools_ipc_send(ipc, COMMAND_EASYCOMMAND, argv[i]);
+		if(!response) printf("Failed to send EASYCOMMAND command\n");
+    }
 	g_object_unref(ipc);
 	return EXIT_SUCCESS;
 }

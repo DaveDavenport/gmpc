@@ -760,7 +760,80 @@ void colorshift_pixbuf(GdkPixbuf * dest, GdkPixbuf * src, int shift)
 	}
 }
 
+/* Kudos to the gnome-panel guys. */
+void decolor_pixbuf(GdkPixbuf * dest, GdkPixbuf * src)
+{
+	gint i, j;
+	gint width, height, has_alpha, src_rowstride, dest_rowstride;
+	guchar *target_pixels;
+	guchar *original_pixels;
+	guchar *pix_src;
+	guchar *pix_dest;
+	gint r;
 
+	has_alpha = gdk_pixbuf_get_has_alpha(src);
+	width = gdk_pixbuf_get_width(src);
+	height = gdk_pixbuf_get_height(src);
+	src_rowstride = gdk_pixbuf_get_rowstride(src);
+	dest_rowstride = gdk_pixbuf_get_rowstride(dest);
+	original_pixels = gdk_pixbuf_get_pixels(src);
+	target_pixels = gdk_pixbuf_get_pixels(dest);
+	for (i = 0; i < height; i++)
+	{
+		pix_dest = target_pixels + i * dest_rowstride;
+		pix_src = original_pixels + i * src_rowstride;
+
+		for (j = 0; j < width; j++)
+		{
+			r = *(pix_src++);
+			r += *(pix_src++);
+			r += *(pix_src++);
+
+            r = CLAMP(((r)/3),0,255);
+
+			*(pix_dest++) = r;
+            *(pix_dest++) = r;
+            *(pix_dest++) = r;
+
+			if (has_alpha)
+				*(pix_dest++) = *(pix_src++);
+		}
+	}
+}
+
+void darken_pixbuf(GdkPixbuf * dest, GdkPixbuf * src, double factor)
+{
+	gint i, j;
+	gint width, height, has_alpha, src_rowstride, dest_rowstride;
+	guchar *target_pixels;
+	guchar *original_pixels;
+	guchar *pix_src;
+	guchar *pix_dest;
+	gint r;
+
+	has_alpha = gdk_pixbuf_get_has_alpha(src);
+	width = gdk_pixbuf_get_width(src);
+	height = gdk_pixbuf_get_height(src);
+	src_rowstride = gdk_pixbuf_get_rowstride(src);
+	dest_rowstride = gdk_pixbuf_get_rowstride(dest);
+	original_pixels = gdk_pixbuf_get_pixels(src);
+	target_pixels = gdk_pixbuf_get_pixels(dest);
+	for (i = 0; i < height; i++)
+	{
+		pix_dest = target_pixels + i * dest_rowstride;
+		pix_src = original_pixels + i * src_rowstride;
+
+		for (j = 0; j < width; j++)
+		{
+			*(pix_dest++) = ((*(pix_src++))*factor);
+			*(pix_dest++) = ((*(pix_src++))*factor);
+			*(pix_dest++) = ((*(pix_src++))*factor);
+
+			if (has_alpha)
+				*(pix_dest++) = *(pix_src++);
+		}
+	}
+}
 static void create_directory(const gchar * url)
 {
 	/**

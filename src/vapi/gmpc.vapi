@@ -269,6 +269,11 @@ namespace Gmpc {
     namespace Misc{
         [CCode (cname="colorshift_pixbuf",cheader_filename="misc.h")]
         public void colorshift_pixbuf(Gdk.Pixbuf dest, Gdk.Pixbuf src, int shift);
+
+        [CCode (cname="darken_pixbuf",cheader_filename="misc.h")]
+        public void darken_pixbuf(Gdk.Pixbuf dest, Gdk.Pixbuf src, double factor);
+        [CCode (cname="decolor_pixbuf",cheader_filename="misc.h")]
+        public void decolor_pixbuf(Gdk.Pixbuf dest, Gdk.Pixbuf src);
         [CCode (cname="misc_header_expose_event",cheader_filename="misc.h")]
         public bool misc_header_expose_event(Gtk.Widget widget, Gdk.EventExpose event);
 

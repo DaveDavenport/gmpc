@@ -1,4 +1,4 @@
-/* Gnome Music Player Client Multimedia Keys plugin (gmpc-mmkeys)
+/* Gnome Music Player Client
  * Copyright (C) 2011 Qball Cow <qball@gmpclient.org>
  * Project homepage: http://gmpclient.org/
  
@@ -32,6 +32,7 @@ private const string np2_LOG_DOMAIN = "NowPlaying";
 
 /* create teh plugin of type Gmpc.Plugin.Base that implements the Browser interface */
 namespace Gmpc {
+
     namespace Plugin {
         public class Mockup : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface {
             private bool    theme_colors    = (bool) config.get_int_with_default("Now Playing", "use-theme-color",1); 
@@ -42,6 +43,9 @@ namespace Gmpc {
 
             private Gtk.Label bitrate_label = null;
             private Gtk.TreeRowReference np_ref = null;
+
+			private bool use_backdrop = (bool) config.get_int_with_default("Now Playing", "use-backdrop",0); 
+
 
             construct {
                 /* Set the plugin as Browser type*/
@@ -192,6 +196,11 @@ namespace Gmpc {
                     this.title_color = this.paned.style.text[Gtk.StateType.PRELIGHT].to_string();
                     this.item_color = this.paned.style.text[Gtk.StateType.PRELIGHT].to_string();
                 }
+				if(use_backdrop) {
+					this.title_color = "#fff";
+					this.item_color = "#fff";
+					this.theme_colors = false;
+				}
                 this.update();
             }
 
@@ -253,15 +262,18 @@ namespace Gmpc {
             private void browser_init() {
                 if(this.paned == null)
                 {
+                    
                     this.paned = new Gtk.ScrolledWindow(null,null);
                     this.paned.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC);
                     this.paned.set_shadow_type(Gtk.ShadowType.ETCHED_IN);
-                    this.container = new Gtk.EventBox();
-                    this.container.set_visible_window(true);
+					if(use_backdrop) {
+	                    this.container = new Gmpc.Widgets.MetaData.Backdrop(Gmpc.MetaData.Type.ARTIST_ART);
+					}else{
+						this.container = new Gtk.EventBox();
+					}
                     this.paned.style_set.connect(browser_bg_style_changed);
                     this.paned.add_with_viewport(this.container);
                     this.paned.get_vadjustment().set("step-increment", 20.0);
-
                     this.paned.show_all();
 
                 }
@@ -270,6 +282,8 @@ namespace Gmpc {
             /* Clear the view inside the scrolled window*/
             private void clear()
             {
+				if(use_backdrop)
+					(this.container as Gmpc.Widgets.MetaData.Backdrop).set_song(null);
                 /* Clear */
                 var list = this.container.get_children();
                 foreach(Gtk.Widget child in list){
@@ -313,6 +327,8 @@ namespace Gmpc {
                 }
                 GLib.Timer t = new GLib.Timer();
                 this.clear();
+				if(use_backdrop)
+					(this.container as Gmpc.Widgets.MetaData.Backdrop).set_song(song);
                 this.song_checksum = checksum;
 
                 var vbox = new Gtk.VBox (false,6);
@@ -339,7 +355,7 @@ namespace Gmpc {
 		}
 
                 /* Artist image */
-		if(config.get_int_with_default("Interface", "hide-album-art", 0) == 0)
+		if(config.get_int_with_default("Interface", "hide-album-art", 0) == 0 && !use_backdrop)
 		{
 			ali = new Gtk.Alignment(1f,0f,0f,0f);
 			var artist_image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ARTIST_ART, meta_size);
@@ -356,14 +372,14 @@ namespace Gmpc {
                 if(song.title != null) {
                     var box = new Gtk.HBox(false, 6);
                     /* Favored button */
-		
-		    if(config.get_int_with_default("Interface", "hide-favorites-icon",0) == 0){
-			    var fav_button = new Gmpc.Favorites.Button();
-			    fav_button.set_song(song);
-			    ali = new Gtk.Alignment(0.0f, 0.5f,0f,0f);
-			    ali.add(fav_button);
-			    box.pack_start(ali, false, false, 0); 
-		    }
+
+                    if(config.get_int_with_default("Interface", "hide-favorites-icon",0) == 0){
+                        var fav_button = new Gmpc.Favorites.Button();
+                        fav_button.set_song(song);
+                        ali = new Gtk.Alignment(0.0f, 0.5f,0f,0f);
+                        ali.add(fav_button);
+                        box.pack_start(ali, false, false, 0); 
+                    }
                     var label = new Gtk.Label(song.title);
                     label.selectable = true;
                     label.set_markup(GLib.Markup.printf_escaped("<span color='%s' size='%i' weight='bold'>%s</span>", 
@@ -412,7 +428,8 @@ namespace Gmpc {
                     var event = new Gtk.EventBox();
                     var box = new Gtk.HBox(false, 6);
                     var label = new Gtk.Label(song.artist);
-                    label.selectable = true;
+					event.set_visible_window(false);
+					label.selectable = true;
                     var image = new Gtk.Image.from_icon_name("media-artist", Gtk.IconSize.MENU);
                     event.add(image);
                     box.pack_start(event, false, false, 0);
@@ -434,7 +451,8 @@ namespace Gmpc {
                     var event = new Gtk.EventBox();
                     var box = new Gtk.HBox(false, 6);
                     var label = new Gtk.Label(song.album);
-                    label.selectable = true;
+					event.set_visible_window(false);
+					label.selectable = true;
                     var image = new Gtk.Image.from_icon_name("media-album", Gtk.IconSize.MENU);
                     event.add(image);
                     box.pack_start(event, false, false, 0);
@@ -577,11 +595,7 @@ namespace Gmpc {
                 if(config.get_int_with_default("MetaData", "show-lyrics",1) == 1)
                 {
                     var alib = new Gtk.Alignment(0f,0f,1f,0f);
-                    var text_view = new Gmpc.MetaData.TextView(Gmpc.MetaData.Type.SONG_TXT);
-                    text_view.force_ro = true;
-                    text_view.set_left_margin(8);
-                    text_view.query_from_song(song);
-
+                    var text_view = new Gmpc.Widgets.MetaData.TextLabel(song, Gmpc.MetaData.Type.SONG_TXT);
                     alib.add(text_view);
                     notebook.append_page(alib, new Gtk.Label("Lyrics"));
                     var button = new Gtk.RadioButton.with_label(group,("Lyrics"));
@@ -604,13 +618,7 @@ namespace Gmpc {
                 if(config.get_int_with_default("MetaData", "show-guitar-tabs",1) == 1)
                 {
                     var alib = new Gtk.Alignment(0f,0f,1f,0f);
-                    var text_view = new Gmpc.MetaData.TextView(Gmpc.MetaData.Type.SONG_GUITAR_TAB);
-                    text_view.force_ro = true;
-                    text_view.use_monospace = true;
-                    text_view.set_left_margin(8);
                     var text_view_queried = false;
-
-                    alib.add(text_view);
                     notebook.append_page(alib, new Gtk.Label(_("Guitar Tabs")));
                     var button = new Gtk.RadioButton.with_label(group,_("Guitar Tabs"));
                     group = button.get_group();
@@ -622,17 +630,20 @@ namespace Gmpc {
                                 GLib.log(np2_LOG_DOMAIN,GLib.LogLevelFlags.LEVEL_DEBUG, "guitar tab notebook page %i clicked", j);
                                 notebook.set_current_page(j);
                                 if(!text_view_queried){
-                                    text_view.query_from_song(song);
+                                    var text_view = new Gmpc.Widgets.MetaData.TextLabel(song, Gmpc.MetaData.Type.SONG_GUITAR_TAB);
+                                    alib.add(text_view);
                                     text_view_queried = true;
                                     this.change_color_style(text_view);
+                                    text_view.show();
                                 }
                             }
                     });
                     if(i == 0){
-                        text_view.query_from_song(song);
+                        var text_view = new Gmpc.Widgets.MetaData.TextLabel(song, Gmpc.MetaData.Type.SONG_GUITAR_TAB);
+                        alib.add(text_view);
                         text_view_queried = true;
                     }
-                    alib.show();
+                    alib.show_all();
                     i++;
                 }
                 GLib.log(np2_LOG_DOMAIN, GLib.LogLevelFlags.LEVEL_DEBUG, "guitar tabs took: %.6f seconds.", t.elapsed());
@@ -722,13 +733,8 @@ namespace Gmpc {
                 if(config.get_int_with_default("MetaData", "show-artist-information",1) == 1)
                 {
                     var alib = new Gtk.Alignment(0f,0f,1f,0f);
-                    var text_view = new Gmpc.MetaData.TextView(Gmpc.MetaData.Type.ARTIST_TXT);
-                    text_view.force_ro = true;
-                    text_view.use_monospace = false;
-                    text_view.set_left_margin(8);
                     var text_view_queried = false;
 
-                    alib.add(text_view);
                     notebook.append_page(alib, new Gtk.Label(_("Artist information")));
                     var button = new Gtk.RadioButton.with_label(group,_("Artist information"));
                     group = button.get_group();
@@ -740,17 +746,20 @@ namespace Gmpc {
                                 GLib.log(np2_LOG_DOMAIN,GLib.LogLevelFlags.LEVEL_DEBUG, "artist info notebook page %i clicked", j);
                                 notebook.set_current_page(j);
                                 if(!text_view_queried){
-                                    text_view.query_from_song(song);
+                                    var text_view = new Gmpc.Widgets.MetaData.TextLabel(song,Gmpc.MetaData.Type.ARTIST_TXT);
+                                    alib.add(text_view);
                                     text_view_queried = true;
+                                    text_view.show();
                                     this.change_color_style(text_view);
                                 }
                             }
                             });
                     if(i == 0){
-                        text_view.query_from_song(song);
+                        var text_view = new Gmpc.Widgets.MetaData.TextLabel(song,Gmpc.MetaData.Type.ARTIST_TXT);
+                        alib.add(text_view);
                         text_view_queried = true;
                     }
-                    alib.show();
+                    alib.show_all();
                     i++;
                 }
 

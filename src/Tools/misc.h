@@ -59,6 +59,8 @@ gchar * mpd_song_checksum(const mpd_Song *song);
 
 void
 colorshift_pixbuf(GdkPixbuf *dest, GdkPixbuf *src, int shift);
+void decolor_pixbuf(GdkPixbuf *dest, GdkPixbuf *src);
+void darken_pixbuf(GdkPixbuf * dest, GdkPixbuf * src, double factor);
 
 void create_gmpc_paths(void);
 mpd_Song * mpd_songDup0(const mpd_Song *song);

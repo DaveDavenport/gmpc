@@ -196,7 +196,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
             {
                 if(GMPC_META_IMAGE_ASYNC(self->_priv->tooltip_image)->uri == NULL || 
 				strcmp(GMPC_META_IMAGE_ASYNC(self->_priv->tooltip_image)->uri, self->_priv->image_url) != 0)
-			gmpc_meta_image_async_set_from_file(GMPC_META_IMAGE_ASYNC(self->_priv->tooltip_image), self->_priv->image_url, 350, FALSE); 
+			gmpc_meta_image_async_set_from_file(GMPC_META_IMAGE_ASYNC(self->_priv->tooltip_image), self->_priv->image_url, 350, GMPC_MODIFICATION_TYPE_NONE); 
                 gtk_widget_show(self->_priv->tooltip_image);
                 return TRUE;
             }
@@ -661,7 +661,10 @@ class Gmpc:MetaImage from Gtk:Event:Box{
             }
             self->_priv->image_url = g_strdup(path); 
             gmpc_meta_image_async_set_from_file(GMPC_META_IMAGE_ASYNC(self->_priv->image), self->_priv->image_url, self->size,
-                    (cfg_get_single_value_as_int_with_default(config, "metaimage", "addcase",TRUE) && self->image_type == META_ALBUM_ART));
+                    ((cfg_get_single_value_as_int_with_default(config, "metaimage", "addcase",TRUE) && self->image_type == META_ALBUM_ART))?
+                    GMPC_MODIFICATION_TYPE_CASING:GMPC_MODIFICATION_TYPE_NONE
+                    
+                    );
             if(self->squared) {
                 gtk_widget_set_size_request(GTK_WIDGET(self), self->size, self->size);
             }

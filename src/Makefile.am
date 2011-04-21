@@ -33,6 +33,8 @@ gmpc_WIDGETS_FILES=\
     Widgets/playlist3-messages.c\
     Widgets/gmpc-song-links.vala\
     Widgets/advanced_settings.vala\
+    Widgets/gmpc-metadata-text-label.vala\
+    Widgets/gmpc-metadata-backdrop.vala\
     GUI/title_header.c\
     GUI/status_icon.c\
     GUI/cmd.c\
