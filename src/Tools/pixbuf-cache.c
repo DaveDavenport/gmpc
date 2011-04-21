@@ -30,6 +30,7 @@
 /* The hash table looking up the entries */
 static GHashTable *pb_cache = NULL;
 guint32 total_size = 0;
+#define MAX_SIZE 400
 
 /* The structure holding the cache entry */
 typedef struct
@@ -162,6 +163,7 @@ void pixbuf_cache_add_icon(int size, const gchar * url, GdkPixbuf * pb)
 	GTimer *t = g_timer_new();
 	gchar *key;
 	g_assert(pb_cache != NULL);
+    if(size > MAX_SIZE) return;
 
 	key = g_strdup_printf("%i:%s", size, url);
 
