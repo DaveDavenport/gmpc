@@ -30,6 +30,9 @@ namespace Gmpc {
             private string song_checksum = null;
             private Gmpc.MetaData.Type cur_type = Gmpc.MetaData.Type.ARTIST_ART; 
             private Gdk.Pixbuf pb = null;
+            private ModificationType mod_type = (ModificationType)
+                        config.get_int_with_default(
+                            "Backdrop", "alterations",2);
 
             // Image loading
             private Gmpc.PixbufLoaderAsync? loader = null;
@@ -54,7 +57,7 @@ namespace Gmpc {
                             pb = pixbuf;
                             this.queue_draw();
                             });
-                        loader.set_from_file(uri, req.width, -1, ModificationType.DARKEN);
+                        loader.set_from_file(uri, req.width, -1,mod_type);
                     }
 
                 }

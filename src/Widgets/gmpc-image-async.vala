@@ -24,10 +24,15 @@ using Gdk;
 const string LOG_DOMAIN = "ImageAsync";
 namespace Gmpc
 {
+	/**
+	 * Operations you can do on the image. 
+	 * The modified pixbuf will be stored in cache.
+     */
     public enum ModificationType {
-        NONE,       // Add nothing
-            CASING,     // Add border and or casing
-            DARKEN      // Darken the image (for backdrop)
+            NONE    = 0,        // Add nothing
+            CASING  = 1,        // Add border and or casing
+            DARKEN  = 2,        // Darken the image (for backdrop)
+            DECOLOR = 4         // Remove color from image.
     }
     public class PixbufLoaderAsync : GLib.Object
     {
@@ -65,10 +70,10 @@ namespace Gmpc
             if(this.pcancel != null) pcancel.cancel();
         }
 
-        private Gdk.Pixbuf? modify_pixbuf(Gdk.Pixbuf? pix, int size,ModificationType casing) 
+        private Gdk.Pixbuf? modify_pixbuf(owned Gdk.Pixbuf? pix, int size,ModificationType casing) 
         {
             if(pix == null) return null;
-            if(casing == ModificationType.CASING)
+            if((casing&ModificationType.CASING) == ModificationType.CASING)
             {
                 if(config.get_int_with_default("metaimage", "addcase", 1) == 1)
                 {
@@ -95,9 +100,10 @@ namespace Gmpc
                             var temph = (case_image.height > pix2.height)?pix2.height:case_image.height;
                             pix2.copy_area(0,0, tempw-1, temph-2, blank, case_image.width-tempw, 1);
                             case_image.composite(blank, 0,0,case_image.width, case_image.height, 0,0,1,1,Gdk.InterpType.BILINEAR, 250);
-                            return blank;
+                            pix = (owned)blank;
                         }catch (Error e) {
-
+                            GLib.log(LOG_DOMAIN,GLib.LogLevelFlags.LEVEL_WARNING, 
+                                    "Failed to get the stylized-cover image");
                         }
 
                     }
@@ -105,15 +111,15 @@ namespace Gmpc
                     Gmpc.Fix.add_border(pix);
                 }
             }
-            else if (casing == ModificationType.DARKEN)
+            if ((casing&ModificationType.DARKEN) == ModificationType.DARKEN)
             {
                 Gmpc.Misc.darken_pixbuf(pix, pix, 0.4);
             }
-            else
+            if ((casing&ModificationType.DECOLOR) == ModificationType.DECOLOR)
             {
+                Gmpc.Misc.decolor_pixbuf(pix, pix);
             }
 
-            /* used to try to track leak */
             return pix;
         }
 
@@ -166,7 +172,7 @@ namespace Gmpc
                     });
             loader.area_prepared.connect((source) => {
                     var apix = loader.get_pixbuf();
-                    var afinal = this.modify_pixbuf(apix, int.max(height, width),border);
+                    var afinal = this.modify_pixbuf((owned)apix, int.max(height, width),border);
 
                     pixbuf = afinal;
                     pixbuf_update(pixbuf);
@@ -217,7 +223,7 @@ namespace Gmpc
             var final = Gmpc.PixbufCache.lookup_icon(int.max(height, width), uri);
             if(final == null)
             {
-                final = this.modify_pixbuf(pix, int.max(height, width),border);
+                final = this.modify_pixbuf((owned)pix, int.max(height, width),border);
                 Gmpc.PixbufCache.add_icon(int.max(height, width),uri, final);
             }
             this.pixbuf = final;
