@@ -1,6 +1,6 @@
 #include <glib.h>
 #include <gtk/gtk.h>
-#include "Widgets/pixbuf-cache.h"
+#include "pixbuf-cache.h"
 
 #define CYCLES 100
 

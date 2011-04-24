@@ -282,8 +282,6 @@ namespace Gmpc {
             /* Clear the view inside the scrolled window*/
             private void clear()
             {
-				if(use_backdrop)
-					(this.container as Gmpc.Widgets.MetaData.Backdrop).set_song(null);
                 /* Clear */
                 var list = this.container.get_children();
                 foreach(Gtk.Widget child in list){
@@ -315,6 +313,8 @@ namespace Gmpc {
                 MPD.Song song = server.playlist_get_current_song(); 
                 if(song == null) {
                     debug("GMPC Is playing, cannot get this");
+       				if(use_backdrop)
+    					(this.container as Gmpc.Widgets.MetaData.Backdrop).set_song(null);
                     update_not_playing();
                     return;
                 }
@@ -911,6 +911,8 @@ namespace Gmpc {
             {
                 this.clear();
                 song_checksum = null;
+   				if(use_backdrop)
+   					(this.container as Gmpc.Widgets.MetaData.Backdrop).set_song(null);
 
                 var it = Gtk.IconTheme.get_default();
                 Gtk.IconInfo info = it.lookup_icon("gmpc", 150, 0);

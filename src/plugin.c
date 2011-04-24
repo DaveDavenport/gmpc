@@ -47,6 +47,38 @@ int plugin_get_pos(int id)
     return id & (PLUGIN_ID_MARK - 1);
 }
 
+
+typedef struct _Blacklist {
+    const char *plugin_name;
+    const char *reason;
+}Blacklist;
+
+static const int num_blacklisted_plugins = 3;
+static Blacklist blacklist[] = 
+{
+    {"Lyrdb.com lyric source", "Plugin is intergrated into GMPC"},
+    {"Extra Playlist View", "Plugin is intergrated into GMPC"},
+    {"Statistics", "Plugin is intergrated into GMPC"}
+};
+
+static void plugin_manager_blacklist(gmpcPluginParent *p, GError **error)
+{
+    int i;
+    const char *name = gmpc_plugin_get_name(p);
+    g_assert(name != NULL);
+    for(i = 0; i<num_blacklisted_plugins; i++) {
+        if(strcmp(name, blacklist[i].plugin_name) == 0) {
+            g_set_error(error, plugin_quark(), 0,
+                 "pluging has with name: %s is blacklisted: '%s'", name, 
+                  blacklist[i].reason);
+            g_log(PLUGIN_LOG_DOMAIN, G_LOG_LEVEL_CRITICAL,
+                  "pluging has with name: %s is blacklisted: '%s'", name, 
+                  blacklist[i].reason);
+        }
+    }
+    
+}
+
 static int plugin_validate(gmpcPlugin * plug, GError ** error)
 {
     int i;
@@ -202,6 +234,14 @@ void plugin_add(gmpcPlugin * plug, int plugin, GError ** error)
     gmpcPluginParent *parent = g_malloc0(sizeof(*parent));
     parent->old = plug;
     parent->new = NULL;
+    
+        
+    plugin_manager_blacklist(parent, error);
+    if(error != NULL)
+    {
+        return ;
+    }
+     
     /* set plugin id */
     plug->id = num_plugins | ((plugin) ? PLUGIN_ID_MARK : PLUGIN_ID_INTERNALL);
     /* put it in the list */
@@ -221,6 +261,12 @@ void plugin_add_new(GmpcPluginBase * plug, int plugin, GError ** error)
     gmpcPluginParent *parent = g_malloc0(sizeof(*parent));
     parent->new = plug;
     parent->old = NULL;
+
+    plugin_manager_blacklist(parent, error);
+    if(error != NULL)
+    {
+        return ;
+    }
     /* set plugin id */
     plug->id = num_plugins | ((plugin) ? PLUGIN_ID_MARK : PLUGIN_ID_INTERNALL);
     /* put it in the list */

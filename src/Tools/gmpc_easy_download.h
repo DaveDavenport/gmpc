@@ -33,6 +33,8 @@ typedef enum {
 } GEADStatus;
 
 typedef void (*GEADAsyncCallback) (const GEADAsyncHandler * handle, GEADStatus status, gpointer user_data);
+typedef void (*GEADAsyncCallbackVala) (const GEADAsyncHandler * handle, GEADStatus status, gpointer user_data,
+gpointer userdata_callback);
 /**
  * @param uri       the http uri to download
  * @param callback  the callback function. Giving status updates on the download.
@@ -57,12 +59,23 @@ const char *gmpc_easy_handler_get_uri(const GEADAsyncHandler * handle);
 
 const char *gmpc_easy_handler_get_data(const GEADAsyncHandler * handle, goffset * length);
 
-guchar *gmpc_easy_handler_get_data_vala_wrap(const GEADAsyncHandler * handle, gint * length);
+const guchar *gmpc_easy_handler_get_data_vala_wrap(const GEADAsyncHandler * handle, gint * length);
+/**
+ * Get the data as a string. 
+ * If you know it will be a text. This function will return the data \0 
+ * terminated.  (if you need length, without the trailing \0 use get_data
+ * This can be usefull for f.e. vala that might copy the 'raw'data  and remove 
+ * the trailing '\0'.
+ */
+const char *gmpc_easy_handler_get_data_as_string(const GEADAsyncHandler * handle);
 
 void gmpc_easy_handler_set_user_data(const GEADAsyncHandler *handle, gpointer user_data);
 gpointer gmpc_easy_handler_get_user_data(const GEADAsyncHandler *handle);
 
 
 char *gmpc_easy_download_uri_escape(const char *part);
+void gmpc_easy_async_downloader_vala(const char *path, gpointer user_data2, GEADAsyncCallbackVala callback,
+														  gpointer user_data
+														  );
 #endif
 /* vim: set noexpandtab ts=4 sw=4 sts=4 tw=120: */

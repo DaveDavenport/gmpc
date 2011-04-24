@@ -8,6 +8,7 @@ pixbuf_cache_test_CFLAGS = @CFLAGS@\
 		@gtk_CFLAGS@\
 		-I$(top_srcdir)/src\
 		-I$(top_srcdir)/src/vala\
+		-I$(top_srcdir)/src/Tools\
         -I$(top_srcdir)/src/MetaData\
 		-DPIXMAP_PATH=\""$(pkgdatadir)/icons/"\" \
 		-DGLADE_PATH=\""$(pkgdatadir)"\"
@@ -21,6 +22,6 @@ pixbuf_cache_test_SOURCES = \
 		pixbuf_cache_test.c
 
 nodist_pixbuf_cache_test_SOURCES = \
-        $(top_srcdir)/src/Widgets/pixbuf-cache.c
+        $(top_srcdir)/src/Tools/pixbuf-cache.c
 
 endif

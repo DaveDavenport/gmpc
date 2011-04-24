@@ -48,9 +48,12 @@ namespace Gmpc.Widgets.MetaData
                 {
                     string path = item.get_uri();
                     string res = null;
-                    GLib.FileUtils.get_contents( path, out res);
-
-                    this.set_text(res);
+                    try{
+                        GLib.FileUtils.get_contents( path, out res);
+                        this.set_text(res);
+                    }catch (Error e) {
+                        this.set_text(_("Error reading file: %s").printf(e.message));
+                    }
                 }
                 else 
                 {
@@ -77,6 +80,7 @@ namespace Gmpc.Widgets.MetaData
             this.set_text("Not available");
             this.set_alignment(0.0f, 0.0f);
             this.set_padding(4,4);
+            this.set_selectable(true);
             cur_type = type;
             song_checksum = Gmpc.Misc.song_checksum(song);
 

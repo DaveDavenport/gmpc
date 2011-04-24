@@ -22,6 +22,7 @@
 
 #define RANGE(l,u,v) (((v)<(l))?(l):(((v)<(u))?(v):(u)))
 #include <libmpd/libmpd.h>
+#include "metadata.h"
 /**
  * format time into 
  * Total time: %i days %i hours %i minutes
@@ -56,11 +57,12 @@ gboolean misc_header_expose_event(GtkWidget *widget, GdkEventExpose *event);
 void misc_header_style_set_process_containers(GtkWidget *container, GtkStyle *old_style, gpointer data);
 
 gchar * mpd_song_checksum(const mpd_Song *song);
+gchar *mpd_song_checksum_type(const mpd_Song * song, MetaDataType type);
 
 void
 colorshift_pixbuf(GdkPixbuf *dest, GdkPixbuf *src, int shift);
 void decolor_pixbuf(GdkPixbuf *dest, GdkPixbuf *src);
-void darken_pixbuf(GdkPixbuf * dest, GdkPixbuf * src, double factor);
+void darken_pixbuf(GdkPixbuf * dest, guint factor);
 
 void create_gmpc_paths(void);
 mpd_Song * mpd_songDup0(const mpd_Song *song);

@@ -1,18 +1,21 @@
 #include <glib.h>
+#include <assert.h>
 #include <gtk/gtk.h>
-#include "pixbuf-cache.h"
-#include "gmpc-extras.h"
 
-#define CYCLES 3
 
+void colorshift_pixbuf(GdkPixbuf *dest, GdkPixbuf *src, int shift);
+void decolor_pixbuf(GdkPixbuf *dest, GdkPixbuf *src);
+void darken_pixbuf(GdkPixbuf * dest, guint factor);
+
+/* Dummy */
 gpointer config = NULL;
 
 void show_error_message(void)
 {
 }
+
 void playlist3_show_error_message(const char *message, int el)
 {
-
 }
 /**
  * Dummy config system 
@@ -33,35 +36,23 @@ void cfg_set_single_value_as_string(gpointer *config, const gchar *a, const gcha
 {
 }
 
-void cfg_set_single_value_as_int(gpointer *config, const gchar *a, const gchar *b, int def )
-{
-}
+
 int main (int argc, char **argv)
 {
-    guint i = CYCLES;
     GList *node,*list = NULL; 
+    int i;
     GMainLoop *l; 
     g_type_init_with_debug_flags(G_TYPE_DEBUG_MASK);
 
-    l = g_main_loop_new(NULL, TRUE); 
-    pixbuf_cache_create();
-    for(;i>0;i--){
-      GtkWidget *pb = gmpc_meta_image_async_new();
-      if(pb) {
-            list = g_list_prepend(list, g_object_ref_sink(pb));
-      }
-        gmpc_meta_image_async_set_from_file(pb,"test.jpg", i*5 ,0);
+    GdkPixbuf *pb = gdk_pixbuf_new_from_file("test.jpg", NULL);
+    assert(pb != NULL);
+    GTimer *t = g_timer_new();
+    for(i =0; i<1;i++)
+        darken_pixbuf(pb, 1);    
+    printf("elapsed: %f\n", g_timer_elapsed(t, NULL));
+    g_timer_destroy(t);
 
-    }
-    printf("Filling done\n");
-    for(node = g_list_first(list); node; node = g_list_next(node))
-    {
-        g_object_unref(node->data);
-    }
-    g_list_free(list);
-    g_timeout_add_seconds(30, g_main_loop_quit,l);
-    printf("quitting in 30 seconds\n");
-    g_main_loop_run(l);
+    gdk_pixbuf_save(pb, "out.png", "png", NULL,NULL);
 
-    pixbuf_cache_destroy();
+    g_object_unref(pb);
 }

@@ -21,7 +21,7 @@ using Gmpc;
 
 private const bool use_transition_mdbd = Gmpc.use_transition;
 private const string some_unique_name_mdbd = Config.VERSION;
-
+private const string log_domain_mdbd = "Gmpc.Widgets.MetaData.Backdrop";
 namespace Gmpc {
     namespace Widgets
 	{
@@ -55,11 +55,12 @@ namespace Gmpc {
                         loader = new PixbufLoaderAsync(); 
                         loader.pixbuf_update.connect((source, pixbuf)=>{
                             pb = pixbuf;
+                            log (log_domain_mdbd,GLib.LogLevelFlags.LEVEL_DEBUG, 
+                            "Updating background");
                             this.queue_draw();
                             });
                         loader.set_from_file(uri, req.width, -1,mod_type);
                     }
-
                 }
             }
             /**
@@ -75,7 +76,11 @@ namespace Gmpc {
                     set_from_item(null);
                     return;
                 }
-                song_checksum = Gmpc.Misc.song_checksum(song);
+                // Same artist/bg do not update.
+                if(song_checksum == Gmpc.Misc.song_checksum_type(song, cur_type))
+                    return;
+                    
+                song_checksum = Gmpc.Misc.song_checksum_type(song, cur_type);
                 Gmpc.MetaData.Item item = null;
                 var a = metawatcher.query(song, cur_type, out item);
                 if(a == Gmpc.MetaData.Result.AVAILABLE) {
@@ -91,7 +96,8 @@ namespace Gmpc {
              */
             public Backdrop(Gmpc.MetaData.Type type)
             {
-                assert(type == Gmpc.MetaData.Type.ARTIST_ART || type == Gmpc.MetaData.Type.ALBUM_ART);
+                assert(type == Gmpc.MetaData.Type.ARTIST_ART || 
+                        type == Gmpc.MetaData.Type.ALBUM_ART);
                 cur_type = type;
 
                 // Set visible window
@@ -100,8 +106,9 @@ namespace Gmpc {
                 this.set_app_paintable(true);
                 // Watch changes */
                 metawatcher.data_changed.connect((csong, type, result, met) => {
-                        if(song_checksum != null && type == cur_type &&
-                            song_checksum == Gmpc.Misc.song_checksum(csong))
+                        if(song_checksum != null && met != null &&
+                            type == cur_type &&
+                            song_checksum == Gmpc.Misc.song_checksum_type(csong,cur_type))
                         {
                             if(result == Gmpc.MetaData.Result.AVAILABLE) {
                                 this.set_from_item(met);
@@ -115,9 +122,12 @@ namespace Gmpc {
                 this.expose_event.connect(container_expose);
 
             }
-
+            /**
+             * Draw the background. (only exposed part) 
+             */
             private bool container_expose(Gtk.Widget ev, Gdk.EventExpose event)
             {
+                /* If there is an background image set. */
                 if(pb != null)
                 {
                     var gc = Gdk.cairo_create(ev.window);
@@ -127,6 +137,7 @@ namespace Gmpc {
                     Gdk.cairo_set_source_pixbuf(gc, pb,0.0,0.0);
                     gc.fill();
                 }
+                /* no image set */
                 else
                 {
                     var gc = Gdk.cairo_create(ev.window);

@@ -125,6 +125,7 @@ const gchar **meta_data_get_text_vector(const MetaData *data);
 /* TEXT LIST */
 gboolean meta_data_is_text_list(const MetaData *data);
 const GList *meta_data_get_text_list (const MetaData *data);
+void meta_data_set_text(MetaData *data, const gchar *text);
 
 /* ****************************************** */
 void metadata_import_old_db(char *url);

@@ -9,6 +9,8 @@ async_image_test_CFLAGS = @CFLAGS@\
 		-I$(top_srcdir)/src\
 		-I$(top_srcdir)/src/vala\
         -I$(top_srcdir)/src/MetaData\
+        -I$(top_srcdir)/src/Tools\
+        -I$(top_srcdir)/src/Widgets\
 		-DPIXMAP_PATH=\""$(pkgdatadir)/icons/"\" \
 		-DGLADE_PATH=\""$(pkgdatadir)"\"
 
@@ -22,7 +24,7 @@ async_image_test_SOURCES = \
 
 nodist_async_image_test_SOURCES = \
         $(top_srcdir)/src/Widgets/gmpc-image-async.c\
-        $(top_srcdir)/src/Widgets/pixbuf-cache.c\
-        $(top_srcdir)/src/misc.c
+        $(top_srcdir)/src/Tools/pixbuf-cache.c\
+        $(top_srcdir)/src/Tools/misc.c
 
 endif

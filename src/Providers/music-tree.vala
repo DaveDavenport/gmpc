@@ -34,7 +34,7 @@ using Gmpc.Plugin;
 private const bool use_transition_lp = Gmpc.use_transition;
 private const string some_unique_name_lp = Config.VERSION;
 
-private const string log_domain_cp = "Gmpc.Plugin.MusicTreeProvider";
+private const string log_domain_cp = "Gmpc.Providers.MusicTree";
 
 public class Gmpc.Provider.MusicTree : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIface 
 {

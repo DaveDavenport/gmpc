@@ -230,7 +230,7 @@ static void preferences_destroy(GtkWidget *container)
  };
 
 gmpcPlugin extraplaylist_plugin = {
-	.name = "Extra Playlist View",
+	.name = "Internal Extra Playlist View",
 	.version = {0, 0, 1},
 	.plugin_type = GMPC_PLUGIN_NO_GUI | GMPC_INTERNALL,
 	.init = extra_playlist_init,            /* initialization */

@@ -40,6 +40,8 @@ namespace Gmpc
         public string uri = null;
         public Gdk.Pixbuf pixbuf {set;get;default=null;}
         private Gtk.TreeRowReference rref = null;
+        private int width=0;
+        private int height=0;
 
         public signal void pixbuf_update(Gdk.Pixbuf? pixbuf);
 
@@ -113,7 +115,7 @@ namespace Gmpc
             }
             if ((casing&ModificationType.DARKEN) == ModificationType.DARKEN)
             {
-                Gmpc.Misc.darken_pixbuf(pix, pix, 0.4);
+                Gmpc.Misc.darken_pixbuf(pix, 2);
             }
             if ((casing&ModificationType.DECOLOR) == ModificationType.DECOLOR)
             {
@@ -124,8 +126,10 @@ namespace Gmpc
         }
 
 
-        public new void set_from_file(string uri, int width, int height, ModificationType border)
+        public new void set_from_file(string uri, int req_width, int req_height, ModificationType border)
         {
+            width = req_width;
+            height = req_height;
             /*  If running cancel the current action. */
             if(this.pcancel != null && !this.pcancel.is_cancelled()) {
                 this.pcancel.cancel();
@@ -146,30 +150,33 @@ namespace Gmpc
             this.load_from_file_async(uri, width,height , cancel, border);
         }
 
-        private async void load_from_file_async(string uri, int width, int height, GLib.Cancellable cancel, ModificationType border)
+        private void size_prepare(Gdk.PixbufLoader loader,int  gwidth, int gheight)
         {
-            GLib.File file = GLib.File.new_for_path(uri);
-            size_t result = 0;
-            Gdk.PixbufLoader loader = new Gdk.PixbufLoader();
-            loader.size_prepared.connect((source, gwidth, gheight) => {
-                    double dsize = (double)(int.max(width,height)); 
-                    int nwidth = 0, nheight = 0;
-                    if(height < 0) {
+             double dsize = (double)(int.max(width,height)); 
+             int nwidth = 0, nheight = 0;
+             if(height < 0) {
                     double scale = width/(double)gwidth;
                     nwidth = width;
                     nheight = (int)(gheight*scale);
-                    } else if (width < 0) {
+             } else if (width < 0) {
                     double scale = height/(double)gheight;
                     nheight = height;
                     nwidth = (int)(gwidth*scale);
-
-                    }else{
+             }else{
                     nwidth = (gheight >gwidth)? (int)((dsize/gheight)*gwidth): (int)dsize;
                     nheight= (gwidth > gheight )? (int)((dsize/gwidth)*gheight): (int)dsize;
-                    }
-                    loader.set_size(nwidth, nheight);
-
-                    });
+             }
+             loader.set_size(nwidth, nheight);
+        }
+        private async void load_from_file_async(string uri, int req_width, int req_height, GLib.Cancellable cancel, ModificationType border)
+        {
+             width = req_width;
+            height = req_height;
+            GLib.File file = GLib.File.new_for_path(uri);
+            size_t result = 0;
+            Gdk.PixbufLoader loader = new Gdk.PixbufLoader();
+            loader.size_prepared.connect(size_prepare);
+                    /*
             loader.area_prepared.connect((source) => {
                     var apix = loader.get_pixbuf();
                     var afinal = this.modify_pixbuf((owned)apix, int.max(height, width),border);
@@ -177,7 +184,7 @@ namespace Gmpc
                     pixbuf = afinal;
                     pixbuf_update(pixbuf);
                     call_row_changed();
-                    });
+                    });*/
             try{
                 var stream = yield file.read_async(0, cancel);
                 if(!cancel.is_cancelled() && stream != null )

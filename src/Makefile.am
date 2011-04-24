@@ -8,7 +8,7 @@ CONF_VERSION=0
 
 bin_PROGRAMS=gmpc
 
-gmpc_VALAFLAGS=--pkg=gmodule-2.0 --pkg=config --pkg=gtk+-2.0 --pkg=gmpc --pkg=libmpd --vapidir=$(top_srcdir)/src/vapi/ --basedir=$(top_builddir)/src/ -H gmpc-extras.h --library=gmpc-extras --use-header
+gmpc_VALAFLAGS=--pkg=gmodule-2.0 --pkg=config --pkg=gtk+-2.0 --pkg=gmpc --pkg=libmpd --pkg=libxml-2.0 --vapidir=$(top_srcdir)/src/vapi/ --basedir=$(top_builddir)/src/ -H gmpc-extras.h --library=gmpc-extras --use-header
 
 VALA_VAPI_FILES=\
     vapi/gmpc.vapi\
@@ -18,6 +18,8 @@ VALA_VAPI_FILES=\
 
 PLUGIN_FILES=\
     Providers/music-tree.vala\
+    Providers/HTBackdrops.vala\
+    Providers/LyrDB.vala\
     Plugins/extraplaylist.c
 
 

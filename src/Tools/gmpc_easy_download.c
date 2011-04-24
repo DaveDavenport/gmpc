@@ -318,6 +318,9 @@ static void gmpc_easy_async_headers_update(SoupMessage * msg, gpointer data)
 {
 	_GEADAsyncHandler *d = data;
 	const gchar *encoding = soup_message_headers_get(msg->response_headers, "Content-Encoding");
+	goffset size = soup_message_headers_get_content_length(msg->response_headers);
+	g_log("EasyDownload", G_LOG_LEVEL_DEBUG,
+			  "Expected download length: %u",(guint)size);
 	if (encoding)
 	{
 		if (strcmp(encoding, "gzip") == 0)
@@ -330,6 +333,7 @@ static void gmpc_easy_async_headers_update(SoupMessage * msg, gpointer data)
 			g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Url is enflated");
 		}
 	}
+
 	/* If a second set comes in, close that */
 	else
 	{
@@ -343,7 +347,7 @@ static void gmpc_easy_async_headers_update(SoupMessage * msg, gpointer data)
 	 */
 	if (d->old_status_code != 0 && d->old_status_code != msg->status_code)
 	{
-		g_log("EasyDownloader", G_LOG_LEVEL_DEBUG,
+		g_log("EasyDownload", G_LOG_LEVEL_DEBUG,
 			  "Cleaning out the previous block of data: status_code:  %i(old) ->%i(new)",
 			  d->old_status_code, msg->status_code);
 		/* Clear buffer */
@@ -374,6 +378,9 @@ static void gmpc_easy_async_status_update(SoupMessage * msg, SoupBuffer * buffer
 			data_start = (d->is_gzip == 1) ? skip_gzip_header(buffer->data, buffer->length) : 0;
 			d->z->next_in = (void *)((buffer->data) + data_start);
 			d->z->avail_in = buffer->length - data_start;
+            d->z->zalloc = NULL;
+            d->z->zfree = NULL;
+            d->z->opaque = NULL;
 			if (inflateInit2(d->z, -MAX_WBITS) == Z_OK)
 			{
 				int res = 0;
@@ -479,14 +486,19 @@ const char *gmpc_easy_handler_get_data(const GEADAsyncHandler * handle, goffset 
 	return d->data;
 }
 
-guchar *gmpc_easy_handler_get_data_vala_wrap(const GEADAsyncHandler * handle, gint * length)
+const guchar *gmpc_easy_handler_get_data_vala_wrap(const GEADAsyncHandler * handle, gint * length)
 {
 	_GEADAsyncHandler *d = (_GEADAsyncHandler *) handle;
 	if (length)
 		*length = (gint) d->length;
 	return (guchar *) d->data;
 }
-
+const char *gmpc_easy_handler_get_data_as_string(const GEADAsyncHandler * handle)
+{
+	_GEADAsyncHandler *d = (_GEADAsyncHandler *) handle;
+	g_assert(d->data[d->length] == '\0');
+	return (gchar *) d->data;
+}
 void gmpc_easy_handler_set_user_data(const GEADAsyncHandler * handle, gpointer user_data)
 {
 	_GEADAsyncHandler *d = (_GEADAsyncHandler *) handle;
@@ -578,5 +590,34 @@ char *gmpc_easy_download_uri_escape(const char *part)
 {
 	return soup_uri_encode(part, "&+");
 }
+
+/**************************************************************/
+
+
+typedef struct {
+	void *a;
+	void *b;
+	GEADAsyncCallbackVala callback;
+} valaf;
+
+static void temp_callback(const GEADAsyncHandler *handle, GEADStatus status, gpointer user_data)
+{
+	valaf *f = (valaf*)user_data;
+	f->callback(handle, status, f->b, f->a);
+	if(status != GEAD_PROGRESS) g_free(f);
+}
+void gmpc_easy_async_downloader_vala(const char *path, gpointer user_data2, GEADAsyncCallbackVala callback,
+														  gpointer user_data
+														  )
+{
+	valaf *f = g_malloc0(sizeof(*f));
+	f->a = user_data;
+	f->b =user_data2;
+	f->callback = callback;
+	gmpc_easy_async_downloader(path, temp_callback, f);
+
+
+}
+
 
 /* vim: set noexpandtab ts=4 sw=4 sts=4 tw=120: */

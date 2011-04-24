@@ -55,6 +55,12 @@ void plugin_manager_load_internal_plugins(void)
     plugin_add_new((GmpcPluginBase *) 
             gmpc_provider_music_tree_new(),
             0, NULL);
+    plugin_add_new((GmpcPluginBase *) 
+            gmpc_provider_ht_backdrops_new(),
+            0, NULL);
+    plugin_add_new((GmpcPluginBase *) 
+            gmpc_provider_lyr_db_new(),
+            0, NULL);
     /* Add it to the plugin command */
     plugin_add_new(GMPC_PLUGIN_BASE(gmpc_easy_command), 0, NULL);
     /** Find Browser */

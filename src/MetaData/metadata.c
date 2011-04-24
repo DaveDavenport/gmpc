@@ -1377,6 +1377,16 @@ gboolean meta_data_is_text(const MetaData *data)
 {
 	return data->content_type == META_DATA_CONTENT_TEXT;
 }
+
+void meta_data_set_text(MetaData *data, const gchar *text)
+{
+	if(meta_data_is_text(data))
+	{
+		if(data->content) g_free(data->content);
+		data->content = g_strdup(text);
+		data->size = -1;
+	}
+}
 const gchar * meta_data_get_text(const MetaData *data)
 {
 	g_assert(meta_data_is_text(data));

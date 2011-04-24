@@ -10,6 +10,10 @@ GObject *config = NULL;
 GmpcMetaWatcher *gmw = NULL;
 GObject *connection = NULL;
 
+void show_error_message(void)
+{
+}
+
 void playlist3_show_error_message()
 {
 }

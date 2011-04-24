@@ -23,7 +23,7 @@ namespace Gmpc {
 
     [CCode (cheader_filename="gmpc-meta-watcher.h")]
     public class MetaWatcher {
-        public signal void data_changed(MPD.Song song,  Gmpc.MetaData.Type type, Gmpc.MetaData.Result result,MetaData.Item met);
+        public signal void data_changed(MPD.Song song,  Gmpc.MetaData.Type type, Gmpc.MetaData.Result result,MetaData.Item? met);
 
 
         [CCode ( cname="gmpc_meta_watcher_get_meta_path", cheader_filename="gmpc-meta-watcher.h" )]
@@ -68,6 +68,9 @@ namespace Gmpc {
 
            [CCode (cname="meta_data_get_text")]
            public unowned string  get_text();
+           [CCode (cname="meta_data_set_text")]
+           public void set_text(string data);
+           
            [CCode (cname="meta_data_get_text_from_html")]
            public string get_text_from_html();
            /* same as get_text */
@@ -203,9 +206,13 @@ namespace Gmpc {
         public class Handle {
             [CCode (cname="gmpc_easy_async_cancel", cheader_filename="gmpc_easy_download.h")]
             public void cancel ();
-
+            /* Gets raw data. Remember data_length does not include trailing \0. */
             [CCode (cname="gmpc_easy_handler_get_data_vala_wrap", cheader_filename="gmpc_easy_download.h")]
             public unowned uchar[] get_data();
+            
+            [CCode (cname="gmpc_easy_handler_get_data_as_string", cheader_filename="gmpc_easy_download.h")]
+            public unowned string get_data_as_string();
+            
             [CCode (cname="gmpc_easy_handler_get_uri", cheader_filename="gmpc_easy_download.h")]
             public unowned string get_uri();
 
@@ -222,7 +229,10 @@ namespace Gmpc {
 
 
         public delegate void Callback (Gmpc.AsyncDownload.Handle handle, Gmpc.AsyncDownload.Status status);
+        public delegate void CallbackVala (Gmpc.AsyncDownload.Handle handle, Gmpc.AsyncDownload.Status status, void *p);
 
+        [CCode (cname="gmpc_easy_async_downloader_vala", cheader_filename="gmpc_easy_download.h")]
+        public unowned Gmpc.AsyncDownload.Handle download_vala(string uri, void *p,Gmpc.AsyncDownload.CallbackVala callback);
         [CCode (cname="gmpc_easy_async_downloader", cheader_filename="gmpc_easy_download.h")]
         public unowned Gmpc.AsyncDownload.Handle download(string uri, Gmpc.AsyncDownload.Callback callback);
         
@@ -271,7 +281,7 @@ namespace Gmpc {
         public void colorshift_pixbuf(Gdk.Pixbuf dest, Gdk.Pixbuf src, int shift);
 
         [CCode (cname="darken_pixbuf",cheader_filename="misc.h")]
-        public void darken_pixbuf(Gdk.Pixbuf dest, Gdk.Pixbuf src, double factor);
+        public void darken_pixbuf(Gdk.Pixbuf dest, uint factor = 1.0);
         [CCode (cname="decolor_pixbuf",cheader_filename="misc.h")]
         public void decolor_pixbuf(Gdk.Pixbuf dest, Gdk.Pixbuf src);
         [CCode (cname="misc_header_expose_event",cheader_filename="misc.h")]
@@ -346,6 +356,9 @@ namespace Gmpc {
     namespace Misc {
         [CCode (cname="mpd_song_checksum",cheader_filename="misc.h")]
         public string? song_checksum(MPD.Song? song);
+        [CCode (cname="mpd_song_checksum_type",cheader_filename="misc.h")]
+        public string? song_checksum_type(MPD.Song? song, Gmpc.MetaData.Type type);
+
     }
     namespace MpdInteraction {
         [CCode (cname="play_path",cheader_filename="mpdinteraction.h")]

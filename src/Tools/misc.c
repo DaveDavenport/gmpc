@@ -677,6 +677,52 @@ gboolean misc_header_expose_event(GtkWidget * widget, GdkEventExpose * event)
 	return FALSE;
 }
 
+gchar *mpd_song_checksum_type(const mpd_Song * song, MetaDataType type)
+{
+	gchar *retv = NULL;
+	
+	if (song)
+	{
+		GChecksum *cs = g_checksum_new(G_CHECKSUM_SHA256);
+		switch(type)
+		{
+		    case META_ARTIST_SIMILAR:
+		    case META_ARTIST_TXT:
+		    case META_ARTIST_ART:
+   	            if (song->artist)
+        			g_checksum_update(cs, (guchar *) song->artist, -1);
+     		    break;
+		    case META_ALBUM_ART:
+		    case META_ALBUM_TXT:
+	    		if (song->album)
+	           		g_checksum_update(cs, (guchar *) song->album, -1);
+	            if (song->artist)
+        			g_checksum_update(cs, (guchar *) song->artist, -1);
+    			break;
+  		    case META_SONG_TXT:
+  		    case META_SONG_SIMILAR:
+		    case META_SONG_GUITAR_TAB:
+                if (song->artist)
+        			g_checksum_update(cs, (guchar *) song->artist, -1);
+        		if (song->title)
+        			g_checksum_update(cs, (guchar *) song->title, -1);		    
+		        break;
+		    case META_GENRE_SIMILAR:
+           		if (song->genre)
+        			g_checksum_update(cs, (guchar *) song->genre, -1);	
+       			break;
+   			case META_QUERY_DATA_TYPES:	   
+   			case META_QUERY_NO_CACHE: 
+		    default:
+    		    break;
+        }
+		retv = g_strdup(g_checksum_get_string(cs));
+		g_checksum_free(cs);
+	}
+	return retv;
+}
+
+
 gchar *mpd_song_checksum(const mpd_Song * song)
 {
 	gchar *retv = NULL;
@@ -801,39 +847,35 @@ void decolor_pixbuf(GdkPixbuf * dest, GdkPixbuf * src)
 	}
 }
 
-void darken_pixbuf(GdkPixbuf * dest, GdkPixbuf * src, double factor)
+void darken_pixbuf(GdkPixbuf * dest,guint factor)
 {
-	gint i, j;
+	guint i, j;
 	gint width, height, has_alpha, src_rowstride, dest_rowstride;
 	guchar *target_pixels;
-	guchar *original_pixels;
-	guchar *pix_src;
 	guchar *pix_dest;
 	gint r;
 
-	has_alpha = gdk_pixbuf_get_has_alpha(src);
-	width = gdk_pixbuf_get_width(src);
-	height = gdk_pixbuf_get_height(src);
-	src_rowstride = gdk_pixbuf_get_rowstride(src);
+	has_alpha = gdk_pixbuf_get_has_alpha(dest);
+	width = gdk_pixbuf_get_width(dest);
+	height = gdk_pixbuf_get_height(dest);
 	dest_rowstride = gdk_pixbuf_get_rowstride(dest);
-	original_pixels = gdk_pixbuf_get_pixels(src);
 	target_pixels = gdk_pixbuf_get_pixels(dest);
 	for (i = 0; i < height; i++)
 	{
 		pix_dest = target_pixels + i * dest_rowstride;
-		pix_src = original_pixels + i * src_rowstride;
 
 		for (j = 0; j < width; j++)
 		{
-			*(pix_dest++) = ((*(pix_src++))*factor);
-			*(pix_dest++) = ((*(pix_src++))*factor);
-			*(pix_dest++) = ((*(pix_src++))*factor);
+			*(pix_dest++) >>= factor; 
+			*(pix_dest++) >>= factor; 
+			*(pix_dest++) >>= factor; 
 
 			if (has_alpha)
-				*(pix_dest++) = *(pix_src++);
+                pix_dest++;
 		}
 	}
 }
+
 static void create_directory(const gchar * url)
 {
 	/**

@@ -492,6 +492,7 @@ test/GmpcEasyDownload/Makefile
 test/MetaDataCache/Makefile
 test/PixbufCache/Makefile
 test/AsyncImage/Makefile
+test/Misc/Makefile
 ])
 echo ""
 echo ""
