@@ -57,10 +57,7 @@ public class Gmpc.Provider.HTBackdrops:
 
     public void get_metadata(MPD.Song song, Gmpc.MetaData.Type type, MetaDataCallback callback)
     {
-        // To be enabled when I get key.
-        callback(null);
-        return;
-        
+
         if(song == null || song.artist == null)
         {
             log(log_domain_ppbd, GLib.LogLevelFlags.LEVEL_DEBUG, 
@@ -85,8 +82,9 @@ public class Gmpc.Provider.HTBackdrops:
 
     /* HT Backdrops specific code */
     const string query = "http://htbackdrops.com/api/%s/searchXML?keywords=%s&default_operator=and&fields=title";
-    const string download_url = "http://htbackdrops.com/api/%s/download/%s/thumbnail";
-    const string api_key = "TESTKEY";
+    const string download_url = "http://htbackdrops.com/api/%s/download/%s/fullsize";
+    const string thumbnail_url = "http://htbackdrops.com/api/%s/download/%s/thumbnail";
+    const string api_key = "b3085ed18168f083aa69179b3364c9d8";
     
     private void add_image(ref List<Gmpc.MetaData.Item> list, Xml.Node *image)
     {
@@ -97,6 +95,7 @@ public class Gmpc.Provider.HTBackdrops:
             if(entries->name == "id")
             {
                 var path = download_url.printf(api_key, entries->get_content());
+                var thumb_path = thumbnail_url.printf(api_key, entries->get_content());
                 log(log_domain_ppbd, GLib.LogLevelFlags.LEVEL_DEBUG, 
                         "Entry : %s", path);
                 MetaData.Item pitem = new MetaData.Item();
@@ -104,6 +103,8 @@ public class Gmpc.Provider.HTBackdrops:
                 pitem.plugin_name = get_name();
                 pitem.content_type = MetaData.ContentType.URI;
                 pitem.set_uri(path);
+                pitem.set_thumbnail_uri(thumb_path);
+                
                 list.append((owned)pitem);
             }
         }

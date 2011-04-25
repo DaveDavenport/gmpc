@@ -52,6 +52,8 @@ namespace Gmpc {
             [CCode (cname="meta_data_new")]
             public Item ();
             public Gmpc.MetaData.Type type; 
+            [CCode (cname="meta_data_dup")]
+            public static Item copy(Item item);
            public unowned string plugin_name;
            public int size;
            public void * content;
@@ -60,8 +62,7 @@ namespace Gmpc {
            [CCode (cname="meta_data_is_empty")]
            public bool is_empty();
 
-           [CCode (cname="meta_data_set_uri")]
-           public void set_uri(string uri);
+
            /* add accessors? */
            [CCode (cname="meta_data_get_raw")]
            public unowned uchar[] get_raw();
@@ -76,8 +77,14 @@ namespace Gmpc {
            /* same as get_text */
 
            [CCode (cname="meta_data_get_uri")]
-           public unowned string get_uri();
-
+           public unowned string? get_uri();
+           [CCode (cname="meta_data_set_uri")]
+           public void set_uri(string uri);
+           [CCode (cname="meta_data_get_thumbnail_uri")]
+           public unowned string? get_thumbnail_uri();
+           [CCode (cname="meta_data_set_thumbnail_uri")]
+           public void set_thumbnail_uri(string uri);
+           
            [CCode (cname="meta_data_get_html")]
            public unowned string get_html();
 

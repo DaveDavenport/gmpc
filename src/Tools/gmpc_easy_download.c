@@ -606,7 +606,7 @@ static void temp_callback(const GEADAsyncHandler *handle, GEADStatus status, gpo
 	f->callback(handle, status, f->b, f->a);
 	if(status != GEAD_PROGRESS) g_free(f);
 }
-void gmpc_easy_async_downloader_vala(const char *path, gpointer user_data2, GEADAsyncCallbackVala callback,
+GEADAsyncHandler * gmpc_easy_async_downloader_vala(const char *path, gpointer user_data2, GEADAsyncCallbackVala callback,
 														  gpointer user_data
 														  )
 {
@@ -614,9 +614,7 @@ void gmpc_easy_async_downloader_vala(const char *path, gpointer user_data2, GEAD
 	f->a = user_data;
 	f->b =user_data2;
 	f->callback = callback;
-	gmpc_easy_async_downloader(path, temp_callback, f);
-
-
+	return gmpc_easy_async_downloader(path, temp_callback, f);
 }
 
 

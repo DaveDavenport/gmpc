@@ -67,7 +67,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
         });
     }
 
-    private void add_entry_image(string? provider, string uri,Gdk.PixbufFormat? format, Gdk.Pixbuf pb, bool is_raw = false)
+    private void add_entry_image(string? provider, string uri,Gdk.PixbufFormat? format, Gdk.Pixbuf pb, bool is_raw = false, bool is_thumbnail = false)
     {
         string a;
         a = "";// Markup.printf_escaped("<b>%s</b>: %s",_("Uri"),uri);
@@ -80,7 +80,11 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
         }
         if(pb != null)
         {
-            a+="\n<b>%s</b>: %ix%i (%s)".printf(_("Size"), pb.width, pb.height,_("wxh"));
+            if(is_thumbnail) {
+                a+="\n<b>%s</b>: %ix%i (%s) (%s)".printf(_("Size"), pb.width, pb.height,_("wxh"), _("high-res image will be downloaded"));
+            }else{
+                a+="\n<b>%s</b>: %ix%i (%s)".printf(_("Size"), pb.width, pb.height,_("wxh"));
+           }
 
         }
         int new_h, new_w;
@@ -165,8 +169,10 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
         this.itemslist.pack_start(sep, false, true, 0);
     }
 
-    public void image_downloaded(Gmpc.AsyncDownload.Handle handle, Gmpc.AsyncDownload.Status status)
+    public void image_downloaded(Gmpc.AsyncDownload.Handle handle, Gmpc.AsyncDownload.Status status, void *p)
     {
+        MetaData.Item *item = (MetaData.Item *)p;
+        GLib.assert(item != null);
         if(status == Gmpc.AsyncDownload.Status.PROGRESS) return;
         this.downloads.remove(handle);
         this.bar.pulse();
@@ -184,9 +190,14 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
                     }
                     load.close();
 
-                    Gdk.Pixbuf pb = load.get_pixbuf();//new Gdk.Pixbuf.from_inline((int)length, (uchar[])data, true); 
+                    Gdk.Pixbuf pb = load.get_pixbuf();
                     if(pb!= null)
-                        this.add_entry_image((string)handle.get_user_data(),handle.get_uri(),load.get_format(),pb);
+                        this.add_entry_image((string)handle.get_user_data(),
+                                            item->get_uri(),
+                                            load.get_format(),
+                                            pb,
+                                            false,
+                                            (item->get_thumbnail_uri() != null));
                 }catch (Error e) {
                     stdout.printf("Failed to load file: %s::%s\n",e.message,handle.get_uri());
                 }
@@ -204,7 +215,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
             this.ilevent.sensitive = true;
             this.combo.sensitive = true;
         }
-
+        delete item;
     }
     public void callback(void *handle,string? plugin_name,GLib.List<MetaData.Item>? list)
     {
@@ -242,9 +253,14 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
             {
                 if(md.content_type == Gmpc.MetaData.ContentType.URI)
                 {
-                    unowned string uri = md.get_uri();
                     if(md.content_type == Gmpc.MetaData.ContentType.URI)
                     {
+                        unowned string uri = null;
+                        if(md.get_thumbnail_uri() != null) {
+                            uri = md.get_thumbnail_uri();
+                        }else{
+                            uri = md.get_uri();
+                        }
                         if(uri[0] == '/'){
                             try{
                                 Gdk.Pixbuf pb = new Gdk.Pixbuf.from_file(uri);
@@ -258,7 +274,8 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
 
                             }
                         }else{
-                            var h =  Gmpc.AsyncDownload.download(uri, image_downloaded); 
+                            MetaData.Item *item = MetaData.Item.copy(md);
+                            var h =  Gmpc.AsyncDownload.download_vala(uri,(void *)item,image_downloaded);                                 
                             if(h!=null)
                             {
                                 h.set_user_data(md.plugin_name);

@@ -1287,6 +1287,8 @@ void meta_data_free(MetaData *data)
 		data->content = NULL;
 		data->size = 0;
 	}
+	if(data->thumbnail_uri) g_free(data->thumbnail_uri);
+	data->thumbnail_uri = NULL;
 	g_free(data);
 }
 
@@ -1334,6 +1336,9 @@ MetaData *meta_data_dup(MetaData *data)
 			retv->content = g_strdup((gchar *)data->content);
 		}
 	}
+	if(data->thumbnail_uri != NULL) {
+		retv->thumbnail_uri = g_strdup(data->thumbnail_uri);
+	}
 	return retv;
 }
 MetaData *meta_data_dup_steal(MetaData *data)
@@ -1351,6 +1356,8 @@ MetaData *meta_data_dup_steal(MetaData *data)
 	retv->content = data->content;
 	data->size  = 0;
 	data->content = NULL;
+	retv->thumbnail_uri = data->thumbnail_uri;
+	data->thumbnail_uri = NULL;
 	return retv;
 }
 gboolean meta_data_is_empty(const MetaData *data)
@@ -1371,6 +1378,20 @@ void meta_data_set_uri(MetaData *data, const gchar *uri)
 	g_assert(meta_data_is_uri(data));
 	if(data->content) g_free(data->content);
 	data->content = g_strdup(uri);
+}
+void meta_data_set_thumbnail_uri(MetaData *data, const gchar *uri)
+{
+	g_assert(meta_data_is_uri(data));
+	if(data->thumbnail_uri) g_free(data->thumbnail_uri);
+	data->thumbnail_uri = g_strdup(uri);
+}
+const gchar * meta_data_get_thumbnail_uri(const MetaData *data)
+{
+	g_assert(meta_data_is_uri(data));
+	/* Only valid for images. */
+	g_assert((data->type&(META_ALBUM_ART|META_ARTIST_ART)) != 0);
+
+	return (const gchar *)data->thumbnail_uri;
 }
 
 gboolean meta_data_is_text(const MetaData *data)

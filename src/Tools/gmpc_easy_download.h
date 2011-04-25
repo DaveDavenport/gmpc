@@ -74,7 +74,7 @@ gpointer gmpc_easy_handler_get_user_data(const GEADAsyncHandler *handle);
 
 
 char *gmpc_easy_download_uri_escape(const char *part);
-void gmpc_easy_async_downloader_vala(const char *path, gpointer user_data2, GEADAsyncCallbackVala callback,
+GEADAsyncHandler * gmpc_easy_async_downloader_vala(const char *path, gpointer user_data2, GEADAsyncCallbackVala callback,
 														  gpointer user_data
 														  );
 #endif

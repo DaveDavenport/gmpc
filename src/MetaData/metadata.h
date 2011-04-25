@@ -80,6 +80,11 @@ typedef struct {
      * null terminated anyway.
      */
     gsize size;
+    /**
+     * If type is an image (album art/artist art). 
+     */
+    /** This allows us to be a bit more friendly for image providers */
+    char *thumbnail_uri;
 }MetaData;
 
 
@@ -108,6 +113,8 @@ gboolean meta_data_is_empty(const MetaData *data);
 gboolean meta_data_is_uri(const MetaData *data);
 const gchar *meta_data_get_uri(const MetaData *data);
 void meta_data_set_uri(MetaData *data, const gchar *uri);
+void meta_data_set_thumbnail_uri(MetaData *data, const gchar *uri);
+const gchar *meta_data_get_thumbnail_uri(const MetaData *data);
 /* TEXT */
 gboolean meta_data_is_text(const MetaData *data);
 const gchar * meta_data_get_text(const MetaData *data);
