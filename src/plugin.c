@@ -61,7 +61,7 @@ static Blacklist blacklist[] =
     {"Statistics", "Plugin is intergrated into GMPC"}
 };
 
-static void plugin_manager_blacklist(gmpcPluginParent *p, GError **error)
+static int plugin_manager_blacklist(gmpcPluginParent *p, GError **error)
 {
     int i;
     const char *name = gmpc_plugin_get_name(p);
@@ -74,9 +74,10 @@ static void plugin_manager_blacklist(gmpcPluginParent *p, GError **error)
             g_log(PLUGIN_LOG_DOMAIN, G_LOG_LEVEL_CRITICAL,
                   "pluging has with name: %s is blacklisted: '%s'", name, 
                   blacklist[i].reason);
+            return TRUE;
         }
     }
-    
+    return FALSE;
 }
 
 static int plugin_validate(gmpcPlugin * plug, GError ** error)
@@ -236,9 +237,14 @@ void plugin_add(gmpcPlugin * plug, int plugin, GError ** error)
     parent->new = NULL;
     
         
-    plugin_manager_blacklist(parent, error);
-    if(error != NULL)
+    if(plugin_manager_blacklist(parent, error))
     {
+        if(error && *error != NULL)
+        {
+            g_log(PLUGIN_LOG_DOMAIN, G_LOG_LEVEL_CRITICAL,
+                "%s: Not loading plugin.",
+                      plug->name);
+        }
         return ;
     }
      
@@ -262,10 +268,9 @@ void plugin_add_new(GmpcPluginBase * plug, int plugin, GError ** error)
     parent->new = plug;
     parent->old = NULL;
 
-    plugin_manager_blacklist(parent, error);
-    if(error != NULL)
+    if(plugin_manager_blacklist(parent, error))
     {
-        return ;
+        return;
     }
     /* set plugin id */
     plug->id = num_plugins | ((plugin) ? PLUGIN_ID_MARK : PLUGIN_ID_INTERNALL);
