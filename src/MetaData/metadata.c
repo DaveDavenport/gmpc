@@ -1072,6 +1072,42 @@ static void metadata_pref_priority_changed(GtkCellRenderer *renderer, char *path
 		}
 	}
 }
+/**
+ * Get the enabled state directly from the plugin
+ */
+static void __column_data_func_enabled(GtkTreeViewColumn *column, 
+										GtkCellRenderer *cell,
+										GtkTreeModel *model,
+										GtkTreeIter *iter,
+										gpointer data)
+{
+		gmpcPluginParent *plug;
+		gtk_tree_model_get(GTK_TREE_MODEL(model), iter, 0, &plug, -1);
+		if(plug)
+		{
+			gboolean active = gmpc_plugin_get_enabled(plug);
+			g_object_set(G_OBJECT(cell), "active", active, NULL);
+		}
+}
+/**
+ * Set enabled
+ */
+static void __column_toggled_enabled(GtkCellRendererToggle *renderer,
+										char *path,
+										gpointer store)
+{
+	GtkTreeIter iter;
+	if(gtk_tree_model_get_iter_from_string(GTK_TREE_MODEL(store), &iter, path))
+	{
+		gmpcPluginParent *plug;
+		gtk_tree_model_get(GTK_TREE_MODEL(store), &iter, 0, &plug, -1);
+		if(plug)
+		{
+			gboolean state = !gtk_cell_renderer_toggle_get_active(renderer);
+			gmpc_plugin_set_enabled(plug,state);
+		}
+	}
+}
 static void metadata_construct_pref_pane(GtkWidget *container)
 {
 	GtkObject *adjustment;
@@ -1097,6 +1133,20 @@ static void metadata_construct_pref_pane(GtkWidget *container)
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 	treeview = gtk_tree_view_new_with_model(GTK_TREE_MODEL(store));
 	gtk_container_add(GTK_CONTAINER(sw), treeview);
+
+
+	/* enable column */
+	renderer = gtk_cell_renderer_toggle_new();
+	gtk_tree_view_insert_column_with_data_func(GTK_TREE_VIEW(treeview),
+			-1,
+			"Enabled",
+			renderer,
+			(GtkTreeCellDataFunc)__column_data_func_enabled,
+			NULL,
+			NULL);
+	g_object_set(G_OBJECT(renderer), "activatable", TRUE, NULL);
+	g_signal_connect(G_OBJECT(renderer), "toggled" ,
+			G_CALLBACK(__column_toggled_enabled), store);
 
 	/* Build the columns */
 	renderer = gtk_cell_renderer_text_new();
@@ -1128,14 +1178,11 @@ static void metadata_construct_pref_pane(GtkWidget *container)
 	for(i=0; i< meta_num_plugins;i++)
 	{
 		GtkTreeIter iter;
-		if(gmpc_plugin_get_enabled(meta_plugins[i]))
-		{
-			gtk_list_store_insert_with_values(store, &iter, -1, 
-					0, meta_plugins[i],
-					1, gmpc_plugin_get_name(meta_plugins[i]),
-					2, gmpc_plugin_metadata_get_priority(meta_plugins[i]),
-					-1);
-		}
+		gtk_list_store_insert_with_values(store, &iter, -1, 
+				0, meta_plugins[i],
+				1, gmpc_plugin_get_name(meta_plugins[i]),
+				2, gmpc_plugin_metadata_get_priority(meta_plugins[i]),
+				-1);
 	}
 
 	label = gtk_label_new("Plugins are evaluated from low priority to high");
