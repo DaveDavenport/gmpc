@@ -262,8 +262,7 @@ public class Gmpc.Provider.MusicTree : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIfa
 	private async void get_artist_art(string directory, MPD.Song song, MetaDataCallback callback)
 	{
 		List<Gmpc.MetaData.Item> list = null;
-		List <string> queries = null;
-		log(log_domain_cp, GLib.LogLevelFlags.LEVEL_DEBUG,
+        log(log_domain_cp, GLib.LogLevelFlags.LEVEL_DEBUG,
 			"Query artist art ");
 
 		// Create search query

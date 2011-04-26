@@ -19,8 +19,6 @@
 using GLib;
 using Gmpc;
 
-private const bool use_transition_mdbd = Gmpc.use_transition;
-private const string some_unique_name_mdbd = Config.VERSION;
 private const string log_domain_mdbd = "Gmpc.Widgets.MetaData.Backdrop";
 namespace Gmpc {
     namespace Widgets
@@ -28,7 +26,10 @@ namespace Gmpc {
 		class MetaData.Backdrop : Gtk.EventBox
         {
             private string song_checksum = null;
+            private MPD.Song? cur_song = null;        
             private Gmpc.MetaData.Type cur_type = Gmpc.MetaData.Type.ARTIST_ART; 
+            
+            /*   */
             private Gdk.Pixbuf pb = null;
             private ModificationType mod_type = (ModificationType)
                         config.get_int_with_default(
@@ -70,6 +71,7 @@ namespace Gmpc {
              */
             public void set_song(MPD.Song? song)
             {
+                cur_song = song;
                 loader = null;
                 if(song == null) {
                     song_checksum = null;
@@ -121,6 +123,22 @@ namespace Gmpc {
                 // Add expose event
                 this.expose_event.connect(container_expose);
 
+                this.button_press_event.connect(button_press_event_callback);
+            }
+            private bool button_press_event_callback(Gdk.EventButton event)
+            {
+                if(cur_song == null) return false;
+                var menu = new Gtk.Menu();
+                /*  Add selector */
+                var item = new Gtk.ImageMenuItem.with_label(_("Metadata selector"));
+                item.set_image(new Gtk.Image.from_stock("gtk-edit", Gtk.IconSize.MENU));
+                item.activate.connect((source)=>{
+                    new Gmpc.MetaData.EditWindow(cur_song, cur_type);
+                    });
+                menu.append(item);
+                menu.show_all();
+                menu.popup(null, null, null, event.button, event.time);
+                return true;            
             }
             /**
              * Draw the background. (only exposed part) 
@@ -147,9 +165,6 @@ namespace Gmpc {
                 }
                 return false;
             }
-
-
         }
-
     }
 }

@@ -27,6 +27,7 @@ namespace Gmpc.Widgets.MetaData
 {
     public class TextLabel : Gtk.Label
     {
+        private MPD.Song? cur_song = null;
         private string song_checksum = null;
         private Gmpc.MetaData.Type cur_type = Gmpc.MetaData.Type.ALBUM_TXT; 
         private void set_from_item(Gmpc.MetaData.Item? item)
@@ -82,6 +83,7 @@ namespace Gmpc.Widgets.MetaData
             this.set_padding(4,4);
             this.set_selectable(true);
             cur_type = type;
+            cur_song = song;
             song_checksum = Gmpc.Misc.song_checksum(song);
 
             metawatcher.data_changed.connect((csong, type, result, met) => {
@@ -108,6 +110,17 @@ namespace Gmpc.Widgets.MetaData
             }else {
                 this.set_from_item(null);
             }
+            this.populate_popup.connect((source, menu)=>{
+                /*  Add selector */
+                var mitem = new Gtk.ImageMenuItem.with_label(_("Metadata selector"));
+                mitem.set_image(
+                    new Gtk.Image.from_stock("gtk-edit", Gtk.IconSize.MENU));
+                mitem.activate.connect((source)=>{
+                    new Gmpc.MetaData.EditWindow(cur_song, cur_type);
+                 });
+                 menu.append(mitem);
+                 mitem.show();
+            });
 
         }
 
