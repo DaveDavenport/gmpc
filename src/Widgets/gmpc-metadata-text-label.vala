@@ -23,7 +23,7 @@ private const bool use_transition_mdtl = Gmpc.use_transition;
 private const string some_unique_name_mdtl = Config.VERSION;
 
 
-namespace Gmpc.Widgets.MetaData
+namespace Gmpc.MetaData.Widgets
 {
     public class TextLabel : Gtk.Label
     {

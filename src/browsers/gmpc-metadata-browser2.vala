@@ -34,7 +34,7 @@ using Gmpc;
 private const bool use_transition_mdb = Gmpc.use_transition;
 private const string some_unique_name_mdb = Config.VERSION;
 
-public class Gmpc.Widget.SimilarSongs : Gtk.Alignment
+public class Gmpc.MetaData.Widgets.SimilarSongs : Gtk.Alignment
 {
     private MPD.Song song = null;
     private Gtk.Widget pchild = null;
@@ -1687,7 +1687,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
                     debug("notebook page %i clicked", j);
                     notebook.set_current_page(j);
                     if(!similar_songs_queried){
-                    var similar_songs = new Gmpc.Widget.SimilarSongs(song);
+                    var similar_songs = new Gmpc.MetaData.Widgets.SimilarSongs(song);
                     similar_songs.update();
                     similar_songs_queried = true;
                     similar_songs_box.add(similar_songs);
@@ -1696,7 +1696,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
                     }
                     });
             if(i == 0){
-                var similar_songs = new Gmpc.Widget.SimilarSongs(song);
+                var similar_songs = new Gmpc.MetaData.Widgets.SimilarSongs(song);
                 similar_songs.update();
                 similar_songs_queried = true;
                 similar_songs_box.add(similar_songs);

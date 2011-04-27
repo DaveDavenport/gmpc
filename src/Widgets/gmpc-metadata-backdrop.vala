@@ -20,10 +20,11 @@ using GLib;
 using Gmpc;
 
 private const string log_domain_mdbd = "Gmpc.Widgets.MetaData.Backdrop";
-namespace Gmpc {
-    namespace Widgets
+namespace Gmpc
+{
+    namespace MetaData.Widgets
 	{
-		class MetaData.Backdrop : Gtk.EventBox
+		class Backdrop : Gtk.EventBox
         {
             private string song_checksum = null;
             private MPD.Song? cur_song = null;        
@@ -50,8 +51,11 @@ namespace Gmpc {
                     if(uri != null)
                     {
                         Gtk.Allocation req;
-
+                        int width;
                         this.get_allocation(out req); 
+                        width = int.max(req.width, 400);
+                        log(log_domain_mdbd, GLib.LogLevelFlags.LEVEL_DEBUG, 
+                                "Getting image with size: %u", width);
 						// Pixbuf loader needs only width constraint support.
                         loader = new PixbufLoaderAsync(); 
                         loader.pixbuf_update.connect((source, pixbuf)=>{
@@ -60,7 +64,7 @@ namespace Gmpc {
                             "Updating background");
                             this.queue_draw();
                             });
-                        loader.set_from_file(uri, req.width, -1,mod_type);
+                        loader.set_from_file(uri, width, -1,mod_type);
                     }
                 }
             }
