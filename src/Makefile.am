@@ -37,12 +37,17 @@ gmpc_WIDGETS_FILES=\
     Widgets/advanced_settings.vala\
     Widgets/gmpc-metadata-text-label.vala\
     Widgets/gmpc-metadata-backdrop.vala\
+    Widgets/gmpc-metadata-similarsongs.vala\
+    Widgets/gmpc-metadata-similarartists.vala\
     GUI/title_header.c\
     GUI/status_icon.c\
     GUI/cmd.c\
     GUI/thv.c
 
 gmpc_TOOLS_FILES=\
+    Tools/gmpc-database-update-tracker.vala\
+    Tools/gmpc-metadata-prefetcher.vala\
+    Tools/gmpc-liststore-sort.vala\
     Tools/gmpc_easy_download.c\
     Tools/advanced-search.c\
     Tools/setup-assistant.c\
@@ -78,12 +83,9 @@ gmpc_SOURCES=\
     vala/gmpc-connection.vala\
     vala/gmpc-easy-command.vala\
     vala/gmpc-favorites.vala\
-    vala/gmpc-liststore-sort.vala\
-    vala/gmpc-metadata-prefetcher.vala\
     vala/gmpc-mpddata-treeview-tooltip.vala\
     vala/gmpc-plugin.vala\
     vala/gmpc-url-fetching-gui.vala\
-    vala/gmpc-database-update-tracker.vala\
     vala/gmpc-test-plugin.vala\
     vala/gmpc-paned-size-group.vala\
     MetaData/metadata-cache-sqlite.c\

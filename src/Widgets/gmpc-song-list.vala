@@ -25,7 +25,7 @@ using MPD;
 private const bool use_transition_gsl = Gmpc.use_transition;
 private const string some_unique_name_gsl = Config.VERSION;
 
-public class Gmpc.Widget.Songlist : Gtk.VBox
+public class Gmpc.Widgets.Songlist : Gtk.VBox
 {
     private const int MAX_RESULTS           = 125;
     private Gdk.Cursor hand_cursor          = new Gdk.Cursor(Gdk.CursorType.HAND2);

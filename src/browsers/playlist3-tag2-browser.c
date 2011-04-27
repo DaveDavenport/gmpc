@@ -331,7 +331,7 @@ static void tag2_browser_add_selected(GtkWidget * item, tag_element * te)
  * Redirect to metadata browser 
  */
 
-extern GmpcMetadataBrowser *metadata_browser;
+extern GmpcBrowsersMetadata *browsers_metadata;
 static void tag2_browser_header_information(GtkWidget * item, tag_element * te)
 {
 	GtkTreeIter iter;
@@ -345,7 +345,7 @@ static void tag2_browser_header_information(GtkWidget * item, tag_element * te)
 			if (te->type == MPD_TAG_ITEM_ARTIST || te->type == MPD_TAG_ITEM_ALBUM_ARTIST)
 			{
 				info2_activate();
-				gmpc_metadata_browser_set_artist(metadata_browser, value);
+				gmpc_browsers_metadata_set_artist(browsers_metadata, value);
 
 			} else if (te->type == MPD_TAG_ITEM_ALBUM)
 			{
@@ -353,7 +353,7 @@ static void tag2_browser_header_information(GtkWidget * item, tag_element * te)
 				if (artist)
 				{
 					info2_activate();
-					gmpc_metadata_browser_set_album(metadata_browser, artist, value);
+					gmpc_browsers_metadata_set_album(browsers_metadata, artist, value);
 					/*
 					   info2_activate();
 					   info2_fill_album_view(artist,value);

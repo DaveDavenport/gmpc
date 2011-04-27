@@ -25,7 +25,9 @@
 using Gtk;
 
 namespace Gmpc {
-    public class Liststore.Sort : Gtk.ListStore, Gtk.TreeDragSource ,Gtk.TreeDragDest
+namespace Tools
+{
+    public class ListstoreSort : Gtk.ListStore, Gtk.TreeDragSource ,Gtk.TreeDragDest
     {
         private const bool use_transition = Gmpc.use_transition;
 
@@ -72,4 +74,6 @@ namespace Gmpc {
             return false;
         }
     }
+    }
 }
+

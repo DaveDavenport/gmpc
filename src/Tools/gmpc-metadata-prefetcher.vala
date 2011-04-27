@@ -23,7 +23,7 @@ using Gmpc;
 
 private const bool use_transition_mpf = Gmpc.use_transition;
 
-public class  Gmpc.Plugin.MetadataPrefetcher : Gmpc.Plugin.Base {
+public class  Gmpc.Tools.MetadataPrefetcher : Gmpc.Plugin.Base {
     private const int[] version = {0,0,2};
 
     public override unowned int[] get_version() {

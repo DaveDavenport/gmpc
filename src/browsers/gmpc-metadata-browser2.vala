@@ -34,487 +34,7 @@ using Gmpc;
 private const bool use_transition_mdb = Gmpc.use_transition;
 private const string some_unique_name_mdb = Config.VERSION;
 
-public class Gmpc.MetaData.Widgets.SimilarSongs : Gtk.Alignment
-{
-    private MPD.Song song = null;
-    private Gtk.Widget pchild = null;
-    private uint idle_add = 0;
-    ~SimilarSongs ()
-    {
-        if(this.idle_add > 0){
-            GLib.Source.remove(this.idle_add);
-            this.idle_add = 0;
-        }
-    }
-
-    public SimilarSongs (MPD.Song song) 
-    {
-        this.song = song;
-        this.set(0.0f, 0.0f, 1.0f, 0.0f);
-    }
-    private void add_clicked(Gtk.Widget item)
-    {
-        Gtk.TreeView tree = (Gtk.TreeView)this.pchild;
-
-        var sel = tree.get_selection();
-        Gtk.TreeModel model = null;
-        Gtk.TreeIter iter;
-        List<Gtk.TreePath> list = sel.get_selected_rows(out model);
-        foreach(Gtk.TreePath path in list)
-        {
-            if(model.get_iter(out iter, path))
-            {
-                unowned MPD.Song song = null;
-                model.get(iter, 0, out song, -1);
-                if(song != null)
-                {
-                   MPD.PlayQueue.queue_add_song(server, song.file); 
-                }
-            }
-        }
-        MPD.PlayQueue.queue_commit(server);
-
-    }
-    private void play_clicked(Gtk.Widget item)
-    {
-        Gtk.TreeView tree = (Gtk.TreeView)this.pchild;
-
-        var sel = tree.get_selection();
-        Gtk.TreeModel model = null;
-        Gtk.TreeIter iter;
-        List<Gtk.TreePath> list = sel.get_selected_rows(out model);
-        if(list != null)
-        {
-            Gtk.TreePath path = list.data;
-            if(model.get_iter(out iter, path))
-            {
-                unowned MPD.Song song = null;
-                model.get(iter, 0, out song, -1);
-                if(song != null)
-                {
-                    Gmpc.MpdInteraction.play_path(song.file);
-                }
-            }
-        }
-    }
-    private void replace_clicked(Gtk.Widget item)
-    {
-        bool found = false;
-        Gtk.TreeView tree = (Gtk.TreeView)this.pchild;
-        var sel = tree.get_selection();
-        Gtk.TreeModel model = null;
-        Gtk.TreeIter iter;
-        List<Gtk.TreePath> list = sel.get_selected_rows(out model);
-        foreach(Gtk.TreePath path in list)
-        {
-            if(model.get_iter(out iter, path))
-            {
-                unowned MPD.Song song = null;
-                model.get(iter, 0, out song, -1);
-                if(song != null)
-                {
-                   MPD.PlayQueue.queue_add_song(server, song.file); 
-                   found = true;
-                }
-            }
-        }
-        if(found)
-        {
-            MPD.PlayQueue.clear(server);
-            MPD.PlayQueue.queue_commit(server);
-            MPD.Player.play(server);
-        }
-
-
-        this.play_clicked(item);
-    }
-    private void tree_row_activated(Gtk.Widget tree, Gtk.TreePath path , Gtk.TreeViewColumn column)
-    {
-        var model = (tree as Gtk.TreeView).get_model();
-        Gtk.TreeIter iter;
-        if(model.get_iter(out iter, path))
-        {
-            unowned MPD.Song song = null;
-            model.get(iter, 0, out song, -1);
-            if(song != null)
-            {
-                Gmpc.MpdInteraction.play_path(song.file);
-            }
-        }
-    }
-    private bool tree_right_menu(Gtk.Widget tree, Gdk.EventButton event)
-    {
-        if(event.button == 3)
-        {
-            var menu = new Gtk.Menu();
-            var item = new Gtk.ImageMenuItem.from_stock("gtk-media-play",null);
-            item.activate.connect(play_clicked);
-            menu.append(item);
-
-            item = new Gtk.ImageMenuItem.from_stock("gtk-add",null);
-            item.activate.connect(add_clicked);
-            menu.append(item);
-
-            item = new Gtk.ImageMenuItem.with_mnemonic(_("_Replace"));
-            item.set_image(new Gtk.Image.from_stock("gtk-redo", Gtk.IconSize.MENU));
-            item.activate.connect(replace_clicked);
-            menu.append(item);
-
-            (tree as Gmpc.MpdData.TreeView).right_mouse_integration(menu);
-            menu.popup(null, null, null, event.button, event.time);
-            menu.show_all();
-            return true;
-        }
-        return false;
-    }
-
-    private Gmpc.MetaData.Item copy = null;
-    MPD.Data.Item item = null;
-    private unowned List <unowned string> current = null;
-    private bool update_sim_song()
-    {
-        if(current == null){
-           current = copy.get_text_list(); 
-           pchild = new Gtk.ProgressBar();
-           this.add(pchild);
-           this.show_all();
-        }
-        ((Gtk.ProgressBar)pchild).pulse();
-        if(current != null)
-        {
-            string entry = current.data;
-            if(entry != null){
-                var split = entry.split("::",2);
-                if(split.length == 2)
-                {
-                    MPD.Database.search_start(server, false);
-                    var art_split = split[0].split(" ");
-                    foreach(string artist in art_split)
-                    {
-                        MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, artist);
-                    }
-
-                    MPD.Database.search_add_constraint(server, MPD.Tag.Type.TITLE, split[1]);
-                    var data = MPD.Database.search_commit(server);
-                    if(data != null)
-                    {
-                        item.concatenate((owned)data); 
-                    }
-                }
-            }
-            current = current.next;
-            if(current != null) return true;
-        }
-        this.pchild.destroy();
-        if(item != null)
-            {
-            var model = new Gmpc.MpdData.Model();
-            item.remove_duplicate_songs();
-            model.set_mpd_data((owned)item);
-            Gmpc.MpdData.TreeView tree = new Gmpc.MpdData.TreeView("similar-song", true, model);
-            tree.enable_click_fix();
-            tree.button_release_event.connect(tree_right_menu);
-            tree.row_activated.connect(tree_row_activated);
-            this.add(tree);
-
-            this.pchild = tree;
-        }else {
-            var label = new Gtk.Label(_("Unavailable"));
-            label.set_alignment(0.0f, 0.0f);
-            this.add(label);
-            this.pchild = label;
-        }
-
-        copy = null;
-        this.idle_add = 0;
-
-        this.show_all();
-        return false;
-    }
-    private void metadata_changed(MetaWatcher gmw2, MPD.Song song, Gmpc.MetaData.Type type, Gmpc.MetaData.Result result, Gmpc.MetaData.Item? met)
-    {
-        if(this.song.artist.collate(song.artist)!=0) return;
-        if(type != Gmpc.MetaData.Type.SONG_SIMILAR) return;
-        
-        if(this.pchild != null) this.pchild.destroy(); 
-
-        if(result == Gmpc.MetaData.Result.FETCHING) {
-            var label = new Gtk.Label(_("Fetching .. "));
-            label.set_alignment(0.0f, 0.0f);
-            this.add(label);
-            this.pchild = label;
-        }else if (result == Gmpc.MetaData.Result.UNAVAILABLE)
-        {
-            var label = new Gtk.Label(_("Unavailable"));
-            label.set_alignment(0.0f, 0.0f);
-            this.add(label);
-            this.pchild = label;
-        }else{
-            if(met.is_text_list())
-            {
-                this.copy = met.dup_steal();
-                this.idle_add =  GLib.Idle.add(this.update_sim_song);
-                return;
-            }else {
-                var label = new Gtk.Label(_("Unavailable"));
-                label.set_alignment(0.0f, 0.0f);
-                this.add(label);
-                this.pchild = label;
-            }
-        }
-        this.show_all();
-
-    }
-    public void update()
-    {
-        MetaData.Item item = null;
-        metawatcher.data_changed.connect(metadata_changed);
-        Gmpc.MetaData.Result gm_result = metawatcher.query(song, Gmpc.MetaData.Type.SONG_SIMILAR,out item);
-        this.metadata_changed(metawatcher, this.song, Gmpc.MetaData.Type.SONG_SIMILAR, gm_result, item); 
-    }
-
-}
-
-public class Gmpc.Widget.SimilarArtist : Gtk.Table
-{
-    private MPD.Song song = null;
-    private int columns = 1;
-    private int button_width = 200;
-    private void size_changed(Gdk.Rectangle alloc)
-    {
-		int t_column = alloc.width/button_width;
-        t_column = (t_column < 1)?1:t_column;
-        if(t_column != columns )
-		{
-			var list = this.get_children();
-			foreach(Gtk.Widget child in list) {
-				child.ref();
-				this.remove(child);
-			}
-
-			columns = t_column;
-			int i = 0;
-
-			this.resize(list.length()/columns+1, columns);
-			foreach(Gtk.Widget item in list)
-			{
-				this.attach(item, 
-						i%columns,i%columns+1,i/columns,i/columns+1,
-						Gtk.AttachOptions.EXPAND|Gtk.AttachOptions.FILL,
-						Gtk.AttachOptions.SHRINK, 0,0);
-				i++;
-			}
-			this.show_all();
-		}
-
-    } 
-
-    /**
-     * Handle signals from the metadata object.
-     */
-    private void metadata_changed(MetaWatcher gmw2, 
-            MPD.Song song, 
-            Gmpc.MetaData.Type type, 
-            Gmpc.MetaData.Result result, 
-            Gmpc.MetaData.Item? met)
-    {
-        /* only listen to the same artist and the same type */
-        if(type != Gmpc.MetaData.Type.ARTIST_SIMILAR) return;
-        if(this.song.artist.collate(song.artist)!=0) return;
-
-        /* clear widgets */
-        var child_list = this.get_children();
-        foreach(Gtk.Widget child in child_list)
-        {
-            child.destroy();
-        }
-
-        /* if unavailable set that in a label*/
-        if(result == Gmpc.MetaData.Result.UNAVAILABLE || met.is_empty() || !met.is_text_list())
-        {
-            var label = new Gtk.Label(_("Unavailable"));
-            this.attach(label, 0,1,0,1,Gtk.AttachOptions.SHRINK, Gtk.AttachOptions.SHRINK, 0,0);
-        }
-        /* if fetching set that in a label*/
-        else if(result == Gmpc.MetaData.Result.FETCHING){
-            var label = new Gtk.Label(_("Fetching"));
-            this.attach(label, 0,1,0,1,Gtk.AttachOptions.SHRINK, Gtk.AttachOptions.SHRINK, 0,0);
-        
-        }
-        /* Set result */
-        else {
-            List<Gtk.Widget> in_db_list = null;
-            GLib.List<unowned string> list = met.get_text_list().copy();
-            list.sort((GLib.CompareFunc)string.collate);
-
-
-            int items = 30;
-            int i = 0;
-            if(list != null)
-            {
-                unowned List<unowned string> liter= null;                 
-                MPD.Database.search_field_start(server, MPD.Tag.Type.ARTIST);
-                var data = MPD.Database.search_commit(server);
-
-                int q =0;
-
-                if(data != null)
-                {
-
-                    data.sort_album_disc_track();
-                    unowned MPD.Data.Item iter = data.get_first();
-
-                    liter = list.first();
-                    string artist = "";
-                    if(iter.tag.validate() == false) {
-                        error("Failed to validate"); 
-                    }
-                    if(iter.tag != null) 
-                        artist = iter.tag.casefold(); 
-                    do{
-                        var res = liter.data.casefold().collate(artist);
-                        q++;
-                        if(res == 0)
-                        {
-                            in_db_list.prepend(new_artist_button(iter.tag, true));
-                            i++;
-                            var d = liter.data;
-                            liter = liter.next;
-                            list.remove(d);
-                            //liter = null;
-                            iter.next(false);
-                            if(iter != null)
-                                artist = iter.tag.casefold();
-                        }
-                        else if (res > 0) {
-                            //list.remove(liter.data);
-
-                            iter.next(false);
-                            if(iter != null)
-                                artist = iter.tag.casefold(); 
-                        }
-                        else {
-                            liter = liter.next;
-                        }
-                    }while(iter != null && liter != null && i < items);
-                }
-
-                liter= list.first();
-                while(liter != null && i < items) 
-                {
-                    var artist = liter.data;
-                    in_db_list.prepend(new_artist_button(artist, false));
-                    i++;
-                    liter = liter.next; 
-                }
-
-            }
-            in_db_list.reverse();
-            i=0;
-            this.hide();
-            uint llength = in_db_list.length();
-            columns = this.allocation.width/button_width;
-	    columns = (columns < 1)?1:columns;
-            this.resize(llength/columns+1, columns);
-            foreach(Gtk.Widget item in in_db_list)
-            {
-                this.attach(item, 
-                        i%columns,i%columns+1,i/columns,i/columns+1,
-                        Gtk.AttachOptions.EXPAND|Gtk.AttachOptions.FILL,
-                        Gtk.AttachOptions.SHRINK, 0,0);
-                i++;
-            }
-        }
-
-        this.show_all();
-    }
-    private
-    void
-    artist_button_clicked(Gtk.Button button)
-    {
-        unowned string artist = (string)button.get_data<string>("artist");
-        Gmpc.Browser.Metadata.show_artist(artist);
-    }
-    public
-    Gtk.Widget
-    new_artist_button(string artist, bool in_db)
-    {
-        var hbox = new Gtk.HBox(false, 6);
-        hbox.border_width = 4;
-/*
-        var event = new Gtk.Frame(null);
-        */
-
-        var event = new Gtk.EventBox();
-        event.app_paintable = true;
-        event.set_visible_window(true);
-        event.expose_event.connect(Gmpc.Misc.misc_header_expose_event);
-        event.set_size_request(button_width-20,60);
-
-        var image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ARTIST_ART, 48);
-        image.set_no_cover_icon("no-artist");
-        image.set_loading_cover_icon("fetching-artist");
-        var song = new MPD.Song();
-        song.artist = artist;
-        image.set_squared(true);
-        image.update_from_song_delayed(song);
-        hbox.pack_start(image,false,false,0);
-
-        var label = new Gtk.Label(artist);
-        label.set_tooltip_text(artist);
-        label.set_selectable(true);
-        label.set_alignment(0.0f, 0.5f);
-        label.ellipsize = Pango.EllipsizeMode.END; 
-        hbox.pack_start(label,true,true,0);
-
-        if(in_db)
-        {
-            var find = new Gtk.Button();
-            find.add(new Gtk.Image.from_stock("gtk-find", Gtk.IconSize.MENU));
-            find.set_relief(Gtk.ReliefStyle.NONE);
-            hbox.pack_start(find,false,false,0);
-
-            find.set_data_full("artist",(void *)"%s".printf(artist), (GLib.DestroyNotify) g_free);
-            find.clicked.connect(artist_button_clicked);
-        }
-
-        event.add(hbox);
-        return event;
-    }
-    public bool first_show_b = false;
-
-    public void first_show()
-    {
-        GLib.log(np2_LOG_DOMAIN, GLib.LogLevelFlags.LEVEL_DEBUG, "First Show()");
-
-        if(!first_show_b)
-        {
-            MetaData.Item item = null;
-            metawatcher.data_changed.connect(metadata_changed);
-            this.size_allocate.connect(size_changed);
-
-            Gmpc.MetaData.Result gm_result = metawatcher.query(song, Gmpc.MetaData.Type.ARTIST_SIMILAR,out item);
-            if(gm_result == Gmpc.MetaData.Result.AVAILABLE)
-            {
-                this.metadata_changed(metawatcher, this.song, Gmpc.MetaData.Type.ARTIST_SIMILAR, gm_result, item); 
-            }
-            first_show_b = true;
-        }
-    }
-    public SimilarArtist(MPD.Server server, MPD.Song song)
-    {
-        this.song = song;
-
-        this.set_homogeneous(true);
-
-        this.set_row_spacings(6);
-        this.set_col_spacings(6);
-        this.show();
-
-    }
-}
-
-public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface, Gmpc.Plugin.PreferencesIface 
+public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface, Gmpc.Plugin.PreferencesIface 
 {
     private int block_update = 0;
     /* Stores the location in the cat_tree */
@@ -1708,7 +1228,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
 
         if(config.get_int_with_default("MetaData", "show-similar-artist",1) == 1 && song.artist != null)
         {
-            var similar_artist = new Gmpc.Widget.SimilarArtist(Gmpc.server,song);
+            var similar_artist = new Gmpc.MetaData.Widgets.SimilarArtists(Gmpc.server,song);
 
             notebook.append_page(similar_artist, new Gtk.Label(_("Similar Artist")));
 
@@ -1728,7 +1248,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         if(config.get_int_with_default("MetaData", "show-web-links",1) == 1)
         {
 
-            var song_links = new Gmpc.Song.Links(Gmpc.Song.Links.Type.SONG,song);
+            var song_links = new Gmpc.MetaData.Widgets.SongLinks(Gmpc.MetaData.Widgets.SongLinks.Type.SONG,song);
             notebook.append_page(song_links, new Gtk.Label(_("Web Links")));
             var button = new Gtk.RadioButton.with_label(group,_("Web Links"));
             group = button.get_group();
@@ -1816,7 +1336,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         vbox.pack_start(hbox, false, false, 0);
 
 
-        var result_hbox = new Gmpc.Widget.Songlist();//new Gmpc.Widget.Albumview();
+        var result_hbox = new Gmpc.Widgets.Songlist();//new Gmpc.Widget.Albumview();
 
         result_hbox.artist_song_clicked.connect((source, song) => {
                 if(song.artist != null) { 
@@ -2115,7 +1635,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         {
             var slhbox = new Gtk.VBox(false, 6);
 
-            var sl = new Gmpc.Widget.Songlist();
+            var sl = new Gmpc.Widgets.Songlist();
             slhbox.pack_start(sl, false, false, 0);
 
             sl.album_song_clicked.connect((source, song) => {
@@ -2180,7 +1700,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         /* Show web links */
         if(config.get_int_with_default("MetaData", "show-web-links",1) == 1)
         {
-            var song_links = new Gmpc.Song.Links(Gmpc.Song.Links.Type.ALBUM,song);
+            var song_links = new Gmpc.MetaData.Widgets.SongLinks(Gmpc.MetaData.Widgets.SongLinks.Type.ALBUM,song);
             notebook.append_page(song_links, new Gtk.Label(_("Web Links")));
             var rbutton = new Gtk.RadioButton.with_label(group,_("Web Links"));
             group = rbutton.get_group();
@@ -2384,7 +1904,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         /* Show similar artist */
         if(config.get_int_with_default("MetaData", "show-similar-artist",1) == 1)
         {
-            var similar_artist = new Gmpc.Widget.SimilarArtist(Gmpc.server,song);
+            var similar_artist = new Gmpc.MetaData.Widgets.SimilarArtists(Gmpc.server,song);
 
             notebook.append_page(similar_artist, new Gtk.Label(_("Similar Artist")));
 
@@ -2407,7 +1927,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         {
             var slhbox = new Gtk.VBox(false, 6);
 
-            var sl = new Gmpc.Widget.Songlist();
+            var sl = new Gmpc.Widgets.Songlist();
             slhbox.pack_start(sl, false, false, 0);
 
             sl.album_song_clicked.connect((source, song) => {
@@ -2453,7 +1973,7 @@ public class  Gmpc.MetadataBrowser : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface,
         /* Show web links */
         if(config.get_int_with_default("MetaData", "show-web-links",1) == 1)
         {
-            var song_links = new Gmpc.Song.Links(Gmpc.Song.Links.Type.ARTIST,song);
+            var song_links = new Gmpc.MetaData.Widgets.SongLinks(Gmpc.MetaData.Widgets.SongLinks.Type.ARTIST,song);
             notebook.append_page(song_links, new Gtk.Label(_("Web Links")));
             var button_sl = new Gtk.RadioButton.with_label(group,_("Web Links"));
             group = button_sl.get_group();

@@ -937,7 +937,7 @@ void create_playlist3(void)
             G_TYPE_STRING        /* Num items */
         };
         /* song id, song title */
-        pl3_tree = (GtkTreeModel *) gmpc_liststore_sort_new();
+        pl3_tree = (GtkTreeModel *) gmpc_tools_liststore_sort_new();
         gtk_list_store_set_column_types(GTK_LIST_STORE(pl3_tree), PL3_CAT_NROWS, types);
     }
 	thv_init(pl3_tree);
@@ -1848,7 +1848,7 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
     {
         GtkWidget *volume_button = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "volume_button"));
                                  //gtk_scale_button_get_value(GTK_SCALE_BUTTON(volume_button)) * 100;
-        int volume = gmpc_volume_get_volume_level(GMPC_VOLUME(volume_button));
+        int volume = gmpc_widgets_volume_get_volume_level(GMPC_WIDGETS_VOLUME(volume_button));
         int new_volume = mpd_status_get_volume(connection);
         if (new_volume >= 0 &&
             mpd_server_check_command_allowed(connection, "setvol") == MPD_SERVER_COMMAND_ALLOWED
@@ -1861,7 +1861,7 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
             /* don't do anything if nothing is changed */
             if (new_volume != volume)
             {
-                gmpc_volume_set_volume_level(GMPC_VOLUME(volume_button), new_volume );
+                gmpc_widgets_volume_set_volume_level(GMPC_WIDGETS_VOLUME(volume_button), new_volume );
             }
         } else
         {
@@ -2202,33 +2202,33 @@ static void playlist3_fill_server_menu(void)
  */
 /* glue code */
 
-extern GmpcMetadataBrowser *metadata_browser;
+extern GmpcBrowsersMetadata *browsers_metadata;
 
 void info2_activate(void)
 {
     GtkTreeView *tree = (GtkTreeView *) gtk_builder_get_object(pl3_xml, "cat_tree");
-    gmpc_metadata_browser_select_browser(metadata_browser, tree);
+    gmpc_browsers_metadata_select_browser(browsers_metadata, tree);
 }
 
 
 void info2_fill_song_view(mpd_Song * song)
 {
     info2_activate();
-    gmpc_metadata_browser_set_song(metadata_browser, song);
+    gmpc_browsers_metadata_set_song(browsers_metadata, song);
 }
 
 
 void info2_fill_artist_view(const gchar * artist)
 {
     info2_activate();
-    gmpc_metadata_browser_set_artist(metadata_browser, artist);
+    gmpc_browsers_metadata_set_artist(browsers_metadata, artist);
 }
 
 
 void info2_fill_album_view(const gchar * artist, const gchar * album)
 {
     info2_activate();
-    gmpc_metadata_browser_set_album(metadata_browser, artist, album);
+    gmpc_browsers_metadata_set_album(browsers_metadata, artist, album);
 }
 
 

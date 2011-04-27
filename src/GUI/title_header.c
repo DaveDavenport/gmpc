@@ -23,7 +23,7 @@
 #include "playlist3.h"
 
 /* glue code */
-extern GmpcMetadataBrowser *metadata_browser;
+extern GmpcBrowsersMetadata *browsers_metadata;
 
 static GtkWidget *header_labels[5];
 
@@ -33,8 +33,8 @@ static void playlist3_header_song(void)
     if (song)
     {
         GtkTreeView *tree = (GtkTreeView *) gtk_builder_get_object(pl3_xml, "cat_tree");
-        gmpc_metadata_browser_select_browser(metadata_browser, tree);
-        gmpc_metadata_browser_set_song(metadata_browser, song);
+        gmpc_browsers_metadata_select_browser(browsers_metadata, tree);
+        gmpc_browsers_metadata_set_song(browsers_metadata, song);
     }
 }
 
@@ -45,8 +45,8 @@ static void playlist3_header_artist(void)
     if (song && song->artist)
     {
         GtkTreeView *tree = (GtkTreeView *) gtk_builder_get_object(pl3_xml, "cat_tree");
-        gmpc_metadata_browser_select_browser(metadata_browser, tree);
-        gmpc_metadata_browser_set_artist(metadata_browser, song->artist);
+        gmpc_browsers_metadata_select_browser(browsers_metadata, tree);
+        gmpc_browsers_metadata_set_artist(browsers_metadata, song->artist);
     }
 }
 
@@ -57,8 +57,8 @@ static void playlist3_header_album(void)
     if (song && song->artist && song->album)
     {
         GtkTreeView *tree = (GtkTreeView *) gtk_builder_get_object(pl3_xml, "cat_tree");
-        gmpc_metadata_browser_select_browser(metadata_browser, tree);
-        gmpc_metadata_browser_set_album(metadata_browser, song->artist, song->album);
+        gmpc_browsers_metadata_select_browser(browsers_metadata, tree);
+        gmpc_browsers_metadata_set_album(browsers_metadata, song->artist, song->album);
     }
 }
 

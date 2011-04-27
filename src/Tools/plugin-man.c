@@ -39,10 +39,10 @@
 
 #define LOG_DOMAIN "Gmpc.Plugin.Manager"
 
-/* \todo this needs to be globally available. find a good solution to where to
+/* @todo this needs to be globally available. find a good solution to where to
  *       hide this one
  */
-GmpcMetadataBrowser *metadata_browser = NULL;
+GmpcBrowsersMetadata *browsers_metadata = NULL;
 
 void plugin_manager_load_internal_plugins(void)
 {
@@ -88,19 +88,19 @@ void plugin_manager_load_internal_plugins(void)
 
     plugin_add(&extraplaylist_plugin, 0, NULL);
     plugin_add_new(
-            GMPC_PLUGIN_BASE((metadata_browser = gmpc_metadata_browser_new())),
+            GMPC_PLUGIN_BASE((browsers_metadata = gmpc_browsers_metadata_new())),
             0, NULL);
 
     plugin_add_new(
-            GMPC_PLUGIN_BASE(gmpc_plugin_metadata_prefetcher_new()),
+            GMPC_PLUGIN_BASE(gmpc_tools_metadata_prefetcher_new()),
             0, NULL);
 
     plugin_add_new(
-            GMPC_PLUGIN_BASE(gmpc_plugin_database_update_tracker_new()),
+            GMPC_PLUGIN_BASE(gmpc_tools_database_update_tracker_new()),
             0, NULL);
 
     plugin_add_new(
-            GMPC_PLUGIN_BASE(gmpc_plugin_mockup_new()),
+            GMPC_PLUGIN_BASE(gmpc_browsers_nowplaying_new()),
             0, NULL);
 
 

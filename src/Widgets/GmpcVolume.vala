@@ -3,7 +3,7 @@ using Gdk;
 using Cairo;
 using Gmpc;
 
-public class Gmpc.Volume : Gtk.EventBox
+public class Gmpc.Widgets.Volume : Gtk.EventBox
 {
     private const string some_unique_name = Config.VERSION;
     private static const int BORDER_WIDTH = 1;

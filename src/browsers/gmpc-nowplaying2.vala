@@ -33,8 +33,8 @@ private const string np2_LOG_DOMAIN = "NowPlaying";
 /* create teh plugin of type Gmpc.Plugin.Base that implements the Browser interface */
 namespace Gmpc {
 
-    namespace Plugin {
-        public class Mockup : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface {
+    namespace Browsers {
+        public class Nowplaying : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface {
             private bool    theme_colors    = (bool) config.get_int_with_default("Now Playing", "use-theme-color",1); 
             private string  title_color     = config.get_string_with_default("Now Playing", "title-color", "#4d90dd");
             private string  item_color      = config.get_string_with_default("Now Playing", "item-color", "#304ab8");
@@ -691,7 +691,7 @@ namespace Gmpc {
                 GLib.log(np2_LOG_DOMAIN, GLib.LogLevelFlags.LEVEL_DEBUG, "similar songs took: %.6f seconds.", t.elapsed());
                 if(config.get_int_with_default("MetaData", "show-similar-artist",1) == 1 && song.artist != null)
                 {
-                    var similar_artist = new Gmpc.Widget.SimilarArtist(Gmpc.server,song);
+                    var similar_artist = new Gmpc.MetaData.Widgets.SimilarArtists(Gmpc.server,song);
 
                     notebook.append_page(similar_artist, new Gtk.Label(_("Similar Artist")));
 
@@ -714,7 +714,7 @@ namespace Gmpc {
                 if(config.get_int_with_default("MetaData", "show-web-links",1) == 1)
                 {
 
-                    var song_links = new Gmpc.Song.Links(Gmpc.Song.Links.Type.SONG,song);
+                    var song_links = new Gmpc.MetaData.Widgets.SongLinks(Gmpc.MetaData.Widgets.SongLinks.Type.SONG,song);
                     notebook.append_page(song_links, new Gtk.Label(_("Web Links")));
                     var button = new Gtk.RadioButton.with_label(group,_("Web Links"));
                     group = button.get_group();

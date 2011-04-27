@@ -28,7 +28,7 @@ using Gmpc;
 private const bool use_transition_sl = Gmpc.use_transition;
 
 static bool initialized = false;
-public class Gmpc.Song.Links: Gtk.Frame
+public class Gmpc.MetaData.Widgets.SongLinks: Gtk.Frame
 {
     private const string some_unique_name = Config.VERSION;
     public enum Type {
@@ -39,7 +39,7 @@ public class Gmpc.Song.Links: Gtk.Frame
     private Type type = Type.ARTIST;
     private MPD.Song song = null;
 
-    ~Links()
+    ~SongLinks()
     {
     }
 
@@ -48,7 +48,7 @@ public class Gmpc.Song.Links: Gtk.Frame
         Gmpc.open_uri(uri);
     }
 
-    public Links(Type type, MPD.Song song)
+    public SongLinks(Type type, MPD.Song song)
     {
         debug("Links created");
         this.type = type;

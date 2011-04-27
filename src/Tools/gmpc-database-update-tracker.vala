@@ -24,7 +24,7 @@ using Gmpc;
 private const bool use_transition_mb = Gmpc.use_transition;
 private const string some_unique_name_mb = Config.VERSION;
 
-public class  Gmpc.Plugin.DatabaseUpdateTracker : Gmpc.Plugin.Base {
+public class  Gmpc.Tools.DatabaseUpdateTracker : Gmpc.Plugin.Base {
     private Gtk.Image image = null;
 
     private const int[] version = {0,0,2};

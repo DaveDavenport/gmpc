@@ -57,11 +57,8 @@ src/gmpc-stats-label.gob
 
 # Vala
 src/vala/gmpc-connection.c
-src/vala/gmpc-database-update-tracker.c
 src/vala/gmpc-easy-command.c
 src/vala/gmpc-favorites.c
-src/vala/gmpc-liststore-sort.c
-src/vala/gmpc-metadata-prefetcher.c
 src/vala/gmpc-mpddata-treeview-tooltip.c
 src/vala/gmpc-paned-size-group.c
 src/vala/gmpc-plugin.c
@@ -69,6 +66,7 @@ src/vala/gmpc-test-plugin.c
 src/vala/gmpc-url-fetching-gui.c
 
 # Tools
+src/Tools/gmpc-database-update-tracker.c
 src/Tools/gmpc_easy_download.c
 src/Tools/bug-information.c
 src/Tools/setup-assistant.c
@@ -79,6 +77,8 @@ src/Tools/misc.c
 src/Tools/ipc.c
 
 #Widgets
+src/Widgets/gmpc-metadata-similarartists.c
+src/Widgets/gmpc-metadata-similarsongs.c
 src/Widgets/advanced_settings.c
 src/Widgets/gmpc-progress.c
 src/Widgets/GmpcVolume.c
