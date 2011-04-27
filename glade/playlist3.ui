@@ -399,7 +399,7 @@
                         <property name="border_width">1</property>
                         <property name="spacing">6</property>
                         <child>
-                          <object class="GmpcVolume" id="volume_button">
+                          <object class="GmpcWidgetsVolume" id="volume_button">
                             <property name="visible">True</property>
                           </object>
                           <packing>
