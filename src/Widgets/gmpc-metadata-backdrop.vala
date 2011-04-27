@@ -132,6 +132,7 @@ namespace Gmpc
             private bool button_press_event_callback(Gdk.EventButton event)
             {
                 if(cur_song == null) return false;
+                if(event.button != 3) return false;
                 var menu = new Gtk.Menu();
                 /*  Add selector */
                 var item = new Gtk.ImageMenuItem.with_label(_("Metadata selector"));
