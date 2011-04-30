@@ -51,7 +51,7 @@ void cfg_set_single_value_as_int(config_obj * cfg, const char *class,
 {
 }
 
-static int queries = 2;
+static int queries = 4;
 void callback(GList *list, gpointer data)
 {
     GMainLoop *lop = (GMainLoop *)data;
@@ -92,9 +92,16 @@ int main (int argc, char **argv)
     discogs_plugin.metadata->get_metadata(song,  META_ALBUM_ART, callback, l);
     discogs_plugin.metadata->get_metadata(song,  META_ARTIST_ART, callback, l);
     mpd_freeSong(song);
+    song = mpd_newSong();
+    song->artist = g_strdup("Appnottoaf");
+    song->album = g_strdup("grabba");
+    discogs_plugin.metadata->get_metadata(song,  META_ALBUM_ART, callback, l);
+    discogs_plugin.metadata->get_metadata(song,  META_ARTIST_ART, callback, l);
+    mpd_freeSong(song);
 
     g_main_loop_run(l);
     gmpc_easy_async_quit();
     g_main_loop_unref(l);
+    xmlCleanupParser();
     return EXIT_SUCCESS;
 }
