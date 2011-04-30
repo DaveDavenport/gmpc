@@ -579,7 +579,7 @@ gmpcPlugin discogs_plugin =
 {
 	.name           = ("DiscoGS Artist and Album Image Fetcher (internal)"),
 	.version        = {0,21,0},
-	.plugin_type    = GMPC_PLUGIN_META_DATA,
+	.plugin_type    = GMPC_PLUGIN_META_DATA|GMPC_INTERNALL,
 	.metadata       = &lf_cover,
 	.get_enabled    = discogs_get_enabled,
 	.set_enabled    = discogs_set_enabled,
