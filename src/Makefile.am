@@ -172,12 +172,6 @@ if HAVE_UNIQUE
     LIBS += @unique_LIBS@;
 endif
 
-if OSX
-LIBS+=@macint_LIBS@
-endif
-
-
-
 AM_LDFLAGS = \
 	@EXTRA_LDFLAGS@\
 	@LDFLAGS@
@@ -204,10 +198,6 @@ AM_CFLAGS = @CFLAGS@\
 
 if HAVE_UNIQUE
     AM_CFLAGS += @unique_CFLAGS@ 
-endif
-if OSX
-AM_CFLAGS+=@macint_CFLAGS@
-INCLUDES+=-DOSX=1
 endif
 
 if MAINTAINER_MODE

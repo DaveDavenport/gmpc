@@ -30,13 +30,6 @@
 #include "revision.h"
 #include "gmpc-metaimage.h"
 #include "gmpc-extras.h"
-#ifdef ENABLE_IGE
-#include "ige-mac-menu.h"
-#include "ige-mac-dock.h"
-#include "ige-mac-bundle.h"
-#endif
-
-
 #include "GUI/thv.h"
 #include "GUI/cmd.h"
 #include "GUI/status_icon.h"
@@ -890,37 +883,6 @@ void create_playlist3(void)
         if (colormap)
             gtk_widget_set_default_colormap(colormap);
     }
-    #ifdef ENABLE_IGE
-    {
-
-        GtkUIManager *ui = GTK_UI_MANAGER(gtk_builder_get_object(pl3_xml, "uimanager1"));
-        GtkMenuBar *m_item = GTK_MENU_BAR(gtk_ui_manager_get_widget(ui, "/menubartest"));
-        GdkPixbuf *pb = NULL;
-        IgeMacDock *dock;
-        IgeMacMenuGroup *group;
-        //ige_mac_menu_install_key_handler ();
-        ige_mac_menu_set_menu_bar(m_item);
-        gtk_widget_hide(m_item);
-        gtk_widget_set_no_show_all(m_item, TRUE);
-
-        group = ige_mac_menu_add_app_menu_group();
-        ige_mac_menu_add_app_menu_item(group, GTK_MENU_ITEM(gtk_builder_get_object(pl3_xml, "about1")), NULL);
-
-        group = ige_mac_menu_add_app_menu_group();
-        ige_mac_menu_add_app_menu_item(group, GTK_MENU_ITEM(gtk_builder_get_object(pl3_xml, "save1")), NULL);
-                                 // ige_mac_dock_new ();
-        dock = ige_mac_dock_get_default();
-
-        g_signal_connect(dock, "clicked", G_CALLBACK(create_playlist3), NULL);
-
-        g_signal_connect(dock, "quit-activate", G_CALLBACK(main_quit), NULL);
-        pb = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gmpc", 64, 0, NULL);
-        if (pb)
-        {
-            ige_mac_dock_set_icon_from_pixbuf(dock, pb);
-        }
-    }
-    #endif
     /* create tree store for the "category" view */
     if (pl3_tree == NULL)
     {
@@ -1552,10 +1514,6 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
     if (what & MPD_CST_STATE)
     {
         mpd_Song *song = mpd_playlist_get_current_song(connection);
-        #ifdef ENABLE_IGE
-        IgeMacDock *dock = ige_mac_dock_get_default();
-        GdkPixbuf *pb;
-        #endif
         int state = mpd_player_get_state(mi);
         switch (state)
         {
@@ -1595,17 +1553,6 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
                 gtk_window_set_title(GTK_WINDOW(pl3_win), buffer);
 
                 g_free(markup);
-
-                #ifdef ENABLE_IGE
-                pb = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gmpc-tray-play", 64, 0, NULL);
-                if (pb)
-                {
-                    ige_mac_dock_set_icon_from_pixbuf(dock, pb);
-                } else
-                {
-                    g_log(LOG_DOMAIN, G_LOG_LEVEL_WARNING, "failed to get icon\n");
-                }
-                #endif
                 break;
             }
             case MPD_PLAYER_PAUSE:
@@ -1646,16 +1593,6 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
                     }
                 } else
                 gtk_window_set_title(GTK_WINDOW(pl3_win), buffer);
-                #ifdef ENABLE_IGE
-                pb = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gmpc-tray-pause", 64, 0, NULL);
-                if (pb)
-                {
-                    ige_mac_dock_set_icon_from_pixbuf(dock, pb);
-                } else
-                {
-                    g_log(LOG_DOMAIN, G_LOG_LEVEL_WARNING, "failed to get icon\n");
-                }
-                #endif
                 g_free(markup);
                 break;
             }
@@ -1681,17 +1618,6 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
                     }
                 } else
                 gtk_window_set_title(GTK_WINDOW(pl3_win), _("GMPC"));
-            #ifdef ENABLE_IGE
-                pb = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gmpc", 64, 0, NULL);
-                if (pb)
-                {
-                    ige_mac_dock_set_icon_from_pixbuf(dock, pb);
-                } else
-                {
-                    g_log(LOG_DOMAIN, G_LOG_LEVEL_WARNING, "failed to get icon\n");
-                }
-            #endif
-
         }
         playlist3_update_header();
 

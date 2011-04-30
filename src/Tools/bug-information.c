@@ -145,13 +145,6 @@ static void bug_information_generate_message(GtkTextBuffer * buffer)
 	gtk_text_buffer_insert(buffer, &iter, "Disabled", -1);
 #endif
 
-	gtk_text_buffer_insert_with_tags(buffer, &iter, "\nMac integration:\t", -1, bold_tag, NULL);
-#ifdef ENABLE_IGE
-	gtk_text_buffer_insert(buffer, &iter, "Enabled", -1);
-#else
-	gtk_text_buffer_insert(buffer, &iter, "Disabled", -1);
-#endif
-
 	gtk_text_buffer_insert_with_tags(buffer, &iter, "\nLibspiff support:\t", -1, bold_tag, NULL);
 #ifdef SPIFF
 	gtk_text_buffer_insert(buffer, &iter, "Enabled", -1);

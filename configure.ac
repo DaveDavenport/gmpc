@@ -297,7 +297,6 @@ esac
 
 win32=no
 macosx=no
-macige=no
 case $host in
   *-*-mingw32* | *-*-windows)
     win32=yes
@@ -315,24 +314,6 @@ AM_CONDITIONAL(OSX, test x$macosx = xyes)
 # for smclient 
 AM_CONDITIONAL(PLATFORM_WIN32, test x$win32 = xyes) 
 AM_CONDITIONAL(PLATFORM_OSX, test x$macosx = xyes) 
-
-
-AC_ARG_ENABLE(macige,
-              [  --enable-macige      Enable Mac integration on mac.],
-              [ case "${enableval}" in
-                    yes)    macige=yes;;
-                     no)    macige=no;;
-                      *)    AC_MSG_ERROR([bad value ${enableval} for --enable-macige]);;
-                esac],
-              [macige=no])
-
-if test x$macosx = xyes && test x$macige = xyes; then
-# mac integration 
-PKG_CHECK_MODULES([macint],ige-mac-integration)
-AC_SUBST(macint_CFLAGS)
-AC_SUBST(macint_LIBS)
-AC_DEFINE(ENABLE_IGE, 1, [Enable Mac integration Support])
-fi
 
 ##
 # These depend on if we are or are not on windows or osX
@@ -506,11 +487,6 @@ if test x${enable_mmkeys} = xyes; then
 	echo "Multimedia keys support is:       enabled"
 else
 	echo "Multimedia keys support is:       disabled"
-fi
-if test "x$macige" = "xyes"; then 
-	echo "Use mac integration library:      enabled"
-else
-	echo "Use mac integration library:      disabled"
 fi
 if test "x$libspiff" = "x1"; then
 	echo "Use libspiff library:             enabled"
