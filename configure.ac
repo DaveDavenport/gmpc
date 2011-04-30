@@ -7,7 +7,7 @@ m4_define([package_version], [package_major_version.package_minor_version.packag
 AC_INIT([gmpc], [0.20.95], [qball@gmpclient.org])
 
 #Define variable
-m4_define([package_tagline],       "  ")
+m4_define([package_tagline],       "All hail the Greg")
 m4_define([package_website],       "http://gmpclient.org")
 m4_define([package_copyright],     "Copyright 2003-2011 Qball Cow")
 m4_define([package_bugtracker],    "http://gmpc.wikia.com/wiki/GMPC_HELP")

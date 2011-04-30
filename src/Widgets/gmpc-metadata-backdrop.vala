@@ -43,6 +43,7 @@ namespace Gmpc
                 pb = null;
                 if(item == null || song_checksum == null)
                 {
+                   this.queue_draw();
                    return; 
                 }
                 if(item.content_type == Gmpc.MetaData.ContentType.URI)
@@ -112,11 +113,11 @@ namespace Gmpc
                 this.set_app_paintable(true);
                 // Watch changes */
                 metawatcher.data_changed.connect((csong, type, result, met) => {
-                        if(song_checksum != null && met != null &&
+                        if(song_checksum != null &&
                             type == cur_type &&
                             song_checksum == Gmpc.Misc.song_checksum_type(csong,cur_type))
                         {
-                            if(result == Gmpc.MetaData.Result.AVAILABLE) {
+                            if(met != null && result == Gmpc.MetaData.Result.AVAILABLE) {
                                 this.set_from_item(met);
                          }else {
                                 this.set_from_item(null);
