@@ -474,6 +474,7 @@ test/MetaDataCache/Makefile
 test/PixbufCache/Makefile
 test/AsyncImage/Makefile
 test/Misc/Makefile
+test/DiscoGS/Makefile
 ])
 echo ""
 echo ""
