@@ -43,6 +43,7 @@
  *       hide this one
  */
 GmpcBrowsersMetadata *browsers_metadata = NULL;
+extern gmpcPlugin discogs_plugin;
 
 void plugin_manager_load_internal_plugins(void)
 {
@@ -51,15 +52,6 @@ void plugin_manager_load_internal_plugins(void)
     /** current playlist */
     plugin_add_new((GmpcPluginBase *)
             play_queue_plugin_new("current-pl"),
-            0, NULL);
-    plugin_add_new((GmpcPluginBase *) 
-            gmpc_provider_music_tree_new(),
-            0, NULL);
-    plugin_add_new((GmpcPluginBase *) 
-            gmpc_provider_ht_backdrops_new(),
-            0, NULL);
-    plugin_add_new((GmpcPluginBase *) 
-            gmpc_provider_lyr_db_new(),
             0, NULL);
     /* Add it to the plugin command */
     plugin_add_new(GMPC_PLUGIN_BASE(gmpc_easy_command), 0, NULL);
@@ -106,6 +98,17 @@ void plugin_manager_load_internal_plugins(void)
 
     /* Initialize the message system */
     plugin_add_new(GMPC_PLUGIN_BASE(pl3_messages), 0, NULL);
+    /** Provider */
+    plugin_add(&discogs_plugin, 0, NULL);
+    plugin_add_new((GmpcPluginBase *) 
+            gmpc_provider_music_tree_new(),
+            0, NULL);
+    plugin_add_new((GmpcPluginBase *) 
+            gmpc_provider_ht_backdrops_new(),
+            0, NULL);
+    plugin_add_new((GmpcPluginBase *) 
+            gmpc_provider_lyr_db_new(),
+            0, NULL);
 }
 
 void plugin_manager_initialize_plugins(void)
