@@ -65,7 +65,13 @@ static void advanced_settings()
 			});
 	//vbox.pack_start(ck, false, false, 0);
     vbox.add(ck);
-
+    /** use backdrops  */
+	ck = new Gtk.CheckButton.with_label("Use backdrops (restart required)");
+	ck.set_active((bool)config.get_int_with_default("Now Playing", "use-backdrop", 0));
+	ck.toggled.connect((source) => {
+		config.set_int("Now Playing", "use-backdrop",(int)source.get_active());
+			});
+	    vbox.add(ck);
 	/* Browsers */
 	label = new Gtk.Label(_("Browsers"));
     label.set_ellipsize(Pango.EllipsizeMode.END);
