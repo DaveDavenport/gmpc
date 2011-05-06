@@ -40,6 +40,7 @@ gmpc_WIDGETS_FILES=\
     Widgets/gmpc-metadata-backdrop.vala\
     Widgets/gmpc-metadata-similarsongs.vala\
     Widgets/gmpc-metadata-similarartists.vala\
+    GUI/control_window.c\
     GUI/title_header.c\
     GUI/status_icon.c\
     GUI/cmd.c\
@@ -264,6 +265,7 @@ EXTRA_DIST=\
         Tools/pixbuf-cache.h\
         preferences.h\
         internal-plugins.h\
+        GUI/control_window.h\
         GUI/title_header.h\
         GUI/cmd.h\
         GUI/thv.h\

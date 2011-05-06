@@ -663,7 +663,7 @@
                 </child>
               </object>
               <packing>
-                <property name="padding">6</property>
+                <property name="padding">0</property>
                 <property name="position">4</property>
               </packing>
             </child>
@@ -698,7 +698,7 @@
             <property name="visible">True</property>
             <child>
               <object class="GtkProgressBar" id="pl3_progressbar">
-                <property name="pulse_step">0.10000000149</property>
+                <property name="pulse_step">0.100000</property>
               </object>
               <packing>
                 <property name="expand">False</property>

@@ -34,9 +34,10 @@
 #include "GUI/cmd.h"
 #include "GUI/status_icon.h"
 #include "GUI/title_header.h"
+#include "GUI/control_window.h"
 
 #define ALBUM_SIZE_SMALL 48
-#define ALBUM_SIZE_LARGE 80
+#define ALBUM_SIZE_LARGE 64
 
 #define LOG_DOMAIN "Playlist"
 
@@ -76,7 +77,7 @@ void pl3_pb_seek_event(GtkWidget * pb, guint seek_time, gpointer user_data);
 void set_browser_format(void);
 void set_playlist_format(void);
 
-static gboolean playlist_player_volume_changed(GtkWidget * vol_but, int new_vol);
+gboolean playlist_player_volume_changed(GtkWidget * vol_but, int new_vol);
 
 /* Glade declarations, otherwise these would be static */
 void about_window(void);
@@ -371,19 +372,30 @@ int pl3_cat_tree_button_release_event(GtkTreeView * tree, GdkEventButton * event
 /**********************************************************
  * MISC
  */
-
+static GtkWidget *control_window = NULL;
 static gboolean pl3_win_state_event(GtkWidget * window, GdkEventWindowState * event, gpointer data)
 {
     GtkWidget *p = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "alignment1"));
     GtkWidget *h = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "hbox1"));
+    GtkWidget *b = (GTK_WIDGET(gtk_builder_get_object(pl3_xml, "menubartest")));
     if (((event->new_window_state) & GDK_WINDOW_STATE_FULLSCREEN))
     {
+		if(control_window == NULL) 
+			control_window = create_control_window(window);
+        gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "bread_crumb")));
+        gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "box_tab_bar")));
+        gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "vbox5")));
         gtk_widget_hide(p);
         gtk_widget_hide(h);
+        gtk_widget_hide(b);
     } else
     {
+		control_window_destroy(control_window);
+		control_window = NULL;
+   		playlist_zoom_level_changed();
         gtk_widget_show(p);
         gtk_widget_show(h);
+        gtk_widget_show(b);
     }
     return FALSE;
 }
@@ -1355,6 +1367,9 @@ void playlist_menu_artist_image_changed(GtkToggleAction *ta)
  */
 void playlist_zoom_out(void)
 {
+    /* Do not change zoom level when fullscreen */
+    if(pl3_window_is_fullscreen())
+		return;
     if ((pl3_zoom + 1) >= PLAYLIST_ZOOM_LEVELS)
         return;
     pl3_old_zoom = pl3_zoom;
@@ -1365,6 +1380,9 @@ void playlist_zoom_out(void)
 
 void playlist_zoom_in(void)
 {
+    /* Do not change zoom level when fullscreen */
+    if(pl3_window_is_fullscreen())
+		return;
     if (pl3_zoom <= PLAYLIST_NO_ZOOM)
         return;
     pl3_old_zoom = pl3_zoom;
@@ -1379,6 +1397,7 @@ void playlist_zoom_in(void)
 static void playlist_zoom_level_changed(void)
 {
     GtkWidget *pl3_win = playlist3_get_window();
+
     if (pl3_old_zoom <= PLAYLIST_SMALL)
     {
         gtk_window_get_size(GTK_WINDOW(pl3_win), &pl3_wsize.width, &pl3_wsize.height);
@@ -1507,7 +1526,7 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
      */
     if (!pl3_xml)
         return;
-
+	control_window_status_update(mi, what, control_window);
     /**
      * Player state changed
      */
@@ -1837,8 +1856,7 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
     }
 }
 
-
-static gboolean playlist_player_volume_changed(GtkWidget * vol_but, int new_vol)
+gboolean playlist_player_volume_changed(GtkWidget * vol_but, int new_vol)
 {
     int volume = new_vol;        //gtk_scale_button_get_value(GTK_SCALE_BUTTON(vol_but)) * 100;
     int new_volume = mpd_status_get_volume(connection);
