@@ -91,12 +91,11 @@ static void control_window_leave_fullscreen(GtkWidget *button, GtkWidget *parent
  */
 GtkWidget *create_control_window(GtkWidget *parent)
 {
-    gint width, height;
     GtkWidget *pp_button, *next_button, *prev_button, *ff_button;
     GtkWidget *vol, *progress, *hbox, *play_image;
     GdkScreen *screen = gtk_window_get_screen(GTK_WINDOW(parent));
-    int new_volume;
-
+    int new_volume,monitor;
+    GdkRectangle rect;
     /* Create window */
     GtkWidget *base = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     gtk_window_set_type_hint(GTK_WINDOW(base), GDK_WINDOW_TYPE_HINT_DOCK);
@@ -176,9 +175,11 @@ GtkWidget *create_control_window(GtkWidget *parent)
     gtk_box_pack_start(GTK_BOX(hbox), next_button, FALSE, FALSE, 0);
 
     /* Move window to right location and set size */
-    gtk_window_get_size(GTK_WINDOW(parent), &width, &height);
-    gtk_widget_set_size_request(GTK_WIDGET(base), width*0.6, height*0.05);
-    gtk_window_move(GTK_WINDOW(base), width*0.2, height);
+    monitor = gdk_screen_get_monitor_at_window(screen, parent->window);
+    gdk_screen_get_monitor_geometry(screen, monitor, &rect);
+    gtk_window_get_size(GTK_WINDOW(parent), &rect.width, &rect.height);
+    gtk_widget_set_size_request(GTK_WIDGET(base), rect.width*0.6, rect.height*0.05);
+    gtk_window_move(GTK_WINDOW(base), rect.width*0.2, rect.height);
 
     if (gdk_screen_is_composited(screen))
     {
