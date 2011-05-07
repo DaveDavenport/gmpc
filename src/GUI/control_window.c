@@ -98,7 +98,7 @@ GtkWidget *create_control_window(GtkWidget *parent)
     GdkRectangle rect;
     /* Create window */
     GtkWidget *base = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-    gtk_window_set_type_hint(GTK_WINDOW(base), GDK_WINDOW_TYPE_HINT_DOCK);
+    //gtk_window_set_type_hint(GTK_WINDOW(base), GDK_WINDOW_TYPE_HINT_DOCK);
     gtk_window_set_skip_pager_hint(GTK_WINDOW(base), TRUE);
     gtk_window_set_skip_taskbar_hint(GTK_WINDOW(base), TRUE);
     gtk_window_set_decorated(GTK_WINDOW(base), FALSE);
@@ -188,6 +188,7 @@ GtkWidget *create_control_window(GtkWidget *parent)
             gtk_widget_set_colormap(base, colormap);
         gtk_window_set_opacity(GTK_WINDOW(base), 0.7);
     }
+    
     /* Change colors */
     control_window_modify_colors(base);
     gtk_widget_show_all(base);
