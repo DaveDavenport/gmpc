@@ -29,7 +29,6 @@ namespace Gmpc
             private string song_checksum = null;
             private MPD.Song? cur_song = null;        
             private Gmpc.MetaData.Type cur_type = Gmpc.MetaData.Type.ARTIST_ART; 
-            
             /*   */
             private Gdk.Pixbuf pb = null;
             private ModificationType mod_type = (ModificationType)
@@ -107,6 +106,10 @@ namespace Gmpc
                         type == Gmpc.MetaData.Type.ALBUM_ART);
                 cur_type = type;
 
+
+                this.realize.connect((source)=>{
+                        source.window.set_back_pixmap(null, true);
+                        });
                 // Set visible window
                 this.set_visible_window(true);
                 // Set paintable 
