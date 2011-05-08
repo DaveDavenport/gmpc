@@ -34,18 +34,22 @@ void pl3_pb_seek_event(GtkWidget * pb, guint seek_time, gpointer user_data);
 static gboolean
 expose_window(GtkWidget *widget, GdkEventExpose *event, gpointer date)
 {
-    cairo_t *cr;
-    cr = gdk_cairo_create(widget->window);
+    /* Create */
+    cairo_t *cr = gdk_cairo_create(widget->window);
 
+    /* Paint background */
     cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, .7);
     cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
     cairo_paint(cr);             /* paint source */
 
+    /* Paint border */
     cairo_set_source_rgba(cr, .8, .8, .8, .7);
     cairo_rectangle(cr, 0.5,0.5,
         widget->allocation.width-1.0,
         widget->allocation.height-1.0);
     cairo_stroke(cr);
+
+    /* Destroy */
     cairo_destroy(cr);
 
     return FALSE;
@@ -61,9 +65,12 @@ static void control_window_modify_colors(GtkWidget *base)
     GList *iter;
     if(GTK_IS_HSCALE(base) == FALSE)
     {
-        gtk_widget_modify_bg(base, GTK_STATE_NORMAL,&(base->style->black));
-        gtk_widget_modify_fg(base, GTK_STATE_NORMAL,&(base->style->white));
-        gtk_widget_modify_text(base, GTK_STATE_NORMAL,&(base->style->white));
+        gtk_widget_modify_bg(base, 
+                GTK_STATE_NORMAL,&(base->style->black));
+        gtk_widget_modify_fg(base,
+                GTK_STATE_NORMAL,&(base->style->white));
+        gtk_widget_modify_text(base,
+                GTK_STATE_NORMAL,&(base->style->white));
     }
     if(GTK_IS_CONTAINER(base))
     {
@@ -98,6 +105,7 @@ GtkWidget *create_control_window(GtkWidget *parent)
     GdkRectangle rect;
     /* Create window */
     GtkWidget *base = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+    /* Setup window to hoover above and not show up */
     gtk_window_set_type_hint(GTK_WINDOW(base), GDK_WINDOW_TYPE_HINT_UTILITY);
     gtk_window_set_skip_pager_hint(GTK_WINDOW(base), TRUE);
     gtk_window_set_skip_taskbar_hint(GTK_WINDOW(base), TRUE);
@@ -105,6 +113,8 @@ GtkWidget *create_control_window(GtkWidget *parent)
     gtk_window_set_resizable(GTK_WINDOW(base), FALSE);
     gtk_window_set_keep_above(GTK_WINDOW(base), TRUE);
     gtk_window_set_transient_for(GTK_WINDOW(base), GTK_WINDOW(parent));
+
+    /* Set border */
     gtk_container_set_border_width(GTK_CONTAINER(base), 4);
 
     /* Overwrite background drawing */
@@ -201,10 +211,12 @@ GtkWidget *create_control_window(GtkWidget *parent)
 void control_window_status_update(MpdObj * mi, ChangedStatusType what, GtkWidget *base)
 {
     GtkWidget *volume_button, *progress, *play_image;
+    /* Bail out of base == NULL */
     if(base == NULL) return;
-    volume_button = g_object_get_data(G_OBJECT(base), "vol");
-    progress = g_object_get_data(G_OBJECT(base), "progress");
-    play_image = g_object_get_data(G_OBJECT(base), "play_image");
+    /* Get the different subwidgets from the parent */
+    volume_button   = g_object_get_data(G_OBJECT(base), "vol");
+    progress        = g_object_get_data(G_OBJECT(base), "progress");
+    play_image      = g_object_get_data(G_OBJECT(base), "play_image");
 
     if (what & MPD_CST_STATE)
     {
@@ -267,5 +279,4 @@ void control_window_destroy(GtkWidget *cw)
 {
     if(cw == NULL) return;
     gtk_widget_destroy(cw);
-
 }

@@ -61,7 +61,14 @@ static void playlist3_header_album(void)
         gmpc_browsers_metadata_set_album(browsers_metadata, song->artist, song->album);
     }
 }
+static void playlist3_header_update_style(GtkWidget *widget, GtkStyle *prev, gpointer data)
+{
+    gtk_widget_modify_text(header_labels[1], GTK_STATE_NORMAL, &(widget->style->text[GTK_STATE_INSENSITIVE]));
+    gtk_widget_modify_fg(header_labels[1], GTK_STATE_NORMAL, &(widget->style->text[GTK_STATE_INSENSITIVE]));
 
+    gtk_widget_modify_text(header_labels[3], GTK_STATE_NORMAL, &(widget->style->text[GTK_STATE_INSENSITIVE]));
+    gtk_widget_modify_fg(header_labels[3], GTK_STATE_NORMAL, &(widget->style->text[GTK_STATE_INSENSITIVE]));
+}
 
 void playlist3_new_header(void)
 {
@@ -74,19 +81,20 @@ void playlist3_new_header(void)
         gtk_widget_set_size_request(hbox, 250, -1);
         /** Title */
         header_labels[0] = (GtkWidget *)gmpc_clicklabel_new("");
-        gmpc_clicklabel_font_size(GMPC_CLICKLABEL(header_labels[0]), 18);
+        gmpc_clicklabel_font_size(GMPC_CLICKLABEL(header_labels[0]), 12);
+        gmpc_clicklabel_set_do_bold(GMPC_CLICKLABEL(header_labels[0]), TRUE);
         gmpc_clicklabel_set_ellipsize(GMPC_CLICKLABEL(header_labels[0]), PANGO_ELLIPSIZE_END);
 
         header_labels[1] = gtk_label_new(_("By"));
         /** Artist */
         header_labels[2] = (GtkWidget *)gmpc_clicklabel_new("");
         gmpc_clicklabel_set_ellipsize(GMPC_CLICKLABEL(header_labels[2]), PANGO_ELLIPSIZE_NONE);
-        gmpc_clicklabel_set_do_italic(GMPC_CLICKLABEL(header_labels[2]), TRUE);
+  //      gmpc_clicklabel_set_do_italic(GMPC_CLICKLABEL(header_labels[2]), TRUE);
 
         header_labels[3] = gtk_label_new(_("From"));
         /** Albumr */
         header_labels[4] = (GtkWidget *)gmpc_clicklabel_new("");
-        gmpc_clicklabel_set_do_italic(GMPC_CLICKLABEL(header_labels[4]), TRUE);
+//        gmpc_clicklabel_set_do_italic(GMPC_CLICKLABEL(header_labels[4]), TRUE);
         gmpc_clicklabel_set_ellipsize(GMPC_CLICKLABEL(header_labels[4]), PANGO_ELLIPSIZE_END);
 
         gtk_box_pack_start(GTK_BOX(vbox), header_labels[0], FALSE, TRUE, 0);
@@ -102,6 +110,9 @@ void playlist3_new_header(void)
         g_signal_connect(G_OBJECT(header_labels[4]), "clicked", G_CALLBACK(playlist3_header_album), NULL);
         gtk_box_pack_start(GTK_BOX(hbox10), vbox, TRUE, TRUE, 0);
         gtk_widget_show_all(hbox10);
+
+        g_signal_connect(G_OBJECT(hbox10), "style-set", G_CALLBACK(playlist3_header_update_style), NULL);
+        playlist3_header_update_style(hbox10, NULL, NULL);
     }
 }
 

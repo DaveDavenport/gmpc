@@ -36,8 +36,8 @@
 #include "GUI/title_header.h"
 #include "GUI/control_window.h"
 
-#define ALBUM_SIZE_SMALL 48
-#define ALBUM_SIZE_LARGE 64
+#define ALBUM_SIZE_SMALL 42
+#define ALBUM_SIZE_LARGE 42
 
 #define LOG_DOMAIN "Playlist"
 

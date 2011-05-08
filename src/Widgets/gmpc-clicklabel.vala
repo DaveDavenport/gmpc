@@ -25,6 +25,7 @@ public class Gmpc.Clicklabel : Gtk.EventBox
     private Gtk.Label label                 = null;
     private int size                        = 10*Pango.SCALE; 
     private bool italic                     = false;
+    private bool bold                       = false;
     private Gdk.Cursor hand_cursor          = new Gdk.Cursor(Gdk.CursorType.HAND2);
     private Pango.AttrList attributes       = null; 
     /**
@@ -124,6 +125,12 @@ public class Gmpc.Clicklabel : Gtk.EventBox
         update();
     }
 
+    public void set_do_bold(bool val)
+    {
+        bold = val;
+        update();
+    }
+
     public signal void clicked ();
 
     /**
@@ -139,6 +146,15 @@ public class Gmpc.Clicklabel : Gtk.EventBox
             attr                = Pango.attr_style_new(Pango.Style.ITALIC); 
         }else {
             attr                = Pango.attr_style_new(Pango.Style.NORMAL); 
+        }
+        attr.start_index        = 0;
+        attr.end_index          = -1;
+        Gmpc.Fix.change(attributes,(owned)attr);
+
+        if(this.bold) {
+            attr                = Pango.attr_weight_new(Pango.Weight.BOLD); 
+        }else {
+            attr                = Pango.attr_weight_new(Pango.Weight.NORMAL); 
         }
         attr.start_index        = 0;
         attr.end_index          = -1;

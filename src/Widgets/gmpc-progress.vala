@@ -24,7 +24,7 @@ using Gdk;
 
 private const bool use_transition = Gmpc.use_transition;
 
-public class Gmpc.Progress : Gtk.HBox
+public class Gmpc.Progress : Gtk.VBox
 {
     private uint total              = 0;
     private uint current            = 0;
@@ -156,7 +156,7 @@ public class Gmpc.Progress : Gtk.HBox
         this.set_value_handler = GLib.Signal.connect_swapped(this.scale,"value_changed",(GLib.Callback)value_changed,this);
         this.scale.update_policy = Gtk.UpdateType.DISCONTINUOUS;//DELAYED;//DISCONTINUOUS;
         this.scale.sensitive = false;
-
+		this.set_spacing(0);
         this.scale.add_events((int)Gdk.EventMask.SCROLL_MASK);
         this.scale.add_events((int)Gdk.EventMask.POINTER_MOTION_MASK);
         this.scale.add_events((int)Gdk.EventMask.ENTER_NOTIFY_MASK);
@@ -170,7 +170,7 @@ public class Gmpc.Progress : Gtk.HBox
         this.scale.leave_notify_event.connect(enter_notify_event_callback);
 
         this.label = new Gtk.Label("");
-        this.label.set_alignment(1.0f,0.5f);
+        this.label.set_alignment(0.5f,0.5f);
 
         this.pack_start(this.scale, true,true,0);
         this.pack_end(this.label, false,true,0);
