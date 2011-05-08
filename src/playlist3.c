@@ -988,10 +988,12 @@ void create_playlist3(void)
     if (!cfg_get_single_value_as_int_with_default(config, "Interface", "hide-favorites-icon", FALSE))
     {
         favorites_button = gmpc_favorites_button_new();
-        ali = gtk_alignment_new(0.0, 0.0, 0.0, 0.0);
+        ali = gtk_alignment_new(0.0, 0.5, 0.0, 0.0);
         gtk_container_add(GTK_CONTAINER(ali), GTK_WIDGET(favorites_button));
         gtk_box_pack_start(GTK_BOX(gtk_builder_get_object(pl3_xml, "hbox10")), GTK_WIDGET(ali), FALSE, FALSE, 0);
-        gtk_widget_show_all(GTK_WIDGET(ali));
+		gtk_box_reorder_child(GTK_BOX(gtk_builder_get_object(pl3_xml,
+						"hbox10")),ali,0); 
+		gtk_widget_show_all(GTK_WIDGET(ali));
     }
     playlist_status_changed(connection,
         MPD_CST_STATE | MPD_CST_SONGID | MPD_CST_NEXTSONG |
