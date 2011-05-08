@@ -991,8 +991,8 @@ void create_playlist3(void)
         ali = gtk_alignment_new(0.0, 0.5, 0.0, 0.0);
         gtk_container_add(GTK_CONTAINER(ali), GTK_WIDGET(favorites_button));
         gtk_box_pack_start(GTK_BOX(gtk_builder_get_object(pl3_xml, "hbox10")), GTK_WIDGET(ali), FALSE, FALSE, 0);
-		gtk_box_reorder_child(GTK_BOX(gtk_builder_get_object(pl3_xml,
-						"hbox10")),ali,0); 
+//		gtk_box_reorder_child(GTK_BOX(gtk_builder_get_object(pl3_xml,
+//						"hbox10")),ali,0); 
 		gtk_widget_show_all(GTK_WIDGET(ali));
     }
     playlist_status_changed(connection,

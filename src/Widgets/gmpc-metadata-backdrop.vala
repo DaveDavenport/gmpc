@@ -122,10 +122,10 @@ namespace Gmpc
                         {
                             if(met != null && result == Gmpc.MetaData.Result.AVAILABLE) {
                                 this.set_from_item(met);
-                         }else {
+                            } else {
                                 this.set_from_item(null);
+                            }
                         }
-                }
                 });
 
                 // Add expose event
