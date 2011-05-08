@@ -56,10 +56,10 @@ namespace Gmpc
                         width = int.max(req.width, 400);
                         log(log_domain_mdbd, GLib.LogLevelFlags.LEVEL_DEBUG, 
                                 "Getting image with size: %u", width);
-						// Pixbuf loader needs only width constraint support.
-                        loader = new PixbufLoaderAsync(); 
+                        if(loader == null)
+                            loader = new PixbufLoaderAsync(); 
                         loader.pixbuf_update.connect((source, pixbuf)=>{
-                            pb = pixbuf;
+                            this.pb = pixbuf;
                             log (log_domain_mdbd,GLib.LogLevelFlags.LEVEL_DEBUG, 
                             "Updating background");
                             this.queue_draw();
@@ -76,7 +76,6 @@ namespace Gmpc
             public void set_song(MPD.Song? song)
             {
                 cur_song = song;
-                loader = null;
                 if(song == null) {
                     song_checksum = null;
                     set_from_item(null);

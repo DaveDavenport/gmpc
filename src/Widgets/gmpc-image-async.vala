@@ -131,9 +131,8 @@ namespace Gmpc
             width = req_width;
             height = req_height;
             /*  If running cancel the current action. */
-            if(this.pcancel != null && !this.pcancel.is_cancelled()) {
-                this.pcancel.cancel();
-            }
+            this.cancel();
+
             this.pcancel = null;
             this.uri = uri;
 
@@ -149,7 +148,13 @@ namespace Gmpc
             this.pcancel = cancel;
             this.load_from_file_async(uri, width,height , cancel, border);
         }
-
+        public void cancel()
+        {
+            GLib.log(LOG_DOMAIN,GLib.LogLevelFlags.LEVEL_DEBUG,"Cancel the image loading");
+            if(this.pcancel != null) {
+                this.pcancel.cancel();
+            }
+        }
         private void size_prepare(Gdk.PixbufLoader loader,int  gwidth, int gheight)
         {
              double dsize = (double)(int.max(width,height)); 
@@ -206,7 +211,7 @@ namespace Gmpc
             try {
                 loader.close();
             }catch (Error err) {
-                warning("Error trying to parse image: %s::%s", err.message,uri);
+                debug("Error trying to parse image: %s::%s? query cancelled?", err.message,uri);
                 pixbuf_update(null);
                 call_row_changed();
                 loader = null;
