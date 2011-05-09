@@ -184,7 +184,8 @@ namespace Gmpc.Favorites{
             }
             else if (event.button == 3 && this.song != null) {
                 var menu = new Gtk.Menu();
-                MPD.Data.Item ? item = MPD.Database.get_playlist_list(server);
+				int items = 0;
+				MPD.Data.Item ? item = MPD.Database.get_playlist_list(server);
                 while(item != null)
                 {
                     string pp = item.playlist.path;
@@ -199,11 +200,16 @@ namespace Gmpc.Favorites{
                             });
                     menu.append(entry);
                     item.next_free();
+					items++;
                 }
-                menu.show_all();
-                menu.popup(null, null, null, event.button, event.time);
-
-            }
+				if(items > 0)
+				{
+	                menu.show_all();
+    	            menu.popup(null, null, null, event.button, event.time);
+				}
+				else menu.destroy();
+				return true;
+			}
             return false;
         }
 
