@@ -18,6 +18,7 @@
  */
  
 #include <gtk/gtk.h>
+#include <glib/gstdio.h>
 #include "playlist3.h"
 #include "main.h"
 #include "cmd.h"
@@ -64,7 +65,22 @@ static gchar *entry_current = NULL;
 
 static void show_command_line_history_destroy(void)
 {
-    current = NULL;
+	gchar *path = gmpc_get_user_path("cmd-history.txt");
+	/* Store results */
+	FILE *fp = g_fopen(path,"w");
+	if(fp != NULL)
+	{
+		GList *first = g_list_first(history);
+		for(;first != NULL; first = g_list_next(first))
+		{
+			fputs(first->data, fp);
+			fputc('\n', fp);
+		}
+
+		fclose(fp);
+	}
+	g_free(path);
+	current = NULL;
     last = NULL;
     g_list_foreach(history, (GFunc)g_free, NULL);
     g_list_free(history);
@@ -82,15 +98,16 @@ void show_command_line_activate(GtkWidget *entry, gpointer data)
 	gmpc_easy_command_do_query(GMPC_EASY_COMMAND(gmpc_easy_command),
 			command);
 
-    /*  Update history */
-    history = g_list_prepend(history, g_strdup(command));
-    /* if no last, current is last */ 
-    if(last == NULL) {
-        last = history;
-    }
-
-    history_length++;
-    /* Clear the current selected entry */
+	if(last == NULL || g_utf8_collate(last->data, command) != 0) 
+	{
+		history = g_list_prepend(history, g_strdup(command));
+		/* if no last, current is last */ 
+		if(last == NULL) {
+			last = history;
+		}
+		history_length++;
+	}
+		/* Clear the current selected entry */
     current = NULL;
     if(history_length > 100) {
         GList *temp;
@@ -189,6 +206,8 @@ void show_command_line(void)
 		GtkTreeModel		*model;
 		GtkCellRenderer		*ren;
 		GtkEntryCompletion	*comp;
+		FILE				*fp;
+		gchar 				*path;
 		/**
 		 * Setup completion on the entry box.
 		 * Completion should match what is done in the Easycommand popup 
@@ -243,6 +262,26 @@ void show_command_line(void)
                         "destroy", 
                         G_CALLBACK(show_command_line_history_destroy),
                         NULL);
+
+
+
+		/* Store results */
+		path = gmpc_get_user_path("cmd-history.txt");
+		fp = g_fopen(path,"r");
+		if(fp != NULL)
+		{
+			char buffer[512];
+			while(fgets(buffer, 512, fp) != NULL) 
+			{
+				if(buffer[strlen(buffer)-1] == '\n') buffer[strlen(buffer)-1] = '\0';
+				if(buffer[0] != '\0')
+					history = g_list_prepend(history, g_strdup(buffer));
+			}
+			history = g_list_reverse(history);
+			last = history;
+			fclose(fp);
+		}
+		g_free(path);
 		/* Only need todo this once */
 		init = 0;
 	}
