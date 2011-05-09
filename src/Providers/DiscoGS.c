@@ -568,7 +568,7 @@ static void discogs_fetch_get_image(mpd_Song *song,MetaDataType type,
 }
 
 
-gmpcMetaDataPlugin lf_cover =
+static gmpcMetaDataPlugin discogs_metadata_object =
 {
 	.get_priority   = discogs_fetch_cover_priority,
 	.set_priority   = discogs_fetch_cover_priority_set,
@@ -580,7 +580,7 @@ gmpcPlugin discogs_plugin =
 	.name           = ("DiscoGS Artist and Album Image Fetcher (internal)"),
 	.version        = {0,21,0},
 	.plugin_type    = GMPC_PLUGIN_META_DATA|GMPC_INTERNALL,
-	.metadata       = &lf_cover,
+	.metadata       = &discogs_metadata_object,
 	.get_enabled    = discogs_get_enabled,
 	.set_enabled    = discogs_set_enabled,
 };
