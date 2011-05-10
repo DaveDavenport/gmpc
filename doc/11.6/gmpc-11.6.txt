@@ -1,0 +1,135 @@
+Gnome Music Player Client 11.6
+==============================
+release: All hail the Greg
+
+
+image::images/gmpc.png[width="300",alt="",link="images/gmpc.png",float="right"]
+The 11.6 release is another release with the focus on usability and speed. Several 
+widgets are replaced with easier to use ones and often better looking widgets and the overal responsiveness is improved.
+Some bling has been added to improve the visual attractiveness of GMPC.
+
+.Reminder
+NOTE: This version is not yet released. If people will step up and help I hope to relase it in June 2011
+
+
+unfloat::[]
+
+TODO
+----
+These things has to be done before I can even think of releasing GMPC 11.6
+
+* Evaluate what plugins still work flawless.
+
+NOTE: If this is done, it should extend the list below.
+
+* [http://musicpd.org/mantis/view.php?id=3227[3227]] Clearing metadata does not redraw background
+* [http://musicpd.org/mantis/view.php?id=3221[3221]] Intergrate DiscoGS plugin into GMPC Source.
+* [http://musicpd.org/mantis/view.php?id=3222[3222]] Intergrate Last.FM Plugin into GMPC source. 
+* [http://musicpd.org/mantis/view.php?id=3223[3223]] Add backdrops option to advanced settings window.  
+* [http://musicpd.org/mantis/view.php?id=3224[3224]] Add extra-playlist plugin to the plugin blacklist. 
+* [http://musicpd.org/mantis/view.php?id=3145[3145]] Update man pages link.
+* [http://musicpd.org/mantis/view.php?id=3129[3129]] Typo in Preferences->Avahi Zeroconf dialog
+* [http://musicpd.org/mantis/view.php?id=3225[3225]] Update Manual
+
+.Blocker bug
+IMPORTANT: I want to have atleast a usable english manual.
+
+* [http://musicpd.org/mantis/view.php?id=3226[3226]] Remove OsX specific code from GMPC. (unless somebody wants to maintain it)
+* Check if Win32 build still works.
+* etc.
+
+
+New Features
+------------
+image::images/replaygain-auto.png[width="100",alt="",link="images/replaygain-auto.png", float="right"]
+* Auto mode support Replaygain
+
+unfloat::[]
+image::images/md-albumview.png[width="100",alt="",link="images/md-albumview.png", float="right"]
+* New Albumview (large album covers) in MetaData Browser.
+
+unfloat::[]
+image::images/md-songlist.png[width="100",alt="", link="images/md-songlist.png", float="right"]
+
+* New songlist view in MetaData browser.
+
+unfloat::[]
+
+
+image::images/gmpc-volume.png[float="right"]
+* New volume button that does not have corner of screen issue like the Gtk Version.
+
+unfloat::[]
+
+image::images/gmpc-advanced-settings.png[width="100",alt="",link="images/gmpc-advanced-settings.png", float="right"]
+* Add advanced settings screen that allows you to remove gui elements.
+
+unfloat::[]
+
+image::images/gmpc-extraplaylist.png[width="100",alt="",link="images/gmpc-extraplaylist.png", float="right"]
+* Intergrate Extra play-queue plugin.
+
+unfloat::[]
+
+
+
+* Intergrate LyrDB provider plugin.
+* Add HTBackdrops Provider plugin.
+image::images/gmpc-ec-cmd.png[width="100",alt="", link="images/gmpc-ec-cmd.png", float="right"]
+* Easycommand Commandline inside gmpc gui.
+
+unfloat::[]
+
+
+image::images/gmpc-backdrop.png[width="100",alt="",link="images/gmpc-backdrop.png", float="right"]
+* Backdrops in the NowPlaying screen.
+
+unfloat::[]
+
+image::images/gmpc-fullscreen-11.6.png[width="100",alt="",link="images/gmpc-fullscreen-11.6.png", float="right"]
+
+* Fullscreen mode.
+
+unfloat::[]
+
+* Add support for thumbnail uri's in metadata system.
+
+
+Removed Features
+----------------
+* Rating support.
+
+Fixes
+-----
+* Different version scheme: YY.M
+* Make music-tree plugin find more art more aggrasively.
+* Ctrl-W to close window.
+* Improved (humanity) tray icons.
+* Etched in border for Nowplaying/Metadata browser
+* Fix long time crasher in songlist.
+* Auto query on metadata selector.
+* Improve sorting in songlists.
+* Fix several smaller drawing issues with gradient themes.
+* Fixing several (small) memory leaks.
+* NowPlaying: Scale images to available size.
+* Easycommand: Add icons to entrybox.
+* Easycommand: Better matching for autocomplete.
+* Easycommand: popup go away very quicly when moving focus.
+* Easycommand: popup aggrasively grab mouse/keyboard pointer.
+* Fix right mouse add/replace handling. 
+* Remove all libsexy stuff.
+* Code cleanups, separations, etc.
+* Replace libbacon with libunique.
+* Set 5 second timeout on GmpcEasyDownload.
+* Reduce sqlite database integrety check time.
+* Speedup metadata queries by using explicit sql indexes.
+* (Metadata browser) Do more things lazy loading.
+* Improve play-queue manipulation (add,replace,play) from metadata.
+* Center playing in play queue on creation.
+* Building with newer vala versions.
+* Easycommand for plugins.
+* (some) keybindings can be changed using gtk's build in system.
+* Move more code to vala.
+* Code cleanups, added code documentation.
+
+
