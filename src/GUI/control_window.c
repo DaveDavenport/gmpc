@@ -42,13 +42,13 @@ expose_window(GtkWidget *widget, GdkEventExpose *event, gpointer date)
     cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
     cairo_paint(cr);             /* paint source */
 
-    /* Paint border 
+    /* Paint border */
     cairo_set_source_rgba(cr, .8, .8, .8, .7);
     cairo_rectangle(cr, 0.5,0.5,
         widget->allocation.width-1.0,
         widget->allocation.height-1.0);
     cairo_stroke(cr);
-*/
+
     /* Destroy */
     cairo_destroy(cr);
 
@@ -91,21 +91,30 @@ static void control_window_leave_fullscreen(GtkWidget *button, GtkWidget *parent
 {
     gtk_window_unfullscreen(GTK_WINDOW(parent));
 }
-static gboolean control_window_leave_notify_event(GtkWidget *base, GdkEventCrossing *ev, gpointer data)
+
+/**
+ * Hiding code
+ */
+static guint timeout = 0;
+static gboolean control_window_leave_notify_event(GtkWidget *base, 
+        GdkEventCrossing *ev, gpointer data)
 {
-	printf("leave%i\n",ev->detail);
-	if(ev->mode != GDK_CROSSING_NORMAL) return FALSE;
-	if(ev->detail != GDK_NOTIFY_NONLINEAR) return FALSE;
 	GtkWidget *hbox = (GtkWidget *)g_object_get_data(G_OBJECT(base), "hbox");
-	gtk_widget_hide(hbox);
+    if(timeout > 0) {
+        g_source_remove(timeout);
+        timeout = 0;
+    }
+    timeout = g_timeout_add_seconds(5, (GSourceFunc) gtk_widget_hide, hbox);
 	return TRUE;
 }
-static gboolean control_window_enter_notify_event(GtkWidget *base, GdkEventCrossing *ev, gpointer data)
+static gboolean control_window_enter_notify_event(GtkWidget *base,
+        GdkEventCrossing *ev, gpointer data)
 {
-	printf("enter: %i\n", ev->detail);
-	if(ev->mode != GDK_CROSSING_NORMAL) return FALSE;
-	if(ev->detail != GDK_NOTIFY_NONLINEAR) return FALSE;
 	GtkWidget *hbox = (GtkWidget *)g_object_get_data(G_OBJECT(base), "hbox");
+    if(timeout > 0) {
+        g_source_remove(timeout);
+        timeout = 0;
+    }
 	gtk_widget_show(hbox);
 	return TRUE;
 }
@@ -117,16 +126,14 @@ GtkWidget *create_control_window(GtkWidget *parent)
 {
     GtkWidget *pp_button, *next_button, *prev_button, *ff_button;
     GtkWidget *vol, *progress, *hbox, *play_image;
-    GdkScreen *screen = gtk_window_get_screen(GTK_WINDOW(parent));
-    int new_volume,monitor;
-    GdkRectangle rect;
+    int new_volume;
     /* Create window */
     GtkWidget *base = gtk_event_box_new();
-    GtkWidget *ali = gtk_alignment_new(0,0,1,1);
-/*
-    g_signal_connect(G_OBJECT(base), "enter-notify-event" , G_CALLBACK(control_window_enter_notify_event), NULL);
-    g_signal_connect(G_OBJECT(base), "leave-notify-event" , G_CALLBACK(control_window_leave_notify_event), NULL);
-*/
+    GtkWidget *ali = gtk_alignment_new(0.5,0,0.6,1);
+    g_signal_connect(G_OBJECT(base), "enter-notify-event" , 
+            G_CALLBACK(control_window_enter_notify_event), NULL);
+    g_signal_connect(G_OBJECT(base), "leave-notify-event" ,
+            G_CALLBACK(control_window_leave_notify_event), NULL);
     /* Overwrite background drawing */
     gtk_widget_set_app_paintable(base, TRUE);
     g_signal_connect(G_OBJECT(base), "expose-event",
@@ -136,7 +143,7 @@ GtkWidget *create_control_window(GtkWidget *parent)
     g_object_set_data(G_OBJECT(base), "hbox" , hbox);
     gtk_container_add(GTK_CONTAINER(base), ali);
     gtk_container_add(GTK_CONTAINER(ali), hbox);
-    gtk_container_set_border_width(GTK_CONTAINER(ali), 6);
+    gtk_container_set_border_width(GTK_CONTAINER(ali), 1);
 
     /* Previous button */
     ff_button = gtk_button_new();
@@ -160,7 +167,8 @@ GtkWidget *create_control_window(GtkWidget *parent)
     gmpc_progress_set_hide_text(GMPC_PROGRESS(progress), FALSE);
     gtk_box_pack_start(GTK_BOX(hbox), progress, TRUE, TRUE, 0);
     g_object_set_data(G_OBJECT(base), "progress", progress);
-    g_signal_connect(G_OBJECT(progress), "seek-event", G_CALLBACK(pl3_pb_seek_event), NULL);
+    g_signal_connect(G_OBJECT(progress), "seek-event", G_CALLBACK(pl3_pb_seek_event), 
+            NULL);
 
     /* Previous button */
     prev_button = gtk_button_new();
@@ -198,26 +206,11 @@ GtkWidget *create_control_window(GtkWidget *parent)
     gtk_button_set_relief(GTK_BUTTON(next_button), GTK_RELIEF_NONE);
     gtk_box_pack_start(GTK_BOX(hbox), next_button, FALSE, FALSE, 0);
 
-    /* Move window to right location and set size */
-/*
-    monitor = gdk_screen_get_monitor_at_window(screen, parent->window);
-    gdk_screen_get_monitor_geometry(screen, monitor, &rect);
-    gtk_window_get_size(GTK_WINDOW(parent), &rect.width, &rect.height);
-    gtk_widget_set_size_request(GTK_WIDGET(base), rect.width*0.6, rect.height*0.05);
-    gtk_window_move(GTK_WINDOW(base), rect.width*0.2, rect.height);
-*/
- /*   if (gdk_screen_is_composited(screen))
-    {
-        GdkColormap *colormap = gdk_screen_get_rgba_colormap(screen);
-        if (colormap)
-            gtk_widget_set_colormap(base, colormap);
-        gtk_window_set_opacity(GTK_WINDOW(base), 0.7);
-    }
-   */ 
     /* Change colors */
     control_window_modify_colors(base);
     gtk_widget_show_all(base);
 
+    timeout = g_timeout_add_seconds(5, (GSourceFunc) gtk_widget_hide, hbox);
     return base;
 }
 
@@ -266,17 +259,20 @@ void control_window_status_update(MpdObj * mi, ChangedStatusType what, GtkWidget
     }
     if (what & MPD_CST_VOLUME)
     {
-        int volume = gmpc_widgets_volume_get_volume_level(GMPC_WIDGETS_VOLUME(volume_button));
+        int volume = gmpc_widgets_volume_get_volume_level(
+                GMPC_WIDGETS_VOLUME(volume_button));
         int new_volume = mpd_status_get_volume(connection);
         if (new_volume >= 0 &&
-            mpd_server_check_command_allowed(connection, "setvol") == MPD_SERVER_COMMAND_ALLOWED
-            )
+            mpd_server_check_command_allowed(connection, "setvol") == 
+            MPD_SERVER_COMMAND_ALLOWED
+           )
         {
             gtk_widget_set_sensitive(volume_button, TRUE);
             /* don't do anything if nothing is changed */
             if (new_volume != volume)
             {
-                gmpc_widgets_volume_set_volume_level(GMPC_WIDGETS_VOLUME(volume_button), new_volume );
+                gmpc_widgets_volume_set_volume_level(
+                        GMPC_WIDGETS_VOLUME(volume_button), new_volume );
             }
         } else
         {
@@ -292,5 +288,10 @@ void control_window_status_update(MpdObj * mi, ChangedStatusType what, GtkWidget
 void control_window_destroy(GtkWidget *cw)
 {
     if(cw == NULL) return;
+
+    if(timeout > 0) {
+        g_source_remove(timeout);
+        timeout = 0;
+    }
     gtk_widget_destroy(cw);
 }
