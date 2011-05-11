@@ -7,6 +7,7 @@ image::images/gmpc.png[width="300",alt="",link="images/gmpc.png",float="right"]
 The 11.6 release is another release with the focus on usability and speed. Several 
 widgets are replaced with easier to use ones and often better looking widgets and the overal responsiveness is improved.
 Some bling has been added to improve the visual attractiveness of GMPC.
+The important Metadata provider plugins, the plugins that get you the nice art, are intergrated into GMPC. This should provide a better experience out-of-the-box and makes it easier to deprecate and add providers (without the trouble for distributions to  get new packages accepted).
 
 .Reminder
 NOTE: This version is not yet released. If people will step up and help I hope to relase it in June 2011
@@ -135,8 +136,11 @@ Fixes
 * Code cleanups, added code documentation.
 
 
-Deprecated Plugins
--------------------
+Plugins
+-------
+
+Deprecated
+~~~~~~~~~~
 
 * DiscoGS: Intergrated into GMPC
 * LyrDB: Intergrated into GMPC
@@ -145,13 +149,13 @@ Deprecated Plugins
 * MDCover: To be deprecated by music-tree inside GMPC.
 
 Non Functional Plugins
-----------------------
+~~~~~~~~~~~~~~~~~~~~~~
 
 * Cover Amazon: License issue
 * Last FM radio: Blocked by last.fm
 
 To Be Tested
-------------
+~~~~~~~~~~~~
 
 * Magnatune: The browser + fetcher part
 * Jamendo: The browser + fetcher part
@@ -162,11 +166,11 @@ To Be Tested
 * lyrics: Both leolyrics and other one
 
 Works
------
+~~~~~
 * Last.fm (tested Qball)
 
 Unmaintained
-------------
+~~~~~~~~~~~~
 
 * qosd
 * xosd
