@@ -94,6 +94,8 @@ unfloat::[]
 
 * Add support for thumbnail uri's in metadata system.
 
+* Compacter layout player part. Lot of the intermation is duplicated in now-playing. So 
+reduce size of the player part.
 
 Removed Features
 ----------------
@@ -133,3 +135,41 @@ Fixes
 * Code cleanups, added code documentation.
 
 
+Deprecated Plugins
+-------------------
+
+* DiscoGS: Intergrated into GMPC
+* LyrDB: Intergrated into GMPC
+* Extra Playlist View: Intergrated into GMPC
+* Statistics: Intergrated into GMPC (0.20.0)
+* MDCover: To be deprecated by music-tree inside GMPC.
+
+Non Functional Plugins
+----------------------
+
+* Cover Amazon: License issue
+* Last FM radio: Blocked by last.fm
+
+To Be Tested
+------------
+
+* Magnatune: The browser + fetcher part
+* Jamendo: The browser + fetcher part
+* Avahi: Does it discover MPD? and add it?
+* lyricswiki
+* guitartab
+* dynamic playlist: Needs last.fm plugin
+* lyrics: Both leolyrics and other one
+
+Works
+-----
+* Last.fm (tested Qball)
+
+Unmaintained
+------------
+
+* qosd
+* xosd
+* appindicator
+* playlistsort
+* Tagedit

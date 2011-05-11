@@ -167,7 +167,8 @@ LIBS= \
 	@libxspf_LIBS@\
 	@libxml2_LIBS@\
 	@libx11_LIBS@\
-	@sqlite3_LIBS@
+	@sqlite3_LIBS@\
+	-lz
 
 
 if HAVE_UNIQUE
