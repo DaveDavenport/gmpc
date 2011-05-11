@@ -265,7 +265,7 @@ namespace Gmpc {
                     
                     this.paned = new Gtk.ScrolledWindow(null,null);
                     this.paned.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC);
-                    this.paned.set_shadow_type(Gtk.ShadowType.ETCHED_IN);
+                    this.paned.set_shadow_type(Gtk.ShadowType.NONE);
 					if(use_backdrop) {
 	                    this.container = new Gmpc.MetaData.Widgets.Backdrop(Gmpc.MetaData.Type.ARTIST_ART);
 					}else{

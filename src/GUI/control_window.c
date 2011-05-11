@@ -42,13 +42,13 @@ expose_window(GtkWidget *widget, GdkEventExpose *event, gpointer date)
     cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
     cairo_paint(cr);             /* paint source */
 
-    /* Paint border */
+    /* Paint border 
     cairo_set_source_rgba(cr, .8, .8, .8, .7);
     cairo_rectangle(cr, 0.5,0.5,
         widget->allocation.width-1.0,
         widget->allocation.height-1.0);
     cairo_stroke(cr);
-
+*/
     /* Destroy */
     cairo_destroy(cr);
 
@@ -104,8 +104,8 @@ GtkWidget *create_control_window(GtkWidget *parent)
     int new_volume,monitor;
     GdkRectangle rect;
     /* Create window */
-    GtkWidget *base = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-    /* Setup window to hoover above and not show up */
+    GtkWidget *base = gtk_event_box_new();gtk_window_new(GTK_WINDOW_TOPLEVEL);
+    /* Setup window to hoover above and not show up 
     gtk_window_set_type_hint(GTK_WINDOW(base), GDK_WINDOW_TYPE_HINT_UTILITY);
     gtk_window_set_skip_pager_hint(GTK_WINDOW(base), TRUE);
     gtk_window_set_skip_taskbar_hint(GTK_WINDOW(base), TRUE);
@@ -113,9 +113,9 @@ GtkWidget *create_control_window(GtkWidget *parent)
     gtk_window_set_resizable(GTK_WINDOW(base), FALSE);
     gtk_window_set_keep_above(GTK_WINDOW(base), TRUE);
     gtk_window_set_transient_for(GTK_WINDOW(base), GTK_WINDOW(parent));
-
+	*/
     /* Set border */
-    gtk_container_set_border_width(GTK_CONTAINER(base), 4);
+//    gtk_container_set_border_width(GTK_CONTAINER(base), 4);
 
     /* Overwrite background drawing */
     gtk_widget_set_app_paintable(base, TRUE);
@@ -186,20 +186,21 @@ GtkWidget *create_control_window(GtkWidget *parent)
     gtk_box_pack_start(GTK_BOX(hbox), next_button, FALSE, FALSE, 0);
 
     /* Move window to right location and set size */
+/*
     monitor = gdk_screen_get_monitor_at_window(screen, parent->window);
     gdk_screen_get_monitor_geometry(screen, monitor, &rect);
     gtk_window_get_size(GTK_WINDOW(parent), &rect.width, &rect.height);
     gtk_widget_set_size_request(GTK_WIDGET(base), rect.width*0.6, rect.height*0.05);
     gtk_window_move(GTK_WINDOW(base), rect.width*0.2, rect.height);
-
-    if (gdk_screen_is_composited(screen))
+*/
+ /*   if (gdk_screen_is_composited(screen))
     {
         GdkColormap *colormap = gdk_screen_get_rgba_colormap(screen);
         if (colormap)
             gtk_widget_set_colormap(base, colormap);
         gtk_window_set_opacity(GTK_WINDOW(base), 0.7);
     }
-    
+   */ 
     /* Change colors */
     control_window_modify_colors(base);
     gtk_widget_show_all(base);

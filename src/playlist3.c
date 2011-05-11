@@ -375,14 +375,18 @@ int pl3_cat_tree_button_release_event(GtkTreeView * tree, GdkEventButton * event
 static GtkWidget *control_window = NULL;
 static gboolean pl3_win_state_event(GtkWidget * window, GdkEventWindowState * event, gpointer data)
 {
+	GtkWidget *vbox1 =  GTK_WIDGET(gtk_builder_get_object(pl3_xml, "vbox1"));
     GtkWidget *p = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "alignment1"));
     GtkWidget *h = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "hbox1"));
     GtkWidget *b = (GTK_WIDGET(gtk_builder_get_object(pl3_xml, "menubartest")));
     if (((event->new_window_state) & GDK_WINDOW_STATE_FULLSCREEN))
     {
-		if(control_window == NULL) 
+		if(control_window == NULL) { 
 			control_window = create_control_window(window);
-        gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "bread_crumb")));
+			gtk_box_pack_start(GTK_BOX(vbox1), control_window, FALSE, FALSE, 0);
+			gtk_box_reorder_child(GTK_BOX(vbox1), control_window, 0);
+		}
+		gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "bread_crumb")));
         gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "box_tab_bar")));
         gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "vbox5")));
         gtk_widget_hide(p);
