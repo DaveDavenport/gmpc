@@ -384,7 +384,7 @@ static gboolean pl3_win_state_event(GtkWidget * window, GdkEventWindowState * ev
 		if(control_window == NULL) { 
 			control_window = create_control_window(window);
 			gtk_box_pack_start(GTK_BOX(vbox1), control_window, FALSE, FALSE, 0);
-			gtk_box_reorder_child(GTK_BOX(vbox1), control_window, 0);
+//			gtk_box_reorder_child(GTK_BOX(vbox1), control_window, 0);
 		}
 		gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "bread_crumb")));
         gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "box_tab_bar")));

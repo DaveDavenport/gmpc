@@ -171,11 +171,14 @@ public class Gmpc.Progress : Gtk.VBox
 
         this.label = new Gtk.Label("");
         this.label.set_alignment(0.5f,0.5f);
+	this.label.set_no_show_all(true);
 
         this.pack_start(this.scale, true,true,0);
-        this.pack_end(this.label, false,true,0);
-        this.show_all();
+        this.pack_end(this.label, false,false,0);
+	this.scale.show();
+	this.label.show();
 
+        this.show();
     }
    
     public signal void seek_event (uint seek_time);
