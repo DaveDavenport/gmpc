@@ -70,12 +70,14 @@ static xmlNodePtr get_first_node_by_name(xmlNodePtr xml, xmlChar *name) {
 
 static xmlNodePtr get_next_node_by_name(xmlNodePtr xml, xmlChar *name)
 {
+    xmlNodePtr iter;
 	if(name == NULL || xml == NULL) return NULL;
-	for(;xml;xml=xml->next)
+	for(iter= xml->next;iter;iter=iter->next)
 	{
-		if(xml->name && xmlStrEqual(xml->name, name))
-			return xml;
-	}
+		if(iter->name && xmlStrEqual(iter->name, name)){
+			return iter;
+        }
+    }
 	return NULL;
 }
 
@@ -141,7 +143,6 @@ static GList* __lastfm_art_xml_get_image(const char* data, const gint size, cons
     xmlDocPtr doc;
 	if(size <= 0 || data == NULL || data[0] != '<')
 		return NULL;
-
 	doc = xmlParseMemory(data,size);
 	if(doc)
 	{
@@ -153,7 +154,7 @@ static GList* __lastfm_art_xml_get_image(const char* data, const gint size, cons
             if(cur)
             {
                 xmlNodePtr cur2 = get_first_node_by_name(cur, BAD_CAST"image"); 
-                for(;cur2;cur2 = get_next_node_by_name(cur2, BAD_CAST"image"))
+                for(;cur2!= NULL ;cur2 = get_next_node_by_name(cur2, BAD_CAST"image"))
 				{
 					xmlChar *temp = xmlGetProp(cur2, BAD_CAST"size");
 					if(temp)
