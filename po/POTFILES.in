@@ -93,4 +93,5 @@ src/GUI/title_header.c
 
 #Providers
 src/Providers/music-tree.c
+src/Providers/LastFM.c
 #src/Providers/gmc-plugin.c

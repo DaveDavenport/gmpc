@@ -1,8 +1,8 @@
 if ENABLE_TEST
 noinst_PROGRAMS = \
-   discogs 
+   lastfm 
 
-discogs_CFLAGS = @CFLAGS@\
+lastfm_CFLAGS = @CFLAGS@\
 		@glib_CFLAGS@\
 		@libmpd_CFLAGS@\
 		@gtk_CFLAGS@\
@@ -17,24 +17,24 @@ discogs_CFLAGS = @CFLAGS@\
         -DPIXMAP_PATH="\"\""\
         -DGLADE_PATH="\"\""
 
-discogs_LDADD = @LIBS@\
+lastfm_LDADD = @LIBS@\
 		@libmpd_LIBS@\
 		@glib_LIBS@\
 		@gtk_LIBS@\
-        @libsoup_LIBS@\
-        @sqlite3_LIBS@\
-	@libxml2_LIBS@\
-	-lz
+		@libsoup_LIBS@\
+		@sqlite3_LIBS@\
+		@libxml2_LIBS@\
+		-lz
 
-discogs_SOURCES = \
+lastfm_SOURCES = \
 		test.c 
 
-nodist_discogs_SOURCES = \
+nodist_lastfm_SOURCES = \
 		$(top_srcdir)/src/plugin.c\
 		$(top_srcdir)/src/Tools/misc.c\
 		$(top_srcdir)/src/MetaData/metadata.c\
 		$(top_srcdir)/src/Tools/gmpc_easy_download.c\
-		$(top_srcdir)/src/Providers/DiscoGS.c\
+		$(top_srcdir)/src/Providers/LastFM.c\
         $(top_srcdir)/src/vala/gmpc-plugin.c\
 		$(top_srcdir)/src/MetaData/metadata-cache-sqlite.c\
 		$(top_srcdir)/src/MetaData/metadata-cache.c

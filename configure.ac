@@ -475,6 +475,7 @@ test/PixbufCache/Makefile
 test/AsyncImage/Makefile
 test/Misc/Makefile
 test/DiscoGS/Makefile
+test/LastFM/Makefile
 ])
 echo ""
 echo ""

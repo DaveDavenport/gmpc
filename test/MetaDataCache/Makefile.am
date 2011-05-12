@@ -23,7 +23,8 @@ mtc_test_LDADD = @LIBS@\
         @gtk_LIBS@\
         @sqlite3_LIBS@\
         @libsoup_LIBS@\
-		@glib_LIBS@
+		@glib_LIBS@\
+		-lz
 
 mtc_test_SOURCES = \
 		mtc_test.c

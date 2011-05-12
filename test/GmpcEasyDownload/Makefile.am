@@ -20,7 +20,8 @@ gmpc_easy_download_LDADD = @LIBS@\
 		@libmpd_LIBS@\
 		@glib_LIBS@\
 		@gtk_LIBS@\
-        @libsoup_LIBS@
+        @libsoup_LIBS@\
+	-lz
 
 gmpc_easy_download_SOURCES = \
 		ged.c 

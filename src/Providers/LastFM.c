@@ -108,9 +108,6 @@ static GList *__lastfm_art_xml_get_artist_image(const char *data, gint size, Met
 							xmlChar *temp = xmlGetProp(cur4, BAD_CAST"name");
 							if(temp)
 							{
-								/**
-								 * We want large image, but if that is not available, get the medium one 
-								 */
 								if(xmlStrEqual(temp, BAD_CAST"original"))
 								{
 									xmlChar *xurl = xmlNodeGetContent(cur4);
@@ -120,7 +117,8 @@ static GList *__lastfm_art_xml_get_artist_image(const char *data, gint size, Met
 											mtd->type = mtype;
 											mtd->plugin_name = lastfm_plugin.name;
 											mtd->content_type = META_DATA_CONTENT_URI;
-											mtd->content  = g_strdup((char *)xurl); mtd->size = 0;
+											mtd->content  = g_strdup((char *)xurl);
+											mtd->size = 0;
 											list =g_list_prepend(list, mtd);
 										}
 										xmlFree(xurl);
@@ -154,55 +152,51 @@ static GList* __lastfm_art_xml_get_image(const char* data, const gint size, cons
             xmlNodePtr cur = get_first_node_by_name(root,BAD_CAST type);
             if(cur)
             {
-                xmlNodePtr cur2 = cur->xmlChildrenNode;
-                for(;cur2;cur2 = cur2->next)
-                {
-                    if(cur2->name)
-                    {
-                        if (xmlStrEqual(cur2->name, BAD_CAST"image"))
-                        {
-
-                            xmlChar *temp = xmlGetProp(cur2, BAD_CAST"size");
-                            if(temp)
-                            {
-                                /**
-                                 * We want large image, but if that is not available, get the medium one 
-                                 */
-                                if(xmlStrEqual(temp, BAD_CAST"medium"))
-                                {
-                                    xmlChar *xurl = xmlNodeGetContent(cur2);
-                                    if(xurl){
-                                        if(strstr((char *)xurl, "noartist") == NULL){
-                                            MetaData *mtd = meta_data_new();
-                                            mtd->type = mtype;
-                                            mtd->plugin_name = lastfm_plugin.name;
-                                            mtd->content_type = META_DATA_CONTENT_URI;
-                                            mtd->content  = g_strdup((char *)xurl); mtd->size = 0;
-                                            list =g_list_append(list, mtd);
-                                        }
-                                        xmlFree(xurl);
-                                    }
-                                }else if(xmlStrEqual(temp, BAD_CAST"large") || xmlStrEqual(temp, BAD_CAST"extralarge"))
-                                {
-                                    xmlChar *xurl = xmlNodeGetContent(cur2);
-                                    if(xurl)
-                                    {
-                                        if(strstr((char *)xurl, "noartist") == NULL){
-                                            MetaData *mtd = meta_data_new();
-                                            mtd->type = mtype;
-                                            mtd->plugin_name = lastfm_plugin.name;
-                                            mtd->content_type = META_DATA_CONTENT_URI;
-                                            mtd->content  = g_strdup((char *)xurl); mtd->size = 0;
-                                            list =g_list_prepend(list, mtd);
-                                        }
-                                        xmlFree(xurl);
-                                    }
-                                }
-                                xmlFree(temp);
-                            }
-                        }
-                    }
-                }
+                xmlNodePtr cur2 = get_first_node_by_name(cur, BAD_CAST"image"); 
+                for(;cur2;cur2 = get_next_node_by_name(cur2, BAD_CAST"image"))
+				{
+					xmlChar *temp = xmlGetProp(cur2, BAD_CAST"size");
+					if(temp)
+					{
+						/**
+						 * We want large image, but if that is not available, get the medium one 
+						 */
+						if(xmlStrEqual(temp, BAD_CAST"medium"))
+						{
+							xmlChar *xurl = xmlNodeGetContent(cur2);
+							if(xurl){
+								if(strstr((char *)xurl, "noartist") == NULL){
+									MetaData *mtd = meta_data_new();
+									mtd->type = mtype;
+									mtd->plugin_name = lastfm_plugin.name;
+									mtd->content_type = META_DATA_CONTENT_URI;
+									mtd->content  = g_strdup((char *)xurl);
+									mtd->size = 0;
+									list =g_list_append(list, mtd);
+								}
+								xmlFree(xurl);
+							}
+						}else if(xmlStrEqual(temp, BAD_CAST"large") || 
+								xmlStrEqual(temp, BAD_CAST"extralarge"))
+						{
+							xmlChar *xurl = xmlNodeGetContent(cur2);
+							if(xurl)
+							{
+								if(strstr((char *)xurl, "noartist") == NULL){
+									MetaData *mtd = meta_data_new();
+									mtd->type = mtype;
+									mtd->plugin_name = lastfm_plugin.name;
+									mtd->content_type = META_DATA_CONTENT_URI;
+									mtd->content  = g_strdup((char *)xurl);
+									mtd->size = 0;
+									list =g_list_prepend(list, mtd);
+								}
+								xmlFree(xurl);
+							}
+						}
+						xmlFree(temp);
+					}
+				}
             }
         }
 		xmlFreeDoc(doc);
@@ -225,38 +219,35 @@ static MetaData* __lastfm_art_xml_get_genre_similar(const gchar* l_data, gint l_
 		xmlNodePtr cur = get_first_node_by_name(root, BAD_CAST "similartags");
 		if(cur != NULL)
 		{
-			xmlNodePtr cur2 = cur->xmlChildrenNode;
-			for(; cur2 != NULL; cur2 = cur2->next)
+			xmlNodePtr cur2 = get_first_node_by_name(cur, BAD_CAST"tag");
+			for(; cur2 != NULL; cur2 = get_next_node_by_name(cur2,BAD_CAST"tag")) 
 			{
-				if(xmlStrEqual(cur2->name, BAD_CAST "tag"))
+				xmlNodePtr cur3 = get_first_node_by_name(cur2,BAD_CAST"name"); 
+				for(; cur3 != NULL; cur3 = get_next_node_by_name(cur3, BAD_CAST "name"))
 				{
-					xmlNodePtr cur3 = cur2->xmlChildrenNode;
-					for(; cur3 != NULL; cur3 = cur3->next)
+					xmlChar* temp = xmlNodeGetContent(cur3);
+					if(temp)
 					{
-						if(xmlStrEqual(cur3->name, BAD_CAST "name"))
+						if(!mtd)
 						{
-							xmlChar* temp = xmlNodeGetContent(cur3);
-							if(temp)
-							{
-								if(!mtd)
-								{
-									mtd = meta_data_new();
-									mtd->type = META_GENRE_SIMILAR;
-									mtd->plugin_name = lastfm_plugin.name;
-									mtd->content_type = META_DATA_CONTENT_TEXT_LIST;
-									mtd->size = 0;
-								}
-								mtd->size++;
-								mtd->content = g_list_prepend((GList*) mtd->content, g_strdup((char *)temp));
-                                xmlFree(temp);
-                                break;
-                            }
+							mtd = meta_data_new();
+							mtd->type = META_GENRE_SIMILAR;
+							mtd->plugin_name = lastfm_plugin.name;
+							mtd->content_type = META_DATA_CONTENT_TEXT_LIST;
+							mtd->size = 0;
 						}
+						mtd->size++;
+						mtd->content = g_list_prepend((GList*) mtd->content, 
+								g_strdup((char *)temp));
+						xmlFree(temp);
+						break;
 					}
 				}
 			}
-			if(mtd != NULL)
-				mtd->content = g_list_reverse((GList*) mtd->content); /* to have the match-order */
+			if(mtd != NULL) {
+				/* to have the match-order */
+				mtd->content = g_list_reverse((GList*) mtd->content);
+			}
 		}
 		xmlFreeDoc(doc);
 	}
@@ -284,36 +275,32 @@ static MetaData* __lastfm_art_xml_get_artist_similar(const gchar* data, gint siz
 	cur = get_first_node_by_name(root, BAD_CAST "similarartists");
 	if(cur)
 	{
-		xmlNodePtr cur2 = cur->xmlChildrenNode;
-		for(;cur2;cur2=cur2->next)
+		xmlNodePtr cur2 = get_first_node_by_name(cur, BAD_CAST "artist");
+		for(;cur2;cur2=get_next_node_by_name(cur2, BAD_CAST "artist"))
 		{
-			if(xmlStrEqual(cur2->name, BAD_CAST "artist"))
+			xmlNodePtr cur3 = get_first_node_by_name(cur2, BAD_CAST "name");
+			for(;cur3;cur3=get_next_node_by_name(cur3, BAD_CAST"name"))
 			{
-				xmlNodePtr cur3 = cur2->xmlChildrenNode;
-				for(;cur3;cur3=cur3->next)
+				xmlChar *temp = xmlNodeGetContent(cur3);
+				if(temp)
 				{
-					if(xmlStrEqual(cur3->name, BAD_CAST "name"))
-					{
-						xmlChar *temp = xmlNodeGetContent(cur3);
-						if(temp)
-						{
-							if(!mtd) {
-								mtd = meta_data_new();
-								mtd->type = META_ARTIST_SIMILAR;
-								mtd->plugin_name = lastfm_plugin.name;
-								mtd->content_type = META_DATA_CONTENT_TEXT_LIST;
-								mtd->size = 0;
-							}
-							mtd->size++;
-							mtd->content = g_list_prepend((GList*) mtd->content, g_strdup((char *)temp));
-							xmlFree(temp);
-						}
+					if(!mtd) {
+						mtd = meta_data_new();
+						mtd->type = META_ARTIST_SIMILAR;
+						mtd->plugin_name = lastfm_plugin.name;
+						mtd->content_type = META_DATA_CONTENT_TEXT_LIST;
+						mtd->size = 0;
 					}
+					mtd->size++;
+					mtd->content = g_list_prepend((GList*) mtd->content,
+							g_strdup((char *)temp));
+					xmlFree(temp);
 				}
 			}
 		}
-		if(mtd != NULL)
+		if(mtd != NULL) {
 			mtd->content = g_list_reverse((GList*) mtd->content);
+		}
 	}
 	xmlFreeDoc(doc);
 	return mtd;
@@ -339,44 +326,42 @@ static MetaData* __lastfm_art_xml_get_song_similar(const gchar* data, gint size)
 	cur = get_first_node_by_name(root, BAD_CAST "similartracks");
 	if(cur)
 	{
-		xmlNodePtr cur2 = cur->xmlChildrenNode;
-		for(;cur2;cur2=cur2->next)
+		xmlNodePtr cur2 =  get_first_node_by_name(cur, BAD_CAST"track");
+		for(;cur2;cur2= get_next_node_by_name(cur2, BAD_CAST"track"))
 		{
-			if(xmlStrEqual(cur2->name, BAD_CAST"track"))
+			xmlNodePtr cur3 = cur2->xmlChildrenNode;
+			xmlChar *artist = NULL;
+			xmlChar *title = NULL;
+			for(;cur3;cur3=cur3->next)
 			{
-				xmlNodePtr cur3 = cur2->xmlChildrenNode;
-				xmlChar *artist = NULL;
-				xmlChar *title = NULL;
-				for(;cur3;cur3=cur3->next)
+				if(xmlStrEqual(cur3->name, BAD_CAST"name"))
 				{
-					if(xmlStrEqual(cur3->name, BAD_CAST"name"))
-					{
-						xmlChar *temp = xmlNodeGetContent(cur3);
-						title = temp; 
-					}
-					else if (xmlStrEqual(cur3->name, BAD_CAST"artist")) 
-					{
-						xmlNodePtr cur4 = get_first_node_by_name(cur3, BAD_CAST"name");
-						if(cur4){
-							xmlChar *temp = xmlNodeGetContent(cur4);
-							artist = temp; 
-						}
+					xmlChar *temp = xmlNodeGetContent(cur3);
+					title = temp; 
+				}
+				else if (xmlStrEqual(cur3->name, BAD_CAST"artist")) 
+				{
+					xmlNodePtr cur4 = get_first_node_by_name(cur3, BAD_CAST"name");
+					if(cur4){
+						xmlChar *temp = xmlNodeGetContent(cur4);
+						artist = temp; 
 					}
 				}
-				if(artist && title) {
-					if(!mtd) {
-						mtd = meta_data_new();
-						mtd->type = META_SONG_SIMILAR;
-						mtd->plugin_name = lastfm_plugin.name;
-						mtd->content_type = META_DATA_CONTENT_TEXT_LIST;
-						mtd->size = 0;
-					}
-					mtd->size++;
-					mtd->content = g_list_prepend((GList*) mtd->content, g_strdup_printf("%s::%s", artist, title));
-				}
-				if(artist) xmlFree(artist);
-				if(title) xmlFree(title);
 			}
+			if(artist && title) {
+				if(!mtd) {
+					mtd = meta_data_new();
+					mtd->type = META_SONG_SIMILAR;
+					mtd->plugin_name = lastfm_plugin.name;
+					mtd->content_type = META_DATA_CONTENT_TEXT_LIST;
+					mtd->size = 0;
+				}
+				mtd->size++;
+				mtd->content = g_list_prepend((GList*) mtd->content,
+						g_strdup_printf("%s::%s", artist, title));
+			}
+			if(artist) xmlFree(artist);
+			if(title) xmlFree(title);
 		}
 		if(mtd != NULL)
 			mtd->content = g_list_reverse((GList*) mtd->content);
@@ -587,8 +572,9 @@ static void similar_genre_callback(const GEADAsyncHandler *handle, GEADStatus st
 		goffset size = 0;
 		const gchar* data = gmpc_easy_handler_get_data(handle, &size);
 		MetaData* mtd = __lastfm_art_xml_get_genre_similar(data, size);
-		if(mtd)
+		if(mtd) {
 			list = g_list_append(list, mtd);
+		}
 	}
 	q->callback(list, q->user_data);
 	g_slice_free(Query, q);
@@ -607,53 +593,15 @@ static void biography_callback(const GEADAsyncHandler *handle, GEADStatus status
 		goffset size=0;
 		const gchar *data = gmpc_easy_handler_get_data(handle, &size);
 		char* url = __lastfm_art_xml_get_artist_bio(data, size);
-		/* strip html */
 		if(url)
 		{
-			int i=0;
-			int j=0,depth=0;
-			int url_length = strlen(url);
-			for(j=0; j < url_length ;j++)
-			{
-				if(url[j] == '<') depth++;
-				else if(url[j] == '>' && depth) depth--;
-				else if(depth == 0)
-				{
-					/* Quick and dirty html unescape*/
-					if(strncasecmp(&url[j], "&lt;", 4) == 0){
-						url[i] = url[j];	
-						i++;
-						j+=3;
-					}else if (strncasecmp(&url[j], "&gt;", 4) == 0){
-						url[i] = url[j];	
-						i++;
-						j+=3;
-					}else if (strncasecmp(&url[j], "&quot;", 6) == 0){
-						url[i] = url[j];	
-						i++;
-						j+=5;
-					}else if (strncasecmp(&url[j], "&amp;", 5) == 0){
-						url[i] = url[j];	
-						i++;
-						j+=4;
-					}
-					else{
-						url[i] = url[j];	
-						i++;
-					}
-				}
-			}
-			url[i] = '\0';
-            if(i > 0){
-                MetaData *mtd = meta_data_new();
-                mtd->type = META_ARTIST_TXT;
-                mtd->plugin_name = lastfm_plugin.name;
-                mtd->content_type = META_DATA_CONTENT_TEXT;
-                mtd->content = url;
-                mtd->size = i;
-                list = g_list_append(list, mtd);
-            }
-            else g_free(url);
+			MetaData *mtd = meta_data_new();
+			mtd->type = META_ARTIST_TXT;
+			mtd->plugin_name = lastfm_plugin.name;
+			mtd->content_type = META_DATA_CONTENT_HTML;
+			mtd->content = url;
+			mtd->size = -1;
+			list = g_list_append(list, mtd);
 		}
 
 	}
@@ -664,7 +612,8 @@ static void biography_callback(const GEADAsyncHandler *handle, GEADStatus status
  * Get album images new style
  */
 
-static void album_image_callback(const GEADAsyncHandler *handle, GEADStatus status, gpointer user_data)
+static void album_image_callback(const GEADAsyncHandler *handle,
+		GEADStatus status, gpointer user_data)
 {
 	Query *q = (Query *)user_data;
 	GList *list = NULL;
@@ -681,7 +630,8 @@ static void album_image_callback(const GEADAsyncHandler *handle, GEADStatus stat
 /**
  * Get artist image new style
  */
-static void artist_image_callback(const GEADAsyncHandler *handle, GEADStatus status, gpointer user_data)
+static void artist_image_callback(const GEADAsyncHandler *handle,
+		GEADStatus status, gpointer user_data)
 {
 	Query *q = (Query *)user_data;
 	GList *list = NULL;
@@ -697,7 +647,10 @@ static void artist_image_callback(const GEADAsyncHandler *handle, GEADStatus sta
 	g_slice_free(Query, q);
 }
 
-static void lastfm_fetch_get_uris(mpd_Song *song, MetaDataType type, void (*callback)(GList *list, gpointer data), gpointer user_data)
+static void lastfm_fetch_get_uris(mpd_Song *song,
+		MetaDataType type,
+		void (*callback)(GList *list, gpointer data),
+		gpointer user_data)
 {
 	g_debug("Query last.fm api v2");
     if(song->artist != NULL && type == META_ARTIST_ART && 
@@ -781,8 +734,10 @@ static void lastfm_fetch_get_uris(mpd_Song *song, MetaDataType type, void (*call
 		g_free(furl);
 
 		return;
-    }else if (song->title != NULL && song->artist != NULL && type == META_SONG_SIMILAR && cfg_get_single_value_as_int_with_default(config, "cover-lastfm", "fetch-similar-song", TRUE))
-    {
+    }else if (song->title != NULL && song->artist != NULL && 
+			type == META_SONG_SIMILAR &&
+			cfg_get_single_value_as_int_with_default(config, "cover-lastfm", "fetch-similar-song", TRUE))
+	{
 
         char furl[1024];
         char *artist = gmpc_easy_download_uri_escape(song->artist);
@@ -814,25 +769,14 @@ static gmpcMetaDataPlugin lf_cover = {
 	.get_metadata = lastfm_fetch_get_uris
 };
 
-static void lastfm_init(void)
-{
-	bindtextdomain(GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
-	bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
-}
-static const gchar *lastfm_get_translation_domain(void)
-{
-    return GETTEXT_PACKAGE;
-}
 gmpcPlugin lastfm_plugin = {
 	.name           = N_("Last FM metadata fetcher (internal)"),
 	.version        = {0,20,0},
 	.plugin_type    = GMPC_PLUGIN_META_DATA|GMPC_INTERNALL,
-    .init           = lastfm_init,
 	.metadata       = &lf_cover,
     .pref           = &lf_pref,
 	.get_enabled    = lastfm_get_enabled,
-	.set_enabled    = lastfm_set_enabled,
-    .get_translation_domain = lastfm_get_translation_domain
+	.set_enabled    = lastfm_set_enabled
 };
 
 /* vim:set ts=4 sw=4: */
