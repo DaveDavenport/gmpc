@@ -44,6 +44,7 @@
  */
 GmpcBrowsersMetadata *browsers_metadata = NULL;
 extern gmpcPlugin discogs_plugin;
+extern gmpcPlugin lastfm_plugin;
 
 void plugin_manager_load_internal_plugins(void)
 {
@@ -100,6 +101,7 @@ void plugin_manager_load_internal_plugins(void)
     plugin_add_new(GMPC_PLUGIN_BASE(pl3_messages), 0, NULL);
     /** Provider */
     plugin_add(&discogs_plugin, 0, NULL);
+    plugin_add(&lastfm_plugin, 0, NULL);
     plugin_add_new((GmpcPluginBase *) 
             gmpc_provider_music_tree_new(),
             0, NULL);

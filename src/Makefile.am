@@ -21,6 +21,7 @@ PLUGIN_FILES=\
     Providers/HTBackdrops.vala\
     Providers/LyrDB.vala\
     Providers/DiscoGS.c\
+    Providers/LastFM.c\
     Plugins/extraplaylist.c
 
 
