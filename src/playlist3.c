@@ -174,10 +174,11 @@ static void pl3_initialize_tree(void)
         }
 		TEC("setup %s", gmpc_plugin_get_name(plugins[i]))
 	}
-
-    gtk_tree_selection_select_path(sel, path);
+	
     gtk_tree_view_set_cursor(GTK_TREE_VIEW(gtk_builder_get_object(pl3_xml, "cat_tree")), path, NULL, FALSE);
+	TEC("set cursor");
     gtk_tree_path_free(path);
+	TEC("finish set");
 }
 
 
@@ -491,7 +492,7 @@ void pl3_push_statusbar_message(const char *mesg)
  */
 void pl3_push_rsb_message(const char *string)
 {
-    gtk_statusbar_push(GTK_STATUSBAR(gtk_builder_get_object(pl3_xml, "statusbar2")), 0, string);
+    gtk_statusbar_push(GTK_STATUSBAR(gtk_builder_get_object(pl3_xml, "statusbar1")), 0, string);
 }
 
 
@@ -991,8 +992,7 @@ void create_playlist3(void)
     /**
      * The new progress bar
      */
-    pb = (GtkWidget *) gmpc_progress_new();
-    gtk_box_pack_start(GTK_BOX(gtk_builder_get_object(pl3_xml, "hbox_progress")), pb, TRUE, TRUE, 0);
+    pb = (GtkWidget *) gtk_builder_get_object(pl3_xml, "hbox_progress");
     gtk_widget_show(pb);
     g_signal_connect(G_OBJECT(pb), "seek-event", G_CALLBACK(pl3_pb_seek_event), NULL);
 
@@ -1057,6 +1057,8 @@ void create_playlist3(void)
     gtk_box_pack_start(GTK_BOX
         (gtk_builder_get_object(pl3_xml, "hbox_playlist_player")), metaimage_album_art, FALSE, TRUE, 0);
 
+    gtk_box_reorder_child(GTK_BOX
+        (gtk_builder_get_object(pl3_xml, "hbox_playlist_player")), metaimage_album_art, 0);
     gmpc_metaimage_set_size(GMPC_METAIMAGE(metaimage_album_art), ALBUM_SIZE_LARGE);
     gmpc_metaimage_set_no_cover_icon(GMPC_METAIMAGE(metaimage_album_art), (char *)"gmpc");
     gmpc_metaimage_set_connection(GMPC_METAIMAGE(metaimage_album_art), connection);
@@ -1877,7 +1879,7 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
     if (what & MPD_CST_NEXTSONG)
     {
 
-        GtkWidget *next_button = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "button9"));
+        GtkWidget *next_button = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "next_button"));
         if (next_button)
         {
             int i = mpd_player_get_next_song_id(mi);

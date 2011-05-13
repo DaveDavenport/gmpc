@@ -341,36 +341,35 @@ static void pl3_file_browser_replace_folder(void)
 /* add's the toplevel entry for the file browser, it also add's a fantom child */
 static void pl3_file_browser_add(GtkWidget * cat_tree)
 {
-	GtkTreeIter iter, child;
+	INIT_TIC_TAC()
+	GtkTreeIter iter;
 	GtkTreePath *path;
 	gint pos = cfg_get_single_value_as_int_with_default(config, "file-browser", "position", 2);
+	
+	TEC("get pos ")
 	playlist3_insert_browser(&iter, pos);
+	TEC("insert browser")
 	gtk_list_store_set(GTK_LIST_STORE(pl3_tree), &iter,
 					   PL3_CAT_TYPE, file_browser_plug.id,
 					   PL3_CAT_TITLE, _("Database"), PL3_CAT_ICON_ID, "gmpc-database", -1);
-	/* add fantom child for lazy tree */
+	TEC("set list store")
 
 	if (pl3_fb_tree_ref)
 	{
 		gtk_tree_row_reference_free(pl3_fb_tree_ref);
 		pl3_fb_tree_ref = NULL;
 	}
+	TEC("Free references")
+	
 	path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_tree), &iter);
 	if (path)
 	{
 		pl3_fb_tree_ref = gtk_tree_row_reference_new(GTK_TREE_MODEL(pl3_tree), path);
 		gtk_tree_path_free(path);
 	}
+	TEC("New references")
 
-	if (pl3_fb_tree == NULL)
-	{
-		pl3_file_browser_init();
-	}
 
-	gtk_tree_store_append(pl3_fb_dir_store, &iter, NULL);
-	gtk_tree_store_set(pl3_fb_dir_store, &iter,
-					   PL3_FB_ICON, "gtk-open", PL3_FB_NAME, "/", PL3_FB_PATH, "/", PL3_FB_OPEN, FALSE, -1);
-	gtk_tree_store_append(pl3_fb_dir_store, &child, &iter);
 }
 
 static int directory_sort_func(gpointer ppaa, gpointer ppbb, gpointer data)
@@ -711,7 +710,12 @@ static void pl3_file_browser_selected(GtkWidget * container)
 {
 	if (pl3_fb_tree == NULL)
 	{
+		GtkTreeIter iter,child;
 		pl3_file_browser_init();
+		gtk_tree_store_append(pl3_fb_dir_store, &iter, NULL);
+		gtk_tree_store_set(pl3_fb_dir_store, &iter,
+				PL3_FB_ICON, "gtk-open", PL3_FB_NAME, "/", PL3_FB_PATH, "/", PL3_FB_OPEN, FALSE, -1);
+		gtk_tree_store_append(pl3_fb_dir_store, &child, &iter);
 	}
 
 	gtk_container_add(GTK_CONTAINER(container), pl3_fb_vbox);
@@ -1222,17 +1226,20 @@ static void pl3_file_browser_connection_changed(MpdObj * mi, int connect, gpoint
 {
 	if (connect)
 	{
-		GtkTreePath *path = gtk_tree_path_new_from_string("0");
-		if (mpd_stats_get_total_songs(connection) == 0)
+		if(pl3_fb_tree != NULL)
 		{
-			gtk_widget_show(pl3_fb_warning_box);
-		} else
-		{
-			gtk_widget_hide(pl3_fb_warning_box);
-		}
+			GtkTreePath *path = gtk_tree_path_new_from_string("0");
+			if (mpd_stats_get_total_songs(connection) == 0)
+			{
+				gtk_widget_show(pl3_fb_warning_box);
+			} else
+			{
+				gtk_widget_hide(pl3_fb_warning_box);
+			}
 
-		gtk_tree_view_expand_to_path(GTK_TREE_VIEW(pl3_fb_dir_tree), path);
-		gtk_tree_path_free(path);
+			gtk_tree_view_expand_to_path(GTK_TREE_VIEW(pl3_fb_dir_tree), path);
+			gtk_tree_path_free(path);
+		}
 	} else
 		pl3_file_browser_disconnect();
 }
