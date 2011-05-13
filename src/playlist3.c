@@ -876,7 +876,9 @@ void create_playlist3(void)
 	TEC("Setup dialog url hook")
     /* load gui desciption */
     path = gmpc_get_full_glade_path("playlist3.ui");
+	TEC("get path")
     pl3_xml = gtk_builder_new();
+	TEC("create builder")
     if(gtk_builder_add_from_file(pl3_xml, path,&error) == 0)
     {
         /*
@@ -1084,6 +1086,7 @@ void create_playlist3(void)
         pl3_wsize.y = cfg_get_single_value_as_int_with_default(config, "playlist", "ypos", 0);
         pl3_wsize.width = cfg_get_single_value_as_int_with_default(config, "playlist", "width", 0);
         pl3_wsize.height = cfg_get_single_value_as_int_with_default(config, "playlist", "height", 0);
+		TEC("get settings")
         /* restore location + position */
         /*pl3_show_and_position_window(); */
 
@@ -1091,11 +1094,13 @@ void create_playlist3(void)
         {
             gtk_window_move(GTK_WINDOW(playlist3_get_window()), pl3_wsize.x, pl3_wsize.y);
         }
+		TEC("move window settings")
         if (pl3_wsize.height > 0 && pl3_wsize.width > 0)
         {
             g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "restore size %i %i\n", pl3_wsize.width, pl3_wsize.height);
             gtk_window_resize(GTK_WINDOW(playlist3_get_window()), pl3_wsize.width, pl3_wsize.height);
         }
+		TEC("resize window settings")
         /* restore pane position */
         if (cfg_get_single_value_as_int(config, "playlist", "pane-pos") != CFG_INT_NOT_DEFINED)
         {
@@ -1103,18 +1108,19 @@ void create_playlist3(void)
                 (gtk_builder_get_object(pl3_xml, "hpaned1")),
                 cfg_get_single_value_as_int(config, "playlist", "pane-pos"));
         }
+		TEC("set pane window settings")
         if (maximized)
             gtk_window_maximize(GTK_WINDOW(playlist3_get_window()));
+		TEC("maximize pane window settings")
         /**
          * restore zoom level
          */
-        gtk_widget_show(playlist3_get_window());
-    } else
-    {
-        gtk_widget_show(playlist3_get_window());
     }
-    pl3_zoom = cfg_get_single_value_as_int_with_default(config, "playlist", "zoomlevel", PLAYLIST_NO_ZOOM);
+	gtk_widget_show(playlist3_get_window());
+	TEC("Show window")
+	pl3_zoom = cfg_get_single_value_as_int_with_default(config, "playlist", "zoomlevel", PLAYLIST_NO_ZOOM);
     playlist_zoom_level_changed();
+	TEC("zoom level")
 
 	TEC("Restore state")
     pl3_update_go_menu();

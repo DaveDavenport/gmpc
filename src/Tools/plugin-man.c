@@ -165,7 +165,6 @@ void plugin_manager_save_state(void)
 void plugin_manager_connection_changed(MpdObj *mi, const int connected)
 {
     int i = 0;
-    INIT_TIC_TAC();
     for (i = 0; i < num_plugins; i++)
     {
         g_log(LOG_DOMAIN,
@@ -174,14 +173,12 @@ void plugin_manager_connection_changed(MpdObj *mi, const int connected)
                 gmpc_plugin_get_name(plugins[i]));
 
         gmpc_plugin_mpd_connection_changed(plugins[i], mi, connected, NULL);
-        TEC("Connection changed plugin: %s", gmpc_plugin_get_name(plugins[i]));
     }
 }
 
 void plugin_manager_status_changed(MpdObj *mi, const ChangedStatusType what)
 {
     int i = 0;
-    INIT_TIC_TAC();
     for (i = 0; i < num_plugins; i++)
     {
         g_log(LOG_DOMAIN,
@@ -189,7 +186,6 @@ void plugin_manager_status_changed(MpdObj *mi, const ChangedStatusType what)
                 "Status changed plugin: %s\n",
                 gmpc_plugin_get_name(plugins[i]));
         gmpc_plugin_status_changed(plugins[i], mi, what);
-        TEC("Status changed plugin: %s", gmpc_plugin_get_name(plugins[i]));
     }
 }
 
