@@ -130,7 +130,7 @@ void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userd
 
 #define TAC(a,ARGS...) g_get_current_time(&stop123);\
     TIMER_SUB(start123, stop123, diff123);\
-    printf(a": %lu s, %lu us\n",##ARGS, (unsigned long)( diff123.tv_sec),(unsigned long)( diff123.tv_usec));    
+    printf("%lu.%06lu:%s: "a"\n", (unsigned long)( diff123.tv_sec),(unsigned long)( diff123.tv_usec),__FUNCTION__,##ARGS);    
 
 #define TOC(a,ARGS...) TAC(a,##ARGS);\
     start123 = stop123;

@@ -51,7 +51,7 @@ void cfg_set_single_value_as_int(config_obj * cfg, const char *class,
 {
 }
 
-static int queries = 4;
+static int queries = 6;
 void callback(GList *list, gpointer data)
 {
     GMainLoop *lop = (GMainLoop *)data;

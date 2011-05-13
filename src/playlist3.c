@@ -156,20 +156,24 @@ static void pl3_initialize_tree(void)
     int i;
     GtkTreePath *path;
     GtkTreeSelection *sel;
+	GtkWidget *cat_tree = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "cat_tree"));
+
+	INIT_TIC_TAC()
 
     path = gtk_tree_path_new_from_string("0");
     sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(gtk_builder_get_object(pl3_xml, "cat_tree")));
-
+	TEC("Get selection");
     for (i = 0; i < num_plugins; i++)
     {
         if (gmpc_plugin_is_browser(plugins[i]))
         {
             if (gmpc_plugin_get_enabled(plugins[i]))
             {
-                gmpc_plugin_browser_add(plugins[i], GTK_WIDGET(gtk_builder_get_object(pl3_xml, "cat_tree")));
+                gmpc_plugin_browser_add(plugins[i], cat_tree);
             }
         }
-    }
+		TEC("setup %s", gmpc_plugin_get_name(plugins[i]))
+	}
 
     gtk_tree_selection_select_path(sel, path);
     gtk_tree_view_set_cursor(GTK_TREE_VIEW(gtk_builder_get_object(pl3_xml, "cat_tree")), path, NULL, FALSE);
@@ -853,7 +857,7 @@ void create_playlist3(void)
     gchar *path = NULL;
     GtkTreeIter iter;
     GError *error = NULL;
-
+	INIT_TIC_TAC();	
     /* indicate that the playlist is not hidden */
     pl3_hidden = FALSE;
 
@@ -869,7 +873,7 @@ void create_playlist3(void)
     }
     /* initial, setting the url hook */
     gtk_about_dialog_set_url_hook((GtkAboutDialogActivateLinkFunc) about_dialog_activate, NULL, NULL);
-
+	TEC("Setup dialog url hook")
     /* load gui desciption */
     path = gmpc_get_full_glade_path("playlist3.ui");
     pl3_xml = gtk_builder_new();
@@ -883,8 +887,8 @@ void create_playlist3(void)
         g_log(LOG_DOMAIN, G_LOG_LEVEL_WARNING, "Failed to open playlist3.glade: %s\n", error->message);
         abort();
     }
-
     g_free(path);
+	TEC("Load builder file")
 
     /** murrine hack */
     if (cfg_get_single_value_as_int_with_default(config, "Default", "murrine-hack", FALSE))
@@ -898,7 +902,8 @@ void create_playlist3(void)
 
         if (colormap)
             gtk_widget_set_default_colormap(colormap);
-    }
+		TEC("Murrine hack")
+	}
     /* create tree store for the "category" view */
     if (pl3_tree == NULL)
     {
@@ -918,7 +923,10 @@ void create_playlist3(void)
         pl3_tree = (GtkTreeModel *) gmpc_tools_liststore_sort_new();
         gtk_list_store_set_column_types(GTK_LIST_STORE(pl3_tree), PL3_CAT_NROWS, types);
     }
+	TEC("Setup pl3_tree")
+
 	thv_init(pl3_tree);
+	TEC("thv_init")
 
     tree = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "cat_tree"));
 
@@ -950,6 +958,7 @@ void create_playlist3(void)
 
     g_signal_connect_after(G_OBJECT(sel), "changed", G_CALLBACK(pl3_cat_sel_changed), NULL);
 
+	TEC("setup cat_tree")
     /**
      * Bread Crumb system.
      */
@@ -970,9 +979,11 @@ void create_playlist3(void)
     g_signal_connect(gtk_builder_get_object(pl3_xml, "cb_cat_selector"),
         "changed", G_CALLBACK(pl3_cat_combo_changed), NULL);
 
+	TEC("setup breadcrumb")
     /* initialize the category view */
     pl3_initialize_tree();
 
+	TEC("Init category tree")
     gtk_widget_show(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "vbox_playlist_player")));
 
     /**
@@ -985,10 +996,12 @@ void create_playlist3(void)
 
     new_pb = pb;
 
+	TEC("Init progress bar")
     /* Make sure change is applied */
 
     playlist3_new_header();
 
+	TEC("Init header")
     if (!cfg_get_single_value_as_int_with_default(config, "Interface", "hide-favorites-icon", FALSE))
     {
         favorites_button = gmpc_favorites_button_new();
@@ -998,7 +1011,8 @@ void create_playlist3(void)
 //		gtk_box_reorder_child(GTK_BOX(gtk_builder_get_object(pl3_xml,
 //						"hbox10")),ali,0); 
 		gtk_widget_show_all(GTK_WIDGET(ali));
-    }
+		TEC("Init fav icon")
+	}
     playlist_status_changed(connection,
         MPD_CST_STATE | MPD_CST_SONGID | MPD_CST_NEXTSONG |
         MPD_CST_ELAPSED_TIME | MPD_CST_VOLUME |
@@ -1007,7 +1021,9 @@ void create_playlist3(void)
     g_signal_connect(G_OBJECT(gtk_builder_get_object(pl3_xml, "volume_button")),
         "value_changed", G_CALLBACK(playlist_player_volume_changed), NULL);
 
-    /* Restore values from config */
+	TEC("Signal setup")
+
+	/* Restore values from config */
     gtk_toggle_action_set_active(GTK_TOGGLE_ACTION
         (gtk_builder_get_object
         (pl3_xml, "ViewShowArtistImage")),
@@ -1017,12 +1033,15 @@ void create_playlist3(void)
     /* connect signals that are defined in the gui description */
     gtk_builder_connect_signals(pl3_xml,NULL);
 
+	TEC("connect signals")
+
     /* select the current playlist */
     if (gtk_tree_model_get_iter_first(GTK_TREE_MODEL(pl3_tree), &iter))
     {
         gtk_tree_selection_select_iter(sel, &iter);
     }
 
+	TEC("Select view")
     /*
      * Insert new custom widget
      */
@@ -1055,6 +1074,7 @@ void create_playlist3(void)
     gmpc_metaimage_set_squared(GMPC_METAIMAGE(metaimage_artist_art), FALSE);
     gmpc_metaimage_set_size(GMPC_METAIMAGE(metaimage_artist_art), 200);
 
+	TEC("Setup metaimages")
     /* restore the window's position and size, if the user wants this. */
     if (cfg_get_single_value_as_int_with_default(config, "playlist", "savepossize", 0))
     {
@@ -1096,12 +1116,15 @@ void create_playlist3(void)
     pl3_zoom = cfg_get_single_value_as_int_with_default(config, "playlist", "zoomlevel", PLAYLIST_NO_ZOOM);
     playlist_zoom_level_changed();
 
+	TEC("Restore state")
     pl3_update_go_menu();
+	TEC("Go menu")
     /* make it update itself */
     pl3_update_profiles_menu(gmpc_profiles, PROFILE_ADDED, -1, NULL);
     g_signal_connect(G_OBJECT(gmpc_profiles), "changed", G_CALLBACK(pl3_update_profiles_menu), NULL);
     g_signal_connect(G_OBJECT(gmpc_profiles), "changed", G_CALLBACK(pl3_profiles_changed), NULL);
 
+	TEC("Update profiles")
     /**
      * Set as drag destination
      */
@@ -1112,12 +1135,14 @@ void create_playlist3(void)
         (gtk_builder_get_object(pl3_xml, "hbox_playlist_player")),
         "drag_data_received", GTK_SIGNAL_FUNC(playlist3_source_drag_data_recieved), NULL);
 
+	TEC("setup drag")
     /* A signal that responses on change of pane position */
     g_signal_connect(G_OBJECT(gtk_builder_get_object(pl3_xml, "hpaned1")),
         "notify::position", G_CALLBACK(pl3_win_pane_changed), NULL);
 
     /* update it */
     pl3_win_pane_changed(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "hpaned1")), NULL, NULL);
+	TEC("setup pos notify")
     /**
      *
      */
@@ -1125,14 +1150,18 @@ void create_playlist3(void)
 
     g_signal_connect(G_OBJECT(playlist3_get_window()), "window-state-event", G_CALLBACK(pl3_win_state_event), NULL);
 
+	TEC("signal connn changed")
+
     /**
      * Add status icons
      */
     main_window_init_default_status_icons();
     main_window_update_status_icons();
 
+	TEC("Update status icon")
     /* Update extra */
     init_extra_playlist_state();
+	TEC("Setup extra playlist")
 }
 
 
