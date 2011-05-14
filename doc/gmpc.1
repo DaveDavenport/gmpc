@@ -1,10 +1,10 @@
-.TH gmpc 1 "February 21, 2010" "" "Gnome Music Player Client"
+.TH GMPC 1 "February 21, 2010" "" "Gnome Music Player Client"
 
 .SH NAME
 GMPC - Gnome Music Player Client
 
 .SH SYNOPSIS
-gmpc [OPTION]
+GMPC [OPTION]
 
 .SH DESCRIPTION
 GMPC is a fully featured but still very lightweight gtk client 
@@ -29,6 +29,7 @@ GMPC can show the following types of metadata:
 * Artist biography
 .br
 * Similar artist
+.br
 * Similar songs
 
 GMPC uses plugins to fetch metadata and can be extended using plugins.
@@ -41,11 +42,8 @@ Start fullscreen.
 .BI --start-hidden
 Start hidden.
 .TP
-.BI --replace
-Replace the running session of gmpc.
-.TP
 .BI --quit
-Quit the running gmpc
+Quit the running GMPC
 .TP
 .BI --profile=<profile>
 Start with a specific profile.
@@ -54,7 +52,7 @@ Start with a specific profile.
 Show an overview of the commandline options.
 .TP
 .BI --debug-level=<level>
-Make gmpc output debug information
+Make GMPC output debug information
 
 0 \- No output
 
@@ -66,6 +64,18 @@ Make gmpc output debug information
 .TP
 .BI --log-filter=<LogDomain>
 Print out debug information from a certain log domain.
+Example domains:
+.BI Config,
+.BI MetaImage,
+.BI MpdData.Model,
+.BI MpdData.Model.Playlist,
+.BI MpdData.TreeView,
+.BI Profiles,
+.BI Gmpc,
+.BI Playlist,
+.BI Plugin,
+.BI Preferences,
+.BI TrayIcon
 .TP
 .BI --version
 Display version and if possible git revision.
