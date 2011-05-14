@@ -389,8 +389,8 @@
                 <property name="yalign">0</property>
                 <property name="left_padding">0</property>
                 <property name="right_padding">0</property>
-                <property name="top_padding">4</property>
-                <property name="bottom_padding">4</property>
+                <property name="top_padding">0</property>
+                <property name="bottom_padding">0</property>
                 <child>
                   <object class="GtkVBox" id="vbox_playlist_player">
                     <property name="visible">True</property>
@@ -547,7 +547,7 @@
             <child>
               <object class="GtkAlignment" id="alignment_bread_crumb">
                 <property name="visible">True</property>
-                <property name="top_padding">4</property>
+                <property name="top_padding">0</property>
                 <child>
                   <object class="GtkHBox" id="bread_crumb">
                     <property name="spacing">6</property>
@@ -570,7 +570,7 @@
             <child>
               <object class="GtkAlignment" id="alignment_tab_bar">
                 <property name="visible">True</property>
-                <property name="top_padding">4</property>
+                <property name="top_padding">2</property>
                 <child>
                   <object class="GtkHBox" id="box_tab_bar">
                     <property name="visible">True</property>
