@@ -23,11 +23,11 @@ These things has to be done before I can even think of releasing GMPC 11.6
 
 NOTE: If this is done, it should extend the list below.
 
-* [http://musicpd.org/mantis/view.php?id=3227[3227]] Clearing metadata does not redraw background
-* [http://musicpd.org/mantis/view.php?id=3221[3221]] Intergrate DiscoGS plugin into GMPC Source.
-* [http://musicpd.org/mantis/view.php?id=3222[3222]] Intergrate Last.FM Plugin into GMPC source. 
-* [http://musicpd.org/mantis/view.php?id=3223[3223]] Add backdrops option to advanced settings window.  
-* [http://musicpd.org/mantis/view.php?id=3224[3224]] Add extra-playlist plugin to the plugin blacklist. 
+* [http://musicpd.org/mantis/view.php?id=3227[3227]] Clearing metadata does not redraw background. (done)
+* [http://musicpd.org/mantis/view.php?id=3221[3221]] Intergrate DiscoGS plugin into GMPC Source. (done)
+* [http://musicpd.org/mantis/view.php?id=3222[3222]] Intergrate Last.FM Plugin into GMPC source. (done)
+* [http://musicpd.org/mantis/view.php?id=3223[3223]] Add backdrops option to advanced settings window. (done) 
+* [http://musicpd.org/mantis/view.php?id=3224[3224]] Add extra-playlist plugin to the plugin blacklist. (done)
 * [http://musicpd.org/mantis/view.php?id=3145[3145]] Update man pages link.
 * [http://musicpd.org/mantis/view.php?id=3129[3129]] Typo in Preferences->Avahi Zeroconf dialog
 * [http://musicpd.org/mantis/view.php?id=3225[3225]] Update Manual
@@ -73,11 +73,14 @@ image::images/gmpc-extraplaylist.png[width="100",alt="",link="images/gmpc-extrap
 unfloat::[]
 
 
-
+* Intergrate Last.FM provider plugin.
 * Intergrate LyrDB provider plugin.
 * Add HTBackdrops Provider plugin.
+
 image::images/gmpc-ec-cmd.png[width="100",alt="", link="images/gmpc-ec-cmd.png", float="right"]
+
 * Easycommand Commandline inside gmpc gui.
+* Easycommand Commandline history support.
 
 unfloat::[]
 
@@ -104,6 +107,7 @@ Removed Features
 
 Fixes
 -----
+* Improve startup time.
 * Different version scheme: YY.M
 * Make music-tree plugin find more art more aggrasively.
 * Ctrl-W to close window.
@@ -142,6 +146,7 @@ Plugins
 Deprecated
 ~~~~~~~~~~
 
+* Last.FM: Intergrated into GMPC
 * DiscoGS: Intergrated into GMPC
 * LyrDB: Intergrated into GMPC
 * Extra Playlist View: Intergrated into GMPC
@@ -167,7 +172,7 @@ To Be Tested
 
 Works
 ~~~~~
-* Last.fm (tested Qball)
+* Last.fm (tested Qball on intergration into GMPC)
 
 Unmaintained
 ~~~~~~~~~~~~
