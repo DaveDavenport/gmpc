@@ -127,15 +127,6 @@ static int plugin_validate(gmpcPlugin * plug, GError ** error)
                   plug->name);
             return FALSE;
         }
-        if (plug->browser->cat_key_press != NULL)
-        {
-            g_set_error(error, plugin_quark(), 0, "%s: %s",
-                        _("Failed to load plugin"),
-                        _("plugin browser structure is incorrect"));
-            g_log(PLUGIN_LOG_DOMAIN, G_LOG_LEVEL_CRITICAL,
-                  "Plugin %s implements a cat_key_press event handler that is deprecated",
-                  plug->name);
-        }
     }
     if (plug->plugin_type & GMPC_PLUGIN_META_DATA)
     {
@@ -166,26 +157,6 @@ static int plugin_validate(gmpcPlugin * plug, GError ** error)
                         _("plugin metadata structure is incorrect"));
             g_log(PLUGIN_LOG_DOMAIN, G_LOG_LEVEL_CRITICAL,
                   "%s: plugin_type&GMPC_PLUGIN_META_DATA && plugin->metadata->set_priority != NULL Failed",
-                  plug->name);
-            return FALSE;
-        }
-        if (plug->metadata->get_image != NULL)
-        {
-            g_set_error(error, plugin_quark(), 0, "%s: %s %s",
-                        _("Failed to load plugin"), plug->name,
-                        _("plugin get_image api is deprecated "));
-            g_log(PLUGIN_LOG_DOMAIN, G_LOG_LEVEL_CRITICAL,
-                  "%s: plugin_type&GMPC_PLUGIN_META_DATA && plugin->metadata->get_image != NULL was true",
-                  plug->name);
-            return FALSE;
-        }
-        if (plug->metadata->get_uris != NULL)
-        {
-            g_set_error(error, plugin_quark(), 0, "%s: %s %s",
-                        _("Failed to load plugin"), plug->name,
-                        _("plugin get_uris api is deprecated "));
-            g_log(PLUGIN_LOG_DOMAIN, G_LOG_LEVEL_CRITICAL,
-                  "%s: plugin_type&GMPC_PLUGIN_META_DATA && plugin->metadata->get_uris != NULL was true",
                   plug->name);
             return FALSE;
         }
@@ -514,7 +485,7 @@ void gmpc_plugin_save_yourself(gmpcPluginParent * plug)
     }
 }
 
-gboolean gmpc_plugin_get_enabled(gmpcPluginParent * plug)
+gboolean gmpc_plugin_get_enabled(const gmpcPluginParent * plug)
 {
     if (plug->new)
     {

@@ -850,10 +850,10 @@ void decolor_pixbuf(GdkPixbuf * dest, GdkPixbuf * src)
 void darken_pixbuf(GdkPixbuf * dest,guint factor)
 {
 	guint i, j;
-	gint width, height, has_alpha, src_rowstride, dest_rowstride;
+	guint height,width;
+	gint has_alpha, dest_rowstride;
 	guchar *target_pixels;
 	guchar *pix_dest;
-	gint r;
 
 	has_alpha = gdk_pixbuf_get_has_alpha(dest);
 	width = gdk_pixbuf_get_width(dest);

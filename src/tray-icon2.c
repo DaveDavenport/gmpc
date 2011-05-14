@@ -519,7 +519,7 @@ static void tray_icon2_create_tooltip_real(int position)
      */
     if(cfg_get_single_value_as_int_with_default(config, "Interface", "hide-album-art", 0) == 0) 
     {
-	    coverimg = gmpc_metaimage_new_size(META_ALBUM_ART, 80);
+	    coverimg = (GtkWidget *)gmpc_metaimage_new_size(META_ALBUM_ART, 80);
 	    gmpc_metaimage_set_squared(GMPC_METAIMAGE(coverimg), TRUE);
 	    gmpc_metaimage_set_connection(GMPC_METAIMAGE(coverimg), connection);
 	    gmpc_metaimage_set_no_cover_icon(GMPC_METAIMAGE(coverimg), (char *)"gmpc");

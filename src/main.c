@@ -207,8 +207,10 @@ int main(int argc, char **argv)
         print_version();
         return EXIT_SUCCESS;
     }
+    TEC("Parsing command line options");
 
 	log_set_debug_level(settings.debug_level);
+	TEC("Set debug level")
     /* Show the bug-information dialog */
     if (settings.show_bug_information)
     {
@@ -216,7 +218,6 @@ int main(int argc, char **argv)
         return EXIT_SUCCESS;
     }
 
-    TEC("Parsing command line options");
 
     /**
      * Init libxml.
@@ -374,9 +375,9 @@ int main(int argc, char **argv)
 
 	/* Easy command */
     gmpc_easy_command = gmpc_easy_command_new();
+    TEC("Init easy command")
 	gmpc_easy_command_set_default_entries();
-    TEC("Init easy command");
-
+	TEC("Set easy commands")
 	
 	/* Advanced search */
     advanced_search_init();

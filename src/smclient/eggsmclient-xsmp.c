@@ -26,6 +26,9 @@
 #include "eggsmclient.h"
 #include "eggsmclient-private.h"
 
+#if defined (GDK_WINDOWING_X11)
+# ifdef EGG_SM_CLIENT_BACKEND_XSMP
+
 #include "eggdesktopfile.h"
 
 #include <errno.h>
@@ -1368,3 +1371,5 @@ smc_error_handler (SmcConn       smc_conn,
 {
   /* Do nothing */
 }
+#endif
+#endif

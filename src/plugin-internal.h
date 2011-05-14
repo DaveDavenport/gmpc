@@ -37,7 +37,7 @@ void gmpc_plugin_init(gmpcPluginParent * plug);
 void gmpc_plugin_destroy(gmpcPluginParent * plug);
 void gmpc_plugin_save_yourself(gmpcPluginParent * plug);
 
-gboolean gmpc_plugin_get_enabled(gmpcPluginParent * plug);
+gboolean gmpc_plugin_get_enabled(const gmpcPluginParent * plug);
 void gmpc_plugin_set_enabled(gmpcPluginParent * plug, gboolean enabled);
 gboolean gmpc_plugin_has_enabled(gmpcPluginParent * plug);
 

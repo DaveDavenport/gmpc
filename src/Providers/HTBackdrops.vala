@@ -72,6 +72,16 @@ public class Gmpc.Provider.HTBackdrops:
                 /* A request for artist art came in. */
                 this.get_artist_art(song, callback);
                 return; 
+			case Gmpc.MetaData.Type.ARTIST_TXT:	
+			case Gmpc.MetaData.Type.ARTIST_SIMILAR:	
+			case Gmpc.MetaData.Type.ALBUM_ART:
+			case Gmpc.MetaData.Type.ALBUM_TXT:	
+			case Gmpc.MetaData.Type.SONG_TXT:	
+			case Gmpc.MetaData.Type.SONG_SIMILAR:	
+			case Gmpc.MetaData.Type.GENRE_SIMILAR:	
+			case Gmpc.MetaData.Type.SONG_GUITAR_TAB:	
+			case Gmpc.MetaData.Type.QUERY_DATA_TYPES:	
+			case Gmpc.MetaData.Type.QUERY_NO_CACHE:	
             default:
                 break;
         }

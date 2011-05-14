@@ -92,12 +92,17 @@ gboolean parse_options(int *argc, char ***argv)
 
         {NULL}
     };
-
+	INIT_TIC_TAC();
     context = g_option_context_new(_("Gnome Music Player Client"));
+	TEC("context new")
     g_option_context_add_main_entries(context, entries, "gmpc");
+	TEC(" add main context")
     g_option_context_add_group(context, gtk_get_option_group(TRUE));
+	TEC("Add gtk option group")
     g_option_context_add_group(context, egg_sm_client_get_option_group());
+	TEC("Add egg sm option group")
     g_option_context_parse(context, argc, argv, &error);
+	TEC("Parse option group")
     g_option_context_free(context);
     if (error)
     {

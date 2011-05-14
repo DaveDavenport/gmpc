@@ -341,11 +341,12 @@ static void pl3_file_browser_replace_folder(void)
 /* add's the toplevel entry for the file browser, it also add's a fantom child */
 static void pl3_file_browser_add(GtkWidget * cat_tree)
 {
-	INIT_TIC_TAC()
 	GtkTreeIter iter;
 	GtkTreePath *path;
-	gint pos = cfg_get_single_value_as_int_with_default(config, "file-browser", "position", 2);
-	
+	gint pos;
+	INIT_TIC_TAC()
+	pos = cfg_get_single_value_as_int_with_default(config, "file-browser", "position", 2);
+
 	TEC("get pos ")
 	playlist3_insert_browser(&iter, pos);
 	TEC("insert browser")
