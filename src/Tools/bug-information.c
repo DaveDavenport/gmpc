@@ -162,13 +162,18 @@ static void bug_information_generate_message(GtkTextBuffer * buffer)
 	/** Plugins */
 	if (num_plugins > 0)
 	{
-		gtk_text_buffer_insert_with_tags(buffer, &iter, "\n\nPlugins:\n", -1, bold_tag, larger_tag, NULL);
+		gtk_text_buffer_insert_with_tags(buffer, &iter, "\n\nExternal Plugins:\n", -1, bold_tag, larger_tag, NULL);
 		for (i = 0; i < num_plugins; i++)
 		{
 			if (!gmpc_plugin_is_internal(plugins[i]))
 			{
 				const gchar *name = gmpc_plugin_get_name(plugins[i]);
 				const int *version = gmpc_plugin_get_version(plugins[i]);
+				if(gmpc_plugin_get_enabled(plugins[i])) {
+					gtk_text_buffer_insert(buffer, &iter, "☑ ", -1);
+				}else  {
+					gtk_text_buffer_insert(buffer, &iter, "☐ ", -1);
+				}
 				gtk_text_buffer_insert_with_tags(buffer, &iter, name, -1, bold_tag, NULL);
 				temp = g_strdup_printf("\t%i.%i.%i\n", version[0], version[1], version[2]);
 				gtk_text_buffer_insert(buffer, &iter, temp, -1);
@@ -176,6 +181,28 @@ static void bug_information_generate_message(GtkTextBuffer * buffer)
 			}
 		}
 	}
+	if (num_plugins > 0)
+	{
+		gtk_text_buffer_insert_with_tags(buffer, &iter, "\n\nMetadata Plugins:\n", -1, bold_tag, larger_tag, NULL);
+		for (i = 0; i < num_plugins; i++)
+		{
+			if (gmpc_plugin_is_metadata(plugins[i]))
+			{
+				const gchar *name = gmpc_plugin_get_name(plugins[i]);
+				const int *version = gmpc_plugin_get_version(plugins[i]);
+				if(gmpc_plugin_get_enabled(plugins[i])) {
+					gtk_text_buffer_insert(buffer, &iter, "☑ ", -1);
+				}else  {
+					gtk_text_buffer_insert(buffer, &iter, "☐ ", -1);
+				}
+				gtk_text_buffer_insert_with_tags(buffer, &iter, name, -1, bold_tag, NULL);
+				temp = g_strdup_printf("\t%i.%i.%i\n", version[0], version[1], version[2]);
+				gtk_text_buffer_insert(buffer, &iter, temp, -1);
+				g_free(temp);
+			}
+		}
+	}
+
 	if (mpd_check_connected(connection))
 	{
 		gchar **handlers;
@@ -242,7 +269,7 @@ void bug_information_window_new(GtkWidget * window)
 	text_view = gtk_text_view_new();
 	/* setup textview */
 	/* set tabarray */
-	tab_array = pango_tab_array_new_with_positions(1, TRUE, PANGO_TAB_LEFT, 400);
+	tab_array = pango_tab_array_new_with_positions(1, TRUE, PANGO_TAB_LEFT, 500);
 	gtk_text_view_set_accepts_tab(GTK_TEXT_VIEW(text_view), TRUE);
 	gtk_text_view_set_tabs(GTK_TEXT_VIEW(text_view), tab_array);
 	pango_tab_array_free(tab_array);
