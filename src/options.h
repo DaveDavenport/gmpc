@@ -33,6 +33,7 @@ typedef struct _Options
 	gchar *config_path;
 	gint debug_level;
 	gchar *profile_name;
+	char *icon_theme;
 }Options;
 
 extern Options settings;

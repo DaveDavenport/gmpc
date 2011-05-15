@@ -263,6 +263,11 @@ int main(int argc, char **argv)
     gtk_init(&argc, &argv);
     TEC("Gtk init");
 
+	/* Hack to override the icon theme, on recursive zeltak request */
+	if(settings.icon_theme != NULL) {
+		gtk_settings_set_string_property(gtk_settings_get_default(),
+				"gtk-icon-theme-name" , settings.icon_theme,NULL);
+	}
     /* connect signal to Session manager to quit */
     g_signal_connect(
 		egg_sm_client_get(), "quit", 

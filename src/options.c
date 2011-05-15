@@ -36,7 +36,8 @@ Options settings =
 	.fullscreen = FALSE,
 	.config_path = NULL,
 	.debug_level = -1,
-	.profile_name = NULL
+	.profile_name = NULL,
+	.icon_theme = NULL
 };
 gboolean parse_options(int *argc, char ***argv)
 {
@@ -88,6 +89,10 @@ gboolean parse_options(int *argc, char ***argv)
         {
             "profile", 'p', 0, G_OPTION_ARG_STRING,
             &(settings.profile_name), N_("Select a profile"), "<Profile Name>"
+        },
+        {
+            "icon-theme", 'i', 0, G_OPTION_ARG_STRING,
+            &(settings.icon_theme), N_("Run GMPC with a different icon theme"), "<icon theme name>"
         },
 
         {NULL}
