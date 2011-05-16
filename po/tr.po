@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-27 19:20+0200\n"
+"POT-Creation-Date: 2011-05-16 20:57+0200\n"
 "PO-Revision-Date: 2011-02-12 00:05+0000\n"
 "Last-Translator: keenblade <keenblade@gmail.com>\n"
 "Language-Team: Turkish <tr@li.org>\n"
@@ -24,26 +24,26 @@ msgstr ""
 msgid "A gnome frontend for the mpd daemon"
 msgstr "Mpd süreci için bir gnome arayüzü"
 
-#: ../data/gmpc.desktop.in.h:2 ../src/main.c:1046 ../src/playlist3.c:1948
-#: ../src/tray-icon2.c:651 ../src/options.c:96
+#: ../data/gmpc.desktop.in.h:2 ../src/main.c:1054 ../src/playlist3.c:1935
+#: ../src/tray-icon2.c:651 ../src/options.c:101
 #: ../src/browsers/gmpc-nowplaying2.c:2443
 #: ../src/browsers/gmpc-nowplaying2.c:2447
 msgid "Gnome Music Player Client"
 msgstr "Gnome Muzik Çalıcı İstemcisi"
 
-#: ../src/main.c:326
+#: ../src/main.c:333
 msgid "Failed to load the configuration system."
 msgstr "Yapılandırma dizgesi yüklenmesi başarılamadı."
 
-#: ../src/main.c:423
+#: ../src/main.c:431
 msgid "Failed to setup libmpd"
 msgstr "libmpd ayarlanması başarılamadı."
 
-#: ../src/main.c:810
+#: ../src/main.c:818
 msgid "GMPC has insufficient permissions on the mpd server."
 msgstr "GMPC için mpd sunucunda  izinler yetersiz."
 
-#: ../src/main.c:842
+#: ../src/main.c:850
 #, c-format
 msgid ""
 "Failed to set password on: '%s'\n"
@@ -52,113 +52,113 @@ msgstr ""
 "'%s' için şifre ayarlanamadı.\n"
 "Lütfen tekrar deneyin"
 
-#: ../src/main.c:847
+#: ../src/main.c:855
 #, c-format
 msgid "Please enter your password for: '%s'"
 msgstr "Lütfen parolana gir:'%s'"
 
-#: ../src/main.c:887 ../src/main.c:918
+#: ../src/main.c:895 ../src/main.c:926
 msgid "error code"
 msgstr "hata kodu"
 
-#: ../src/main.c:904
+#: ../src/main.c:912
 msgid "Insufficient permission to connect to mpd. Check password"
 msgstr ""
 "Mpd sunucusuna bağlanmak için izinler yetersiz. Şifrenizi kontrol edin."
 
-#: ../src/main.c:947
+#: ../src/main.c:955
 msgid "MPD versions before 0.13.0 are not supported"
 msgstr "0.13.0 dem önceki MPD sürümleri desteklenmez"
 
-#: ../src/main.c:1013
+#: ../src/main.c:1021
 msgid "Connected to mpd"
 msgstr "Mpd' ye bağlanıldı"
 
-#: ../src/main.c:1016
+#: ../src/main.c:1024
 msgid "Disconnected from mpd"
 msgstr "Mpd' ye bağlantı kesildi."
 
-#: ../src/main.c:1048
+#: ../src/main.c:1056
 msgid "Tagline"
 msgstr ""
 
 #. * Mpd version
-#: ../src/main.c:1049 ../src/preferences.c:351
+#: ../src/main.c:1057 ../src/preferences.c:351
 #: ../src/browsers/server-information.c:337
 msgid "Version"
 msgstr "Sürüm"
 
-#: ../src/main.c:1055
+#: ../src/main.c:1063
 #, fuzzy
 msgid "Revision"
 msgstr "Sürüm"
 
-#: ../src/main.c:1065
+#: ../src/main.c:1073
 msgid "quit"
 msgstr "çık"
 
-#: ../src/main.c:1066
+#: ../src/main.c:1074
 msgid "Quit gmpc"
 msgstr "Gmpc' den çık"
 
-#: ../src/main.c:1071
+#: ../src/main.c:1079
 msgid "hide"
 msgstr "sakla"
 
-#: ../src/main.c:1072
+#: ../src/main.c:1080
 msgid "Hide gmpc"
 msgstr "Gmpc' yi sakla"
 
-#: ../src/main.c:1077
+#: ../src/main.c:1085
 msgid "show"
 msgstr "göster"
 
-#: ../src/main.c:1078
+#: ../src/main.c:1086
 msgid "Show gmpc"
 msgstr "Gmpc' yi göster"
 
-#: ../src/main.c:1083
+#: ../src/main.c:1091
 msgid "toggle"
 msgstr ""
 
-#: ../src/main.c:1084
+#: ../src/main.c:1092
 msgid "Toogle gmpc visibility"
 msgstr ""
 
-#: ../src/main.c:1089
+#: ../src/main.c:1097
 msgid "show notification"
 msgstr "bildirileri göster"
 
-#: ../src/main.c:1090
+#: ../src/main.c:1098
 msgid "Show trayicon notification"
 msgstr "Sistem tepsisi simgesinde bildiri göster"
 
-#: ../src/main.c:1094
+#: ../src/main.c:1102
 msgid "preferences"
 msgstr ""
 
-#: ../src/main.c:1095
+#: ../src/main.c:1103
 msgid "Show preferences window"
 msgstr ""
 
-#: ../src/main.c:1100
+#: ../src/main.c:1108
 #, fuzzy
 msgid "bug information"
 msgstr "Hata bilgisi"
 
-#: ../src/main.c:1101 ../src/options.c:82
+#: ../src/main.c:1109 ../src/options.c:83
 msgid "Show bug information"
 msgstr "Hata bilgisi göster"
 
-#: ../src/main.c:1106 ../src/main.c:1112
+#: ../src/main.c:1114 ../src/main.c:1120
 msgid "url"
 msgstr ""
 
-#: ../src/main.c:1107
+#: ../src/main.c:1115
 msgid "Show add url window"
 msgstr ""
 
-#: ../src/main.c:1113
+#: ../src/main.c:1121
 msgid "Add url <scheme>://<path>"
 msgstr ""
 
@@ -174,146 +174,137 @@ msgstr ""
 msgid "Metadata Handler"
 msgstr "Metadata Yöneticisi"
 
-#: ../src/playlist3.c:749
+#: ../src/playlist3.c:763
 msgid "Connected"
 msgstr "Bağlandı"
 
-#: ../src/playlist3.c:760 ../src/GUI/title_header.c:163
+#: ../src/playlist3.c:774 ../src/GUI/title_header.c:174
 msgid "Not Connected"
 msgstr "Bağlı Değil"
 
-#: ../src/playlist3.c:780 ../src/playlist3.c:786 ../src/playlist3.c:799
-#: ../src/playlist3.c:805 ../src/playlist3.c:1677 ../src/playlist3.c:1683
+#: ../src/playlist3.c:794 ../src/playlist3.c:800 ../src/playlist3.c:813
+#: ../src/playlist3.c:819 ../src/playlist3.c:1676 ../src/playlist3.c:1682
 msgid "GMPC"
 msgstr "GMPC"
 
-#: ../src/playlist3.c:781 ../src/playlist3.c:786
+#: ../src/playlist3.c:795 ../src/playlist3.c:800
 msgid "Connected to"
 msgstr "Bağlanılan:"
 
-#: ../src/playlist3.c:800 ../src/playlist3.c:805
+#: ../src/playlist3.c:814 ../src/playlist3.c:819
 msgid "Disconnected"
 msgstr "Bağlantı Kesildi"
 
 #. *
 #. * Set paused in Window string
 #.
-#: ../src/playlist3.c:1629 ../src/playlist3.c:1633
+#: ../src/playlist3.c:1638 ../src/playlist3.c:1642
 msgid "paused"
 msgstr "duraklatıldı"
 
-#: ../src/playlist3.c:1726
+#: ../src/playlist3.c:1714
 #, c-format
 msgid "Repeat: %s"
 msgstr "Tekrarla: %s"
 
-#: ../src/playlist3.c:1727 ../src/playlist3.c:1741 ../src/playlist3.c:1758
-#: ../src/playlist3.c:1772
+#: ../src/playlist3.c:1715 ../src/playlist3.c:1729 ../src/playlist3.c:1746
+#: ../src/playlist3.c:1760
 msgid "On"
 msgstr "Açık"
 
-#: ../src/playlist3.c:1727 ../src/playlist3.c:1741 ../src/playlist3.c:1758
-#: ../src/playlist3.c:1772 ../glade/preferences-server.ui.h:9
-#: ../src/Tools/mpdinteraction.c:147
+#: ../src/playlist3.c:1715 ../src/playlist3.c:1729 ../src/playlist3.c:1746
+#: ../src/playlist3.c:1760 ../glade/preferences-server.ui.h:9
+#: ../src/Tools/mpd-easy-commands.c:76
 msgid "Off"
 msgstr "Kapat"
 
-#: ../src/playlist3.c:1740
+#: ../src/playlist3.c:1728
 #, c-format
 msgid "Random: %s"
 msgstr "Rastgele: %s"
 
-#: ../src/playlist3.c:1757
+#: ../src/playlist3.c:1745
 #, c-format
 msgid "Single mode: %s"
 msgstr "Tekil kip: %s"
 
-#: ../src/playlist3.c:1771
+#: ../src/playlist3.c:1759
 #, c-format
 msgid "Consume: %s"
 msgstr "Harca: %s"
 
-#: ../src/playlist3.c:1880
+#: ../src/playlist3.c:1868
 msgid "MPD Reported the following error"
 msgstr "MPD Takip eden hatayı raporladı"
 
-#: ../src/playlist3.c:2032 ../src/playlist3.c:2039
+#: ../src/playlist3.c:2019 ../src/playlist3.c:2026
 msgid "Profile"
 msgstr "Profil"
 
-#: ../src/playlist3.c:2033
+#: ../src/playlist3.c:2020
 msgid "added"
 msgstr "eklendi"
 
-#: ../src/playlist3.c:2041
+#: ../src/playlist3.c:2028
 msgid "changed hostname to:"
 msgstr "sunucu ismi şöyle değiştirildi:"
 
-#: ../src/playlist3.c:2315 ../src/Widgets/advanced_settings.c:150
-#: ../src/Widgets/advanced_settings.c:154
+#: ../src/playlist3.c:2302 ../src/Widgets/advanced_settings.c:167
+#: ../src/Widgets/advanced_settings.c:171
 msgid "Interface"
 msgstr "Arayüz"
 
-#: ../src/plugin.c:89 ../src/plugin.c:99 ../src/plugin.c:109
-#: ../src/plugin.c:121 ../src/plugin.c:131 ../src/plugin.c:143
-#: ../src/plugin.c:153 ../src/plugin.c:163 ../src/plugin.c:173
-#: ../src/plugin.c:183 ../src/plugin.c:193 ../src/plugin.c:208
-#: ../src/plugin.c:222 ../src/plugin.c:314
+#: ../src/plugin.c:91 ../src/plugin.c:101 ../src/plugin.c:111
+#: ../src/plugin.c:123 ../src/plugin.c:136 ../src/plugin.c:146
+#: ../src/plugin.c:156 ../src/plugin.c:166 ../src/plugin.c:181
+#: ../src/plugin.c:195 ../src/plugin.c:287
 msgid "Failed to load plugin"
 msgstr "Eklenti yüklenemedi"
 
-#: ../src/plugin.c:89
+#: ../src/plugin.c:91
 msgid "plugin has no name"
 msgstr "Eklentinin ismi yok"
 
-#: ../src/plugin.c:100
+#: ../src/plugin.c:102
 msgid "plugin with same name already exists"
 msgstr "aynı isimde bir eklenti zaten var"
 
-#: ../src/plugin.c:110
+#: ../src/plugin.c:112
 msgid "plugin is missing set/get enable function"
 msgstr "eklentide ayarla/al etkinleştir fonksiyonu eksik"
 
-#: ../src/plugin.c:122 ../src/plugin.c:132 ../src/plugin.c:209
+#: ../src/plugin.c:124 ../src/plugin.c:182
 msgid "plugin browser structure is incorrect"
 msgstr "eklenti tarayıcı yapısı hatalı"
 
-#: ../src/plugin.c:144 ../src/plugin.c:154 ../src/plugin.c:164
-#: ../src/plugin.c:194
+#: ../src/plugin.c:137 ../src/plugin.c:147 ../src/plugin.c:157
+#: ../src/plugin.c:167
 msgid "plugin metadata structure is incorrect"
 msgstr "eklenti üstveri yapısı hatalı"
 
-#: ../src/plugin.c:174
-msgid "plugin get_image api is deprecated "
-msgstr ""
-
-#: ../src/plugin.c:184
-msgid "plugin get_uris api is deprecated "
-msgstr ""
-
-#: ../src/plugin.c:223
+#: ../src/plugin.c:196
 msgid "plugin preferences structure is incorrect"
 msgstr "eklenti özellikleri yapısı hatalı"
 
-#: ../src/plugin.c:328
+#: ../src/plugin.c:301
 msgid "Failed to create plugin instance"
 msgstr "Eklenti örneği oluşturma başarısız oldu"
 
-#: ../src/plugin.c:345
+#: ../src/plugin.c:318
 msgid "Failed to bind symbol in plugin"
 msgstr "Eklentide simge bindirilemedi"
 
-#: ../src/plugin.c:359
+#: ../src/plugin.c:332
 #, c-format
 msgid "Plugin %s has wrong api version: %i"
 msgstr "%s eklentisinin api sürümü yanlış: %i"
 
-#: ../src/plugin.c:373 ../src/plugin.c:382
+#: ../src/plugin.c:346 ../src/plugin.c:355
 #, c-format
 msgid "Plugin %s has wrong no plugin structure: %s"
 msgstr "%s Eklentisi hatalı. Eklenti yapısı yok: %s"
 
-#: ../src/plugin.c:404
+#: ../src/plugin.c:377
 msgid ""
 "One or more plugins failed to load, see help->messages for more information"
 msgstr ""
@@ -384,45 +375,49 @@ msgstr "Sonraki"
 msgid "Notification"
 msgstr "Bildiri"
 
-#: ../src/options.c:50
+#: ../src/options.c:51
 msgid "Start the program in full screen"
 msgstr "Programı tam ekran başlat"
 
-#: ../src/options.c:54
+#: ../src/options.c:55
 msgid "Show program version and revision"
 msgstr "Program sürüm ve düzeltim bilgisini göster"
 
-#: ../src/options.c:58
+#: ../src/options.c:59
 msgid "Quits the running gmpc"
 msgstr "Çalışan gmpc' yi kapatır"
 
-#: ../src/options.c:62
+#: ../src/options.c:63
 msgid "Don't load the plugins"
 msgstr "Eklentiler yüklenmesin"
 
-#: ../src/options.c:66
+#: ../src/options.c:67
 msgid "Load alternative config file"
 msgstr "Başka ayar dosyası yükle"
 
-#: ../src/options.c:70
+#: ../src/options.c:71
 msgid "Set the debug level"
 msgstr "Hata seviyesini ayarla"
 
-#: ../src/options.c:74
+#: ../src/options.c:75
 msgid "Start gmpc hidden to tray"
 msgstr "Gmpc'yi sistem tepsisine saklayarak başlat"
 
-#: ../src/options.c:78
+#: ../src/options.c:79
 msgid "Remove all failed hits from metadata cache"
 msgstr "Tüm başarısız denemeleri metadata önbelleğinden kaldır"
 
-#: ../src/options.c:86
+#: ../src/options.c:87
 msgid "Shows all output from a certain log domain"
 msgstr "Tüm çıktıyı belirli bir kayıt günlüğü alanında göster"
 
-#: ../src/options.c:90
+#: ../src/options.c:91
 msgid "Select a profile"
 msgstr "Bir profil seç"
+
+#: ../src/options.c:95
+msgid "Run GMPC with a different icon theme"
+msgstr ""
 
 #: ../src/smclient/eggdesktopfile.c:165
 #, c-format
@@ -454,7 +449,7 @@ msgstr "Tanınmayan başlatma seçeneği: %d"
 msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
 msgstr "Bir 'Type=Link' masaüstü girişine, belge URI'leri geçilemiyor"
 
-#: ../src/smclient/eggdesktopfile.c:1392
+#: ../src/smclient/eggdesktopfile.c:1393
 #, c-format
 msgid "Not a launchable item"
 msgstr "Başlatılabilir bir öğe değil"
@@ -620,7 +615,7 @@ msgstr "<b>Ana:</b>"
 msgid "<b>Playlist:</b>"
 msgstr "<b>Çalma listesi:</b>"
 
-#: ../glade/preferences-playlist.ui.h:3 ../src/Widgets/advanced_settings.c:140
+#: ../glade/preferences-playlist.ui.h:3 ../src/Widgets/advanced_settings.c:157
 #, fuzzy
 msgid "Advanced settings"
 msgstr "Sunucu Ayarları"
@@ -819,7 +814,7 @@ msgstr "Tüketim"
 msgid "Consume Mode"
 msgstr "Harcama Kipi"
 
-#: ../glade/playlist3.ui.h:3 ../src/Tools/mpdinteraction.c:426
+#: ../glade/playlist3.ui.h:3 ../src/Tools/mpd-easy-commands.c:362
 msgid "Mute"
 msgstr "Sessiz"
 
@@ -1029,8 +1024,8 @@ msgid "Search Playlist"
 msgstr "Çalma Listesinde Ara"
 
 #: ../src/browsers/playlist3-file-browser.c:117
-#: ../src/browsers/playlist3-file-browser.c:350
-#: ../src/browsers/playlist3-file-browser.c:1210
+#: ../src/browsers/playlist3-file-browser.c:355
+#: ../src/browsers/playlist3-file-browser.c:1215
 #: ../src/browsers/server-information.c:346
 msgid "Database"
 msgstr "Veritabanı"
@@ -1062,8 +1057,8 @@ msgstr "'%s' dizini tüm alt dizinleriyle eklendi"
 #. replace
 #. add the replace widget
 #: ../src/browsers/playlist3-file-browser.c:641
-#: ../src/browsers/playlist3-file-browser.c:934
-#: ../src/browsers/playlist3-file-browser.c:965
+#: ../src/browsers/playlist3-file-browser.c:939
+#: ../src/browsers/playlist3-file-browser.c:970
 #: ../src/browsers/playlist3-find2-browser.c:641
 #: ../src/browsers/playlist3-playlist-editor.c:693
 #: ../src/browsers/playlist3-playlist-editor.c:766
@@ -1074,49 +1069,49 @@ msgstr "Değiştir"
 
 #. add the update widget
 #: ../src/browsers/playlist3-file-browser.c:666
-#: ../src/browsers/playlist3-file-browser.c:923
+#: ../src/browsers/playlist3-file-browser.c:928
 msgid "Update"
 msgstr "Güncelle"
 
-#: ../src/browsers/playlist3-file-browser.c:779
+#: ../src/browsers/playlist3-file-browser.c:784
 msgid "Loaded playlist"
 msgstr "Yüklenmiş çalma listesi"
 
-#: ../src/browsers/playlist3-file-browser.c:1050
+#: ../src/browsers/playlist3-file-browser.c:1055
 #: ../src/browsers/playlist3-playlist-editor.c:533
 msgid "Added"
 msgstr "Eklendi"
 
-#: ../src/browsers/playlist3-file-browser.c:1052
+#: ../src/browsers/playlist3-file-browser.c:1057
 #: ../src/browsers/playlist3-playlist-editor.c:533
 msgid "song"
 msgid_plural "songs"
 msgstr[0] "şarkı"
 
-#: ../src/browsers/playlist3-file-browser.c:1055
+#: ../src/browsers/playlist3-file-browser.c:1060
 msgid "directory"
 msgid_plural "directories"
 msgstr[0] "dizin"
 
-#: ../src/browsers/playlist3-file-browser.c:1058
+#: ../src/browsers/playlist3-file-browser.c:1063
 msgid "playlist"
 msgid_plural "playlists"
 msgstr[0] "çalma listesi"
 
-#: ../src/browsers/playlist3-file-browser.c:1079
-#: ../src/browsers/playlist3-file-browser.c:1124
+#: ../src/browsers/playlist3-file-browser.c:1084
+#: ../src/browsers/playlist3-file-browser.c:1129
 msgid "Are you sure you want to clear the selected playlist?"
 msgstr "Seçili çalma listesini temizlemek istediğinizden emin misiniz?"
 
-#: ../src/browsers/playlist3-file-browser.c:1414
+#: ../src/browsers/playlist3-file-browser.c:1422
 msgid "search database"
 msgstr "veritabanını ara"
 
-#: ../src/browsers/playlist3-file-browser.c:1415
+#: ../src/browsers/playlist3-file-browser.c:1423
 msgid "Search database <query>"
 msgstr "Veritabanında ara <sorgu>"
 
-#: ../src/browsers/playlist3-file-browser.c:1461
+#: ../src/browsers/playlist3-file-browser.c:1469
 msgid "Lookup directory in database"
 msgstr "Veritabanında arama dizini"
 
@@ -1161,7 +1156,7 @@ msgstr "Çalma Listesi Düzenleyici"
 #: ../src/browsers/playlist3-playlist-editor.c:1188
 #: ../src/vala/gmpc-favorites.c:143 ../src/vala/gmpc-favorites.c:165
 #: ../src/vala/gmpc-favorites.c:215 ../src/vala/gmpc-favorites.c:229
-#: ../src/vala/gmpc-favorites.c:392
+#: ../src/vala/gmpc-favorites.c:394
 msgid "Favorites"
 msgstr "Sık Kullanılanlar"
 
@@ -1573,7 +1568,7 @@ msgstr "Dosya Seç"
 #: ../src/gmpc-meta-text-view.gob:112 ../src/gmpc-metaimage.gob:754
 #: ../src/vala/gmpc-test-plugin.c:1862
 #: ../src/Widgets/gmpc-metadata-text-label.c:220
-#: ../src/Widgets/gmpc-metadata-backdrop.c:337
+#: ../src/Widgets/gmpc-metadata-backdrop.c:356
 msgid "Metadata selector"
 msgstr "Metaveri seçici"
 
@@ -1721,12 +1716,278 @@ msgstr "MPD veritabanını tekrar tarıyor"
 msgid "MPD Database has been updated at:"
 msgstr "MPD Veritabanı şu tarihte güncellendi:"
 
+#. Default to 'select' if no specific action given
+#: ../src/Tools/mpd-easy-commands.c:25
+msgid "select"
+msgstr "seç"
+
+#: ../src/Tools/mpd-easy-commands.c:59
+msgid "enable"
+msgstr "etkinleştir"
+
+#: ../src/Tools/mpd-easy-commands.c:63
+msgid "disable"
+msgstr "etkisizleştir"
+
+#: ../src/Tools/mpd-easy-commands.c:125
+msgid ""
+"Update database: The used MPD server is to old and does not support this."
+msgstr ""
+"Veritabanını güncelle: Kullanılan MPD sunucusu çok eski ve bu özelliği "
+"desteklemiyor."
+
+#: ../src/Tools/mpd-easy-commands.c:129
+msgid "Update database: You have insufficient permission."
+msgstr "Veritabanını güncelle: Yeterli izniniz yok."
+
+#: ../src/Tools/mpd-easy-commands.c:141
+msgid ""
+"Repeat current song: The used MPD server is to old and does not support this."
+msgstr ""
+"Şuanki şarkıyı tekrarla: Kullanılan MPD sunucusu çok yaşlı(öldü ölecek) ve "
+"bu işlemi desteklemiyor."
+
+#: ../src/Tools/mpd-easy-commands.c:145
+msgid "Repeat current song: You have insufficient permission."
+msgstr "Şuanki şarkıyı tekrarla: Gerekli izinlere sahip değilsiniz."
+
+#: ../src/Tools/mpd-easy-commands.c:149
+msgid "The current song will be forever repeated."
+msgstr "Geçerli şarkı sonsuza kadar tekrar edilecek."
+
+#: ../src/Tools/mpd-easy-commands.c:160
+msgid ""
+"Stop after current song: The used MPD server is to old and does not support "
+"this."
+msgstr ""
+"Şuanki şarkıdan sonra dur: Kullanılan MPD sunucusu çok yaşlı(öldü ölecek) ve "
+"bu işlemi desteklemiyor."
+
+#: ../src/Tools/mpd-easy-commands.c:164
+msgid "Stop after current song: You have insufficient permission."
+msgstr "Şuanki şarkıdan sonra dur: Gerekli izinlere sahip değilsiniz."
+
+#: ../src/Tools/mpd-easy-commands.c:168
+msgid "Playback will be stopped after the current playing song."
+msgstr "Şuanki şarkıdan sonra çalma durdurulacak."
+
+#: ../src/Tools/mpd-easy-commands.c:252
+msgid "Consume: The used MPD server is to old and does not support this."
+msgstr ""
+"Tüketici:  Kullanılan MPD suncusu çok yaşlı(öldü ölecek) ve bu işlemi "
+"desteklemiyor."
+
+#: ../src/Tools/mpd-easy-commands.c:256
+msgid "Consume: You have insufficient permission to use this option."
+msgstr ""
+"Tüketici: Bu seçeneği kullanmak için gerekli izinlere sahip değilsiniz."
+
+#: ../src/Tools/mpd-easy-commands.c:277
+msgid "Single: The used MPD server is to old and does not support this."
+msgstr ""
+"Tekil: Kullanılan MPD suncusu çok yaşlı(öldü ölecek) ve bu işlemi "
+"desteklemiyor."
+
+#: ../src/Tools/mpd-easy-commands.c:281
+msgid "Single: You have insufficient permission to use this option."
+msgstr "Tekil: Bu seçeneği kullanmak için gerekli izinlere sahip değilsiniz."
+
+#. Player control
+#. basic playlist commands
+#: ../src/Tools/mpd-easy-commands.c:333 ../src/Tools/mpd-easy-commands.c:374
+msgid "play"
+msgstr "çal"
+
+#: ../src/Tools/mpd-easy-commands.c:333
+msgid "start playback"
+msgstr "Kayıttan yürütmeyi başlat"
+
+#: ../src/Tools/mpd-easy-commands.c:336
+msgid "pause"
+msgstr "duraklat"
+
+#: ../src/Tools/mpd-easy-commands.c:336
+msgid "pause playback"
+msgstr "çalmayı duraklat"
+
+#: ../src/Tools/mpd-easy-commands.c:339
+msgid "next"
+msgstr "sonraki"
+
+#: ../src/Tools/mpd-easy-commands.c:339
+msgid "next song"
+msgstr "sonraki şarkı"
+
+#: ../src/Tools/mpd-easy-commands.c:342
+msgid "prev"
+msgstr "önceki"
+
+#: ../src/Tools/mpd-easy-commands.c:342
+msgid "previous song"
+msgstr "önceki şarkı"
+
+#: ../src/Tools/mpd-easy-commands.c:345
+msgid "stop"
+msgstr "dur"
+
+#: ../src/Tools/mpd-easy-commands.c:345
+msgid "stop playback"
+msgstr "kayıttan yürütmeyi durdur"
+
+#: ../src/Tools/mpd-easy-commands.c:349
+msgid "random"
+msgstr "rasgele"
+
+#: ../src/Tools/mpd-easy-commands.c:349
+msgid "Random (on|off)"
+msgstr "Rasgele (açık|kapalı)"
+
+#: ../src/Tools/mpd-easy-commands.c:351
+msgid "repeat"
+msgstr "tekrar"
+
+#: ../src/Tools/mpd-easy-commands.c:351
+msgid "Repeat (on|off)"
+msgstr "Tekrar (açık|kapalı)"
+
+#: ../src/Tools/mpd-easy-commands.c:354
+msgid "single"
+msgstr "tek"
+
+#: ../src/Tools/mpd-easy-commands.c:354
+msgid "Single (on|off)"
+msgstr "Tekil (Açık|Kapalı)"
+
+#: ../src/Tools/mpd-easy-commands.c:356
+msgid "consume"
+msgstr "harca"
+
+#: ../src/Tools/mpd-easy-commands.c:356
+msgid "Consume (on|off)"
+msgstr "Harca (aç|kapa)"
+
+#. volume commands
+#: ../src/Tools/mpd-easy-commands.c:360
+msgid "volume"
+msgstr "ses"
+
+#: ../src/Tools/mpd-easy-commands.c:360
+msgid "Volume (+-)<level>"
+msgstr "Ses(+-)<düzey>"
+
+#: ../src/Tools/mpd-easy-commands.c:362
+msgid "mute"
+msgstr "sessiz"
+
+#: ../src/Tools/mpd-easy-commands.c:365
+msgid "crossfade"
+msgstr "Çapraz geçiş"
+
+#: ../src/Tools/mpd-easy-commands.c:366
+msgctxt "Regex for matching crossfade, translate off"
+msgid "([0-9]+|Off)"
+msgstr "([0-9]+|Kapalı)"
+
+#: ../src/Tools/mpd-easy-commands.c:367
+msgid "Set Crossfade <seconds>"
+msgstr "Çapraz Geçişi Ayarla <saniyeler>"
+
+#: ../src/Tools/mpd-easy-commands.c:369
+msgid "output"
+msgstr "çıkış"
+
+#: ../src/Tools/mpd-easy-commands.c:370
+msgctxt "Regex for matching output"
+msgid "[0-9]+[ ]*(Enable|Disable|Select|)"
+msgstr "[0-9]+[ ]*(Etkinleştir|Pasifleştir|Seç|)"
+
+#: ../src/Tools/mpd-easy-commands.c:371
+msgid "output X enable or disable or select"
+msgstr ""
+
+#: ../src/Tools/mpd-easy-commands.c:374
+msgid "Play <query>"
+msgstr "Çal <sorgu>"
+
+#: ../src/Tools/mpd-easy-commands.c:376
+msgid "add"
+msgstr "ekle"
+
+#: ../src/Tools/mpd-easy-commands.c:376
+msgid "Add <query>"
+msgstr "Ekle <sorgu>"
+
+#: ../src/Tools/mpd-easy-commands.c:378
+msgid "replace"
+msgstr "değiştir"
+
+#: ../src/Tools/mpd-easy-commands.c:378
+msgid "Replace <query>"
+msgstr "Değiştir <sorgu>"
+
+#. Basic seek commands
+#: ../src/Tools/mpd-easy-commands.c:382
+msgid "seek"
+msgstr "ara"
+
+#: ../src/Tools/mpd-easy-commands.c:382
+msgid "Seek within the current song"
+msgstr "Geçerli şarkı içinde ara"
+
+#: ../src/Tools/mpd-easy-commands.c:386
+msgid "stop after current song"
+msgstr "geçerli şarkıdan sonra dur"
+
+#: ../src/Tools/mpd-easy-commands.c:388
+msgid "Stop playback after the current song"
+msgstr "Geçerli şarkıdan sonra çalmayı durdur"
+
+#: ../src/Tools/mpd-easy-commands.c:392
+msgid "repeat current song"
+msgstr "geçerli şarkıyı tekrar et"
+
+#: ../src/Tools/mpd-easy-commands.c:394
+msgid "Repeat the current song"
+msgstr "Geçerli şarkıyı tekrar et"
+
+#: ../src/Tools/mpd-easy-commands.c:398
+msgid "update database"
+msgstr "veritabanını güncelle"
+
+#: ../src/Tools/mpd-easy-commands.c:400
+msgid "Update the database"
+msgstr "Veritabanını güncelle"
+
+#: ../src/Tools/mpd-easy-commands.c:404
+#, fuzzy
+msgid "disconnect"
+msgstr "_Bağlantıyı Kes"
+
+#: ../src/Tools/mpd-easy-commands.c:406
+#, fuzzy
+msgid "disconnect from MPD"
+msgstr "Mpd' ye bağlantı kesildi."
+
+#: ../src/Tools/mpd-easy-commands.c:409 ../src/Tools/mpd-easy-commands.c:413
+#, fuzzy
+msgid "connect"
+msgstr "_Bağlan"
+
+#: ../src/Tools/mpd-easy-commands.c:411
+#, fuzzy
+msgid "connect to MPD"
+msgstr "Bağlanılan:"
+
+#: ../src/Tools/mpd-easy-commands.c:415
+msgid "connect to MPD using profile"
+msgstr ""
+
 #: ../src/Tools/gmpc_easy_download.c:288
 msgid "Proxy"
 msgstr "Vekil Sunucu (proxy)"
 
 #. Basic dialog with a close button
-#: ../src/Tools/bug-information.c:236
+#: ../src/Tools/bug-information.c:256
 msgid "Bug information"
 msgstr "Hata bilgisi"
 
@@ -1761,283 +2022,41 @@ msgstr ""
 msgid "Finish"
 msgstr "Bitti"
 
-#. Default to 'select' if no specific action given
-#: ../src/Tools/mpdinteraction.c:95
-msgid "select"
-msgstr "seç"
-
-#: ../src/Tools/mpdinteraction.c:129
-msgid "enable"
-msgstr "etkinleştir"
-
-#: ../src/Tools/mpdinteraction.c:133
-msgid "disable"
-msgstr "etkisizleştir"
-
-#: ../src/Tools/mpdinteraction.c:212
-msgid "Single: The used MPD server is to old and does not support this."
-msgstr ""
-"Tekil: Kullanılan MPD suncusu çok yaşlı(öldü ölecek) ve bu işlemi "
-"desteklemiyor."
-
-#: ../src/Tools/mpdinteraction.c:216
-msgid "Single: You have insufficient permission to use this option."
-msgstr "Tekil: Bu seçeneği kullanmak için gerekli izinlere sahip değilsiniz."
-
-#: ../src/Tools/mpdinteraction.c:238
-msgid "Consume: The used MPD server is to old and does not support this."
-msgstr ""
-"Tüketici:  Kullanılan MPD suncusu çok yaşlı(öldü ölecek) ve bu işlemi "
-"desteklemiyor."
-
-#: ../src/Tools/mpdinteraction.c:242
-msgid "Consume: You have insufficient permission to use this option."
-msgstr ""
-"Tüketici: Bu seçeneği kullanmak için gerekli izinlere sahip değilsiniz."
-
-#: ../src/Tools/mpdinteraction.c:343
-msgid ""
-"Stop after current song: The used MPD server is to old and does not support "
-"this."
-msgstr ""
-"Şuanki şarkıdan sonra dur: Kullanılan MPD sunucusu çok yaşlı(öldü ölecek) ve "
-"bu işlemi desteklemiyor."
-
-#: ../src/Tools/mpdinteraction.c:347
-msgid "Stop after current song: You have insufficient permission."
-msgstr "Şuanki şarkıdan sonra dur: Gerekli izinlere sahip değilsiniz."
-
-#: ../src/Tools/mpdinteraction.c:351
-msgid "Playback will be stopped after the current playing song."
-msgstr "Şuanki şarkıdan sonra çalma durdurulacak."
-
-#: ../src/Tools/mpdinteraction.c:363
-msgid ""
-"Repeat current song: The used MPD server is to old and does not support this."
-msgstr ""
-"Şuanki şarkıyı tekrarla: Kullanılan MPD sunucusu çok yaşlı(öldü ölecek) ve "
-"bu işlemi desteklemiyor."
-
-#: ../src/Tools/mpdinteraction.c:367
-msgid "Repeat current song: You have insufficient permission."
-msgstr "Şuanki şarkıyı tekrarla: Gerekli izinlere sahip değilsiniz."
-
-#: ../src/Tools/mpdinteraction.c:371
-msgid "The current song will be forever repeated."
-msgstr "Geçerli şarkı sonsuza kadar tekrar edilecek."
-
-#: ../src/Tools/mpdinteraction.c:383
-msgid ""
-"Update database: The used MPD server is to old and does not support this."
-msgstr ""
-"Veritabanını güncelle: Kullanılan MPD sunucusu çok eski ve bu özelliği "
-"desteklemiyor."
-
-#: ../src/Tools/mpdinteraction.c:387
-msgid "Update database: You have insufficient permission."
-msgstr "Veritabanını güncelle: Yeterli izniniz yok."
-
-#. Player control
-#. basic playlist commands
-#: ../src/Tools/mpdinteraction.c:397 ../src/Tools/mpdinteraction.c:438
-msgid "play"
-msgstr "çal"
-
-#: ../src/Tools/mpdinteraction.c:397
-msgid "start playback"
-msgstr "Kayıttan yürütmeyi başlat"
-
-#: ../src/Tools/mpdinteraction.c:400
-msgid "pause"
-msgstr "duraklat"
-
-#: ../src/Tools/mpdinteraction.c:400
-msgid "pause playback"
-msgstr "çalmayı duraklat"
-
-#: ../src/Tools/mpdinteraction.c:403
-msgid "next"
-msgstr "sonraki"
-
-#: ../src/Tools/mpdinteraction.c:403
-msgid "next song"
-msgstr "sonraki şarkı"
-
-#: ../src/Tools/mpdinteraction.c:406
-msgid "prev"
-msgstr "önceki"
-
-#: ../src/Tools/mpdinteraction.c:406
-msgid "previous song"
-msgstr "önceki şarkı"
-
-#: ../src/Tools/mpdinteraction.c:409
-msgid "stop"
-msgstr "dur"
-
-#: ../src/Tools/mpdinteraction.c:409
-msgid "stop playback"
-msgstr "kayıttan yürütmeyi durdur"
-
-#: ../src/Tools/mpdinteraction.c:413
-msgid "random"
-msgstr "rasgele"
-
-#: ../src/Tools/mpdinteraction.c:413
-msgid "Random (on|off)"
-msgstr "Rasgele (açık|kapalı)"
-
-#: ../src/Tools/mpdinteraction.c:415
-msgid "repeat"
-msgstr "tekrar"
-
-#: ../src/Tools/mpdinteraction.c:415
-msgid "Repeat (on|off)"
-msgstr "Tekrar (açık|kapalı)"
-
-#: ../src/Tools/mpdinteraction.c:418
-msgid "single"
-msgstr "tek"
-
-#: ../src/Tools/mpdinteraction.c:418
-msgid "Single (on|off)"
-msgstr "Tekil (Açık|Kapalı)"
-
-#: ../src/Tools/mpdinteraction.c:420
-msgid "consume"
-msgstr "harca"
-
-#: ../src/Tools/mpdinteraction.c:420
-msgid "Consume (on|off)"
-msgstr "Harca (aç|kapa)"
-
-#. volume commands
-#: ../src/Tools/mpdinteraction.c:424
-msgid "volume"
-msgstr "ses"
-
-#: ../src/Tools/mpdinteraction.c:424
-msgid "Volume (+-)<level>"
-msgstr "Ses(+-)<düzey>"
-
-#: ../src/Tools/mpdinteraction.c:426
-msgid "mute"
-msgstr "sessiz"
-
-#: ../src/Tools/mpdinteraction.c:429
-msgid "crossfade"
-msgstr "Çapraz geçiş"
-
-#: ../src/Tools/mpdinteraction.c:430
-msgctxt "Regex for matching crossfade, translate off"
-msgid "([0-9]+|Off)"
-msgstr "([0-9]+|Kapalı)"
-
-#: ../src/Tools/mpdinteraction.c:431
-msgid "Set Crossfade <seconds>"
-msgstr "Çapraz Geçişi Ayarla <saniyeler>"
-
-#: ../src/Tools/mpdinteraction.c:433
-msgid "output"
-msgstr "çıkış"
-
-#: ../src/Tools/mpdinteraction.c:434
-msgctxt "Regex for matching output"
-msgid "[0-9]+[ ]*(Enable|Disable|Select|)"
-msgstr "[0-9]+[ ]*(Etkinleştir|Pasifleştir|Seç|)"
-
-#: ../src/Tools/mpdinteraction.c:435
-msgid "output X enable or disable or select"
-msgstr ""
-
-#: ../src/Tools/mpdinteraction.c:438
-msgid "Play <query>"
-msgstr "Çal <sorgu>"
-
-#: ../src/Tools/mpdinteraction.c:440
-msgid "add"
-msgstr "ekle"
-
-#: ../src/Tools/mpdinteraction.c:440
-msgid "Add <query>"
-msgstr "Ekle <sorgu>"
-
-#: ../src/Tools/mpdinteraction.c:442
-msgid "replace"
-msgstr "değiştir"
-
-#: ../src/Tools/mpdinteraction.c:442
-msgid "Replace <query>"
-msgstr "Değiştir <sorgu>"
-
-#. Basic seek commands
-#: ../src/Tools/mpdinteraction.c:446
-msgid "seek"
-msgstr "ara"
-
-#: ../src/Tools/mpdinteraction.c:446
-msgid "Seek within the current song"
-msgstr "Geçerli şarkı içinde ara"
-
-#: ../src/Tools/mpdinteraction.c:450
-msgid "stop after current song"
-msgstr "geçerli şarkıdan sonra dur"
-
-#: ../src/Tools/mpdinteraction.c:452
-msgid "Stop playback after the current song"
-msgstr "Geçerli şarkıdan sonra çalmayı durdur"
-
-#: ../src/Tools/mpdinteraction.c:456
-msgid "repeat current song"
-msgstr "geçerli şarkıyı tekrar et"
-
-#: ../src/Tools/mpdinteraction.c:458
-msgid "Repeat the current song"
-msgstr "Geçerli şarkıyı tekrar et"
-
-#: ../src/Tools/mpdinteraction.c:462
-msgid "update database"
-msgstr "veritabanını güncelle"
-
-#: ../src/Tools/mpdinteraction.c:464
-msgid "Update the database"
-msgstr "Veritabanını güncelle"
-
-#: ../src/Tools/mpdinteraction.c:468
+#: ../src/Tools/mpdinteraction.c:83
 msgid "Server Settings"
 msgstr "Sunucu Ayarları"
 
-#: ../src/Tools/mpdinteraction.c:490
+#: ../src/Tools/mpdinteraction.c:105
 msgid "Connection"
 msgstr "Bağlantı"
 
-#: ../src/Tools/mpdinteraction.c:578
+#: ../src/Tools/mpdinteraction.c:193
 msgid "Connecting"
 msgstr "Bağlanıyor"
 
 #. Add all from album
-#: ../src/Tools/mpdinteraction.c:1679
+#: ../src/Tools/mpdinteraction.c:1297
 msgid "All from album"
 msgstr "Albümün tamamı"
 
 #. Add all from artist
-#: ../src/Tools/mpdinteraction.c:1692
+#: ../src/Tools/mpdinteraction.c:1310
 msgid "All from artist"
 msgstr "Sanatçıdan tamamı"
 
 #. Add all from genre
-#: ../src/Tools/mpdinteraction.c:1703
+#: ../src/Tools/mpdinteraction.c:1321
 msgid "All from genre"
 msgstr "Türün tamamı"
 
 #. Add all from file
-#: ../src/Tools/mpdinteraction.c:1711
+#: ../src/Tools/mpdinteraction.c:1329
 msgid "All from same directory"
 msgstr "Aynı dizindekilerin tamamı"
 
 #. Create sub menu
 #. Add
-#: ../src/Tools/mpdinteraction.c:1720
+#: ../src/Tools/mpdinteraction.c:1338
 msgid "Add more"
 msgstr "Daha fazla ekle"
 
@@ -2216,8 +2235,8 @@ msgstr "Getiriliyor"
 msgid "Fetching .. "
 msgstr "Getiriliyor .. "
 
-#: ../src/Widgets/advanced_settings.c:174
-#: ../src/Widgets/advanced_settings.c:179
+#: ../src/Widgets/advanced_settings.c:198
+#: ../src/Widgets/advanced_settings.c:203
 #, fuzzy
 msgid "Browsers"
 msgstr "Dosya Gezgini"
@@ -2303,17 +2322,57 @@ msgstr "Rastgele kipi etkin"
 msgid "Random disabled"
 msgstr "Rastgele kipi devre dışı"
 
-#: ../src/GUI/title_header.c:80
+#: ../src/GUI/title_header.c:88
 msgid "By"
 msgstr ""
 
-#: ../src/GUI/title_header.c:86
+#. gmpc_clicklabel_set_do_italic(GMPC_CLICKLABEL(header_labels[2]), TRUE);
+#: ../src/GUI/title_header.c:94
 msgid "From"
 msgstr ""
 
-#: ../src/GUI/title_header.c:155
+#: ../src/GUI/title_header.c:166
 msgid "Not Playing"
 msgstr "Çalınmıyor"
+
+#. Fetch artist art
+#: ../src/Providers/LastFM.c:472
+#, fuzzy
+msgid "Artist images"
+msgstr "_Sanatçı Resmini Göster"
+
+#. Fetch artist text
+#: ../src/Providers/LastFM.c:479
+#, fuzzy
+msgid "Artist biography"
+msgstr "Sanatci Biyografisi"
+
+#. Fetch similar artists
+#: ../src/Providers/LastFM.c:486
+#, fuzzy
+msgid "Similar artists"
+msgstr "Benzer Sanatçılar"
+
+#. Fetch artist art
+#: ../src/Providers/LastFM.c:493
+#, fuzzy
+msgid "Album cover"
+msgstr "Albüm resmi"
+
+#. Fetch similar songs
+#: ../src/Providers/LastFM.c:500
+msgid "Similar songs"
+msgstr "Benzer şarkılar"
+
+#. Fetch similar genre
+#: ../src/Providers/LastFM.c:507
+#, fuzzy
+msgid "Similar genres"
+msgstr "Benzer Şarkılar"
+
+#: ../src/Providers/LastFM.c:774
+msgid "Last FM metadata fetcher (internal)"
+msgstr ""
 
 #~ msgid "Show redraw events in GTK+"
 #~ msgstr "GTK+ daki tekrar çizme olaylarını göster"
@@ -2366,9 +2425,6 @@ msgstr "Çalınmıyor"
 
 #~ msgid "_Fullscreen"
 #~ msgstr "_Tam ekran"
-
-#~ msgid "_Connect"
-#~ msgstr "_Bağlan"
 
 #~ msgid "_Help"
 #~ msgstr "_Yardım"
@@ -2428,9 +2484,6 @@ msgstr "Çalınmıyor"
 #~ msgid "MPD database is updating."
 #~ msgstr "MPD veritabanı güncelleniyor."
 
-#~ msgid "_Show Artist Image"
-#~ msgstr "_Sanatçı Resmini Göster"
-
 #~ msgid "_Expand Interface"
 #~ msgstr "_Arayüzü Genişlet"
 
@@ -2474,15 +2527,9 @@ msgstr "Çalınmıyor"
 #~ msgid "Invalid search"
 #~ msgstr "geçersiz arama"
 
-#~ msgid "Similar songs"
-#~ msgstr "Benzer şarkılar"
-
 #~ msgid "<b>Genre: </b>"
 #~ msgid_plural "<b>Genres: </b>"
 #~ msgstr[0] "<b>Tür: </b>"
-
-#~ msgid "Similar Artists"
-#~ msgstr "Benzer Sanatçılar"
 
 #~ msgid "show current artist"
 #~ msgstr "geçerli sanatçıyı göster"

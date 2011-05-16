@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-27 19:20+0200\n"
+"POT-Creation-Date: 2011-05-16 20:57+0200\n"
 "PO-Revision-Date: 2011-02-19 10:14+0000\n"
 "Last-Translator: Urpo Lankinen <wwwwolf@iki.fi>\n"
 "Language-Team: Finnish <fi@li.org>\n"
@@ -24,26 +24,26 @@ msgstr ""
 msgid "A gnome frontend for the mpd daemon"
 msgstr "Gnome-käyttöliittymä MPD-palvelulle"
 
-#: ../data/gmpc.desktop.in.h:2 ../src/main.c:1046 ../src/playlist3.c:1948
-#: ../src/tray-icon2.c:651 ../src/options.c:96
+#: ../data/gmpc.desktop.in.h:2 ../src/main.c:1054 ../src/playlist3.c:1935
+#: ../src/tray-icon2.c:651 ../src/options.c:101
 #: ../src/browsers/gmpc-nowplaying2.c:2443
 #: ../src/browsers/gmpc-nowplaying2.c:2447
 msgid "Gnome Music Player Client"
 msgstr "Gnomen musiikkisoitinasiakas"
 
-#: ../src/main.c:326
+#: ../src/main.c:333
 msgid "Failed to load the configuration system."
 msgstr "Asetusjärjestelmän lataaminen epäonnistui."
 
-#: ../src/main.c:423
+#: ../src/main.c:431
 msgid "Failed to setup libmpd"
 msgstr "libmpd:n käyttöönottaminen epäonnistui"
 
-#: ../src/main.c:810
+#: ../src/main.c:818
 msgid "GMPC has insufficient permissions on the mpd server."
 msgstr "GMPC:llä ei ole riittäviä oikeuksia mpd-palvelimeen"
 
-#: ../src/main.c:842
+#: ../src/main.c:850
 #, c-format
 msgid ""
 "Failed to set password on: '%s'\n"
@@ -52,112 +52,112 @@ msgstr ""
 "Salasanan asettaminen kohteeseen '%s' epäonnistui\n"
 "Olkaa hyvä ja yrittäkää uudelleen"
 
-#: ../src/main.c:847
+#: ../src/main.c:855
 #, c-format
 msgid "Please enter your password for: '%s'"
 msgstr "Syötä salasanasi kohteelle '%s'"
 
-#: ../src/main.c:887 ../src/main.c:918
+#: ../src/main.c:895 ../src/main.c:926
 msgid "error code"
 msgstr "virhekoodi"
 
-#: ../src/main.c:904
+#: ../src/main.c:912
 msgid "Insufficient permission to connect to mpd. Check password"
 msgstr "Riittävät oikeudet mpd:hen yhdistämiseen puuttuvat. Tarkista salasana"
 
-#: ../src/main.c:947
+#: ../src/main.c:955
 msgid "MPD versions before 0.13.0 are not supported"
 msgstr "MPD:n 0.13.0 aiemmat versiot eivät ole tuettuja"
 
-#: ../src/main.c:1013
+#: ../src/main.c:1021
 msgid "Connected to mpd"
 msgstr "Yhdistä mpd:hen"
 
-#: ../src/main.c:1016
+#: ../src/main.c:1024
 msgid "Disconnected from mpd"
 msgstr "Katkaise yhteys mpd:hen"
 
-#: ../src/main.c:1048
+#: ../src/main.c:1056
 msgid "Tagline"
 msgstr ""
 
 #. * Mpd version
-#: ../src/main.c:1049 ../src/preferences.c:351
+#: ../src/main.c:1057 ../src/preferences.c:351
 #: ../src/browsers/server-information.c:337
 msgid "Version"
 msgstr "Versio"
 
-#: ../src/main.c:1055
+#: ../src/main.c:1063
 #, fuzzy
 msgid "Revision"
 msgstr "Versio"
 
-#: ../src/main.c:1065
+#: ../src/main.c:1073
 msgid "quit"
 msgstr "lopeta"
 
-#: ../src/main.c:1066
+#: ../src/main.c:1074
 msgid "Quit gmpc"
 msgstr "Lopeta gmpc"
 
-#: ../src/main.c:1071
+#: ../src/main.c:1079
 msgid "hide"
 msgstr "piilota"
 
-#: ../src/main.c:1072
+#: ../src/main.c:1080
 msgid "Hide gmpc"
 msgstr "Piilota gmpc"
 
-#: ../src/main.c:1077
+#: ../src/main.c:1085
 msgid "show"
 msgstr "näytä"
 
-#: ../src/main.c:1078
+#: ../src/main.c:1086
 msgid "Show gmpc"
 msgstr "Näytä gmpc"
 
-#: ../src/main.c:1083
+#: ../src/main.c:1091
 msgid "toggle"
 msgstr ""
 
-#: ../src/main.c:1084
+#: ../src/main.c:1092
 msgid "Toogle gmpc visibility"
 msgstr ""
 
-#: ../src/main.c:1089
+#: ../src/main.c:1097
 msgid "show notification"
 msgstr "näytä ilmoitus"
 
-#: ../src/main.c:1090
+#: ../src/main.c:1098
 msgid "Show trayicon notification"
 msgstr "Näytä työkalurivin kuvake"
 
-#: ../src/main.c:1094
+#: ../src/main.c:1102
 msgid "preferences"
 msgstr ""
 
-#: ../src/main.c:1095
+#: ../src/main.c:1103
 msgid "Show preferences window"
 msgstr ""
 
-#: ../src/main.c:1100
+#: ../src/main.c:1108
 #, fuzzy
 msgid "bug information"
 msgstr "Bugin tiedot"
 
-#: ../src/main.c:1101 ../src/options.c:82
+#: ../src/main.c:1109 ../src/options.c:83
 msgid "Show bug information"
 msgstr "Näytä bugin tiedot"
 
-#: ../src/main.c:1106 ../src/main.c:1112
+#: ../src/main.c:1114 ../src/main.c:1120
 msgid "url"
 msgstr ""
 
-#: ../src/main.c:1107
+#: ../src/main.c:1115
 msgid "Show add url window"
 msgstr ""
 
-#: ../src/main.c:1113
+#: ../src/main.c:1121
 msgid "Add url <scheme>://<path>"
 msgstr ""
 
@@ -173,146 +173,137 @@ msgstr ""
 msgid "Metadata Handler"
 msgstr "Metatiedon käsittelijä"
 
-#: ../src/playlist3.c:749
+#: ../src/playlist3.c:763
 msgid "Connected"
 msgstr "Yhdistetty"
 
-#: ../src/playlist3.c:760 ../src/GUI/title_header.c:163
+#: ../src/playlist3.c:774 ../src/GUI/title_header.c:174
 msgid "Not Connected"
 msgstr "Ei yhdistettynä"
 
-#: ../src/playlist3.c:780 ../src/playlist3.c:786 ../src/playlist3.c:799
-#: ../src/playlist3.c:805 ../src/playlist3.c:1677 ../src/playlist3.c:1683
+#: ../src/playlist3.c:794 ../src/playlist3.c:800 ../src/playlist3.c:813
+#: ../src/playlist3.c:819 ../src/playlist3.c:1676 ../src/playlist3.c:1682
 msgid "GMPC"
 msgstr ""
 
-#: ../src/playlist3.c:781 ../src/playlist3.c:786
+#: ../src/playlist3.c:795 ../src/playlist3.c:800
 msgid "Connected to"
 msgstr "Yhdistetty palvelimeen"
 
-#: ../src/playlist3.c:800 ../src/playlist3.c:805
+#: ../src/playlist3.c:814 ../src/playlist3.c:819
 msgid "Disconnected"
 msgstr "Ei yhteyttä"
 
 #. *
 #. * Set paused in Window string
 #.
-#: ../src/playlist3.c:1629 ../src/playlist3.c:1633
+#: ../src/playlist3.c:1638 ../src/playlist3.c:1642
 msgid "paused"
 msgstr ""
 
-#: ../src/playlist3.c:1726
+#: ../src/playlist3.c:1714
 #, c-format
 msgid "Repeat: %s"
 msgstr "Toisto: %s"
 
-#: ../src/playlist3.c:1727 ../src/playlist3.c:1741 ../src/playlist3.c:1758
-#: ../src/playlist3.c:1772
+#: ../src/playlist3.c:1715 ../src/playlist3.c:1729 ../src/playlist3.c:1746
+#: ../src/playlist3.c:1760
 msgid "On"
 msgstr "Päällä"
 
-#: ../src/playlist3.c:1727 ../src/playlist3.c:1741 ../src/playlist3.c:1758
-#: ../src/playlist3.c:1772 ../glade/preferences-server.ui.h:9
-#: ../src/Tools/mpdinteraction.c:147
+#: ../src/playlist3.c:1715 ../src/playlist3.c:1729 ../src/playlist3.c:1746
+#: ../src/playlist3.c:1760 ../glade/preferences-server.ui.h:9
+#: ../src/Tools/mpd-easy-commands.c:76
 msgid "Off"
 msgstr ""
 
-#: ../src/playlist3.c:1740
+#: ../src/playlist3.c:1728
 #, c-format
 msgid "Random: %s"
 msgstr "Satunnaistoisto: %s"
 
-#: ../src/playlist3.c:1757
+#: ../src/playlist3.c:1745
 #, c-format
 msgid "Single mode: %s"
 msgstr "Yksittäissoittotila: %s"
 
-#: ../src/playlist3.c:1771
+#: ../src/playlist3.c:1759
 #, c-format
 msgid "Consume: %s"
 msgstr ""
 
-#: ../src/playlist3.c:1880
+#: ../src/playlist3.c:1868
 msgid "MPD Reported the following error"
 msgstr "MPD palautti seuraavan virheen"
 
-#: ../src/playlist3.c:2032 ../src/playlist3.c:2039
+#: ../src/playlist3.c:2019 ../src/playlist3.c:2026
 msgid "Profile"
 msgstr "Profiili"
 
-#: ../src/playlist3.c:2033
+#: ../src/playlist3.c:2020
 msgid "added"
 msgstr ""
 
-#: ../src/playlist3.c:2041
+#: ../src/playlist3.c:2028
 msgid "changed hostname to:"
 msgstr "vaihtoi palvelimen osoitteeksi"
 
-#: ../src/playlist3.c:2315 ../src/Widgets/advanced_settings.c:150
-#: ../src/Widgets/advanced_settings.c:154
+#: ../src/playlist3.c:2302 ../src/Widgets/advanced_settings.c:167
+#: ../src/Widgets/advanced_settings.c:171
 msgid "Interface"
 msgstr "Käyttöliittymä"
 
-#: ../src/plugin.c:89 ../src/plugin.c:99 ../src/plugin.c:109
-#: ../src/plugin.c:121 ../src/plugin.c:131 ../src/plugin.c:143
-#: ../src/plugin.c:153 ../src/plugin.c:163 ../src/plugin.c:173
-#: ../src/plugin.c:183 ../src/plugin.c:193 ../src/plugin.c:208
-#: ../src/plugin.c:222 ../src/plugin.c:314
+#: ../src/plugin.c:91 ../src/plugin.c:101 ../src/plugin.c:111
+#: ../src/plugin.c:123 ../src/plugin.c:136 ../src/plugin.c:146
+#: ../src/plugin.c:156 ../src/plugin.c:166 ../src/plugin.c:181
+#: ../src/plugin.c:195 ../src/plugin.c:287
 msgid "Failed to load plugin"
 msgstr "Liitännäisen lataaminen epäonnistui"
 
-#: ../src/plugin.c:89
+#: ../src/plugin.c:91
 msgid "plugin has no name"
 msgstr "liitännäisellä ei ole nimeä"
 
-#: ../src/plugin.c:100
+#: ../src/plugin.c:102
 msgid "plugin with same name already exists"
 msgstr "samanniminen liitännäinen on jo ladattu"
 
-#: ../src/plugin.c:110
+#: ../src/plugin.c:112
 msgid "plugin is missing set/get enable function"
 msgstr ""
 
-#: ../src/plugin.c:122 ../src/plugin.c:132 ../src/plugin.c:209
+#: ../src/plugin.c:124 ../src/plugin.c:182
 msgid "plugin browser structure is incorrect"
 msgstr ""
 
-#: ../src/plugin.c:144 ../src/plugin.c:154 ../src/plugin.c:164
-#: ../src/plugin.c:194
+#: ../src/plugin.c:137 ../src/plugin.c:147 ../src/plugin.c:157
+#: ../src/plugin.c:167
 msgid "plugin metadata structure is incorrect"
 msgstr ""
 
-#: ../src/plugin.c:174
-msgid "plugin get_image api is deprecated "
-msgstr ""
-
-#: ../src/plugin.c:184
-msgid "plugin get_uris api is deprecated "
-msgstr ""
-
-#: ../src/plugin.c:223
+#: ../src/plugin.c:196
 msgid "plugin preferences structure is incorrect"
 msgstr ""
 
-#: ../src/plugin.c:328
+#: ../src/plugin.c:301
 msgid "Failed to create plugin instance"
 msgstr "Liitännäisen instanssin luominen epäonnistui"
 
-#: ../src/plugin.c:345
+#: ../src/plugin.c:318
 msgid "Failed to bind symbol in plugin"
 msgstr ""
 
-#: ../src/plugin.c:359
+#: ../src/plugin.c:332
 #, c-format
 msgid "Plugin %s has wrong api version: %i"
 msgstr "Liitännäisen %s API-versio %i on virheellinen"
 
-#: ../src/plugin.c:373 ../src/plugin.c:382
+#: ../src/plugin.c:346 ../src/plugin.c:355
 #, c-format
 msgid "Plugin %s has wrong no plugin structure: %s"
 msgstr ""
 
-#: ../src/plugin.c:404
+#: ../src/plugin.c:377
 msgid ""
 "One or more plugins failed to load, see help->messages for more information"
 msgstr ""
@@ -381,45 +372,49 @@ msgstr "Seuraava"
 msgid "Notification"
 msgstr "Ilmoitus"
 
-#: ../src/options.c:50
+#: ../src/options.c:51
 msgid "Start the program in full screen"
 msgstr "Käynnistä ohjelma koko ruudun täyttävässä tilassa"
 
-#: ../src/options.c:54
+#: ../src/options.c:55
 msgid "Show program version and revision"
 msgstr "Näytä ohjelman versio ja muunnelma"
 
-#: ../src/options.c:58
+#: ../src/options.c:59
 msgid "Quits the running gmpc"
 msgstr "Sulkee käynnissä olevan gmpc:n"
 
-#: ../src/options.c:62
+#: ../src/options.c:63
 msgid "Don't load the plugins"
 msgstr "Älä lataa liitännäisiä"
 
-#: ../src/options.c:66
+#: ../src/options.c:67
 msgid "Load alternative config file"
 msgstr "Lataa vaihtoehtoinen asetustiedosto"
 
-#: ../src/options.c:70
+#: ../src/options.c:71
 msgid "Set the debug level"
 msgstr "Aseta vianetsintätaso"
 
-#: ../src/options.c:74
+#: ../src/options.c:75
 msgid "Start gmpc hidden to tray"
 msgstr "Aloita gmpc piilotettuna työkaluriviin"
 
-#: ../src/options.c:78
+#: ../src/options.c:79
 msgid "Remove all failed hits from metadata cache"
 msgstr "Poista kaikki epäonnistuneet haut metatietojen välimuistista"
 
-#: ../src/options.c:86
+#: ../src/options.c:87
 msgid "Shows all output from a certain log domain"
 msgstr ""
 
-#: ../src/options.c:90
+#: ../src/options.c:91
 msgid "Select a profile"
 msgstr "Valitse profiili"
+
+#: ../src/options.c:95
+msgid "Run GMPC with a different icon theme"
+msgstr ""
 
 #: ../src/smclient/eggdesktopfile.c:165
 #, c-format
@@ -451,7 +446,7 @@ msgstr "Tuntematon käynnistysvalitsin: %d"
 msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
 msgstr "Asiakirja-URIa ei voi välittää \"Type=Link\"-työpöytälinkille"
 
-#: ../src/smclient/eggdesktopfile.c:1392
+#: ../src/smclient/eggdesktopfile.c:1393
 #, c-format
 msgid "Not a launchable item"
 msgstr "Ei käynnitettävä kohde"
@@ -614,7 +609,7 @@ msgstr ""
 msgid "<b>Playlist:</b>"
 msgstr ""
 
-#: ../glade/preferences-playlist.ui.h:3 ../src/Widgets/advanced_settings.c:140
+#: ../glade/preferences-playlist.ui.h:3 ../src/Widgets/advanced_settings.c:157
 #, fuzzy
 msgid "Advanced settings"
 msgstr "Palvelinasetukset"
@@ -811,7 +806,7 @@ msgstr "Kuluttaa"
 msgid "Consume Mode"
 msgstr ""
 
-#: ../glade/playlist3.ui.h:3 ../src/Tools/mpdinteraction.c:426
+#: ../glade/playlist3.ui.h:3 ../src/Tools/mpd-easy-commands.c:362
 msgid "Mute"
 msgstr "Mykistä"
 
@@ -1020,8 +1015,8 @@ msgid "Search Playlist"
 msgstr ""
 
 #: ../src/browsers/playlist3-file-browser.c:117
-#: ../src/browsers/playlist3-file-browser.c:350
-#: ../src/browsers/playlist3-file-browser.c:1210
+#: ../src/browsers/playlist3-file-browser.c:355
+#: ../src/browsers/playlist3-file-browser.c:1215
 #: ../src/browsers/server-information.c:346
 msgid "Database"
 msgstr ""
@@ -1049,8 +1044,8 @@ msgstr ""
 #. replace
 #. add the replace widget
 #: ../src/browsers/playlist3-file-browser.c:641
-#: ../src/browsers/playlist3-file-browser.c:934
-#: ../src/browsers/playlist3-file-browser.c:965
+#: ../src/browsers/playlist3-file-browser.c:939
+#: ../src/browsers/playlist3-file-browser.c:970
 #: ../src/browsers/playlist3-find2-browser.c:641
 #: ../src/browsers/playlist3-playlist-editor.c:693
 #: ../src/browsers/playlist3-playlist-editor.c:766
@@ -1061,52 +1056,52 @@ msgstr ""
 
 #. add the update widget
 #: ../src/browsers/playlist3-file-browser.c:666
-#: ../src/browsers/playlist3-file-browser.c:923
+#: ../src/browsers/playlist3-file-browser.c:928
 msgid "Update"
 msgstr ""
 
-#: ../src/browsers/playlist3-file-browser.c:779
+#: ../src/browsers/playlist3-file-browser.c:784
 msgid "Loaded playlist"
 msgstr ""
 
-#: ../src/browsers/playlist3-file-browser.c:1050
+#: ../src/browsers/playlist3-file-browser.c:1055
 #: ../src/browsers/playlist3-playlist-editor.c:533
 msgid "Added"
 msgstr ""
 
-#: ../src/browsers/playlist3-file-browser.c:1052
+#: ../src/browsers/playlist3-file-browser.c:1057
 #: ../src/browsers/playlist3-playlist-editor.c:533
 msgid "song"
 msgid_plural "songs"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/browsers/playlist3-file-browser.c:1055
+#: ../src/browsers/playlist3-file-browser.c:1060
 msgid "directory"
 msgid_plural "directories"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/browsers/playlist3-file-browser.c:1058
+#: ../src/browsers/playlist3-file-browser.c:1063
 msgid "playlist"
 msgid_plural "playlists"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../src/browsers/playlist3-file-browser.c:1079
-#: ../src/browsers/playlist3-file-browser.c:1124
+#: ../src/browsers/playlist3-file-browser.c:1084
+#: ../src/browsers/playlist3-file-browser.c:1129
 msgid "Are you sure you want to clear the selected playlist?"
 msgstr ""
 
-#: ../src/browsers/playlist3-file-browser.c:1414
+#: ../src/browsers/playlist3-file-browser.c:1422
 msgid "search database"
 msgstr ""
 
-#: ../src/browsers/playlist3-file-browser.c:1415
+#: ../src/browsers/playlist3-file-browser.c:1423
 msgid "Search database <query>"
 msgstr ""
 
-#: ../src/browsers/playlist3-file-browser.c:1461
+#: ../src/browsers/playlist3-file-browser.c:1469
 msgid "Lookup directory in database"
 msgstr ""
 
@@ -1151,7 +1146,7 @@ msgstr ""
 #: ../src/browsers/playlist3-playlist-editor.c:1188
 #: ../src/vala/gmpc-favorites.c:143 ../src/vala/gmpc-favorites.c:165
 #: ../src/vala/gmpc-favorites.c:215 ../src/vala/gmpc-favorites.c:229
-#: ../src/vala/gmpc-favorites.c:392
+#: ../src/vala/gmpc-favorites.c:394
 msgid "Favorites"
 msgstr ""
 
@@ -1563,7 +1558,7 @@ msgstr ""
 #: ../src/gmpc-meta-text-view.gob:112 ../src/gmpc-metaimage.gob:754
 #: ../src/vala/gmpc-test-plugin.c:1862
 #: ../src/Widgets/gmpc-metadata-text-label.c:220
-#: ../src/Widgets/gmpc-metadata-backdrop.c:337
+#: ../src/Widgets/gmpc-metadata-backdrop.c:356
 msgid "Metadata selector"
 msgstr ""
 
@@ -1709,12 +1704,276 @@ msgstr ""
 msgid "MPD Database has been updated at:"
 msgstr ""
 
+#. Default to 'select' if no specific action given
+#: ../src/Tools/mpd-easy-commands.c:25
+msgid "select"
+msgstr ""
+
+#: ../src/Tools/mpd-easy-commands.c:59
+msgid "enable"
+msgstr "ota käyttöön"
+
+#: ../src/Tools/mpd-easy-commands.c:63
+msgid "disable"
+msgstr "poista käytöstä"
+
+#: ../src/Tools/mpd-easy-commands.c:125
+msgid ""
+"Update database: The used MPD server is to old and does not support this."
+msgstr ""
+"Päivitä tietokanta: Käytössä oleva MPD-palvelin on liian vanha eikä tue tätä "
+"toimintoa."
+
+#: ../src/Tools/mpd-easy-commands.c:129
+msgid "Update database: You have insufficient permission."
+msgstr "Päivitä tietokanta: Sinulla ei ole riittäviä oikeuksia."
+
+#: ../src/Tools/mpd-easy-commands.c:141
+msgid ""
+"Repeat current song: The used MPD server is to old and does not support this."
+msgstr ""
+"Toista nykyinen kappale: Käytössäoleva MPD-palvelin on liian vanha eikä tue "
+"tätä toimintoa."
+
+#: ../src/Tools/mpd-easy-commands.c:145
+msgid "Repeat current song: You have insufficient permission."
+msgstr "Toista nykyinen kappale: Sinulla ei ole riittäviä oikeuksia."
+
+#: ../src/Tools/mpd-easy-commands.c:149
+msgid "The current song will be forever repeated."
+msgstr "Parhaillaan soiva kappale toistetaan loputtomasti."
+
+#: ../src/Tools/mpd-easy-commands.c:160
+msgid ""
+"Stop after current song: The used MPD server is to old and does not support "
+"this."
+msgstr ""
+"Lopeta toisto kappaleen jälkeen: Käytössäoleva MPD-palvelin on liian vanha "
+"eikä tue tätä toimintoa."
+
+#: ../src/Tools/mpd-easy-commands.c:164
+msgid "Stop after current song: You have insufficient permission."
+msgstr "Lopeta toisto kappaleen jälkeen: Sinulla ei ole riittäviä oikeuksia."
+
+#: ../src/Tools/mpd-easy-commands.c:168
+msgid "Playback will be stopped after the current playing song."
+msgstr "Toisto lopetetaan parhaillaan soivan kappaleen jälkeen."
+
+#: ../src/Tools/mpd-easy-commands.c:252
+msgid "Consume: The used MPD server is to old and does not support this."
+msgstr ""
+"Kuluta: Käytössäoleva MPD-palvelin on liian vanha eikä tue tätä toimintoa."
+
+#: ../src/Tools/mpd-easy-commands.c:256
+msgid "Consume: You have insufficient permission to use this option."
+msgstr ""
+"Kuluta: Sinulla ei ole riittäviä oikeuksia tämän toiminnon suorittamiseen."
+
+#: ../src/Tools/mpd-easy-commands.c:277
+msgid "Single: The used MPD server is to old and does not support this."
+msgstr ""
+"Kerta: Käytössäoleva MPD-palvelin on liian vanha eikä tue tätä toimintoa."
+
+#: ../src/Tools/mpd-easy-commands.c:281
+msgid "Single: You have insufficient permission to use this option."
+msgstr "Kerta: Sinulla ei ole riittäviä oikeuksia."
+
+#. Player control
+#. basic playlist commands
+#: ../src/Tools/mpd-easy-commands.c:333 ../src/Tools/mpd-easy-commands.c:374
+msgid "play"
+msgstr "toista"
+
+#: ../src/Tools/mpd-easy-commands.c:333
+msgid "start playback"
+msgstr "aloita toisto"
+
+#: ../src/Tools/mpd-easy-commands.c:336
+msgid "pause"
+msgstr "keskeytä"
+
+#: ../src/Tools/mpd-easy-commands.c:336
+msgid "pause playback"
+msgstr "keskeytä toisto"
+
+#: ../src/Tools/mpd-easy-commands.c:339
+msgid "next"
+msgstr "seuraava"
+
+#: ../src/Tools/mpd-easy-commands.c:339
+msgid "next song"
+msgstr "seuraava kappale"
+
+#: ../src/Tools/mpd-easy-commands.c:342
+msgid "prev"
+msgstr "edellinen"
+
+#: ../src/Tools/mpd-easy-commands.c:342
+msgid "previous song"
+msgstr "edellinen kappale"
+
+#: ../src/Tools/mpd-easy-commands.c:345
+msgid "stop"
+msgstr "pysäytä"
+
+#: ../src/Tools/mpd-easy-commands.c:345
+msgid "stop playback"
+msgstr "lopeta toisto"
+
+#: ../src/Tools/mpd-easy-commands.c:349
+msgid "random"
+msgstr "satunnainen"
+
+#: ../src/Tools/mpd-easy-commands.c:349
+msgid "Random (on|off)"
+msgstr "satunnainen (päälle|pois)"
+
+#: ../src/Tools/mpd-easy-commands.c:351
+msgid "repeat"
+msgstr "kertaus"
+
+#: ../src/Tools/mpd-easy-commands.c:351
+msgid "Repeat (on|off)"
+msgstr "jatkuva soitto (päälle|pois)"
+
+#: ../src/Tools/mpd-easy-commands.c:354
+msgid "single"
+msgstr "sinkku"
+
+#: ../src/Tools/mpd-easy-commands.c:354
+msgid "Single (on|off)"
+msgstr "Sinkku (päälle|pois)"
+
+#: ../src/Tools/mpd-easy-commands.c:356
+msgid "consume"
+msgstr "kuluta"
+
+#: ../src/Tools/mpd-easy-commands.c:356
+msgid "Consume (on|off)"
+msgstr "Kuluta (päälle|pois)"
+
+#. volume commands
+#: ../src/Tools/mpd-easy-commands.c:360
+msgid "volume"
+msgstr "äänenvoimakkuus"
+
+#: ../src/Tools/mpd-easy-commands.c:360
+msgid "Volume (+-)<level>"
+msgstr "Äänenvoimakkuus (+-)<level>"
+
+#: ../src/Tools/mpd-easy-commands.c:362
+msgid "mute"
+msgstr "mykistys"
+
+#: ../src/Tools/mpd-easy-commands.c:365
+msgid "crossfade"
+msgstr "ristihäivytys"
+
+#: ../src/Tools/mpd-easy-commands.c:366
+msgctxt "Regex for matching crossfade, translate off"
+msgid "([0-9]+|Off)"
+msgstr ""
+
+#: ../src/Tools/mpd-easy-commands.c:367
+msgid "Set Crossfade <seconds>"
+msgstr "Aseta ristihäivytys <seconds>"
+
+#: ../src/Tools/mpd-easy-commands.c:369
+msgid "output"
+msgstr "ulostulo"
+
+#: ../src/Tools/mpd-easy-commands.c:370
+msgctxt "Regex for matching output"
+msgid "[0-9]+[ ]*(Enable|Disable|Select|)"
+msgstr ""
+
+#: ../src/Tools/mpd-easy-commands.c:371
+msgid "output X enable or disable or select"
+msgstr ""
+
+#: ../src/Tools/mpd-easy-commands.c:374
+msgid "Play <query>"
+msgstr ""
+
+#: ../src/Tools/mpd-easy-commands.c:376
+msgid "add"
+msgstr ""
+
+#: ../src/Tools/mpd-easy-commands.c:376
+msgid "Add <query>"
+msgstr ""
+
+#: ../src/Tools/mpd-easy-commands.c:378
+msgid "replace"
+msgstr ""
+
+#: ../src/Tools/mpd-easy-commands.c:378
+msgid "Replace <query>"
+msgstr ""
+
+#. Basic seek commands
+#: ../src/Tools/mpd-easy-commands.c:382
+msgid "seek"
+msgstr ""
+
+#: ../src/Tools/mpd-easy-commands.c:382
+msgid "Seek within the current song"
+msgstr "Vaihda kohtaa nykyisen kappaleen sisällä"
+
+#: ../src/Tools/mpd-easy-commands.c:386
+msgid "stop after current song"
+msgstr ""
+
+#: ../src/Tools/mpd-easy-commands.c:388
+msgid "Stop playback after the current song"
+msgstr "Pysäytä soitto nykyisen kappaleen jälkeen"
+
+#: ../src/Tools/mpd-easy-commands.c:392
+msgid "repeat current song"
+msgstr ""
+
+#: ../src/Tools/mpd-easy-commands.c:394
+msgid "Repeat the current song"
+msgstr "Toista nykyinen kappale"
+
+#: ../src/Tools/mpd-easy-commands.c:398
+msgid "update database"
+msgstr ""
+
+#: ../src/Tools/mpd-easy-commands.c:400
+msgid "Update the database"
+msgstr ""
+
+#: ../src/Tools/mpd-easy-commands.c:404
+#, fuzzy
+msgid "disconnect"
+msgstr "_Katkaise yhteys"
+
+#: ../src/Tools/mpd-easy-commands.c:406
+#, fuzzy
+msgid "disconnect from MPD"
+msgstr "Katkaise yhteys mpd:hen"
+
+#: ../src/Tools/mpd-easy-commands.c:409 ../src/Tools/mpd-easy-commands.c:413
+#, fuzzy
+msgid "connect"
+msgstr "_Yhdistä"
+
+#: ../src/Tools/mpd-easy-commands.c:411
+#, fuzzy
+msgid "connect to MPD"
+msgstr "Yhdistetty palvelimeen"
+
+#: ../src/Tools/mpd-easy-commands.c:415
+msgid "connect to MPD using profile"
+msgstr ""
+
 #: ../src/Tools/gmpc_easy_download.c:288
 msgid "Proxy"
 msgstr "Välityspalvelin"
 
 #. Basic dialog with a close button
-#: ../src/Tools/bug-information.c:236
+#: ../src/Tools/bug-information.c:256
 msgid "Bug information"
 msgstr "Bugin tiedot"
 
@@ -1747,281 +2006,41 @@ msgstr ""
 msgid "Finish"
 msgstr "Valmis"
 
-#. Default to 'select' if no specific action given
-#: ../src/Tools/mpdinteraction.c:95
-msgid "select"
-msgstr ""
-
-#: ../src/Tools/mpdinteraction.c:129
-msgid "enable"
-msgstr "ota käyttöön"
-
-#: ../src/Tools/mpdinteraction.c:133
-msgid "disable"
-msgstr "poista käytöstä"
-
-#: ../src/Tools/mpdinteraction.c:212
-msgid "Single: The used MPD server is to old and does not support this."
-msgstr ""
-"Kerta: Käytössäoleva MPD-palvelin on liian vanha eikä tue tätä toimintoa."
-
-#: ../src/Tools/mpdinteraction.c:216
-msgid "Single: You have insufficient permission to use this option."
-msgstr "Kerta: Sinulla ei ole riittäviä oikeuksia."
-
-#: ../src/Tools/mpdinteraction.c:238
-msgid "Consume: The used MPD server is to old and does not support this."
-msgstr ""
-"Kuluta: Käytössäoleva MPD-palvelin on liian vanha eikä tue tätä toimintoa."
-
-#: ../src/Tools/mpdinteraction.c:242
-msgid "Consume: You have insufficient permission to use this option."
-msgstr ""
-"Kuluta: Sinulla ei ole riittäviä oikeuksia tämän toiminnon suorittamiseen."
-
-#: ../src/Tools/mpdinteraction.c:343
-msgid ""
-"Stop after current song: The used MPD server is to old and does not support "
-"this."
-msgstr ""
-"Lopeta toisto kappaleen jälkeen: Käytössäoleva MPD-palvelin on liian vanha "
-"eikä tue tätä toimintoa."
-
-#: ../src/Tools/mpdinteraction.c:347
-msgid "Stop after current song: You have insufficient permission."
-msgstr "Lopeta toisto kappaleen jälkeen: Sinulla ei ole riittäviä oikeuksia."
-
-#: ../src/Tools/mpdinteraction.c:351
-msgid "Playback will be stopped after the current playing song."
-msgstr "Toisto lopetetaan parhaillaan soivan kappaleen jälkeen."
-
-#: ../src/Tools/mpdinteraction.c:363
-msgid ""
-"Repeat current song: The used MPD server is to old and does not support this."
-msgstr ""
-"Toista nykyinen kappale: Käytössäoleva MPD-palvelin on liian vanha eikä tue "
-"tätä toimintoa."
-
-#: ../src/Tools/mpdinteraction.c:367
-msgid "Repeat current song: You have insufficient permission."
-msgstr "Toista nykyinen kappale: Sinulla ei ole riittäviä oikeuksia."
-
-#: ../src/Tools/mpdinteraction.c:371
-msgid "The current song will be forever repeated."
-msgstr "Parhaillaan soiva kappale toistetaan loputtomasti."
-
-#: ../src/Tools/mpdinteraction.c:383
-msgid ""
-"Update database: The used MPD server is to old and does not support this."
-msgstr ""
-"Päivitä tietokanta: Käytössä oleva MPD-palvelin on liian vanha eikä tue tätä "
-"toimintoa."
-
-#: ../src/Tools/mpdinteraction.c:387
-msgid "Update database: You have insufficient permission."
-msgstr "Päivitä tietokanta: Sinulla ei ole riittäviä oikeuksia."
-
-#. Player control
-#. basic playlist commands
-#: ../src/Tools/mpdinteraction.c:397 ../src/Tools/mpdinteraction.c:438
-msgid "play"
-msgstr "toista"
-
-#: ../src/Tools/mpdinteraction.c:397
-msgid "start playback"
-msgstr "aloita toisto"
-
-#: ../src/Tools/mpdinteraction.c:400
-msgid "pause"
-msgstr "keskeytä"
-
-#: ../src/Tools/mpdinteraction.c:400
-msgid "pause playback"
-msgstr "keskeytä toisto"
-
-#: ../src/Tools/mpdinteraction.c:403
-msgid "next"
-msgstr "seuraava"
-
-#: ../src/Tools/mpdinteraction.c:403
-msgid "next song"
-msgstr "seuraava kappale"
-
-#: ../src/Tools/mpdinteraction.c:406
-msgid "prev"
-msgstr "edellinen"
-
-#: ../src/Tools/mpdinteraction.c:406
-msgid "previous song"
-msgstr "edellinen kappale"
-
-#: ../src/Tools/mpdinteraction.c:409
-msgid "stop"
-msgstr "pysäytä"
-
-#: ../src/Tools/mpdinteraction.c:409
-msgid "stop playback"
-msgstr "lopeta toisto"
-
-#: ../src/Tools/mpdinteraction.c:413
-msgid "random"
-msgstr "satunnainen"
-
-#: ../src/Tools/mpdinteraction.c:413
-msgid "Random (on|off)"
-msgstr "satunnainen (päälle|pois)"
-
-#: ../src/Tools/mpdinteraction.c:415
-msgid "repeat"
-msgstr "kertaus"
-
-#: ../src/Tools/mpdinteraction.c:415
-msgid "Repeat (on|off)"
-msgstr "jatkuva soitto (päälle|pois)"
-
-#: ../src/Tools/mpdinteraction.c:418
-msgid "single"
-msgstr "sinkku"
-
-#: ../src/Tools/mpdinteraction.c:418
-msgid "Single (on|off)"
-msgstr "Sinkku (päälle|pois)"
-
-#: ../src/Tools/mpdinteraction.c:420
-msgid "consume"
-msgstr "kuluta"
-
-#: ../src/Tools/mpdinteraction.c:420
-msgid "Consume (on|off)"
-msgstr "Kuluta (päälle|pois)"
-
-#. volume commands
-#: ../src/Tools/mpdinteraction.c:424
-msgid "volume"
-msgstr "äänenvoimakkuus"
-
-#: ../src/Tools/mpdinteraction.c:424
-msgid "Volume (+-)<level>"
-msgstr "Äänenvoimakkuus (+-)<level>"
-
-#: ../src/Tools/mpdinteraction.c:426
-msgid "mute"
-msgstr "mykistys"
-
-#: ../src/Tools/mpdinteraction.c:429
-msgid "crossfade"
-msgstr "ristihäivytys"
-
-#: ../src/Tools/mpdinteraction.c:430
-msgctxt "Regex for matching crossfade, translate off"
-msgid "([0-9]+|Off)"
-msgstr ""
-
-#: ../src/Tools/mpdinteraction.c:431
-msgid "Set Crossfade <seconds>"
-msgstr "Aseta ristihäivytys <seconds>"
-
-#: ../src/Tools/mpdinteraction.c:433
-msgid "output"
-msgstr "ulostulo"
-
-#: ../src/Tools/mpdinteraction.c:434
-msgctxt "Regex for matching output"
-msgid "[0-9]+[ ]*(Enable|Disable|Select|)"
-msgstr ""
-
-#: ../src/Tools/mpdinteraction.c:435
-msgid "output X enable or disable or select"
-msgstr ""
-
-#: ../src/Tools/mpdinteraction.c:438
-msgid "Play <query>"
-msgstr ""
-
-#: ../src/Tools/mpdinteraction.c:440
-msgid "add"
-msgstr ""
-
-#: ../src/Tools/mpdinteraction.c:440
-msgid "Add <query>"
-msgstr ""
-
-#: ../src/Tools/mpdinteraction.c:442
-msgid "replace"
-msgstr ""
-
-#: ../src/Tools/mpdinteraction.c:442
-msgid "Replace <query>"
-msgstr ""
-
-#. Basic seek commands
-#: ../src/Tools/mpdinteraction.c:446
-msgid "seek"
-msgstr ""
-
-#: ../src/Tools/mpdinteraction.c:446
-msgid "Seek within the current song"
-msgstr "Vaihda kohtaa nykyisen kappaleen sisällä"
-
-#: ../src/Tools/mpdinteraction.c:450
-msgid "stop after current song"
-msgstr ""
-
-#: ../src/Tools/mpdinteraction.c:452
-msgid "Stop playback after the current song"
-msgstr "Pysäytä soitto nykyisen kappaleen jälkeen"
-
-#: ../src/Tools/mpdinteraction.c:456
-msgid "repeat current song"
-msgstr ""
-
-#: ../src/Tools/mpdinteraction.c:458
-msgid "Repeat the current song"
-msgstr "Toista nykyinen kappale"
-
-#: ../src/Tools/mpdinteraction.c:462
-msgid "update database"
-msgstr ""
-
-#: ../src/Tools/mpdinteraction.c:464
-msgid "Update the database"
-msgstr ""
-
-#: ../src/Tools/mpdinteraction.c:468
+#: ../src/Tools/mpdinteraction.c:83
 msgid "Server Settings"
 msgstr "Palvelinasetukset"
 
-#: ../src/Tools/mpdinteraction.c:490
+#: ../src/Tools/mpdinteraction.c:105
 msgid "Connection"
 msgstr "Yhteys"
 
-#: ../src/Tools/mpdinteraction.c:578
+#: ../src/Tools/mpdinteraction.c:193
 msgid "Connecting"
 msgstr "Yhdistetään"
 
 #. Add all from album
-#: ../src/Tools/mpdinteraction.c:1679
+#: ../src/Tools/mpdinteraction.c:1297
 msgid "All from album"
 msgstr "Kaikki albumista"
 
 #. Add all from artist
-#: ../src/Tools/mpdinteraction.c:1692
+#: ../src/Tools/mpdinteraction.c:1310
 msgid "All from artist"
 msgstr "Kaikki esittäjältä"
 
 #. Add all from genre
-#: ../src/Tools/mpdinteraction.c:1703
+#: ../src/Tools/mpdinteraction.c:1321
 msgid "All from genre"
 msgstr ""
 
 #. Add all from file
-#: ../src/Tools/mpdinteraction.c:1711
+#: ../src/Tools/mpdinteraction.c:1329
 msgid "All from same directory"
 msgstr "Kaikki samasta hakemistosta"
 
 #. Create sub menu
 #. Add
-#: ../src/Tools/mpdinteraction.c:1720
+#: ../src/Tools/mpdinteraction.c:1338
 msgid "Add more"
 msgstr ""
 
@@ -2206,8 +2225,8 @@ msgstr ""
 msgid "Fetching .. "
 msgstr ""
 
-#: ../src/Widgets/advanced_settings.c:174
-#: ../src/Widgets/advanced_settings.c:179
+#: ../src/Widgets/advanced_settings.c:198
+#: ../src/Widgets/advanced_settings.c:203
 #, fuzzy
 msgid "Browsers"
 msgstr "Selainlaajennos"
@@ -2292,17 +2311,54 @@ msgstr ""
 msgid "Random disabled"
 msgstr ""
 
-#: ../src/GUI/title_header.c:80
+#: ../src/GUI/title_header.c:88
 msgid "By"
 msgstr "Esittäjä"
 
-#: ../src/GUI/title_header.c:86
+#. gmpc_clicklabel_set_do_italic(GMPC_CLICKLABEL(header_labels[2]), TRUE);
+#: ../src/GUI/title_header.c:94
 msgid "From"
 msgstr "Albumilta"
 
-#: ../src/GUI/title_header.c:155
+#: ../src/GUI/title_header.c:166
 msgid "Not Playing"
 msgstr "Soitto Pysäytetty"
+
+#. Fetch artist art
+#: ../src/Providers/LastFM.c:472
+#, fuzzy
+msgid "Artist images"
+msgstr "_Näytä artistin kuva"
+
+#. Fetch artist text
+#: ../src/Providers/LastFM.c:479
+msgid "Artist biography"
+msgstr ""
+
+#. Fetch similar artists
+#: ../src/Providers/LastFM.c:486
+#, fuzzy
+msgid "Similar artists"
+msgstr "Kaikki esittäjältä"
+
+#. Fetch artist art
+#: ../src/Providers/LastFM.c:493
+msgid "Album cover"
+msgstr ""
+
+#. Fetch similar songs
+#: ../src/Providers/LastFM.c:500
+msgid "Similar songs"
+msgstr ""
+
+#. Fetch similar genre
+#: ../src/Providers/LastFM.c:507
+msgid "Similar genres"
+msgstr ""
+
+#: ../src/Providers/LastFM.c:774
+msgid "Last FM metadata fetcher (internal)"
+msgstr ""
 
 #~ msgid "Show redraw events in GTK+"
 #~ msgstr "Näytä uudelleenpiirtotapahtumat GTK+:ssa"
@@ -2325,9 +2381,6 @@ msgstr "Soitto Pysäytetty"
 #~ msgid "_Fullscreen"
 #~ msgstr "_Kokoruutu"
 
-#~ msgid "_Connect"
-#~ msgstr "_Yhdistä"
-
 #~ msgid "Show Messages"
 #~ msgstr "Näytä viesti"
 
@@ -2336,9 +2389,6 @@ msgstr "Soitto Pysäytetty"
 
 #~ msgid "_Send Password"
 #~ msgstr "_Lähetä salasana"
-
-#~ msgid "_Show Artist Image"
-#~ msgstr "_Näytä artistin kuva"
 
 #~ msgid "_Help"
 #~ msgstr "O_hje"
