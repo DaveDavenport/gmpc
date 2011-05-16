@@ -411,6 +411,6 @@ void mpd_easy_commands_init(void)
 								_("connect to MPD"), (GmpcEasyCommandCallback *) connect, NULL);
 	gmpc_easy_command_add_entry(gmpc_easy_command,
 								_("connect"),
-								"[a-Z0-9 ]*",
+								".*",
 								_("connect to MPD using profile"), (GmpcEasyCommandCallback *) connect, NULL);
 }
