@@ -52,6 +52,7 @@ gmpc_TOOLS_FILES=\
     Tools/gmpc-metadata-prefetcher.vala\
     Tools/gmpc-liststore-sort.vala\
     Tools/gmpc_easy_download.c\
+    Tools/mpd-easy-commands.c\
     Tools/advanced-search.c\
     Tools/setup-assistant.c\
     Tools/bug-information.c\
@@ -245,7 +246,8 @@ EXTRA_DIST=\
 		browsers/playlist3-playlist-editor.h\
         gtktransition.h\
         plugin-internal.h\
-		Tools/setup-assistant.h\
+        Tools/mpd-easy-commands.h\
+        Tools/setup-assistant.h\
 		Tools/bug-information.h\
         Tools/plugin-man.h\
         Tools/log.h\

@@ -33,6 +33,7 @@ void consume_toggle(void);
 int  seek_ns(int n);
 int  seek_ps(int n);
 int connect_to_mpd(void);
+void disconnect_from_mpd();
 void song_fastforward(void);
 void song_fastbackward(void);
 void volume_up(void);

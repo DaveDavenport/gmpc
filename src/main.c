@@ -61,6 +61,7 @@
 
 #include "internal-plugins.h"
 #include "log.h"
+#include "mpd-easy-commands.h"
 
 /**
  * Global objects that give signals
@@ -383,7 +384,8 @@ int main(int argc, char **argv)
     TEC("Init easy command")
 	gmpc_easy_command_set_default_entries();
 	TEC("Set easy commands")
-	
+    mpd_easy_commands_init();
+    TEC("Set MPD Easy commands");	
 	/* Advanced search */
     advanced_search_init();
     TEC("Init advanced search");

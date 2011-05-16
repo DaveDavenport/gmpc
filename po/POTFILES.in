@@ -67,6 +67,7 @@ src/vala/gmpc-url-fetching-gui.c
 
 # Tools
 src/Tools/gmpc-database-update-tracker.c
+src/Tools/mpd-easy-commands.c
 src/Tools/gmpc_easy_download.c
 src/Tools/bug-information.c
 src/Tools/setup-assistant.c

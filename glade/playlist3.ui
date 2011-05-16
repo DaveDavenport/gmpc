@@ -83,8 +83,7 @@
           <object class="GtkAction" id="ViewEasyCommandHelp">
             <property name="label" translatable="true">_Easy Command Help</property>
             <signal name="activate" handler="easy_command_help_window" swapped="no"/>
-            <property name="stock-id">gtk-help</property>
-          </object>
+	    </object>
         </child>
         <child>
           <object class="GtkAction" id="ViewAbout">
