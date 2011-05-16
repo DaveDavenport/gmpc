@@ -1,7 +1,7 @@
 /* Gnome Music Player Client
  * Copyright (C) 2011 Qball Cow <qball@gmpclient.org>
  * Project homepage: http://gmpclient.org/
- 
+
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -25,7 +25,7 @@ private const bool use_transition_mb2 = Gmpc.use_transition;
 private const string some_unique_name_mb2 = Config.VERSION;
 private const string np2_LOG_DOMAIN = "NowPlaying";
 
-/** 
+/**
  * This plugin implements an 'improved' now playing interface, modeled after the mockup found here
  * http://gmpclient.org/wiki/GMPC_Mocup
  */
@@ -35,7 +35,7 @@ namespace Gmpc {
 
     namespace Browsers {
         public class Nowplaying : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface {
-            private bool    theme_colors    = (bool) config.get_int_with_default("Now Playing", "use-theme-color",1); 
+            private bool    theme_colors    = (bool) config.get_int_with_default("Now Playing", "use-theme-color",1);
             private string  title_color     = config.get_string_with_default("Now Playing", "title-color", "#4d90dd");
             private string  item_color      = config.get_string_with_default("Now Playing", "item-color", "#304ab8");
             private Gdk.Color background;
@@ -44,12 +44,12 @@ namespace Gmpc {
             private Gtk.Label bitrate_label = null;
             private Gtk.TreeRowReference np_ref = null;
 
-			private bool use_backdrop = (bool) config.get_int_with_default("Now Playing", "use-backdrop",0); 
+			private bool use_backdrop = (bool) config.get_int_with_default("Now Playing", "use-backdrop",0);
 
 
             construct {
                 /* Set the plugin as Browser type*/
-                this.plugin_type = 2|8; 
+                this.plugin_type = 2|8;
                 /* Track changed status */
                 gmpcconn.status_changed.connect(status_changed);
                 /* Track connect/disconnect */
@@ -112,7 +112,7 @@ namespace Gmpc {
                 }
 
                 if(this.get_name() != null)
-                    Gmpc.config.set_int(this.get_name(), "enabled", (int)state); 
+                    Gmpc.config.set_int(this.get_name(), "enabled", (int)state);
             }
             /* Save our position in the side-bar */
             public override void save_yourself() {
@@ -126,7 +126,7 @@ namespace Gmpc {
             }
 
             /* React MPD's status changed */
-            private 
+            private
                 void
                 status_changed(Gmpc.Connection conn, MPD.Server server, MPD.Status.Changed what)
                 {
@@ -763,6 +763,75 @@ namespace Gmpc {
                     i++;
                 }
 
+                {
+                    var alib = new Gtk.Alignment(0f,0f,1f,0f);
+                    var text_view_queried = false;
+
+                    notebook.append_page(alib, new Gtk.Label(_("Other songs from album")));
+                    var button = new Gtk.RadioButton.with_label(group,_("Other songs from album"));
+                    group = button.get_group();
+                    hboxje.pack_start(button, false, false, 0);
+                    var j = i;
+                    var sl = new Gmpc.Widgets.Songlist();
+
+                    sl.song_clicked.connect((source, song) => {
+                            if(song.file != null) {
+                                Gmpc.MpdInteraction.play_path(song.file);
+                            }
+                    });
+                    sl.play_song_clicked.connect((source, song) => {
+                            if(song.file != null) {
+                                Gmpc.MpdInteraction.play_path(song.file);
+                            }
+                    });
+                    alib.add(sl);
+                    button.clicked.connect((source) => {
+                            if((source as Gtk.CheckButton).get_active()) {
+                                GLib.log(np2_LOG_DOMAIN,GLib.LogLevelFlags.LEVEL_DEBUG, "artist info notebook page %i clicked", j);
+                                notebook.set_current_page(j);
+                                if(!text_view_queried){
+                                    if(song.artist != null && song.album != null) 
+                                    {
+                                        MPD.Database.search_start(server,true);
+                                        if(song.albumartist != null) {
+                                            MPD.Database.search_add_constraint(server,
+                                            MPD.Tag.Type.ALBUM_ARTIST, song.albumartist);
+                                        }else{
+                                            MPD.Database.search_add_constraint(server,
+                                                MPD.Tag.Type.ARTIST, song.artist);
+                                        }
+                                        MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM, song.album);
+                                        var data = MPD.Database.search_commit(server);
+                                        data.sort_album_disc_track();
+                                        sl.set_from_data((owned)data, true);
+                                        this.change_color_style(sl);
+                                    }else{
+                                        sl.destroy();
+                                        alib.add(new Gtk.Label(_("Not available")));
+                                    }
+                                    text_view_queried = true;
+                                }
+                            }
+                            });
+                            if(i == 0){
+                            if(song.artist != null && song.album != null) 
+                            {
+                                MPD.Database.search_start(server,true);
+                                MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, song.artist);
+                                MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM, song.album);
+                                var data = MPD.Database.search_commit(server);
+                                data.sort_album_disc_track();
+                                sl.set_from_data((owned)data, true);
+                            }else{
+                                 sl.destroy();
+                                 alib.add(new Gtk.Label(_("Not available")));
+                            }
+                            text_view_queried = true;
+                    }
+                    alib.show_all();
+                    i++;
+                }
+
                 GLib.log(np2_LOG_DOMAIN, GLib.LogLevelFlags.LEVEL_DEBUG, "Artist info took: %.6f seconds.", t.elapsed());
                 /* Track changed pages */
                 notebook.notify["page"].connect((source,spec) => {
@@ -831,7 +900,7 @@ namespace Gmpc {
                         unowned MPD.Data.Item iter = data.get_first();
                         do{
                             if(iter.tag == song.album){
-                                iter.next(false); 
+                                iter.next(false);
                                 continue;
                             }
                             list.append_new();
@@ -861,7 +930,7 @@ namespace Gmpc {
                             var but_hbox = new Gtk.HBox(false, 6);
                             button.add(but_hbox);
                             var image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ALBUM_ART, 48);
-                            var but_song = iter.song; 
+                            var but_song = iter.song;
                             image.set_squared(true);
                             image.update_from_song_delayed(but_song);
 
@@ -874,7 +943,7 @@ namespace Gmpc {
                             if(iter.song.date != null && iter.song.date.length > 0) strlabel += "%s\n".printf(iter.song.date);
                             if(iter.song.album != null) strlabel+= iter.song.album;
                             else strlabel += _("No Album");
-                            but_label.set_markup(GLib.Markup.printf_escaped("<b>%s</b>",strlabel)); 
+                            but_label.set_markup(GLib.Markup.printf_escaped("<b>%s</b>",strlabel));
                             but_label.set_ellipsize(Pango.EllipsizeMode.END);
                             but_hbox.pack_start(but_label, true, true, 0);
 
@@ -904,8 +973,8 @@ namespace Gmpc {
                 t.stop();
                 GLib.log(np2_LOG_DOMAIN, GLib.LogLevelFlags.LEVEL_DEBUG, "Building now playing took: %.6f seconds.", t.elapsed());
             }
-            /** 
-             * This shows the page when mpd is not playing, for now it is the gmpc logo + Gnome Music Player Client 
+            /**
+             * This shows the page when mpd is not playing, for now it is the gmpc logo + Gnome Music Player Client
              */
             private void update_not_playing()
             {
@@ -968,7 +1037,7 @@ namespace Gmpc {
             }
 
             /**
-             * Makes gmpc jump to the now playing browser 
+             * Makes gmpc jump to the now playing browser
              */
             public void select_now_playing_browser()
             {
@@ -982,7 +1051,7 @@ namespace Gmpc {
             }
 
             /**
-             * Gmpc.Plugin.BrowserIface.add_go_menu 
+             * Gmpc.Plugin.BrowserIface.add_go_menu
              */
             private int browser_add_go_menu(Gtk.Menu menu)
             {
