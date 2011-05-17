@@ -32,6 +32,9 @@
 
 #define LASTFM_API_KEY "ec1cdd08d574e93fa6ef9ad861ae795a" 
 #define LASTFM_API_ROOT "http://ws.audioscrobbler.com/2.0/"
+
+#define LOG_DOMAIN "Gmpc.Provider.LastFM"
+
 gmpcPlugin lastfm_plugin;
 
 typedef struct Query {
@@ -196,6 +199,49 @@ static GList* __lastfm_art_xml_get_image(const char* data, const gint size, cons
 							}
 						}
 						xmlFree(temp);
+					}
+				}
+            }
+        }
+		xmlFreeDoc(doc);
+	}
+	return list;
+}
+
+static GList* __lastfm_art_xml_get_album_info(const char* data, const gint size)
+{
+	GList *list = NULL;
+    xmlDocPtr doc;
+	if(size <= 0 || data == NULL || data[0] != '<')
+		return NULL;
+	doc = xmlParseMemory(data,size);
+
+	if(doc)
+	{
+		xmlNodePtr root = xmlDocGetRootElement(doc);
+        if(root)
+        {
+            /* loop through all albums */
+            xmlNodePtr cur = get_first_node_by_name(root,BAD_CAST"album");
+            if(cur)
+            {
+                xmlNodePtr cur2 = get_first_node_by_name(cur, BAD_CAST"wiki"); 
+                if(cur2)
+				{
+					xmlNodePtr cur3 = get_first_node_by_name(cur2, BAD_CAST"content");
+					if(cur3)
+					{
+						xmlChar *xurl = xmlNodeGetContent(cur3);
+						if(xurl){
+							MetaData *mtd = meta_data_new();
+							mtd->type = META_ALBUM_TXT;
+							mtd->plugin_name = lastfm_plugin.name;
+							mtd->content_type = META_DATA_CONTENT_HTML;
+							mtd->content  = g_strdup((char *)xurl);
+							mtd->size = -1;
+							list =g_list_append(list, mtd);
+						}
+						xmlFree(xurl);
 					}
 				}
             }
@@ -429,6 +475,9 @@ static void pref_enable_fetch(GtkWidget *con, gpointer data)
         case META_ALBUM_ART:
             cfg_set_single_value_as_int(config, "cover-lastfm", "fetch-art-album",state); 
             break;
+		case META_ALBUM_TXT:
+			cfg_set_single_value_as_int(config, "cover-lastfm", "fetch-album-info",state); 
+			break;                                                                                 
         case META_ARTIST_SIMILAR:
             cfg_set_single_value_as_int(config, "cover-lastfm", "fetch-similar-artist",state); 
             break;
@@ -441,8 +490,8 @@ static void pref_enable_fetch(GtkWidget *con, gpointer data)
         case META_ARTIST_TXT:
             cfg_set_single_value_as_int(config, "cover-lastfm", "fetch-biography-artist",state); 
             break;                                                                                 
+	
 		// Stop compiler warnings.
-		case META_ALBUM_TXT:
 		case META_SONG_TXT:
 		case META_SONG_GUITAR_TAB:
 		case META_QUERY_DATA_TYPES:
@@ -456,7 +505,7 @@ static void pref_enable_fetch(GtkWidget *con, gpointer data)
 static void pref_construct(GtkWidget *con)
 {
     GtkWidget *frame,*vbox;
-    GtkWidget *a_a_ck, *a_b_ck, *a_s_ck,*c_a_ck, *s_s_ck, *s_g_ck;
+    GtkWidget *a_a_ck, *a_b_ck, *a_s_ck, *c_a_ck, *a_i_ck, *s_s_ck, *s_g_ck;
 
     /**
      * Enable/Disable checkbox
@@ -489,12 +538,19 @@ static void pref_construct(GtkWidget *con)
     gtk_box_pack_start(GTK_BOX(vbox), a_s_ck, FALSE, TRUE, 0);
     g_signal_connect(G_OBJECT(a_s_ck), "toggled", G_CALLBACK(pref_enable_fetch), GINT_TO_POINTER(META_ARTIST_SIMILAR));
 
-    /* Fetch artist art */
+    /* Fetch album art */
     c_a_ck = gtk_check_button_new_with_label(_("Album cover"));    
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(c_a_ck),
         cfg_get_single_value_as_int_with_default(config, "cover-lastfm", "fetch-art-album", TRUE)); 
     gtk_box_pack_start(GTK_BOX(vbox), c_a_ck, FALSE, TRUE, 0);
     g_signal_connect(G_OBJECT(c_a_ck), "toggled", G_CALLBACK(pref_enable_fetch), GINT_TO_POINTER(META_ALBUM_ART));
+
+    /* Fetch album info */
+    a_i_ck = gtk_check_button_new_with_label(_("Album information"));    
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(a_i_ck),
+        cfg_get_single_value_as_int_with_default(config, "cover-lastfm", "fetch-album-info", TRUE)); 
+    gtk_box_pack_start(GTK_BOX(vbox), a_i_ck, FALSE, TRUE, 0);
+    g_signal_connect(G_OBJECT(c_a_ck), "toggled", G_CALLBACK(pref_enable_fetch), GINT_TO_POINTER(META_ALBUM_TXT));
 
     /* Fetch similar songs */
     s_s_ck = gtk_check_button_new_with_label(_("Similar songs"));
@@ -628,6 +684,25 @@ static void album_image_callback(const GEADAsyncHandler *handle,
 	q->callback(list, q->user_data);
 	g_slice_free(Query, q);
 }
+/****
+ * Get album info new style
+ */
+
+static void album_info_callback(const GEADAsyncHandler *handle,
+		GEADStatus status, gpointer user_data)
+{
+	Query *q = (Query *)user_data;
+	GList *list = NULL;
+	if(status == GEAD_PROGRESS) return;
+	if(status == GEAD_DONE)
+	{
+		goffset size=0;
+		const gchar* data = gmpc_easy_handler_get_data(handle, &size);
+		list = __lastfm_art_xml_get_album_info(data, size);
+	}
+	q->callback(list, q->user_data);
+	g_slice_free(Query, q);
+}
 /**
  * Get artist image new style
  */
@@ -682,6 +757,24 @@ static void lastfm_fetch_get_uris(mpd_Song *song,
 		snprintf(furl,1024,LASTFM_API_ROOT"?method=album.getinfo&artist=%s&album=%s&api_key=%s", artist,album,LASTFM_API_KEY);
 		g_debug("url: '%s'", furl);
 		gmpc_easy_async_downloader(furl, album_image_callback, q); 
+		g_free(artist);
+		g_free(album);
+		return;
+	}
+
+	else if (song->artist != NULL && song->album != NULL &&  type == META_ALBUM_TXT && 
+			cfg_get_single_value_as_int_with_default(config, "cover-lastfm", "fetch-album-info", TRUE))
+	{
+		char furl[1024];
+		gchar *artist = gmpc_easy_download_uri_escape(song->artist);
+		gchar *album = gmpc_easy_download_uri_escape(song->album);
+		Query *q = g_slice_new0(Query);
+
+		q->callback = callback;
+		q->user_data = user_data;
+		snprintf(furl,1024,LASTFM_API_ROOT"?method=album.getinfo&artist=%s&album=%s&api_key=%s", artist,album,LASTFM_API_KEY);
+		g_debug("url: '%s'", furl);
+		gmpc_easy_async_downloader(furl, album_info_callback, q); 
 		g_free(artist);
 		g_free(album);
 		return;
