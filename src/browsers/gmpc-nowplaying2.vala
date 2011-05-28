@@ -767,8 +767,8 @@ namespace Gmpc {
                     var alib = new Gtk.Alignment(0f,0f,1f,0f);
                     var text_view_queried = false;
 
-                    notebook.append_page(alib, new Gtk.Label(_("Other songs from album")));
-                    var button = new Gtk.RadioButton.with_label(group,_("Other songs from album"));
+                    notebook.append_page(alib, new Gtk.Label(_("Songs from album")));
+                    var button = new Gtk.RadioButton.with_label(group,_("songs from album"));
                     group = button.get_group();
                     hboxje.pack_start(button, false, false, 0);
                     var j = i;

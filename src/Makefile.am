@@ -20,6 +20,7 @@ PLUGIN_FILES=\
     Providers/music-tree.vala\
     Providers/HTBackdrops.vala\
     Providers/LyrDB.vala\
+    Providers/ChartLyrics.vala\
     Providers/DiscoGS.c\
     Providers/LastFM.c\
     Plugins/extraplaylist.c

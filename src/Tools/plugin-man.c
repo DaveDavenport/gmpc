@@ -111,6 +111,9 @@ void plugin_manager_load_internal_plugins(void)
     plugin_add_new((GmpcPluginBase *) 
             gmpc_provider_lyr_db_new(),
             0, NULL);
+    plugin_add_new((GmpcPluginBase *) 
+            gmpc_provider_chart_lyrics_new(),
+            0, NULL);
 }
 
 void plugin_manager_initialize_plugins(void)
