@@ -1502,6 +1502,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         this.metadata_box.add(master_box);
         this.change_color_style(this.metadata_sw);
         this.metadata_sw.show_all();
+        MetadataBoxShowBaseEntry.grab_focus();
     }
 
 

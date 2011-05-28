@@ -26,6 +26,7 @@ public class Gmpc.Clicklabel : Gtk.EventBox
     private int size                        = 10*Pango.SCALE; 
     private bool italic                     = false;
     private bool bold                       = false;
+    private bool underline                  = false;
     private Gdk.Cursor hand_cursor          = new Gdk.Cursor(Gdk.CursorType.HAND2);
     private Pango.AttrList attributes       = null; 
     /**
@@ -60,6 +61,7 @@ public class Gmpc.Clicklabel : Gtk.EventBox
         this.size = pfd.get_size();
           
 
+        update();
         /* Set our own attributes */
         label.set_attributes(attributes);
 
@@ -85,8 +87,29 @@ public class Gmpc.Clicklabel : Gtk.EventBox
 
         this.button_release_event.connect((source, event) => {
             if(event.button == 1) {
-                clicked();
+                stdout.printf("clicked: %d\n", 
+                    (int)((event.state&Gdk.ModifierType.MOD1_MASK) == Gdk.ModifierType.MOD1_MASK));
+
+                clicked((event.state&Gdk.ModifierType.MOD1_MASK) == Gdk.ModifierType.MOD1_MASK);
             }
+            return false;
+        });
+
+        this.key_release_event.connect((source, event) => {
+            if(event.keyval == 65293 /* enter */ ) {
+                clicked((event.state&Gdk.ModifierType.MOD1_MASK) == Gdk.ModifierType.MOD1_MASK);
+            }
+            return false;
+        });
+
+        this.focus_in_event.connect((source, event) => {
+                stdout.printf("focus in event\n");
+                this.set_do_underline(true);
+            return false;
+        });
+        this.focus_out_event.connect((source, event) => {
+                stdout.printf("focus out event\n");
+                this.set_do_underline(false);
             return false;
         });
     }
@@ -116,6 +139,11 @@ public class Gmpc.Clicklabel : Gtk.EventBox
         label.set_text(value);
     }
 
+    public void set_do_underline(bool val)
+    {
+        underline = val;
+        update();
+    }
     /**
      * Set do italic
      */
@@ -131,7 +159,7 @@ public class Gmpc.Clicklabel : Gtk.EventBox
         update();
     }
 
-    public signal void clicked ();
+    public signal void clicked (bool alt = false);
 
     /**
      * Private functions
@@ -142,6 +170,7 @@ public class Gmpc.Clicklabel : Gtk.EventBox
         Pango.Attribute attr    = null;
 
         /* Set style  */
+        /* italic */
         if(this.italic) {
             attr                = Pango.attr_style_new(Pango.Style.ITALIC); 
         }else {
@@ -151,10 +180,21 @@ public class Gmpc.Clicklabel : Gtk.EventBox
         attr.end_index          = -1;
         Gmpc.Fix.change(attributes,(owned)attr);
 
+        /* bold */
         if(this.bold) {
             attr                = Pango.attr_weight_new(Pango.Weight.BOLD); 
         }else {
             attr                = Pango.attr_weight_new(Pango.Weight.NORMAL); 
+        }
+        attr.start_index        = 0;
+        attr.end_index          = -1;
+        Gmpc.Fix.change(attributes,(owned)attr);
+
+        /* underline */
+        if(this.underline) {
+            attr                = Pango.attr_underline_new(Pango.Underline.SINGLE); 
+        }else {
+            attr                = Pango.attr_underline_new(Pango.Underline.NONE); 
         }
         attr.start_index        = 0;
         attr.end_index          = -1;
@@ -166,6 +206,6 @@ public class Gmpc.Clicklabel : Gtk.EventBox
         attr.end_index          = -1;
         //attributes.change((owned)attr);
         Gmpc.Fix.change(attributes,(owned)attr);
-
+        label.set_attributes(attributes);
      }
 }

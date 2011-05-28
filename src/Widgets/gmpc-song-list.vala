@@ -250,13 +250,17 @@ public class Gmpc.Widgets.Songlist : Gtk.VBox
             label = GLib.Path.get_basename(song.file);
         }
         var wlabel = new Gmpc.Clicklabel(label);
+        wlabel.set_can_focus(true);
 
 
         /* add the label */
         box.pack_start(wlabel, false, false, 0);
 
-        wlabel.clicked.connect((source) => {
-            song_clicked(song_file);
+        wlabel.clicked.connect((source, alt) => {
+            if(alt) 
+                play_song_clicked(song_file);
+            else
+                song_clicked(song_file);
         });
 
         /* Add the entry */
