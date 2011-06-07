@@ -161,13 +161,14 @@ static void nag_screen_start(void)
 			" please contact the developer ( email: qball@gmpclient.org, irc: "
 			"irc.freenode.org #gmpc)\n" 
 			"\n"
+			"Because off all the bitching I got about this dialog, it will not pop-up again.\n"
+			"However I will discontinue GMPC if no help arrives.\n"
+			"\n"
 			"Qball");
 
 		g_object_add_weak_pointer(G_OBJECT(dialog), &dialog);	
-
-		gtk_widget_show(dialog);
-		g_signal_connect(G_OBJECT(dialog), "response",
-				G_CALLBACK(gtk_widget_destroy), NULL);
+		gtk_dialog_run(GTK_DIALOG(dialog));
+		gtk_widget_destroy(dialog);
 }
 
 /**
@@ -611,7 +612,6 @@ int main(int argc, char **argv)
     q_free(url);
 
 
-	g_timeout_add_seconds(120, (GSourceFunc)nag_screen_start, NULL);
 	nag_screen_start();
     /*
      * run the main loop
