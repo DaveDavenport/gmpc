@@ -143,33 +143,6 @@ void send_password(void);
 
 static void print_version(void);
 
-static void nag_screen_start(void)
-{
-	static GtkWidget *dialog = NULL;
-	
-	if(dialog != NULL) return;
-	dialog = gtk_message_dialog_new_with_markup(
-			playlist3_get_window(),
-			GTK_DIALOG_DESTROY_WITH_PARENT,
-			GTK_MESSAGE_INFO, 
-			GTK_BUTTONS_CLOSE,
-			"GMPC is looking for help getting a release ready.\n"
-			"Several things need to be done to accomplish this.\n"
-			"One of the main remaining issues is a user-manual and "
-			"testing of GMPC and it plugins.\n"
-			"If you want to see a new release (and not this stupid nag screen,"
-			" please contact the developer ( email: qball@gmpclient.org, irc: "
-			"irc.freenode.org #gmpc)\n" 
-			"\n"
-			"Because off all the bitching I got about this dialog, it will not pop-up again.\n"
-			"However I will discontinue GMPC if no help arrives.\n"
-			"\n"
-			"Qball");
-
-		g_object_add_weak_pointer(G_OBJECT(dialog), &dialog);	
-		gtk_dialog_run(GTK_DIALOG(dialog));
-		gtk_widget_destroy(dialog);
-}
 
 /**
  * Forward libxml errors into GLib.log errors with LibXML error domain 
@@ -612,7 +585,6 @@ int main(int argc, char **argv)
     q_free(url);
 
 
-	nag_screen_start();
     /*
      * run the main loop
      */
