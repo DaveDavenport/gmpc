@@ -234,7 +234,8 @@ static void pl3_cp_init(PlayQueuePlugin * self)
 
 	gmpc_easy_command_add_entry(gmpc_easy_command,
 								_("search playlist"), ".*",
-								_("Search playlist <query>"), (GmpcEasyCommandCallback *) pl3_cp_ec_playlist, self);
+								_("Search playlist <query>"), 
+                                (GmpcEasyCommandCallback *) pl3_cp_ec_playlist, self);
 }
 
 void pl3_current_playlist_destroy(PlayQueuePlugin * self);

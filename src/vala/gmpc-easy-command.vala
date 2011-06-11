@@ -33,6 +33,8 @@ using Gmpc;
  */
 private const bool use_transition_ec = Gmpc.use_transition;
 private const string some_unique_name_ec = Config.VERSION;
+private const string log_domain_ec = "EasyCommand";
+
 public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 	/* hack to make gettext happy */
 	private Gtk.EntryCompletion completion = null;
@@ -191,6 +193,7 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 	public void do_query(string value_unsplit) {
 		unowned Gtk.TreeModel model = this.store;
 		Gtk.TreeIter iter;
+		GLib.log(log_domain_ec, GLib.LogLevelFlags.LEVEL_DEBUG, "doing query: %s", value_unsplit);
 		if (value_unsplit.length == 0) {
 			if(this.window != null) {
 				popup_destroy();
@@ -200,6 +203,7 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 		foreach(string value in value_unsplit.split(";")) {
 			bool found = false;
 			value = value.strip();
+			GLib.log(log_domain_ec, GLib.LogLevelFlags.LEVEL_DEBUG, "doing query: %s", value);
 			/* ToDo: Make this nicer... maybe some fancy parsing */
 			if (model.get_iter_first(out iter)) {
 				do {
@@ -208,9 +212,12 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 					void *data;
 					model.get(iter, 1, out name, 2, out pattern, 3, out callback, 4, out data);
 
-					test = "%s[ ]*%s$".printf(name, pattern);
+					test = "^%s[ ]*%s$".printf(name, pattern);
+					GLib.log(log_domain_ec, GLib.LogLevelFlags.LEVEL_DEBUG, "doing query: %s-%s", test,value);
 					if (GLib.Regex.match_simple(test, value, GLib.RegexCompileFlags.CASELESS, 0)) {
 						string param;
+
+						GLib.log(log_domain_ec, GLib.LogLevelFlags.LEVEL_DEBUG, "Found match");
 						if (value.length > name.length)
 							param = value.substring(name.length, -1);
 						else
@@ -221,32 +228,6 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 					}
 				} while (model.iter_next(ref iter) && !found);
 			}
-			/* If now exact match is found, use the partial matching that is
-			 * also used by the completion popup.
-			 * First, partial, match is taken.
-			if(!found) {
-				if (model.get_iter_first(out iter)) {
-					do {
-						string name, pattern, test;
-						Callback callback = null;
-						void *data;
-						model.get(iter, 1, out name, 2, out pattern, 3, out callback, 4, out data);
-
-						test = "^%s.*".printf(value);
-						if (GLib.Regex.match_simple(test, name,GLib.RegexCompileFlags.CASELESS, 0)) {
-							string param;
-							if (value.length > name.length)
-								param = value.substring(name.length, -1);
-							else
-								param = "";
-							var param_str = param.strip();
-							callback(data, param_str);
-							found = true;
-						}
-					} while (model.iter_next(ref iter) && !found);
-				}
-			}
-			*/
 			/* If we still cannot match it, give a message */
 			if (!found)
 				Gmpc.Messages.show("Unknown command: '%s'".printf(value), Gmpc.Messages.Level.INFO);
