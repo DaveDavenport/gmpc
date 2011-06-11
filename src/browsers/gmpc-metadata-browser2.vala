@@ -47,6 +47,11 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
     private Gdk.Color foreground;
 
 
+    private void show_metadata_search()
+    {
+        select_browser(null);
+    }
+
     construct {
         /* Set the plugin as an internal one and of type pl_browser */
         this.plugin_type = 2|8; 
@@ -59,6 +64,13 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         var foreground = config.get_string_with_default("Now Playing", "foreground-color", "#FFF");
         Gdk.Color.parse(background,out this.background);
         Gdk.Color.parse(foreground,out this.foreground);
+
+        easy_command.add_entry(
+                _("switch metadata"),
+                "",
+                _("Switch to Metadata view"),
+                (Gmpc.Easy.Command.Callback *)show_metadata_search,
+                this);
     }
 
     private const int[] version =  {0,0,0};
