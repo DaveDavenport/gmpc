@@ -331,10 +331,10 @@ void mpd_easy_commands_init(void)
 {
 	/* Player control */
 	gmpc_easy_command_add_entry_stock_id(gmpc_easy_command, _("play"), "", _("start playback"),
-								(GmpcEasyCommandCallback *) mpd_player_play, connection,
+								(GmpcEasyCommandCallback *) play_song, connection,
 								"gtk-media-play");
 	gmpc_easy_command_add_entry_stock_id(gmpc_easy_command, _("pause"), "", _("pause playback"),
-								(GmpcEasyCommandCallback *) mpd_player_pause, connection,
+								(GmpcEasyCommandCallback *) pause_song, connection,
 								"gtk-media-pause");
 	gmpc_easy_command_add_entry_stock_id(gmpc_easy_command, _("next"), "", _("next song"), (GmpcEasyCommandCallback *) next_song,
 								NULL,

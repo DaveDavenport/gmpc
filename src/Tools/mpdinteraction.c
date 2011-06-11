@@ -232,6 +232,16 @@ int stop_song(void)
 	return FALSE;
 }
 
+int 
+pause_song(void)
+{
+	if (
+		mpd_check_connected(connection) && 
+		mpd_server_check_command_allowed(connection, "pause") == MPD_SERVER_COMMAND_ALLOWED)
+		mpd_player_pause(connection);
+	return FALSE;
+}
+
 int play_song(void)
 {
 	int state = mpd_player_get_state(connection);
@@ -942,7 +952,7 @@ void preferences_window_connect(GtkWidget * but)
 		}
 	}
 }
-void disconnect_from_mpd()
+void disconnect_from_mpd(void)
 {
     /* set that user doesn't want to connect */
     gmpc_connected = FALSE;
