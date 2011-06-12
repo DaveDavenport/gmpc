@@ -1091,7 +1091,7 @@ static void gmpc_easy_command_set_default_entries(void)
 
 	gmpc_easy_command_add_entry(gmpc_easy_command,
 			_("toggle"), "",
-			_("Toogle gmpc visibility"),
+			_("Toggle gmpc visibility"),
 			(GmpcEasyCommandCallback *) pl3_toggle_hidden,
 			NULL);
 
