@@ -53,7 +53,7 @@ typedef struct _Blacklist {
     const char *reason;
 }Blacklist;
 
-static const int num_blacklisted_plugins = 6;
+static const int num_blacklisted_plugins = 7;
 static Blacklist blacklist[] = 
 {
     {"Lyrdb.com lyric source", "Plugin is intergrated into GMPC"},
@@ -61,7 +61,8 @@ static Blacklist blacklist[] =
     {"Statistics", "Plugin is intergrated into GMPC"},
     {"DiscoGS Artist and Album Image Fetcher", "Plugin is intergrated into GMPC"},
 	{"Last FM metadata fetcher", "Plugin is intergrated into GMPC"},
-    {"Fullscreen Info", "Plugin is intergrated into GMPC"}
+    {"Fullscreen Info", "Plugin is intergrated into GMPC"},
+    {"WikiPedia", "Plugin ddos'es Wikipedia"}
 };
 
 static int plugin_manager_blacklist(gmpcPluginParent *p, GError **error)

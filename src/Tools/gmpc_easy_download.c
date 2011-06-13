@@ -367,6 +367,7 @@ static void gmpc_easy_async_status_update(SoupMessage * msg, SoupBuffer * buffer
 	/* don't store error data, not used anyway */
 	if (!SOUP_STATUS_IS_SUCCESSFUL(msg->status_code))
 	{
+		printf("Error mesg status code: %i\n", msg->status_code);
 		return;
 	}
 	if (d->is_gzip || d->is_deflate)
@@ -539,6 +540,8 @@ GEADAsyncHandler *gmpc_easy_async_downloader_with_headers(const gchar * uri, GEA
 		soup_session = soup_session_async_new();
 		gmpc_easy_download_set_proxy(soup_session);
 		g_object_set(soup_session, "timeout", 5, NULL);
+		/* Set user agent, to get around wikipedia ban. */
+		g_object_set(soup_session, "user-agent", "gmpc ",NULL);
 	}
 
 	msg = soup_message_new("GET", uri);
