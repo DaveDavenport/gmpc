@@ -825,7 +825,7 @@ public class  Gmpc.TestPlugin : Gmpc.Plugin.Base,Gmpc.Plugin.ToolMenuIface, Gmpc
     }
     public int tool_menu_integration(Gtk.Menu menu)
     {
-        Gtk.MenuItem item = new Gtk.MenuItem.with_label("Edit metadata current song");
+        Gtk.MenuItem item = new Gtk.MenuItem.with_label(_("Edit metadata current song"));
         menu.append(item);
         item.activate.connect(menu_activated_album);
         return 2;
