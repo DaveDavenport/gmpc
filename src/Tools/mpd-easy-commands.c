@@ -121,12 +121,20 @@ static void update_database_command(gpointer user_data, const char *param)
 	int val = mpd_server_check_command_allowed(connection, "update");
 	if (val == MPD_SERVER_COMMAND_NOT_SUPPORTED)
 	{
+        char * mesg = g_strdup_printf("%s: %s",
+                _("Update database"),
+                _("The used MPD server is too old and does not support this."));
 		playlist3_message_show(pl3_messages,
-							   _("Update database: The used MPD server is to old and does not support this."),
-							   ERROR_CRITICAL);
-	} else if (val == MPD_SERVER_COMMAND_NOT_ALLOWED)
+                mesg,
+                ERROR_CRITICAL);
+        g_free(mesg);
+    } else if (val == MPD_SERVER_COMMAND_NOT_ALLOWED)
 	{
-		playlist3_message_show(pl3_messages, _("Update database: You have insufficient permission."), ERROR_WARNING);
+        char * mesg = g_strdup_printf("%s: %s",
+                _("Update database"),
+                _("You have insufficient permission to use this option."));
+		playlist3_message_show(pl3_messages,mesg, ERROR_WARNING);
+        g_free(mesg);
 	} else if (val == MPD_SERVER_COMMAND_ALLOWED)
 	{
 		mpd_database_update_dir(connection, "/");
@@ -137,14 +145,21 @@ static void repeat_current_song_command(gpointer user_data, const char *param)
 	int val = mpd_server_check_command_allowed(connection, "single");
 	if (val == MPD_SERVER_COMMAND_NOT_SUPPORTED)
 	{
+        char * mesg = g_strdup_printf("%s: %s",
+                _("Repeat current song"),
+                _("The used MPD server is too old and does not support this."));
 		playlist3_message_show(pl3_messages,
-							   _("Repeat current song: The used MPD server is to old and does not support this."),
-							   ERROR_CRITICAL);
-	} else if (val == MPD_SERVER_COMMAND_NOT_ALLOWED)
+                mesg,
+                ERROR_CRITICAL);
+        g_free(mesg);
+    } else if (val == MPD_SERVER_COMMAND_NOT_ALLOWED)
 	{
-		playlist3_message_show(pl3_messages, _("Repeat current song: You have insufficient permission."),
-							   ERROR_WARNING);
-	} else if (val == MPD_SERVER_COMMAND_ALLOWED)
+        char * mesg = g_strdup_printf("%s: %s",
+                _("Repeat current song"),
+                _("You have insufficient permission to use this option."));
+        playlist3_message_show(pl3_messages,mesg, ERROR_WARNING);
+        g_free(mesg);
+    } else if (val == MPD_SERVER_COMMAND_ALLOWED)
 	{
 		playlist3_message_show(pl3_messages, _("The current song will be forever repeated."), ERROR_INFO);
 		mpd_player_set_repeat(connection, TRUE);
@@ -156,13 +171,18 @@ static void stop_after_current_song_command(gpointer user_data, const char *para
 	int val = mpd_server_check_command_allowed(connection, "single");
 	if (val == MPD_SERVER_COMMAND_NOT_SUPPORTED)
 	{
-		playlist3_message_show(pl3_messages,
-							   _("Stop after current song: The used MPD server is to old and does not support this."),
-							   ERROR_CRITICAL);
-	} else if (val == MPD_SERVER_COMMAND_NOT_ALLOWED)
+        char * mesg = g_strdup_printf("%s: %s",
+                _("Stop after current song"),
+                _("The used MPD server is too old and does not support this."));
+		playlist3_message_show(pl3_messages,mesg,ERROR_CRITICAL);
+        g_free(mesg);
+    } else if (val == MPD_SERVER_COMMAND_NOT_ALLOWED)
 	{
-		playlist3_message_show(pl3_messages, _("Stop after current song: You have insufficient permission."),
-							   ERROR_WARNING);
+        char * mesg = g_strdup_printf("%s: %s",
+                _("Stop after current song"),
+                _("You have insufficient permission to use this option."));
+		playlist3_message_show(pl3_messages,mesg,ERROR_WARNING);
+        g_free(mesg);
 	} else if (val == MPD_SERVER_COMMAND_ALLOWED)
 	{
 		playlist3_message_show(pl3_messages, _("Playback will be stopped after the current playing song."), ERROR_INFO);
@@ -249,12 +269,18 @@ static void set_consume(gpointer data, const char *param)
 	int val = mpd_server_check_command_allowed(connection, "consume");
 	if (val == MPD_SERVER_COMMAND_NOT_SUPPORTED)
 	{
-		playlist3_message_show(pl3_messages, _("Consume: The used MPD server is to old and does not support this."),
-							   ERROR_CRITICAL);
-	} else if (val == MPD_SERVER_COMMAND_NOT_ALLOWED)
+        char * mesg = g_strdup_printf("%s: %s",
+                _("Consume"),
+                _("The used MPD server is too old and does not support this."));
+		playlist3_message_show(pl3_messages,mesg,ERROR_CRITICAL);
+        g_free(mesg);
+    } else if (val == MPD_SERVER_COMMAND_NOT_ALLOWED)
 	{
-		playlist3_message_show(pl3_messages, _("Consume: You have insufficient permission to use this option."),
-							   ERROR_WARNING);
+        char * mesg = g_strdup_printf("%s: %s",
+                _("Consume"),
+                _("You have insufficient permission to use this option."));
+		playlist3_message_show(pl3_messages,mesg,ERROR_WARNING);
+        g_free(mesg);
 	} else if (val == MPD_SERVER_COMMAND_ALLOWED)
 	{
 		if (g_utf8_collate(param, "on") == 0)
@@ -274,12 +300,18 @@ static void set_single(gpointer data, const char *param)
 	int val = mpd_server_check_command_allowed(connection, "single");
 	if (val == MPD_SERVER_COMMAND_NOT_SUPPORTED)
 	{
-		playlist3_message_show(pl3_messages, _("Single: The used MPD server is to old and does not support this."),
-							   ERROR_CRITICAL);
-	} else if (val == MPD_SERVER_COMMAND_NOT_ALLOWED)
+        char * mesg = g_strdup_printf("%s: %s",
+                _("Single"),
+                _("The used MPD server is too old and does not support this."));
+        playlist3_message_show(pl3_messages,mesg,ERROR_CRITICAL);
+        g_free(mesg);
+    } else if (val == MPD_SERVER_COMMAND_NOT_ALLOWED)
 	{
-		playlist3_message_show(pl3_messages, _("Single: You have insufficient permission to use this option."),
-							   ERROR_WARNING);
+        char * mesg = g_strdup_printf("%s: %s",
+                _("Single"),
+                _("You have insufficient permission to use this option."));
+        playlist3_message_show(pl3_messages, mesg, ERROR_WARNING);
+        g_free(mesg);
 	} else if (val == MPD_SERVER_COMMAND_ALLOWED)
 	{
 		if (g_utf8_collate(param, "on") == 0)

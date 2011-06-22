@@ -154,8 +154,8 @@ namespace Gmpc {
                                         "<span color='%s' weight='bold'>%s:</span> %i %s, %.1f %s, %i %s",
                                         this.item_color, _("Format"), 
                                         channels , GLib.ngettext(N_("Channel"),N_("Channels"), channels),
-                                        MPD.Status.get_samplerate(Gmpc.server)/1000.0, _("kHz"), 
-                                        bitrate, _("kbps")
+                                        MPD.Status.get_samplerate(Gmpc.server)/1000.0, "kHz", 
+                                        bitrate, "kbps"
                                         ));
                         }
                     }
@@ -511,8 +511,8 @@ namespace Gmpc {
                                 "<span color='%s' weight='bold'>%s:</span> %i %s, %.1f %s, %i %s",
                                 this.item_color, _("Format"), 
                                 channels , GLib.ngettext(N_("Channel"),N_("Channels"), channels),
-                                MPD.Status.get_samplerate(Gmpc.server)/1000.0, _("kHz"), 
-                                bitrate, _("kbps")
+                                MPD.Status.get_samplerate(Gmpc.server)/1000.0, "kHz", 
+                                bitrate, "kbps"
                                 ));
 
                     info_vbox.pack_start(box, false, false, 0); 

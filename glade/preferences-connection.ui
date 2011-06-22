@@ -228,7 +228,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="max_length">256</property>
-                    <property name="text" translatable="yes">localhost</property>
+                    <property name="text" translatable="no">localhost</property>
                     <signal name="changed" handler="update_preferences_hostname"/>
                   </object>
                   <packing>

@@ -161,7 +161,7 @@ void create_preferences_window(void)
 
     plugin_store = gtk_list_store_new(2, G_TYPE_INT, G_TYPE_STRING);
     column = gtk_tree_view_column_new();
-    gtk_tree_view_column_set_title(column, _("Plugins:"));
+    gtk_tree_view_column_set_title(column, _("Plugins"));
     renderer = gtk_cell_renderer_text_new();
     gtk_tree_view_column_pack_start(column, renderer, TRUE);
     gtk_tree_view_column_set_attributes(column, renderer, "markup", 1, NULL);

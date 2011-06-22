@@ -81,9 +81,10 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
         if(pb != null)
         {
             if(is_thumbnail) {
-                a+="\n<b>%s</b>: %ix%i (%s) (%s)".printf(_("Size"), pb.width, pb.height,_("wxh"), _("high-res image will be downloaded"));
+                a+="\n<b>%s</b>: %ix%i (%s) (%s)".printf(_("Size"), pb.width, pb.height,_("width x height"), 
+                        _("high-res image will be downloaded"));
             }else{
-                a+="\n<b>%s</b>: %ix%i (%s)".printf(_("Size"), pb.width, pb.height,_("wxh"));
+                a+="\n<b>%s</b>: %ix%i (%s)".printf(_("Size"), pb.width, pb.height,_("width x height"));
            }
 
         }
