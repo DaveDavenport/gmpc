@@ -410,7 +410,7 @@ void plugin_load_dir(const gchar * path)
             } else
             {
                 g_log(PLUGIN_LOG_DOMAIN, G_LOG_LEVEL_INFO,
-                      "%s not loaded, wrong extention, should be: '%s'",
+                      "%s not loaded, wrong extension, should be: '%s'",
                       dirname, G_MODULE_SUFFIX);
             }
             q_free(full_path);

@@ -983,7 +983,7 @@ gchar * gmpc_get_metadata_filename(MetaDataType  type, mpd_Song *song, char *ext
 	{
 		GError *error = NULL;
 		gchar *filename = NULL, *dirname = NULL;
-		const gchar *extention= (type&(META_ALBUM_TXT|META_ARTIST_TXT|META_SONG_TXT|META_SONG_GUITAR_TAB))?"txt":((ext == NULL)?((type&(META_ALBUM_ART|META_ARTIST_ART))?"jpg":""):ext);
+		const gchar *extension= (type&(META_ALBUM_TXT|META_ARTIST_TXT|META_SONG_TXT|META_SONG_GUITAR_TAB))?"txt":((ext == NULL)?((type&(META_ALBUM_ART|META_ARTIST_ART))?"jpg":""):ext);
 
 		/* Convert it so the filesystem likes it */
 		/* TODO: Add error checking */
@@ -1031,23 +1031,23 @@ gchar * gmpc_get_metadata_filename(MetaDataType  type, mpd_Song *song, char *ext
 			gchar *temp ;
 			g_assert(song->album != NULL);
 			temp =g_filename_from_utf8(song->album,-1,NULL,NULL,NULL); 
-			filename = g_strdup_printf("%s.%s", temp,extention);
+			filename = g_strdup_printf("%s.%s", temp,extension);
 			g_free(temp);
 		}else if(type&META_ARTIST_ART){
-			filename = g_strdup_printf("artist_IMAGE.%s", extention);
+			filename = g_strdup_printf("artist_IMAGE.%s", extension);
 		}else if (type&META_ARTIST_TXT){
-			filename = g_strdup_printf("artist_BIOGRAPHY.%s", extention);
+			filename = g_strdup_printf("artist_BIOGRAPHY.%s", extension);
 		}else if (type&META_SONG_TXT) {
 			gchar *temp ;
 			g_assert(song->title != NULL);
 			temp =g_filename_from_utf8(song->title,-1,NULL,NULL,NULL); 
-			filename = g_strdup_printf("%s_LYRIC.%s", temp,extention);
+			filename = g_strdup_printf("%s_LYRIC.%s", temp,extension);
 			g_free(temp);
 		}else if (type&META_SONG_GUITAR_TAB) {
 			gchar *temp ;
 			g_assert(song->title != NULL);
 			temp =g_filename_from_utf8(song->title,-1,NULL,NULL,NULL); 
-			filename = g_strdup_printf("%s_GUITAR_TAB.%s", temp,extention);
+			filename = g_strdup_printf("%s_GUITAR_TAB.%s", temp,extension);
 			g_free(temp);
 		}
 		filename = strip_invalid_chars(filename);

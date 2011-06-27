@@ -134,7 +134,7 @@ namespace Gmpc {
         public void set_metadata(MPD.Song song, Result result, Gmpc.MetaData.Item met); 
 
         [CCode ( cname="gmpc_get_metadata_filename", cheader_filename="libmpd/libmpd.h,metadata.h")]
-        public string get_metadata_filename(Type type, MPD.Song song, string? extention);
+        public string get_metadata_filename(Type type, MPD.Song song, string? extension);
 
         [CCode ( cname="GmpcMetaImage", cheader_filename="gmpc-metaimage.h")]
         public class Image: Gtk.Widget {

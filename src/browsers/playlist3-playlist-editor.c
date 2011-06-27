@@ -75,7 +75,7 @@ static void playlist_editor_set_enabled(int enabled)
 };
 
 /**
- * Browser extention 
+ * Browser extension 
  */
 gmpcPlBrowserPlugin playlist_editor_gbp = {
 	.add = playlist_editor_browser_add,	/* Add */
