@@ -111,7 +111,7 @@ static gboolean sqlite_check_integrity(void)
 			if(strcmp(value, "ok") == 0){
 				database_check = TRUE;
 			}else{
-				g_log(MDC_LOG_DOMAIN, G_LOG_LEVEL_WARNING, "%s: Sqlite database integrety check failed: %s\n",
+				g_log(MDC_LOG_DOMAIN, G_LOG_LEVEL_WARNING, "%s: Sqlite database integrity check failed: %s\n",
 						__FUNCTION__,
 						value);
 			}
@@ -662,7 +662,7 @@ void meta_data_sqlite_cache_init(void)
 		}
 		TEC("Prepare metadata statements");
 		database_valid = sqlite_check_integrity();
-		TEC("Checked integrety1");
+		TEC("Checked integrity1");
 		if(!database_valid){
 			gchar buffer[128];
 			gchar *new_uri = NULL;
@@ -680,7 +680,7 @@ void meta_data_sqlite_cache_init(void)
 			}
 			g_free(new_uri);
 		}
-		TEC("Checked integrety");
+		TEC("Checked integrity");
 		g_log(MDC_LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Database integrity check: valid");
 	}while(!database_valid);
 	g_free(url);
