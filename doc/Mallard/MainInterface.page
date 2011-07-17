@@ -1,0 +1,126 @@
+<page xmlns="http://projectmallard.org/1.0/"
+      type="topic"
+      id="MainInterface">
+
+    <title>Main Interface</title>
+    <p>
+        The following image displays GMPC’s main window:
+    </p>
+    
+    <section id="full">
+        <title>Full view</title>
+        <media type="image" src="Images/main-window.png"/>
+        <p>
+            If you collapse the main window, parts of the window might be hidden. Currently there are 2 collapsed views.
+        </p>
+    </section>
+
+    <section id="collapsed">
+        <title>Collapsed</title>
+        <p>
+            If you collapse the main window, parts of the window might be hidden. Currently there are 2 collapsed views.
+            First stage:
+        </p>
+        <media type="image" src="Images/main-window-collapsed1.png"/>
+        <p>
+            Second stage:
+        </p>
+        <media type="image" src="Images/main-view-collapsed2.png"/>
+    </section>
+    <p> 
+        In the next view sections we will explain each part of the interface.
+    </p>
+
+
+    <section id="menubar">
+        <title>The menu bar</title>
+        <media type="image" src="Images/menu-bar.png"/>
+        <p>
+            The menu bar gives you direct acces to every part of the program. You can control playback (control item), configure gmpc, enable outputs, switch to another profile, etc.
+        </p>
+
+        <note>
+            <p>
+                There might be more or less menu items available depending on the number of plugins installed.
+            </p>
+        </note>
+
+        <tree>
+            <item>Music
+                <item>Connect - Connect to MPD.</item>
+                <item>Disconnect - Disconnect from MPD.</item>
+                <item>Send password - Send a new password to MPD. This can either increase or drop the permission level.</item>
+                <item>
+                    Profiles - A submenu containing a list of possible profiles
+                    <item>
+                        List of profiles.
+                    </item>
+                </item>
+                <item>Preferences - Opens the preferences pane. (more here)</item>
+                <item>Quit - Completely quits GMPC.</item>
+            </item>
+            <item>
+                Server
+                <item>Update database - Tells MPD to update the complete database.</item>
+                <item>Information - Opens a window with server information. (more here)</item>
+                <item>List of outputs available on the connected MPD. This allows you to enable and disable them.</item>
+            </item>
+            <item>
+                Control
+                <item>Play/Pause</item>
+                <item>Stop</item>
+                <item>Next</item>
+                <item>Previous</item>
+                <item>Mute - Toggles mute state. (Set volume to 0, and restores it again.)</item>
+                <item>Repeat - Enable/Disable repeat.</item>
+                <item>Random - Enable/Disable random.</item>
+                <item>Single mode - Enable/Disable single mode. Single mode makes MPD not progres to the next song.</item>
+                <item>Consume - Enable/Disable consume mode. Consume mode makes MPD remove played songs from the play-queue.</item>
+            </item>
+            <item>
+                View
+                <item>Expand Interface - Makes GMPC interface include more elements.</item>
+                <item>Collapse Interface - Hides elements from the GMPC interface.</item>
+                <item>Fullscreen - Switch to fullscreen mode.</item>
+                <item>Show artist image - Enable/Disable an artist image to be embedded below the sidebar.</item>
+            </item>
+            <item>
+                Option
+                <item>These show options for the current visible browser.</item>
+            </item>
+            <item>
+                Tool
+                <item>Add Url - Add a remote URI to the play-queue. (see here)</item>
+                <item>List of global options that are inserted by plugins.</item>
+            </item>
+            <item>
+                Go
+                <item>Gives a list of enabled browsers and allows you to switch between them quickly.</item>
+            </item>
+            <item>
+                Help
+                <item>Show messages - Shows you a list of messages, warnings and information that GMPC have shown in the past.</item>
+                <item>Visit website - Opens GMPC’s website.</item>
+                <item>Getting Help - Opens GMPC’s Wiki on the getting help page.</item>
+                <item>Bug information - Opens a dialog with information about your current GMPC. (more here)</item>
+                <item>Easy command help - Opens a list of possible commands for the easy-command dialog. More information can be found here.</item>
+                <item>About - Opens about dialog.</item>
+            </item>
+        </tree>
+    </section>
+
+    <section id="PlaybackControl">
+        <title>Playback Control</title>
+        <media type="image" src="Images/playback-control.png"/>
+        <p>
+            I will explain the elements from left to right.
+        </p>
+        <section id="AlbumCover">
+            <media type="image" src="Images/pc-cover.png"/>
+            <p>
+                This shows cover of the currently playing album. If no cover is available, or the song has not information about it, an empty case or cd is shown.
+            </p>
+        </section>
+
+    </section>
+</page>
