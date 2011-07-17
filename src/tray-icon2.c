@@ -985,6 +985,7 @@ gmpcPrefPlugin tray_icon2_preferences =
     tray_icon2_preferences_destroy
 };
 
+
 gmpcPlugin tray_icon2_plug =
 {
     .name = N_("Notification"),
@@ -995,7 +996,7 @@ gmpcPlugin tray_icon2_plug =
     .destroy = tray_icon2_destroy,
     .mpd_status_changed = tray_icon2_status_changed,
     .mpd_connection_changed = tray_icon2_connection_changed,
-    .set_enabled = tray_icon2_set_enabled,
-    .get_enabled = tray_icon2_get_enabled,
+    .set_enabled = NULL,
+    .get_enabled = NULL,
     .pref = &tray_icon2_preferences
 };
