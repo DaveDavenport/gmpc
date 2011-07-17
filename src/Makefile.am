@@ -175,7 +175,11 @@ LIBS= \
 
 
 if HAVE_UNIQUE
-    LIBS += @unique_LIBS@;
+    LIBS += @unique_LIBS@
+endif
+
+if HAVE_APP_INDICATOR
+    LIBS += @APP_INDICATOR_LIBS@
 endif
 
 AM_LDFLAGS = \
@@ -204,6 +208,10 @@ AM_CFLAGS = @CFLAGS@\
 
 if HAVE_UNIQUE
     AM_CFLAGS += @unique_CFLAGS@ 
+endif
+
+if HAVE_APP_INDICATOR
+    AM_CFLAGS += @APP_INDICATOR_CFLAGS@
 endif
 
 if MAINTAINER_MODE
