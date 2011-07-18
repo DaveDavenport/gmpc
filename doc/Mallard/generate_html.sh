@@ -2,4 +2,7 @@
 
 # yes this might not work on all installs, sorry.
 
-xsltproc /usr/share/yelp-xsl/xslt/mallard/html/mal2xhtml.xsl *.page
+for a in *.page
+do
+    gnome-doc-tool xhtml $a
+done    
