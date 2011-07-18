@@ -24,11 +24,17 @@
             If you collapse the main window, parts of the window might be hidden. Currently there are 2 collapsed views.
             First stage:
         </p>
-        <media type="image" src="Images/main-window-collapsed1.png"/>
+        <figure>
+            <desc>GMPC Collapsed</desc>
+            <media type="image" src="Images/main-window-collapsed1.png"/>
+        </figure>
         <p>
             Second stage:
         </p>
-        <media type="image" src="Images/main-view-collapsed2.png"/>
+         <figure>
+            <desc>GMPC Small</desc>
+            <media type="image" src="Images/main-view-collapsed2.png"/>
+         </figure>
     </section>
     <p> 
         In the next view sections we will explain each part of the interface.
@@ -119,10 +125,37 @@
             I will explain the elements from left to right.
         </p>
         <section id="AlbumCover">
+            <title>Album art</title>
             <media type="image" src="Images/pc-cover.png"/>
             <p>
                 This shows cover of the currently playing album. If no cover is available, or the song has not information about it, an empty case or cd is shown.
             </p>
+            
+            <note>
+                <list>
+                    <item><p>Hovering the cover will show an enlarged version of the cover.</p></item>
+                    <item><p>Right mouse click on the cover allows you to modify it.</p></item>
+                    <item><p>You can modify the look of the cover art in the preferences pane. (With or without the casing)</p></item>
+                </list>
+            </note>
+            <figure>
+                <desc>Album art with and without case</desc>
+                <media type="image" src="Images/pc-cover.png"/>
+                <media type="image" src="Images/pc-cover-plain.png"/>
+            </figure>
+
+        </section>
+        <section id="SongInfo">
+            <title>Song information</title>
+            <media type="image" src="Images/pc-song-info.png"/>
+            <p>
+                Next to it is basic information about the song. This shows the Title, artist and album name.
+            </p>
+            <note>
+                <p>
+                    If you click on the title, artist or album name it will jump to that section in the Metadata Browser.
+                </p>
+            </note>
         </section>
 
     </section>
