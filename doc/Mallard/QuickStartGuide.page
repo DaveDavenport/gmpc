@@ -1,0 +1,132 @@
+<page xmlns="http://projectmallard.org/1.0/"
+      type="topic"
+      id="QuickStartGuide">
+      <title> Quick Start </title>
+      <p>
+        This guide will quickly, in 8 steps, show how to get started once you installed GMPC.
+        This guide assumes that you allready setup MPD and it is working.
+      </p>
+      <steps>
+        <item>
+            <title>Step 1</title>
+            <p>
+                Start GMPC. Normally GMPC can be found in the menu under: 
+                <code>Applications->Multimedia->Gnome Music Player Client</code>
+                This should be identical under GNOME, KDE, Unitiy and XFCE.
+                If you start it from a terminal, or using a run dialog (alt-F2) type
+                <code>gmpc</code>
+            </p>
+            <figure>
+                <media type="image" src="Images/gmpc-dev-install-guidestep_9.png"/>
+            </figure>
+        </item>
+        <item>
+            <title>Step 2</title>
+            <p>
+                The first time you run gmpc, you see a first-run wizard.
+                Follow the wizard step by step.
+             </p>
+             <note>
+                <p>
+                    If you do not get the wizard. You can get the same connection pane, by 
+                    going to the preferences.  <code>Music->Preferences</code>.
+                </p>
+             </note>
+            <figure>
+            <media type="image" src="Images/gmpc-dev-install-guidestep_10.png"/>
+            </figure>
+        </item>
+        <item>
+            <title>Step 3</title>
+            <p>
+                Enter the ip of the machine running mpd.
+                If GMPC and MPD are running on the same machine, you can enter 
+                <code>localhost</code> in the Host field.
+                If MPD is running on a different machine, enter the external IP address of that machine.
+                In the screenshot this is <code>192.150.0.102</code>
+            </p>
+            <note>
+                <p>
+                    If you password protected your MPD, enable <code>Use Authentication</code>
+                    and enter the password below.
+                </p>
+            </note>
+            <figure>
+            <media type="image" src="Images/gmpc-dev-install-guidestep_11.png"/>
+            </figure>
+            <p>
+                Press Connect, if that succeeds, we can continue to the final page of the wizard.
+            </p>
+            <p>
+                If GMPC fails to connect to MPD, check if MPD is running.
+                If MPD is running on a different machine, check if MPD accepts connections from the network.
+                This is configured with the <code>bind_to_address</code> option in <code>mpd.conf</code>.
+            </p>
+        </item>
+        <item>
+            <title>Step 4</title>
+            <p>
+                If GMPC is successfully connected we can close the wizard.
+            </p>
+            <figure>
+            <media type="image" src="Images/gmpc-dev-install-guidestep_12.png"/>
+            </figure>
+
+        </item>
+        <item>
+            <title>Step 5</title>
+            <note>
+                <p>
+                    If you already add music to the play queue from another client you will
+                    see this play queue in GMPC. Clients are kept into sync with each other.
+                </p>
+            </note>
+            <p>
+                (update screenshots)
+            </p>
+            <p>
+                When running GMPC for the first time we see the now playing screen.
+                This does not display anything because no music is currently playing.
+            </p>
+            <figure>
+            <media type="image" src="Images/gmpc-dev-install-guidestep_13.png"/>
+            </figure>
+            <p>
+                Lets add some music, the easiest way is using the file browser (called Database).
+                You can find the database in the left pane.
+            </p>
+        </item>
+        <item>
+            <title>Step 6</title>
+            <figure>
+                <media type="image" src="Images/gmpc-dev-install-guidestep_14.png"/>
+            </figure>
+            <note>
+                <p>
+                    If you see no folders or music in the Database, it means MPD has not indexed your music.
+                    To let MPD index your music go the the <code>Server</code> menu and press <code>Update MPD Database</code>.
+                    In the lower right corner a updating icon will appear.  If after updating the database view is still empty
+                    you might want to check the MPD documentation on how to solve this.
+                </p>
+           </note>
+        </item>
+        <item>
+            <title>Step 7</title>
+            <p>
+                To add a songs you right-click on the folder and press add.
+            </p>
+            <figure>
+                <media type="image" src="Images/gmpc-dev-install-guidestep_15.png"/>
+            </figure>
+        </item>
+        <item>
+            <title>Step 8</title>
+            <p>
+                Now the play queue is filled, lets select a song an play it. (double click on the song).
+            </p>
+            <figure>
+                <media type="image" src="Images/gmpc-dev-install-guidestep_16.png"/>
+            </figure>
+        </item>
+    </steps>
+</page>

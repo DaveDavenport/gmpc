@@ -2,7 +2,8 @@
       type="topic"
       id="index">
       <info>
-        <link type="topic" xref="MainInterface"/>
+          <link type="topic" xref="MainInterface"/>
+          <link type="topic" xref="QuickStartGuide"/>
       </info>
       <title>Gnome Music Player Client</title>
       <p>
@@ -14,7 +15,7 @@
         GMPC is one of the oldest clients for GMPC, and the only one that has been continuously developed and maintained.
       </p>
       <figure>
-          <desc>The Gnome Music Player Client</desc>
+          <title>The Gnome Music Player Client</title>
           <media type="image" src="Images/main-window.png"/>
       </figure>
       <section id="#QuickStartGuide">
