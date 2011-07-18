@@ -635,6 +635,10 @@ void pl3_toggle_hidden(void)
     {
         pl3_hide();
     }
+
+    #ifdef HAVE_APP_INDICATOR
+        tray_icon2_update_menu();
+    #endif
 }
 
 

@@ -99,6 +99,7 @@ char *gmpc_get_full_image_path(void);
 /* tray stuff */
 gboolean tray_icon2_get_available(void);
 void tray_icon2_create_tooltip(void);
+void tray_icon2_update_menu(void);
 
 /* tag stuff */
 
