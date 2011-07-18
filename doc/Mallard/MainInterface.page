@@ -9,7 +9,10 @@
     
     <section id="full">
         <title>Full view</title>
-        <media type="image" src="Images/main-window.png"/>
+        <figure>
+            <desc>GMPC full view</desc>
+            <media type="image" src="Images/main-window.png"/>
+        </figure>
         <p>
             If you collapse the main window, parts of the window might be hidden. Currently there are 2 collapsed views.
         </p>

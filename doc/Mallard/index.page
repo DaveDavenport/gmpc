@@ -1,0 +1,64 @@
+<page xmlns="http://projectmallard.org/1.0/"
+      type="topic"
+      id="index">
+      <info>
+        <link type="topic" xref="MainInterface"/>
+      </info>
+      <title>Gnome Music Player Client</title>
+      <p>
+        The Gnome Music Player Client (or short GMPC) is a frontend for the Music Player Daemon (short MPD).
+        GMPC allows you to control the playback of MPD. Create playlists, enable/disable outputs, etc.
+        In addition to just controlling MPD, GMPC offers features like Album art, lyrics, etc. More options like
+        editing of tags can be added by installing plugins.
+        
+        GMPC is one of the oldest clients for GMPC, and the only one that has been continuously developed and maintained.
+      </p>
+      <figure>
+          <desc>The Gnome Music Player Client</desc>
+          <media type="image" src="Images/main-window.png"/>
+      </figure>
+      <section id="#QuickStartGuide">
+        <title>
+            <link xref="QuickStartGuide">
+                Quick start
+            </link>
+        </title>
+        <p>
+            A guide giving a quick introduction to Gnome Music Player Client.
+        </p>
+      </section>
+      <section id="#IFace">
+      <title>
+        <link xref="MainInterface">
+            The main interface explained
+          </link>
+      </title>
+      <p>
+        In this section each part of the main interface is explained.
+      </p>
+      </section>
+      <section id="#EasyCommands">
+        <title>
+            <link xref="EasyCommand">
+                Easy Command
+            </link>
+        </title>
+        <p>
+                Easy command provides a commandline interface in GMPC. Allowing
+                you to quickly control MPD and GMPC.
+                For example if you want to play the song 'Layla' from 'Eric Clapton'
+                you just type: <code>play title=layla artist=clapton</code>
+                This section explains the possibilities easy command offers.
+        </p>
+      </section>
+      <section id="#TipsAndTricks">
+        <title>
+            <link xref="TipsAndTricks">
+                Tips and Tricks
+            </link>
+        </title>
+        <p>
+            Tips and tricks for using the Gnome Music Player Client.
+        </p>
+      </section>
+</page>
