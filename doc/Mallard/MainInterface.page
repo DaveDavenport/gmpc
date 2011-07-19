@@ -157,6 +157,78 @@
                 </p>
             </note>
         </section>
+        <section id="Favorite">
+            <title>Favorite</title>
+		    <media type="image" src="Images/pc-favorite-nhl.png"/>
+		    <p>
+			    The heart-shaped icon allows you to mark (or unmark) the song as favorite by clicking in on it.
+    			If the song is marked as favorite the icon is highlighted, if it is not a favorite, the icon is dimmed.
+	    	</p>
+		    <figure>
+			    <title>Song is a favorite</title>
+    			<media type="image" src="Images/pc-favorite-hl.png"/>
+	    	</figure>
+		    <figure>
+    		    <title>Song is not marked a favorite</title>
+	        	<media type="image" src="Images/pc-favorite-nhl.png"/>
+        	</figure>
+            <p>
+                GMPC stores the favorite songs are stored in a playlist called Favorite. This way the information
+                can be shared between different clients.
+            </p>
+            <note>
+                <p>
+                    Right click on the favorite icon allows you to add the current song to any playlist.
+                </p>
+            </note>
+            <note>
+                <p>
+                    To make favorites work, MPD needs to be able to store and load playlists.
+                </p>
+            </note>
+        </section>
+        <section id="PlaybackControl">
+            <title>Playback Control</title>
+            <media type="image" src="Images/pc-playback-control.png"/>
+            <p>
+                Of course the playback control buttons are also available: Play/Pause, Previous, Next, Stop and volume control.
+            </p>
+            <note>
+                <list>
+                    <item><p>You need sufficient permission to control playback. If you do not have the permission, the buttons will be made insensitive.</p></item>
+                    <item><p>If there is no output mixer defined in MPD, or it is not currently available, the Volume control is made insensitive.</p></item>
+                </list>
+            </note>
+            <note>
+                <p>
+                    Hovering your mouse over the next button will show a tooltip with the title of the next song.
+                </p>
+            </note>
+        </section>
+        <section id="SeekBar">
+            <title>Seek bar</title>
+            <media type="image" src="Images/pc-seek-bar.png"/>
+            <p>
+                Below is the progress/seek bar. This indicates how much of the song is allready played. 
+                You can drag the bar to a certain position to seek. Pressing the middle mouse button will instantly jump to that position. 
+            </p>
+            <p>
+                On the right of the seekbar is the progressed time (or remaining, see tip) and the total time of the song (if available).
 
+            </p>
+            <note>
+                 <list>
+                     <item><p>
+                         Right mouse click on the seekbar changes the time indication from progressed time to remaining time and back.
+                     </p></item>
+                     <item><p>
+                         Hovering the progress bar  will show you the time (or remaining) under the cursor. Allowing you to seek exactly to one point.
+                     </p></item>
+                     <item><p>
+                         Seeking is not instant, but the seek is done as you drop the handle. This is done so MPD is not spammed with seek requests.
+                     </p></item>
+                 </list>
+            </note>
+        </section>
     </section>
 </page>
