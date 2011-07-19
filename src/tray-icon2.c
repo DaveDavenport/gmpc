@@ -400,6 +400,10 @@ static gboolean tray_icon2_get_enabled(void)
  */
 static void tray_icon2_set_enabled(int enabled)
 {
+    #ifndef HAVE_APP_INDICATOR
+        cfg_set_single_value_as_int(config, TRAY_ICON2_ID, "use_appindicator", FALSE);
+    #endif
+
     cfg_set_single_value_as_int(config, TRAY_ICON2_ID, "enable", enabled);
     #ifdef HAVE_APP_INDICATOR
     if ((enabled) && (cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "use_appindicator", DEFAULT_TRAY_ICON_USE_APPINDICATOR)))
