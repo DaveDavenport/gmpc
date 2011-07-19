@@ -83,7 +83,7 @@ gboolean tray_icon2_get_available(void)
     if ((indicator) && (app_indicator_get_status(indicator) != APP_INDICATOR_STATUS_PASSIVE))
         return TRUE;
 
-    #else
+    #endif
     if (tray_icon2_gsi)
     {
         if (gtk_status_icon_is_embedded(tray_icon2_gsi) && gtk_status_icon_get_visible(tray_icon2_gsi))
@@ -92,7 +92,6 @@ gboolean tray_icon2_get_available(void)
         }
     }
 
-    #endif
     return FALSE;
 }
 
@@ -130,7 +129,7 @@ static void tray_icon2_update_menu_widget(GtkWidget *menu)
 {
     GtkWidget *item;
 
-    item = gtk_check_menu_item_new_with_mnemonic(_("_Show GMPC"));
+    item = gtk_check_menu_item_new_with_mnemonic(_("Sho_w GMPC"));
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item), !playlist3_window_is_hidden());
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
     g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_toggle_hidden), NULL);
@@ -233,7 +232,6 @@ static int tray_icon2_button_press_event(gpointer tray, GdkEventButton * event, 
     return TRUE;
 }
 
-
 static int tray_icon2_button_scroll_event(gpointer tray, GdkEventScroll * event, gpointer data)
 {
     if (event->direction == GDK_SCROLL_UP)
@@ -277,6 +275,7 @@ static int tray_icon2_button_scroll_event_appindicator(AppIndicator *this_indica
 #endif
 
 
+
 /* hack to delay tooltip showup on tray-icon*/
 /*
 GTimeVal current = {0,0};
@@ -317,7 +316,13 @@ static void tray_icon2_init(void)
 
     if (cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "enable", TRUE))
     {
+        #ifndef HAVE_APP_INDICATOR
+            cfg_set_single_value_as_int(config, TRAY_ICON2_ID, "use_appindicator", FALSE);
+        #endif
+
         #ifdef HAVE_APP_INDICATOR
+        if (cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "use_appindicator", DEFAULT_TRAY_ICON_USE_APPINDICATOR))
+        {
             GtkMenu *indicator_menu = gtk_menu_new();
             indicator = app_indicator_new ("gmpc", "gmpc-tray-disconnected", APP_INDICATOR_CATEGORY_APPLICATION_STATUS);
             app_indicator_set_icon_theme_path(indicator, PIXMAP_PATH);
@@ -327,7 +332,8 @@ static void tray_icon2_init(void)
             app_indicator_set_status (indicator, APP_INDICATOR_STATUS_ACTIVE);
             g_signal_connect(G_OBJECT(indicator), "scroll-event", G_CALLBACK(tray_icon2_button_scroll_event_appindicator), NULL);
 
-        #else
+        } else {
+        #endif
             tray_icon2_gsi = gtk_status_icon_new_from_icon_name("gmpc-tray-disconnected");
             #if GTK_CHECK_VERSION(2,15,0)
                 gtk_status_icon_set_has_tooltip(GTK_STATUS_ICON(tray_icon2_gsi), TRUE);
@@ -343,6 +349,8 @@ static void tray_icon2_init(void)
                 g_signal_connect(G_OBJECT(tray_icon2_gsi), "scroll-event", G_CALLBACK(tray_icon2_button_scroll_event), NULL);
                 /*g_signal_connect(G_OBJECT(tray_icon2_gsi), "query-tooltip", G_CALLBACK(tray_icon2_tooltip_query), NULL);*/
             }
+        #ifdef HAVE_APP_INDICATOR
+        }
         #endif // HAVE_APP_INDICATOR
 
         /* Make sure the icons are up2date */
@@ -362,13 +370,13 @@ static void tray_icon2_destroy(void)
         g_object_unref(indicator);
         indicator = NULL;
     }
-    #else
+    #endif
     if (tray_icon2_gsi)
     {
         g_object_unref(tray_icon2_gsi);
         tray_icon2_gsi = NULL;
     }
-    #endif
+
     /* free the currnet song checksum */
     if (current_song_checksum)
     {
@@ -394,7 +402,7 @@ static void tray_icon2_set_enabled(int enabled)
 {
     cfg_set_single_value_as_int(config, TRAY_ICON2_ID, "enable", enabled);
     #ifdef HAVE_APP_INDICATOR
-    if (enabled)
+    if ((enabled) && (cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "use_appindicator", DEFAULT_TRAY_ICON_USE_APPINDICATOR)))
     {
         if (!indicator)
         {
@@ -411,9 +419,9 @@ static void tray_icon2_set_enabled(int enabled)
             app_indicator_set_status(indicator, APP_INDICATOR_STATUS_PASSIVE);
         }
     }
-    #else
+    #endif
 
-    if (enabled)
+    if ((enabled) && (!cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "use_appindicator", DEFAULT_TRAY_ICON_USE_APPINDICATOR)))
     {
         if (!tray_icon2_gsi)
         {
@@ -430,7 +438,6 @@ static void tray_icon2_set_enabled(int enabled)
             gtk_status_icon_set_visible(GTK_STATUS_ICON(tray_icon2_gsi), FALSE);
         }
     }
-    #endif
 }
 
 
@@ -769,6 +776,25 @@ static void tray_icon2_create_tooltip_real(int position)
 
         GdkRectangle rect, rect2;
         GtkOrientation orientation;
+
+        #ifdef HAVE_APP_INDICATOR
+        if  (indicator != NULL) {
+            // there's no way to get the AppIndicator's position, so showing at tooltip is not possible
+            // choosing 50px above right corner
+            GdkRectangle rect2;
+            screen = gtk_widget_get_screen(pl3_win);
+
+            monitor = gdk_screen_get_monitor_at_window(screen, pl3_win->window);
+            gdk_screen_get_monitor_geometry(screen, monitor, &rect2);
+            /** Set Y = window height - size; */
+            y = rect2.y + rect2.height - 50 - 95;
+            /** X =window width - width */
+            x = rect2.x + rect2.width - 5 - 300;
+            gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), x + x_offset, y + y_offset);
+
+        } else
+        #endif
+
         if (gtk_status_icon_get_geometry(tray_icon2_gsi, &screen, &rect, &orientation))
         {
             monitor = gdk_screen_get_monitor_at_point(screen, rect.x, rect.y);
@@ -805,8 +831,9 @@ static void tray_icon2_create_tooltip_real(int position)
                     x = 0;
                 }
             }
+            gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), rect2.x + x, rect2.y + y);
         }
-        gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), rect2.x + x, rect2.y + y);
+
     } else if (position == TI2_AT_UPPER_LEFT)
     {
         GdkRectangle rect2;
@@ -923,15 +950,12 @@ static void tray_icon2_status_changed(MpdObj * mi, ChangedStatusType what, void 
     }
 
     #ifdef HAVE_APP_INDICATOR
-        if (indicator == NULL)
+        if ((indicator == NULL) && (tray_icon2_gsi == NULL))
             return;
 
-        if (what & MPD_CST_STATE)
+        if ((indicator != NULL) && (what & MPD_CST_STATE))
             tray_icon2_update_menu();
 
-    #else
-        if (tray_icon2_gsi == NULL)
-            return;
     #endif
 
     if (what & MPD_CST_STATE)
@@ -942,10 +966,12 @@ static void tray_icon2_status_changed(MpdObj * mi, ChangedStatusType what, void 
             mpd_song_markup(buffer, 256, "[%name%: ][%title%|%shortfile%][ - %artist%]", song);
 
             #ifdef HAVE_APP_INDICATOR
-                app_indicator_set_icon_full(indicator, "gmpc-tray-play", "gmpc is playing");
-            #else
-                gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray-play");
+                if (indicator != NULL)
+                    app_indicator_set_icon_full(indicator, "gmpc-tray-play", "gmpc is playing");
             #endif
+            if (tray_icon2_gsi != NULL)
+                gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray-play");
+
             //gtk_status_icon_set_tooltip(tray_icon2_gsi,buffer);
             if (has_buttons)
             {
@@ -955,10 +981,12 @@ static void tray_icon2_status_changed(MpdObj * mi, ChangedStatusType what, void 
         } else if (state == MPD_PLAYER_PAUSE)
         {
             #ifdef HAVE_APP_INDICATOR
+            if (indicator != NULL)
                 app_indicator_set_icon_full(indicator, "gmpc-tray-pause", "gmpc is pausing");
-            #else
-                gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray-pause");
             #endif
+            if (tray_icon2_gsi != NULL)
+                gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray-pause");
+
             //gtk_status_icon_set_tooltip(tray_icon2_gsi,_("Gnome Music Player Client"));
             if (has_buttons)
             {
@@ -968,10 +996,12 @@ static void tray_icon2_status_changed(MpdObj * mi, ChangedStatusType what, void 
         } else
         {
             #ifdef HAVE_APP_INDICATOR
+            if (indicator != NULL)
                 app_indicator_set_icon_full(indicator, "gmpc-tray", "gmpc is idling");
-            #else
-                gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray");
             #endif
+            if (tray_icon2_gsi != NULL)
+                gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray");
+
             //gtk_status_icon_set_tooltip(tray_icon2_gsi,_("Gnome Music Player Client"));
             if (has_buttons)
             {
@@ -989,10 +1019,7 @@ static void tray_icon2_status_changed(MpdObj * mi, ChangedStatusType what, void 
 static void tray_icon2_connection_changed(MpdObj * mi, int connect, void *user_data)
 {
     #ifdef HAVE_APP_INDICATOR
-        if (indicator == NULL)
-            return;
-    #else
-        if (tray_icon2_gsi == NULL)
+        if ((indicator == NULL) && (tray_icon2_gsi == NULL))
             return;
     #endif
 
@@ -1003,11 +1030,14 @@ static void tray_icon2_connection_changed(MpdObj * mi, int connect, void *user_d
     {
         /* Set the disconnect image, and reset the GtkTooltip */
         #ifdef HAVE_APP_INDICATOR
-            app_indicator_set_icon_full(indicator, "gmpc-tray-disconnected", "gmpc is disconnected");
-            tray_icon2_update_menu();
-        #else
-            gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray-disconnected");
+            if (indicator != NULL) {
+                app_indicator_set_icon_full(indicator, "gmpc-tray-disconnected", "gmpc is disconnected");
+                tray_icon2_update_menu();
+            }
         #endif
+            if (tray_icon2_gsi != NULL) {
+            gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray-disconnected");
+            }
 
         /* Destroy notification */
         if (tray_icon2_tooltip)
@@ -1024,12 +1054,25 @@ void tray_enable_toggled(GtkToggleButton * but)
 {
     g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "tray-icon.c: changing tray icon %i\n", gtk_toggle_button_get_active(but));
     cfg_set_single_value_as_int(config, TRAY_ICON2_ID, "enable", (int)gtk_toggle_button_get_active(but));
+
     if (cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "enable", 1))
     {
         tray_icon2_set_enabled(TRUE);
     } else
     {
         tray_icon2_set_enabled(FALSE);
+    }
+}
+
+void tray_use_appindicator_toggled(GtkToggleButton * but)
+{
+    g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "tray-icon.c: use_appindicator toggled %i\n", gtk_toggle_button_get_active(but));
+    cfg_set_single_value_as_int(config, TRAY_ICON2_ID, "use_appindicator", (int)gtk_toggle_button_get_active(but));
+
+    if (cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "enable", DEFAULT_TRAY_ICON_ENABLE))
+    {
+        tray_icon2_set_enabled(FALSE);
+        tray_icon2_set_enabled(TRUE);
     }
 }
 
