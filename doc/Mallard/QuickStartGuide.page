@@ -43,7 +43,6 @@
                 If GMPC and MPD are running on the same machine, you can enter 
                 <code>localhost</code> in the Host field.
                 If MPD is running on a different machine, enter the external IP address of that machine.
-                In the screenshot this is <code>192.150.0.102</code>
             </p>
             <note>
                 <p>
@@ -81,9 +80,6 @@
                     see this play queue in GMPC. Clients are kept into sync with each other.
                 </p>
             </note>
-            <p>
-                (update screenshots)
-            </p>
             <p>
                 When running GMPC for the first time we see the now playing screen.
                 This does not display anything because no music is currently playing.
