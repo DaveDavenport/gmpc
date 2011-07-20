@@ -429,4 +429,11 @@ namespace Gmpc {
 	static weak parentPlugin[] plugins; 
 	[CCode (cheader_filename="main.h", cname="num_plugins")]
 	static int num_plugins;
+
+
+    namespace Preferences {
+        [CCode (cname="preferences_window_update", cheader_filename="preferences.h")]
+        public void update();
+
+    }
 }

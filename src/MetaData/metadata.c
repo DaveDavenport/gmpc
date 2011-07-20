@@ -1105,6 +1105,7 @@ static void __column_toggled_enabled(GtkCellRendererToggle *renderer,
 		{
 			gboolean state = !gtk_cell_renderer_toggle_get_active(renderer);
 			gmpc_plugin_set_enabled(plug,state);
+			preferences_window_update();
 		}
 	}
 }

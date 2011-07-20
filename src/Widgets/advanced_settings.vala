@@ -70,8 +70,8 @@ static void advanced_settings()
 	ck.set_active((bool)config.get_int_with_default("Now Playing", "use-backdrop", 0));
 	ck.toggled.connect((source) => {
 		config.set_int("Now Playing", "use-backdrop",(int)source.get_active());
-			});
-	    vbox.add(ck);
+        });
+    vbox.add(ck);
 	/* Browsers */
 	label = new Gtk.Label(_("Browsers"));
     label.set_ellipsize(Pango.EllipsizeMode.END);
@@ -89,6 +89,7 @@ static void advanced_settings()
 			ck.toggled.connect((source) => {
 					p.set_enabled((int)source.get_active());
                     Gmpc.Playlist3.update_go_menu();
+                    Gmpc.Preferences.update();
 					});
 	//		vbox.pack_start(ck, false, false, 0);
             vbox.add(ck);
