@@ -3,7 +3,7 @@
   <!-- interface-requires gtk+ 2.12 -->
   <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkDialog" id="preferences_window">
-    <property name="title" translatable="yes">gmpc - Configuration</property>
+    <property name="title" translatable="yes">GMPC - Preferences</property>
     <property name="default_width">600</property>
     <property name="default_height">450</property>
     <property name="type_hint">normal</property>

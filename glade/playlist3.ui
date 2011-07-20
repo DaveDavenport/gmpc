@@ -285,7 +285,7 @@
         </child>
         <child>
           <object class="GtkAction" id="menu_help">
-            <property name="label" translatable="yes">_help</property>
+            <property name="label" translatable="yes">_Help</property>
           </object>
         </child>
         <child>
