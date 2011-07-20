@@ -1,0 +1,23 @@
+<page xmlns="http://projectmallard.org/1.0/"
+      type="topic"
+      id="PreferencesMultimediaKeys">
+
+    <title>Preferences - Multimedia Keys</title>
+    <p>
+        The following image displays the Multimedia Keys preferences dialog:
+    </p>
+    
+    <figure>
+        <desc>The Multimedia Keys preferences dialog</desc>
+        <media type="image" src="Images/preferences-multimedia-keys.png"/>
+    </figure>
+    
+    <p>This dialog allows you to bind keyboard shortcuts and multimedia keys to actions in GMPC.</p>
+
+    <steps>
+      <title>Assigning, changing or disabling a shortcut or multimedia key</title>
+      <item><p>Select the respective action in the list.</p></item>
+      <item><p>Click the field next to it in the "Shortcut" column. That fields text will change into "New accelerator...".</p></item>
+      <item><p>Press the desired key combination or multimedia key you want to assign to that action. Pressing 'backspace' will disable the keybinding.</p></item>
+    </steps>
+</page>
