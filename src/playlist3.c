@@ -1128,6 +1128,10 @@ void create_playlist3(void)
     playlist_zoom_level_changed();
 	TEC("zoom level")
 
+    #ifdef HAVE_APP_INDICATOR
+        tray_icon2_update_menu();
+    #endif
+
 	TEC("Restore state")
     pl3_update_go_menu();
 	TEC("Go menu")
