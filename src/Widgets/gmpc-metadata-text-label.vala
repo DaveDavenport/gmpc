@@ -111,8 +111,18 @@ namespace Gmpc.MetaData.Widgets
                 this.set_from_item(null);
             }
             this.populate_popup.connect((source, menu)=>{
+                /*  Add refetch */
+                var mitem = new Gtk.ImageMenuItem.with_label(_("Refetch"));
+                mitem.set_image(
+                    new Gtk.Image.from_stock("gtk-refresh", Gtk.IconSize.MENU));
+                mitem.activate.connect((source)=>{
+                    metawatcher.query(song, type|Gmpc.MetaData.Type.QUERY_NO_CACHE, out item);
+                 });
+                 menu.append(mitem);
+                 mitem.show();
+                             
                 /*  Add selector */
-                var mitem = new Gtk.ImageMenuItem.with_label(_("Metadata selector"));
+                mitem = new Gtk.ImageMenuItem.with_label(_("Metadata selector"));
                 mitem.set_image(
                     new Gtk.Image.from_stock("gtk-edit", Gtk.IconSize.MENU));
                 mitem.activate.connect((source)=>{
