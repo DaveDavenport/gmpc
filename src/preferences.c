@@ -183,11 +183,10 @@ void create_preferences_window(void)
                 gmpc_plugin_get_enabled(plugins[i]))
             {
                 GtkTreeIter iter;
-                const gchar *translation_domain = gmpc_plugin_get_translation_domain(plugins[i]);
                 gtk_list_store_append(GTK_LIST_STORE(plugin_store), &iter);
                 gtk_list_store_set(GTK_LIST_STORE(plugin_store), &iter, 0, i,
                     #if defined(ENABLE_NLS) &&  GLIB_CHECK_VERSION(2,18,0)
-                    1, g_dgettext(translation_domain, gmpc_plugin_get_name(plugins[i])),
+                    1, _(gmpc_plugin_get_name(plugins[i])),
                     #else
                     1, gmpc_plugin_get_name(plugins[i]),
                     #endif
