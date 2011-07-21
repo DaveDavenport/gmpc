@@ -45,7 +45,7 @@
         </list>
         
         <note><p>
-            Ubuntu's new interface "Unity" uses a little different approach to provide tray icons and GMPC will natively integrate into it if the support is compiled in. When you are not using Unity, you will automatically get a fallback icon. However, if you experience problems like missing icons in the context menu or if you can't change the volume by scrolling on the icon, you can switch to the legacy tray icon by editing the "gmpc.cfg" file normally located under "~/.config/gmpc". The flag is named "use_appindicator" in the "tray-icon2" section.
+            Ubuntu's new interface "Unity" uses a little different approach to provide notification area icons and GMPC will natively integrate into it if the support is compiled in. When you are not using Unity, you will automatically get a fallback icon. However, if you experience problems like missing icons in the context menu or if you can't change the volume by scrolling on the icon, you can switch back to the legacy tray icon through the respective option in the "Preferences"->"Interface"->"Advanced Settings" window.
         </p></note>
     </section>
 

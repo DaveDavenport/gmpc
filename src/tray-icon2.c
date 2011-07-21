@@ -28,6 +28,7 @@
 #include "gmpc-extras.h"
 #include "gmpc-metaimage.h"
 #include "misc.h"
+#include "tray-icon2.h"
 
 #define LOG_DOMAIN "TrayIcon"
 /* name of config field */
@@ -1049,6 +1050,15 @@ static void tray_icon2_connection_changed(MpdObj * mi, int connect, void *user_d
     }
 }
 
+gboolean trayicon2_have_appindicator_support( void )
+{
+#ifdef HAVE_APP_INDICATOR
+	return TRUE;
+#else
+	return FALSE;
+#endif
+}
+
 
 /**
  *  PREFERENCES
@@ -1068,10 +1078,9 @@ void tray_enable_toggled(GtkToggleButton * but)
     }
 }
 
-void tray_use_appindicator_toggled(GtkToggleButton * but)
+void trayicon2_toggle_use_appindicator()
 {
-    g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "tray-icon.c: use_appindicator toggled %i\n", gtk_toggle_button_get_active(but));
-    cfg_set_single_value_as_int(config, TRAY_ICON2_ID, "use_appindicator", (int)gtk_toggle_button_get_active(but));
+	 cfg_set_single_value_as_int(config, TRAY_ICON2_ID, "use_appindicator", !cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "use_appindicator", TRUE));
 
     if (cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "enable", DEFAULT_TRAY_ICON_ENABLE))
     {

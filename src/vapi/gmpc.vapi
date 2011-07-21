@@ -267,7 +267,13 @@ namespace Gmpc {
         public void show();
     }
 
+    namespace TrayIcon2 {
+        [CCode (cname="trayicon2_toggle_use_appindicator", cheader_filename="tray-icon2.h")]
+        public void toggle_use_appindicator();
 
+        [CCode (cname="trayicon2_have_appindicator_support", cheader_filename="tray-icon2.h")]
+        public bool have_appindicator_support();
+    }
 
    [CCode (cname = "config", cheader_filename="plugin.h")]
     static Settings config; 

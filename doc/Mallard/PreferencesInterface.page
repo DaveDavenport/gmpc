@@ -40,7 +40,8 @@
             <title>Interface</title>
             <item><p>Hide album art - This will hide the album art in the "Now Playing" browser and the notification popup.</p></item>
             <item><p>Hide favorite icon - This hides the favorite icon.</p></item>
-            <item><p>Use backdrops (restart required) - TODO</p></item>
+            <item><p>Use backdrops (restart required) - This will put the artists image in a darkend version behind the contents of the "Now Playing" browser.</p></item>
+            <item><p>Use legacy tray icon - This option is only available if you compiled GMPC with AppIndicator support. This option allows you to seamlessly switch between the AppIndicator and the old tray icon. More information on this is available in the "Preferences"->"Notification" section.</p></item>
         </list>
 
         <list>

@@ -35,7 +35,7 @@ static void advanced_settings()
 	
 	/* Settings */
 	var vbox = new Gmpc.Widget.Albumview();//new Gtk.VBox(false, 6);
-    win.set_size_request(400, -1);
+    win.set_size_request(450, -1);
     vbox.set_cover_size(180,32);
     vbox.set_header_size(32);
 	win.vbox.add(vbox);
@@ -72,6 +72,16 @@ static void advanced_settings()
 		config.set_int("Now Playing", "use-backdrop",(int)source.get_active());
         });
     vbox.add(ck);
+
+    /** Use legacy tray icon  */
+    if (Gmpc.TrayIcon2.have_appindicator_support()) {
+	    ck = new Gtk.CheckButton.with_label("Use legacy tray icon");
+        ck.set_active(!(bool)config.get_int_with_default("tray-icon2", "use_appindicator", 1));
+	    ck.toggled.connect((source) => {
+            Gmpc.TrayIcon2.toggle_use_appindicator();
+        });
+        vbox.add(ck);
+    }
 	/* Browsers */
 	label = new Gtk.Label(_("Browsers"));
     label.set_ellipsize(Pango.EllipsizeMode.END);
