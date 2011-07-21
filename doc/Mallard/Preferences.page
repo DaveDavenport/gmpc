@@ -1,12 +1,12 @@
 <page xmlns="http://projectmallard.org/1.0/"
       type="topic"
       id="Preferences">
-      <title>The "Preferences" window</title>
+      <title>The Preferences window</title>
       <p>
-          The "Preferences" window allows you to configure GMPC and its plugins. The available options can vary, depending on used plugins (internal and external), so if you miss something, make sure you have the respective plugin installed and enabled.
+          The Preferences window allows you to configure GMPC and its plugins. The available options can vary, depending on used plugins (internal and external), so if you miss something, make sure you have the respective plugin installed and enabled.
       </p>
       <figure>
-          <title>The "Preferences" window showing the "Connection" dialog</title>
+          <desc>The Preferences window showing the "Connection" dialog</desc>
           <media type="image" src="Images/preferences-connection.png"/>
       </figure>
       
@@ -94,8 +94,18 @@
                     Metadata Browser
                 </link>
             </title>
-            <p></p>
+            <p>This dialog menu lets you control, which metadata shall be shown in the "Metadata"- and "Now Playing" browsers.</p>
         </item>
+        
+        <item>
+            <title>
+                <link xref="PreferencesPlugins">
+                    Plugins
+                </link>
+            </title>
+            <p>This dialog lists all loadable plugins and allows you to enable/disable them.</p>
+        </item>
+        
       </terms>
     </section>
 
@@ -108,7 +118,7 @@
                         Internal Extra Playlist View
                     </link>
                 </title>
-                <p>This item is only shown, if the extra playlist is enabled.</p>
+                <p>This item is only visible, if the extra playlist is enabled.</p>
             </item>
 
         </terms>
