@@ -38,6 +38,18 @@
         In this section each part of the main interface is explained.
       </p>
       </section>
+      
+      <section id="#Preferences">
+      <title>
+        <link xref="Preferences">
+            The "Preferences" window
+        </link>
+      </title>
+      <p>
+        The "Preferences" window allows you to configure GMPC and its plugins.
+      </p>
+      </section>
+      
       <section id="#EasyCommands">
         <title>
             <link xref="EasyCommand">
