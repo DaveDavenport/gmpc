@@ -17,17 +17,6 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-/**
- * This plugin consists of 3 parts
- * Metadata2 plugin: Implements metadata 2 browser.
- * Now Playing plugin: Reusing the metadata 2 browser it implements a now playing browser.
- * Custom widget, there are some custom widgets used by the metadata 2 browser
- *  * Similar songs.
- *  * Similar artist.
- *  * More. (expands, collapses a sub widget
- * 
- */
-
 using Config;
 using Gtk;
 using Gmpc;
@@ -48,9 +37,9 @@ private class AlbumviewEntry
 
 public class Gmpc.Widget.Albumview : Gtk.Container
 {
-    private int cover_width     = 220;
-    private int cover_height    = 220+30;
-    private int header_height   = 150;
+    private int cover_width_real     = 220;
+    private int cover_height_real    = 220+30;
+    private int header_height_real   = 150;
     private int num_items       = 0;
     private int columns         = 3;
 
@@ -60,13 +49,13 @@ public class Gmpc.Widget.Albumview : Gtk.Container
     /** Accessor */
     public void set_cover_size(int width, int height) 
     {
-        cover_width = width;
-        cover_height = height;
+        cover_width_real = width;
+        cover_height_real = height;
         this.queue_resize();
     }
     public void set_header_size(int height)
     {
-        header_height = height;
+        header_height_real = height;
         this.queue_resize();
     }
 
@@ -78,34 +67,67 @@ public class Gmpc.Widget.Albumview : Gtk.Container
 
     ~Albumview()
     {
-        stdout.printf("Destroy");
     }
 
-    public override void size_request(out Gtk.Requisition req)
+	/**
+     * This function is incomplete.
+	 */
+	public override void size_request(out Gtk.Requisition req)
     {
-        GLib.Timer t = new GLib.Timer();
         req = Gtk.Requisition();
+		int cover_width = cover_width_real; 
+		int cover_height= cover_height_real; 
+		int header_height = header_height_real; 
         /* request minimum of 1 column */
-        int width = cover_width*1; 
-        int height = 0;//cover_height*((int)GLib.Math.ceil(num_items/(double)columns));
+        int width = cover_width_real*1; 
         int items = 0;
-        foreach (AlbumviewEntry e in children) {
-            if(e.type == AlbumviewEntry.Type.ITEM) { 
-                items++;
-            }else if (e.type == AlbumviewEntry.Type.HEADER) {
-                height += header_height;
-                height += cover_height* ((int)GLib.Math.ceil(items/(double)columns));
-                items = 0;
-            }
-        }
-        if(items > 0) {
-            height += cover_height* ((int)GLib.Math.ceil(items/(double)columns));
-            items = 0;
-        }
+		/* determine max width/height */
+		foreach ( var child in children)
+		{
+			if(child.widget.get_visible())
+			{
+				if(child.type == AlbumviewEntry.Type.ITEM) {
+					Gtk.Requisition cr = {0,0};
+					child.widget.size_request(out cr);
+					cover_width = int.max(cr.width,cover_width);
+					cover_height = int.max(cr.height,cover_height);
+				}else{
+					Gtk.Requisition cr = {0,0};
+					child.widget.size_request(out cr);
+					width = int.max(cr.width,width);
+					header_height = int.max(cr.height,header_height);
+				}
+			}
+		}
 
-        req.width = width;
-        req.height =height; 
-        stdout.printf("elapsed_time size_request: %f\n", t.elapsed());
+        int rows = 0;
+		foreach ( var child in children)
+		{
+			if(child.widget.get_visible())
+			{
+				if(child.type == AlbumviewEntry.Type.ITEM) {
+					items++;
+				}else{
+					if(items != 0)
+					{
+						int nrows = items/columns;
+						int remain = (items%columns >0)?1:0;
+						rows = rows + (nrows+remain)*cover_height; 
+						rows+=cover_height;
+					}
+					items = 0;
+				}
+			}
+		}
+		if(items != 0)
+		{
+			int nrows = items/columns;
+			int remain = (items%columns >0)?1:0;
+			rows = rows + (nrows+remain)*cover_height; 
+		}
+
+        req.width =  width;
+        req.height = rows; 
     }
 
     public override void add(Gtk.Widget widget)
@@ -166,15 +188,42 @@ public class Gmpc.Widget.Albumview : Gtk.Container
     }
     public override void size_allocate(Gdk.Rectangle alloc)
     {
-        GLib.Timer t = new GLib.Timer();
+		int cover_width = cover_width_real; 
+		int cover_height= cover_height_real; 
+		int header_height = header_height_real; 
         /* Hack to avvoid pointless resizes, I get this "1" size when a child widget changes */
         if(alloc.width == 1) return;
-        int new_columns = int.max(alloc.width/cover_width, 1);
+		int width = alloc.width;
+        int new_columns = 0; 
         int rows = 0;
         int item = 0;
 
-        foreach ( var child in children)
-        {
+		foreach ( var child in children)
+		{
+			if(child.widget.get_visible())
+			{
+
+				if(child.type == AlbumviewEntry.Type.ITEM) {
+					Gtk.Requisition cr = {0,0};
+					child.widget.size_request(out cr);
+					cover_width = int.max(cr.width,cover_width);
+					cover_height = int.max(cr.height,cover_height);
+					item++;
+				}else{
+					Gtk.Requisition cr = {0,0};
+					child.widget.size_request(out cr);
+					item = 0;
+
+					width = int.max(cr.width,width);
+					header_height = int.max(cr.height,header_height);
+				}
+			}
+		}
+		new_columns = int.max(width/cover_width, 1);
+		item = 0;
+		rows = 0;
+		foreach ( var child in children)
+		{
             if(child.widget.get_visible())
             {
                 if(child.type == AlbumviewEntry.Type.ITEM) {
@@ -182,18 +231,18 @@ public class Gmpc.Widget.Albumview : Gtk.Container
                     Gtk.Requisition cr = {0,0};
                     child.widget.size_request(out cr);
                     ca.x = alloc.x + (item%columns)*cover_width;
-                    ca.y = rows+alloc.y + (int)GLib.Math.floor(item/(double)columns)*cover_height;
+                    ca.y = rows+alloc.y + (item/columns)*cover_height;
                     ca.width = cover_width;
                     ca.height = cover_height;
 
                     child.widget.size_allocate(ca);
                     item++;
                 }else{
-
                     if(item != 0)
                     {
-                        rows = rows + ((int)GLib.Math.floor((item-1)/(double)columns))*cover_height;
-                        rows+=cover_height;
+						int nrows = item/columns;
+						int remain = (item%columns >0)?1:0;
+						rows = rows + (nrows+remain)*cover_height; 
                     }
                     item = 0;
 
@@ -207,23 +256,16 @@ public class Gmpc.Widget.Albumview : Gtk.Container
 
                     child.widget.size_allocate(ca);
                     rows+=header_height;
-
-
-
                 }
             }
         }
         if(new_columns != columns) {
-            stdout.printf("Columns: %i->%i\n", columns, new_columns);
             columns = new_columns;
             this.queue_resize();
         }
-
-        stdout.printf("elapsed_time size_allocate: %f\n", t.elapsed());
     }
     public override void forall_internal(bool include_internals, Gtk.Callback callback) 
     {
-        GLib.Timer t = new GLib.Timer();
         weak List<AlbumviewEntry> iter = children.first();
         /* Somehow it fails when doing a foreach() construction, weird vala bug I guess */
         /* would be  nice if I could filter out say only the visible ones */
@@ -232,7 +274,6 @@ public class Gmpc.Widget.Albumview : Gtk.Container
             iter = iter.next;
             callback(child.widget);
         }
-        stdout.printf("elapsed_time foreach internal: %f: %p\n", t.elapsed(),(void *)callback);
     }
     public void clear()
     {
