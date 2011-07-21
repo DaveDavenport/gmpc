@@ -70,7 +70,7 @@ public class Gmpc.Widget.Albumview : Gtk.Container
     }
 
 	/**
-     * This function is incomplete.
+     * Calculates the size of the widget. 
 	 */
 	public override void size_request(out Gtk.Requisition req)
     {
@@ -228,8 +228,6 @@ public class Gmpc.Widget.Albumview : Gtk.Container
             {
                 if(child.type == AlbumviewEntry.Type.ITEM) {
                     Gdk.Rectangle ca = {0,0,0,0};
-                    Gtk.Requisition cr = {0,0};
-                    child.widget.size_request(out cr);
                     ca.x = alloc.x + (item%columns)*cover_width;
                     ca.y = rows+alloc.y + (item/columns)*cover_height;
                     ca.width = cover_width;
@@ -247,8 +245,6 @@ public class Gmpc.Widget.Albumview : Gtk.Container
                     item = 0;
 
                     Gdk.Rectangle ca = {0,0,0,0};
-                    Gtk.Requisition cr = {0,0};
-                    child.widget.size_request(out cr);
                     ca.x = alloc.x; 
                     ca.y = alloc.y+rows;
                     ca.width = cover_width*columns;
