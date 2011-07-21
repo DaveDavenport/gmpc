@@ -2376,6 +2376,7 @@ void enable_extra_playlist(GtkToggleAction *action)
             extraplaylist_plugin.set_enabled(state);
         }
     }
+    preferences_window_update();
 }
 
 
