@@ -25,6 +25,7 @@
 #include <config.h>
 #include "main.h"
 #include "playlist3.h"
+#include "preferences.h"
 #include "gmpc-extras.h"
 #include "gmpc-metaimage.h"
 #include "misc.h"
@@ -389,12 +390,12 @@ static void tray_icon2_destroy(void)
 
 /**
  * Get enabled
- */
+ *
 static gboolean tray_icon2_get_enabled(void)
 {
     return cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "enable", TRUE);
 }
-
+*/
 
 /**
  * Set Disabled
@@ -1078,7 +1079,7 @@ void tray_enable_toggled(GtkToggleButton * but)
     }
 }
 
-void trayicon2_toggle_use_appindicator()
+void trayicon2_toggle_use_appindicator(void)
 {
 	 cfg_set_single_value_as_int(config, TRAY_ICON2_ID, "use_appindicator", !cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "use_appindicator", TRUE));
 

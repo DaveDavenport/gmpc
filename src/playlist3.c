@@ -26,7 +26,7 @@
 #include "plugin.h"
 #include "misc.h"
 #include "playlist3.h"
-/* every part split out over multiple files */
+#include "preferences.h"
 #include "revision.h"
 #include "gmpc-metaimage.h"
 #include "gmpc-extras.h"
