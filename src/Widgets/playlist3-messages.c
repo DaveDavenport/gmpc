@@ -190,6 +190,8 @@ void playlist3_message_add_widget(Playlist3MessagePlugin * self, GtkWidget * wid
 {
 	GtkWidget *event = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "error_event"));
 	GtkWidget *box = gtk_bin_get_child(GTK_BIN(event));
+	if(box == NULL)
+		return;
 	/* Avoid adding more then one widget */
 	if (widget_added)
 		return;
