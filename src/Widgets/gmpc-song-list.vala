@@ -74,13 +74,14 @@ public class Gmpc.Widgets.Songlist : Gtk.VBox
         });
 
         MPD.Song song_file = song;
-        event.button_press_event.connect((source, event) => {
+        event.button_release_event.connect((source, event) => {
             if(event.button == 1) {
                 artist_song_clicked(song_file);
                 return true;
                 }
             return false;
         });
+		
 
 
         /* Create lLabel */
@@ -139,7 +140,7 @@ public class Gmpc.Widgets.Songlist : Gtk.VBox
         });
 
         MPD.Song song_file = song;
-        event.button_press_event.connect((source, event) => {
+        event.button_release_event.connect((source, event) => {
             if(event.button == 1) {
                 album_song_clicked(song_file);
                 return true;
@@ -232,7 +233,7 @@ public class Gmpc.Widgets.Songlist : Gtk.VBox
 
 
         MPD.Song song_file = song;
-        event.button_press_event.connect((source, event) => {
+        event.button_release_event.connect((source, event) => {
             if(event.button == 1) {
                 play_song_clicked(song_file);
                 return true;
