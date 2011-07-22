@@ -1298,11 +1298,16 @@ static void playlist_pref_destroy(GtkWidget * container)
 
 void playlist_pref_construct(GtkWidget * container)
 {
+	GError *error = NULL;
     gchar *path = gmpc_get_full_glade_path("preferences-playlist.ui");
     playlist_pref_xml = gtk_builder_new();
 
-    gtk_builder_add_from_file(playlist_pref_xml, path, NULL);
-
+    gtk_builder_add_from_file(playlist_pref_xml, path, &error);
+	if(error) {
+		g_warning("Failed to open builder file: %s", error->message);
+		g_error_free(error);
+		return;
+	}
     if (playlist_pref_xml)
     {
         GtkWidget *vbox = (GtkWidget *) gtk_builder_get_object(playlist_pref_xml,
@@ -1348,6 +1353,7 @@ void playlist_pref_construct(GtkWidget * container)
             cfg_get_single_value_as_int_with_default(config, "general", "search-as-you-type",
             0));
         gtk_container_add(GTK_CONTAINER(container), vbox);
+		gtk_widget_show_all(vbox);
         gtk_builder_connect_signals(playlist_pref_xml, NULL);
     }
     g_free(path);

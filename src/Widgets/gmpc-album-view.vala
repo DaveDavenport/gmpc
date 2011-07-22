@@ -35,16 +35,29 @@ private class QtableEntry
 
 }
 
-public class Gmpc.Widget.Qtable : Gtk.Container
+public class Gmpc.Widget.Qtable : Gtk.Container, Gtk.Buildable
 {
-    private int cover_width_real     = 220;
-    private int cover_height_real    = 220+30;
-    private int header_height_real   = 150;
+    private int cover_width_real     = 2;
+    private int cover_height_real    = 2;
+    private int header_height_real   = 1;
     private int num_items       = 0;
     private int columns         = 3;
 
 
     private List<QtableEntry> children = null;
+	/* GtkBuildable override */
+	public void add_child(Gtk.Builder build, GLib.Object child, string? type)
+	{
+		if(!(child is Gtk.Widget)) {
+			GLib.warning("Trying to add non widget");
+			return;
+		}
+		if(type != null && type == "header") {
+			add_header(child as Gtk.Widget);
+		}else{
+			add(child as Gtk.Widget);
+		}
+	}
 
     /** Accessor */
     public void set_cover_size(int width, int height) 
@@ -58,10 +71,11 @@ public class Gmpc.Widget.Qtable : Gtk.Container
         header_height_real = height;
         this.queue_resize();
     }
-
+	construct{
+        this.set_has_window(false);
+	}
     public Qtable()
     {
-        this.set_has_window(false);
         this.set_redraw_on_allocate(false);
     }
 

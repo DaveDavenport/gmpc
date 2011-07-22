@@ -1,184 +1,115 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0"?>
 <interface>
   <!-- interface-requires gtk+ 2.12 -->
   <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkVBox" id="playlist-vbox">
     <property name="visible">True</property>
+    <property name="orientation">vertical</property>
     <property name="spacing">8</property>
     <child>
-      <object class="GtkFrame" id="frame18">
-        <property name="visible">True</property>
-        <property name="label_xalign">0</property>
-        <property name="shadow_type">none</property>
-        <child>
-          <object class="GtkAlignment" id="alignment46">
+      <object class="GmpcWidgetQtable" id="vbox1">
+        <child type="header">
+          <object class="GtkLabel" id="main_label">
             <property name="visible">True</property>
-            <property name="left_padding">12</property>
-            <child>
-              <object class="GtkVBox" id="vbox32">
-                <property name="visible">True</property>
-                <property name="border_width">12</property>
-                <property name="spacing">6</property>
-                <child>
-                  <object class="GtkCheckButton" id="ck_hide_on_close">
-                    <property name="label" translatable="yes">Hide on close</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">False</property>
-                    <property name="use_underline">True</property>
-                    <property name="draw_indicator">True</property>
-                    <signal name="toggled" handler="hide_on_close_enable_tb"/>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkCheckButton" id="ck_cover_case">
-                    <property name="label" translatable="yes">Stylize album covers</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">False</property>
-                    <property name="draw_indicator">True</property>
-                    <signal name="toggled" handler="show_cover_case_tb"/>
-                  </object>
-                  <packing>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkCheckButton" id="ck_stop_on_exit">
-                    <property name="label" translatable="yes">Stop playing on exit</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">False</property>
-                    <property name="draw_indicator">True</property>
-                    <signal name="toggled" handler="ck_stop_on_exit_toggled_cb"/>
-                  </object>
-                  <packing>
-                    <property name="position">2</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkCheckButton" id="ck_show_tooltip">
-                    <property name="label" translatable="yes">Show songlist tooltip</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">False</property>
-                    <property name="draw_indicator">True</property>
-                    <signal name="toggled" handler="ck_show_tooltip_enable_tb"/>
-                  </object>
-                  <packing>
-                    <property name="position">3</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkCheckButton" id="ck_search_as_you_type">
-                    <property name="label" translatable="yes">Enable search as you type. (Might be slow)</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">False</property>
-                    <property name="draw_indicator">True</property>
-                    <signal name="toggled" handler="ck_search_as_you_type"/>
-                  </object>
-                  <packing>
-                    <property name="position">4</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkCheckButton" id="ck_show_tabbed_heading">
-                    <property name="label" translatable="yes">Show buttons instead of dropdown in collapsed view</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">False</property>
-                    <property name="draw_indicator">True</property>
-                    <signal name="toggled" handler="ck_show_tabbed_heading_enable_cb"/>
-                  </object>
-                  <packing>
-                    <property name="position">4</property>
-                  </packing>
-                </child>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child type="label">
-          <object class="GtkLabel" id="label173">
-            <property name="visible">True</property>
+            <property name="xalign">0</property>
             <property name="label" translatable="yes">&lt;b&gt;Main:&lt;/b&gt;</property>
             <property name="use_markup">True</property>
           </object>
         </child>
-      </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="position">0</property>
-      </packing>
-    </child>
-    <child>
-      <object class="GtkFrame" id="frame10">
-        <property name="visible">True</property>
-        <property name="label_xalign">0</property>
-        <property name="shadow_type">none</property>
         <child>
-          <object class="GtkAlignment" id="alignment23">
+          <object class="GtkCheckButton" id="ck_hide_on_close">
+            <property name="label" translatable="yes">Hide on close</property>
             <property name="visible">True</property>
-            <property name="left_padding">12</property>
-            <child>
-              <object class="GtkVBox" id="vbox18">
-                <property name="visible">True</property>
-                <property name="border_width">12</property>
-                <property name="spacing">6</property>
-                <child>
-                  <object class="GtkCheckButton" id="ck_ps">
-                    <property name="label" translatable="yes">Center playing song</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">False</property>
-                    <property name="use_underline">True</property>
-                    <property name="draw_indicator">True</property>
-                    <signal name="toggled" handler="cur_song_center_enable_tb"/>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkCheckButton" id="ck_possize">
-                    <property name="label" translatable="yes">Save position and size between sessions</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">False</property>
-                    <property name="use_underline">True</property>
-                    <property name="draw_indicator">True</property>
-                    <signal name="toggled" handler="save_possize_enable_tb"/>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-              </object>
-            </child>
+            <property name="can_focus">True</property>
+            <property name="receives_default">False</property>
+            <property name="use_underline">True</property>
+            <property name="draw_indicator">True</property>
+            <signal name="toggled" handler="hide_on_close_enable_tb"/>
           </object>
         </child>
-        <child type="label">
-          <object class="GtkLabel" id="label103">
+        <child>
+          <object class="GtkCheckButton" id="ck_cover_case">
+            <property name="label" translatable="yes">Stylize album covers</property>
             <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">False</property>
+            <property name="draw_indicator">True</property>
+            <signal name="toggled" handler="show_cover_case_tb"/>
+          </object>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="ck_stop_on_exit">
+            <property name="label" translatable="yes">Stop playing on exit</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">False</property>
+            <property name="draw_indicator">True</property>
+            <signal name="toggled" handler="ck_stop_on_exit_toggled_cb"/>
+          </object>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="ck_show_tooltip">
+            <property name="label" translatable="yes">Show songlist tooltip</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">False</property>
+            <property name="draw_indicator">True</property>
+            <signal name="toggled" handler="ck_show_tooltip_enable_tb"/>
+          </object>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="ck_show_tabbed_heading">
+            <property name="label" translatable="yes">Show buttons instead of dropdown in collapsed view</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">False</property>
+            <property name="draw_indicator">True</property>
+            <signal name="toggled" handler="ck_show_tabbed_heading_enable_cb"/>
+          </object>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="ck_search_as_you_type">
+            <property name="label" translatable="yes">Enable search as you type. (Might be slow)</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">False</property>
+            <property name="draw_indicator">True</property>
+            <signal name="toggled" handler="ck_search_as_you_type"/>
+          </object>
+        </child>
+        <child type="header">
+          <object class="GtkLabel" id="playlist_label">
+            <property name="visible">True</property>
+            <property name="xalign">0</property>
             <property name="label" translatable="yes">&lt;b&gt;Playlist:&lt;/b&gt;</property>
             <property name="use_markup">True</property>
           </object>
         </child>
+        <child>
+          <object class="GtkCheckButton" id="ck_ps">
+            <property name="label" translatable="yes">Center playing song</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">False</property>
+            <property name="use_underline">True</property>
+            <property name="draw_indicator">True</property>
+            <signal name="toggled" handler="cur_song_center_enable_tb"/>
+          </object>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="ck_possize">
+            <property name="label" translatable="yes">Save position and size between sessions</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">False</property>
+            <property name="use_underline">True</property>
+            <property name="draw_indicator">True</property>
+            <signal name="toggled" handler="save_possize_enable_tb"/>
+          </object>
+        </child>
       </object>
       <packing>
-        <property name="expand">False</property>
-        <property name="fill">False</property>
-        <property name="position">1</property>
+        <property name="position">0</property>
       </packing>
     </child>
     <child>
@@ -200,7 +131,7 @@
       </object>
       <packing>
         <property name="expand">False</property>
-        <property name="position">2</property>
+        <property name="position">1</property>
       </packing>
     </child>
   </object>
