@@ -15,7 +15,7 @@
         GMPC is one of the oldest clients for GMPC, and the only one that has been continuously developed and maintained.
       </p>
       <figure>
-          <title>The Gnome Music Player Client</title>
+          <desc>The Gnome Music Player Client</desc>
           <media type="image" src="Images/main-window.png"/>
       </figure>
       <section id="#QuickStartGuide">

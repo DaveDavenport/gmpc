@@ -15,16 +15,24 @@
     <p>This dialog allows you to further control the server.</p>
     
     <p>The following options are available:</p>
-    <list>
+    <terms>
         <title>Crossfade:</title>
-        <item><p>Enable crossfade - This sets, whether crossfading is enabled or not.</p></item>
-        <item><p>fade time (s) - This sets, how many seconds the songs should blend together on song change.</p></item>
-    </list>
+        <item>
+            <title>Enable crossfade</title>
+            <p>This sets, whether crossfading is enabled or not.</p>
+        </item>
+        <item>
+            <title>fade time (s)</title>
+            <p>This sets, how many seconds the songs should blend together on song change.</p>
+        </item>
+    </terms>
     
-    <list>
+    <terms>
         <title>Output Devices:</title>
-        <item><p>This lists all available output devices, which are configured on the server. To enable / disable output devices, check or uncheck the box in the "Enabled" column.</p></item>
-    </list>    
+        <item>
+            <p>This lists all available output devices, which are configured on the server. To enable / disable output devices, check or uncheck the box in the "Enabled" column.</p>
+        </item>
+    </terms>    
     
     <note><p>You can also switch between output devices in the "Server" menu of GMPC's main window or by key combinations.</p></note>
     

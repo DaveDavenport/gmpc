@@ -16,10 +16,17 @@
         <p>
             This dialog allows you to control the large amount of metadata handlers, which are available either in GMPC directly or can be installed as plugins.
         </p>
-
-        <list>
+        
+        <terms>
             <title>The table offers the following configurable columns:</title>
-            <item><p>Enabled - Check or uncheck this field if to enable or disable the respective metadata handler. If it offers a further configuration dialog, it will appear appear below the "Plugins:" menu point in GMPC's Preferences window.</p></item>
-            <item><p>Priority - When you click this field while the row is selected you can edit this value. The priority sets, in which order metadata handlers are queried. 100 is the highest value and 0 the lowest.</p></item>
-        </list>
+            <item>
+                <title>Enabled</title>
+                <p>Check or uncheck this field if to enable or disable the respective metadata handler. If it offers a further configuration dialog, it will appear appear below the "Plugins:" menu point in GMPC's Preferences window.</p>
+            </item>
+            <item>
+                <title>Priority</title>
+                <p>When you click this field while the row is selected you can edit this value. The priority sets, in which order metadata handlers are queried. The value can be between 0 and 100 and priorities are evaluated from low to high.</p>
+            </item>
+        </terms>
+
 </page>

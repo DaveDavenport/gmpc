@@ -5,5 +5,5 @@
 
 for a in *.page
 do
-    bash gnome-doc-tool xhtml $a
+    bash gnome-doc-tool xhtml --css-file="style.css" $a
 done    

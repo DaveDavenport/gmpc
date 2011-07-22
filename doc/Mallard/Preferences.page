@@ -1,18 +1,16 @@
 <page xmlns="http://projectmallard.org/1.0/"
-      type="topic"
-      id="Preferences">
-      <title>The Preferences window</title>
-      <p>
-          The Preferences window allows you to configure GMPC and its plugins. The available options can vary, depending on used plugins (internal and external), so if you miss something, make sure you have the respective plugin installed and enabled.
-      </p>
-      <figure>
-          <desc>The Preferences window showing the "Connection" dialog</desc>
-          <media type="image" src="Images/preferences-connection.png"/>
-      </figure>
-      
-      
-      
-      <section id="#AlwaysVisible">
+    type="topic"
+    id="Preferences">
+    <title>The Preferences window</title>
+    <p>
+        The Preferences window allows you to configure GMPC and its plugins. The available options can vary, depending on used plugins (internal and external), so if you miss something, make sure you have the respective plugin installed and enabled.
+    </p>
+    <figure>
+        <desc>The Preferences window showing the "Connection" dialog</desc>
+        <media type="image" src="Images/preferences-connection.png"/>
+    </figure>
+
+    <section id="#AlwaysVisible">
           <title>Always visible:</title>
 
       <terms>

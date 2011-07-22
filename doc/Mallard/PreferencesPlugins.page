@@ -16,11 +16,23 @@
             This dialog lists all loadable plugins and allows you to enable/disable them.
         </p>
 
-        <list>
+        <terms>
             <title>The "Loaded Plugins:" table offers the following columns:</title>
-            <item><p>Enabled - Check or uncheck this field if to enable or disable the respective plugin. If it offers a further configuration dialog, it will appear appear below the "Plugins:" menu point in GMPC's Preferences window.</p></item>
-            <item><p>Name - The name of the plugin</p></item>
-            <item><p>Function - What type of enhancement does the plugin provide</p></item>
-            <item><p>Version - The version number of the plugin.</p></item>
-        </list>
+            <item>
+                <title>Enabled</title>
+                <p>Check or uncheck this field if to enable or disable the respective plugin. If it offers a further configuration dialog, it will appear appear below the "Plugins:" menu point in GMPC's Preferences window.</p>
+            </item>
+            <item>
+                <title>Name</title>
+                <p>The name of the plugin</p>
+            </item>
+            <item>
+                <title>Function</title>
+                <p>What type of enhancement does the plugin provide</p>
+            </item>
+            <item>
+                <title>Version</title>
+                <p>The version number of the plugin.</p>
+            </item>
+        </terms>
 </page>
