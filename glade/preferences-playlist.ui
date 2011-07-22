@@ -5,10 +5,14 @@
   <object class="GtkVBox" id="playlist-vbox">
     <property name="visible">True</property>
     <property name="orientation">vertical</property>
-    <property name="spacing">8</property>
+    <property name="spacing">6</property>
     <child>
       <object class="GmpcWidgetQtable" id="vbox1">
-        <child type="header">
+	  	<property name="spacing">6</property>
+		<property name="item-width">6</property>
+		<property name="item-height">6</property>
+		<property name="header-height">32</property>
+	  	<child type="header">
           <object class="GtkLabel" id="main_label">
             <property name="visible">True</property>
             <property name="xalign">0</property>

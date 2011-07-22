@@ -37,11 +37,41 @@ private class QtableEntry
 
 public class Gmpc.Widget.Qtable : Gtk.Container, Gtk.Buildable
 {
-    private int cover_width_real     = 2;
-    private int cover_height_real    = 2;
-    private int header_height_real   = 1;
+    private int item_width_real     = 0;
+    private int item_height_real    = 0;
+    private int header_height_real  = 0;
     private int num_items       = 0;
     private int columns         = 3;
+	public  int spacing {get;set;default=8;}
+
+	public int item_width { 
+			get {
+				return item_width_real;
+			}
+			set {
+				item_width_real = value;
+				this.queue_resize();
+			}
+	}
+
+	public int item_height { 
+			get {
+				return item_height_real;
+			}
+			set {
+				item_height_real = value;
+				this.queue_resize();
+			}
+	}
+	public int header_height { 
+			get {
+				return header_height_real;
+			}
+			set {
+				header_height_real = value;
+				this.queue_resize();
+			}
+	}
 
 
     private List<QtableEntry> children = null;
@@ -62,8 +92,8 @@ public class Gmpc.Widget.Qtable : Gtk.Container, Gtk.Buildable
     /** Accessor */
     public void set_cover_size(int width, int height) 
     {
-        cover_width_real = width;
-        cover_height_real = height;
+        item_width_real = width;
+        item_height_real = height;
         this.queue_resize();
     }
     public void set_header_size(int height)
@@ -89,12 +119,12 @@ public class Gmpc.Widget.Qtable : Gtk.Container, Gtk.Buildable
 	public override void size_request(out Gtk.Requisition req)
     {
         req = Gtk.Requisition();
-		int cover_width = cover_width_real; 
-		int cover_height= cover_height_real; 
+		int cover_width = item_width_real; 
+		int cover_height= item_height_real; 
 		int header_height = header_height_real; 
-        /* request minimum of 1 column */
-        int width = cover_width_real*1; 
+        int width = 0; 
         int items = 0;
+
 		/* determine max width/height */
 		foreach ( var child in children)
 		{
@@ -113,8 +143,12 @@ public class Gmpc.Widget.Qtable : Gtk.Container, Gtk.Buildable
 				}
 			}
 		}
-
-        int rows = 0;
+		if(spacing>0) {
+			cover_width		+= spacing;
+			cover_height	+= spacing;
+			header_height	+= spacing;
+		}
+		int rows = 0;
 		foreach ( var child in children)
 		{
 			if(child.widget.get_visible())
@@ -127,9 +161,9 @@ public class Gmpc.Widget.Qtable : Gtk.Container, Gtk.Buildable
 						int nrows = items/columns;
 						int remain = (items%columns >0)?1:0;
 						rows = rows + (nrows+remain)*cover_height; 
-						rows+=cover_height;
 					}
 					items = 0;
+					rows+=header_height;
 				}
 			}
 		}
@@ -139,8 +173,8 @@ public class Gmpc.Widget.Qtable : Gtk.Container, Gtk.Buildable
 			int remain = (items%columns >0)?1:0;
 			rows = rows + (nrows+remain)*cover_height; 
 		}
-
-        req.width =  width;
+		/* Width of one column */
+        req.width =  cover_width;
         req.height = rows; 
     }
 
@@ -202,8 +236,8 @@ public class Gmpc.Widget.Qtable : Gtk.Container, Gtk.Buildable
     }
     public override void size_allocate(Gdk.Rectangle alloc)
     {
-		int cover_width = cover_width_real; 
-		int cover_height= cover_height_real; 
+		int cover_width = item_width_real; 
+		int cover_height= item_height_real; 
 		int header_height = header_height_real; 
         /* Hack to avvoid pointless resizes, I get this "1" size when a child widget changes */
         if(alloc.width == 1) return;
@@ -233,9 +267,13 @@ public class Gmpc.Widget.Qtable : Gtk.Container, Gtk.Buildable
 				}
 			}
 		}
+		if(spacing>0) {
+			cover_width		+= spacing;
+			cover_height	+= spacing;
+			header_height	+= spacing;
+		}
 		new_columns = int.max(width/cover_width, 1);
 		item = 0;
-		rows = 0;
 		foreach ( var child in children)
 		{
             if(child.widget.get_visible())
