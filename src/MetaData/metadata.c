@@ -25,6 +25,7 @@
 
 #include "metadata.h"
 #include "metadata-cache.h"
+#include "preferences.h"
 
 #include "gmpc_easy_download.h"
 
