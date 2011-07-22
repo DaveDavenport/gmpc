@@ -109,6 +109,9 @@ void plugin_manager_load_internal_plugins(void)
             gmpc_provider_ht_backdrops_new(),
             0, NULL);
     plugin_add_new((GmpcPluginBase *) 
+            gmpc_provider_render_cover_new(),
+            0, NULL);
+    plugin_add_new((GmpcPluginBase *) 
             gmpc_provider_lyr_db_new(),
             0, NULL);
     plugin_add_new((GmpcPluginBase *) 
