@@ -1,0 +1,13 @@
+<page xmlns="http://projectmallard.org/1.0/"
+      type="topic"
+      id="BrowserArtistBrowser">
+
+    <title>Browsers - Artist Browser</title>
+    <p>The Artist browser lets you search through the database based on artists.</p>
+
+    <figure>
+        <desc>The Artist Browser</desc>
+        <media type="image" src="Images/browser-artist-browser.png"/>
+    </figure>
+  
+</page>

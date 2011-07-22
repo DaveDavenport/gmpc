@@ -38,11 +38,20 @@
         In this section each part of the main interface is explained.
       </p>
       </section>
-      
+      <section id="#Browsers">
+      <title>
+        <link xref="Browsers">
+            Browsers
+        </link>
+      </title>
+      <p>
+        GMPC uses so called "Browsers" to structure the vast amount of possibilities, GMPC has to offer.
+      </p>
+      </section>
       <section id="#Preferences">
       <title>
         <link xref="Preferences">
-            The Preferences window
+            Preferences
         </link>
       </title>
       <p>

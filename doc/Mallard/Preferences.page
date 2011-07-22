@@ -1,7 +1,7 @@
 <page xmlns="http://projectmallard.org/1.0/"
     type="topic"
     id="Preferences">
-    <title>The Preferences window</title>
+    <title>Preferences</title>
     <p>
         The Preferences window allows you to configure GMPC and its plugins. The available options can vary, depending on used plugins (internal and external), so if you miss something, make sure you have the respective plugin installed and enabled.
     </p>
@@ -10,8 +10,8 @@
         <media type="image" src="Images/preferences-connection.png"/>
     </figure>
 
-    <section id="#AlwaysVisible">
-          <title>Always visible:</title>
+    <section id="#AlwaysAvailable">
+          <title>Always available:</title>
 
       <terms>
         <item>
@@ -107,8 +107,8 @@
       </terms>
     </section>
 
-    <section id="#NotAlwaysVisible">
-        <title>Not always visible:</title>
+    <section id="#NotAlwaysAvailable">
+        <title>Not always available:</title>
         <terms>
             <item>
                 <title>
@@ -116,7 +116,7 @@
                         Internal Extra Playlist View
                     </link>
                 </title>
-                <p>This item is only visible, if the extra playlist is enabled.</p>
+                <p>This item is only available, if the extra playlist is enabled.</p>
             </item>
 
         </terms>

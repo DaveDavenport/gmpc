@@ -1,0 +1,13 @@
+<page xmlns="http://projectmallard.org/1.0/"
+      type="topic"
+      id="PlaylistEditor">
+
+    <title>Browsers - Playlist Editor</title>
+    <p>The Playlist Editor allows you to add, delete and edit playlists.</p>
+
+    <figure>
+        <desc>The Playlist Editor</desc>
+        <media type="image" src="Images/browser-playlist-editor.png"/>
+    </figure>
+  
+</page>
