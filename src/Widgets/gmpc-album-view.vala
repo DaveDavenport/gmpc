@@ -24,7 +24,7 @@ using Gmpc;
 private const bool use_transition_gav = Gmpc.use_transition;
 private const string some_unique_name_gav = Config.VERSION;
 [compact]
-private class AlbumviewEntry 
+private class QtableEntry 
 {
     public enum Type { 
         HEADER,
@@ -35,7 +35,7 @@ private class AlbumviewEntry
 
 }
 
-public class Gmpc.Widget.Albumview : Gtk.Container
+public class Gmpc.Widget.Qtable : Gtk.Container
 {
     private int cover_width_real     = 220;
     private int cover_height_real    = 220+30;
@@ -44,7 +44,7 @@ public class Gmpc.Widget.Albumview : Gtk.Container
     private int columns         = 3;
 
 
-    private List<AlbumviewEntry> children = null;
+    private List<QtableEntry> children = null;
 
     /** Accessor */
     public void set_cover_size(int width, int height) 
@@ -59,13 +59,13 @@ public class Gmpc.Widget.Albumview : Gtk.Container
         this.queue_resize();
     }
 
-    public Albumview()
+    public Qtable()
     {
         this.set_has_window(false);
         this.set_redraw_on_allocate(false);
     }
 
-    ~Albumview()
+    ~Qtable()
     {
     }
 
@@ -86,7 +86,7 @@ public class Gmpc.Widget.Albumview : Gtk.Container
 		{
 			if(child.widget.get_visible())
 			{
-				if(child.type == AlbumviewEntry.Type.ITEM) {
+				if(child.type == QtableEntry.Type.ITEM) {
 					Gtk.Requisition cr = {0,0};
 					child.widget.size_request(out cr);
 					cover_width = int.max(cr.width,cover_width);
@@ -105,7 +105,7 @@ public class Gmpc.Widget.Albumview : Gtk.Container
 		{
 			if(child.widget.get_visible())
 			{
-				if(child.type == AlbumviewEntry.Type.ITEM) {
+				if(child.type == QtableEntry.Type.ITEM) {
 					items++;
 				}else{
 					if(items != 0)
@@ -133,8 +133,8 @@ public class Gmpc.Widget.Albumview : Gtk.Container
     public override void add(Gtk.Widget widget)
     {
         if(widget != null) {
-            AlbumviewEntry a = new AlbumviewEntry();
-            a.type = AlbumviewEntry.Type.ITEM;
+            QtableEntry a = new QtableEntry();
+            a.type = QtableEntry.Type.ITEM;
             a.widget = widget;
             children.append(a);
             widget.set_parent(this);
@@ -145,8 +145,8 @@ public class Gmpc.Widget.Albumview : Gtk.Container
     public void add_header(Gtk.Widget widget)
     {
         if(widget != null) {
-            AlbumviewEntry a = new AlbumviewEntry();
-            a.type = AlbumviewEntry.Type.HEADER;
+            QtableEntry a = new QtableEntry();
+            a.type = QtableEntry.Type.HEADER;
             a.widget = widget;
             children.append(a);
             widget.set_parent(this);
@@ -162,13 +162,13 @@ public class Gmpc.Widget.Albumview : Gtk.Container
     public override void remove(Gtk.Widget widget)
     {
         if(widget != null ) {
-            AlbumviewEntry a = null; 
+            QtableEntry a = null; 
             /*
                if((a = children.find_custom(widget,compare)) == null) {
                GLib.error("Failed to find widget in container");
                }
              */
-            foreach(AlbumviewEntry f in this.children) {
+            foreach(QtableEntry f in this.children) {
                 if(f.widget == widget) {
                     a = f;
                     break;
@@ -203,7 +203,7 @@ public class Gmpc.Widget.Albumview : Gtk.Container
 			if(child.widget.get_visible())
 			{
 
-				if(child.type == AlbumviewEntry.Type.ITEM) {
+				if(child.type == QtableEntry.Type.ITEM) {
 					Gtk.Requisition cr = {0,0};
 					child.widget.size_request(out cr);
 					cover_width = int.max(cr.width,cover_width);
@@ -226,7 +226,7 @@ public class Gmpc.Widget.Albumview : Gtk.Container
 		{
             if(child.widget.get_visible())
             {
-                if(child.type == AlbumviewEntry.Type.ITEM) {
+                if(child.type == QtableEntry.Type.ITEM) {
                     Gdk.Rectangle ca = {0,0,0,0};
                     ca.x = alloc.x + (item%columns)*cover_width;
                     ca.y = rows+alloc.y + (item/columns)*cover_height;
@@ -262,11 +262,11 @@ public class Gmpc.Widget.Albumview : Gtk.Container
     }
     public override void forall_internal(bool include_internals, Gtk.Callback callback) 
     {
-        weak List<AlbumviewEntry> iter = children.first();
+        weak List<QtableEntry> iter = children.first();
         /* Somehow it fails when doing a foreach() construction, weird vala bug I guess */
         /* would be  nice if I could filter out say only the visible ones */
         while(iter != null) {
-            weak AlbumviewEntry child = iter.data;
+            weak QtableEntry child = iter.data;
             iter = iter.next;
             callback(child.widget);
         }
