@@ -34,6 +34,48 @@ using Gmpc;
 private const bool use_transition_mdb = Gmpc.use_transition;
 private const string some_unique_name_mdb = Config.VERSION;
 
+public class ButtonPopUp : Gtk.Window
+{
+    private int x=0;
+    private int y=0; 
+    private int width = 0;
+    private int height = 0;
+    construct{
+        type = Gtk.WindowType.POPUP;
+        // this looks ignored.
+        //set_gravity(Gdk.Gravity.CENTER);
+        no_show_all = true;
+        resizable =false;
+
+        this.leave_notify_event.connect((source, event) => {
+            this.destroy();
+        });
+        this.size_allocate.connect(sig_realize);
+    }
+    ~ButtonPopUp ()
+    {
+    }
+
+    private void sig_realize(Gdk.Rectangle alloc)
+    {
+        this.width = alloc.width;
+        this.height = alloc.height;
+    }
+
+    private void move_it()
+    {
+        this.move(x-width/2, y-height/2);
+    }
+
+    public void popup(Gdk.EventButton event)
+    {
+        x = (int)event.x_root;
+        y =(int) event.y_root;
+        show();
+        move_it();
+    }
+}
+
 public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface, Gmpc.Plugin.PreferencesIface 
 {
     private int block_update = 0;
@@ -2063,10 +2105,74 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
 
                         /* If clicked switch to browser */
                         image.button_release_event.connect((source, event) => {
-							if(event.button == 1) {
+							if(event.button == 2) {
 								set_album(but_song.artist, but_song.album);
 								return true;
-							}
+							}else if (event.button == 1) {
+                                var p = new ButtonPopUp();
+
+                                hbox = new Gtk.HBox(false, 0);
+                                var open = new Gtk.Button();
+                                open.set_tooltip_text(_("Open"));
+                                open.add(new Image.from_stock("gtk-open", Gtk.IconSize.DND));
+                                hbox.pack_start(open, false, false, 0);
+                                open.clicked.connect( (source) => {
+                                    set_album(but_song.artist, but_song.album);
+                                    p.destroy();
+                                });
+
+                                var play = new Button();
+                                play.add(new Image.from_stock("gtk-media-play", Gtk.IconSize.DND));
+                                play.set_tooltip_text(_("Play album"));
+                                hbox.pack_start(play, false, false, 0);
+                                play.clicked.connect( (source) => {
+                                    MPD.Database.search_start(server,true);
+                                    if(but_song.artist!= null)
+                                        MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, but_song.artist);
+                                    if(but_song.album != null)
+                                        MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM, but_song.album);
+                                    var data = MPD.Database.search_commit(server);
+                                    if(data != null) {
+                                        data.sort_album_disc_track();
+                                        while(data != null){ 
+                                            MPD.PlayQueue.queue_add_song(server, data.song.file);
+                                            data.next_free();
+                                        }
+                                        MPD.PlayQueue.clear(server);
+                                        MPD.PlayQueue.queue_commit(server);
+                                        MPD.Player.play(server);
+                                    }   
+                                    p.destroy();
+                                });
+
+                                var add = new Button();
+                                add.add(new Image.from_stock("gtk-add", Gtk.IconSize.DND));
+                                add.set_tooltip_text(_("Add album to play-queue"));
+                                hbox.pack_start(add, false, false, 0);
+                                add.clicked.connect( (source) => {
+                                    MPD.Database.search_start(server,true);
+                                    if(but_song.artist!= null)
+                                        MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, but_song.artist);
+                                    if(but_song.album != null)
+                                        MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM, but_song.album);
+                                    var data = MPD.Database.search_commit(server);
+                                    if(data != null) {
+                                        data.sort_album_disc_track();
+                                        while(data != null){ 
+                                            MPD.PlayQueue.queue_add_song(server, data.song.file);
+                                            data.next_free();
+                                        }
+                                        MPD.PlayQueue.queue_commit(server);
+                                        }   
+                                    p.destroy();
+                                });
+
+
+                                p.add(hbox);
+                                hbox.show_all();
+                                p.popup(event);
+                                return true;
+                            }
 							return false;
 						});
 						albums++;
