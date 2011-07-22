@@ -282,8 +282,8 @@ public class Gmpc.Widget.Qtable : Gtk.Container, Gtk.Buildable
                     Gdk.Rectangle ca = {0,0,0,0};
                     ca.x = alloc.x + (item%columns)*cover_width;
                     ca.y = rows+alloc.y + (item/columns)*cover_height;
-                    ca.width = cover_width;
-                    ca.height = cover_height;
+                    ca.width = cover_width - spacing;
+                    ca.height = cover_height - spacing;
 
                     child.widget.size_allocate(ca);
                     item++;
@@ -300,7 +300,7 @@ public class Gmpc.Widget.Qtable : Gtk.Container, Gtk.Buildable
                     ca.x = alloc.x; 
                     ca.y = alloc.y+rows;
                     ca.width = cover_width*columns;
-                    ca.height = header_height;
+                    ca.height = header_height - spacing;
 
                     child.widget.size_allocate(ca);
                     rows+=header_height;

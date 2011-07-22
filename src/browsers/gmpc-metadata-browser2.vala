@@ -1674,6 +1674,11 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
             var j = i;
             bool seen = false;
             rbutton.clicked.connect((source) => {
+					notebook.set_current_page(j);
+					});
+			notebook.notify["page"].connect((source)=> 
+				{
+					if(notebook.page != j) return;
                     debug("notebook page %i clicked", j);
                     if(!seen) 
                     {
@@ -1705,7 +1710,6 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
 
                         seen = true;
                     }
-                    notebook.set_current_page(j);
                     });
             slhbox.show();
             i++;
@@ -1965,7 +1969,12 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
             hboxje.pack_start(rbutton, false, false, 0);
             var j = i;
             bool seen = false;
-            rbutton.clicked.connect((source) => {
+			rbutton.clicked.connect((source) => {
+					notebook.set_current_page(j);
+					});
+			notebook.notify["page"].connect((source)=> 
+					{
+					if(notebook.page != j) return;
                     debug("notebook page %i clicked", j);
                     if(!seen) 
                     {
@@ -1978,7 +1987,6 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
 
                         seen  = true;
                     }
-                    notebook.set_current_page(j);
                     });
             slhbox.show();
             i++;

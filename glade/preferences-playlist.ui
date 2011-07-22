@@ -63,7 +63,7 @@
         </child>
         <child>
           <object class="GtkCheckButton" id="ck_show_tabbed_heading">
-            <property name="label" translatable="yes">Show buttons instead of dropdown in collapsed view</property>
+            <property name="label" translatable="yes">Show buttons navigation in collapsed view</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
