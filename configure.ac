@@ -359,7 +359,7 @@ if test x${VALAC} = x""; then
     exit 1;
 fi
 
-APPINDICATOR_REQUIRED=0.0.7
+APPINDICATOR_REQUIRED=0.3
 
 AC_ARG_ENABLE(appindicator,
                         AS_HELP_STRING([--enable-appindicator[=@<:@no/auto/yes@:>@]],[Build support for application indicators ]),
