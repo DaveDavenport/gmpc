@@ -2036,12 +2036,11 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
                         MPD.Song but_song = asong;
 
                         /* Create button */
-                        button = new Gtk.Button();
-                        button.set_relief(Gtk.ReliefStyle.NONE);
                         var but_hbox = new Gtk.VBox(false, 6);
-                        button.add(but_hbox);
-                        var image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ALBUM_ART, 200);
+                        var image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ALBUM_ART, 175);
                         image.set_squared(true);
+						image.set_scale_up(true);
+						image.set_has_tooltip(false);
                         image.update_from_song_delayed(but_song);
 
                         but_hbox.pack_start(image, false, false, 0);
@@ -2050,24 +2049,30 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
                         but_label.selectable = true;
                         but_label.set_alignment(0.5f, 0.0f);
                         /* Create label */
-                        var strlabel = "";
-                        if(but_song.date != null && but_song.date.length > 0) strlabel += "%s - ".printf(but_song.date);
-                        if(but_song.album != null) strlabel+= but_song.album;
+                        var strlabel = "<b>";
+                        if(but_song.date != null && but_song.date.length > 0) strlabel += GLib.Markup.printf_escaped("%s - ",but_song.date);
+                        if(but_song.album != null) strlabel+=GLib.Markup.escape_text(but_song.album);
                         else strlabel += _("No Album");
-                        but_label.set_text(strlabel); 
+						strlabel += "</b>";
+						if(but_song.artist != null) strlabel += GLib.Markup.printf_escaped("\n%s",but_song.artist);
+                        but_label.set_markup(strlabel); 
+						(but_label as Gtk.Misc).set_alignment(0.0f, 0.0f);
                         but_label.set_ellipsize(Pango.EllipsizeMode.END);
                         /* add label */
                         but_hbox.pack_start(but_label, true, true, 0);
-                        /* Add  button to view */
-//                        album_hbox.pack_start(button, false, false,0);
-                        album_view.add(button);
+
                         /* If clicked switch to browser */
-                        button.clicked.connect((source) => {
-                                stdout.printf("'%s' - '%s'\n", but_song.artist, but_song.album);
-                                /* Hack to avoid crash */
-                                set_album(but_song.artist, but_song.album);
-                                });
-                        albums++;
+                        image.button_release_event.connect((source, event) => {
+							if(event.button == 1) {
+								set_album(but_song.artist, but_song.album);
+								return true;
+							}
+							return false;
+						});
+						albums++;
+
+
+                        album_view.add(but_hbox);
                     }
                 }while(this.model_albums.iter_next(ref titer));
             }

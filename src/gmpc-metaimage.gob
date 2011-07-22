@@ -662,7 +662,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
             self->_priv->image_url = g_strdup(path); 
             gmpc_meta_image_async_set_from_file(GMPC_META_IMAGE_ASYNC(self->_priv->image), self->_priv->image_url, self->size,
                     ((cfg_get_single_value_as_int_with_default(config, "metaimage", "addcase",TRUE) && self->image_type == META_ALBUM_ART))?
-                    GMPC_MODIFICATION_TYPE_CASING:GMPC_MODIFICATION_TYPE_NONE
+                    GMPC_MODIFICATION_TYPE_CASING:GMPC_MODIFICATION_TYPE_BORDER
                     
                     );
             if(self->squared) {

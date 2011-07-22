@@ -297,6 +297,8 @@ namespace Gmpc {
         public void darken_pixbuf(Gdk.Pixbuf dest, uint factor = 1.0);
         [CCode (cname="decolor_pixbuf",cheader_filename="misc.h")]
         public void decolor_pixbuf(Gdk.Pixbuf dest, Gdk.Pixbuf src);
+		[CCode (cname="screenshot_add_border",cheader_filename="misc.h")]
+		public void border_pixbuf (Gdk.Pixbuf buf);
         [CCode (cname="misc_header_expose_event",cheader_filename="misc.h")]
         public bool misc_header_expose_event(Gtk.Widget widget, Gdk.EventExpose event);
 

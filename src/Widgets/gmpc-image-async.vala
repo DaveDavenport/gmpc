@@ -32,7 +32,8 @@ namespace Gmpc
             NONE    = 0,        // Add nothing
             CASING  = 1,        // Add border and or casing
             DARKEN  = 2,        // Darken the image (for backdrop)
-            DECOLOR = 4         // Remove color from image.
+            DECOLOR = 4,        // Remove color from image.
+			BORDER  = 8
     }
     public class PixbufLoaderAsync : GLib.Object
     {
@@ -120,6 +121,10 @@ namespace Gmpc
             if ((casing&ModificationType.DECOLOR) == ModificationType.DECOLOR)
             {
                 Gmpc.Misc.decolor_pixbuf(pix, pix);
+            }
+            if ((casing&ModificationType.BORDER) == ModificationType.BORDER)
+            {
+                Gmpc.Misc.border_pixbuf(pix);
             }
 
             return pix;
