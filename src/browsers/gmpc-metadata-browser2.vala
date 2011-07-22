@@ -2610,6 +2610,15 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
                 }
             }
         }
+        /* clean items in the future */
+        if(history != null) {
+            unowned List<Hitem?>? iter = current.prev;
+            while(iter != null && iter != current) {
+                history.remove(iter.data);
+                iter = history.first();
+            }
+        }
+
         history.prepend(hi);
         if(history.length() > 25){
             unowned List<Hitem?> a = history.last();
