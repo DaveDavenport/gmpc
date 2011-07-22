@@ -1,7 +1,7 @@
 /* Gnome Music Player Client
  * Copyright (C) 2011 Qball Cow <qball@gmpclient.org>
  * Project homepage: http://gmpclient.org/
- 
+
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -27,8 +27,8 @@ namespace Gmpc
 		class Backdrop : Gtk.EventBox
         {
             private string song_checksum = null;
-            private MPD.Song? cur_song = null;        
-            private Gmpc.MetaData.Type cur_type = Gmpc.MetaData.Type.ARTIST_ART; 
+            private MPD.Song? cur_song = null;
+            private Gmpc.MetaData.Type cur_type = Gmpc.MetaData.Type.ARTIST_ART;
             /*   */
             private Gdk.Pixbuf pb = null;
             private ModificationType mod_type = (ModificationType)
@@ -43,7 +43,7 @@ namespace Gmpc
                 if(item == null || song_checksum == null)
                 {
                    this.queue_draw();
-                   return; 
+                   return;
                 }
                 if(item.content_type == Gmpc.MetaData.ContentType.URI)
                 {
@@ -52,15 +52,15 @@ namespace Gmpc
                     {
                         Gtk.Allocation req;
                         int width;
-                        this.get_allocation(out req); 
+                        this.get_allocation(out req);
                         width = int.max(req.width, 400);
-                        log(log_domain_mdbd, GLib.LogLevelFlags.LEVEL_DEBUG, 
+                        log(log_domain_mdbd, GLib.LogLevelFlags.LEVEL_DEBUG,
                                 "Getting image with size: %u", width);
                         if(loader == null)
-                            loader = new PixbufLoaderAsync(); 
+                            loader = new PixbufLoaderAsync();
                         loader.pixbuf_update.connect((source, pixbuf)=>{
                             this.pb = pixbuf;
-                            log (log_domain_mdbd,GLib.LogLevelFlags.LEVEL_DEBUG, 
+                            log (log_domain_mdbd,GLib.LogLevelFlags.LEVEL_DEBUG,
                             "Updating background");
                             this.queue_draw();
                             });
@@ -84,7 +84,7 @@ namespace Gmpc
                 // Same artist/bg do not update.
                 if(song_checksum == Gmpc.Misc.song_checksum_type(song, cur_type))
                     return;
-                    
+
                 song_checksum = Gmpc.Misc.song_checksum_type(song, cur_type);
                 Gmpc.MetaData.Item item = null;
                 var a = metawatcher.query(song, cur_type, out item);
@@ -101,7 +101,7 @@ namespace Gmpc
              */
             public Backdrop(Gmpc.MetaData.Type type)
             {
-                assert(type == Gmpc.MetaData.Type.ARTIST_ART || 
+                assert(type == Gmpc.MetaData.Type.ARTIST_ART ||
                         type == Gmpc.MetaData.Type.ALBUM_ART);
                 cur_type = type;
 
@@ -111,7 +111,7 @@ namespace Gmpc
                         });
                 // Set visible window
                 this.set_visible_window(true);
-                // Set paintable 
+                // Set paintable
                 this.set_app_paintable(true);
                 // Watch changes */
                 metawatcher.data_changed.connect((csong, type, result, met) => {
@@ -146,10 +146,10 @@ namespace Gmpc
                 menu.append(item);
                 menu.show_all();
                 menu.popup(null, null, null, event.button, event.time);
-                return true;            
+                return true;
             }
             /**
-             * Draw the background. (only exposed part) 
+             * Draw the background. (only exposed part)
              */
             private bool container_expose(Gtk.Widget ev, Gdk.EventExpose event)
             {
