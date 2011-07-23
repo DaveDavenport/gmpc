@@ -43,7 +43,8 @@ static int skip_gzip_header(const char *src, gsize size)
 		return -1;
 	if (src[2] != Z_DEFLATED)
 	{
-		fprintf(stderr, "unsupported compression method (%d).\n", (int)src[3]);
+		g_log(LOG_DOMAIN, G_LOG_LEVEL_WARNING, 
+					"unsupported compression method (%d).\n", (int)src[3]);
 		return -1;
 	}
 	idx = 10;
@@ -367,7 +368,8 @@ static void gmpc_easy_async_status_update(SoupMessage * msg, SoupBuffer * buffer
 	/* don't store error data, not used anyway */
 	if (!SOUP_STATUS_IS_SUCCESSFUL(msg->status_code))
 	{
-		printf("Error mesg status code: %i\n", msg->status_code);
+		g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, 
+						"Error mesg status code: %i\n", msg->status_code);
 		return;
 	}
 	if (d->is_gzip || d->is_deflate)
@@ -522,7 +524,7 @@ GEADAsyncHandler *gmpc_easy_async_downloader(const gchar * uri, GEADAsyncCallbac
 {
 	if (uri == NULL)
 	{
-		printf("Error\n");
+		g_log(LOG_DOMAIN,G_LOG_LEVEL_WARNING, "No download uri specified.");
 		return NULL;
 	}
 	return gmpc_easy_async_downloader_with_headers(uri, callback, user_data, NULL);
