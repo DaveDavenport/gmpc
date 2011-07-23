@@ -35,7 +35,7 @@ private class QtableEntry
 
 }
 
-public class Gmpc.Widget.Qtable : Gtk.Container, Gtk.Buildable
+public class Gmpc.Widgets.Qtable : Gtk.Container, Gtk.Buildable
 {
     private int item_width_real     = 0;
     private int item_height_real    = 0;

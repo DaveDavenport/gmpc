@@ -1390,7 +1390,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         vbox.pack_start(hbox, false, false, 0);
 
 
-        var result_hbox = new Gmpc.Widgets.Songlist();//new Gmpc.Widget.Qtable();
+        var result_hbox = new Gmpc.Widgets.Songlist();
 
         result_hbox.artist_song_clicked.connect((source, song) => {
                 if(song.artist != null) { 
@@ -2058,7 +2058,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
             /* Create album list */
             var album_hbox = new Gtk.VBox(false, 6);
 
-            var album_view = new Gmpc.Widget.Qtable();
+            var album_view = new Gmpc.Widgets.Qtable();
             album_hbox.pack_start(album_view, false, true, 0);
             /**
              * Reuse the album browser view. 

@@ -34,7 +34,7 @@ static void advanced_settings()
             "gtk-close", Gtk.ResponseType.CLOSE);
 	
 	/* Settings */
-	var vbox = new Gmpc.Widget.Qtable();//new Gtk.VBox(false, 6);
+	var vbox = new Gmpc.Widgets.Qtable();
     win.set_size_request(450, -1);
     vbox.header_height = 32;
 	win.vbox.add(vbox);
