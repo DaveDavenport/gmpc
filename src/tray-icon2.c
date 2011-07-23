@@ -325,7 +325,7 @@ static void tray_icon2_init(void)
         #ifdef HAVE_APP_INDICATOR
         if (cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "use_appindicator", DEFAULT_TRAY_ICON_USE_APPINDICATOR))
         {
-            GtkMenu *indicator_menu = gtk_menu_new();
+            GtkMenu *indicator_menu = GTK_MENU(gtk_menu_new());
             indicator = app_indicator_new ("gmpc", "gmpc-tray-disconnected", APP_INDICATOR_CATEGORY_APPLICATION_STATUS);
             app_indicator_set_icon_theme_path(indicator, PIXMAP_PATH);
             app_indicator_set_menu (indicator, GTK_MENU (indicator_menu));
@@ -787,7 +787,6 @@ static void tray_icon2_create_tooltip_real(int position)
         if  (indicator != NULL) {
             // there's no way to get the AppIndicator's position, so showing at tooltip is not possible
             // choosing 50px above right corner
-            GdkRectangle rect2;
             screen = gtk_widget_get_screen(pl3_win);
 
             monitor = gdk_screen_get_monitor_at_window(screen, pl3_win->window);

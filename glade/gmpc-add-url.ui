@@ -3,6 +3,7 @@
   <!-- interface-requires gtk+ 2.12 -->
   <!-- interface-naming-policy project-wide -->
   <object class="GtkDialog" id="add_url_dialog">
+    <property name="title" translatable="yes">Add URL</property>
     <property name="border_width">5</property>
     <property name="window_position">center-on-parent</property>
     <property name="type_hint">normal</property>

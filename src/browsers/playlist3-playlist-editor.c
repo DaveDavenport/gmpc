@@ -598,7 +598,7 @@ static void playlist_editor_new_playlist(GtkWidget * item, gpointer data)
 	int done = 0;
 	GtkWidget *pl3_win = playlist3_get_window();
 	GtkWidget *dialog =
-		gtk_dialog_new_with_buttons(_("New playlist"), NULL, GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+		gtk_dialog_new_with_buttons(_("New Playlist"), NULL, GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
 									GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 									NULL);
 	GtkWidget *button = NULL;
