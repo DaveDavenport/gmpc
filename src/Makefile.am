@@ -29,18 +29,19 @@ PLUGIN_FILES=\
 
 
 gmpc_WIDGETS_FILES=\
-    Widgets/gmpc-clicklabel.vala\
-    Widgets/gmpc-song-list.vala\
-    Widgets/gmpc-progress.vala\
-    Widgets/gmpc-image-async.vala\
-    Widgets/mpd-async-request.c\
-    Widgets/gmpc-widgets-qtable.vala\
     Widgets/GmpcVolume.vala\
+    Widgets/gmpc-progress.vala\
+    Widgets/mpd-async-request.c\
+    Widgets/gmpc-song-list.vala\
+    Widgets/gmpc-clicklabel.vala\
     Widgets/playlist3-messages.c\
     Widgets/gmpc-song-links.vala\
+    Widgets/gmpc-image-async.vala\
     Widgets/advanced_settings.vala\
-    Widgets/gmpc-metadata-text-label.vala\
+    Widgets/gmpc-widgets-qtable.vala\
+    Widgets/gmpc-widgets-popupmenu.vala\
     Widgets/gmpc-metadata-backdrop.vala\
+    Widgets/gmpc-metadata-text-label.vala\
     Widgets/gmpc-metadata-similarsongs.vala\
     Widgets/gmpc-metadata-similarartists.vala\
     GUI/control_window.c\

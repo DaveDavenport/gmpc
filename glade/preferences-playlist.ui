@@ -7,7 +7,7 @@
     <property name="orientation">vertical</property>
     <property name="spacing">6</property>
     <child>
-      <object class="GmpcWidgetQtable" id="vbox1">
+      <object class="GmpcWidgetsQtable" id="vbox1">
 	  	<property name="spacing">6</property>
 		<property name="item-width">6</property>
 		<property name="item-height">6</property>

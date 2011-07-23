@@ -188,6 +188,39 @@ namespace MPD {
         public void queue_commit(MPD.Server server);
         [CCode (cname="mpd_playlist_clear")]
         public void clear(MPD.Server server);
+        
+        public void add_artist(MPD.Server server, string artist)
+        {
+            MPD.Database.search_start(server,true);
+            MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, artist);
+            var data = MPD.Database.search_commit(server);
+            if(data != null) {
+                data.sort_album_disc_track();
+                while(data != null){ 
+                    MPD.PlayQueue.queue_add_song(server, data.song.file);
+                    data.next_free();
+                }
+                MPD.PlayQueue.queue_commit(server);
+            }
+        }
+        public void add_album(MPD.Server server, string? artist, string? album, string? album_artist=null)
+        {
+            MPD.Database.search_start(server,true);
+            if(album_artist != null)
+                MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM_ARTIST, album_artist);
+            else
+                MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, artist);
+            MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM, album);
+            var data = MPD.Database.search_commit(server);
+            if(data != null) {
+                data.sort_album_disc_track();
+                while(data != null){ 
+                    MPD.PlayQueue.queue_add_song(server, data.song.file);
+                    data.next_free();
+                }
+                MPD.PlayQueue.queue_commit(server);
+            }
+        }
     }
 
     namespace Player {
