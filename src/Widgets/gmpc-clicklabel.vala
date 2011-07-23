@@ -27,11 +27,7 @@ public class Gmpc.Clicklabel : Gtk.EventBox
     private bool italic                     = false;
     private bool bold                       = false;
     private bool underline                  = false;
-    private Gdk.Cursor hand_cursor          = new Gdk.Cursor(Gdk.CursorType.HAND2);
     private Pango.AttrList attributes       = null; 
-    /**
-     * Public functions
-     */
 
     /**
      * Constructor 
@@ -73,7 +69,7 @@ public class Gmpc.Clicklabel : Gtk.EventBox
          * Change mouse cursor to hand when focus in
          */
         this.enter_notify_event.connect((source, event) => {
-            this.window.set_cursor(hand_cursor);
+            this.set_do_underline(true);
             return false;
         });
 
@@ -81,23 +77,26 @@ public class Gmpc.Clicklabel : Gtk.EventBox
          * Change back when focus out 
          */
         this.leave_notify_event.connect((source, event) => {
-            this.window.set_cursor(null);
+            this.set_do_underline(false);
             return false;
         });
 
         this.button_release_event.connect((source, event) => {
             if(event.button == 1) {
                 stdout.printf("clicked: %d\n", 
-                    (int)((event.state&Gdk.ModifierType.MOD1_MASK) == Gdk.ModifierType.MOD1_MASK));
+                    (int)((event.state&Gdk.ModifierType.MOD1_MASK) 
+                                == Gdk.ModifierType.MOD1_MASK));
 
-                clicked((event.state&Gdk.ModifierType.MOD1_MASK) == Gdk.ModifierType.MOD1_MASK);
+                clicked((event.state&Gdk.ModifierType.MOD1_MASK) 
+                                    == Gdk.ModifierType.MOD1_MASK);
             }
             return false;
         });
 
         this.key_release_event.connect((source, event) => {
             if(event.keyval == 65293 /* enter */ ) {
-                clicked((event.state&Gdk.ModifierType.MOD1_MASK) == Gdk.ModifierType.MOD1_MASK);
+                clicked((event.state&Gdk.ModifierType.MOD1_MASK) 
+                                    == Gdk.ModifierType.MOD1_MASK);
             }
             return false;
         });

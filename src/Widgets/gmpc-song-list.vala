@@ -28,7 +28,6 @@ private const string some_unique_name_gsl = Config.VERSION;
 public class Gmpc.Widgets.Songlist : Gtk.VBox
 {
     private const int MAX_RESULTS           = 125;
-    private Gdk.Cursor hand_cursor          = new Gdk.Cursor(Gdk.CursorType.HAND2);
     /* Constructor function  */
     public Songlist()
     {
@@ -51,8 +50,6 @@ public class Gmpc.Widgets.Songlist : Gtk.VBox
         ali.set_padding(0,0,level*32,0);
         box.pack_start(ali, false, false, 0);
 
-        
-        //var image = new Gtk.Image.from_icon_name("media-album", Gtk.IconSize.BUTTON);
         var image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ARTIST_ART, 32);
         image.set_no_cover_icon("no-artist");
         image.set_loading_cover_icon("fetching-artist");
@@ -61,40 +58,21 @@ public class Gmpc.Widgets.Songlist : Gtk.VBox
         /* add the image */
         ali.add(image);
 
-        /* setup handling off clicks */
-        event.enter_notify_event.connect((source, event) => {
-            this.window.set_cursor(hand_cursor);
-            return false;
-
-        });
-
-        event.leave_notify_event.connect((source, event) => {
-            this.window.set_cursor(null);
-            return false;
-        });
-
-        MPD.Song song_file = song;
-        event.button_release_event.connect((source, event) => {
-            if(event.button == 1) {
-                artist_song_clicked(song_file);
-                return true;
-                }
-            return false;
-        });
-		
-
-
         /* Create lLabel */
         string label = null;
         if(song.albumartist != null && song.albumartist.length > 0 ) 
         {
-            label = GLib.Markup.printf_escaped("<b>%s: %s</b>",_("Artist"), song.albumartist);
+            label = "%s: %s".printf(_("Artist"), song.albumartist);
         }else{
-            label = GLib.Markup.printf_escaped("<b>%s: %s</b>",_("Artist"), song.artist);
+            label = "%s: %s".printf(_("Artist"), song.artist);
         }
-        var wlabel = new Gtk.Label("");
-        wlabel.set_markup(label);
+        var wlabel = new Clicklabel(label);
+        wlabel.set_do_bold(true);
 
+        MPD.Song song_file = song;
+        wlabel.clicked.connect((source, event) => {
+                artist_song_clicked(song_file);
+        });
         /* add the label */
         box.pack_start(wlabel, false, false, 0);
 
@@ -127,33 +105,15 @@ public class Gmpc.Widgets.Songlist : Gtk.VBox
         /* add the image */
         ali.add(image);
 
-        /* setup handling off clicks */
-        event.enter_notify_event.connect((source, event) => {
-            this.window.set_cursor(hand_cursor);
-            return false;
-
-        });
-
-        event.leave_notify_event.connect((source, event) => {
-            this.window.set_cursor(null);
-            return false;
-        });
+        /* Create lLabel */
+        string label = "%s: %s".printf(_("Album"), song.album);
+        var wlabel = new Clicklabel(label);
+        wlabel.set_do_bold(true);
 
         MPD.Song song_file = song;
-        event.button_release_event.connect((source, event) => {
-            if(event.button == 1) {
+        wlabel.clicked.connect((source) => {
                 album_song_clicked(song_file);
-                return true;
-                }
-            return false;
         });
-
-
-        /* Create lLabel */
-        string label = GLib.Markup.printf_escaped("<b>%s: %s</b>",_("Album"), song.album);
-        var wlabel = new Gtk.Label("");
-        wlabel.set_markup(label);
-
         /* add the label */
         box.pack_start(wlabel, false, false, 0);
 
@@ -216,15 +176,13 @@ public class Gmpc.Widgets.Songlist : Gtk.VBox
 
         event.enter_notify_event.connect((source, event) => {
             image.set_from_stock("gtk-media-play", Gtk.IconSize.MENU);
-            this.window.set_cursor(hand_cursor);
             return false;
 
         });
 
         event.leave_notify_event.connect((source, event) => {
             image.set_from_icon_name("media-audiofile",Gtk.IconSize.MENU);
-            this.window.set_cursor(null);
-            return false;
+             return false;
         });
 
         /* add the image */

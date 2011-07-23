@@ -89,27 +89,12 @@ public class Gmpc.Widgets.Qtable : Gtk.Container, Gtk.Buildable
 		}
 	}
 
-    /** Accessor */
-    public void set_cover_size(int width, int height) 
-    {
-        item_width_real = width;
-        item_height_real = height;
-        this.queue_resize();
-    }
-    public void set_header_size(int height)
-    {
-        header_height_real = height;
-        this.queue_resize();
-    }
+
 	construct{
         this.set_has_window(false);
+        this.set_redraw_on_allocate(false);
 	}
     public Qtable()
-    {
-        this.set_redraw_on_allocate(false);
-    }
-
-    ~Qtable()
     {
     }
 
@@ -239,7 +224,8 @@ public class Gmpc.Widgets.Qtable : Gtk.Container, Gtk.Buildable
 		int cover_width = item_width_real; 
 		int cover_height= item_height_real; 
 		int header_height = header_height_real; 
-        /* Hack to avvoid pointless resizes, I get this "1" size when a child widget changes */
+        /* Hack to avvoid pointless resizes, 
+         * I get this "1" size when a child widget changes */
         if(alloc.width == 1) return;
 		int width = alloc.width;
         int new_columns = 0; 
@@ -312,10 +298,12 @@ public class Gmpc.Widgets.Qtable : Gtk.Container, Gtk.Buildable
             this.queue_resize();
         }
     }
-    public override void forall_internal(bool include_internals, Gtk.Callback callback) 
+    public override void forall_internal(bool include_internals,
+                                         Gtk.Callback callback) 
     {
         weak List<QtableEntry> iter = children.first();
-        /* Somehow it fails when doing a foreach() construction, weird vala bug I guess */
+        /* Somehow it fails when doing a foreach() construction, 
+            weird vala bug I guess */
         /* would be  nice if I could filter out say only the visible ones */
         while(iter != null) {
             weak QtableEntry child = iter.data;
