@@ -83,10 +83,6 @@ public class Gmpc.Clicklabel : Gtk.EventBox
 
         this.button_release_event.connect((source, event) => {
             if(event.button == 1) {
-                stdout.printf("clicked: %d\n", 
-                    (int)((event.state&Gdk.ModifierType.MOD1_MASK) 
-                                == Gdk.ModifierType.MOD1_MASK));
-
                 clicked((event.state&Gdk.ModifierType.MOD1_MASK) 
                                     == Gdk.ModifierType.MOD1_MASK);
             }
@@ -102,12 +98,10 @@ public class Gmpc.Clicklabel : Gtk.EventBox
         });
 
         this.focus_in_event.connect((source, event) => {
-                stdout.printf("focus in event\n");
                 this.set_do_underline(true);
             return false;
         });
         this.focus_out_event.connect((source, event) => {
-                stdout.printf("focus out event\n");
                 this.set_do_underline(false);
             return false;
         });
