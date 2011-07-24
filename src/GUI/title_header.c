@@ -131,6 +131,7 @@ void playlist3_update_header(void)
         {
             mpd_song_markup(buffer, 1024, "[%title%|%shortfile%][ (%name%)]", song);
             gmpc_clicklabel_set_text(GMPC_CLICKLABEL(header_labels[0]), buffer);
+            gmpc_clicklabel_set_sensitive(GMPC_CLICKLABEL(header_labels[0]), TRUE);
             if (song->artist)
             {
                 gtk_widget_show(header_labels[1]);
@@ -164,6 +165,7 @@ void playlist3_update_header(void)
         } else
         {
             gmpc_clicklabel_set_text(GMPC_CLICKLABEL(header_labels[0]), _("Not Playing"));
+            gmpc_clicklabel_set_sensitive(GMPC_CLICKLABEL(header_labels[0]), FALSE);
             gtk_widget_hide(header_labels[1]);
             gtk_widget_hide(header_labels[2]);
             gtk_widget_hide(header_labels[3]);
@@ -172,6 +174,7 @@ void playlist3_update_header(void)
     } else
     {
         gmpc_clicklabel_set_text(GMPC_CLICKLABEL(header_labels[0]), _("Not Connected"));
+        gmpc_clicklabel_set_sensitive(GMPC_CLICKLABEL(header_labels[0]), FALSE);
         gtk_widget_hide(header_labels[1]);
         gtk_widget_hide(header_labels[2]);
         gtk_widget_hide(header_labels[3]);

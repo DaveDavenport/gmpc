@@ -23,11 +23,13 @@ using Gmpc;
 public class Gmpc.Clicklabel : Gtk.EventBox
 {
     private Gtk.Label label                 = null;
+    private new bool sensitive              = false;
     private int size                        = 10*Pango.SCALE; 
     private bool italic                     = false;
     private bool bold                       = false;
     private bool underline                  = false;
-    private Pango.AttrList attributes       = null; 
+    private Pango.AttrList attributes       = null;
+    private ulong handlers[6];
 
     /**
      * Constructor 
@@ -64,47 +66,76 @@ public class Gmpc.Clicklabel : Gtk.EventBox
         /* pack label */
         this.add(label);
 
+        this.set_sensitive(true);
 
-        /**
-         * Change mouse cursor to hand when focus in
-         */
-        this.enter_notify_event.connect((source, event) => {
-            this.set_do_underline(true);
-            return false;
-        });
-
-        /**
-         * Change back when focus out 
-         */
-        this.leave_notify_event.connect((source, event) => {
-            this.set_do_underline(false);
-            return false;
-        });
-
-        this.button_release_event.connect((source, event) => {
-            if(event.button == 1) {
-                clicked((event.state&Gdk.ModifierType.MOD1_MASK) 
-                                    == Gdk.ModifierType.MOD1_MASK);
-            }
-            return false;
-        });
-
-        this.key_release_event.connect((source, event) => {
-            if(event.keyval == 65293 /* enter */ ) {
-                clicked((event.state&Gdk.ModifierType.MOD1_MASK) 
-                                    == Gdk.ModifierType.MOD1_MASK);
-            }
-            return false;
-        });
-
-        this.focus_in_event.connect((source, event) => {
+    }
+    
+    /**
+     * Set sensitive
+     */
+    public new void set_sensitive(bool sensitive_state) {
+        if (this.sensitive == sensitive_state) {
+            return;
+        }
+        else if (sensitive_state == true){
+            /**
+             * Underline text when focus in
+             */
+            handlers[0] = this.enter_notify_event.connect((source, event) => {
                 this.set_do_underline(true);
-            return false;
-        });
-        this.focus_out_event.connect((source, event) => {
+                return false;
+            });
+
+            /**
+             * Change back when focus out 
+             */
+            handlers[1] = this.leave_notify_event.connect((source, event) => {
                 this.set_do_underline(false);
-            return false;
-        });
+                return false;
+            });
+
+            handlers[2] = this.button_release_event.connect((source, event) => {
+                if(event.button == 1) {
+                    clicked((event.state&Gdk.ModifierType.MOD1_MASK) 
+                                        == Gdk.ModifierType.MOD1_MASK);
+                }
+                return false;
+            });
+
+            handlers[3] = this.key_release_event.connect((source, event) => {
+                if(event.keyval == 65293 /* enter */ ) {
+                    clicked((event.state&Gdk.ModifierType.MOD1_MASK) 
+                                        == Gdk.ModifierType.MOD1_MASK);
+                }
+                return false;
+            });
+
+            handlers[4] = this.focus_in_event.connect((source, event) => {
+                    this.set_do_underline(true);
+                return false;
+            });
+            handlers[5] = this.focus_out_event.connect((source, event) => {
+                    this.set_do_underline(false);
+                return false;
+            });
+            this.sensitive = true;
+        }
+        else {
+            /**
+             * disconnect all events
+             */
+            for (int i = 0; i <= 5; i++)
+                this.disconnect(handlers[i]);
+                
+            this.sensitive = false;
+        }
+    }
+
+    /**
+     * Get sensitivity state
+     */
+    public new bool get_sensitive() {
+        return this.sensitive;
     }
 
     /**
