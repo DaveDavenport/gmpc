@@ -93,7 +93,7 @@ public class Gmpc.Clicklabel : Gtk.EventBox
             /**
              * Underline text when focus in
              */
-            handlers[Sighandler.LEAVE_NOTIFY] = this.enter_notify_event.connect(
+            handlers[Sighandler.ENTER_NOTIFY] = this.enter_notify_event.connect(
                 (source, event) => {
                     this.set_do_underline(true);
                     return false;
@@ -142,7 +142,7 @@ public class Gmpc.Clicklabel : Gtk.EventBox
             /**
              * disconnect all events
              */
-            for (int i = 0; i <= Sighandler.NUM_SIGNALS; i++)
+            for (int i = 0; i < Sighandler.NUM_SIGNALS; i++)
                 this.disconnect(handlers[i]);
                 
             this.sensitive = false;

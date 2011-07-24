@@ -97,6 +97,10 @@ void playlist3_new_header(void)
 //        gmpc_clicklabel_set_do_italic(GMPC_CLICKLABEL(header_labels[4]), TRUE);
         gmpc_clicklabel_set_ellipsize(GMPC_CLICKLABEL(header_labels[4]), PANGO_ELLIPSIZE_END);
 
+        GtkAlignment *title_header_top_alignment = gtk_alignment_new(0,0,0,0);
+        gtk_widget_set_size_request(GTK_WIDGET(title_header_top_alignment), 0, 6);
+
+        gtk_box_pack_start(GTK_BOX(vbox), title_header_top_alignment, FALSE, TRUE, 0);
         gtk_box_pack_start(GTK_BOX(vbox), header_labels[0], FALSE, TRUE, 0);
         gtk_box_pack_start(GTK_BOX(vbox), hbox, FALSE, TRUE, 0);
 
