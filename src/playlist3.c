@@ -1472,6 +1472,7 @@ static void playlist_zoom_level_changed(void)
         g_object_ref(box);
         gtk_container_remove(GTK_CONTAINER(vtop), box);
         gtk_box_pack_end(GTK_BOX(top), box, FALSE, TRUE, 0);
+        gtk_box_reorder_child(GTK_BOX(top), box, 0);
         /* release my reference */
         g_object_unref(box);
         gtk_widget_show(box);
