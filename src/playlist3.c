@@ -592,6 +592,9 @@ int pl3_hide(void)
         gtk_widget_hide(pl3_win);
         pl3_hidden = TRUE;
     }
+    #ifdef HAVE_APP_INDICATOR
+        tray_icon2_update_menu();
+    #endif
     return TRUE;
 }
 
@@ -635,10 +638,6 @@ void pl3_toggle_hidden(void)
     {
         pl3_hide();
     }
-
-    #ifdef HAVE_APP_INDICATOR
-        tray_icon2_update_menu();
-    #endif
 }
 
 
