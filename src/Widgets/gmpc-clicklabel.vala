@@ -29,7 +29,19 @@ public class Gmpc.Clicklabel : Gtk.EventBox
     private bool bold                       = false;
     private bool underline                  = false;
     private Pango.AttrList attributes       = null;
+    
+    private enum Sighandler {
+        ENTER_NOTIFY,
+        LEAVE_NOTIFY,
+        BUTTON_RELEASE,
+        KEY_RELEASE,
+        FOCUS_IN,
+        FOCUS_OUT,
+        NUM_SIGNALS
+    }
+    /* 6 == Sighandler.NUM_SIGNALS  vala stupidity. */
     private ulong handlers[6];
+    
 
     /**
      * Constructor 
@@ -65,7 +77,7 @@ public class Gmpc.Clicklabel : Gtk.EventBox
 
         /* pack label */
         this.add(label);
-
+        /* Set widget sensitive */
         this.set_sensitive(true);
 
     }
@@ -81,50 +93,56 @@ public class Gmpc.Clicklabel : Gtk.EventBox
             /**
              * Underline text when focus in
              */
-            handlers[0] = this.enter_notify_event.connect((source, event) => {
-                this.set_do_underline(true);
-                return false;
-            });
+            handlers[Sighandler.LEAVE_NOTIFY] = this.enter_notify_event.connect(
+                (source, event) => {
+                    this.set_do_underline(true);
+                    return false;
+                });
 
             /**
              * Change back when focus out 
              */
-            handlers[1] = this.leave_notify_event.connect((source, event) => {
-                this.set_do_underline(false);
-                return false;
-            });
-
-            handlers[2] = this.button_release_event.connect((source, event) => {
-                if(event.button == 1) {
-                    clicked((event.state&Gdk.ModifierType.MOD1_MASK) 
-                                        == Gdk.ModifierType.MOD1_MASK);
-                }
-                return false;
-            });
-
-            handlers[3] = this.key_release_event.connect((source, event) => {
-                if(event.keyval == 65293 /* enter */ ) {
-                    clicked((event.state&Gdk.ModifierType.MOD1_MASK) 
-                                        == Gdk.ModifierType.MOD1_MASK);
-                }
-                return false;
-            });
-
-            handlers[4] = this.focus_in_event.connect((source, event) => {
-                    this.set_do_underline(true);
-                return false;
-            });
-            handlers[5] = this.focus_out_event.connect((source, event) => {
+            handlers[Sighandler.LEAVE_NOTIFY] = this.leave_notify_event.connect(
+                (source, event) => {
                     this.set_do_underline(false);
-                return false;
-            });
+                    return false;
+                });
+
+            handlers[Sighandler.BUTTON_RELEASE] = this.button_release_event.connect(
+                (source, event) => {
+                    if(event.button == 1) {
+                        clicked((event.state&Gdk.ModifierType.MOD1_MASK) 
+                                            == Gdk.ModifierType.MOD1_MASK);
+                    }
+                    return false;
+                });
+
+            handlers[Sighandler.KEY_RELEASE] = this.key_release_event.connect(
+                (source, event) => {
+                    if(event.keyval == 65293 /* enter */ ) {
+                        clicked((event.state&Gdk.ModifierType.MOD1_MASK) 
+                                            == Gdk.ModifierType.MOD1_MASK);
+                    }
+                    return false;
+                });
+
+            handlers[Sighandler.FOCUS_IN] = this.focus_in_event.connect(
+                (source, event) => {
+                    this.set_do_underline(true);
+                    return false;
+                });
+            handlers[Sighandler.FOCUS_OUT] = this.focus_out_event.connect(
+                (source, event) => {
+                    this.set_do_underline(false);
+                    return false;
+                });
             this.sensitive = true;
         }
         else {
             /**
              * disconnect all events
              */
-            for (int i = 0; i <= 5; i++)
+            for (int i = 0; i <= Sighandler.NUM_SIGNALS; i++)
                 this.disconnect(handlers[i]);
                 
             this.sensitive = false;
