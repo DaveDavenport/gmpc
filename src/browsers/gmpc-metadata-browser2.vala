@@ -923,7 +923,6 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
          if(value == null && extra == null) return;
          var box = new Gtk.HBox(false, 6);
          var label = new Gtk.Label("");
-         label.set_selectable(true);
          label.set_alignment(0.0f, 0.0f);
          label.set_markup(Markup.printf_escaped("<b>%s:</b>",entry_label));
          if(image != null)
@@ -1482,22 +1481,26 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
 
         /* Genres of songs */
         var pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ALBUM_GENRES_SONGS, song);
+        pt_label.set_selectable(true);
         pt_label.set_alignment(0.0f, 0.5f);
         pt_label.set_line_wrap(true);
         this.add_entry(info_box, _("Genres"), null, pt_label, ref i, "media-genre");
 
         /* Dates of songs */
         pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ALBUM_DATES_SONGS, song);
+        pt_label.set_selectable(true);
         pt_label.set_line_wrap(true);
         pt_label.set_alignment(0.0f, 0.5f);
         this.add_entry(info_box, _("Dates"), null, pt_label, ref i,"media-date");
         /* Total number of songs */
         pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ALBUM_NUM_SONGS, song);
+        pt_label.set_selectable(true);
         pt_label.set_line_wrap(true);
         pt_label.set_alignment(0.0f, 0.5f);
         this.add_entry(info_box, _("Songs"), null, pt_label, ref i, "media-num-tracks");
         /* Total playtime */
         pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ALBUM_PLAYTIME_SONGS, song);
+        pt_label.set_selectable(true);
         pt_label.set_line_wrap(true);
         pt_label.set_alignment(0.0f, 0.5f);
         this.add_entry(info_box, _("Playtime"), null, pt_label, ref i, "media-track-length");
@@ -1743,21 +1746,25 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
 
         /* Genres of songs */
         var pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ARTIST_GENRES_SONGS, song);
+        pt_label.set_selectable(true);
         pt_label.set_alignment(0.0f, 0.5f);
         pt_label.set_line_wrap(true);
         this.add_entry(info_box, _("Genres"), null, pt_label, ref i, "media-genre");
         /* Dates of songs */
         pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ARTIST_DATES_SONGS, song);
+        pt_label.set_selectable(true);
         pt_label.set_line_wrap(true);
         pt_label.set_alignment(0.0f, 0.5f);
         this.add_entry(info_box, _("Dates"), null, pt_label, ref i,"media-date");
         /* Total number of songs */
         pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ARTIST_NUM_SONGS, song);
+        pt_label.set_selectable(true);
         pt_label.set_line_wrap(true);
         pt_label.set_alignment(0.0f, 0.5f);
         this.add_entry(info_box, _("Songs"), null, pt_label, ref i, "media-num-tracks");
         /* Total playtime */
         pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ARTIST_PLAYTIME_SONGS, song);
+        pt_label.set_selectable(true);
         pt_label.set_line_wrap(true);
         pt_label.set_alignment(0.0f, 0.5f);
         this.add_entry(info_box, _("Playtime"), null, pt_label, ref i, "media-track-length");
