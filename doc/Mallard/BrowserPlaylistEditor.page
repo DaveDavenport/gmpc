@@ -29,7 +29,7 @@
             </item>
             <item>
                 <title>Delete</title>
-                <p>This will delete the selected playlist. Warning: this deletes immediately without any confirmation.</p>
+                <p>This allows you to delete the selected playlist. The message bar will show up to ask you for confirmation.</p>
             </item>
             <item>
                 <title>Rename</title>
@@ -37,7 +37,7 @@
             </item>
             <item>
                 <title>Clear</title>
-                <p>This will remove all songs from the selected playlist. Warning: this clears immediately without any confirmation.</p>
+                <p>This allows you to remove all songs from the selected playlist. The message bar will show up to ask you for confirmation.</p>
             </item>
         </terms>
     </section>
