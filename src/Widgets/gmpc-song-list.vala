@@ -68,6 +68,7 @@ public class Gmpc.Widgets.Songlist : Gmpc.Widgets.Qtable
         }
         var wlabel = new Clicklabel(label);
         wlabel.set_do_bold(true);
+        wlabel.set_can_focus(true);
 
         MPD.Song song_file = song;
         wlabel.clicked.connect((source, event) => {
@@ -110,6 +111,7 @@ public class Gmpc.Widgets.Songlist : Gmpc.Widgets.Qtable
         string label = "%s: %s".printf(_("Album"), song.album);
         var wlabel = new Clicklabel(label);
         wlabel.set_do_bold(true);
+        wlabel.set_can_focus(true);
 
         MPD.Song song_file = song;
         wlabel.clicked.connect((source) => {
@@ -213,7 +215,6 @@ public class Gmpc.Widgets.Songlist : Gmpc.Widgets.Qtable
         }
         var wlabel = new Gmpc.Clicklabel(label);
         wlabel.set_can_focus(true);
-
 
         /* add the label */
         box.pack_start(wlabel, false, false, 0);
