@@ -234,8 +234,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
                 });
                 menu.append(item);
 
-                item = new Gtk.ImageMenuItem.with_mnemonic(_("_Replace"));
-                item.set_image(new Gtk.Image.from_stock("gtk-redo", Gtk.IconSize.MENU));
+                item = new Gtk.ImageMenuItem.from_stock("gtk-media-play",null);
                 item.activate.connect((source) => {
                     Gtk.TreeModel model;
                     Gtk.TreeIter iter;
@@ -352,8 +351,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
                 item.activate.connect(album_add_clicked);
                 menu.append(item);
 
-                item = new Gtk.ImageMenuItem.with_mnemonic(_("_Replace"));
-                item.set_image(new Gtk.Image.from_stock("gtk-redo", Gtk.IconSize.MENU));
+                item = new Gtk.ImageMenuItem.from_stock("gtk-media-play",null);
                 item.activate.connect(album_replace_clicked);
                 menu.append(item);
 
@@ -440,9 +438,8 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
                 var item = new Gtk.ImageMenuItem.from_stock("gtk-add",null);
                 item.activate.connect(song_add_clicked);
                 menu.append(item);
-
-                item = new Gtk.ImageMenuItem.with_mnemonic(_("_Replace"));
-                item.set_image(new Gtk.Image.from_stock("gtk-redo", Gtk.IconSize.MENU));
+                
+                item = new Gtk.ImageMenuItem.from_stock("gtk-media-play",null);
                 item.activate.connect(song_replace_clicked);
                 menu.append(item);
 
@@ -1100,7 +1097,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         abutton.clicked.connect(add_selected_song);
         control_hbox.pack_start(abutton, false, false,0);
 
-        abutton = new Gtk.Button.with_mnemonic(_("_Replace"));
+        abutton = new Gtk.Button.with_mnemonic(_("_Clear and play"));
         abutton.set_tooltip_text(_("Replace the current play queue with this item"));
         abutton.set_property("xalign", 0.0f);
         abutton.set_image(new Gtk.Image.from_stock("gtk-redo", Gtk.IconSize.BUTTON));
@@ -1109,7 +1106,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         control_hbox.pack_start(abutton, false, false,0);
 
         abutton = new Gtk.Button.from_stock("gtk-media-play");
-        abutton.set_tooltip_text(_("Play this item"));
+        abutton.set_tooltip_text(_("Play this song"));
         abutton.set_property("xalign", 0.0f);
         abutton.set_relief(Gtk.ReliefStyle.NONE);
         abutton.clicked.connect(play_selected_song);
@@ -1489,10 +1486,9 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         button.clicked.connect(add_selected_song);
         control_hbox.pack_start(button, false, false,0);
 
-        button = new Gtk.Button.with_mnemonic(_("_Replace"));
-        button.set_tooltip_text(_("Replace the current play queue with this item"));
+        button = new Gtk.Button.from_stock("gtk-media-play");
+        button.set_tooltip_text(_("Replace the current play queue with this item and play"));
         button.set_property("xalign", 0.0f);
-        button.set_image(new Gtk.Image.from_stock("gtk-redo", Gtk.IconSize.BUTTON));
         button.set_relief(Gtk.ReliefStyle.NONE);
         button.clicked.connect(replace_selected_song);
         control_hbox.pack_start(button, false, false,0);
@@ -1750,10 +1746,9 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         button.clicked.connect(add_selected_song);
         hbox_2.pack_start(button, false, false,0);
 
-        button = new Gtk.Button.with_mnemonic(_("_Replace"));
-        button.set_tooltip_text(_("Replace the current play queue with this item"));
+        button = new Gtk.Button.from_stock("gtk-media-play");
+        button.set_tooltip_text(_("Replace the current play queue with this item and play"));
         button.set_property("xalign", 0.0f);
-        button.set_image(new Gtk.Image.from_stock("gtk-redo", Gtk.IconSize.BUTTON));
         button.set_relief(Gtk.ReliefStyle.NONE);
         button.clicked.connect(replace_selected_song);
         hbox_2.pack_start(button, false, false,0);
