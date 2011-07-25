@@ -1,7 +1,7 @@
 /* Gnome Music Player Client (GMPC)
  * Copyright (C) 2004-2011 Qball Cow <qball@gmpclient.org>
  * Project homepage: http://gmpclient.org/
- 
+
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -25,7 +25,7 @@
  *  * Similar songs.
  *  * Similar artist.
  *  * More. (expands, collapses a sub widget
- * 
+ *
  */
 using Config;
 using Gtk;
@@ -34,7 +34,7 @@ using Gmpc;
 private const bool use_transition_mdb = Gmpc.use_transition;
 private const string some_unique_name_mdb = Config.VERSION;
 
-public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface, Gmpc.Plugin.PreferencesIface 
+public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface, Gmpc.Plugin.PreferencesIface
 {
     private int block_update = 0;
     /* Stores the location in the cat_tree */
@@ -42,7 +42,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
 
     private string title_color = config.get_string_with_default("Now Playing", "title-color", "#4d90dd");
     private string item_color = config.get_string_with_default("Now Playing", "item-color", "#304ab8");
-    private bool theme_colors = (bool) config.get_int_with_default("Now Playing", "use-theme-color",1); 
+    private bool theme_colors = (bool) config.get_int_with_default("Now Playing", "use-theme-color",1);
     private Gdk.Color background;
     private Gdk.Color foreground;
 
@@ -54,7 +54,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
 
     construct {
         /* Set the plugin as an internal one and of type pl_browser */
-        this.plugin_type = 2|8; 
+        this.plugin_type = 2|8;
 
         gmpcconn.connection_changed.connect(con_changed);
         gmpcconn.status_changed.connect(status_changed);
@@ -87,7 +87,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
             int pos = this.paned.get_position();
             config.set_int(this.get_name(), "pane-pos", pos);
         }
-        
+
         if(this.model_artist != null) this.model_artist.set_mpd_data(null);
         if(this.model_albums != null)this.model_albums.set_mpd_data(null);
 
@@ -100,7 +100,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         }
     }
     /* Now playing browser */
-    
+
 
     /**
      * Browser part
@@ -113,15 +113,15 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
     /* artist */
     private Gtk.TreeView tree_artist = null;
     private Gmpc.MpdData.Model model_artist = null;
-    private Gtk.TreeModelFilter model_filter_artist = null; 
+    private Gtk.TreeModelFilter model_filter_artist = null;
     private Gtk.Entry artist_filter_entry = null;
 
     /* album */
     private Gtk.TreeView tree_album  = null;
     private Gmpc.MpdData.Model model_albums = null;
-    private Gtk.TreeModelFilter model_filter_album = null; 
+    private Gtk.TreeModelFilter model_filter_album = null;
     private Gtk.Entry album_filter_entry = null;
-    
+
     /* song */
     private Gtk.TreeView tree_songs  = null;
     private Gmpc.MpdData.Model model_songs = null;
@@ -133,14 +133,14 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
     private Gtk.EventBox header = null;
 
     /**
-     * Makes gmpc jump to the metadata browser 
+     * Makes gmpc jump to the metadata browser
      */
     private void select_metadata_browser(Gtk.Widget widget)
     {
         this.select_browser(null);
     }
     /**
-     * Gmpc.Plugin.BrowserIface.add_go_menu 
+     * Gmpc.Plugin.BrowserIface.add_go_menu
      */
     private int browser_add_go_menu(Gtk.Menu menu)
     {
@@ -218,7 +218,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
                         if(artist != null) {
                             MPD.Database.search_start(server,true);
                             MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, artist);
-                            MPD.Data.Item data = MPD.Database.search_commit(server); 
+                            MPD.Data.Item data = MPD.Database.search_commit(server);
                             data.sort_album_disc_track();
                             if(data != null)
                             {
@@ -286,16 +286,16 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
             this.artist_filter_entry.grab_focus();
             this.artist_filter_entry.set_position(1);
 
-           return true; 
+           return true;
         }
         return false;
      }
-     /** 
+     /**
       * Album tree view
       */
      private void album_add_clicked(Gtk.Widget item )
      {
-        string artist = browser_get_selected_artist(); 
+        string artist = browser_get_selected_artist();
         if(artist != null)
         {
             string albumartist = null;
@@ -311,8 +311,8 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
                     if(ydata.tag.length > 0)
                         albumartist = ydata.tag;
                 }
-            } 
-            /* Fill in the first browser */ 
+            }
+            /* Fill in the first browser */
             MPD.Database.search_start(server,true);
             if(albumartist != null && albumartist.length > 0)
                 MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM_ARTIST, albumartist);
@@ -392,7 +392,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
             this.album_filter_entry.grab_focus();
             this.album_filter_entry.set_position(1);
 
-           return true; 
+           return true;
         }
         return false;
      }
@@ -411,14 +411,14 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         this.model_filter_album.refilter();
      }
      /**
-      * Songs 
+      * Songs
       */
      private void song_add_clicked(Gtk.Widget item )
      {
-        MPD.Song? song = browser_get_selected_song(); 
+        MPD.Song? song = browser_get_selected_song();
         if(song != null)
         {
-            MPD.PlayQueue.add_song(server,song.file); 
+            MPD.PlayQueue.add_song(server,song.file);
         }
      }
      private void song_replace_clicked(Gtk.Widget item)
@@ -438,7 +438,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
                 var item = new Gtk.ImageMenuItem.from_stock("gtk-add",null);
                 item.activate.connect(song_add_clicked);
                 menu.append(item);
-                
+
                 item = new Gtk.ImageMenuItem.from_stock("gtk-media-play",null);
                 item.activate.connect(song_replace_clicked);
                 menu.append(item);
@@ -468,7 +468,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         if(this.paned == null)
         {
             this.paned = new Gtk.HPaned();
-            paned_size_group.add_paned(this.paned); 
+            paned_size_group.add_paned(this.paned);
             this.paned.style_set.connect(browser_bg_style_changed);
             /* Bow with browsers */
             this.browser_box = new Gtk.VBox(true, 6);
@@ -508,14 +508,14 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
             this.tree_artist.button_release_event.connect(artist_browser_button_release_event);
             this.tree_artist.key_press_event.connect(browser_artist_key_press_event);
             sw.add(tree_artist);
-            /* setup the columns */ 
+            /* setup the columns */
             var column = new Gtk.TreeViewColumn();
             if(config.get_int_with_default("tag2-plugin", "show-image-column", 1) == 1)
             {
                 var prenderer = new Gtk.CellRendererPixbuf();
                 prenderer.set("height", this.model_artist.icon_size);
                 column.pack_start(prenderer, false);
-                column.add_attribute(prenderer, "pixbuf",27); 
+                column.add_attribute(prenderer, "pixbuf",27);
             }
             var trenderer = new Gtk.CellRendererText();
             column.pack_start(trenderer, true);
@@ -561,14 +561,14 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
             this.tree_album.button_release_event.connect(album_browser_button_release_event);
             this.tree_album.key_press_event.connect(browser_album_key_press_event);
             sw.add(tree_album);
-            /* setup the columns */ 
+            /* setup the columns */
             column = new Gtk.TreeViewColumn();
             if(config.get_int_with_default("tag2-plugin", "show-image-column", 1) == 1)
             {
                 var prenderer = new Gtk.CellRendererPixbuf();
                 prenderer.set("height", this.model_albums.icon_size);
                 column.pack_start(prenderer, false);
-                column.add_attribute(prenderer, "pixbuf",27); 
+                column.add_attribute(prenderer, "pixbuf",27);
             }
             this.tree_album.append_column(column);
 
@@ -600,14 +600,14 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
             this.tree_songs.button_press_event.connect(browser_button_press_event);
             this.tree_songs.button_release_event.connect(song_browser_button_release_event);
             sw.add(tree_songs);
-            /* setup the columns */ 
+            /* setup the columns */
             column = new Gtk.TreeViewColumn();
 
             if(config.get_int_with_default("tag2-plugin", "show-image-column", 1) == 1)
             {
                 var prenderer = new Gtk.CellRendererPixbuf();
                 column.pack_start(prenderer, false);
-                column.add_attribute(prenderer, "icon-name",23); 
+                column.add_attribute(prenderer, "icon-name",23);
             }
             trenderer = new Gtk.CellRendererText();
             column.pack_start(trenderer, false);
@@ -636,6 +636,10 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
             this.metadata_box = new Gtk.EventBox();
             this.metadata_box.set_visible_window(true);
             this.metadata_sw.add_with_viewport(this.metadata_box);
+            (this.metadata_box as Gtk.Container).set_focus_hadjustment(
+                this.metadata_sw.get_hadjustment());
+            (this.metadata_box as Gtk.Container).set_focus_vadjustment(
+                this.metadata_sw.get_vadjustment());
 
             /* header */
             var vb = new Gtk.VBox(false, 0);
@@ -801,8 +805,8 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
                     if(ydata.tag.length > 0)
                         albumartist = ydata.tag;
                 }
-            } 
-            /* Fill in the first browser */ 
+            }
+            /* Fill in the first browser */
             MPD.Database.search_start(server,true);
             if(albumartist != null&& albumartist.length > 0)
                 MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM_ARTIST, albumartist);
@@ -822,15 +826,15 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         this.metadata_box_clear();
         this.metadata_box_update();
     }
-    /** 
+    /**
      * Metadata box
      */
 
      private void add_selected_song(Gtk.Button button)
      {
-        string artist = browser_get_selected_artist(); 
-        string album = browser_get_selected_album(); 
-        MPD.Song? song = browser_get_selected_song(); 
+        string artist = browser_get_selected_artist();
+        string album = browser_get_selected_album();
+        MPD.Song? song = browser_get_selected_song();
         if(song != null){
             MPD.PlayQueue.add_song(server,song.file);
             return;
@@ -861,18 +865,18 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
             var data = MPD.Database.search_commit(server);
             if(data != null) {
                 data.sort_album_disc_track();
-                while(data != null){ 
+                while(data != null){
                     MPD.PlayQueue.queue_add_song(server, data.song.file);
                     data.next_free();
                 }
                 MPD.PlayQueue.queue_commit(server);
-            }   
+            }
         }
      }
 
      private void play_selected_song(Gtk.Button button)
      {
-        MPD.Song? song = browser_get_selected_song(); 
+        MPD.Song? song = browser_get_selected_song();
         if(song != null) {
             Gmpc.MpdInteraction.play_path(song.file);
         }
@@ -893,7 +897,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
      /**
       * Add a row to a gtk table
       * <b>$label:</b> $value
-      * then increments i 
+      * then increments i
       */
 
      private void add_entry(Gtk.Table table, string entry_label, string? value,Gtk.Widget? extra,  ref int i, string ? image = null)
@@ -940,7 +944,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         var vbox = new Gtk.VBox (false,6);
         vbox.border_width = 8;
 
-        history_bc_header(HitemType.SONG, song.artist, song.album, song.title); 
+        history_bc_header(HitemType.SONG, song.artist, song.album, song.title);
 
 
         /* Start building the gui */
@@ -977,7 +981,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         info_box.set_row_spacings(3);
         info_box.set_col_spacings(8);
         int i=0;
-        /* Title */ 
+        /* Title */
         if(song.title != null) {
 
             var box = new Gtk.HBox(false, 6);
@@ -987,17 +991,17 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
 		    fav_button.set_song(song);
 		    ali = new Gtk.Alignment(0.0f, 0.5f,0f,0f);
 		    ali.add(fav_button);
-		    box.pack_start(ali, false, false, 0); 
+		    box.pack_start(ali, false, false, 0);
 	    }
 	    var label = new Gtk.Label(song.title);
             label.selectable = true;
-            label.set_markup(GLib.Markup.printf_escaped("<span color='%s' size='%i' weight='bold'>%s</span>", 
+            label.set_markup(GLib.Markup.printf_escaped("<span color='%s' size='%i' weight='bold'>%s</span>",
                         this.title_color,Pango.SCALE*20 ,song.title));
             label.set_ellipsize(Pango.EllipsizeMode.END);
             label.set_alignment(0.0f, 0.5f);
-            box.pack_start(label, true, true, 0); 
-            //hist_box.pack_start(box, true, true, 0); 
-            //vbox.pack_start(box, true, true, 0); 
+            box.pack_start(label, true, true, 0);
+            //hist_box.pack_start(box, true, true, 0);
+            //vbox.pack_start(box, true, true, 0);
             info_box.attach(box, 0,2, i, i+1,Gtk.AttachOptions.FILL,Gtk.AttachOptions.FILL,0,0);
             i++;
         }else if (song.name!= null) {
@@ -1321,6 +1325,13 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         label.set_markup(_("<b>Search:</b>"));
         hbox.pack_start(label, false, false, 0);
         MetadataBoxShowBaseEntry = new Gtk.Entry();
+
+        MetadataBoxShowBaseEntry.add_accelerator("grab-focus",
+                            Gmpc.Playlist.get_accel_group(),
+                            0x046,
+                            Gdk.ModifierType.CONTROL_MASK,
+                            0);
+
         /* Add clear icon */
         MetadataBoxShowBaseEntry.set_icon_from_stock(Gtk.EntryIconPosition.SECONDARY, "gtk-clear");
         MetadataBoxShowBaseEntry.icon_press.connect((source, pos, event) => {
@@ -1336,13 +1347,13 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         var result_hbox = new Gmpc.Widgets.Songlist();
 
         result_hbox.artist_song_clicked.connect((source, song) => {
-                if(song.artist != null) { 
-                this.set_artist(song.artist);   
+                if(song.artist != null) {
+                this.set_artist(song.artist);
                 }
                 });
         result_hbox.album_song_clicked.connect((source, song) => {
                 if(song.artist != null && song.album != null) {
-                this.set_album(song.artist, song.album);   
+                this.set_album(song.artist, song.album);
                 }
                 });
         result_hbox.song_clicked.connect((source, song) => {
@@ -1357,8 +1368,8 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
 
         MetadataBoxShowBaseEntry.activate.connect((source) => {
             string value = source.get_text();
-            current.data.search_string = value; 
-            MPD.Data.Item? list = Gmpc.Query.search(value, false); 
+            current.data.search_string = value;
+            MPD.Data.Item? list = Gmpc.Query.search(value, false);
             result_hbox.set_from_data((owned)list,true,true);
             result_hbox.show_all();
         });
@@ -1417,7 +1428,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         vbox.border_width = 8;
 
 
-        history_bc_header(HitemType.ALBUM, artist, album, null); 
+        history_bc_header(HitemType.ALBUM, artist, album, null);
 
         /* Artist image */
         var hbox = new Gtk.HBox(false, 6);
@@ -1452,18 +1463,18 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         label.set_line_wrap(true);
         this.add_entry(info_box, _("Album"), null, label, ref i, "media-album");
 
-        /* Genres of songs */ 
+        /* Genres of songs */
         var pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ALBUM_GENRES_SONGS, song);
         pt_label.set_alignment(0.0f, 0.5f);
         pt_label.set_line_wrap(true);
         this.add_entry(info_box, _("Genres"), null, pt_label, ref i, "media-genre");
 
-        /* Dates of songs */ 
+        /* Dates of songs */
         pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ALBUM_DATES_SONGS, song);
         pt_label.set_line_wrap(true);
         pt_label.set_alignment(0.0f, 0.5f);
         this.add_entry(info_box, _("Dates"), null, pt_label, ref i,"media-date");
-        /* Total number of songs */ 
+        /* Total number of songs */
         pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ALBUM_NUM_SONGS, song);
         pt_label.set_line_wrap(true);
         pt_label.set_alignment(0.0f, 0.5f);
@@ -1540,7 +1551,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
 
             sl.album_song_clicked.connect((source, song) => {
                 if(song.artist != null && song.album != null) {
-                    this.set_album(song.artist, song.album);   
+                    this.set_album(song.artist, song.album);
                 }
             });
             sl.song_clicked.connect((source, song) => {
@@ -1552,7 +1563,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
                     Gmpc.MpdInteraction.play_path(song.file);
                 }
             });
-            
+
 
             notebook.append_page(slhbox, new Gtk.Label(_("Song list")));
             var rbutton = new Gtk.RadioButton.with_label(group,_("Song list"));
@@ -1563,11 +1574,11 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
             rbutton.clicked.connect((source) => {
 					notebook.set_current_page(j);
 					});
-			notebook.notify["page"].connect((source)=> 
+			notebook.notify["page"].connect((source)=>
 				{
 					if(notebook.page != j) return;
                     debug("notebook page %i clicked", j);
-                    if(!seen) 
+                    if(!seen)
                     {
                         string albumartist = null;
                         if(Gmpc.server.tag_supported(MPD.Tag.Type.ALBUM_ARTIST))
@@ -1581,7 +1592,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
                                 if(ydata.tag.length > 0)
                                 albumartist = ydata.tag;
                             }
-                        } 
+                        }
                         MPD.Database.search_start(server,true);
                         if(albumartist != null&& albumartist.length > 0)
                             MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM_ARTIST, albumartist);
@@ -1663,7 +1674,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         this.metadata_sw.show_all();
     }
     /**
-     * This fills the view for artist 
+     * This fills the view for artist
      * <artist name>
      * <image> | <array with info>
      *           < buttonss>
@@ -1681,7 +1692,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         vbox.border_width = 8;
 
         /* Set up header */
-        history_bc_header(HitemType.ARTIST, artist, null, null); 
+        history_bc_header(HitemType.ARTIST, artist, null, null);
 
         /* Create an MPD.Song with the info for this type set */
         MPD.Song song = new MPD.Song();
@@ -1713,17 +1724,17 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         label.set_alignment(0.0f, 0.5f);
         this.add_entry(info_box, _("Artist"), null, label, ref i, "media-artist");
 
-        /* Genres of songs */ 
+        /* Genres of songs */
         var pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ARTIST_GENRES_SONGS, song);
         pt_label.set_alignment(0.0f, 0.5f);
         pt_label.set_line_wrap(true);
         this.add_entry(info_box, _("Genres"), null, pt_label, ref i, "media-genre");
-        /* Dates of songs */ 
+        /* Dates of songs */
         pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ARTIST_DATES_SONGS, song);
         pt_label.set_line_wrap(true);
         pt_label.set_alignment(0.0f, 0.5f);
         this.add_entry(info_box, _("Dates"), null, pt_label, ref i,"media-date");
-        /* Total number of songs */ 
+        /* Total number of songs */
         pt_label = new Gmpc.MetaData.StatsLabel(Gmpc.MetaData.StatsLabel.Type.ARTIST_NUM_SONGS, song);
         pt_label.set_line_wrap(true);
         pt_label.set_alignment(0.0f, 0.5f);
@@ -1795,7 +1806,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
 
             alib.show();
         }
-        
+
         /* Show similar artist */
         if(config.get_int_with_default("MetaData", "show-similar-artist",1) == 1)
         {
@@ -1827,7 +1838,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
 
             sl.album_song_clicked.connect((source, song) => {
                 if(song.artist != null && song.album != null) {
-                    this.set_album(song.artist, song.album);   
+                    this.set_album(song.artist, song.album);
                 }
             });
             sl.song_clicked.connect((source, song) => {
@@ -1839,7 +1850,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
                     Gmpc.MpdInteraction.play_path(song.file);
                 }
             });
-            
+
 
             notebook.append_page(slhbox, new Gtk.Label(_("Song list")));
             var rbutton = new Gtk.RadioButton.with_label(group,_("Song list"));
@@ -1850,11 +1861,11 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
 			rbutton.clicked.connect((source) => {
 					notebook.set_current_page(j);
 					});
-			notebook.notify["page"].connect((source)=> 
+			notebook.notify["page"].connect((source)=>
 					{
 					if(notebook.page != j) return;
                     debug("notebook page %i clicked", j);
-                    if(!seen) 
+                    if(!seen)
                     {
                         MPD.Database.search_start(server,true);
                         MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, artist);
@@ -1897,7 +1908,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
             var album_view = new Gmpc.Widgets.Qtable();
             album_hbox.pack_start(album_view, false, true, 0);
             /**
-             * Reuse the album browser view. 
+             * Reuse the album browser view.
              */
             Gtk.TreeIter titer;
             if(this.model_albums.get_iter_first(out titer))
@@ -1907,7 +1918,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
                     this.model_albums.get(titer,0, &asong);
                     if(song != null)
                     {
-                        /* Make a copy of the song. Otherwise only a reference is added to the 
+                        /* Make a copy of the song. Otherwise only a reference is added to the
                          * button clicked handler.
                          * This reference can be invalid before click completed.
                          */
@@ -1933,7 +1944,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
                         else strlabel += _("No Album");
 						strlabel += "</b>";
 						if(but_song.artist != null) strlabel += GLib.Markup.printf_escaped("\n%s",but_song.artist);
-                        but_label.set_markup(strlabel); 
+                        but_label.set_markup(strlabel);
 						(but_label as Gtk.Misc).set_alignment(0.0f, 0.0f);
                         but_label.set_ellipsize(Pango.EllipsizeMode.END);
                         /* add label */
@@ -1966,7 +1977,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
                                 hbox.pack_start(play, false, false, 0);
                                 play.clicked.connect( (source) => {
                                     MPD.PlayQueue.clear(server);
-                                    MPD.PlayQueue.add_album(server, 
+                                    MPD.PlayQueue.add_album(server,
                                                             but_song.artist,
                                                             but_song.album);
                                     MPD.Player.play(server);
@@ -1981,7 +1992,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
                                 add.set_tooltip_text(_("Add album to play-queue"));
                                 hbox.pack_start(add, false, false, 0);
                                 add.clicked.connect( (source) => {
-                                    MPD.PlayQueue.add_album(server, 
+                                    MPD.PlayQueue.add_album(server,
                                                             but_song.artist,
                                                             but_song.album);
                                     p.destroy();
@@ -2071,7 +2082,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         if(this.update_timeout > 0) {
            GLib.Source.remove(this.update_timeout);
         }
-        update_timeout = GLib.Idle.add(this.metadata_box_update_real); 
+        update_timeout = GLib.Idle.add(this.metadata_box_update_real);
     }
     private bool metadata_box_update_real()
     {
@@ -2124,7 +2135,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         this.update_timeout = 0;
         return false;
     }
-    /** 
+    /**
      * Browser Interface bindings
      */
     public void browser_add (Gtk.Widget category_tree)
@@ -2134,7 +2145,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         Gtk.TreeModel model = tree.get_model();
         Gtk.TreeIter iter;
         Gmpc.Browser.insert(out iter, config.get_int_with_default(this.get_name(), "position", 100));
-        store.set(iter, 0, this.id, 1, _(this.get_name()), 3, "gmpc-metabrowser"); 
+        store.set(iter, 0, this.id, 1, _(this.get_name()), 3, "gmpc-metabrowser");
         /* Create a row reference */
         this.rref = new Gtk.TreeRowReference(model,  model.get_path(iter));
     }
@@ -2160,7 +2171,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         container.remove(this.paned);
     }
     private
-    void 
+    void
     con_changed(Gmpc.Connection conn, MPD.Server server, int connect)
     {
         if(this.paned == null) return;
@@ -2170,7 +2181,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         metadata_box_clear();
         metadata_box_update();
     }
-    private 
+    private
     void
     status_changed(Gmpc.Connection conn, MPD.Server server, MPD.Status.Changed what)
     {
@@ -2186,7 +2197,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
 
     }
     /**
-     * History 
+     * History
      */
      private enum HitemType {
         BASE,
@@ -2294,7 +2305,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         }
         menu.show_all();
         menu.popup(null, null, null, 0, Gtk.get_current_event_time());
-        
+
     }
 
     private void history_bc_header(HitemType type, string? artist, string? album, string? title)
@@ -2307,14 +2318,14 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         var hist_box = history_buttons();
         this.header.add(hist_box);
 
-        /* The buttons are in a schrinking hbox. 
+        /* The buttons are in a schrinking hbox.
          * The final label will be placed next to it, with ellipsizing on.
          */
         var bc_ali = new Gtk.Alignment(0f, 0.5f, 0f, 0f);
         var bc_box = new Gtk.HBox(false, 6);
         bc_ali.add(bc_box);
         hist_box.pack_start(bc_ali, false, false, 0);
-        
+
         /* The 'BASE' button */
         if(artist == null && album == null && title==null)
         {
@@ -2341,7 +2352,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
                 button.set_relief(Gtk.ReliefStyle.NONE);
                 button.set_image(new Gtk.Image.from_icon_name("media-artist", Gtk.IconSize.MENU));
                 button.clicked.connect((source)=>{
-                        set_artist(artist);   
+                        set_artist(artist);
                         });
                 bc_box.pack_start(button, true, true, 0);
             }
@@ -2371,7 +2382,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
                     button.set_relief(Gtk.ReliefStyle.NONE);
                     button.set_image(new Gtk.Image.from_icon_name("media-album", Gtk.IconSize.MENU));
                     button.clicked.connect((source)=>{
-                            set_album(artist, album);   
+                            set_album(artist, album);
                             });
                     bc_box.pack_start(button, true, true, 0);
                 }
@@ -2385,7 +2396,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
             label.set_alignment(0.0f, 0.5f);
             hist_box.pack_start(image, false, false, 0);
             hist_box.pack_start(label, true, true, 0);
-    
+
         }
         this.header.show_all();
     }
@@ -2453,10 +2464,10 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
     }
 
     /**
-     * Public api 
+     * Public api
      */
      public
-     void 
+     void
      set_base()
 
      {
@@ -2508,7 +2519,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
     {
         if(!this.get_enabled()) return;
         this.block_update++;
-        this.set_artist(artist); 
+        this.set_artist(artist);
         /* clear */
         this.album_filter_entry.set_text("");
         Gtk.TreeIter iter;
@@ -2536,7 +2547,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         this.metadata_box_update();
     }
 
-    public 
+    public
     void
     set_song(MPD.Song song)
     {
@@ -2577,7 +2588,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
 
         /** Add item to history */
         var item = Hitem();
-        item.song = song; 
+        item.song = song;
         item.type = HitemType.SONG;
         history_add(item);
 
@@ -2586,7 +2597,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         this.change_color_style(this.metadata_sw);
         this.metadata_box.show_all();
     }
-    public 
+    public
     void
     select_browser(Gtk.TreeView? tree)
     {
@@ -2601,7 +2612,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         }
     }
 
-    /** 
+    /**
      * Preferences
      */
      public void
@@ -2618,14 +2629,14 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         chk.set_active((config.get_int_with_default("MetaData", "show-artist-information",1) == 1));
         box.pack_start(chk, false, false,0);
         chk.toggled.connect ((source)=> {
-           config.set_int("MetaData", "show-artist-information", (int)source.get_active());  
+           config.set_int("MetaData", "show-artist-information", (int)source.get_active());
         });
         /* Album information */
         chk = new Gtk.CheckButton.with_label(_("Album information"));
         chk.set_active((config.get_int_with_default("MetaData", "show-album-information",1) == 1));
         box.pack_start(chk, false, false,0);
         chk.toggled.connect ((source)=> {
-           config.set_int("MetaData", "show-album-information", (int)source.get_active());  
+           config.set_int("MetaData", "show-album-information", (int)source.get_active());
         });
 
         /* Artist similar */
@@ -2633,37 +2644,37 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         chk.set_active((config.get_int_with_default("MetaData", "show-similar-artist",1) == 1));
         box.pack_start(chk, false, false,0);
         chk.toggled.connect ((source)=> {
-           config.set_int("MetaData", "show-similar-artist", (int)source.get_active());  
+           config.set_int("MetaData", "show-similar-artist", (int)source.get_active());
         });
 
-        /* Lyrics */ 
+        /* Lyrics */
         chk = new Gtk.CheckButton.with_label(_("Lyrics"));
         chk.set_active((config.get_int_with_default("MetaData", "show-lyrics",1) == 1));
         box.pack_start(chk, false, false,0);
         chk.toggled.connect ((source)=> {
-           config.set_int("MetaData", "show-lyrics", (int)source.get_active());  
+           config.set_int("MetaData", "show-lyrics", (int)source.get_active());
         });
 
-        /* Guitar Tabs*/ 
+        /* Guitar Tabs*/
         chk = new Gtk.CheckButton.with_label(_("Guitar Tabs"));
         chk.set_active((config.get_int_with_default("MetaData", "show-guitar-tabs",1) == 1));
         box.pack_start(chk, false, false,0);
         chk.toggled.connect ((source)=> {
-           config.set_int("MetaData", "show-guitar-tabs", (int)source.get_active());  
+           config.set_int("MetaData", "show-guitar-tabs", (int)source.get_active());
         });
-        /* Similar songs*/ 
+        /* Similar songs*/
         chk = new Gtk.CheckButton.with_label(_("Similar Songs"));
         chk.set_active((config.get_int_with_default("MetaData", "show-similar-songs",1) == 1));
         box.pack_start(chk, false, false,0);
         chk.toggled.connect ((source)=> {
-           config.set_int("MetaData", "show-similar-songs", (int)source.get_active());  
+           config.set_int("MetaData", "show-similar-songs", (int)source.get_active());
         });
-        /* Web links*/ 
+        /* Web links*/
         chk = new Gtk.CheckButton.with_label(_("Web links"));
         chk.set_active((config.get_int_with_default("MetaData", "show-web-links",1) == 1));
         box.pack_start(chk, false, false,0);
         chk.toggled.connect ((source)=> {
-           config.set_int("MetaData", "show-web-links", (int)source.get_active());  
+           config.set_int("MetaData", "show-web-links", (int)source.get_active());
         });
 
         container.add(box);
@@ -2744,6 +2755,6 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
 	     }
 
 	     if(this.get_name() != null)
-		     Gmpc.config.set_int(this.get_name(), "enabled", (int)state); 
+		     Gmpc.config.set_int(this.get_name(), "enabled", (int)state);
      }
 }

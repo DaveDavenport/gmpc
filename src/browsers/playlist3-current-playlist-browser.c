@@ -1,7 +1,7 @@
 /* Gnome Music Player Client (GMPC)
  * Copyright (C) 2004-2011 Qball Cow <qball@gmpclient.org>
  * Project homepage: http://gmpclient.org/
- 
+
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -234,7 +234,7 @@ static void pl3_cp_init(PlayQueuePlugin * self)
 
 	gmpc_easy_command_add_entry(gmpc_easy_command,
 								_("search playlist"), ".*",
-								_("Search playlist <query>"), 
+								_("Search playlist <query>"),
                                 (GmpcEasyCommandCallback *) pl3_cp_ec_playlist, self);
 }
 
@@ -502,7 +502,7 @@ static void pl3_current_playlist_browser_add(GmpcPluginBrowserIface * obj, GtkWi
 }
 
 /* delete all selected songs,
- * if no songs select ask the user if he want's to clear the list 
+ * if no songs select ask the user if he want's to clear the list
  */
 static void pl3_current_playlist_browser_delete_selected_songs(PlayQueuePlugin * self)
 {
@@ -541,7 +541,7 @@ static void pl3_current_playlist_browser_delete_selected_songs(PlayQueuePlugin *
 	{
         pl3_current_playlist_browser_clear_playlist();
 	}
-	
+
 	/* update everything if where still connected */
 	mpd_status_queue_update(connection);
 }
@@ -956,7 +956,7 @@ static int pl3_current_playlist_browser_key_release_event(GtkTreeView * tree, Gd
 		gtk_widget_grab_focus(self->priv->filter_entry);
 		self->priv->search_keep_open = TRUE;
 		return TRUE;
-	} else if ((event->state & (GDK_CONTROL_MASK | GDK_MOD1_MASK)) == 0)	/*&& 
+	} else if ((event->state & (GDK_CONTROL_MASK | GDK_MOD1_MASK)) == 0)	/*&&
 																			   ((event->keyval >= GDK_space && event->keyval <= GDK_z))) */
 	{
 		char data[10];
@@ -1062,14 +1062,14 @@ static void pl3_current_playlist_browser_clear_playlist(void)
 
     delete = gtk_button_new_from_stock(GTK_STOCK_CLEAR);
     g_signal_connect(G_OBJECT(delete),
-            "clicked", 
+            "clicked",
             G_CALLBACK(pl3_current_playlist_browser_clear_playlist_real),
             NULL);
 
     /* show message */
-    playlist3_message_show(pl3_messages, 
+    playlist3_message_show(pl3_messages,
             _("Are you sure you want to clear the play queue?")
-            ,USER_FEEDBACK); 
+            ,USER_FEEDBACK);
     playlist3_message_add_widget(pl3_messages, delete);
 }
 

@@ -1,7 +1,7 @@
 /* Gnome Music Player Client (GMPC)
  * Copyright (C) 2004-2011 Qball Cow <qball@gmpclient.org>
  * Project homepage: http://gmpclient.org/
- 
+
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -51,10 +51,11 @@ int pl3_window_key_press_event(GtkWidget *, GdkEventKey *);
 
 extern GtkBuilder *pl3_xml;
 /**
- * Server information 
+ * Server information
  */
 
 void serverinformation_show_popup(void);
 
 void pl3_window_fullscreen(void);
+GtkAccelGroup *playlist3_get_accel_group(void);
 #endif

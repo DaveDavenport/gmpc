@@ -7,7 +7,7 @@ namespace Gmpc {
     static PanedSizeGroup paned_size_group;
 
     [CCode (cname = "gmpcconn", cheader_filename="main.h")]
-    static Connection gmpcconn; 
+    static Connection gmpcconn;
 
     [CCode (cname = "connection", cheader_filename="plugin.h")]
     static MPD.Server server;
@@ -33,7 +33,7 @@ namespace Gmpc {
 
 
    namespace MetaData {
-    
+
         [CCode (cname="MetaDataContentType", cprefix = "META_DATA_CONTENT_", cheader_filename = "libmpd/libmpd.h,metadata.h")]
         public enum ContentType {
             EMPTY,
@@ -51,7 +51,7 @@ namespace Gmpc {
         public class Item {
             [CCode (cname="meta_data_new")]
             public Item ();
-            public Gmpc.MetaData.Type type; 
+            public Gmpc.MetaData.Type type;
             [CCode (cname="meta_data_dup")]
             public static Item copy(Item item);
            public unowned string plugin_name;
@@ -71,7 +71,7 @@ namespace Gmpc {
            public unowned string  get_text();
            [CCode (cname="meta_data_set_text")]
            public void set_text(string data);
-           
+
            [CCode (cname="meta_data_get_text_from_html")]
            public string get_text_from_html();
            /* same as get_text */
@@ -84,7 +84,7 @@ namespace Gmpc {
            public unowned string? get_thumbnail_uri();
            [CCode (cname="meta_data_set_thumbnail_uri")]
            public void set_thumbnail_uri(string uri);
-           
+
            [CCode (cname="meta_data_get_html")]
            public unowned string get_html();
 
@@ -120,7 +120,7 @@ namespace Gmpc {
             UNAVAILABLE,
             FETCHING
         }
-       
+
 
         public delegate void Callback (void *handle,string? plugin_name, GLib.List<MetaData.Item>? list);
         [CCode ( cname="metadata_get_list", cheader_filename="libmpd/libmpd.h,metadata.h" )]
@@ -131,7 +131,7 @@ namespace Gmpc {
 
 
         [CCode ( cname="meta_data_set_cache", cheader_filename="metadata-cache.h")]
-        public void set_metadata(MPD.Song song, Result result, Gmpc.MetaData.Item met); 
+        public void set_metadata(MPD.Song song, Result result, Gmpc.MetaData.Item met);
 
         [CCode ( cname="gmpc_get_metadata_filename", cheader_filename="libmpd/libmpd.h,metadata.h")]
         public string get_metadata_filename(Type type, MPD.Song song, string? extension);
@@ -190,7 +190,7 @@ namespace Gmpc {
        public enum Level{
         INFO,
         WARNING,
-        CRITICAL        
+        CRITICAL
     }
 
     [CCode (cname = "playlist3_show_error_message", cheader_filename="playlist3-messages.h")]
@@ -216,10 +216,10 @@ namespace Gmpc {
             /* Gets raw data. Remember data_length does not include trailing \0. */
             [CCode (cname="gmpc_easy_handler_get_data_vala_wrap", cheader_filename="gmpc_easy_download.h")]
             public unowned uchar[] get_data();
-            
+
             [CCode (cname="gmpc_easy_handler_get_data_as_string", cheader_filename="gmpc_easy_download.h")]
             public unowned string get_data_as_string();
-            
+
             [CCode (cname="gmpc_easy_handler_get_uri", cheader_filename="gmpc_easy_download.h")]
             public unowned string get_uri();
 
@@ -242,7 +242,7 @@ namespace Gmpc {
         public unowned Gmpc.AsyncDownload.Handle download_vala(string uri, void *p,Gmpc.AsyncDownload.CallbackVala callback);
         [CCode (cname="gmpc_easy_async_downloader", cheader_filename="gmpc_easy_download.h")]
         public unowned Gmpc.AsyncDownload.Handle download(string uri, Gmpc.AsyncDownload.Callback callback);
-        
+
         [CCode (cname="gmpc_easy_download_uri_escape", cheader_filename="gmpc_easy_download.h")]
         public string escape_uri(string part);
    }
@@ -253,6 +253,7 @@ namespace Gmpc {
     public string user_path(string file);
     [CCode (cname="open_uri", cheader_filename="misc.h")]
     public void open_uri(string uri);
+
 
     namespace Playlist {
         [CCode (cname="(GtkWindow *)playlist3_get_window", cheader_filename="plugin.h")]
@@ -265,6 +266,8 @@ namespace Gmpc {
 
 [CCode (cname="create_playlist3", cheader_filename="plugin.h")]
         public void show();
+        [CCode (cname="playlist3_get_accel_group", cheader_filename="playlist3.h")]
+        public Gtk.AccelGroup get_accel_group();
     }
 
     namespace TrayIcon2 {
@@ -276,17 +279,17 @@ namespace Gmpc {
     }
 
    [CCode (cname = "config", cheader_filename="plugin.h")]
-    static Settings config; 
+    static Settings config;
     [CCode (cheader_filename="config1.h")]
         [Compact]
         [Immutable]
     public class Settings {
         [CCode (cname="cfg_get_single_value_as_string_with_default", cheader_filename="config1.h")]
-        public string get_string_with_default(string class, string key, string value); 
+        public string get_string_with_default(string class, string key, string value);
         [CCode (cname="cfg_get_single_value_as_int_with_default", cheader_filename="config1.h")]
-        public int get_int_with_default(string class, string key, int value); 
+        public int get_int_with_default(string class, string key, int value);
         [CCode (cname="cfg_set_single_value_as_int", cheader_filename="config1.h")]
-        public int set_int(string class, string key, int value); 
+        public int set_int(string class, string key, int value);
     }
 
     namespace Misc{
@@ -322,7 +325,7 @@ namespace Gmpc {
         namespace Metadata {
             [CCode (cname="info2_fill_artist_view")]
             public void show_artist(string artist);
-            
+
             [CCode (cname="info2_fill_album_view")]
             public void show_album(string artist,string album);
         }
@@ -390,7 +393,7 @@ namespace Gmpc {
             public string? get_current_id();
             public void set_db_update_time(string id, int value);
             public int get_db_update_time(string id);
-            public unowned string? get_music_directory(string id); 
+            public unowned string? get_music_directory(string id);
             [CCode (cname="connection_get_hostname", cheader_filename="mpdinteraction.h")]
             public string? get_hostname();
 
@@ -403,7 +406,7 @@ namespace Gmpc {
         [CCode (cname="screenshot_add_border", cheader_filename="misc.h")]
             public void add_border(Gdk.Pixbuf image);
 
-        [CCode (cname="pango_attr_list_change", cheader_filename="pango/pango.h")] 
+        [CCode (cname="pango_attr_list_change", cheader_filename="pango/pango.h")]
             public void change (Pango.AttrList list,owned Pango.Attribute attr);
     }
     [CCode (cheader_filename="pixbuf-cache.h")]
@@ -416,7 +419,7 @@ namespace Gmpc {
     }
     [CCode (cheader_filename="advanced-search.h")]
     namespace Query{
-        [CCode (cname="advanced_search")]     
+        [CCode (cname="advanced_search")]
         public MPD.Data.Item? search(string query, bool playlist);
 
     }
@@ -424,7 +427,7 @@ namespace Gmpc {
 	[CCode (cname="gmpcPluginParent",cprefix="gmpc_plugin_",cheader_filename="plugin-internal.h")]
         [Compact]
         [Immutable]
-	public class parentPlugin 
+	public class parentPlugin
 	{
 		public int get_id();
 		public unowned string get_name();
@@ -434,7 +437,7 @@ namespace Gmpc {
 		public bool is_browser();
 	}
 	[CCode (cheader_filename="main.h", cname="plugins")]
-	static weak parentPlugin[] plugins; 
+	static weak parentPlugin[] plugins;
 	[CCode (cheader_filename="main.h", cname="num_plugins")]
 	static int num_plugins;
 

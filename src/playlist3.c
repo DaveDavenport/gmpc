@@ -174,7 +174,7 @@ static void pl3_initialize_tree(void)
         }
 		TEC("setup %s", gmpc_plugin_get_name(plugins[i]))
 	}
-	
+
     gtk_tree_view_set_cursor(GTK_TREE_VIEW(gtk_builder_get_object(pl3_xml, "cat_tree")), path, NULL, FALSE);
 	TEC("set cursor");
     gtk_tree_path_free(path);
@@ -386,7 +386,7 @@ static gboolean pl3_win_state_event(GtkWidget * window, GdkEventWindowState * ev
     GtkWidget *b = (GTK_WIDGET(gtk_builder_get_object(pl3_xml, "menubartest")));
     if (((event->new_window_state) & GDK_WINDOW_STATE_FULLSCREEN))
     {
-		if(control_window == NULL) { 
+		if(control_window == NULL) {
 			control_window = create_control_window(window);
 			gtk_box_pack_start(GTK_BOX(vbox1), control_window, FALSE, FALSE, 0);
 //			gtk_box_reorder_child(GTK_BOX(vbox1), control_window, 0);
@@ -861,7 +861,7 @@ void create_playlist3(void)
     gchar *path = NULL;
     GtkTreeIter iter;
     GError *error = NULL;
-	INIT_TIC_TAC();	
+	INIT_TIC_TAC();
     /* indicate that the playlist is not hidden */
     pl3_hidden = FALSE;
 
@@ -1014,7 +1014,7 @@ void create_playlist3(void)
         gtk_container_add(GTK_CONTAINER(ali), GTK_WIDGET(favorites_button));
         gtk_box_pack_start(GTK_BOX(gtk_builder_get_object(pl3_xml, "hbox10")), GTK_WIDGET(ali), FALSE, FALSE, 0);
 //		gtk_box_reorder_child(GTK_BOX(gtk_builder_get_object(pl3_xml,
-//						"hbox10")),ali,0); 
+//						"hbox10")),ali,0);
 		gtk_widget_show_all(GTK_WIDGET(ali));
 		TEC("Init fav icon")
 	}
@@ -1966,7 +1966,7 @@ void pl3_update_go_menu(void)
     int i = 0;
     int items = 0;
     GtkWidget *menu = NULL;
-    GtkAccelGroup *group = gtk_accel_group_new();
+    GtkAccelGroup *group = playlist3_get_accel_group();
     GtkUIManager *ui = GTK_UI_MANAGER(gtk_builder_get_object(pl3_xml, "uimanager1"));
     GtkMenuItem *m_item = GTK_MENU_ITEM(gtk_ui_manager_get_widget(ui, "/menubartest/menu_go"));
     /***
@@ -1978,7 +1978,6 @@ void pl3_update_go_menu(void)
      */
     menu = gtk_menu_new();
     gtk_menu_set_accel_group(GTK_MENU(menu), group);
-    gtk_window_add_accel_group(GTK_WINDOW(playlist3_get_window()), group);
     if (mpd_check_connected(connection))
     {
         for (i = 0; i < num_plugins; i++)
@@ -2393,6 +2392,16 @@ void init_extra_playlist_state(void)
     {
         gtk_toggle_action_set_active(action, extraplaylist_plugin.get_enabled());
     }
+}
+
+GtkAccelGroup *playlist3_get_accel_group(void)
+{
+	static GtkAccelGroup *group = NULL;
+	if(group == NULL) {
+		group = gtk_accel_group_new();
+		gtk_window_add_accel_group(GTK_WINDOW(playlist3_get_window()), group);
+	}
+	return group;
 }
 
 /* vim: set noexpandtab ts=4 sw=4 sts=4 tw=80: */

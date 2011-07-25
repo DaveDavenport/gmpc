@@ -145,7 +145,7 @@ static void print_version(void);
 
 
 /**
- * Forward libxml errors into GLib.log errors with LibXML error domain 
+ * Forward libxml errors into GLib.log errors with LibXML error domain
  */
 static void xml_error_func(void *ctx, const char *msg, ...)
 {
@@ -252,7 +252,7 @@ int main(int argc, char **argv)
 	 * (this is forced off on windows).
      */
     packagedir = g_win32_get_package_installation_directory_of_module(NULL);
-    url = g_build_filename(packagedir, 
+    url = g_build_filename(packagedir,
 			"share", "gmpc",
 			"gmpc-gtk-win32.rc", NULL);
     q_free(packagedir);
@@ -271,7 +271,7 @@ int main(int argc, char **argv)
 	}
     /* connect signal to Session manager to quit */
     g_signal_connect(
-		egg_sm_client_get(), "quit", 
+		egg_sm_client_get(), "quit",
 		G_CALLBACK(main_quit), NULL);
     TEC("EggSmClient");
 
@@ -328,7 +328,7 @@ int main(int argc, char **argv)
     */
     if (config == NULL)
     {
-        g_log(LOG_DOMAIN, G_LOG_LEVEL_ERROR, 
+        g_log(LOG_DOMAIN, G_LOG_LEVEL_ERROR,
 			"Failed to save/load configuration:\n%s\n", url);
         show_error_message(_("Failed to load the configuration system."));
 		return EXIT_FAILURE;
@@ -340,9 +340,9 @@ int main(int argc, char **argv)
      * \TODO, Check if version changed, then say something about it
      *
      * Enable this function if we need todo some upgrading on version change.
-     * Removal of this current content destroys config conversion from 0.17 and 
-     * up 
-     */     
+     * Removal of this current content destroys config conversion from 0.17 and
+     * up
+     */
     url = cfg_get_single_value_as_string(config, "Default", "version");
     if (url == NULL || strcmp(url, VERSION))
     {
@@ -350,7 +350,7 @@ int main(int argc, char **argv)
     }
     if (url) q_free(url);
     TEC("New version check");
-    
+
 
     #ifdef HAVE_IPC
     if (cfg_get_single_value_as_int_with_default(config,
@@ -385,7 +385,7 @@ int main(int argc, char **argv)
 	gmpc_easy_command_set_default_entries();
 	TEC("Set easy commands")
     mpd_easy_commands_init();
-    TEC("Set MPD Easy commands");	
+    TEC("Set MPD Easy commands");
 	/* Advanced search */
     advanced_search_init();
     TEC("Init advanced search");
@@ -435,7 +435,7 @@ int main(int argc, char **argv)
     /**
      * Connect signals to the connection object
      */
-    mpd_signal_connect_status_changed(connection, 
+    mpd_signal_connect_status_changed(connection,
 			GmpcStatusChangedCallback, NULL);
     mpd_signal_connect_error(connection,
 			error_callback, NULL);
@@ -445,7 +445,7 @@ int main(int argc, char **argv)
      * Just some trick to provide glib signals
      */
     gmpcconn = (GmpcConnection *) gmpc_connection_new();
-    g_signal_connect(G_OBJECT(gmpcconn), 
+    g_signal_connect(G_OBJECT(gmpcconn),
 			"connection_changed",
 			G_CALLBACK(connection_changed_real), NULL);
     g_signal_connect(G_OBJECT(gmpcconn),
@@ -540,7 +540,7 @@ int main(int argc, char **argv)
         "mpd-update-speed",
         500), (GSourceFunc) update_mpd_status, NULL);
     /**
-     * create the autoconnect timeout, 
+     * create the autoconnect timeout,
      * if autoconnect enable, it will check every 5 seconds
      * if you are still connected, and reconnects you if not.
      */
@@ -548,7 +548,7 @@ int main(int argc, char **argv)
 			(GSourceFunc) autoconnect_callback, NULL);
 
     /**
-     * Call this when entering the main loop, 
+     * Call this when entering the main loop,
      *  so you are connected on startup, not 5 seconds later
      */
     gtk_init_add((GSourceFunc) autoconnect_callback, NULL);
@@ -756,7 +756,7 @@ static void init_stock_icons(void)
  * This involves propegating the signal
  */
 void GmpcStatusChangedCallback(MpdObj * mi,
-								ChangedStatusType what, 
+								ChangedStatusType what,
 								void *userdata)
 {
     g_signal_emit_by_name(gmpcconn, "status-changed", mi, what);
@@ -787,7 +787,7 @@ static void gmpc_status_changed_callback_real(GmpcConnection * conn,
  */
 
 static void password_dialog_response(
-				GtkWidget * dialog, 
+				GtkWidget * dialog,
 				gint response,
 				gpointer data)
 {
@@ -849,7 +849,7 @@ static void password_dialog(int failed)
     if (failed)
     {
         path = g_strdup_printf(
-    		_("Failed to set password on: '%s'\nPlease try again"), 
+    		_("Failed to set password on: '%s'\nPlease try again"),
     		mpd_get_hostname(connection));
     } else
     {
@@ -880,7 +880,7 @@ static int error_callback(MpdObj * mi,
 				char *error_msg,
 				gpointer data)
 {
-    int autoconnect = cfg_get_single_value_as_int_with_default(config, 
+    int autoconnect = cfg_get_single_value_as_int_with_default(config,
 		"connection",
         "autoconnect",
         DEFAULT_AUTOCONNECT);
@@ -907,7 +907,7 @@ static int error_callback(MpdObj * mi,
     } else
     {
         if (setup_assistant_is_running()
-            && (error_id == MPD_ACK_ERROR_PERMISSION || 
+            && (error_id == MPD_ACK_ERROR_PERMISSION ||
         		error_id == MPD_ACK_ERROR_PASSWORD))
         {
             gchar *str = g_markup_printf_escaped("<b>%s</b>",
@@ -943,7 +943,7 @@ static void connection_changed(MpdObj * mi, int connected, gpointer data)
     /* propagate the signal to the connection object */
     if (mpd_check_connected(mi) != connected)
     {
-        g_log(LOG_DOMAIN, 
+        g_log(LOG_DOMAIN,
     			G_LOG_LEVEL_ERROR,
     			"Connection state differs from actual state: act: %i\n",
     			!connected);
@@ -1005,7 +1005,7 @@ static void connection_changed_real(
     /**
      * propegate signals
      */
-    g_log(LOG_DOMAIN, 
+    g_log(LOG_DOMAIN,
 			G_LOG_LEVEL_DEBUG,
 			"Connection changed %i-%i \n",
 			connected,
@@ -1030,7 +1030,7 @@ static void connection_changed_real(
     {
         if (autoconnect_timeout)
             g_source_remove(autoconnect_timeout);
-        autoconnect_timeout = g_timeout_add_seconds(5, 
+        autoconnect_timeout = g_timeout_add_seconds(5,
     			(GSourceFunc) autoconnect_callback, NULL);
         autoconnect_backoff = 0;
     }
@@ -1071,16 +1071,16 @@ static void print_version(void)
  */
 static void gmpc_easy_command_set_default_entries(void)
 {
-	gmpc_easy_command_add_entry_stock_id(gmpc_easy_command, 
+	gmpc_easy_command_add_entry_stock_id(gmpc_easy_command,
 			_("quit"), "",
-			_("Quit gmpc"), 
+			_("Quit gmpc"),
 			(GmpcEasyCommandCallback *) main_quit,
 			NULL,GTK_STOCK_QUIT);
 
 	gmpc_easy_command_add_entry(gmpc_easy_command,
 			_("hide"), "",
 			_("Hide gmpc"),
-			(GmpcEasyCommandCallback *) pl3_hide, 
+			(GmpcEasyCommandCallback *) pl3_hide,
 			NULL);
 
 	gmpc_easy_command_add_entry(gmpc_easy_command,
@@ -1132,11 +1132,11 @@ static void  gmpc_mmkeys_connect_signals(GObject *keys)
 			G_CALLBACK(play_song), NULL);
 
 	g_signal_connect(keys,
-			"mm_next", 
+			"mm_next",
 			G_CALLBACK(next_song), NULL);
 
 	g_signal_connect(keys,
-			"mm_prev", 
+			"mm_prev",
 			G_CALLBACK(prev_song), NULL);
 
 	g_signal_connect(keys,
@@ -1151,7 +1151,7 @@ static void  gmpc_mmkeys_connect_signals(GObject *keys)
 			"mm_fastbackward",
 			G_CALLBACK(song_fastbackward), NULL);
 
-	g_signal_connect(keys, 
+	g_signal_connect(keys,
 			"mm_repeat",
 			G_CALLBACK(repeat_toggle), NULL);
 
@@ -1163,7 +1163,7 @@ static void  gmpc_mmkeys_connect_signals(GObject *keys)
 			"mm_raise",
 			G_CALLBACK(create_playlist3), NULL);
 
-	g_signal_connect(keys, 
+	g_signal_connect(keys,
 			"mm_hide",
 			G_CALLBACK(pl3_hide), NULL);
 
@@ -1172,11 +1172,11 @@ static void  gmpc_mmkeys_connect_signals(GObject *keys)
 			G_CALLBACK(pl3_toggle_hidden), NULL);
 
 	g_signal_connect(keys,
-			"mm_volume_up", 
+			"mm_volume_up",
 			G_CALLBACK(volume_up), NULL);
 
 	g_signal_connect(keys,
-			"mm_volume_down", 
+			"mm_volume_down",
 			G_CALLBACK(volume_down), NULL);
 
 	g_signal_connect(keys,
@@ -1187,7 +1187,7 @@ static void  gmpc_mmkeys_connect_signals(GObject *keys)
 			"mm_show_notification",
 			G_CALLBACK(tray_icon2_create_tooltip), NULL);
 
-	g_signal_connect_swapped(keys, 
+	g_signal_connect_swapped(keys,
 			"mm_show_easy_command",
 			G_CALLBACK(gmpc_easy_command_popup),
 			gmpc_easy_command);
