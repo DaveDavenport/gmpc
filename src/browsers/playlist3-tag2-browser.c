@@ -741,6 +741,9 @@ static void tag2_column_header_menu_item_clicked(GtkCheckMenuItem * item, tag_el
 	/* clear all settings */
 	if (te->image_renderer)
 	{
+		/* Disable fixed height mode, otherwise GTK won't propperly resize the
+		 * height of the row */
+		gtk_tree_view_set_fixed_height_mode(GTK_TREE_VIEW(te->tree), FALSE);
 		gtk_cell_layout_clear_attributes(GTK_CELL_LAYOUT(te->column), te->image_renderer);
 		if (te->type == MPD_TAG_ITEM_ARTIST || te->type == MPD_TAG_ITEM_ALBUM_ARTIST || te->type == MPD_TAG_ITEM_ALBUM)
 		{
@@ -754,6 +757,7 @@ static void tag2_column_header_menu_item_clicked(GtkCheckMenuItem * item, tag_el
 			gtk_cell_renderer_set_fixed_size(te->image_renderer, width, height);
 			gtk_tree_view_column_add_attribute(te->column, te->image_renderer, "icon-name", MPDDATA_MODEL_COL_ICON_ID);
 		}
+		gtk_tree_view_set_fixed_height_mode(GTK_TREE_VIEW(te->tree), TRUE);
 	}
 
 	/* index starts at 1 */
@@ -1532,6 +1536,9 @@ static void tag2_pref_column_type_edited(GtkCellRendererText * text, gchar * pat
 		/* clear all settings */
 		if (te->image_renderer)
 		{
+			/* Disable fixed height mode, otherwise GTK won't propperly resize the
+			 * height of the row */
+			gtk_tree_view_set_fixed_height_mode(GTK_TREE_VIEW(te->tree), FALSE);
 			gtk_cell_layout_clear_attributes(GTK_CELL_LAYOUT(te->column), te->image_renderer);
 			if (te->type == MPD_TAG_ITEM_ARTIST || te->type == MPD_TAG_ITEM_ALBUM_ARTIST
 				|| te->type == MPD_TAG_ITEM_ALBUM)
@@ -1547,6 +1554,7 @@ static void tag2_pref_column_type_edited(GtkCellRendererText * text, gchar * pat
 				gtk_tree_view_column_add_attribute(te->column, te->image_renderer, "icon-name",
 												   MPDDATA_MODEL_COL_ICON_ID);
 			}
+			gtk_tree_view_set_fixed_height_mode(GTK_TREE_VIEW(te->tree), TRUE);
 		}
 
         gtk_label_set_text(GTK_LABEL(te->column_label), _(mpdTagItemKeys[te->type]));
