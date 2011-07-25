@@ -267,7 +267,7 @@ namespace Gmpc {
 [CCode (cname="create_playlist3", cheader_filename="plugin.h")]
         public void show();
         [CCode (cname="playlist3_get_accel_group", cheader_filename="playlist3.h")]
-        public Gtk.AccelGroup get_accel_group();
+        public unowned Gtk.AccelGroup get_accel_group();
     }
 
     namespace TrayIcon2 {
