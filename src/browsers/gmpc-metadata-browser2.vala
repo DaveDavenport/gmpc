@@ -140,6 +140,15 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         this.select_browser(null);
     }
     /**
+     * Makes gmpc jump to the metadata browser
+     * and search
+     */
+    private void select_metadata_browser_search(Gtk.Widget widget)
+    {
+        select_browser(null);
+        set_base();
+    }
+    /**
      * Gmpc.Plugin.BrowserIface.add_go_menu
      */
     private int browser_add_go_menu(Gtk.Menu menu)
@@ -152,7 +161,15 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
             item.add_accelerator("activate", menu.get_accel_group(),0xffc1,0, Gtk.AccelFlags.VISIBLE);
             menu.append(item);
 
-            return 1;
+            item = new Gtk.ImageMenuItem.with_mnemonic(_("Search metadata"));
+            item.set_image(new Gtk.Image.from_stock("gtk-find", Gtk.IconSize.MENU));
+            item.activate.connect(select_metadata_browser_search);
+            item.add_accelerator("activate", menu.get_accel_group(),
+                                    0x04d,Gdk.ModifierType.CONTROL_MASK,
+                                    Gtk.AccelFlags.VISIBLE);
+            menu.append(item);
+
+            return 2;
         }
         return 0;
     }
