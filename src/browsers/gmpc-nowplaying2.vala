@@ -149,12 +149,12 @@ namespace Gmpc {
                         {
                             var channels = MPD.Status.get_channels(Gmpc.server);
                             debug("bitrate changed");
-                            var bitrate = MPD.Status.get_bitrate(Gmpc.server); 
+                            var bitrate = MPD.Status.get_bitrate(Gmpc.server);
                             bitrate_label.set_markup(GLib.Markup.printf_escaped(
                                         "<span color='%s' weight='bold'>%s:</span> %i %s, %.1f %s, %i %s",
-                                        this.item_color, _("Format"), 
+                                        this.item_color, _("Format"),
                                         channels , GLib.ngettext(N_("Channel"),N_("Channels"), channels),
-                                        MPD.Status.get_samplerate(Gmpc.server)/1000.0, "kHz", 
+                                        MPD.Status.get_samplerate(Gmpc.server)/1000.0, "kHz",
                                         bitrate, "kbps"
                                         ));
                         }
@@ -166,7 +166,7 @@ namespace Gmpc {
             private Gtk.ScrolledWindow paned = null;
             private Gtk.EventBox container = null;
             private bool selected = false;
-            /** 
+            /**
              * Browser Interface bindings
              */
             public void browser_add (Gtk.Widget category_tree)
@@ -176,7 +176,7 @@ namespace Gmpc {
                 Gtk.TreeModel model = tree.get_model();
                 Gtk.TreeIter iter;
                 Gmpc.Browser.insert(out iter, config.get_int_with_default(this.get_name(), "position", 0));
-                store.set(iter, 0, this.id, 1, this.get_name(), 3, "media-audiofile"); 
+                store.set(iter, 0, this.id, 1, this.get_name(), 3, "media-audiofile");
                 /* Create a row reference */
                 this.np_ref = new Gtk.TreeRowReference(model,  model.get_path(iter));
             }
@@ -224,8 +224,8 @@ namespace Gmpc {
                 }
                 this.change_color_style(this.container);
             }
-            /** 
-             * Recursively force  a style on widget bg and children. 
+            /**
+             * Recursively force  a style on widget bg and children.
              */
             private void change_color_style(Gtk.Widget bg)
             {
@@ -262,7 +262,7 @@ namespace Gmpc {
             private void browser_init() {
                 if(this.paned == null)
                 {
-                    
+
                     this.paned = new Gtk.ScrolledWindow(null,null);
                     this.paned.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC);
                     this.paned.set_shadow_type(Gtk.ShadowType.NONE);
@@ -271,6 +271,8 @@ namespace Gmpc {
 					}else{
 						this.container = new Gtk.EventBox();
 					}
+					this.container.set_focus_hadjustment(this.paned.get_hadjustment());
+					this.container.set_focus_vadjustment(this.paned.get_vadjustment());
                     this.paned.style_set.connect(browser_bg_style_changed);
                     this.paned.add_with_viewport(this.container);
                     this.paned.get_vadjustment().set("step-increment", 20.0);
@@ -304,13 +306,13 @@ namespace Gmpc {
                 }
                 return retv;
             }
-            /** 
-             * Show the page when playing 
+            /**
+             * Show the page when playing
              */
             private string song_checksum = null;
             private void update_playing()
             {
-                MPD.Song song = server.playlist_get_current_song(); 
+                MPD.Song song = server.playlist_get_current_song();
                 if(song == null) {
                     debug("GMPC Is playing, cannot get this");
        				if(use_backdrop)
@@ -339,7 +341,7 @@ namespace Gmpc {
 		Gtk.Alignment ali = null;
 
 		int meta_size = (int)(this.container.allocation.width*0.20);
-		/* get size based on alloc */ 
+		/* get size based on alloc */
 		meta_size = int.min(int.max(100, meta_size), 250);
 		if(config.get_int_with_default("Interface", "hide-album-art", 0) == 0)
 		{
@@ -378,16 +380,16 @@ namespace Gmpc {
                         fav_button.set_song(song);
                         ali = new Gtk.Alignment(0.0f, 0.5f,0f,0f);
                         ali.add(fav_button);
-                        box.pack_start(ali, false, false, 0); 
+                        box.pack_start(ali, false, false, 0);
                     }
                     var label = new Gtk.Label(song.title);
                     label.selectable = true;
-                    label.set_markup(GLib.Markup.printf_escaped("<span color='%s' size='%i' weight='bold'>%s</span>", 
+                    label.set_markup(GLib.Markup.printf_escaped("<span color='%s' size='%i' weight='bold'>%s</span>",
                                 this.title_color,Pango.SCALE*20 ,song.title));
                     label.set_ellipsize(Pango.EllipsizeMode.END);
                     label.set_alignment(0.0f, 0.5f);
-                    box.pack_start(label, true, true, 0); 
-                    info_vbox.pack_start(box, false, false, 0); 
+                    box.pack_start(label, true, true, 0);
+                    info_vbox.pack_start(box, false, false, 0);
 
                 }else if (song.name!= null) {
                     var label = new Gtk.Label(song.name);
@@ -396,7 +398,7 @@ namespace Gmpc {
                                 title_color, Pango.SCALE*20, song.name));
                     label.set_ellipsize(Pango.EllipsizeMode.END);
                     label.set_alignment(0.0f, 0.5f);
-                    info_vbox.pack_start(label, false, false, 0); 
+                    info_vbox.pack_start(label, false, false, 0);
                 }
                 else if (song.file != null){
                     var filename = GLib.Path.get_basename(song.file);
@@ -420,7 +422,7 @@ namespace Gmpc {
                                 title_color, Pango.SCALE*20, filename));
                     label.set_ellipsize(Pango.EllipsizeMode.END);
                     label.set_alignment(0.0f, 0.5f);
-                    info_vbox.pack_start(label, false, false, 0); 
+                    info_vbox.pack_start(label, false, false, 0);
 
                 }
                 /* Artist */
@@ -437,7 +439,7 @@ namespace Gmpc {
                     label.set_ellipsize(Pango.EllipsizeMode.END);
                     label.set_alignment(0.0f, 0.5f);
                     box.pack_start(label, true, true, 0);
-                    info_vbox.pack_start(box, false, false, 0); 
+                    info_vbox.pack_start(box, false, false, 0);
 
                     event.set_data_full("artist",(void *)"%s".printf(song.artist), (GLib.DestroyNotify) g_free);
                     event.button_press_event.connect((widget, event) => {
@@ -461,7 +463,7 @@ namespace Gmpc {
                     label.set_ellipsize(Pango.EllipsizeMode.END);
                     label.set_alignment(0.0f, 0.5f);
                     box.pack_start(label, true, true, 0);
-                    info_vbox.pack_start(box, false, false, 0); 
+                    info_vbox.pack_start(box, false, false, 0);
 
 
 
@@ -489,7 +491,7 @@ namespace Gmpc {
                     label.set_ellipsize(Pango.EllipsizeMode.END);
                     label.set_alignment(0.0f, 0.5f);
                     box.pack_start(label, true, true, 0);
-                    info_vbox.pack_start(box, false, false, 0); 
+                    info_vbox.pack_start(box, false, false, 0);
 
                 }
                 /* Format */
@@ -505,17 +507,17 @@ namespace Gmpc {
 
                     box.pack_start(bitrate_label, true, true, 0);
 
-                    var bitrate = MPD.Status.get_bitrate(Gmpc.server); 
+                    var bitrate = MPD.Status.get_bitrate(Gmpc.server);
                     var channels = MPD.Status.get_channels(Gmpc.server);
                     bitrate_label.set_markup(GLib.Markup.printf_escaped(
                                 "<span color='%s' weight='bold'>%s:</span> %i %s, %.1f %s, %i %s",
-                                this.item_color, _("Format"), 
+                                this.item_color, _("Format"),
                                 channels , GLib.ngettext(N_("Channel"),N_("Channels"), channels),
-                                MPD.Status.get_samplerate(Gmpc.server)/1000.0, "kHz", 
+                                MPD.Status.get_samplerate(Gmpc.server)/1000.0, "kHz",
                                 bitrate, "kbps"
                                 ));
 
-                    info_vbox.pack_start(box, false, false, 0); 
+                    info_vbox.pack_start(box, false, false, 0);
                 }
                 if(song.file != null)
                 {
@@ -534,9 +536,9 @@ namespace Gmpc {
                         label.set_alignment(0.0f, 0.5f);
                         box.pack_start(label, true, true, 0);
                         label.set_markup(GLib.Markup.printf_escaped("<span color='%s' weight='bold'>%s:</span> %s",
-                                    this.item_color, _("Codec"), 
+                                    this.item_color, _("Codec"),
                                     extension));
-                        info_vbox.pack_start(box, false, false, 0); 
+                        info_vbox.pack_start(box, false, false, 0);
                     }
                 }
                 /* Time*/
@@ -548,11 +550,11 @@ namespace Gmpc {
                     label.selectable = true;
                     label.set_ellipsize(Pango.EllipsizeMode.END);
                     label.set_markup(GLib.Markup.printf_escaped("<span color='%s' weight='bold'>%s:</span> %s",
-                                this.item_color,_("Length"), 
+                                this.item_color,_("Length"),
                                 Gmpc.Misc.format_time((ulong) song.time, "")));
                     label.set_alignment(0.0f, 0.5f);
                     box.pack_start(label, true, true, 0);
-                    info_vbox.pack_start(box, false, false, 0); 
+                    info_vbox.pack_start(box, false, false, 0);
                 }
 
                 if(song.track != null) {
@@ -563,13 +565,13 @@ namespace Gmpc {
                     label.selectable = true;
                     label.set_ellipsize(Pango.EllipsizeMode.END);
                     label.set_markup(GLib.Markup.printf_escaped("<span color='%s' weight='bold'>%s:</span> %s %s",
-                                this.item_color, _("Track number"), 
+                                this.item_color, _("Track number"),
                                 song.track,
                                 (song.disc != null)? "[%s]".printf(song.disc):""
                                 ));
                     label.set_alignment(0.0f, 0.5f);
                     box.pack_start(label, true, true, 0);
-                    info_vbox.pack_start(box, false, false, 0); 
+                    info_vbox.pack_start(box, false, false, 0);
                 }
 
 
@@ -790,7 +792,7 @@ namespace Gmpc {
                                 GLib.log(np2_LOG_DOMAIN,GLib.LogLevelFlags.LEVEL_DEBUG, "artist info notebook page %i clicked", j);
                                 notebook.set_current_page(j);
                                 if(!text_view_queried){
-                                    if(song.artist != null && song.album != null) 
+                                    if(song.artist != null && song.album != null)
                                     {
                                         MPD.Database.search_start(server,true);
                                         if(song.albumartist != null) {
@@ -814,7 +816,7 @@ namespace Gmpc {
                             }
                             });
                             if(i == 0){
-                            if(song.artist != null && song.album != null) 
+                            if(song.artist != null && song.album != null)
                             {
                                 MPD.Database.search_start(server,true);
                                 MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, song.artist);
