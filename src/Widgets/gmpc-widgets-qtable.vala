@@ -1,7 +1,7 @@
 /* Gnome Music Player Client (GMPC)
  * Copyright (C) 2004-2011 Qball Cow <qball@gmpclient.org>
  * Project homepage: http://gmpclient.org/
- 
+
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -24,9 +24,9 @@ using Gmpc;
 private const bool use_transition_gav = Gmpc.use_transition;
 private const string some_unique_name_gav = Config.VERSION;
 [compact]
-private class QtableEntry 
+private class QtableEntry
 {
-    public enum Type { 
+    public enum Type {
         HEADER,
         ITEM
     }
@@ -44,7 +44,7 @@ public class Gmpc.Widgets.Qtable : Gtk.Container, Gtk.Buildable
     private int columns         = 3;
 	public  int spacing {get;set;default=8;}
 
-	public int item_width { 
+	public int item_width {
 			get {
 				return item_width_real;
 			}
@@ -54,7 +54,7 @@ public class Gmpc.Widgets.Qtable : Gtk.Container, Gtk.Buildable
 			}
 	}
 
-	public int item_height { 
+	public int item_height {
 			get {
 				return item_height_real;
 			}
@@ -63,7 +63,7 @@ public class Gmpc.Widgets.Qtable : Gtk.Container, Gtk.Buildable
 				this.queue_resize();
 			}
 	}
-	public int header_height { 
+	public int header_height {
 			get {
 				return header_height_real;
 			}
@@ -99,15 +99,15 @@ public class Gmpc.Widgets.Qtable : Gtk.Container, Gtk.Buildable
     }
 
 	/**
-     * Calculates the size of the widget. 
+     * Calculates the size of the widget.
 	 */
 	public override void size_request(out Gtk.Requisition req)
     {
         req = Gtk.Requisition();
-		int cover_width = item_width_real; 
-		int cover_height= item_height_real; 
-		int header_height = header_height_real; 
-        int width = 0; 
+		int cover_width = item_width_real;
+		int cover_height= item_height_real;
+		int header_height = header_height_real;
+        int width = 0;
         int items = 0;
 
 		/* determine max width/height */
@@ -145,7 +145,7 @@ public class Gmpc.Widgets.Qtable : Gtk.Container, Gtk.Buildable
 					{
 						int nrows = items/columns;
 						int remain = (items%columns >0)?1:0;
-						rows = rows + (nrows+remain)*cover_height; 
+						rows = rows + (nrows+remain)*cover_height;
 					}
 					items = 0;
 					rows+=header_height;
@@ -156,11 +156,11 @@ public class Gmpc.Widgets.Qtable : Gtk.Container, Gtk.Buildable
 		{
 			int nrows = items/columns;
 			int remain = (items%columns >0)?1:0;
-			rows = rows + (nrows+remain)*cover_height; 
+			rows = rows + (nrows+remain)*cover_height;
 		}
 		/* Width of one column */
         req.width =  cover_width;
-        req.height = rows; 
+        req.height = rows;
     }
 
     public override void add(Gtk.Widget widget)
@@ -195,7 +195,7 @@ public class Gmpc.Widgets.Qtable : Gtk.Container, Gtk.Buildable
     public override void remove(Gtk.Widget widget)
     {
         if(widget != null ) {
-            QtableEntry a = null; 
+            QtableEntry a = null;
             /*
                if((a = children.find_custom(widget,compare)) == null) {
                GLib.error("Failed to find widget in container");
@@ -207,7 +207,7 @@ public class Gmpc.Widgets.Qtable : Gtk.Container, Gtk.Buildable
                     break;
                 }
             }
-            if(a == null) 
+            if(a == null)
                 GLib.error("Failed to find widget in container");
             bool visible = widget.get_visible();
             widget.unparent();
@@ -215,22 +215,24 @@ public class Gmpc.Widgets.Qtable : Gtk.Container, Gtk.Buildable
             /* owned is needed to avoid leak */
             children.remove((owned)a);
             num_items--;
-            if(visible) 
+            if(visible)
                 this.queue_resize();
         }
     }
     public override void size_allocate(Gdk.Rectangle alloc)
     {
-		int cover_width = item_width_real; 
-		int cover_height= item_height_real; 
-		int header_height = header_height_real; 
-        /* Hack to avvoid pointless resizes, 
+		int cover_width = item_width_real;
+		int cover_height= item_height_real;
+		int header_height = header_height_real;
+        /* Hack to avvoid pointless resizes,
          * I get this "1" size when a child widget changes */
         if(alloc.width == 1) return;
 		int width = alloc.width;
-        int new_columns = 0; 
+        int new_columns = 0;
         int rows = 0;
         int item = 0;
+        // This fixes it so the correct taborder is calculated.
+        this.allocation = (Gtk.Allocation)alloc;
 
 		foreach ( var child in children)
 		{
@@ -278,12 +280,12 @@ public class Gmpc.Widgets.Qtable : Gtk.Container, Gtk.Buildable
                     {
 						int nrows = item/columns;
 						int remain = (item%columns >0)?1:0;
-						rows = rows + (nrows+remain)*cover_height; 
+						rows = rows + (nrows+remain)*cover_height;
                     }
                     item = 0;
 
                     Gdk.Rectangle ca = {0,0,0,0};
-                    ca.x = alloc.x; 
+                    ca.x = alloc.x;
                     ca.y = alloc.y+rows;
                     ca.width = cover_width*columns;
                     ca.height = header_height - spacing;
@@ -299,10 +301,10 @@ public class Gmpc.Widgets.Qtable : Gtk.Container, Gtk.Buildable
         }
     }
     public override void forall_internal(bool include_internals,
-                                         Gtk.Callback callback) 
+                                         Gtk.Callback callback)
     {
         weak List<QtableEntry> iter = children.first();
-        /* Somehow it fails when doing a foreach() construction, 
+        /* Somehow it fails when doing a foreach() construction,
             weird vala bug I guess */
         /* would be  nice if I could filter out say only the visible ones */
         while(iter != null) {

@@ -1,7 +1,7 @@
 /* Gnome Music Player Client (GMPC)
  * Copyright (C) 2004-2011 Qball Cow <qball@gmpclient.org>
  * Project homepage: http://gmpclient.org/
- 
+
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -25,13 +25,13 @@ using MPD;
 private const bool use_transition_gsl = Gmpc.use_transition;
 private const string some_unique_name_gsl = Config.VERSION;
 
-public class Gmpc.Widgets.Songlist : Gtk.VBox
+public class Gmpc.Widgets.Songlist : Gmpc.Widgets.Qtable
 {
     private const int MAX_RESULTS           = 125;
     /* Constructor function  */
     public Songlist()
     {
-        this.set_spacing(6);
+        this.spacing = 6;
 
     }
     /**
@@ -60,7 +60,7 @@ public class Gmpc.Widgets.Songlist : Gtk.VBox
 
         /* Create lLabel */
         string label = null;
-        if(song.albumartist != null && song.albumartist.length > 0 ) 
+        if(song.albumartist != null && song.albumartist.length > 0 )
         {
             label = "%s: %s".printf(_("Artist"), song.albumartist);
         }else{
@@ -78,7 +78,8 @@ public class Gmpc.Widgets.Songlist : Gtk.VBox
 
         /* Add the entry */
         event.add(box);
-        this.pack_start(event, false, false, 0); 
+        //this.pack_start(event, false, false, 0);
+        this.add_header(event);
     }
 
     /**
@@ -97,7 +98,7 @@ public class Gmpc.Widgets.Songlist : Gtk.VBox
         ali.set_padding(0,0,level*32,0);
         box.pack_start(ali, false, false, 0);
 
-        
+
         //var image = new Gtk.Image.from_icon_name("media-album", Gtk.IconSize.BUTTON);
         var image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ALBUM_ART, 32);
         image.set_squared(false);
@@ -119,7 +120,8 @@ public class Gmpc.Widgets.Songlist : Gtk.VBox
 
         /* Add the entry */
         event.add(box);
-        this.pack_start(event, false, false, 0); 
+//        this.pack_start(event, false, false, 0);
+        this.add_header(event);
     }
     /**
      * Add a disc entry
@@ -150,12 +152,13 @@ public class Gmpc.Widgets.Songlist : Gtk.VBox
         box.pack_start(wlabel, false, false, 0);
 
         /* Add the entry */
-        this.pack_start(box, false, false, 0); 
+        //this.pack_start(box, false, false, 0);
+        this.add_header(box);
     }
 
 
-    /** 
-     * Add a song entry 
+    /**
+     * Add a song entry
      */
 
      private void add_song_entry(MPD.Song song, int level=0)
@@ -216,14 +219,15 @@ public class Gmpc.Widgets.Songlist : Gtk.VBox
         box.pack_start(wlabel, false, false, 0);
 
         wlabel.clicked.connect((source, alt) => {
-            if(alt) 
+            if(alt)
                 play_song_clicked(song_file);
             else
                 song_clicked(song_file);
         });
 
         /* Add the entry */
-        this.pack_start(box, false, false, 0); 
+        //this.pack_start(box, false, false, 0);
+        this.add(box);
      }
 
      /* User click on the title */
@@ -236,7 +240,7 @@ public class Gmpc.Widgets.Songlist : Gtk.VBox
      public signal void artist_song_clicked(MPD.Song song);
 
      /**
-      * Fill the widget from a song list 
+      * Fill the widget from a song list
       */
      public void set_from_data(owned MPD.Data.Item? list, bool show_album=false, bool show_artist=false)
      {
@@ -260,7 +264,7 @@ public class Gmpc.Widgets.Songlist : Gtk.VBox
          for(;iter != null; iter.next(false))
          {
              /* if it is no MPD.Song, skip */
-             if(iter.song == null ) continue;
+             if(iter.song == null) continue;
              if(results > this.MAX_RESULTS) {
                 var bar = new Gtk.InfoBar();
                 var label = new Gtk.Label(_("Only the first %i results are shown. Please refine your search.".printf(MAX_RESULTS)));
@@ -268,13 +272,14 @@ public class Gmpc.Widgets.Songlist : Gtk.VBox
                 bar.set_message_type(Gtk.MessageType.WARNING);
                 (bar.get_content_area() as Gtk.Container).add(label);
 
-                this.pack_start(bar, false, false);
+//                this.pack_start(bar, false, false);
+                this.add_header(bar);
                 break;
              }
              results++;
 
              if(show_artist) {
-                if(iter.song.albumartist != null && 
+                if(iter.song.albumartist != null &&
                         iter.song.albumartist.length > 0)
                 {
                     if(artist == null || artist != iter.song.albumartist)
@@ -312,7 +317,7 @@ public class Gmpc.Widgets.Songlist : Gtk.VBox
              if(disc != null) level++;
              if(artist != null) level++;
              if(album != null) level++;
-             this.add_song_entry(iter.song,level); 
+             this.add_song_entry(iter.song,level);
          }
 
          /* show everything */

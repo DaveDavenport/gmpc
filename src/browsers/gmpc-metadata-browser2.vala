@@ -1362,7 +1362,6 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
 
 
         var result_hbox = new Gmpc.Widgets.Songlist();
-
         result_hbox.artist_song_clicked.connect((source, song) => {
                 if(song.artist != null) {
                 this.set_artist(song.artist);
@@ -1390,6 +1389,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
             result_hbox.set_from_data((owned)list,true,true);
             result_hbox.show_all();
         });
+        result_hbox.show();
         vbox.pack_start(result_hbox, false, false);
 
         if(current != null) {
