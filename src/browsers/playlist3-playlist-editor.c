@@ -544,12 +544,30 @@ static void playlist_editor_list_replace_songs(GtkButton * button, GtkTreeView *
 	mpd_player_play(connection);
 }
 
-static void playlist_editor_clear_playlist(GtkWidget * item, gpointer data)
+static void playlist_editor_clear_playlist_real(GtkWidget * item, gpointer data)
 {
 	gchar *path = g_object_get_data(G_OBJECT(item), "path");
 	mpd_database_playlist_clear(connection, path);
 	playlist_editor_browser_playlist_editor_changed(playlist_editor_icon_view, NULL);
 
+}
+static void playlist_editor_clear_playlist(GtkWidget * item, gpointer data)
+{
+    GtkWidget *delete;
+	gchar *path = g_object_get_data(G_OBJECT(item), "path");
+    gchar *message = g_strdup_printf(_("Are you sure you want to clear the playlist: '%s'"), path);
+    playlist3_message_show(pl3_messages, message,USER_FEEDBACK); 
+
+    delete = gtk_button_new_from_stock(GTK_STOCK_CLEAR);
+
+    g_object_set_data_full(G_OBJECT(delete), "path", g_strdup(path), g_free);
+    g_signal_connect(G_OBJECT(delete), "clicked", 
+            G_CALLBACK(playlist_editor_clear_playlist_real), NULL);
+
+    /* show message */
+    playlist3_message_show(pl3_messages, message,USER_FEEDBACK); 
+    playlist3_message_add_widget(pl3_messages, delete);
+    g_free(message);
 }
 
 static void playlist_editor_load_playlist(GtkWidget * item, gpointer data)
@@ -567,12 +585,30 @@ static void playlist_editor_replace_playlist(GtkWidget * item, gpointer data)
 	mpd_playlist_queue_commit(connection);
 	mpd_player_play(connection);
 }
-
-static void playlist_editor_delete_playlist(GtkWidget * item, gpointer data)
+static void playlist_editor_delete_playlist_real(GtkWidget * item, gpointer data)
 {
 	gchar *path = g_object_get_data(G_OBJECT(item), "path");
 	mpd_database_delete_playlist(connection, path);
 	playlist_editor_fill_list();
+}
+
+static void playlist_editor_delete_playlist(GtkWidget * item, gpointer data)
+{
+    GtkWidget *delete;
+	gchar *path = g_object_get_data(G_OBJECT(item), "path");
+    gchar *message = g_strdup_printf(_("Are you sure you want to delete the playlist: '%s'"), path);
+    playlist3_message_show(pl3_messages, message,USER_FEEDBACK); 
+
+    delete = gtk_button_new_from_stock(GTK_STOCK_DELETE);
+
+    g_object_set_data_full(G_OBJECT(delete), "path", g_strdup(path), g_free);
+    g_signal_connect(G_OBJECT(delete), "clicked", 
+            G_CALLBACK(playlist_editor_delete_playlist_real), NULL);
+
+    /* show message */
+    playlist3_message_show(pl3_messages, message,USER_FEEDBACK); 
+    playlist3_message_add_widget(pl3_messages, delete);
+    g_free(message);
 }
 
 static void playlist_editor_new_entry_changed(GtkEntry * entry, GtkWidget * button)

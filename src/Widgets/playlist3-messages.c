@@ -32,10 +32,11 @@ struct _Playlist3MessagePluginClass
 {
 	GmpcPluginBaseClass parent_class;
 };
-static const char *error_levels[3] = {
+static const char *error_levels[4] = {
 	N_("Info"),
 	N_("Warning"),
-	N_("Critical")
+	N_("Critical"),
+	N_("User question")
 };
 
 /**
@@ -110,6 +111,10 @@ void playlist3_message_show(Playlist3MessagePlugin * self, const gchar * message
 		image_name = GTK_STOCK_DIALOG_WARNING;
 		m = GTK_MESSAGE_WARNING;
 		break;
+	case USER_FEEDBACK:
+		m = GTK_MESSAGE_QUESTION;
+		image_name = GTK_STOCK_DIALOG_QUESTION;
+		break;
 	case ERROR_INFO:
 	default:
 		image_name = GTK_STOCK_DIALOG_INFO;
@@ -153,7 +158,11 @@ void playlist3_message_show(Playlist3MessagePlugin * self, const gchar * message
 		gtk_container_add(GTK_CONTAINER(event), box);
 
 		/* Add close button */
-		gtk_info_bar_add_button(GTK_INFO_BAR(box), GTK_STOCK_CLOSE, GTK_RESPONSE_CLOSE);
+		if(el < USER_FEEDBACK) {
+			gtk_info_bar_add_button(GTK_INFO_BAR(box), GTK_STOCK_CLOSE, GTK_RESPONSE_CLOSE);
+		}else{
+			gtk_info_bar_add_button(GTK_INFO_BAR(box), GTK_STOCK_CANCEL, GTK_RESPONSE_CLOSE);
+		}
 		/* Set message type, so bg color changes accordingly */
 		gtk_info_bar_set_message_type(GTK_INFO_BAR(box), m);
 
@@ -176,7 +185,10 @@ void playlist3_message_show(Playlist3MessagePlugin * self, const gchar * message
 		/* Error */
 		self->priv->error_visible = TRUE;
 		/* Close it after 5 seconds */
-		self->priv->timeout_callback = g_timeout_add_seconds(5, (GSourceFunc) playlist3_message_close, self);
+		if(el < USER_FEEDBACK)
+			self->priv->timeout_callback = g_timeout_add_seconds(5, (GSourceFunc) playlist3_message_close, self);
+		else
+			self->priv->timeout_callback = g_timeout_add_seconds(30, (GSourceFunc) playlist3_message_close, self);
 	} else
 	{
 		self->priv->error_visible = FALSE;

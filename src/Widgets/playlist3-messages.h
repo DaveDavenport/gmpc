@@ -30,7 +30,8 @@ typedef struct _Playlist3MessagePluginPrivate Playlist3MessagePluginPrivate;
 typedef enum {
 	ERROR_INFO,
 	ERROR_WARNING,
-	ERROR_CRITICAL
+	ERROR_CRITICAL,
+	USER_FEEDBACK
 } ErrorLevel;
 
 extern Playlist3MessagePlugin* pl3_messages;
