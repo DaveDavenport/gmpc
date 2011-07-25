@@ -77,6 +77,7 @@ void playlist3_new_header(void)
     {
         GtkWidget *hbox = gtk_hbox_new(FALSE, 6);
         GtkWidget *vbox = gtk_vbox_new(FALSE, 0);
+        gtk_container_set_border_width(GTK_CONTAINER(hbox10), 3);
 
         gtk_widget_set_size_request(hbox, 250, -1);
         /** Title */
@@ -89,12 +90,10 @@ void playlist3_new_header(void)
         /** Artist */
         header_labels[2] = (GtkWidget *)gmpc_clicklabel_new("");
         gmpc_clicklabel_set_ellipsize(GMPC_CLICKLABEL(header_labels[2]), PANGO_ELLIPSIZE_NONE);
-  //      gmpc_clicklabel_set_do_italic(GMPC_CLICKLABEL(header_labels[2]), TRUE);
 
         header_labels[3] = gtk_label_new(_("From"));
         /** Albumr */
         header_labels[4] = (GtkWidget *)gmpc_clicklabel_new("");
-//        gmpc_clicklabel_set_do_italic(GMPC_CLICKLABEL(header_labels[4]), TRUE);
         gmpc_clicklabel_set_ellipsize(GMPC_CLICKLABEL(header_labels[4]), PANGO_ELLIPSIZE_END);
 
         GtkAlignment *title_header_top_alignment = gtk_alignment_new(0,0,0,0);
