@@ -77,9 +77,13 @@ void playlist3_new_header(void)
     {
         GtkWidget *hbox = gtk_hbox_new(FALSE, 6);
         GtkWidget *vbox = gtk_vbox_new(FALSE, 0);
-        gtk_container_set_border_width(GTK_CONTAINER(hbox10), 3);
-
-        gtk_widget_set_size_request(hbox, 250, -1);
+        // expand in width, align in middle
+        GtkAlignment *title_header_top_alignment = gtk_alignment_new(0,0.5,1.0,0);
+        // set a 3 px top/bottom border (looks better then 6)
+        gtk_alignment_set_padding(title_header_top_alignment, 3,3,0,0);
+        
+        // set minimum width 300 pixels.
+        gtk_widget_set_size_request(title_header_top_alignment, 300, -1);
         /** Title */
         header_labels[0] = (GtkWidget *)gmpc_clicklabel_new("");
         gmpc_clicklabel_font_size(GMPC_CLICKLABEL(header_labels[0]), 12);
@@ -96,10 +100,9 @@ void playlist3_new_header(void)
         header_labels[4] = (GtkWidget *)gmpc_clicklabel_new("");
         gmpc_clicklabel_set_ellipsize(GMPC_CLICKLABEL(header_labels[4]), PANGO_ELLIPSIZE_END);
 
-        GtkAlignment *title_header_top_alignment = gtk_alignment_new(0,0,0,0);
-        gtk_widget_set_size_request(GTK_WIDGET(title_header_top_alignment), 0, 6);
 
-        gtk_box_pack_start(GTK_BOX(vbox), title_header_top_alignment, FALSE, TRUE, 0);
+
+
         gtk_box_pack_start(GTK_BOX(vbox), header_labels[0], FALSE, TRUE, 0);
         gtk_box_pack_start(GTK_BOX(vbox), hbox, FALSE, TRUE, 0);
 
@@ -111,7 +114,9 @@ void playlist3_new_header(void)
         g_signal_connect(G_OBJECT(header_labels[0]), "clicked", G_CALLBACK(playlist3_header_song), NULL);
         g_signal_connect(G_OBJECT(header_labels[2]), "clicked", G_CALLBACK(playlist3_header_artist), NULL);
         g_signal_connect(G_OBJECT(header_labels[4]), "clicked", G_CALLBACK(playlist3_header_album), NULL);
-        gtk_box_pack_start(GTK_BOX(hbox10), vbox, TRUE, TRUE, 0);
+
+        gtk_container_add(GTK_CONTAINER(title_header_top_alignment), vbox);
+        gtk_box_pack_start(GTK_BOX(hbox10), title_header_top_alignment, TRUE, TRUE, 0);
         gtk_widget_show_all(hbox10);
 
         g_signal_connect(G_OBJECT(hbox10), "style-set", G_CALLBACK(playlist3_header_update_style), NULL);
