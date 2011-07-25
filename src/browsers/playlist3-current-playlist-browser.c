@@ -539,28 +539,10 @@ static void pl3_current_playlist_browser_delete_selected_songs(PlayQueuePlugin *
 		g_list_free(list);
 	} else
 	{
-		/* create a warning message dialog */
-		GtkWidget *dialog = gtk_message_dialog_new(GTK_WINDOW(playlist3_get_window()),
-												   GTK_DIALOG_MODAL,
-												   GTK_MESSAGE_WARNING,
-												   GTK_BUTTONS_NONE,
-												   _("Are you sure you want to clear the playlist?"));
-		gtk_dialog_add_buttons(GTK_DIALOG(dialog), GTK_STOCK_CANCEL,
-							   GTK_RESPONSE_CANCEL, GTK_STOCK_OK, GTK_RESPONSE_OK, NULL);
-		gtk_dialog_set_default_response(GTK_DIALOG(dialog), GTK_RESPONSE_CANCEL);
-
-		switch (gtk_dialog_run(GTK_DIALOG(dialog)))
-		{
-		case GTK_RESPONSE_OK:
-			/* check if where still connected */
-			mpd_playlist_clear(connection);
-		default:
-			break;
-		}
-		gtk_widget_destroy(GTK_WIDGET(dialog));
+        pl3_current_playlist_browser_clear_playlist();
 	}
+	
 	/* update everything if where still connected */
-
 	mpd_status_queue_update(connection);
 }
 
@@ -1070,9 +1052,25 @@ static void pl3_current_playlist_save_playlist(void)
 	g_object_unref(xml);
 }
 
-static void pl3_current_playlist_browser_clear_playlist(void)
+static void pl3_current_playlist_browser_clear_playlist_real(void)
 {
 	mpd_playlist_clear(connection);
+}
+static void pl3_current_playlist_browser_clear_playlist(void)
+{
+    GtkWidget *delete;
+
+    delete = gtk_button_new_from_stock(GTK_STOCK_CLEAR);
+    g_signal_connect(G_OBJECT(delete),
+            "clicked", 
+            G_CALLBACK(pl3_current_playlist_browser_clear_playlist_real),
+            NULL);
+
+    /* show message */
+    playlist3_message_show(pl3_messages, 
+            _("Are you sure you want to clear the play queue?")
+            ,USER_FEEDBACK); 
+    playlist3_message_add_widget(pl3_messages, delete);
 }
 
 static void pl3_current_playlist_browser_shuffle_playlist(void)

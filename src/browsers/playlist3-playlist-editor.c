@@ -556,7 +556,6 @@ static void playlist_editor_clear_playlist(GtkWidget * item, gpointer data)
     GtkWidget *delete;
 	gchar *path = g_object_get_data(G_OBJECT(item), "path");
     gchar *message = g_strdup_printf(_("Are you sure you want to clear the playlist: '%s'"), path);
-    playlist3_message_show(pl3_messages, message,USER_FEEDBACK); 
 
     delete = gtk_button_new_from_stock(GTK_STOCK_CLEAR);
 
@@ -597,7 +596,6 @@ static void playlist_editor_delete_playlist(GtkWidget * item, gpointer data)
     GtkWidget *delete;
 	gchar *path = g_object_get_data(G_OBJECT(item), "path");
     gchar *message = g_strdup_printf(_("Are you sure you want to delete the playlist: '%s'"), path);
-    playlist3_message_show(pl3_messages, message,USER_FEEDBACK); 
 
     delete = gtk_button_new_from_stock(GTK_STOCK_DELETE);
 
