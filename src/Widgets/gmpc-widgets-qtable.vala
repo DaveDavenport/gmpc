@@ -40,9 +40,19 @@ public class Gmpc.Widgets.Qtable : Gtk.Container, Gtk.Buildable
     private int item_width_real     = 0;
     private int item_height_real    = 0;
     private int header_height_real  = 0;
+    private int max_columns_real    = 0;
     private int num_items       = 0;
     private int columns         = 3;
 	public  int spacing {get;set;default=8;}
+	public int max_columns {
+	        get {
+	            return max_columns_real;
+	        }
+	        set {
+	            max_columns_real = value;
+	            this.queue_resize();
+	        }
+	    }
 
 	public int item_width {
 			get {
@@ -261,6 +271,9 @@ public class Gmpc.Widgets.Qtable : Gtk.Container, Gtk.Buildable
 			header_height	+= spacing;
 		}
 		new_columns = int.max(width/cover_width, 1);
+		if(max_columns_real > 0) {
+		    new_columns = int.min(new_columns,max_columns_real);
+		}
 		item = 0;
 		foreach ( var child in children)
 		{

@@ -32,6 +32,7 @@ public class Gmpc.Widgets.Songlist : Gmpc.Widgets.Qtable
     public Songlist()
     {
         this.spacing = 6;
+        this.max_columns = 3;
 
     }
     /**
