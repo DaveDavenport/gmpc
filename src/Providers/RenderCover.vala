@@ -19,6 +19,8 @@
 
 /**
  * This plugin queries RenderCover.com for artist images (backdrops)
+ * It renders the image to a png (in memory) and passes this as raw data
+ * to the metadata system.
  */
 
 using Config;
@@ -163,21 +165,36 @@ public class Gmpc.Provider.RenderCover:
         Pango.cairo_layout_path(ct,layout);
         ct.fill();
         
-        //
-        if(GLib.FileUtils.test(path, GLib.FileTest.EXISTS)) {
-            GLib.FileUtils.remove(path);
-        }
-        var path  = Gmpc.MetaData.get_metadata_filename(Gmpc.MetaData.Type.ALBUM_ART, song, "png");
-        surf.write_to_png(path);
-                
 
-        MetaData.Item pitem = new MetaData.Item();
-        pitem.type = Gmpc.MetaData.Type.ALBUM_ART;
-        pitem.plugin_name = get_name();
-        pitem.content_type = MetaData.ContentType.URI;
-        pitem.set_uri(path);
-        List<MetaData.Item> list = null;
-        list.append((owned)pitem);
-        callback((owned)list);
+
+	/* We get blocks of image data,
+	 * Do manual memory management because
+	 * vala cannot do this?
+         */	
+	void *data = null;
+	uint len = 0;
+        surf.write_to_png_stream((imgdata)=>
+	{
+		data = GLib.realloc(data, len+imgdata.length);
+		GLib.Memory.copy(&data[len], imgdata, imgdata.length);
+		len += imgdata.length;
+		return Cairo.Status.SUCCESS;
+	});
+	/* Create result message */
+	MetaData.Item pitem = new MetaData.Item();
+	pitem.type = Gmpc.MetaData.Type.ALBUM_ART;
+	pitem.plugin_name = get_name();
+	pitem.content_type = MetaData.ContentType.RAW;
+	/* This function will take over the data and set data=null 
+	 * len = 0
+  	 */
+	pitem.set_raw_void(ref data,ref len);
+	/* this isn't needed as set_raw_void takes ownershit */
+	GLib.free(data);
+	List<MetaData.Item> list = null;
+	list.append((owned)pitem);
+	callback((owned)list);
+
+
      }
 }

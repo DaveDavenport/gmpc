@@ -66,6 +66,10 @@ namespace Gmpc {
            /* add accessors? */
            [CCode (cname="meta_data_get_raw")]
            public unowned uchar[] get_raw();
+	   [CCode (cname="meta_data_set_raw")]
+	   public void set_raw(uchar[] data);
+	   [CCode (cname="meta_data_set_raw_owned")]
+	   public void set_raw_void(ref void *data,ref uint length);
 
            [CCode (cname="meta_data_get_text")]
            public unowned string  get_text();

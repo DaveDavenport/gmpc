@@ -126,6 +126,10 @@ const gchar * meta_data_get_html(const MetaData *data);
 /* RAW */
 gboolean meta_data_is_raw(const MetaData *data);
 const guchar * meta_data_get_raw(const MetaData *data, gsize *length);
+/* set raw data (makes copy) */
+void meta_data_set_raw(MetaData *item, guchar *data, gsize len);
+/* Take ownershit of data. (so no copy) */
+void meta_data_set_raw_owned(MetaData *item, guchar **data, gsize *len);
 /* TEXT VECTOR */
 gboolean meta_data_is_text_vector(const MetaData *data);
 const gchar **meta_data_get_text_vector(const MetaData *data);

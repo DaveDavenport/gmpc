@@ -1428,6 +1428,22 @@ void meta_data_set_uri(MetaData *data, const gchar *uri)
 	if(data->content) g_free(data->content);
 	data->content = g_strdup(uri);
 }
+void meta_data_set_raw(MetaData *item, guchar *data, gsize len)
+{
+	g_assert(meta_data_is_raw(item));
+	if(item->content) g_free(item->content);
+	item->content = g_memdup(data, len);
+	item->size = len;
+}
+void meta_data_set_raw_owned(MetaData *item, guchar **data, gsize *len)
+{
+	g_assert(meta_data_is_raw(item));
+	if(item->content) g_free(item->content);
+	item->content = *data;
+	*data = NULL;
+	item->size = *len;
+	*len = 0;
+}
 void meta_data_set_thumbnail_uri(MetaData *data, const gchar *uri)
 {
 	g_assert(meta_data_is_uri(data));
@@ -1861,6 +1877,7 @@ gboolean meta_data_is_raw(const MetaData *data)
 {
 	return data->content_type == META_DATA_CONTENT_RAW;
 }
+
 const guchar * meta_data_get_raw(const MetaData *data, gsize *length)
 {
 	g_assert(meta_data_is_raw(data));
