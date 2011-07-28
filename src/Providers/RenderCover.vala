@@ -101,8 +101,14 @@ public class Gmpc.Provider.RenderCover:
         Cairo.Pattern p;
         Cairo.Surface surf = new Cairo.ImageSurface(Cairo.Format.ARGB32, album_size,album_size);
         Cairo.Context ct = new Cairo.Context(surf);
+	// Color the background based on hash of artist/album.
+	uint hash = song.album.hash();
+	hash+= song.artist.hash();
         // Background
-        ct.set_source_rgb(77/255.0,77/255.0,155/255.0);
+        ct.set_source_rgb(
+		(hash&255)/255.0,
+		((hash>>8)&255)/255.0,
+		((hash>>16)&255)/255.0);
         ct.paint();
 
         // Header pattern 
