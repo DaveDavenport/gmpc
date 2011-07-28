@@ -26,7 +26,6 @@
 using Config;
 using Gmpc;
 using Gmpc.Plugin;
-using Xml;
 
 private const bool use_transition_prc = Gmpc.use_transition;
 private const string some_unique_name_prc = Config.VERSION;
@@ -104,13 +103,24 @@ public class Gmpc.Provider.RenderCover:
 	// Color the background based on hash of artist/album.
 	uint hash = song.album.hash()/2;
 	hash+= song.artist.hash()/2;
-        // Background
+
+	// Background
         ct.set_source_rgb(
 		(hash&255)/255.0,
 		((hash>>8)&255)/255.0,
 		((hash>>16)&255)/255.0);
         ct.paint();
 
+	var it = Gtk.IconTheme.get_default();
+	try{
+		var pb = it.load_icon("gmpc", 256,0);
+		Misc.decolor_pixbuf(pb, pb);
+       		Gdk.cairo_set_source_pixbuf(ct, pb, 200-pb.width/2 ,390-pb.height);
+		ct.paint_with_alpha(0.6);
+
+	}catch (GLib.Error e) {
+
+	}
         // Header pattern 
         p = new Cairo.Pattern.linear(0, 0, album_size,0);
         p.add_color_stop_rgb(0, 0.8,0.8,0.8);
