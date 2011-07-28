@@ -695,21 +695,21 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		if(self->_priv->song)
 		{
 			MetaDataResult ret;
-            MetaData *met = NULL;
+			MetaData *met = NULL;
 
 			ret = gmpc_meta_watcher_get_meta_path(gmw,self->_priv->song, self->image_type|META_QUERY_NO_CACHE, &met);
 			if(ret == META_DATA_FETCHING)
 			{
 				self_set_cover_fetching(self);
 			}else if (ret == META_DATA_AVAILABLE) {
-                    if(met->content_type == META_DATA_CONTENT_URI)
-                    {
-                        const gchar *path = meta_data_get_uri(met);
-                        self_set_cover_from_path(self,path); 
-                    }else{
-                        g_log(LOG_DOMAIN, G_LOG_LEVEL_WARNING, "Not implemented");
-                        self_set_cover_na(self);
-                    }
+				if(met->content_type == META_DATA_CONTENT_URI)
+				{
+					const gchar *path = meta_data_get_uri(met);
+					self_set_cover_from_path(self,path); 
+				}else{
+					g_log(LOG_DOMAIN, G_LOG_LEVEL_WARNING, "Not implemented");
+					self_set_cover_na(self);
+				}
 			} else {
 				self_set_cover_na(self);
 			}

@@ -102,8 +102,8 @@ public class Gmpc.Provider.RenderCover:
         Cairo.Surface surf = new Cairo.ImageSurface(Cairo.Format.ARGB32, album_size,album_size);
         Cairo.Context ct = new Cairo.Context(surf);
 	// Color the background based on hash of artist/album.
-	uint hash = song.album.hash();
-	hash+= song.artist.hash();
+	uint hash = song.album.hash()/2;
+	hash+= song.artist.hash()/2;
         // Background
         ct.set_source_rgb(
 		(hash&255)/255.0,
