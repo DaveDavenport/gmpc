@@ -24,7 +24,7 @@
 #define DEFAULT_HIDE_ON_STARTUP 0
 #define DEFAULT_TRAY_ICON_ENABLE 1
 #define DEFAULT_TRAY_ICON_USE_APPINDICATOR 1
-#define DEFAULT_AUTOCONNECT 0
+#define DEFAULT_AUTOCONNECT 1
 #define DEFAULT_TRAY_MARKUP "[<span size=\"small\">%name%</span>\n][<span size=\"large\" weight=\"bold\">%title%</span>\n][%artist%][\n<span size=\"small\">%album% [(track %track%)]</span>]|%shortfile%|"
 
 

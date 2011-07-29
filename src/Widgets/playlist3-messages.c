@@ -100,7 +100,7 @@ void playlist3_message_show(Playlist3MessagePlugin * self, const gchar * message
 	q_free(string);
 	g_io_channel_flush(self->priv->log_file, NULL);
 
-	level = cfg_get_single_value_as_int_with_default(config, "Default", "min-error-level", ERROR_INFO);
+    level = cfg_get_single_value_as_int_with_default(config, "Default", "min-error-level", ERROR_WARNING);
 	switch (el)
 	{
 	case ERROR_CRITICAL:

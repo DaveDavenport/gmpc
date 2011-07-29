@@ -1160,7 +1160,7 @@ static void connection_pref_construct(GtkWidget * container)
 																				   DEFAULT_TIMEOUT));
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON
 								 ((GtkWidget *) gtk_builder_get_object(connection_pref_xml, "ck_autocon")),
-								 cfg_get_single_value_as_int_with_default(config, "connection", "autoconnect", 0));
+                                 cfg_get_single_value_as_int_with_default(config, "connection", "autoconnect", DEFAULT_AUTOCONNECT));
 
 	/* set the right sensitive stuff */
 	if (!mpd_check_connected(connection))

@@ -1085,7 +1085,7 @@ void create_playlist3(void)
 
 	TEC("Setup metaimages")
     /* restore the window's position and size, if the user wants this. */
-    if (cfg_get_single_value_as_int_with_default(config, "playlist", "savepossize", 0))
+    if (cfg_get_single_value_as_int_with_default(config, "playlist", "savepossize", 1))
     {
         int maximized = cfg_get_single_value_as_int_with_default(config, "playlist", "maximized", 0);
         /* Load values from config file */
@@ -1320,7 +1320,7 @@ void playlist_pref_construct(GtkWidget * container)
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON
             (gtk_builder_get_object
             (playlist_pref_xml, "ck_possize")),
-            cfg_get_single_value_as_int_with_default(config, "playlist", "savepossize", 0));
+            cfg_get_single_value_as_int_with_default(config, "playlist", "savepossize", 1));
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON
             (gtk_builder_get_object
             (playlist_pref_xml, "ck_hide_on_close")),
