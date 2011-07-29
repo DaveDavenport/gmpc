@@ -47,7 +47,7 @@
                     Tag based browser
                 </link>
             </title>
-            <p></p>
+            <p>This dialog allows you to create, delete and edit tag based browsers including the predefined Genre- and Artist Browsers.</p>
         </item>
         
         <item>
@@ -116,7 +116,7 @@
                         Internal Extra Playlist View
                     </link>
                 </title>
-                <p>This item is only available, if the extra playlist is enabled.</p>
+                <p>This item allows you to control the extra playlist and is only available, if the extra playlist is enabled.</p>
             </item>
 
         </terms>

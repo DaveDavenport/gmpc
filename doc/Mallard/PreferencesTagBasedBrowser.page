@@ -1,0 +1,16 @@
+<page xmlns="http://projectmallard.org/1.0/"
+      type="topic"
+      id="PreferencesTagBasedBrowser">
+
+    <title>Preferences - Tag based browser</title>
+    <p>This dialog allows you to create, delete and edit tag based browsers including the predefined Genre- and Artist Browsers.</p>
+    
+    <figure>
+        <desc>The "Tag based browser" preferences dialog</desc>
+        <media type="image" src="Images/preferences-tag-based-browser.png"/>
+    </figure>
+    
+    
+    <p>The dropdown at the top lets you choose between the tag based browsers you have. Click the "Add"- or "Remove" button to create a new or delete the selected tag based browser. To change the name of the selected tag based browser, simply enter the new name in the "Name:" field.</p>
+    <p>The bottom area allows you to configure the selected tag based browser. Click on the tag in the "text" area to open a menu to choose a tag from. To add or remove tags, press the "Add"- or "Remove" buttons to the right of the "text" area.</p>
+</page>

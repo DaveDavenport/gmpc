@@ -1,0 +1,9 @@
+<page xmlns="http://projectmallard.org/1.0/"
+      type="topic"
+      id="EasyCommand">
+
+    <title>Easy Command</title>
+    <p>Easy command provides a commandline interface in GMPC. Allowing you to quickly control MPD and GMPC. For example if you want to play the song 'Layla' from 'Eric Clapton' you just type: <code>play title=layla artist=clapton</code></p>
+    
+    <p>TODO</p>  
+</page>

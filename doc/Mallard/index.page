@@ -66,10 +66,7 @@
             </link>
         </title>
         <p>
-                Easy command provides a commandline interface in GMPC. Allowing
-                you to quickly control MPD and GMPC.
-                For example if you want to play the song 'Layla' from 'Eric Clapton'
-                you just type: <code>play title=layla artist=clapton</code>
+                Easy command provides a commandline interface in GMPC.
                 This section explains the possibilities easy command offers.
         </p>
       </section>
@@ -81,6 +78,28 @@
         </title>
         <p>
             Tips and tricks for using the Gnome Music Player Client.
+        </p>
+      </section>
+
+      <section id="#BuildInstallInstructions">
+        <title>
+            <link xref="BuildInstallInstructions">
+                Building and installation
+            </link>
+        </title>
+        <p>
+            Instructions, how to install / build GMPC.
+        </p>
+      </section>
+      
+      <section id="#AboutThisDocument">
+        <title>
+            <link xref="AboutThisDocument">
+                About this document
+            </link>
+        </title>
+        <p>
+            Information about this document.
         </p>
       </section>
 </page>

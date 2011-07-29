@@ -44,7 +44,7 @@
         <title>Other fields:</title>
         <item>
             <title>Timeout</title>
-            <p>TODO</p>
+            <p>This defines the time, GMPC should wait between reconnect tries, if the connection isn't established.</p>
         </item>
         <item>
             <title>Autoconnect</title>

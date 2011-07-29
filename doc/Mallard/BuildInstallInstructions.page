@@ -1,0 +1,27 @@
+<page xmlns="http://projectmallard.org/1.0/"
+      type="topic"
+      id="BuildInstallInstructions">
+      <info>
+          <link type="topic" xref="index"/>
+      </info>
+      <title>Building / installation</title>
+
+        <p>You will find binary packages of GMPC for most Linux distributions in their respective repositories. However, if you want to build GMPC from source (e.g. if the distributed version is old or is missing not compiled in features) you need recent versions of several libraries.</p>
+        <terms>
+            <item>
+            <list>
+            <title>Required libraries:</title>
+            <item><p>gtk+ 2.0</p></item>
+            <item><p>libmpd</p></item>
+            <item><p>sqlite3</p></item>
+            <item><p>libxml2</p></item>
+        </list>
+        <list>
+            <title>Optional libraries:</title>
+            <item><p>libunique</p></item>
+            <item><p>libxspf</p></item>
+            <item><p>libspiff</p></item>
+            <item><p>libappindiator >= 0.3</p></item>
+        </list></item></terms>
+
+</page>
