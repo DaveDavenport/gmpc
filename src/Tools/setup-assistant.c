@@ -96,6 +96,7 @@ void setup_assistant(void)
 	GtkWidget *assistant = gtk_assistant_new();
 
 	gtk_window_set_default_size(GTK_WINDOW(assistant), 400, 300);
+    gtk_window_set_title(GTK_WINDOW(assistant), _("GMPC - First start assistant"));
 
 	sa_running = TRUE;
 
