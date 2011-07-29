@@ -164,7 +164,9 @@ int main ( int argc, char **argv )
 	}
 	if(stream)
 	{
-		response = gmpc_tools_ipc_send(ipc, COMMAND_EASYCOMMAND, stream);
+		gchar *command = g_strdup_printf("url %s", stream);
+		response = gmpc_tools_ipc_send(ipc, COMMAND_EASYCOMMAND, command);
+		g_free(command);
 		if(!response) printf("Failed to send STREAM command\n");
 	}
 	if(easycommand)

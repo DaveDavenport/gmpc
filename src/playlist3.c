@@ -661,7 +661,9 @@ gint y, GtkSelectionData * data, guint info, guint time_recieved)
                 /* Don't add lines withouth an actual scheme. */
                 if (scheme)
                 {
-                    url_start_real(url[i]);
+            		gchar *fu = g_uri_unescape_string(url[i], NULL);
+                    url_start_real(fu);
+                    g_free(fu);
                     g_free(scheme);
                 }
             }
