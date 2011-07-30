@@ -29,6 +29,7 @@ public class Gmpc.Clicklabel : Gtk.EventBox
     private bool bold                       = false;
     private bool underline                  = false;
     private Pango.AttrList attributes       = null;
+    private bool mouseCursorInside          = false;
     
     private enum Sighandler {
         ENTER_NOTIFY,
@@ -77,6 +78,17 @@ public class Gmpc.Clicklabel : Gtk.EventBox
 
         /* pack label */
         this.add(label);
+        
+        /* keep track of cursor */
+        this.enter_notify_event.connect( (source, event) => {
+            this.mouseCursorInside = true;
+            return false;
+        });
+        this.leave_notify_event.connect( (source, event) => {
+            this.mouseCursorInside = false;
+            return false;
+        });
+        
         /* Set widget sensitive */
         this.set_sensitive(true);
 
@@ -136,6 +148,12 @@ public class Gmpc.Clicklabel : Gtk.EventBox
                     this.set_do_underline(false);
                     return false;
                 });
+            
+            /* Show underline, if mouse already inside */
+            if (this.mouseCursorInside) {
+                this.set_do_underline(true);
+            }
+
             this.sensitive = true;
         }
         else {
@@ -144,6 +162,9 @@ public class Gmpc.Clicklabel : Gtk.EventBox
              */
             for (int i = 0; i < Sighandler.NUM_SIGNALS; i++)
                 this.disconnect(handlers[i]);
+                
+            /* don't show underline if insensitive  */
+            this.set_do_underline(false);
                 
             this.sensitive = false;
         }
