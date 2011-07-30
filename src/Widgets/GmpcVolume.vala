@@ -142,7 +142,7 @@ public class Gmpc.Widgets.Volume : Gtk.EventBox
         cr.set_line_width (1.0);
         cr.set_line_join (LineJoin.ROUND);
 
-        Gdk.cairo_set_source_color (cr, this.style.text[this.state]);
+        Gdk.cairo_set_source_color (cr, this.style.fg[this.state]);
 
 
         /* Calculate the height of one block */
@@ -186,7 +186,7 @@ public class Gmpc.Widgets.Volume : Gtk.EventBox
             cr.set_source_rgb(1.0,0.0,0.0);
             cr.stroke_preserve();
             cr.clip();
-            Gdk.cairo_set_source_color (cr, this.style.text[this.state]);
+            Gdk.cairo_set_source_color (cr, this.style.fg[this.state]);
             cr.new_path ();  /* current path is not
                                      consumed by cairo_clip() */       
             cr.move_to(
