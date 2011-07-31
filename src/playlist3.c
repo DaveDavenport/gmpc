@@ -2469,21 +2469,26 @@ void open_local_file(void)
 						GTK_STOCK_OPEN,
 						GTK_RESPONSE_OK,
 						NULL);
-			switch(gtk_dialog_run(GTK_DIALOG(fmd)))
+		gtk_file_chooser_set_select_multiple(GTK_FILE_CHOOSER(fmd), TRUE);
+		switch(gtk_dialog_run(GTK_DIALOG(fmd)))
+		{
+			case GTK_RESPONSE_OK:
 			{
-				case GTK_RESPONSE_OK:
+				GSList *iter;
+				GSList *uris = gtk_file_chooser_get_uris(GTK_FILE_CHOOSER(fmd));
+				for(iter = uris;
+					iter != NULL;
+					iter = g_slist_next(iter))
 				{
-					gchar *uri = gtk_file_chooser_get_uri(GTK_FILE_CHOOSER(fmd));
-					if(uri != NULL)
-					{
-						url_start_real(uri);
-						g_free(uri);
-					}
-					break;
+					gchar *uri = iter->data;
+					url_start_real(uri);
 				}
-				default:
-					break;
+				g_slist_free_full(uris, (GDestroyNotify)g_free);
+				break;
 			}
+			default:
+				break;
+		}
 
 			gtk_widget_destroy(GTK_WIDGET(fmd));
 	}
