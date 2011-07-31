@@ -2484,7 +2484,8 @@ void open_local_file(void)
 					url_start_real(uri);
 					g_free(uri);
 				}
-				g_slist_free_full(uris, (GDestroyNotify)g_free);
+                g_slist_foreach (uris, (GFunc) g_free, NULL);
+                g_slist_free (uris);
 				break;
 			}
 			default:
