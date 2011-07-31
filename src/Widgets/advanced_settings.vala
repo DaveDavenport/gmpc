@@ -25,7 +25,7 @@ private const string some_unique_name_as = Config.VERSION;
 /**
  * Show a dialog with some advanced interface settings 
  */
-static void advanced_settings()
+public static void advanced_settings()
 {
 	var win = new Gtk.Dialog.with_buttons(
 			_("Advanced settings"),

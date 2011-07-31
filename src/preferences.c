@@ -24,6 +24,7 @@
 #include "main.h"
 #include "playlist3.h"
 #include "misc.h"
+#include "preferences.h"
 
 #define LOG_DOMAIN "Preferences"
 #define PLUGIN_STATS -200
