@@ -2489,10 +2489,7 @@ void open_local_file(void)
 			default:
 				break;
 		}
-
-			gtk_widget_destroy(GTK_WIDGET(fmd));
+		gtk_widget_destroy(GTK_WIDGET(fmd));
 	}
 }
-
-
 /* vim: set noexpandtab ts=4 sw=4 sts=4 tw=80: */

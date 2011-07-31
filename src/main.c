@@ -710,7 +710,7 @@ static int autoconnect_callback(void)
 {
     /* Don't autoconnect while showing the first start assistant */
     if (setup_assistant_is_running())
-        return;
+        return FALSE;
 
     /* check if there is an connection. */
     if (!mpd_check_connected(connection))
