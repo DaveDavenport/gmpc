@@ -2480,8 +2480,9 @@ void open_local_file(void)
 					iter != NULL;
 					iter = g_slist_next(iter))
 				{
-					gchar *uri = iter->data;
+					char *uri = g_uri_unescape_string(iter->data,NULL);
 					url_start_real(uri);
+					g_free(uri);
 				}
 				g_slist_free_full(uris, (GDestroyNotify)g_free);
 				break;
