@@ -58,4 +58,7 @@ void serverinformation_show_popup(void);
 
 void pl3_window_fullscreen(void);
 GtkAccelGroup *playlist3_get_accel_group(void);
+
+
+void open_local_file(void);
 #endif

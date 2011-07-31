@@ -249,6 +249,13 @@
           </object>
         </child>
         <child>
+          <object class="GtkAction" id="open_local_file">
+            <property name="label" translatable="yes">_Open local file</property>
+            <property name="stock_id">gtk-open</property>
+            <signal name="activate" handler="open_local_file" swapped="no"/>
+          </object>
+        </child>
+        <child>
           <object class="GtkAction" id="menu_profiles">
             <property name="label" translatable="yes">_Profiles</property>
           </object>
@@ -300,6 +307,7 @@
           <menuitem action="MPDDisconnect"/>
           <menuitem action="MPDPassword"/>
           <separator/>
+          <menuitem action="open_local_file"/>
           <menuitem action="menu_profiles"/>
           <separator/>
           <menuitem action="Preferences"/>

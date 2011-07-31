@@ -757,6 +757,8 @@ static void playlist_connection_changed(MpdObj * mi, int connect, gpointer data)
     /* Set menu items */
     if (connect)
     {
+        char **handlers;
+		gboolean found = FALSE;
         gtk_widget_set_sensitive(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "vbox_playlist_player")), TRUE);
         gtk_widget_set_sensitive(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "hpaned1")), TRUE);
 
@@ -765,6 +767,21 @@ static void playlist_connection_changed(MpdObj * mi, int connect, gpointer data)
         gtk_action_set_sensitive(GTK_ACTION(gtk_builder_get_object(pl3_xml, "MPDPassword")), TRUE);
         gtk_action_set_sensitive(GTK_ACTION(gtk_builder_get_object(pl3_xml, "menu_view")), TRUE);
         gtk_action_set_sensitive(GTK_ACTION(gtk_builder_get_object(pl3_xml, "menu_option")), TRUE);
+
+		/* Check if MPD supports 'file://' (so local files). */
+		/* TODO: make this a separate function */
+		handlers = mpd_server_get_url_handlers(connection);
+		if (handlers)
+		{
+			int i=0;
+			for(; !found && handlers != NULL && handlers[i] != NULL; i++) {
+				if(g_utf8_collate(handlers[i], "file://") == 0) {
+					found = TRUE;
+				}
+			}
+			g_strfreev(handlers);
+		}
+        gtk_action_set_sensitive(GTK_ACTION(gtk_builder_get_object(pl3_xml, "open_local_file")), found);
         pl3_push_rsb_message(_("Connected"));
     } else
     {
@@ -776,6 +793,7 @@ static void playlist_connection_changed(MpdObj * mi, int connect, gpointer data)
         gtk_action_set_sensitive(GTK_ACTION(gtk_builder_get_object(pl3_xml, "MPDPassword")), FALSE);
         gtk_action_set_sensitive(GTK_ACTION(gtk_builder_get_object(pl3_xml, "menu_view")), FALSE);
         gtk_action_set_sensitive(GTK_ACTION(gtk_builder_get_object(pl3_xml, "menu_option")), FALSE);
+        gtk_action_set_sensitive(GTK_ACTION(gtk_builder_get_object(pl3_xml, "open_local_file")), FALSE);
         pl3_push_rsb_message(_("Not Connected"));
     }
     /** Set back to the current borwser, and update window title */
@@ -2405,5 +2423,71 @@ GtkAccelGroup *playlist3_get_accel_group(void)
 	}
 	return group;
 }
+
+void open_local_file(void)
+{
+	char **handlers;
+	gboolean found = FALSE;
+	if(!mpd_check_connected(connection))
+		return;
+
+	/* Check if MPD supports 'file://' (so local files). */
+	handlers = mpd_server_get_url_handlers(connection);
+	if (handlers)
+	{
+		int i=0;
+		for(; !found && handlers != NULL && handlers[i] != NULL; i++) {
+			if(g_utf8_collate(handlers[i], "file://") == 0) {
+				found = TRUE;
+			}
+		}
+		g_strfreev(handlers);
+	}
+	/* error message or file open */
+	if(!found) {
+		/* Message not found */
+		GtkWidget *gmd = gtk_message_dialog_new(
+					(GtkWindow*)playlist3_get_window(),
+					GTK_DIALOG_MODAL,
+					GTK_MESSAGE_ERROR,
+					GTK_BUTTONS_CLOSE,
+					_(
+						"To playback local files, you need to be connected "
+						"using unix socket.\n"
+						"See the MPD website for more information."
+					)
+				);
+		gtk_dialog_run(GTK_DIALOG(gmd));
+		gtk_widget_destroy(GTK_WIDGET(gmd));
+	}else {
+		GtkWidget *fmd = gtk_file_chooser_dialog_new(
+						"Select a local file",
+						(GtkWindow*)playlist3_get_window(),
+						GTK_FILE_CHOOSER_ACTION_OPEN,
+						GTK_STOCK_CLOSE,
+						GTK_RESPONSE_CLOSE,
+						GTK_STOCK_OPEN,
+						GTK_RESPONSE_OK,
+						NULL);
+			switch(gtk_dialog_run(GTK_DIALOG(fmd)))
+			{
+				case GTK_RESPONSE_OK:
+				{
+					gchar *uri = gtk_file_chooser_get_uri(GTK_FILE_CHOOSER(fmd));
+					if(uri != NULL)
+					{
+						url_start_real(uri);
+						g_free(uri);
+					}
+					break;
+				}
+				default:
+					break;
+			}
+
+			gtk_widget_destroy(GTK_WIDGET(fmd));
+	}
+}
+
 
 /* vim: set noexpandtab ts=4 sw=4 sts=4 tw=80: */
