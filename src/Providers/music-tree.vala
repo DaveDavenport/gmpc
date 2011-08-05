@@ -178,8 +178,9 @@ public class Gmpc.Provider.MusicTree : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIfa
 		GLib.Regex query,
 		Gmpc.MetaData.Type type)
 	{
+        var path = dir.get_path();
 		log(log_domain_cp, GLib.LogLevelFlags.LEVEL_DEBUG,
-			"Checking %s with pattern: %s",dir.get_path(),
+			"Checking %s with pattern: %s",path,
 			query.get_pattern());
 		/* Start async directory walking */
 		try
@@ -210,7 +211,7 @@ public class Gmpc.Provider.MusicTree : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIfa
 							item.set_uri(GLib.Path.build_filename(path,name));
 							list.append((owned)item);
 							log(log_domain_cp, GLib.LogLevelFlags.LEVEL_DEBUG,
-								"Found %s, adding",name);
+								"Found %s/%s, adding",path,name);
 							/* Match filename against rules */
 						}
 					}
@@ -356,9 +357,9 @@ public class Gmpc.Provider.MusicTree : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIfa
 		}
 		yield walk_back_directory(regex_query, directory, song.file,
 			out list, Gmpc.MetaData.Type.ALBUM_ART);
+		list.first();
 		log(log_domain_cp, GLib.LogLevelFlags.LEVEL_DEBUG,
 			"Query done, %u results", list.length());
-		list.first();
 		callback((owned)list);
 		return ;
 	}
