@@ -1,6 +1,7 @@
 man_MANS = gmpc.1 gmpc-remote.1 gmpc-remote-stream.1
 EXTRA_DIST = $(man_MANS)
 
+SUBDIRS=Mallard
 
 .PHONY: doc
 doc: Manual.txt

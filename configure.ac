@@ -285,6 +285,8 @@ AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR,"$PACKAGE_LOCALE_DIR",[The package's local
 AC_SUBST(PACKAGE_LOCALE_DIR)
 AC_SUBST(PACKAGE_LIBS)
 
+
+
 #Win32 compile support
 
 EXTRA_CFLAGS=
@@ -395,6 +397,9 @@ if test x$enable_shave = xyes; then
 SHAVE_INIT([./]) 
 fi
 
+## TODO add a enable/disable around this.
+GNOME_DOC_INIT([0.18.0])
+
 AC_OUTPUT([
 shave
 shave-libtool
@@ -408,6 +413,7 @@ po/Makefile
 data/gmpc.pc
 remote/Makefile
 doc/Makefile
+doc/Mallard/Makefile
 pixmaps/Makefile
 pixmaps/icons/Makefile
 pixmaps/icons/hicolor/Makefile
