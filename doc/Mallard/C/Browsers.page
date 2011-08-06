@@ -1,88 +1,80 @@
-<page xmlns="http://projectmallard.org/1.0/"
-    type="topic"
-    id="Browsers">
-    <title>Browsers</title>
-    <p>
+<?xml version="1.0"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="Browsers">
+  <title>Browsers</title>
+  <p>
         GMPC uses so called "Browsers" to structure the vast amount of possibilities, GMPC has to offer. You can switch between them in the sidebar or in the single collapsed view though buttons or a dropdown, depending on your options. Other ways to quickly switch between them are the main interface's "Go" menu or shortcuts.
     </p>
-    <figure>
-        <desc>GMPC showing the "Now Playing" browser.</desc>
-        <media type="image" src="Images/main-window.png"/>
-    </figure>
-
-
-      <terms>
-        <item>
-            <title>
-                <link xref="BrowserNowPlaying">
+  <figure>
+    <desc>GMPC showing the "Now Playing" browser.</desc>
+    <media type="image" src="Images/main-window.png"/>
+  </figure>
+  <terms>
+    <item>
+      <title>
+        <link xref="BrowserNowPlaying">
                     Now Playing
                 </link>
-            </title>
-            <p>The now playing browser shows you all sorts of information about the song playing right now.</p>
-        </item>
-        
-        <item>
-            <title>
-                <link xref="BrowserPlayQueue">
+      </title>
+      <p>The now playing browser shows you all sorts of information about the song playing right now.</p>
+    </item>
+    <item>
+      <title>
+        <link xref="BrowserPlayQueue">
                     Play Queue
                 </link>
-            </title>
-            <p>This is basically your master-playlist. Every title you want to listen to will appear here.</p>
-        </item>
-        
-        <item>
-            <title>
-                <link xref="BrowserDatabase">
+      </title>
+      <p>This is basically your master-playlist. Every title you want to listen to will appear here.</p>
+    </item>
+    <item>
+      <title>
+        <link xref="BrowserDatabase">
                     Database
                 </link>
-            </title>
-            <p>The database browser is a directory listing of all your music. With the browser you can browse through all your music currently in the mpd database.</p>
-        </item>
-        
-        <item>
-            <title>
-                <link xref="BrowserSearch">
+      </title>
+      <p>The database browser is a directory listing of all your music. With the browser you can browse through all your music currently in the mpd database.</p>
+    </item>
+    <item>
+      <title>
+        <link xref="BrowserSearch">
                     Search
                 </link>
-            </title>
-            <p>The "Search" browser allows you to search through the database or your play queue.</p>
-        </item>
-        
-        <item>
-            <title>
-                <link xref="BrowserPlaylistEditor">
+      </title>
+      <p>The "Search" browser allows you to search through the database or your play queue.</p>
+    </item>
+    <item>
+      <title>
+        <link xref="BrowserPlaylistEditor">
                     Playlist Editor
                 </link>
-            </title>
-            <p>The Playlist Editor allows you to add, delete and edit playlists.</p>
-        </item>
-        
-        <item>
-            <title>
-                <link xref="BrowserGenreBrowser">
+      </title>
+      <p>The Playlist Editor allows you to add, delete and edit playlists.</p>
+    </item>
+    <item>
+      <title>
+        <link xref="BrowserGenreBrowser">
                     Genre Browser
                 </link>
-            </title>
-            <p>The Genre browser lets you search through the database based on genres.</p>
-        </item>
-        
-        <item>
-            <title>
-                <link xref="BrowserArtistBrowser">
+      </title>
+      <p>The Genre browser lets you search through the database based on genres.</p>
+    </item>
+    <item>
+      <title>
+        <link xref="BrowserArtistBrowser">
                     Artist Browser
                 </link>
-            </title>
-            <p>The Artist browser lets you search through the database based on artists.</p>
-        </item>
-        
-        <item>
-            <title>
-                <link xref="BrowserMetadataBrowser">
+      </title>
+      <p>The Artist browser lets you search through the database based on artists.</p>
+    </item>
+    <item>
+      <title>
+        <link xref="BrowserMetadataBrowser">
                     Metadata Browser
                 </link>
-            </title>
-            <p></p>
-        </item>
-    </terms>
-    <note><p>You can hide specific browsers in the <link xref="PreferencesInterface">Advanced settings</link> window</p></note>
+      </title>
+      <p/>
+    </item>
+  </terms>
+  <note>
+    <p>You can hide specific browsers in the <link xref="PreferencesInterface">Advanced settings</link> window</p>
+  </note>
 </page>

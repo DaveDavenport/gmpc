@@ -1,54 +1,48 @@
-<page xmlns="http://projectmallard.org/1.0/"
-      type="topic"
-      id="PreferencesConnection">
-
-    <title>Preferences - Connection</title>
-    <p>GMPC can handle multiple MPD servers through profiles. Here you can configure and choose between them.</p>
-    
-    <figure>
-        <desc>The Connection preferences dialog</desc>
-        <media type="image" src="Images/preferences-connection.png"/>
-    </figure>
-    
-    
-    <p>The top area lets you manage your MPD servers through the usage of profiles. To select a profile, click on the dropdown to the right of "Profile:". To add a new profile click on the button with the plus sign, to remove the selected profile, click on the button with the minus.</p>
-    <terms>
-        <title>The profile area offers the following fields:</title>
-        <item>
-            <title>Name:</title>
-            <p>Here you can give the profile a name</p>
-        </item>
-        <item>
-            <title>Host:</title>
-            <p>Enter the IP (e.g. 192.168.1.1) or name in the network (e.g. musicbox.local) of your MPD server here. If the server runs on the same machine as GMPC, enter "localhost".</p>
-        </item>
-         <item>
-            <title>Port:</title>
-            <p>Enter the Port, on which your MPD server listens here. The default MPD port is 6600.</p>
-        </item>
-         <item>
-            <title>Use Authentication</title>
-            <p>Enable this, if your server requires authentication.</p>
-        </item>
-        <item>
-            <title>Password:</title>
-            <p>This field is only active, if you enabled "Use Authentication". Here you can enter your password.</p>
-        </item>
-        <item>
-            <title>Music Directory</title>
-            <p>TODO</p>
-        </item>
-    </terms>
-
-    <terms>
-        <title>Other fields:</title>
-        <item>
-            <title>Timeout</title>
-            <p>This defines the time, GMPC should wait between reconnect tries, if the connection isn't established.</p>
-        </item>
-        <item>
-            <title>Autoconnect</title>
-            <p>Enable this field, if you want GMPC to autoconnect to your MPD server.</p>
-        </item>
-    </terms>
+<?xml version="1.0"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="PreferencesConnection">
+  <title>Preferences - Connection</title>
+  <p>GMPC can handle multiple MPD servers through profiles. Here you can configure and choose between them.</p>
+  <figure>
+    <desc>The Connection preferences dialog</desc>
+    <media type="image" src="Images/preferences-connection.png"/>
+  </figure>
+  <p>The top area lets you manage your MPD servers through the usage of profiles. To select a profile, click on the dropdown to the right of "Profile:". To add a new profile click on the button with the plus sign, to remove the selected profile, click on the button with the minus.</p>
+  <terms>
+    <title>The profile area offers the following fields:</title>
+    <item>
+      <title>Name:</title>
+      <p>Here you can give the profile a name</p>
+    </item>
+    <item>
+      <title>Host:</title>
+      <p>Enter the IP (e.g. 192.168.1.1) or name in the network (e.g. musicbox.local) of your MPD server here. If the server runs on the same machine as GMPC, enter "localhost".</p>
+    </item>
+    <item>
+      <title>Port:</title>
+      <p>Enter the Port, on which your MPD server listens here. The default MPD port is 6600.</p>
+    </item>
+    <item>
+      <title>Use Authentication</title>
+      <p>Enable this, if your server requires authentication.</p>
+    </item>
+    <item>
+      <title>Password:</title>
+      <p>This field is only active, if you enabled "Use Authentication". Here you can enter your password.</p>
+    </item>
+    <item>
+      <title>Music Directory</title>
+      <p>TODO</p>
+    </item>
+  </terms>
+  <terms>
+    <title>Other fields:</title>
+    <item>
+      <title>Timeout</title>
+      <p>This defines the time, GMPC should wait between reconnect tries, if the connection isn't established.</p>
+    </item>
+    <item>
+      <title>Autoconnect</title>
+      <p>Enable this field, if you want GMPC to autoconnect to your MPD server.</p>
+    </item>
+  </terms>
 </page>

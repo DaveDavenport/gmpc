@@ -1,13 +1,9 @@
-<page xmlns="http://projectmallard.org/1.0/"
-      type="topic"
-      id="BrowserGenreBrowser">
-
-    <title>Browsers - Genre Browser</title>
-    <p>The Genre browser lets you search through the database based on genres.</p>
-
-    <figure>
-        <desc>The Genre browser</desc>
-        <media type="image" src="Images/browser-genre-browser.png"/>
-    </figure>
-  
+<?xml version="1.0"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="BrowserGenreBrowser">
+  <title>Browsers - Genre Browser</title>
+  <p>The Genre browser lets you search through the database based on genres.</p>
+  <figure>
+    <desc>The Genre browser</desc>
+    <media type="image" src="Images/browser-genre-browser.png"/>
+  </figure>
 </page>

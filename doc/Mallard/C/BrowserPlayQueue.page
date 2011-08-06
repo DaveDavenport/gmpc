@@ -1,58 +1,56 @@
-<page xmlns="http://projectmallard.org/1.0/"
-      type="topic"
-      id="BrowserPlayQueue">
-
-    <title>Browsers - Play Queue</title>
-    <p>This is basically your master-playlist. Every title you want to listen to will appear here. You can add songs to the play-queue by opening the context menu (right mouse click) in either the file in the database or the playlist-editor and selecting "Add". </p>
-
-    <figure>
-        <desc>The "Play Queue" browser</desc>
-        <media type="image" src="Images/browser-playqueue.png"/>
-    </figure>
-
-    <note><p>TIP: If you enable 'Enable songlist tooltip' in xref:preferences[preferences] pane. Gmpc will show a tooltip with the album cover and some information about the song you are hovering.</p></note>
-
-    <section id="#Sorting">
-        <title>Sorting</title>
-        <p>You can move a single song to a new location using drag and drop. You can move a single row by selecting it, and dragging it to the new location. To quickly move around multiple songs you can cut, copy and then paste songs within the play-queue. It is even possible to copy songs from other lists and insert them at a certain position in the play-queue.</p>
-        <note><p>GTK does not yet provide a method of moving multiple rows using drag and drop. Instead of adding this using dirty hacks, a more robust cut/copy/paste system was added.</p></note>
-    </section>
-    
-    <section id="#Filter">
-        <title>Filter</title>
-        <p>You can filter the play-queue by pressing 'ctrl-f' or start typing when it is selecting. The playlist filter supports the xref:query-syntax[Query syntax].</p>
-        <note><p>TIP: If the filter is slow in updating the playlist, because you are on a slow connection or MPD runs on a slow machine. You can disable search-as-you-type in the <link xref="PreferencesInterface">Preferences Interface</link> pane.</p></note>
-    </section>
-    
-    <section id="#EditingColumns">
-        <title>Editing columns</title>
-        <p>You can edit what columns GMPC displays in the play-queue (or any song list), by opening the context menu (right click) and selecting 'edit columns'</p>
-    </section>
-    
-    <section id="#UsefulKeyBindings">
-        <title>Useful key-bindings</title>
-        <terms>
-            <title>Some useful key-bindings are:</title>
-            <item>
-                <title>Center playing song</title>
-                <p>Hit the space bar</p>
-            </item>
-            <item>
-                <title>Delete selected song</title>
-                <p>Hit del</p>
-            </item>
-            <item>
-                <title>Opening filter</title>
-                <p>Ctrl-f</p>
-            </item>
-            <item>
-                <title>Empty filter</title>
-                <p>Escape.</p>
-            </item>
-            <item>
-                <title>Close filter</title>
-                <p>Escape or backspace when empty</p>
-            </item>
-        </terms>
-    </section>
+<?xml version="1.0"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="BrowserPlayQueue">
+  <title>Browsers - Play Queue</title>
+  <p>This is basically your master-playlist. Every title you want to listen to will appear here. You can add songs to the play-queue by opening the context menu (right mouse click) in either the file in the database or the playlist-editor and selecting "Add". </p>
+  <figure>
+    <desc>The "Play Queue" browser</desc>
+    <media type="image" src="Images/browser-playqueue.png"/>
+  </figure>
+  <note>
+    <p>TIP: If you enable 'Enable songlist tooltip' in xref:preferences[preferences] pane. Gmpc will show a tooltip with the album cover and some information about the song you are hovering.</p>
+  </note>
+  <section id="#Sorting">
+    <title>Sorting</title>
+    <p>You can move a single song to a new location using drag and drop. You can move a single row by selecting it, and dragging it to the new location. To quickly move around multiple songs you can cut, copy and then paste songs within the play-queue. It is even possible to copy songs from other lists and insert them at a certain position in the play-queue.</p>
+    <note>
+      <p>GTK does not yet provide a method of moving multiple rows using drag and drop. Instead of adding this using dirty hacks, a more robust cut/copy/paste system was added.</p>
+    </note>
+  </section>
+  <section id="#Filter">
+    <title>Filter</title>
+    <p>You can filter the play-queue by pressing 'ctrl-f' or start typing when it is selecting. The playlist filter supports the xref:query-syntax[Query syntax].</p>
+    <note>
+      <p>TIP: If the filter is slow in updating the playlist, because you are on a slow connection or MPD runs on a slow machine. You can disable search-as-you-type in the <link xref="PreferencesInterface">Preferences Interface</link> pane.</p>
+    </note>
+  </section>
+  <section id="#EditingColumns">
+    <title>Editing columns</title>
+    <p>You can edit what columns GMPC displays in the play-queue (or any song list), by opening the context menu (right click) and selecting 'edit columns'</p>
+  </section>
+  <section id="#UsefulKeyBindings">
+    <title>Useful key-bindings</title>
+    <terms>
+      <title>Some useful key-bindings are:</title>
+      <item>
+        <title>Center playing song</title>
+        <p>Hit the space bar</p>
+      </item>
+      <item>
+        <title>Delete selected song</title>
+        <p>Hit del</p>
+      </item>
+      <item>
+        <title>Opening filter</title>
+        <p>Ctrl-f</p>
+      </item>
+      <item>
+        <title>Empty filter</title>
+        <p>Escape.</p>
+      </item>
+      <item>
+        <title>Close filter</title>
+        <p>Escape or backspace when empty</p>
+      </item>
+    </terms>
+  </section>
 </page>

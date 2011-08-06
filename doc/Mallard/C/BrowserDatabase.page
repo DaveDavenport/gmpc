@@ -1,87 +1,82 @@
-<page xmlns="http://projectmallard.org/1.0/"
-      type="topic"
-      id="BrowserDatabase">
-
-    <title>Browsers - Database</title>
-    <p>The database browser is a directory listing of all your music. With the browser you can browse through all your music currently in the mpd database.
+<?xml version="1.0"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="BrowserDatabase">
+  <title>Browsers - Database</title>
+  <p>The database browser is a directory listing of all your music. With the browser you can browse through all your music currently in the mpd database.
 The folder tree looks like a real folder tree, but it actually is a copy of the music folder tree.
 In case you delete, add or change files, you must first update the database to update the folder/file tree.
 As you can see on the screenshot there are two parts of the window.
 To the left you can see the folder tree, this shows all folders in your music folder.
 Next to the folder tree are colums which show the files and folders from the currently selected folder (the one selected in the folder tree).</p>
-
-    <figure>
-        <desc>The Database browser</desc>
-        <media type="image" src="Images/browser-database.png"/>
-    </figure>
-    
-    <terms>
-        <title>When you right click on a folder in the folder tree, you get three options:</title>
+  <figure>
+    <desc>The Database browser</desc>
+    <media type="image" src="Images/browser-database.png"/>
+  </figure>
+  <terms>
+    <title>When you right click on a folder in the folder tree, you get three options:</title>
+    <item>
+      <title>Add</title>
+      <p>Adds all music files in the selected folder to the playlist.</p>
+    </item>
+    <item>
+      <title>Replace</title>
+      <p>Empties the current playlist and adds all music files in the selected folder to the playlist.</p>
+    </item>
+    <item>
+      <title>Update</title>
+      <p>Updates the database (and the folder tree).</p>
+    </item>
+  </terms>
+  <terms>
+    <title>You can also right click on a folder or file in the right window. The following options are available:</title>
+    <item>
+      <title>Add</title>
+      <p>Adds the specific file(s) and/or folder(s) to the playlist.</p>
+    </item>
+    <item>
+      <title>Replace</title>
+      <p>Empties the current playlist and adds the specific file(s) and/or folder(s) to the playlist.</p>
+    </item>
+    <item>
+      <title>Update</title>
+      <p>Updates the database and the left folder tree. (Only available when right clicking a folder)</p>
+    </item>
+    <item>
+      <title>Information</title>
+      <p>Shows information about the selected song. (Only available when right clicking one song)</p>
+    </item>
+    <item>
+      <title>Add to playlist</title>
+      <p>Allows you to add the selected directory or song to a new or an existing playlist.</p>
+    </item>
+    <item>
+      <title>Add more</title>
+      <p>Gives a number of options to add more files to the playlist. (Only showing up when right clicking one song)</p>
+      <terms>
         <item>
-            <title>Add</title>
-            <p>Adds all music files in the selected folder to the playlist.</p>
+          <title>All from album</title>
+          <p>Adds all songs from the same album to the playlist.</p>
         </item>
         <item>
-            <title>Replace</title>
-            <p>Empties the current playlist and adds all music files in the selected folder to the playlist.</p>
+          <title>All from artist</title>
+          <p>Adds all songs from the same artist to the playlist.</p>
         </item>
         <item>
-            <title>Update</title>
-            <p>Updates the database (and the folder tree).</p>
-        </item>
-    </terms>
-    
-    <terms>
-        <title>You can also right click on a folder or file in the right window. The following options are available:</title>
-        <item>
-            <title>Add</title>
-            <p>Adds the specific file(s) and/or folder(s) to the playlist.</p>
+          <title>All from genre</title>
+          <p>Adds all songs from the same genre to the playlist.</p>
         </item>
         <item>
-            <title>Replace</title>
-            <p>Empties the current playlist and adds the specific file(s) and/or folder(s) to the playlist.</p>
+          <title>All from same directory</title>
+          <p>Adds all songs from the same directory to the playlist.</p>
         </item>
-        <item>
-            <title>Update</title>
-            <p>Updates the database and the left folder tree. (Only available when right clicking a folder)</p>
-        </item>
-        <item>
-            <title>Information</title>
-            <p>Shows information about the selected song. (Only available when right clicking one song)</p>
-        </item>
-        <item>
-            <title>Add to playlist</title>
-            <p>Allows you to add the selected directory or song to a new or an existing playlist.</p>
-        </item>
-        <item>
-            <title>Add more</title>
-            <p>Gives a number of options to add more files to the playlist. (Only showing up when right clicking one song)</p>
-            <terms>
-                <item>
-                    <title>All from album</title>
-                    <p>Adds all songs from the same album to the playlist.</p>
-                </item>
-                <item>
-                    <title>All from artist</title>
-                    <p>Adds all songs from the same artist to the playlist.</p>
-                </item>
-                <item>
-                    <title>All from genre</title>
-                    <p>Adds all songs from the same genre to the playlist.</p>
-                </item>
-                <item>
-                    <title>All from same directory</title>
-                    <p>Adds all songs from the same directory to the playlist.</p>
-                </item>
-            </terms>
-        </item>
-        <item>
-            <title>Tools</title>
-            <p>Gives a number of options for the selected folder(s) and/or file(s).</p>
-        </item>
-        <item>
-            <title>Copy</title>
-            <p>Copies the selected folder(s) and/or file(s), you can paste them in the playlist.</p>
-        </item>
-    </terms>
+      </terms>
+    </item>
+    <item>
+      <title>Tools</title>
+      <p>Gives a number of options for the selected folder(s) and/or file(s).</p>
+    </item>
+    <item>
+      <title>Copy</title>
+      <p>Copies the selected folder(s) and/or file(s), you can paste them in the playlist.</p>
+    </item>
+  </terms>
 </page>

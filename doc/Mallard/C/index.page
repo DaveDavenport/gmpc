@@ -1,12 +1,11 @@
-<page xmlns="http://projectmallard.org/1.0/"
-      type="topic"
-      id="index">
-      <info>
-          <link type="topic" xref="MainInterface"/>
-          <link type="topic" xref="QuickStartGuide"/>
-      </info>
-      <title>Gnome Music Player Client</title>
-      <p>
+<?xml version="1.0"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="index">
+  <info>
+    <link type="topic" xref="MainInterface"/>
+    <link type="topic" xref="QuickStartGuide"/>
+  </info>
+  <title>Gnome Music Player Client</title>
+  <p>
         The Gnome Music Player Client (or short GMPC) is a frontend for the Music Player Daemon (short MPD).
         GMPC allows you to control the playback of MPD. Create playlists, enable/disable outputs, etc.
         In addition to just controlling MPD, GMPC offers features like Album art, lyrics, etc. More options like
@@ -14,92 +13,89 @@
         
         GMPC is one of the oldest clients for GMPC, and the only one that has been continuously developed and maintained.
       </p>
-      <figure>
-          <desc>The Gnome Music Player Client</desc>
-          <media type="image" src="Images/main-window.png"/>
-      </figure>
-      <section id="#QuickStartGuide">
-        <title>
-            <link xref="QuickStartGuide">
+  <figure>
+    <desc>The Gnome Music Player Client</desc>
+    <media type="image" src="Images/main-window.png"/>
+  </figure>
+  <section id="#QuickStartGuide">
+    <title>
+      <link xref="QuickStartGuide">
                 Quick start
             </link>
-        </title>
-        <p>
+    </title>
+    <p>
             A guide giving a quick introduction to Gnome Music Player Client.
         </p>
-      </section>
-      <section id="#IFace">
-      <title>
-        <link xref="MainInterface">
+  </section>
+  <section id="#IFace">
+    <title>
+      <link xref="MainInterface">
             The main interface explained
           </link>
-      </title>
-      <p>
+    </title>
+    <p>
         In this section each part of the main interface is explained.
       </p>
-      </section>
-      <section id="#Browsers">
-      <title>
-        <link xref="Browsers">
+  </section>
+  <section id="#Browsers">
+    <title>
+      <link xref="Browsers">
             Browsers
         </link>
-      </title>
-      <p>
+    </title>
+    <p>
         GMPC uses so called "Browsers" to structure the vast amount of possibilities, GMPC has to offer.
       </p>
-      </section>
-      <section id="#Preferences">
-      <title>
-        <link xref="Preferences">
+  </section>
+  <section id="#Preferences">
+    <title>
+      <link xref="Preferences">
             Preferences
         </link>
-      </title>
-      <p>
+    </title>
+    <p>
         The Preferences window allows you to configure GMPC and its plugins.
       </p>
-      </section>
-      
-      <section id="#EasyCommands">
-        <title>
-            <link xref="EasyCommand">
+  </section>
+  <section id="#EasyCommands">
+    <title>
+      <link xref="EasyCommand">
                 Easy Command
             </link>
-        </title>
-        <p>
+    </title>
+    <p>
                 Easy command provides a commandline interface in GMPC.
                 This section explains the possibilities easy command offers.
         </p>
-      </section>
-      <section id="#TipsAndTricks">
-        <title>
-            <link xref="TipsAndTricks">
+  </section>
+  <section id="#TipsAndTricks">
+    <title>
+      <link xref="TipsAndTricks">
                 Tips and Tricks
             </link>
-        </title>
-        <p>
+    </title>
+    <p>
             Tips and tricks for using the Gnome Music Player Client.
         </p>
-      </section>
-
-      <section id="#BuildInstallInstructions">
-        <title>
-            <link xref="BuildInstallInstructions">
+  </section>
+  <section id="#BuildInstallInstructions">
+    <title>
+      <link xref="BuildInstallInstructions">
                 Building and installation
             </link>
-        </title>
-        <p>
+    </title>
+    <p>
             Instructions, how to install / build GMPC.
         </p>
-      </section>
-      
-      <section id="#AboutThisDocument">
-        <title>
-            <link xref="AboutThisDocument">
+  </section>
+  <section id="#AboutThisDocument">
+    <title>
+      <link xref="AboutThisDocument">
                 About this document
             </link>
-        </title>
-        <p>
+    </title>
+    <p>
             Information about this document.
         </p>
-      </section>
+  </section>
 </page>

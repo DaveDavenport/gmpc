@@ -1,93 +1,94 @@
-<page xmlns="http://projectmallard.org/1.0/"
-      type="topic"
-      id="PreferencesNotification">
-
-    <title>Preferences - Notification</title>
-    <p>
+<?xml version="1.0"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="PreferencesNotification">
+  <title>Preferences - Notification</title>
+  <p>
         The following image displays the notification preferences dialog:
     </p>
-    
-    <figure>
-        <desc>The Notification preferences dialog</desc>
-        <media type="image" src="Images/preferences-notification.png"/>
-    </figure>
-    
-    <section id="popup">
-        <title>PopUp</title>
-        <p>
+  <figure>
+    <desc>The Notification preferences dialog</desc>
+    <media type="image" src="Images/preferences-notification.png"/>
+  </figure>
+  <section id="popup">
+    <title>PopUp</title>
+    <p>
             The PopUp will show the currently playing song along the album art and the next song in the playing queue.
         </p>
-        
-        <terms>
-            <title>The following options are available:</title>
-            <item>
-                <title>Show on song change</title>
-                <p>Enable this option if you want to get the PopUp everytime the song changes.</p>
-            </item>
-            <item>
-                <title>Timeout</title>
-                <p>How long shall the PopUp be shown</p>
-            </item>
-            <item>
-                <title>Position</title>
-                <p>Where shall the PopUp be placed</p>
-            </item>
-        </terms>
-
-        <note><p>
-            It is possible to hide the album art in the PopUp by enabling "Hide album art" in the "Interface->Advanced Settings" preferences window.
-        </p></note>
-
-    </section>
-
-    <section id="notification_area_icon">
-        <title>Notification Area Icon</title>
-        <p>The notification area icon gives you quick access to important features of GMPC, even if the main interface is hidden.</p>
-
-        <list>
-            <title>The icon allows you to:</title>
-            <item><p>Change the volume through vertical mouse scrolling on the icon</p></item>
-            <item><p>Choose the previous / next track through horizontal mouse scrolling on the icon</p></item>
-        </list>
-
-        <list>
-            <title>The icons's menu offers the following options:</title>
-            <item><p>Show / hide the main interface</p></item>
-            <item><p>Control playback (Play, Stop, Next track, Previous track)</p></item>
-            <item><p>Quit GMPC</p></item>
-        </list>
-        
-        <note><p>
-            Ubuntu's new interface "Unity" uses a little different approach to provide notification area icons and GMPC will natively integrate into it if the support is compiled in. When you are not using Unity, you will automatically get a fallback icon. However, if you experience problems like missing icons in the context menu or if you can't change the volume by scrolling on the icon, you can switch back to the legacy tray icon through the respective option in the "Preferences"->"Interface"->"Advanced Settings" window.
-        </p></note>
-    </section>
-
-    <section id="inline_messages">
-        <title>Inline messages</title>
-        <p>Inline messages are shown within GMPC's main interface and provide a non intrusive way for GMPC to inform you about certain events.</p>
-        <terms>
-            <title>The following severity settings are available:</title>
-            <item>
-                <title>information and up</title>
-                <p>Gives you the most feedback, including e.g. when connected/disconnected from server</p>
-            </item>
-            <item>
-                <title>warning and up</title>
-                <p>Non-serious problems will be reported</p>
-            </item>
-            <item>
-                <title>error</title>
-                <p>A plugin failed to load? With this setting you will get those kind of information</p>
-            </item>
-            <item>
-                <title>none</title>
-                <p>You will never get any messages</p>
-            </item>
-            <item>
-                <title></title>
-                <p></p>
-            </item>
-        </terms>
-    </section>
-
+    <terms>
+      <title>The following options are available:</title>
+      <item>
+        <title>Show on song change</title>
+        <p>Enable this option if you want to get the PopUp everytime the song changes.</p>
+      </item>
+      <item>
+        <title>Timeout</title>
+        <p>How long shall the PopUp be shown</p>
+      </item>
+      <item>
+        <title>Position</title>
+        <p>Where shall the PopUp be placed</p>
+      </item>
+    </terms>
+    <note>
+      <p>
+            It is possible to hide the album art in the PopUp by enabling "Hide album art" in the "Interface-&gt;Advanced Settings" preferences window.
+        </p>
+    </note>
+  </section>
+  <section id="notification_area_icon">
+    <title>Notification Area Icon</title>
+    <p>The notification area icon gives you quick access to important features of GMPC, even if the main interface is hidden.</p>
+    <list>
+      <title>The icon allows you to:</title>
+      <item>
+        <p>Change the volume through vertical mouse scrolling on the icon</p>
+      </item>
+      <item>
+        <p>Choose the previous / next track through horizontal mouse scrolling on the icon</p>
+      </item>
+    </list>
+    <list>
+      <title>The icons's menu offers the following options:</title>
+      <item>
+        <p>Show / hide the main interface</p>
+      </item>
+      <item>
+        <p>Control playback (Play, Stop, Next track, Previous track)</p>
+      </item>
+      <item>
+        <p>Quit GMPC</p>
+      </item>
+    </list>
+    <note>
+      <p>
+            Ubuntu's new interface "Unity" uses a little different approach to provide notification area icons and GMPC will natively integrate into it if the support is compiled in. When you are not using Unity, you will automatically get a fallback icon. However, if you experience problems like missing icons in the context menu or if you can't change the volume by scrolling on the icon, you can switch back to the legacy tray icon through the respective option in the "Preferences"-&gt;"Interface"-&gt;"Advanced Settings" window.
+        </p>
+    </note>
+  </section>
+  <section id="inline_messages">
+    <title>Inline messages</title>
+    <p>Inline messages are shown within GMPC's main interface and provide a non intrusive way for GMPC to inform you about certain events.</p>
+    <terms>
+      <title>The following severity settings are available:</title>
+      <item>
+        <title>information and up</title>
+        <p>Gives you the most feedback, including e.g. when connected/disconnected from server</p>
+      </item>
+      <item>
+        <title>warning and up</title>
+        <p>Non-serious problems will be reported</p>
+      </item>
+      <item>
+        <title>error</title>
+        <p>A plugin failed to load? With this setting you will get those kind of information</p>
+      </item>
+      <item>
+        <title>none</title>
+        <p>You will never get any messages</p>
+      </item>
+      <item>
+        <title/>
+        <p/>
+      </item>
+    </terms>
+  </section>
 </page>

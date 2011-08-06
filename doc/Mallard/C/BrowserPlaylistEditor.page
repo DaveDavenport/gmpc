@@ -1,91 +1,87 @@
-<page xmlns="http://projectmallard.org/1.0/"
-      type="topic"
-      id="BrowserPlaylistEditor">
-
-    <title>Browsers - Playlist Editor</title>
-    <p>The Playlist Editor allows you to add, delete and edit playlists.</p>
-
-    <figure>
-        <desc>The Playlist Editor</desc>
-        <media type="image" src="Images/browser-playlist-editor.png"/>
-    </figure>
-    
-    <section>
-        <title>The sidebar</title>
-        <p>The playlist editor's sidebar lists all playlists alphabetically sorted, including the automatically created "Favorites" playlist.</p>
-        <terms>
-            <title>The sidebars context menu offers:</title>
-            <item>
-                <title>Add</title>
-                <p>This will append all songs from the select playlist to the end of the play queue.</p>
-            </item>
-            <item>
-                <title>Replace</title>
-                <p>This will replace the play queue with all songs from the select playlist.</p>
-            </item>
-            <item>
-                <title>New</title>
-                <p>This will open the "New playlist" window, which allows you to create a new playlist. Simply enter a name and click on the "New" button to create it.</p>
-            </item>
-            <item>
-                <title>Delete</title>
-                <p>This allows you to delete the selected playlist. The message bar will show up to ask you for confirmation.</p>
-            </item>
-            <item>
-                <title>Rename</title>
-                <p>This will open the "Rename Playlist" window, which allows you to rename the selected playlist. Simply enter a name and click on the "Rename" button to rename it.</p>
-            </item>
-            <item>
-                <title>Clear</title>
-                <p>This allows you to remove all songs from the selected playlist. The message bar will show up to ask you for confirmation.</p>
-            </item>
-        </terms>
-    </section>
-    <section>
-        <title>The main window</title>
-        <p>The playlist editor's main window lists all songs, which the in the sidebar selected playlist contains. You can drag and drop items to to re-arrange the songs in the playlist.</p>
-        <terms>
-            <title>The main window's context menu offers:</title>
-            <item>
-                <title>Add</title>
-                <p>This will append the selected song(s) to the end of the play queue.</p>
-            </item>
-            <item>
-                <title>Replace</title>
-                <p>This will replace the play queue with all selected songs.</p>
-            </item>
-            <item>
-                <title>Remove</title>
-                <p>This will remove the selected song(s) from the playlist.</p>
-            </item>
-            <item>
-                <title>Add URL</title>
-                <p>This opens the "Add URL" window, which allows you to enter a URL to add to the playlist.</p>
-            </item>
-            <item>
-                <title>Tools</title>
-                <p>This entry contains a list of tools and varies depending on your enabled plugins.</p>
-            </item>
-            <item>
-                <title>Copy</title>
-                <p>This will copy the selected song(s) to the clipboard.</p>
-            </item>
-            <item>
-                <title>Paste before</title>
-                <p>This is only available if you have songs in the clipboard. Pastes the songs in the cliboard before the selected item.</p>
-            </item>
-            <item>
-                <title>Paste after</title>
-                <p>This is only available if you have songs in the clipboard. Pastes the songs in the cliboard before the selected item.</p>
-            </item>
-            <item>
-                <title>Cut</title>
-                <p>This will remove the selected song(s) from the playlist and put them into the clipboard.</p>
-            </item>
-            <item>
-                <title>Edit Columns</title>
-                <p>This allows you to show/hide colums from this view.</p>
-            </item>
-        </terms>
-    </section>
+<?xml version="1.0"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="BrowserPlaylistEditor">
+  <title>Browsers - Playlist Editor</title>
+  <p>The Playlist Editor allows you to add, delete and edit playlists.</p>
+  <figure>
+    <desc>The Playlist Editor</desc>
+    <media type="image" src="Images/browser-playlist-editor.png"/>
+  </figure>
+  <section>
+    <title>The sidebar</title>
+    <p>The playlist editor's sidebar lists all playlists alphabetically sorted, including the automatically created "Favorites" playlist.</p>
+    <terms>
+      <title>The sidebars context menu offers:</title>
+      <item>
+        <title>Add</title>
+        <p>This will append all songs from the select playlist to the end of the play queue.</p>
+      </item>
+      <item>
+        <title>Replace</title>
+        <p>This will replace the play queue with all songs from the select playlist.</p>
+      </item>
+      <item>
+        <title>New</title>
+        <p>This will open the "New playlist" window, which allows you to create a new playlist. Simply enter a name and click on the "New" button to create it.</p>
+      </item>
+      <item>
+        <title>Delete</title>
+        <p>This allows you to delete the selected playlist. The message bar will show up to ask you for confirmation.</p>
+      </item>
+      <item>
+        <title>Rename</title>
+        <p>This will open the "Rename Playlist" window, which allows you to rename the selected playlist. Simply enter a name and click on the "Rename" button to rename it.</p>
+      </item>
+      <item>
+        <title>Clear</title>
+        <p>This allows you to remove all songs from the selected playlist. The message bar will show up to ask you for confirmation.</p>
+      </item>
+    </terms>
+  </section>
+  <section>
+    <title>The main window</title>
+    <p>The playlist editor's main window lists all songs, which the in the sidebar selected playlist contains. You can drag and drop items to to re-arrange the songs in the playlist.</p>
+    <terms>
+      <title>The main window's context menu offers:</title>
+      <item>
+        <title>Add</title>
+        <p>This will append the selected song(s) to the end of the play queue.</p>
+      </item>
+      <item>
+        <title>Replace</title>
+        <p>This will replace the play queue with all selected songs.</p>
+      </item>
+      <item>
+        <title>Remove</title>
+        <p>This will remove the selected song(s) from the playlist.</p>
+      </item>
+      <item>
+        <title>Add URL</title>
+        <p>This opens the "Add URL" window, which allows you to enter a URL to add to the playlist.</p>
+      </item>
+      <item>
+        <title>Tools</title>
+        <p>This entry contains a list of tools and varies depending on your enabled plugins.</p>
+      </item>
+      <item>
+        <title>Copy</title>
+        <p>This will copy the selected song(s) to the clipboard.</p>
+      </item>
+      <item>
+        <title>Paste before</title>
+        <p>This is only available if you have songs in the clipboard. Pastes the songs in the cliboard before the selected item.</p>
+      </item>
+      <item>
+        <title>Paste after</title>
+        <p>This is only available if you have songs in the clipboard. Pastes the songs in the cliboard before the selected item.</p>
+      </item>
+      <item>
+        <title>Cut</title>
+        <p>This will remove the selected song(s) from the playlist and put them into the clipboard.</p>
+      </item>
+      <item>
+        <title>Edit Columns</title>
+        <p>This allows you to show/hide colums from this view.</p>
+      </item>
+    </terms>
+  </section>
 </page>

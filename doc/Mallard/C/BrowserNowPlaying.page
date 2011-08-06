@@ -1,88 +1,83 @@
-<page xmlns="http://projectmallard.org/1.0/"
-      type="topic"
-      id="BrowserNowPlaying">
-
-    <title>Browsers - Now Playing</title>
-    <p>The "Now Playing" browser shows you all sorts of information about the song playing right now. Information found on the "Now Playing" page changes as soon as a new track starts.</p>
-
-    <figure>
-        <desc>The "Now Playing" browser</desc>
-        <media type="image" src="Images/browser-nowplaying.png"/>
-    </figure>
-    
-    <terms>
-        <title>The "Now Playing" browser provides the following information:</title>
-        <item>
-            <title>Album picture</title>
-            <p>The image in the upper left corner is the album picture.</p>
-        </item>
-        <item>
-            <title>Song title</title>
-            <p>The big headlining text is the song title.</p>
-        </item>
-        <item>
-            <title>Artist name</title>
-            <p>The performers of the current song.</p>
-        </item>
-        <item>
-            <title>Album name</title>
-            <p>The album name in which the current song is featured.</p>
-        </item>
-        <item>
-            <title>Genre</title>
-            <p>This displays the genre of the current playing song.</p>
-        </item>
-        <item>
-            <title>Format</title>
-            <p>Format is giving information about sound specific information, the amount of channels, the frequency of the song and the amount of kbps.</p>
-        </item>
-        <item>
-            <title>Codec</title>
-            <p>Codec used for decoding the song.</p>
-        </item>
-        <item>
-            <title>Length</title>
-            <p>Length of the song in minutes, rounded downwords (2:10 = 2 minutes, 1:59 = 1 minute)</p>
-        </item>
-        <item>
-            <title>Track number</title>
-            <p>Track number of the album it's featuring in.</p>
-        </item>
-        <item>
-            <title>Artist picture</title>
-            <p>Image in the upper right corner is a picture from the artist.</p>
-        </item>
-    </terms>
-    
-    <terms>
-        <title>The tabbed view gives you access to:</title>
-        <item>
-            <title>Lyrics</title>
-            <p>Fetches and displays them when possible. (Lyrics can only be fetched when lyrics plugins are installed)</p>
-        </item>
-        <item>
-            <title>Guitar Tabs</title>
-            <p>Fetches guitar tabs for the current playing song. (This only works with the Guitar Tabs plugin installed)</p>
-        </item>
-        <item>
-            <title>Similar Songs</title>
-            <p>Will find similar songs in your own database based on the genre of the song.</p>
-        </item>
-        <item>
-            <title>Similar Artists</title>
-            <p>Last.fm checks for similar artists and these results are displayed.</p>
-        </item>
-        <item>
-            <title>Web Links</title>
-            <p>Shows several links to different pages.</p>
-        </item>
-        <item>
-            <title>Artist Information</title>
-            <p>Shows information about the artist fetched from last.fm.</p>
-        </item>
-    </terms>
-    
-    <p>To the right of the tabbed view there is a list of other albums from the currently playing artist. When you click on one of the albums, it will give you information about the album in the metadata browser.</p>
-
-    <note><p>The album list will only be shown when there are actually other albums from the artist in your mpd database.</p></note>
+<?xml version="1.0"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="BrowserNowPlaying">
+  <title>Browsers - Now Playing</title>
+  <p>The "Now Playing" browser shows you all sorts of information about the song playing right now. Information found on the "Now Playing" page changes as soon as a new track starts.</p>
+  <figure>
+    <desc>The "Now Playing" browser</desc>
+    <media type="image" src="Images/browser-nowplaying.png"/>
+  </figure>
+  <terms>
+    <title>The "Now Playing" browser provides the following information:</title>
+    <item>
+      <title>Album picture</title>
+      <p>The image in the upper left corner is the album picture.</p>
+    </item>
+    <item>
+      <title>Song title</title>
+      <p>The big headlining text is the song title.</p>
+    </item>
+    <item>
+      <title>Artist name</title>
+      <p>The performers of the current song.</p>
+    </item>
+    <item>
+      <title>Album name</title>
+      <p>The album name in which the current song is featured.</p>
+    </item>
+    <item>
+      <title>Genre</title>
+      <p>This displays the genre of the current playing song.</p>
+    </item>
+    <item>
+      <title>Format</title>
+      <p>Format is giving information about sound specific information, the amount of channels, the frequency of the song and the amount of kbps.</p>
+    </item>
+    <item>
+      <title>Codec</title>
+      <p>Codec used for decoding the song.</p>
+    </item>
+    <item>
+      <title>Length</title>
+      <p>Length of the song in minutes, rounded downwords (2:10 = 2 minutes, 1:59 = 1 minute)</p>
+    </item>
+    <item>
+      <title>Track number</title>
+      <p>Track number of the album it's featuring in.</p>
+    </item>
+    <item>
+      <title>Artist picture</title>
+      <p>Image in the upper right corner is a picture from the artist.</p>
+    </item>
+  </terms>
+  <terms>
+    <title>The tabbed view gives you access to:</title>
+    <item>
+      <title>Lyrics</title>
+      <p>Fetches and displays them when possible. (Lyrics can only be fetched when lyrics plugins are installed)</p>
+    </item>
+    <item>
+      <title>Guitar Tabs</title>
+      <p>Fetches guitar tabs for the current playing song. (This only works with the Guitar Tabs plugin installed)</p>
+    </item>
+    <item>
+      <title>Similar Songs</title>
+      <p>Will find similar songs in your own database based on the genre of the song.</p>
+    </item>
+    <item>
+      <title>Similar Artists</title>
+      <p>Last.fm checks for similar artists and these results are displayed.</p>
+    </item>
+    <item>
+      <title>Web Links</title>
+      <p>Shows several links to different pages.</p>
+    </item>
+    <item>
+      <title>Artist Information</title>
+      <p>Shows information about the artist fetched from last.fm.</p>
+    </item>
+  </terms>
+  <p>To the right of the tabbed view there is a list of other albums from the currently playing artist. When you click on one of the albums, it will give you information about the album in the metadata browser.</p>
+  <note>
+    <p>The album list will only be shown when there are actually other albums from the artist in your mpd database.</p>
+  </note>
 </page>

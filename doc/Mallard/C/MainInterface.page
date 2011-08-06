@@ -1,61 +1,53 @@
-<page xmlns="http://projectmallard.org/1.0/"
-      type="topic"
-      id="MainInterface">
-
-    <title>Main Interface</title>
-    <p>
-        The following image displays GMPC’s main window:
+<?xml version="1.0"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="MainInterface">
+  <title>Main Interface</title>
+  <p>
+        The following image displays GMPC&#x2019;s main window:
     </p>
-    
-    <section id="full">
-        <title>Full view</title>
-        <figure>
-            <desc>GMPC full view</desc>
-            <media type="image" src="Images/main-window.png"/>
-        </figure>
-        <p>
+  <section id="full">
+    <title>Full view</title>
+    <figure>
+      <desc>GMPC full view</desc>
+      <media type="image" src="Images/main-window.png"/>
+    </figure>
+    <p>
             If you collapse the main window, parts of the window might be hidden. Currently there are 2 collapsed views.
         </p>
-    </section>
-
-    <section id="collapsed">
-        <title>Collapsed</title>
-        <p>
+  </section>
+  <section id="collapsed">
+    <title>Collapsed</title>
+    <p>
             If you collapse the main window, parts of the window might be hidden. Currently there are 2 collapsed views.
             First stage:
         </p>
-        <figure>
-            <desc>GMPC Collapsed</desc>
-            <media type="image" src="Images/main-window-collapsed1.png"/>
-        </figure>
-        <p>
+    <figure>
+      <desc>GMPC Collapsed</desc>
+      <media type="image" src="Images/main-window-collapsed1.png"/>
+    </figure>
+    <p>
             Second stage:
         </p>
-         <figure>
-            <desc>GMPC Small</desc>
-            <media type="image" src="Images/main-view-collapsed2.png"/>
-         </figure>
-    </section>
-    <p> 
+    <figure>
+      <desc>GMPC Small</desc>
+      <media type="image" src="Images/main-view-collapsed2.png"/>
+    </figure>
+  </section>
+  <p> 
         In the next view sections we will explain each part of the interface.
     </p>
-
-
-    <section id="menubar">
-        <title>The menu bar</title>
-        <media type="image" src="Images/menu-bar.png"/>
-        <p>
+  <section id="menubar">
+    <title>The menu bar</title>
+    <media type="image" src="Images/menu-bar.png"/>
+    <p>
             The menu bar gives you direct acces to every part of the program. You can control playback (control item), configure gmpc, enable outputs, switch to another profile, etc.
         </p>
-
-        <note>
-            <p>
+    <note>
+      <p>
                 There might be more or less menu items available depending on the number of plugins installed.
             </p>
-        </note>
-
-        <tree>
-            <item>Music
+    </note>
+    <tree>
+      <item>Music
                 <item>Connect - Connect to MPD.</item>
                 <item>Disconnect - Disconnect from MPD.</item>
                 <item>Send password - Send a new password to MPD. This can either increase or drop the permission level.</item>
@@ -68,13 +60,13 @@
                 <item>Preferences - Opens the preferences pane. (more here)</item>
                 <item>Quit - Completely quits GMPC.</item>
             </item>
-            <item>
+      <item>
                 Server
                 <item>Update database - Tells MPD to update the complete database.</item>
                 <item>Information - Opens a window with server information. (more here)</item>
                 <item>List of outputs available on the connected MPD. This allows you to enable and disable them.</item>
             </item>
-            <item>
+      <item>
                 Control
                 <item>Play/Pause</item>
                 <item>Stop</item>
@@ -86,149 +78,162 @@
                 <item>Single mode - Enable/Disable single mode. Single mode makes MPD not progres to the next song.</item>
                 <item>Consume - Enable/Disable consume mode. Consume mode makes MPD remove played songs from the play-queue.</item>
             </item>
-            <item>
+      <item>
                 View
                 <item>Expand Interface - Makes GMPC interface include more elements.</item>
                 <item>Collapse Interface - Hides elements from the GMPC interface.</item>
                 <item>Fullscreen - Switch to fullscreen mode.</item>
                 <item>Show artist image - Enable/Disable an artist image to be embedded below the sidebar.</item>
             </item>
-            <item>
+      <item>
                 Option
                 <item>These show options for the current visible browser.</item>
             </item>
-            <item>
+      <item>
                 Tool
                 <item>Add Url - Add a remote URI to the play-queue. (see here)</item>
                 <item>List of global options that are inserted by plugins.</item>
             </item>
-            <item>
+      <item>
                 Go
                 <item>Gives a list of enabled browsers and allows you to switch between them quickly.</item>
             </item>
-            <item>
+      <item>
                 Help
                 <item>Show messages - Shows you a list of messages, warnings and information that GMPC have shown in the past.</item>
-                <item>Visit website - Opens GMPC’s website.</item>
-                <item>Getting Help - Opens GMPC’s Wiki on the getting help page.</item>
+                <item>Visit website - Opens GMPC&#x2019;s website.</item>
+                <item>Getting Help - Opens GMPC&#x2019;s Wiki on the getting help page.</item>
                 <item>Bug information - Opens a dialog with information about your current GMPC. (more here)</item>
                 <item>Easy command help - Opens a list of possible commands for the easy-command dialog. More information can be found here.</item>
                 <item>About - Opens about dialog.</item>
             </item>
-        </tree>
-    </section>
-
-    <section id="PlaybackControl">
-        <title>Playback Control</title>
-        <media type="image" src="Images/playback-control.png"/>
-        <p>
+    </tree>
+  </section>
+  <section id="PlaybackControl">
+    <title>Playback Control</title>
+    <media type="image" src="Images/playback-control.png"/>
+    <p>
             I will explain the elements from left to right.
         </p>
-        <section id="AlbumCover">
-            <title>Album art</title>
-            <media type="image" src="Images/pc-cover.png"/>
-            <p>
+    <section id="AlbumCover">
+      <title>Album art</title>
+      <media type="image" src="Images/pc-cover.png"/>
+      <p>
                 This shows cover of the currently playing album. If no cover is available, or the song has not information about it, an empty case or cd is shown.
             </p>
-            
-            <note>
-                <list>
-                    <item><p>Hovering the cover will show an enlarged version of the cover.</p></item>
-                    <item><p>Right mouse click on the cover allows you to modify it.</p></item>
-                    <item><p>You can modify the look of the cover art in the preferences pane. (With or without the casing)</p></item>
-                </list>
-            </note>
-            <figure>
-                <desc>Album art with and without case</desc>
-                <media type="image" src="Images/pc-cover.png"/>
-                <media type="image" src="Images/pc-cover-plain.png"/>
-            </figure>
-
-        </section>
-        <section id="SongInfo">
-            <title>Song information</title>
-            <media type="image" src="Images/pc-song-info.png"/>
-            <p>
+      <note>
+        <list>
+          <item>
+            <p>Hovering the cover will show an enlarged version of the cover.</p>
+          </item>
+          <item>
+            <p>Right mouse click on the cover allows you to modify it.</p>
+          </item>
+          <item>
+            <p>You can modify the look of the cover art in the preferences pane. (With or without the casing)</p>
+          </item>
+        </list>
+      </note>
+      <figure>
+        <desc>Album art with and without case</desc>
+        <media type="image" src="Images/pc-cover.png"/>
+        <media type="image" src="Images/pc-cover-plain.png"/>
+      </figure>
+    </section>
+    <section id="SongInfo">
+      <title>Song information</title>
+      <media type="image" src="Images/pc-song-info.png"/>
+      <p>
                 Next to it is basic information about the song. This shows the Title, artist and album name.
             </p>
-            <note>
-                <p>
+      <note>
+        <p>
                     If you click on the title, artist or album name it will jump to that section in the Metadata Browser.
                 </p>
-            </note>
-        </section>
-        <section id="Favorite">
-            <title>Favorite</title>
-		    <media type="image" src="Images/pc-favorite-nhl.png"/>
-		    <p>
+      </note>
+    </section>
+    <section id="Favorite">
+      <title>Favorite</title>
+      <media type="image" src="Images/pc-favorite-nhl.png"/>
+      <p>
 			    The heart-shaped icon allows you to mark (or unmark) the song as favorite by clicking in on it.
     			If the song is marked as favorite the icon is highlighted, if it is not a favorite, the icon is dimmed.
 	    	</p>
-		    <figure>
-			    <title>Song is a favorite</title>
-    			<media type="image" src="Images/pc-favorite-hl.png"/>
-	    	</figure>
-		    <figure>
-    		    <title>Song is not marked a favorite</title>
-	        	<media type="image" src="Images/pc-favorite-nhl.png"/>
-        	</figure>
-            <p>
+      <figure>
+        <title>Song is a favorite</title>
+        <media type="image" src="Images/pc-favorite-hl.png"/>
+      </figure>
+      <figure>
+        <title>Song is not marked a favorite</title>
+        <media type="image" src="Images/pc-favorite-nhl.png"/>
+      </figure>
+      <p>
                 GMPC stores the favorite songs are stored in a playlist called Favorite. This way the information
                 can be shared between different clients.
             </p>
-            <note>
-                <p>
+      <note>
+        <p>
                     Right click on the favorite icon allows you to add the current song to any playlist.
                 </p>
-            </note>
-            <note>
-                <p>
+      </note>
+      <note>
+        <p>
                     To make favorites work, MPD needs to be able to store and load playlists.
                 </p>
-            </note>
-        </section>
-        <section id="PlaybackControl">
-            <title>Playback Control</title>
-            <media type="image" src="Images/pc-playback-control.png"/>
-            <p>
+      </note>
+    </section>
+    <section id="PlaybackControl">
+      <title>Playback Control</title>
+      <media type="image" src="Images/pc-playback-control.png"/>
+      <p>
                 Of course the playback control buttons are also available: Play/Pause, Previous, Next, Stop and volume control.
             </p>
-            <note>
-                <list>
-                    <item><p>You need sufficient permission to control playback. If you do not have the permission, the buttons will be made insensitive.</p></item>
-                    <item><p>If there is no output mixer defined in MPD, or it is not currently available, the Volume control is made insensitive.</p></item>
-                </list>
-            </note>
-            <note>
-                <p>
+      <note>
+        <list>
+          <item>
+            <p>You need sufficient permission to control playback. If you do not have the permission, the buttons will be made insensitive.</p>
+          </item>
+          <item>
+            <p>If there is no output mixer defined in MPD, or it is not currently available, the Volume control is made insensitive.</p>
+          </item>
+        </list>
+      </note>
+      <note>
+        <p>
                     Hovering your mouse over the next button will show a tooltip with the title of the next song.
                 </p>
-            </note>
-        </section>
-        <section id="SeekBar">
-            <title>Seek bar</title>
-            <media type="image" src="Images/pc-seek-bar.png"/>
-            <p>
+      </note>
+    </section>
+    <section id="SeekBar">
+      <title>Seek bar</title>
+      <media type="image" src="Images/pc-seek-bar.png"/>
+      <p>
                 Below is the progress/seek bar. This indicates how much of the song is allready played. 
                 You can drag the bar to a certain position to seek. Pressing the middle mouse button will instantly jump to that position. 
             </p>
-            <p>
+      <p>
                 On the right of the seekbar is the progressed time (or remaining, see tip) and the total time of the song (if available).
 
             </p>
-            <note>
-                 <list>
-                     <item><p>
+      <note>
+        <list>
+          <item>
+            <p>
                          Right mouse click on the seekbar changes the time indication from progressed time to remaining time and back.
-                     </p></item>
-                     <item><p>
+                     </p>
+          </item>
+          <item>
+            <p>
                          Hovering the progress bar  will show you the time (or remaining) under the cursor. Allowing you to seek exactly to one point.
-                     </p></item>
-                     <item><p>
+                     </p>
+          </item>
+          <item>
+            <p>
                          Seeking is not instant, but the seek is done as you drop the handle. This is done so MPD is not spammed with seek requests.
-                     </p></item>
-                 </list>
-            </note>
-        </section>
+                     </p>
+          </item>
+        </list>
+      </note>
     </section>
+  </section>
 </page>

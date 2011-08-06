@@ -35,7 +35,7 @@
         </p>
   </note>
   <note>
-  <p>
+    <p>
         GMPC has a QuerySyntax, this is specified by "query" in the list below.
         TODO: More information about the syntax can be found here
   </p>
@@ -152,26 +152,26 @@
       </item>
     </terms>
     <terms>
-        <title>Play-Queue Manipulation</title>
-        <item>
-            <title>add "query"</title>
-            <p>
+      <title>Play-Queue Manipulation</title>
+      <item>
+        <title>add "query"</title>
+        <p>
                 Adds the result of "query" to the play queue.
             </p>
-        </item>
-        <item>
-            <title>replace "query"</title>
-            <p>
+      </item>
+      <item>
+        <title>replace "query"</title>
+        <p>
                 Clears the playlist, ads the result of "query" to the play queue.
                 Start playback.
             </p>
-        </item>
-        <item>
-            <title>Clear play queue</title>
-            <p>
+      </item>
+      <item>
+        <title>Clear play queue</title>
+        <p>
                 Clear the play queue.
             </p>
-        </item>
+      </item>
     </terms>
   </section>
   <section id="figures">

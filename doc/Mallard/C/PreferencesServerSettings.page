@@ -1,40 +1,36 @@
-<page xmlns="http://projectmallard.org/1.0/"
-      type="topic"
-      id="PreferencesServerSettings">
-
-    <title>Preferences - Server Settings</title>
-    <p>
+<?xml version="1.0"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="PreferencesServerSettings">
+  <title>Preferences - Server Settings</title>
+  <p>
         The following image displays the Server Settings preferences dialog:
     </p>
-    
-    <figure>
-        <desc>The Server Settings preferences dialog</desc>
-        <media type="image" src="Images/preferences-server-settings.png"/>
-    </figure>
-    
-    <p>This dialog allows you to further control the server.</p>
-    
-    <p>The following options are available:</p>
-    <terms>
-        <title>Crossfade:</title>
-        <item>
-            <title>Enable crossfade</title>
-            <p>This sets, whether crossfading is enabled or not.</p>
-        </item>
-        <item>
-            <title>fade time (s)</title>
-            <p>This sets, how many seconds the songs should blend together on song change.</p>
-        </item>
-    </terms>
-    
-    <terms>
-        <title>Output Devices:</title>
-        <item>
-            <p>This lists all available output devices, which are configured on the server. To enable / disable output devices, check or uncheck the box in the "Enabled" column.</p>
-        </item>
-    </terms>    
-    
-    <note><p>You can also switch between output devices in the "Server" menu of GMPC's main window or by key combinations.</p></note>
-    
-    <note><p>MPD not only offers local playback, but also has great streaming support, e.g. over http. Those "output devices" will be shown here as well.</p></note>
+  <figure>
+    <desc>The Server Settings preferences dialog</desc>
+    <media type="image" src="Images/preferences-server-settings.png"/>
+  </figure>
+  <p>This dialog allows you to further control the server.</p>
+  <p>The following options are available:</p>
+  <terms>
+    <title>Crossfade:</title>
+    <item>
+      <title>Enable crossfade</title>
+      <p>This sets, whether crossfading is enabled or not.</p>
+    </item>
+    <item>
+      <title>fade time (s)</title>
+      <p>This sets, how many seconds the songs should blend together on song change.</p>
+    </item>
+  </terms>
+  <terms>
+    <title>Output Devices:</title>
+    <item>
+      <p>This lists all available output devices, which are configured on the server. To enable / disable output devices, check or uncheck the box in the "Enabled" column.</p>
+    </item>
+  </terms>
+  <note>
+    <p>You can also switch between output devices in the "Server" menu of GMPC's main window or by key combinations.</p>
+  </note>
+  <note>
+    <p>MPD not only offers local playback, but also has great streaming support, e.g. over http. Those "output devices" will be shown here as well.</p>
+  </note>
 </page>

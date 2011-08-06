@@ -84,3 +84,10 @@ Images/easy-command.png
 
 
 dist-hook:doc-dist-hook
+
+
+indent-help-pages:
+	@for a in $(DOC_PAGES); do\
+		xmllint -format C/"$$a" > C/"$$a.temp";\
+		mv C/"$$a.temp" C/"$$a";\
+	done

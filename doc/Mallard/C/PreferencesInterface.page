@@ -1,102 +1,90 @@
-<page xmlns="http://projectmallard.org/1.0/"
-      type="topic"
-      id="PreferencesInterface">
-
-    <title>Preferences - Interface</title>
-    <p>
+<?xml version="1.0"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="PreferencesInterface">
+  <title>Preferences - Interface</title>
+  <p>
         The following image displays the Interface preferences dialog:
     </p>
-    
-    <figure>
-        <desc>The Interface preferences dialog</desc>
-        <media type="image" src="Images/preferences-interface.png"/>
-    </figure>
-    
-    <p>This dialog offers the configuration of several interface related aspects.</p>
-    
-    <section id="settings">
-        <title>Settings</title>
-        <terms>
-            <title>Main:</title>
-            <item>
-                <title>Hide on close</title>
-                <p>If you enable this option, GMPC's main window will be minimized instead of closed when requested. If the tray icon is shown, GMPC will hide it's main window.</p>
-            </item>
-            <item>
-                <title>Stylize album covers</title>
-                <p>TODO</p>
-            </item>
-             <item>
-                <title>Stop playing on exit</title>
-                <p>If this option is enabled, GMPC will stop playback before quitting.</p>
-            </item>
-             <item>
-                <title>Show songlist tooltip</title>
-                <p>Enable this, if you want tooltips showing further information when hovering items in songlists.</p>
-            </item>
-            <item>
-                <title>Show buttons instead of dropdown in collapsed view</title>
-                <p>When enabled, this will show buttons instead of a dropdown to switch between the different browsers in collapsed view.</p>
-            </item>
-            <item>
-                <title>Enable search as you type. (Might be slow)</title>
-                <p>You don't have to press enter to search.</p>
-            </item>
-        </terms>
-        <terms>
-            <title>Playlist:</title>
-            <item>
-                <title>Center playing song</title>
-                <p>The currently playing song will be centered in the "Play Queue" browser by automatically scrolling the playlist when the song changes.</p>
-            </item>
-            <item>
-                <title>Save position and size between sessions</title>
-                <p>TODO</p>
-            </item>
-            <item>
-                <title></title>
-                <p></p>
-            </item>
-            <item>
-                <title></title>
-                <p></p>
-            </item>
-        </terms>
-
-    </section>
-
-    <section id="advancedSettings">
-        <title>Advanced settings</title>
-        <p>When you click the "Advanced settings" button, a window will appear giving you even further configuration options.</p>
-        
-        <terms>
-            <title>Interface</title>
-            <item>
-                <title>Hide album art</title>
-                <p>This will hide the album art in the "Now Playing" browser and the notification popup.</p>
-            </item>
-            <item>
-                <title>Hide favorite icon</title>
-                <p>This will hide the favorite icon in the player.</p>
-            </item>
-            <item>
-                <title>Use backdrops (restart required)</title>
-                <p>This will put the artists image in a darkend version behind the contents of the "Now Playing" browser.</p>
-            </item>
-            <item>
-                <title>Use legacy tray icon</title>
-                <p>This option is only available if you compiled GMPC with AppIndicator support. This option allows you to seamlessly switch between the AppIndicator and the old tray icon. More information on this is available in the "Preferences"->"Notification" section.</p>
-            </item>
-        </terms>
-        
-
-        <terms>
-            <title>Browsers</title>
-            <item>
-                <p>These items allow you to individually select, which of GMPC's internal browsers should be visible.</p>
-            </item>
-        </terms>
-        
-    </section>
-
+  <figure>
+    <desc>The Interface preferences dialog</desc>
+    <media type="image" src="Images/preferences-interface.png"/>
+  </figure>
+  <p>This dialog offers the configuration of several interface related aspects.</p>
+  <section id="settings">
+    <title>Settings</title>
+    <terms>
+      <title>Main:</title>
+      <item>
+        <title>Hide on close</title>
+        <p>If you enable this option, GMPC's main window will be minimized instead of closed when requested. If the tray icon is shown, GMPC will hide it's main window.</p>
+      </item>
+      <item>
+        <title>Stylize album covers</title>
+        <p>TODO</p>
+      </item>
+      <item>
+        <title>Stop playing on exit</title>
+        <p>If this option is enabled, GMPC will stop playback before quitting.</p>
+      </item>
+      <item>
+        <title>Show songlist tooltip</title>
+        <p>Enable this, if you want tooltips showing further information when hovering items in songlists.</p>
+      </item>
+      <item>
+        <title>Show buttons instead of dropdown in collapsed view</title>
+        <p>When enabled, this will show buttons instead of a dropdown to switch between the different browsers in collapsed view.</p>
+      </item>
+      <item>
+        <title>Enable search as you type. (Might be slow)</title>
+        <p>You don't have to press enter to search.</p>
+      </item>
+    </terms>
+    <terms>
+      <title>Playlist:</title>
+      <item>
+        <title>Center playing song</title>
+        <p>The currently playing song will be centered in the "Play Queue" browser by automatically scrolling the playlist when the song changes.</p>
+      </item>
+      <item>
+        <title>Save position and size between sessions</title>
+        <p>TODO</p>
+      </item>
+      <item>
+        <title/>
+        <p/>
+      </item>
+      <item>
+        <title/>
+        <p/>
+      </item>
+    </terms>
+  </section>
+  <section id="advancedSettings">
+    <title>Advanced settings</title>
+    <p>When you click the "Advanced settings" button, a window will appear giving you even further configuration options.</p>
+    <terms>
+      <title>Interface</title>
+      <item>
+        <title>Hide album art</title>
+        <p>This will hide the album art in the "Now Playing" browser and the notification popup.</p>
+      </item>
+      <item>
+        <title>Hide favorite icon</title>
+        <p>This will hide the favorite icon in the player.</p>
+      </item>
+      <item>
+        <title>Use backdrops (restart required)</title>
+        <p>This will put the artists image in a darkend version behind the contents of the "Now Playing" browser.</p>
+      </item>
+      <item>
+        <title>Use legacy tray icon</title>
+        <p>This option is only available if you compiled GMPC with AppIndicator support. This option allows you to seamlessly switch between the AppIndicator and the old tray icon. More information on this is available in the "Preferences"-&gt;"Notification" section.</p>
+      </item>
+    </terms>
+    <terms>
+      <title>Browsers</title>
+      <item>
+        <p>These items allow you to individually select, which of GMPC's internal browsers should be visible.</p>
+      </item>
+    </terms>
+  </section>
 </page>
