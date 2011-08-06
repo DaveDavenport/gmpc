@@ -15,6 +15,7 @@
             <item><p>libmpd</p></item>
             <item><p>sqlite3</p></item>
             <item><p>libxml2</p></item>
+            <item><p>libsoup</p></item>
         </list>
         <list>
             <title>Optional libraries:</title>
