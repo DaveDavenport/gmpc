@@ -79,8 +79,8 @@ Images/sidebar-hori1.png\
 Images/sidebar-hori2.png\
 Images/sidebar.png\
 Images/status-bar.png\
-Images/status-icons.png
+Images/status-icons.png\
+Images/easy-command.png
 
 
 dist-hook:doc-dist-hook
-

@@ -1,9 +1,184 @@
-<page xmlns="http://projectmallard.org/1.0/"
-      type="topic"
-      id="EasyCommand">
+<?xml version="1.0"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="EasyCommand">
+  <title>Easy Command</title>
+  <p>
+        A feature in post gmpc-0.16.x development repositories is gmpc has an feature called "easy command".
+        Easy command gives you a small command box, allowing you to quickly execute commands without having to use the mouse.
+        For example, send the command to gmpc to search in the play queue for the song Holy Mother from the artist Eric Clapton and play that song immediately the following could easily be typed.
+    </p>
+  <p>
+        Start the easycommand mode:
+        <cmd>
+                Ctrl-space
+        </cmd>
+    </p>
+  <note>
+    <p>
+        You can also configure a desktop wide key, in the preferences pane under
+        Multimedia keys.
+        </p>
+  </note>
+  <p>
+        Now type in the following:
+        <cmd>
+            play title=Holy Mother artist=Eric Clapton
+        </cmd>
+    </p>
+  <p>
+        Below is a list of commands that EasyCommand supports.
 
-    <title>Easy Command</title>
-    <p>Easy command provides a commandline interface in GMPC. Allowing you to quickly control MPD and GMPC. For example if you want to play the song 'Layla' from 'Eric Clapton' you just type: <code>play title=layla artist=clapton</code></p>
-    
-    <p>TODO</p>  
+    </p>
+  <note>
+    <p> The list below might not be complete. Commands can be added or removed
+            based on configuration and availability of plugins.
+            To get a complete list, look at <code>Help-&gt;Easy Comand Help</code>
+        </p>
+  </note>
+  <note>
+  <p>
+        GMPC has a QuerySyntax, this is specified by "query" in the list below.
+        TODO: More information about the syntax can be found here
+  </p>
+  </note>
+  <section id="EasyCommands">
+    <title>Commands</title>
+    <terms>
+      <title>Switch</title>
+      <item>
+        <title>switch play queue:</title>
+        <p>Focus the play-queue</p>
+      </item>
+      <item>
+        <title>switch now playing:</title>
+        <p>Focus the now playing browser</p>
+      </item>
+      <item>
+        <title>switch metadata:</title>
+        <p>Focus the metadata browser</p>
+      </item>
+      <item>
+        <title>switch search:</title>
+        <p>Focus the search browser</p>
+      </item>
+    </terms>
+    <terms>
+      <title>Main</title>
+      <item>
+        <title>quit</title>
+        <p>Close GMPC</p>
+      </item>
+      <item>
+        <title>hide</title>
+        <p>Hide the GMPC window</p>
+      </item>
+      <item>
+        <title>show</title>
+        <p>Unhide and present the GMPC</p>
+      </item>
+      <item>
+        <title>show notification</title>
+        <p>Show the notification popup (if enabled)</p>
+      </item>
+    </terms>
+    <terms>
+      <title>Playback</title>
+      <item>
+        <title>play</title>
+        <p>start playback</p>
+      </item>
+      <item>
+        <title>pause</title>
+        <p> pause playback</p>
+      </item>
+      <item>
+        <title>next</title>
+        <p> next song</p>
+      </item>
+      <item>
+        <title>prev</title>
+        <p> previous song</p>
+      </item>
+      <item>
+        <title>stop</title>
+        <p> stop playback</p>
+      </item>
+      <item>
+        <title>random (on|off)</title>
+        <p> Random (on|off)</p>
+      </item>
+      <item>
+        <title>repeat (on|off)</title>
+        <p> Repeat (on|off)</p>
+      </item>
+      <item>
+        <title>volume [+-]?[0-9]+</title>
+        <p> Volume "level"</p>
+      </item>
+      <item>
+        <title>mute</title>
+        <p> Mute</p>
+      </item>
+      <item>
+        <title>play .*</title>
+        <p> Play "query"</p>
+      </item>
+      <item>
+        <title>seek hh:mm:ss</title>
+        <p> Seek to position</p>
+      </item>
+      <item>
+        <title>seek +hh:mm:ss</title>
+        <p> Seek relative to current position</p>
+      </item>
+      <item>
+        <title>seek -hh:mm:ss</title>
+        <p> Seek backwards relative to current position</p>
+      </item>
+      <item>
+        <title>repeat current song</title>
+        <p> Repeats the currently playing song forever</p>
+      </item>
+      <item>
+        <title>stop after current song</title>
+        <p> Stops playback after current song</p>
+      </item>
+      <item>
+        <title>consume (on|off)</title>
+        <p>Enable/Disable consume mode</p>
+      </item>
+      <item>
+        <title>single (on|off)</title>
+        <p>Enable/Disable single mode</p>
+      </item>
+    </terms>
+    <terms>
+        <title>Play-Queue Manipulation</title>
+        <item>
+            <title>add "query"</title>
+            <p>
+                Adds the result of "query" to the play queue.
+            </p>
+        </item>
+        <item>
+            <title>replace "query"</title>
+            <p>
+                Clears the playlist, ads the result of "query" to the play queue.
+                Start playback.
+            </p>
+        </item>
+        <item>
+            <title>Clear play queue</title>
+            <p>
+                Clear the play queue.
+            </p>
+        </item>
+    </terms>
+  </section>
+  <section id="figures">
+    <title>Screenshots</title>
+    <figure>
+      <desc>The desktop wide Easycommand popup</desc>
+      <media type="image" src="Images/easy-command.png"/>
+    </figure>
+  </section>
 </page>
