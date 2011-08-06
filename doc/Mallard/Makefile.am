@@ -1,5 +1,5 @@
 include ../../gnome-doc-utils.make
-DOC_ID = @PACKAGE@-@VERSION@
+DOC_ID = @PACKAGE@
 DOC_INCLUDES = legal.xml
 DOC_LINGUAS=
 
