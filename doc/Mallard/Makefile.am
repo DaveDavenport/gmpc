@@ -91,3 +91,10 @@ indent-help-pages:
 		xmllint -format C/"$$a" > C/"$$a.temp";\
 		mv C/"$$a.temp" C/"$$a";\
 	done
+
+create-xhtml-pages:
+	@mkdir html;\
+	for a in $(DOC_PAGES);\
+	do\
+		bash gnome-doc-tool xhtml --copy-graphics --css-file="style.css" "C/$$a" -o html/;\
+	done
