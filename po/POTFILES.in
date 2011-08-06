@@ -28,6 +28,7 @@ src/smclient/eggsmclient.c
 [type: gettext/glade]glade/playlist-save-dialog.ui
 [type: gettext/glade]glade/gmpc-add-url.ui
 [type: gettext/glade]glade/playlist3.ui
+[type: gettext/glade]glade/preferences-metadata-appearance.ui
 
 
 # Browsers

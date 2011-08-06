@@ -54,6 +54,7 @@ gmpc_TOOLS_FILES=\
     Tools/gmpc-database-update-tracker.vala\
     Tools/gmpc-metadata-prefetcher.vala\
     Tools/gmpc-liststore-sort.vala\
+    Tools/gmpc-metadata-appearance.vala \
     Tools/gmpc_easy_download.c\
     Tools/mpd-easy-commands.c\
     Tools/advanced-search.c\

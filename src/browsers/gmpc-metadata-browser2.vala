@@ -34,7 +34,7 @@ using Gmpc;
 private const bool use_transition_mdb = Gmpc.use_transition;
 private const string some_unique_name_mdb = Config.VERSION;
 
-public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface, Gmpc.Plugin.PreferencesIface
+public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface
 {
     private int block_update = 0;
     /* Stores the location in the cat_tree */
@@ -2636,83 +2636,6 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         }
     }
 
-    /**
-     * Preferences
-     */
-     public void
-     preferences_pane_construct(Gtk.Container container)
-     {
-        var box = new Gtk.VBox(false, 6);
-        /* Title */
-        var label = new Gtk.Label(_("Enable/disable metadata options"));
-        label.set_alignment(0.0f, 0.5f);
-        box.pack_start(label, false, false,0);
-
-        /* Artist information */
-        var chk = new Gtk.CheckButton.with_label(_("Artist information"));
-        chk.set_active((config.get_int_with_default("MetaData", "show-artist-information",1) == 1));
-        box.pack_start(chk, false, false,0);
-        chk.toggled.connect ((source)=> {
-           config.set_int("MetaData", "show-artist-information", (int)source.get_active());
-        });
-        /* Album information */
-        chk = new Gtk.CheckButton.with_label(_("Album information"));
-        chk.set_active((config.get_int_with_default("MetaData", "show-album-information",1) == 1));
-        box.pack_start(chk, false, false,0);
-        chk.toggled.connect ((source)=> {
-           config.set_int("MetaData", "show-album-information", (int)source.get_active());
-        });
-
-        /* Artist similar */
-        chk = new Gtk.CheckButton.with_label(_("Similar Artist"));
-        chk.set_active((config.get_int_with_default("MetaData", "show-similar-artist",1) == 1));
-        box.pack_start(chk, false, false,0);
-        chk.toggled.connect ((source)=> {
-           config.set_int("MetaData", "show-similar-artist", (int)source.get_active());
-        });
-
-        /* Lyrics */
-        chk = new Gtk.CheckButton.with_label(_("Lyrics"));
-        chk.set_active((config.get_int_with_default("MetaData", "show-lyrics",1) == 1));
-        box.pack_start(chk, false, false,0);
-        chk.toggled.connect ((source)=> {
-           config.set_int("MetaData", "show-lyrics", (int)source.get_active());
-        });
-
-        /* Guitar Tabs*/
-        chk = new Gtk.CheckButton.with_label(_("Guitar Tabs"));
-        chk.set_active((config.get_int_with_default("MetaData", "show-guitar-tabs",1) == 1));
-        box.pack_start(chk, false, false,0);
-        chk.toggled.connect ((source)=> {
-           config.set_int("MetaData", "show-guitar-tabs", (int)source.get_active());
-        });
-        /* Similar songs*/
-        chk = new Gtk.CheckButton.with_label(_("Similar Songs"));
-        chk.set_active((config.get_int_with_default("MetaData", "show-similar-songs",1) == 1));
-        box.pack_start(chk, false, false,0);
-        chk.toggled.connect ((source)=> {
-           config.set_int("MetaData", "show-similar-songs", (int)source.get_active());
-        });
-        /* Web links*/
-        chk = new Gtk.CheckButton.with_label(_("Web links"));
-        chk.set_active((config.get_int_with_default("MetaData", "show-web-links",1) == 1));
-        box.pack_start(chk, false, false,0);
-        chk.toggled.connect ((source)=> {
-           config.set_int("MetaData", "show-web-links", (int)source.get_active());
-        });
-
-        container.add(box);
-        box.show_all();
-     }
-
-     public void
-     preferences_pane_destroy(Gtk.Container container)
-     {
-        foreach(Gtk.Widget child in container.get_children())
-        {
-            container.remove(child);
-        }
-     }
      private void change_color_style(Gtk.Widget bg)
      {
          debug("change style");

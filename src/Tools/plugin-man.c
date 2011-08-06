@@ -96,6 +96,10 @@ void plugin_manager_load_internal_plugins(void)
             GMPC_PLUGIN_BASE(gmpc_browsers_nowplaying_new()),
             0, NULL);
 
+    plugin_add_new(
+            GMPC_PLUGIN_BASE(gmpc_tools_metadata_appearance_new()),
+            0, NULL);
+
 
     /* Initialize the message system */
     plugin_add_new(GMPC_PLUGIN_BASE(pl3_messages), 0, NULL);
