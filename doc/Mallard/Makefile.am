@@ -21,7 +21,7 @@ DOC_PAGES = \
 	PreferencesConnection.page\
 	PreferencesInterface.page\
 	PreferencesInternalExtraPlaylistView.page\
-	PreferencesMetadataBrowser.page\
+	PreferencesMetadataAppearance.page\
 	PreferencesMetadataHandler.page\
 	PreferencesMultimediaKeys.page\
 	PreferencesNotification.page\

@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
-<page xmlns="http://projectmallard.org/1.0/" type="topic" id="PreferencesMetadataBrowser">
-  <title>Preferences - Metadata Browser</title>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="PreferencesMetadataAppearance">
+  <title>Preferences - Metadata Appearance</title>
   <p>
         This dialog menu lets you control, which metadata shall be shown in the "Metadata"- and "Now Playing" browsers.
     </p>
   <figure>
     <desc>The "Metadata Browser" preferences dialog</desc>
-    <media type="image" src="Images/preferences-metadata-browser.png"/>
+    <media type="image" src="Images/preferences-metadata-appearance.png"/>
   </figure>
   <p>To show / hide metadata tabs, check or uncheck the respective checkbox.</p>
 </page>

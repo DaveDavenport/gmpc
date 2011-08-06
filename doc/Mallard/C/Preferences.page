@@ -77,8 +77,8 @@
       </item>
       <item>
         <title>
-          <link xref="PreferencesMetadataBrowser">
-                    Metadata Browser
+          <link xref="PreferencesMetadataAppearance">
+                    Metadata Appearance
                 </link>
         </title>
         <p>This dialog menu lets you control, which metadata shall be shown in the "Metadata"- and "Now Playing" browsers.</p>
