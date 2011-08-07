@@ -1187,6 +1187,10 @@ void create_playlist3(void)
 
 	TEC("signal connn changed")
 
+    /** Remove statusbar border */
+    GtkStatusbar *statusbar = gtk_builder_get_object(pl3_xml, "statusbar1");
+    gtk_frame_set_shadow_type (GTK_FRAME (statusbar->frame), GTK_SHADOW_NONE);
+
     /**
      * Add status icons
      */
