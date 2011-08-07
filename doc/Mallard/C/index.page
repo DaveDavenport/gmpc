@@ -17,7 +17,7 @@
     <desc>The Gnome Music Player Client</desc>
     <media type="image" src="Images/main-window.png"/>
   </figure>
-  <section id="#QuickStartGuide">
+  <section id="QuickStartGuide">
     <title>
       <link xref="QuickStartGuide">
                 Quick start
@@ -27,7 +27,7 @@
             A guide giving a quick introduction to Gnome Music Player Client.
         </p>
   </section>
-  <section id="#IFace">
+  <section id="IFace">
     <title>
       <link xref="MainInterface">
             The main interface explained
@@ -37,7 +37,7 @@
         In this section each part of the main interface is explained.
       </p>
   </section>
-  <section id="#Browsers">
+  <section id="Browsers">
     <title>
       <link xref="Browsers">
             Browsers
@@ -47,7 +47,7 @@
         GMPC uses so called "Browsers" to structure the vast amount of possibilities, GMPC has to offer.
       </p>
   </section>
-  <section id="#Preferences">
+  <section id="Preferences">
     <title>
       <link xref="Preferences">
             Preferences
@@ -57,7 +57,7 @@
         The Preferences window allows you to configure GMPC and its plugins.
       </p>
   </section>
-  <section id="#EasyCommands">
+  <section id="EasyCommands">
     <title>
       <link xref="EasyCommand">
                 Easy Command
@@ -68,7 +68,7 @@
                 This section explains the possibilities easy command offers.
         </p>
   </section>
-  <section id="#TipsAndTricks">
+  <section id="TipsAndTricks">
     <title>
       <link xref="TipsAndTricks">
                 Tips and Tricks
@@ -78,7 +78,7 @@
             Tips and tricks for using the Gnome Music Player Client.
         </p>
   </section>
-  <section id="#BuildInstallInstructions">
+  <section id="BuildInstallInstructions">
     <title>
       <link xref="BuildInstallInstructions">
                 Building and installation
@@ -88,7 +88,7 @@
             Instructions, how to install / build GMPC.
         </p>
   </section>
-  <section id="#AboutThisDocument">
+  <section id="AboutThisDocument">
     <title>
       <link xref="AboutThisDocument">
                 About this document

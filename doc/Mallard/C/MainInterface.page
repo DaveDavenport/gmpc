@@ -32,6 +32,8 @@
       <media type="image" src="Images/main-view-collapsed2.png"/>
     </figure>
   </section>
+  <section id="InterfaceExplained">
+  <title>Interface Explained</title>
   <p> 
         In the next view sections we will explain each part of the interface.
     </p>
@@ -109,7 +111,7 @@
             </item>
     </tree>
   </section>
-  <section id="PlaybackControl">
+  <section id="PlaybackControlMenu">
     <title>Playback Control</title>
     <media type="image" src="Images/playback-control.png"/>
     <p>
@@ -189,14 +191,10 @@
                 Of course the playback control buttons are also available: Play/Pause, Previous, Next, Stop and volume control.
             </p>
       <note>
-        <list>
-          <item>
             <p>You need sufficient permission to control playback. If you do not have the permission, the buttons will be made insensitive.</p>
-          </item>
-          <item>
+      </note>
+      <note>
             <p>If there is no output mixer defined in MPD, or it is not currently available, the Volume control is made insensitive.</p>
-          </item>
-        </list>
       </note>
       <note>
         <p>
@@ -235,5 +233,6 @@
         </list>
       </note>
     </section>
+  </section>
   </section>
 </page>

@@ -12,8 +12,8 @@
   <section id="settings">
     <title>Settings</title>
     <terms>
-      <title>Main:</title>
-      <item>
+        <title>Main</title>
+        <item>
         <title>Hide on close</title>
         <p>If you enable this option, GMPC's main window will be minimized instead of closed when requested. If the tray icon is shown, GMPC will hide it's main window.</p>
       </item>
@@ -83,7 +83,8 @@
     <terms>
       <title>Browsers</title>
       <item>
-        <p>These items allow you to individually select, which of GMPC's internal browsers should be visible.</p>
+      <title></title>
+      <p>These items allow you to individually select, which of GMPC's internal browsers should be visible.</p>
       </item>
     </terms>
   </section>

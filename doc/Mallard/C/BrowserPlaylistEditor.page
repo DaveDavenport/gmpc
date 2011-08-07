@@ -6,7 +6,7 @@
     <desc>The Playlist Editor</desc>
     <media type="image" src="Images/browser-playlist-editor.png"/>
   </figure>
-  <section>
+  <section id="sidebar">
     <title>The sidebar</title>
     <p>The playlist editor's sidebar lists all playlists alphabetically sorted, including the automatically created "Favorites" playlist.</p>
     <terms>
@@ -37,7 +37,7 @@
       </item>
     </terms>
   </section>
-  <section>
+  <section id="MainWindow">
     <title>The main window</title>
     <p>The playlist editor's main window lists all songs, which the in the sidebar selected playlist contains. You can drag and drop items to to re-arrange the songs in the playlist.</p>
     <terms>

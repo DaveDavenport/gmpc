@@ -7,6 +7,7 @@
   <p>You will find binary packages of GMPC for most Linux distributions in their respective repositories. However, if you want to build GMPC from source (e.g. if the distributed version is old or is missing not compiled in features) you need recent versions of several libraries.</p>
   <terms>
     <item>
+        <title/>
       <list>
         <title>Required libraries:</title>
         <item>
