@@ -50,7 +50,7 @@ AC_REPLACE_FUNCS(strndup)
 #intltool, libtool. Check for CC compiler
 AC_PROG_INTLTOOL([0.21])
 
-# Check for intltool version, needed for make dist. 
+# Check for intltool version, needed for make dist.
 AM_CONDITIONAL([INTLTOOL_HIGHER_04000], [test ${INTLTOOL_APPLIED_VERSION_AS_INT} -ge 4000])
 
 
@@ -74,20 +74,20 @@ fi
 PKG_PROG_PKG_CONFIG
 unique=0;
 AC_ARG_ENABLE([unique],
-              [--enable-unique Use unique.], 
+              [--enable-unique Use unique.],
 	          [case "${enableval}" in
 		            yes)    enable_unique=true;;
 		             no)    enable_unique=false;;
 		              *)    AC_MSG_ERROR([bad value ${enableval} for --enable-unique]);;
                esac],
                [enable_unique=true])
-# libxspf 
+# libxspf
 libxspf=0;
 libspiff=0;
 
 
 AC_ARG_ENABLE([libxspf],
-              [--enable-libxspf Use libxspf.], 
+              [--enable-libxspf Use libxspf.],
 	          [case "${enableval}" in
 		            yes)    enable_libxspf=true;;
 		             no)    enable_libxspf=false;;
@@ -114,14 +114,14 @@ AC_ARG_ENABLE(libspiff,
      esac],
      [enable_libspiff=auto])
 
-if test "x${enable_libspiff}" != xno; then 
+if test "x${enable_libspiff}" != xno; then
     AC_CHECK_HEADER(spiff/spiff_c.h, AC_CHECK_LIB(spiff, spiff_parse,libspiff=1,libspiff=0),libspiff=0)
     if test "x${libspiff}" = "x1";
     then
         AC_DEFINE(SPIFF,1,["Use or don't use libspiff"])
         SPIFF_LIBS=-lspiff
         AC_SUBST(SPIFF_LIBS)
-    else 
+    else
         if test "x${enable_libspiff}" = "xyes"; then
             AC_MSG_ERROR([libspiff not found])
         fi
@@ -150,7 +150,7 @@ AC_SUBST(GLIB_REQUIRED)
 AC_SUBST(GTK_REQUIRED)
 
 ##
-# User params 
+# User params
 ##
 
 # Maintainer mode
@@ -308,20 +308,20 @@ case $host in
     win32=yes
     EXTRA_LDFLAGS="-export-all-symbols -mms-bitfields" ;;
   *-apple-darwin*)
-    EXTRA_LDFLAGS="-framework Carbon" 
+    EXTRA_LDFLAGS="-framework Carbon"
     macosx=yes;;
 esac
 AM_CONDITIONAL(WIN32, test x$win32 = xyes)
 AM_CONDITIONAL(OSX, test x$macosx = xyes)
-# for smclient 
-AM_CONDITIONAL(PLATFORM_WIN32, test x$win32 = xyes) 
-AM_CONDITIONAL(PLATFORM_OSX, test x$macosx = xyes) 
+# for smclient
+AM_CONDITIONAL(PLATFORM_WIN32, test x$win32 = xyes)
+AM_CONDITIONAL(PLATFORM_OSX, test x$macosx = xyes)
 
 ##
 # These depend on if we are or are not on windows or osX
 
 ##
-# Session support             
+# Session support
 if test x$macosx = xno && test x$win32 = xno ; then
 # Multimedia keys
 AC_ARG_ENABLE([mmkeys],
@@ -394,11 +394,10 @@ AC_ARG_ENABLE([shave],
                 esac],
               [enable_shave=no])
 if test x$enable_shave = xyes; then
-SHAVE_INIT([./]) 
+SHAVE_INIT([./])
 fi
 
-## TODO add a enable/disable around this.
-GNOME_DOC_INIT([0.18.0])
+GNOME_DOC_INIT([0.18.0], [have_gdu=yes], [have_gdu=no])
 
 AC_OUTPUT([
 shave
@@ -538,6 +537,11 @@ if test "x$unique" = "xtrue"; then
 	echo "Use unique library:               enabled"
 else
 	echo "Use unique library:               disabled"
+fi
+if test "x$have_gdu" = "xyes"; then
+	echo "Use Gnome Documentation:          enabled"
+else
+	echo "Use Gnome Documentation:          disabled"
 fi
 echo "";
 echo "Now type make to build"
