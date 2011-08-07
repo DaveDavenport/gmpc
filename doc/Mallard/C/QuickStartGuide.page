@@ -11,13 +11,12 @@
       <p>
                 Normally GMPC can be found in the menu under: 
        </p>
-
-                <code>Applications-&gt;Multimedia-&gt;Gnome Music Player Client</code>
-       <p>
+      <code>Applications-&gt;Multimedia-&gt;Gnome Music Player Client</code>
+      <p>
                 This should be identical under GNOME, KDE, Unitiy and XFCE.
                 If you start it from a terminal, or using a run dialog (alt-F2) type
         </p>
-                <code>gmpc</code>
+      <code>gmpc</code>
       <figure>
         <media type="image" src="Images/gmpc-dev-install-guidestep_9.png"/>
       </figure>

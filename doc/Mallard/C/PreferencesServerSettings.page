@@ -24,7 +24,7 @@
   <terms>
     <title>Output Devices:</title>
     <item>
-        <title/>
+      <title/>
       <p>This lists all available output devices, which are configured on the server. To enable / disable output devices, check or uncheck the box in the "Enabled" column.</p>
     </item>
   </terms>
