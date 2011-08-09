@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <page xmlns="http://projectmallard.org/1.0/" type="topic" id="PreferencesTagBasedBrowser">
   <title>Preferences - Tag based browser</title>
-  <p>This dialog allows you to create, delete and edit tag based browsers including the predefined Genre- and Artist Browsers.</p>
+  <p>This dialog allows you to create, delete and edit tag based browsers including the predefined genre and artist Browsers.</p>
   <figure>
     <desc>The "Tag based browser" preferences dialog</desc>
     <media type="image" src="Images/preferences-tag-based-browser.png"/>

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <page xmlns="http://projectmallard.org/1.0/" type="topic" id="PreferencesConnection">
   <title>Preferences - Connection</title>
-  <p>GMPC can handle multiple MPD servers through profiles. Here you can configure and choose between them.</p>
+  <p>GMPC can handle multiple MPD servers through profiles. Here you can configure and switch between them.</p>
   <figure>
     <desc>The Connection preferences dialog</desc>
     <media type="image" src="Images/preferences-connection.png"/>

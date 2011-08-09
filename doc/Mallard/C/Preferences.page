@@ -2,7 +2,7 @@
 <page xmlns="http://projectmallard.org/1.0/" type="topic" id="Preferences">
   <title>Preferences</title>
   <p>
-        The Preferences window allows you to configure GMPC and its plugins. The available options can vary, depending on used plugins (internal and external), so if you miss something, make sure you have the respective plugin installed and enabled.
+        The Preferences window allows you to configure GMPC and its plugins. The available options can vary, depending on selected plugins (internal and 3rd party), so if you miss something, make sure you have the respective plugin installed and enabled.
     </p>
   <figure>
     <desc>The Preferences window showing the "Connection" dialog</desc>
@@ -81,7 +81,7 @@
                     Metadata Appearance
                 </link>
         </title>
-        <p>This dialog menu lets you control, which metadata shall be shown in the "Metadata"- and "Now Playing" browsers.</p>
+        <p>This dialog menu lets you control which metadata shall be shown in the "Metadata" and "Now Playing" browsers.</p>
       </item>
       <item>
         <title>

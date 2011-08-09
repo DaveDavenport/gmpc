@@ -60,7 +60,7 @@
     </list>
     <note>
       <p>
-            Ubuntu's new interface "Unity" uses a little different approach to provide notification area icons and GMPC will natively integrate into it if the support is compiled in. When you are not using Unity, you will automatically get a fallback icon. However, if you experience problems like missing icons in the context menu or if you can't change the volume by scrolling on the icon, you can switch back to the legacy tray icon through the respective option in the "Preferences"-&gt;"Interface"-&gt;"Advanced Settings" window.
+            Ubuntu's new interface "Unity" uses a different approach to provide notification area icons and GMPC will natively integrate with it if the support is compiled in. When you are not using Unity, you will automatically get a fallback icon. However, if you experience problems like missing icons in the context menu or if you can't change the volume by scrolling on the icon, you can switch back to the legacy tray icon through the respective option in the "Preferences"-&gt;"Interface"-&gt;"Advanced Settings" window.
         </p>
     </note>
   </section>

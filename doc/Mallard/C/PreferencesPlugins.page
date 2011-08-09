@@ -23,11 +23,11 @@
     </item>
     <item>
       <title>Function</title>
-      <p>What type of enhancement does the plugin provide</p>
+      <p>What type of enhancement the plugin provides</p>
     </item>
     <item>
       <title>Version</title>
-      <p>The version number of the plugin.</p>
+      <p>The plugin version number.</p>
     </item>
   </terms>
 </page>

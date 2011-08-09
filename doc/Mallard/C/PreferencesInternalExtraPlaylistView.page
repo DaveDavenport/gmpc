@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <page xmlns="http://projectmallard.org/1.0/" type="topic" id="PreferencesInternalExtraPlaylistView">
   <title>Preferences - Internal Extra Playlist View</title>
-  <p>This item allows you to control the extra playlist and is only available, if the extra playlist is enabled.</p>
+  <p>This item allows you to control the extra playlist and is only available if the extra playlist is enabled.</p>
   <figure>
     <desc>The "Internal Extra Playlist View" preferences dialog</desc>
     <media type="image" src="Images/preferences-internal-extra-playlist-view.png"/>
