@@ -2,7 +2,7 @@
 <page xmlns="http://projectmallard.org/1.0/" type="topic" id="QuickStartGuide">
   <title> Quick Start </title>
   <p>
-        This guide will quickly, in 8 steps, show how to get started once you installed GMPC.
+        This guide will quickly show you how to get started once you installed GMPC.
         This guide assumes that you allready setup MPD and it is working.
       </p>
   <terms>
@@ -24,7 +24,7 @@
     <item>
       <title>First run wizard</title>
       <p>
-                The first time you run gmpc, you see a first-run wizard.
+                After launching GMPC for the first time, you will see a first-run wizard.
                 Follow the wizard step by step.
              </p>
       <note>
@@ -76,13 +76,13 @@
       <title>The main interface</title>
       <note>
         <p>
-                    If you already add music to the play queue from another client you will
-                    see this play queue in GMPC. Clients are kept into sync with each other.
+                    If you already added music to the play queue from another client you will
+                    see this in the play queue in GMPC. Clients are kept into sync with each other.
                 </p>
       </note>
       <p>
                 When running GMPC for the first time we see the now playing screen.
-                This does not display anything because no music is currently playing.
+                This will not display anything because no music is currently playing.
             </p>
       <figure>
         <media type="image" src="Images/gmpc-dev-install-guidestep_13.png"/>
@@ -109,7 +109,7 @@
     <item>
       <title>Adding Music</title>
       <p>
-                To add a songs you right-click on the folder and press add.
+                To add a songs, right-click on the folder and press add.
             </p>
       <figure>
         <media type="image" src="Images/gmpc-dev-install-guidestep_15.png"/>
@@ -118,7 +118,7 @@
     <item>
       <title>Play Music</title>
       <p>
-                Now the play queue is filled, lets select a song an play it. (double click on the song).
+                Now that the play queue is filled, lets select a song an play it. (double click on the song).
             </p>
       <figure>
         <media type="image" src="Images/gmpc-dev-install-guidestep_16.png"/>
