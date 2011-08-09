@@ -2,7 +2,7 @@
 <page xmlns="http://projectmallard.org/1.0/" type="topic" id="Browsers">
   <title>Browsers</title>
   <p>
-        GMPC uses so called "Browsers" to structure the vast amount of possibilities, GMPC has to offer. You can switch between them in the sidebar or in the single collapsed view though buttons or a dropdown, depending on your options. Other ways to quickly switch between them are the main interface's "Go" menu or shortcuts.
+        GMPC uses internal "Browsers" to customize the various viewing possibilities GMPC has to offer. You can switch between the different views either through the sidebar or in the single collapsed view (though buttons/dropdown depending on your options). Other ways to quickly switch between them are the main interface's "Go" menu or shortcuts.
     </p>
   <figure>
     <desc>GMPC showing the "Now Playing" browser.</desc>
@@ -15,7 +15,7 @@
                     Now Playing
                 </link>
       </title>
-      <p>The now playing browser shows you all sorts of information about the song playing right now.</p>
+      <p>The now playing browser shows you various information about the song playing right now.</p>
     </item>
     <item>
       <title>

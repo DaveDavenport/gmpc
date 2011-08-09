@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <page xmlns="http://projectmallard.org/1.0/" type="topic" id="BrowserNowPlaying">
   <title>Browsers - Now Playing</title>
-  <p>The "Now Playing" browser shows you all sorts of information about the song playing right now. Information found on the "Now Playing" page changes as soon as a new track starts.</p>
+  <p>The "Now Playing" browser presents various information about the current song playing. Information found in the "Now Playing" page changes as soon as a new track starts.</p>
   <figure>
     <desc>The "Now Playing" browser</desc>
     <media type="image" src="Images/browser-nowplaying.png"/>
@@ -30,7 +30,7 @@
     </item>
     <item>
       <title>Format</title>
-      <p>Format is giving information about sound specific information, the amount of channels, the frequency of the song and the amount of kbps.</p>
+      <p>Format gives information about sound specific information, the amount of channels, the frequency of the song and the amount of kbps.</p>
     </item>
     <item>
       <title>Codec</title>
@@ -46,7 +46,7 @@
     </item>
     <item>
       <title>Artist picture</title>
-      <p>Image in the upper right corner is a picture from the artist.</p>
+      <p>The image in the upper right corner is the artist image.</p>
     </item>
   </terms>
   <terms>

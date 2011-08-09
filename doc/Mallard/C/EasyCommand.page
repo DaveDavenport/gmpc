@@ -2,7 +2,7 @@
 <page xmlns="http://projectmallard.org/1.0/" type="topic" id="EasyCommand">
   <title>Easy Command</title>
   <p>
-        A feature in post gmpc-0.16.x development repositories is gmpc has an feature called "easy command".
+        A feature in post gmpc-0.16.x development repositories is that gmpc has a feature called "easy command".
         Easy command gives you a small command box, allowing you to quickly execute commands without having to use the mouse.
         For example, send the command to gmpc to search in the play queue for the song Holy Mother from the artist Eric Clapton and play that song immediately the following could easily be typed.
     </p>

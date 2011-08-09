@@ -6,7 +6,7 @@
   </info>
   <title>Gnome Music Player Client</title>
   <p>
-        The Gnome Music Player Client (or short GMPC) is a frontend for the Music Player Daemon (short MPD).
+        The Gnome Music Player Client (GMPC) is a frontend for the Music Player Daemon (usually reffered to as MPD).
         GMPC allows you to control the playback of MPD. Create playlists, enable/disable outputs, etc.
         In addition to just controlling MPD, GMPC offers features like Album art, lyrics, etc. More options like
         editing of tags can be added by installing plugins.
@@ -44,7 +44,7 @@
         </link>
     </title>
     <p>
-        GMPC uses so called "Browsers" to structure the vast amount of possibilities, GMPC has to offer.
+        GMPC uses internal "Browsers" to structure the vast amount of possibilities GMPC has to offer.
       </p>
   </section>
   <section id="Preferences">

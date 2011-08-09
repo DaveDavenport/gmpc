@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <page xmlns="http://projectmallard.org/1.0/" type="topic" id="BrowserPlayQueue">
   <title>Browsers - Play Queue</title>
-  <p>This is basically your master-playlist. Every title you want to listen to will appear here. You can add songs to the play-queue by opening the context menu (right mouse click) in either the file in the database or the playlist-editor and selecting "Add". </p>
+  <p>This is basically your master-playlist. Every track you want to listen to will appear here. You can add songs to the play-queue by opening the context menu (right mouse click) in either the file in the database or the playlist-editor and selecting "Add". </p>
   <figure>
     <desc>The "Play Queue" browser</desc>
     <media type="image" src="Images/browser-playqueue.png"/>
