@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <page xmlns="http://projectmallard.org/1.0/" type="topic" id="BrowserDatabase">
   <title>Browsers - Database</title>
-  <p>The database browser is a directory listing of all your music. With the browser you can browse through all your music currently in the mpd database.
-The folder tree looks like a real folder tree, but it actually is a copy of the music folder tree.
-In case you delete, add or change files, you must first update the database to update the folder/file tree.
+  <p>The database browser is a directory listing of all your music. With the browser you can browse through all your music currently in the MPD database.
+The folder tree looks like a real folder tree, but its actually a copy of the music folder tree.
+In case you delete add or change files, you must first update the database to update the folder/file tree.
 As you can see on the screenshot there are two parts of the window.
 To the left you can see the folder tree, this shows all folders in your music folder.
-Next to the folder tree are colums which show the files and folders from the currently selected folder (the one selected in the folder tree).</p>
+Next to the folder tree are columns which show the files and folders from the currently selected folder (the one selected in the folder tree).</p>
   <figure>
     <desc>The Database browser</desc>
     <media type="image" src="Images/browser-database.png"/>
