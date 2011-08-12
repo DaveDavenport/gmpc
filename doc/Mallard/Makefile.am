@@ -91,6 +91,7 @@ Images/browser-playlist-editor.png\
 Images/browser-playqueue.png\
 Images/browser-search.png\
 Images/preferences-internal-extra-playlist-view.png\
+Images/preferences-metadata-appearance.png\
 Images/preferences-plugins.png
 
 
