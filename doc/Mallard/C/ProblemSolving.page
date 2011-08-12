@@ -7,12 +7,39 @@
       <p>
 			Check if the following things are correctly configured for MPD:
   		</p>
-  		<list>
-  			<item><p>Is <code>playlist_directory</code> specified in MPD's configuration file?</p></item>
-  			<item><p>Does the <code>playlist_directory</code> exist?</p></item>
-  			<item><p>Is the <code>playlist_directory</code> readable by MPD?</p></item>
-  			<item><p>Can MPD read and write the playlists?</p></item>
-  		</list>
+      <list>
+        <item>
+          <p>Is <code>playlist_directory</code> specified in MPD's configuration file?</p>
+        </item>
+        <item>
+          <p>Does the <code>playlist_directory</code> exist?</p>
+        </item>
+        <item>
+          <p>Is the <code>playlist_directory</code> readable by MPD?</p>
+        </item>
+        <item>
+          <p>Can MPD read and write the playlists?</p>
+        </item>
+      </list>
+    </item>
+    <item>
+      <title>There are not files in the database</title>
+      <list>
+        <item>
+          <p>
+                        Check if MPD is allowed to read the music files in the directory.
+                    </p>
+        </item>
+        <item>
+          <p>
+                        Check if MPD has support for the used music format.
+                        Run: <cmd> mpd --version</cmd> to get a list.
+                    </p>
+        </item>
+      </list>
+      <p>
+            Please check the MPD <link href="http://musicpd.org">website</link> for more information.
+        </p>
     </item>
   </terms>
 </page>

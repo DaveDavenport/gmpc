@@ -879,6 +879,11 @@ void send_password(void)
     password_dialog(FALSE);
 }
 
+static void playlist_support_help_button_clicked(GObject *a)
+{
+	open_uri("ghelp:gmpc#ProblemSolving");
+
+}
 
 static int error_callback(MpdObj * mi,
 				int error_id,
@@ -926,16 +931,22 @@ static int error_callback(MpdObj * mi,
 			if(g_regex_match_simple(".*{.*playlist.*}.*", error_msg,
 						0,G_REGEX_MATCH_NOTEMPTY))
 			{
+				GtkWidget *button = NULL;
 				if(favorites != NULL) {
 					gmpc_favorites_list_set_disable(favorites,TRUE);
-					playlist_editor_set_disabled();
 				}
+				playlist_editor_set_disabled();
 				playlist3_show_error_message(
 						_("Playlist support in MPD is not working. See the "
 						"manual on possible fixes.\n"
 						"Playlist editor and favorites are now disabled."
 						)
 						, ERROR_WARNING);
+				
+				button = gtk_button_new_from_stock(GTK_STOCK_HELP);
+				g_signal_connect(G_OBJECT(button), "clicked",
+						G_CALLBACK(playlist_support_help_button_clicked), NULL);
+				playlist3_error_add_widget(button);
 				return FALSE;
 			}
 		}

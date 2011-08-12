@@ -155,13 +155,17 @@ static void playtime_changed(GmpcMpdDataModel * model, gulong playtime)
 		playlist3_show_playtime(playtime);
 	}
 }
-
+static void pl3_file_support_help_button_clicked(GObject *a)
+{
+	open_uri("ghelp:gmpc#ProblemSolving");
+}
 static void pl3_file_browser_init(void)
 {
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column;
 	GtkWidget *pl3_fb_sw = NULL;
 	GtkWidget *vbox, *sw, *tree;
+    GtkWidget *misc, *button;
 
 	pl3_fb_store2 = gmpc_mpddata_model_new();
 	gmpc_mpddata_model_disable_image(GMPC_MPDDATA_MODEL(pl3_fb_store2));
@@ -228,15 +232,26 @@ static void pl3_file_browser_init(void)
 	gtk_widget_show_all(pl3_fb_sw);
 
 	/* Warning box for when there is no music */
-	pl3_fb_warning_box = gtk_label_new("");
-	gtk_label_set_markup(GTK_LABEL(pl3_fb_warning_box),
+	pl3_fb_warning_box = gtk_vbox_new(FALSE, 6);
+    GtkWidget *label = gtk_label_new("");
+	gtk_label_set_markup(GTK_LABEL(label),
 						 _("It seems you have no music in your database.\n"
 						   "To add music, copy the music to your <i>music_directory</i> as specified in your mpd config file.\n"
 						   "Then update the database. (Server->Update Database)"));
-	gtk_misc_set_alignment(GTK_MISC(pl3_fb_warning_box), 0.0, 0.0);
-	gtk_misc_set_padding(GTK_MISC(pl3_fb_warning_box), 12, 12);
-	gtk_widget_set_no_show_all(pl3_fb_warning_box, TRUE);
+	gtk_misc_set_alignment(GTK_MISC(label), 0.0, 0.0);
+    gtk_box_pack_start(GTK_BOX(pl3_fb_warning_box), label, FALSE, FALSE, 0);
 	gtk_box_pack_end(GTK_BOX(vbox), pl3_fb_warning_box, FALSE, TRUE, 0);
+    {
+        misc = gtk_alignment_new(0, 0.5, 0, 0);
+        button = gtk_button_new_from_stock(GTK_STOCK_HELP);
+        g_signal_connect(G_OBJECT(button), "clicked",
+                G_CALLBACK(pl3_file_support_help_button_clicked), NULL);
+        playlist3_error_add_widget(button);
+        gtk_widget_show(button);
+        gtk_container_add(GTK_CONTAINER(misc), button);
+        gtk_box_pack_start(GTK_BOX(pl3_fb_warning_box), misc, FALSE, FALSE, 0);
+    }
+    gtk_widget_show_all(pl3_fb_warning_box);
 
 	gtk_paned_add2(GTK_PANED(pl3_fb_vbox), vbox);
 	/* set initial state */
