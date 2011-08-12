@@ -164,7 +164,7 @@ static void pl3_file_browser_init(void)
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column;
 	GtkWidget *pl3_fb_sw = NULL;
-	GtkWidget *vbox, *sw, *tree;
+	GtkWidget *vbox, *sw, *tree,*label;
     GtkWidget *misc, *button;
 
 	pl3_fb_store2 = gmpc_mpddata_model_new();
@@ -231,31 +231,36 @@ static void pl3_file_browser_init(void)
 	gtk_box_pack_start(GTK_BOX(vbox), pl3_fb_sw, TRUE, TRUE, 0);
 	gtk_widget_show_all(pl3_fb_sw);
 
+    /******************************************/
 	/* Warning box for when there is no music */
+    /******************************************/
 	pl3_fb_warning_box = gtk_vbox_new(FALSE, 6);
-    GtkWidget *label = gtk_label_new("");
+    /* label */
+    label = gtk_label_new("");
 	gtk_label_set_markup(GTK_LABEL(label),
 						 _("It seems you have no music in your database.\n"
 						   "To add music, copy the music to your <i>music_directory</i> as specified in your mpd config file.\n"
 						   "Then update the database. (Server->Update Database)"));
 	gtk_misc_set_alignment(GTK_MISC(label), 0.0, 0.0);
+    gtk_widget_show(label);
     gtk_box_pack_start(GTK_BOX(pl3_fb_warning_box), label, FALSE, FALSE, 0);
-	gtk_box_pack_end(GTK_BOX(vbox), pl3_fb_warning_box, FALSE, TRUE, 0);
-    {
-        misc = gtk_alignment_new(0, 0.5, 0, 0);
-        button = gtk_button_new_from_stock(GTK_STOCK_HELP);
-        g_signal_connect(G_OBJECT(button), "clicked",
-                G_CALLBACK(pl3_file_support_help_button_clicked), NULL);
-        playlist3_error_add_widget(button);
-        gtk_widget_show(button);
-        gtk_container_add(GTK_CONTAINER(misc), button);
-        gtk_box_pack_start(GTK_BOX(pl3_fb_warning_box), misc, FALSE, FALSE, 0);
-    }
-    gtk_widget_show_all(pl3_fb_warning_box);
 
-	gtk_paned_add2(GTK_PANED(pl3_fb_vbox), vbox);
-	/* set initial state */
-	gtk_widget_show(vbox);
+    /* help button */
+    misc    = gtk_alignment_new(0, 0.5, 0, 0);
+    button  = gtk_button_new_from_stock(GTK_STOCK_HELP);
+    g_signal_connect(G_OBJECT(button), "clicked",
+            G_CALLBACK(pl3_file_support_help_button_clicked), NULL);
+    gtk_container_add(GTK_CONTAINER(misc), button);
+    gtk_widget_show(button);
+    gtk_widget_show_all(misc);
+    gtk_box_pack_start(GTK_BOX(pl3_fb_warning_box), misc, FALSE, FALSE, 0);
+    gtk_widget_set_no_show_all(pl3_fb_warning_box, TRUE);
+
+
+	gtk_box_pack_end(GTK_BOX(vbox), pl3_fb_warning_box, FALSE, TRUE, 0);
+    gtk_paned_add2(GTK_PANED(pl3_fb_vbox), vbox);
+    /* set initial state */
+    gtk_widget_show(vbox);
 	gtk_widget_show(pl3_fb_vbox);
 	g_object_ref_sink(G_OBJECT(pl3_fb_vbox));
 }
