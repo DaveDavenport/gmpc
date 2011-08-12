@@ -1,43 +1,19 @@
-Gnome Music Player Client 11.7
+Gnome Music Player Client 11.8
 ==============================
 release: All hail the Greg
 
 
 image::images/gmpc.png[width="300",alt="",link="images/gmpc.png",float="right"]
-The 11.7 release is another release with the focus on usability and speed. Several 
+The 11.8 release is another release with the focus on usability and speed. Several
 widgets are replaced with easier to use ones and often better looking widgets and the overal responsiveness is improved.
 Some bling has been added to improve the visual attractiveness of GMPC.
 The important Metadata provider plugins, the plugins that get you the nice art, are intergrated into GMPC. This should provide a better experience out-of-the-box and makes it easier to deprecate and add providers (without the trouble for distributions to  get new packages accepted).
 
 .Reminder
-NOTE: This version is not yet released. If people will step up and help I hope to relase it in June 2011
+NOTE: This version is not yet released. If people will step up and help I hope to relase it in August 2011
 
 
 unfloat::[]
-
-TODO
-----
-These things has to be done before I can even think of releasing GMPC 11.7
-
-* Evaluate what plugins still work flawless.
-
-NOTE: If this is done, it should extend the list below.
-
-* [http://musicpd.org/mantis/view.php?id=3227[3227]] Clearing metadata does not redraw background. (done)
-* [http://musicpd.org/mantis/view.php?id=3221[3221]] Intergrate DiscoGS plugin into GMPC Source. (done)
-* [http://musicpd.org/mantis/view.php?id=3222[3222]] Intergrate Last.FM Plugin into GMPC source. (done)
-* [http://musicpd.org/mantis/view.php?id=3223[3223]] Add backdrops option to advanced settings window. (done) 
-* [http://musicpd.org/mantis/view.php?id=3224[3224]] Add extra-playlist plugin to the plugin blacklist. (done)
-* [http://musicpd.org/mantis/view.php?id=3145[3145]] Update man pages link.
-* [http://musicpd.org/mantis/view.php?id=3129[3129]] Typo in Preferences->Avahi Zeroconf dialog
-* [http://musicpd.org/mantis/view.php?id=3225[3225]] Update Manual
-
-.Blocker bug
-IMPORTANT: I want to have atleast a usable english manual.
-
-* [http://musicpd.org/mantis/view.php?id=3226[3226]] Remove OsX specific code from GMPC. (unless somebody wants to maintain it)
-* Check if Win32 build still works.
-* etc.
 
 
 New Features
@@ -98,12 +74,21 @@ unfloat::[]
 
 * Add support for thumbnail uri's in metadata system.
 
-* Compacter layout player part. Lot of the intermation is duplicated in now-playing. So 
+* Compacter layout player part. Lot of the intermation is duplicated in now-playing. So
 reduce size of the player part.
+
+image::images/gmpc-render-art-color.png[width="100",alt="",link="images/gmpc-render-art-color.png", float="right"]
+* Cover art generator. This will generate a cover when GMPC cannot find one on the internet.
+
+unfloat::[]
+
+* Manual. That is fully intergrated in the gnome help system.
+
 
 Removed Features
 ----------------
 * Rating support.
+* osX integrated
 
 Fixes
 -----
@@ -123,7 +108,7 @@ Fixes
 * Easycommand: Better matching for autocomplete.
 * Easycommand: popup go away very quicly when moving focus.
 * Easycommand: popup aggrasively grab mouse/keyboard pointer.
-* Fix right mouse add/replace handling. 
+* Fix right mouse add/replace handling.
 * Remove all libsexy stuff.
 * Code cleanups, separations, etc.
 * Replace libbacon with libunique.
@@ -138,36 +123,16 @@ Fixes
 * (some) keybindings can be changed using gtk's build in system.
 * Move more code to vala.
 * Code cleanups, added code documentation.
-
+* Disable code that depends on playlists, if playlist support in MPD does not work.
+* Fix error in file browser on reconnect.
+* Disabling plugin will now correctly remove it from the preferences pane.
 
 Plugins
 -------
 
-Deprecated
-~~~~~~~~~~
+To be released
+~~~~~~~~~~~~~~
 
-* Last.FM: Intergrated into GMPC
-* DiscoGS: Intergrated into GMPC
-* LyrDB: Intergrated into GMPC
-* Extra Playlist View: Intergrated into GMPC
-* Statistics: Intergrated into GMPC (0.20.0)
-* MDCover: To be deprecated by music-tree inside GMPC.
-
-Non Functional Plugins
-~~~~~~~~~~~~~~~~~~~~~~
-
-* Cover Amazon: License issue
-* Last FM radio: Blocked by last.fm
-* GuitarTabs: Adblocker detection of website blogs plugin.
-
-To Be Tested
-~~~~~~~~~~~~
-
-* dynamic playlist: Needs last.fm plugin
-
-Works
-~~~~~
-* Last.fm (tested Qball on intergration into GMPC)
 * Magnatune: The browser + fetcher part (tested angelos)
 * Jamendo: The browser + fetcher part (tested angelos)
 * lyrics: Both leolyrics and other one (tested angelos)
@@ -180,13 +145,3 @@ Works
 * libnotify: Works (angelos)  (git for libnotify >= 0.7,  release for libnotify < 0.7)
 * tagedit: (angelos)
 * wikipedia: works (angelos) (still open bugs!)
-
-
-Unmaintained
-~~~~~~~~~~~~
-
-* qosd
-* xosd
-* appindicator
-* playlistsort (crashes (angelos))
-* Tagedit (works angelos)
