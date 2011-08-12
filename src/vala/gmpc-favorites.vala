@@ -26,17 +26,23 @@ using MPD;
 /* trick to get config.h included */
 static const string some_unique_name_fav = Config.VERSION;
 private const bool use_transition_fav = Gmpc.use_transition;
-static Gmpc.Favorites.List favorites = null;
+public static Gmpc.Favorites.List favorites = null;
 
+private const string LOG_DOMAIN_FAV = "Gmpc.Favorites";
 namespace Gmpc.Favorites{
     /**
      * This class is created, and stays active until the last GmpcFavoritesButton gets removed
      */
-    private class List : GLib.Object {
-        private MPD.Data.Item? list = null; 
+    public class List : GLib.Object {
+        private MPD.Data.Item?  list = null; 
+        public  bool            disable {get; set; default = false;}
         construct {
             gmpcconn.connection_changed.connect(con_changed);
             gmpcconn.status_changed.connect(status_changed);
+            GLib.log(LOG_DOMAIN_FAV, GLib.LogLevelFlags.LEVEL_DEBUG, "Favorites object created");
+            if(Gmpc.server.connected) {
+                con_changed(gmpcconn, server, 1);
+            }
         }
 
         /**
@@ -48,7 +54,10 @@ namespace Gmpc.Favorites{
         con_changed(Gmpc.Connection conn, MPD.Server server, int connect)
         {
             if(connect == 1){
+                GLib.log(LOG_DOMAIN_FAV, GLib.LogLevelFlags.LEVEL_DEBUG, "Update list");
                 list = MPD.Database.get_playlist_content(server, _("Favorites"));
+                // Enable plugin.
+                disable = false;
                 this.updated();
             }else{
                 list = null;
@@ -61,8 +70,9 @@ namespace Gmpc.Favorites{
         void
         status_changed(Gmpc.Connection conn, MPD.Server server, MPD.Status.Changed what)
         {
-            if((what&MPD.Status.Changed.STORED_PLAYLIST) == MPD.Status.Changed.STORED_PLAYLIST)
+            if(!disable && (what&MPD.Status.Changed.STORED_PLAYLIST) == MPD.Status.Changed.STORED_PLAYLIST)
             {
+                GLib.log(LOG_DOMAIN_FAV, GLib.LogLevelFlags.LEVEL_DEBUG, "Update list");
                 list = MPD.Database.get_playlist_content(server, _("Favorites"));
                 this.updated();
             }
@@ -104,7 +114,7 @@ namespace Gmpc.Favorites{
         {
             bool current = this.is_favorite(path);
             /* Do nothing if state does not change */
-            if(current != favorite)
+            if(!disable && current != favorite)
             {
                 if(favorite){
                     /* Add it */
@@ -156,11 +166,18 @@ namespace Gmpc.Favorites{
             }
             if(favorites == null){
                 favorites = new List();
-		/* make sure favorites is set to NULL again when destroyed */
-		favorites.add_weak_pointer(&favorites);
+                /* make sure favorites is set to NULL again when destroyed */
+                favorites.add_weak_pointer(&favorites);
             } else {
                 favorites.ref();
             }
+            favorites.notify["disable"].connect((source)=>{
+                if(favorites.disable) {
+                    this.set_sensitive(false);
+                }else{
+                    this.set_sensitive(true);
+                }
+            });
             favorites.updated.connect(update);
             this.image = new Gtk.Image();
             this.update(favorites);

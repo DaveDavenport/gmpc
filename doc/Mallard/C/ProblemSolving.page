@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="ProblemSolving">
+  <title>Solving Problems</title>
+  <terms>
+    <item>
+      <title>GMPC tells me that MPD playlists are not working, how to fix this</title>
+      <p>
+			Check if the following things are correctly configured for MPD:
+  		</p>
+  		<list>
+  			<item><p>Is <code>playlist_directory</code> specified in MPD's configuration file?</p></item>
+  			<item><p>Does the <code>playlist_directory</code> exist?</p></item>
+  			<item><p>Is the <code>playlist_directory</code> readable by MPD?</p></item>
+  			<item><p>Can MPD read and write the playlists?</p></item>
+  		</list>
+    </item>
+  </terms>
+</page>

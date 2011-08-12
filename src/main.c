@@ -47,6 +47,7 @@
 #include "preferences.h"
 
 #include "plugin-man.h"
+#include "browsers/playlist3-playlist-editor.h"
 
 #ifdef ENABLE_MMKEYS
 #include "mm-keys.h"
@@ -884,58 +885,76 @@ static int error_callback(MpdObj * mi,
 				char *error_msg,
 				gpointer data)
 {
-    int autoconnect = cfg_get_single_value_as_int_with_default(config,
-		"connection",
-        "autoconnect",
-        DEFAULT_AUTOCONNECT);
-    /* if we are not connected we show a reconnect */
-    if (!mpd_check_connected(mi))
-    {
-        GtkWidget *button;
-        char *str;
-        /* no response? then we just ignore it when autoconnecting. */
-        if (error_id == 15 && autoconnect)
-            return FALSE;
+	int autoconnect = cfg_get_single_value_as_int_with_default(config,
+			"connection",
+			"autoconnect",
+			DEFAULT_AUTOCONNECT);
 
-        str = g_markup_printf_escaped("<b>%s %i: %s</b>",
-    				_("error code"),
-    				error_id,
-    				error_msg);
-        playlist3_show_error_message(str, ERROR_CRITICAL);
-        button = gtk_button_new_from_stock(GTK_STOCK_CONNECT);
-        g_signal_connect(G_OBJECT(button),
-    				"clicked",
-    				G_CALLBACK(connect_to_mpd), NULL);
-        playlist3_error_add_widget(button);
-        g_free(str);
-    } else
-    {
-        if (setup_assistant_is_running()
-            && (error_id == MPD_ACK_ERROR_PERMISSION ||
-        		error_id == MPD_ACK_ERROR_PASSWORD))
-        {
-            gchar *str = g_markup_printf_escaped("<b>%s</b>",
-                _("Insufficient permission to connect to mpd. Check password"));
-            setup_assistant_set_error(str);
-            q_free(str);
-            return TRUE;
-        }
-        if (error_id == MPD_ACK_ERROR_PASSWORD)
-        {
-            password_dialog(TRUE);
-        } else if (error_id == MPD_ACK_ERROR_PERMISSION)
-        {
-            password_dialog(FALSE);
-        } else
-        {
-            gchar *str = g_markup_printf_escaped("<b>%s %i: %s</b>",
-                _("error code"), error_id,
-                error_msg);
-            playlist3_show_error_message(str, ERROR_CRITICAL);
-            g_free(str);
-        }
-    }
-    return FALSE;
+	/* if we are not connected we show a reconnect */
+	if (!mpd_check_connected(mi))
+	{
+		GtkWidget *button;
+		char *str;
+		/* no response? then we just ignore it when autoconnecting. */
+		if (error_id == 15 && autoconnect)
+			return FALSE;
+
+		str = g_markup_printf_escaped("<b>%s %i: %s</b>",
+				_("error code"),
+				error_id,
+				error_msg);
+		playlist3_show_error_message(str, ERROR_CRITICAL);
+		button = gtk_button_new_from_stock(GTK_STOCK_CONNECT);
+		g_signal_connect(G_OBJECT(button),
+				"clicked",
+				G_CALLBACK(connect_to_mpd), NULL);
+		playlist3_error_add_widget(button);
+		g_free(str);
+	} else
+	{
+		if (setup_assistant_is_running()
+				&& (error_id == MPD_ACK_ERROR_PERMISSION ||
+					error_id == MPD_ACK_ERROR_PASSWORD))
+		{
+			gchar *str = g_markup_printf_escaped("<b>%s</b>",
+					_("Insufficient permission to connect to mpd. Check password"));
+			setup_assistant_set_error(str);
+			q_free(str);
+			return TRUE;
+		}
+		if(error_id == MPD_ACK_ERROR_SYSTEM || error_id == MPD_ACK_ERROR_NO_EXIST) {
+			if(g_regex_match_simple(".*{.*playlist.*}.*", error_msg,
+						0,G_REGEX_MATCH_NOTEMPTY))
+			{
+				if(favorites != NULL) {
+					gmpc_favorites_list_set_disable(favorites,TRUE);
+					playlist_editor_set_disabled();
+				}
+				playlist3_show_error_message(
+						_("Playlist support in MPD is not working. See the "
+						"manual on possible fixes.\n"
+						"Playlist editor and favorites are now disabled."
+						)
+						, ERROR_WARNING);
+				return FALSE;
+			}
+		}
+		if (error_id == MPD_ACK_ERROR_PASSWORD)
+		{
+			password_dialog(TRUE);
+		} else if (error_id == MPD_ACK_ERROR_PERMISSION)
+		{
+			password_dialog(FALSE);
+		} else
+		{
+			gchar *str = g_markup_printf_escaped("<b>%s %i: %s</b>",
+					_("error code"), error_id,
+					error_msg);
+			playlist3_show_error_message(str, ERROR_CRITICAL);
+			g_free(str);
+		}
+	}
+	return FALSE;
 }
 
 

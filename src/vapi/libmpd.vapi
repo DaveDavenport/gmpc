@@ -6,6 +6,12 @@ namespace MPD {
     [Compact]
     public class Server {
 
+        [CCode (cname="mpd_check_connected")]
+        public bool check_connected();
+
+        public bool connected { get { return check_connected();}}
+
+
         public MPD.Song playlist_get_song(int songid);
         public unowned MPD.Song playlist_get_current_song();
         public int player_get_next_song_id();

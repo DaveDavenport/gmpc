@@ -31,6 +31,7 @@ DOC_PAGES = \
 	PreferencesServerSettings.page\
 	PreferencesTagBasedBrowser.page\
 	QuickStartGuide.page\
+	ProblemSolving.page\
 	TipsAndTricks.page
 
 DOC_FIGURES=\

@@ -144,8 +144,21 @@ void playlist_editor_destroy(void)
 /**
  * Connection changed
  */
+static gboolean pl3_editor_disabled = FALSE;
+void playlist_editor_set_disabled(void)
+{
+    pl3_editor_disabled = TRUE;
+    if(playlist_editor_browser != NULL)
+        gtk_widget_set_sensitive(GTK_WIDGET(playlist_editor_browser), FALSE);
+
+}
 void playlist_editor_conn_changed(MpdObj * mi, int connect, void *userdata)
 {
+    if(connect == 1) {
+        pl3_editor_disabled = FALSE;
+        if(playlist_editor_browser != NULL)
+            gtk_widget_set_sensitive(GTK_WIDGET(playlist_editor_browser), TRUE);
+    }
 	playlist_editor_fill_list_real();
 }
 
@@ -294,7 +307,7 @@ void playlist_editor_fill_list(void)
 void playlist_editor_fill_list_real(void)
 {
 	GtkTreeIter iter;
-	if (playlist_editor_browser)
+	if (playlist_editor_browser && !pl3_editor_disabled)
 	{
 		gboolean valid = gtk_tree_model_get_iter_first(GTK_TREE_MODEL(playlist_editor_store), &iter);
 		MpdData *data = mpd_database_playlist_list(connection);
@@ -1099,6 +1112,8 @@ static void playlist_editor_browser_init(void)
 	g_object_ref_sink(playlist_editor_browser);
 
 	gtk_widget_show_all(playlist_editor_browser);
+
+    gtk_widget_set_sensitive(GTK_WIDGET(playlist_editor_browser), !pl3_editor_disabled);
 }
 
 void playlist_editor_browser_selected(GtkWidget * container)

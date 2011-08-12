@@ -10,7 +10,7 @@
         GMPC allows you to control the playback of MPD. Create playlists, enable/disable outputs, etc.
         In addition to just controlling MPD, GMPC offers features like Album art, lyrics, etc. More options like
         editing of tags can be added by installing plugins.
-        
+
         GMPC is one of the oldest clients for GMPC, and the only one that has been continuously developed and maintained.
       </p>
   <figure>
@@ -76,6 +76,16 @@
     </title>
     <p>
             Tips and tricks for using the Gnome Music Player Client.
+        </p>
+  </section>
+    <section id="ProblemSolving">
+    <title>
+      <link xref="ProblemSolving">
+                Solving problems
+            </link>
+    </title>
+    <p>
+			Did GMPC reports errors?
         </p>
   </section>
   <section id="BuildInstallInstructions">
