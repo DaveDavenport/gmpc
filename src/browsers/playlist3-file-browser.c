@@ -1173,7 +1173,7 @@ static void pl3_file_browser_disconnect(void)
 	{
 		GtkTreeIter iter;
 		GtkTreeIter child;
-		if (gtk_tree_model_get_iter_first(GTK_TREE_MODEL(pl3_fb_dir_store), &iter))
+		if (pl3_fb_dir_store != NULL && gtk_tree_model_get_iter_first(GTK_TREE_MODEL(pl3_fb_dir_store), &iter))
 		{
 			int valid = gtk_tree_model_iter_children(GTK_TREE_MODEL(pl3_fb_dir_store), &child, &iter);
 
