@@ -59,6 +59,13 @@
           </object>
         </child>
         <child>
+          <object class="GtkAction" id="ViewManual">
+            <property name="label" translatable="true">_Manual</property>
+            <property name="stock-id">gtk-help</property>
+            <signal name="activate" handler="show_user_manual" swapped="no"/>
+          </object>
+        </child>
+        <child>
           <object class="GtkAction" id="ViewWebsite">
             <property name="label" translatable="true">_Visit Website</property>
             <property name="stock-id">gtk-home</property>
@@ -68,7 +75,7 @@
         <child>
           <object class="GtkAction" id="ViewGettingHelp">
             <property name="label" translatable="true">_Getting Help</property>
-            <property name="stock-id">gtk-help</property>
+            <property name="stock-id">gtk-info</property>
             <signal name="activate" handler="url_getting_help" swapped="no"/>
           </object>
         </child>
@@ -353,6 +360,8 @@
           <menuitem action="Dummy"/>
         </menu>
         <menu action="menu_help">
+          <menuitem action="ViewManual"/>
+          <separator/>
           <menuitem action="ViewMessages"/>
           <separator/>
           <menuitem action="ViewWebsite"/>

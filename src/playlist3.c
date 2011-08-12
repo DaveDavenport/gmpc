@@ -878,6 +878,7 @@ void create_playlist3(void)
     GtkWidget *tree;
     GtkTreeSelection *sel;
     GtkTreeViewColumn *column = NULL;
+	GtkStatusbar *statusbar;
     gchar *path = NULL;
     GtkTreeIter iter;
     GError *error = NULL;
@@ -1188,7 +1189,7 @@ void create_playlist3(void)
 	TEC("signal connn changed")
 
     /** Remove statusbar border */
-    GtkStatusbar *statusbar = gtk_builder_get_object(pl3_xml, "statusbar1");
+    statusbar = (GtkStatusbar *)gtk_builder_get_object(pl3_xml, "statusbar1");
     gtk_frame_set_shadow_type (GTK_FRAME (statusbar->frame), GTK_SHADOW_NONE);
 
     /**
@@ -2497,5 +2498,11 @@ void open_local_file(void)
 		}
 		gtk_widget_destroy(GTK_WIDGET(fmd));
 	}
+}
+
+void show_user_manual(void);
+void show_user_manual(void)
+{
+	open_uri("ghelp:gmpc");
 }
 /* vim: set noexpandtab ts=4 sw=4 sts=4 tw=80: */
