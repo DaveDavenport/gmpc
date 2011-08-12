@@ -59,7 +59,6 @@ namespace Gmpc.UrlFetching
 			{
 				this.parse_callback(this, null);
 			}
-			stdout.printf("destroy callback\n");
 			this.destroy_cb(this);
 		}
 		private void url_entry_changed(Gtk.Editable editable)
@@ -75,7 +74,6 @@ namespace Gmpc.UrlFetching
 
 		~Gui ()
 		{
-			stdout.printf("~Gui\n");
 			if(builder != null)
 			{
 				var dialog = (Gtk.Dialog) builder.get_object("add_url_dialog");

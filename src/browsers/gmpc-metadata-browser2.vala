@@ -1039,15 +1039,13 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
                 var regex_a = new GLib.Regex ("\\.[0-9a-zA-Z]*$");
                 filename = regex_a.replace_literal (filename, -1, 0, "");
             } catch (GLib.RegexError e) {
-                stdout.printf("%s", e.message);
-                GLib.assert_not_reached ();
+                GLib.error("%s", e.message);
             }
             try {
                 var regex_b = new GLib.Regex ("_");
                 filename = regex_b.replace_literal (filename, -1, 0, " ");
             } catch (GLib.RegexError e) {
-                stdout.printf("%s", e.message);
-                GLib.assert_not_reached ();
+                GLib.error("%s", e.message);
             }
             label.set_markup(GLib.Markup.printf_escaped("<span color='%s' size='%i' weight='bold'>%s</span>",this.
                         title_color, Pango.SCALE*20, filename));
@@ -1664,7 +1662,6 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
                 /* The list is in reversed order, compensate for that. */
                 var w = group.nth_data(i-page-1);
                 w.set_active(true);
-                stdout.printf("selecting page: %i\n",page);
                 notebook.set_current_page(page);
             }
         }

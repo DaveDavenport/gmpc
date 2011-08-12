@@ -88,7 +88,6 @@ public class Gmpc.MetaData.Widgets.SongLinks: Gtk.Frame
             file.load_from_file(path, GLib.KeyFileFlags.NONE);
         }
         catch  (Error e) {
-            stdout.printf("Failed to load file: %s\n", path);
             return;
         }
 
@@ -145,7 +144,7 @@ public class Gmpc.MetaData.Widgets.SongLinks: Gtk.Frame
                         var regex =  new GLib.Regex (s[0]);
                         uri = regex.replace_literal(uri,-1,0, s[1]);
                         } catch (GLib.RegexError e) {
-                            stdout.printf("Failed to compile regex: '%s'\n", e.message);
+                            GLib.debug("Failed to compile regex: '%s'\n", e.message);
                         }
                     }
                 }
@@ -161,7 +160,7 @@ public class Gmpc.MetaData.Widgets.SongLinks: Gtk.Frame
                     vbox.pack_start(label, false, true, 0);
                 }
             }catch(Error e){
-                stdout.printf("Failed to get entry from %s: '%s'\n", path, e.message);
+                GLib.error("Failed to get entry from %s: '%s'\n", path, e.message);
             }
 
         }

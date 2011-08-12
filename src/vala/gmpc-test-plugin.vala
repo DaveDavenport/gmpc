@@ -187,7 +187,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
                     try {
                         load.write(data);
                     }catch (Error e) {
-                        stdout.printf("Failed to load file: %s::%s\n",e.message,handle.get_uri());
+                        GLib.debug("Failed to load file: %s::%s\n",e.message,handle.get_uri());
                     }
                     load.close();
 
@@ -200,7 +200,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
                                             false,
                                             (item->get_thumbnail_uri() != null));
                 }catch (Error e) {
-                    stdout.printf("Failed to load file: %s::%s\n",e.message,handle.get_uri());
+                    GLib.debug("Failed to load file: %s::%s\n",e.message,handle.get_uri());
                 }
             }
             else
@@ -290,12 +290,12 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
                     try {
                         load.write(data);
                     }catch (Error e) {
-                        stdout.printf("Failed to load raw data: %s\n",e.message);
+                        GLib.debug("Failed to load raw data: %s\n",e.message);
                     }
                     try {
                         load.close();
                     }catch (Error e) {
-                        stdout.printf("Failed to close loader: %s\n",e.message);
+                        GLib.debug("Failed to close loader: %s\n",e.message);
                     }
 
                     Gdk.Pixbuf pb = load.get_pixbuf();

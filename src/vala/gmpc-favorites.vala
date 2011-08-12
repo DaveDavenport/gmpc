@@ -152,7 +152,7 @@ namespace Gmpc.Favorites{
             try {
                 pb = it.load_icon("emblem-favorite",24, 0);
             }catch(Error e) {
-                stdout.printf("error: %s\n", e.message);
+                GLib.error("error: %s\n", e.message);
             }
             if(favorites == null){
                 favorites = new List();
