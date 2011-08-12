@@ -6,7 +6,7 @@
     </p>
   <figure>
     <desc>The Plugins preferences dialog</desc>
-    <media type="image" src="Images/preferences-plugins.png_SCREENSHOT_MISSING_TODO"/>
+    <media type="image" src="Images/preferences-plugins.png"/>
   </figure>
   <p>
             This dialog lists all loadable plugins and allows you to enable/disable them.

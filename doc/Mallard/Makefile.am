@@ -81,7 +81,17 @@ Images/sidebar-hori2.png\
 Images/sidebar.png\
 Images/status-bar.png\
 Images/status-icons.png\
-Images/easy-command.png
+Images/easy-command.png\
+Images/browser-artist-browser.png\
+Images/browser-database.png\
+Images/browser-genre-browser.png\
+Images/browser-metadata-browser.png\
+Images/browser-nowplaying.png\
+Images/browser-playlist-editor.png\
+Images/browser-playqueue.png\
+Images/browser-search.png\
+Images/preferences-internal-extra-playlist-view.png\
+Images/preferences-plugins.png
 
 
 dist-hook:doc-dist-hook
