@@ -271,8 +271,10 @@ namespace Gmpc {
 					}else{
 						this.container = new Gtk.EventBox();
 					}
+                    /*
 					this.container.set_focus_hadjustment(this.paned.get_hadjustment());
 					this.container.set_focus_vadjustment(this.paned.get_vadjustment());
+                    */
                     this.paned.style_set.connect(browser_bg_style_changed);
                     this.paned.add_with_viewport(this.container);
                     this.paned.get_vadjustment().set("step-increment", 20.0);
