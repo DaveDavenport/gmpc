@@ -1,10 +1,10 @@
 #Define the version
-m4_define([package_major_version], [0])
-m4_define([package_minor_version], [20])
-m4_define([package_micro_version], [95])
+m4_define([package_major_version], [11])
+m4_define([package_minor_version], [8])
+m4_define([package_micro_version], [16])
 m4_define([package_version], [package_major_version.package_minor_version.package_micro_version])
 
-AC_INIT([gmpc], [0.20.95], [qball@gmpclient.org])
+AC_INIT([gmpc], [11.8.16], [qball@sarine.nl])
 
 #Define variable
 m4_define([package_tagline],       "All hail the Greg")
