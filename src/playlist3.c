@@ -467,6 +467,7 @@ int pl3_window_key_press_event(GtkWidget * mw, GdkEventKey * event)
  */
 static int pl3_pop_statusbar_message(gpointer data)
 {
+	return FALSE;
     gint id = GPOINTER_TO_INT(data);
     gtk_statusbar_pop(GTK_STATUSBAR(gtk_builder_get_object(pl3_xml, "statusbar1")), id);
     return FALSE;
@@ -479,6 +480,7 @@ static int pl3_pop_statusbar_message(gpointer data)
  */
 void pl3_push_statusbar_message(const char *mesg)
 {
+	return;
     gint id = gtk_statusbar_get_context_id(GTK_STATUSBAR(gtk_builder_get_object(pl3_xml, "statusbar1")), mesg);
     /* message auto_remove after 5 sec */
     g_timeout_add_seconds(5, (GSourceFunc) pl3_pop_statusbar_message, GINT_TO_POINTER(id));
@@ -492,6 +494,7 @@ void pl3_push_statusbar_message(const char *mesg)
  */
 void pl3_push_rsb_message(const char *string)
 {
+	return;
     gtk_statusbar_push(GTK_STATUSBAR(gtk_builder_get_object(pl3_xml, "statusbar1")), 0, string);
 }
 
@@ -1189,8 +1192,8 @@ void create_playlist3(void)
 	TEC("signal connn changed")
 
     /** Remove statusbar border */
-    statusbar = (GtkStatusbar *)gtk_builder_get_object(pl3_xml, "statusbar1");
-    gtk_frame_set_shadow_type (GTK_FRAME (statusbar->frame), GTK_SHADOW_NONE);
+    //statusbar = (GtkStatusbar *)gtk_builder_get_object(pl3_xml, "statusbar1");
+    //gtk_frame_set_shadow_type (GTK_FRAME (statusbar->frame), GTK_SHADOW_NONE);
 
     /**
      * Add status icons

@@ -722,6 +722,7 @@
                 <property name="position">1</property>
               </packing>
             </child>
+<!--
             <child>
               <object class="GtkStatusbar" id="statusbar1">
                 <property name="visible">True</property>
@@ -741,6 +742,7 @@
                 <property name="position">5</property>
               </packing>
             </child>
+-->
           </object>
           <packing>
             <property name="expand">False</property>
