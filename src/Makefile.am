@@ -24,7 +24,8 @@ PLUGIN_FILES=\
     Providers/ChartLyrics.vala\
     Providers/DiscoGS.c\
     Providers/LastFM.c\
-    Plugins/extraplaylist.c
+    Plugins/extraplaylist.c\
+    Plugins/AutoMPD.vala
 
 
 
