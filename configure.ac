@@ -1,10 +1,11 @@
 #Define the version
+# micro version (aka day) is 90+ means developers release
 m4_define([package_major_version], [11])
 m4_define([package_minor_version], [8])
-m4_define([package_micro_version], [17])
+m4_define([package_micro_version], [90])
 m4_define([package_version], [package_major_version.package_minor_version.package_micro_version])
 
-AC_INIT([gmpc], [11.8.17], [qball@sarine.nl])
+AC_INIT([gmpc], [11.8.90], [qball@gmpclient.org])
 
 #Define variable
 m4_define([package_tagline],       "All hail the Greg")

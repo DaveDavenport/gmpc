@@ -44,6 +44,8 @@ public class Gmpc.Widgets.Qtable : Gtk.Container, Gtk.Buildable
     private int num_items       = 0;
     private int columns         = 3;
 	public  int spacing {get;set;default=8;}
+	public int padding_left {get;set;default=0;}
+	public int padding_right{get;set;default=0;}
 	public int max_columns {
 	        get {
 	            return max_columns_real;
@@ -270,7 +272,7 @@ public class Gmpc.Widgets.Qtable : Gtk.Container, Gtk.Buildable
 			cover_height	+= spacing;
 			header_height	+= spacing;
 		}
-		new_columns = int.max(width/cover_width, 1);
+		new_columns = int.max((width-padding_left - padding_right+spacing)/cover_width, 1);
 		if(max_columns_real > 0) {
 		    new_columns = int.min(new_columns,max_columns_real);
 		}
@@ -281,7 +283,7 @@ public class Gmpc.Widgets.Qtable : Gtk.Container, Gtk.Buildable
             {
                 if(child.type == QtableEntry.Type.ITEM) {
                     Gdk.Rectangle ca = {0,0,0,0};
-                    ca.x = alloc.x + (item%columns)*cover_width;
+                    ca.x = alloc.x + (item%columns)*cover_width+padding_left;
                     ca.y = rows+alloc.y + (item/columns)*cover_height;
                     ca.width = cover_width - spacing;
                     ca.height = cover_height - spacing;
@@ -298,7 +300,7 @@ public class Gmpc.Widgets.Qtable : Gtk.Container, Gtk.Buildable
                     item = 0;
 
                     Gdk.Rectangle ca = {0,0,0,0};
-                    ca.x = alloc.x;
+                    ca.x = alloc.x-padding_left;
                     ca.y = alloc.y+rows;
                     ca.width = cover_width*columns;
                     ca.height = header_height - spacing;

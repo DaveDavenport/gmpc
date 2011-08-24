@@ -634,6 +634,22 @@
                         <property name="position">0</property>
                       </packing>
                     </child>
+					<child>
+						<object class="GmpcWidgetsQtable" id="status_icon_box">
+							<property name="spacing">3</property>
+							<property name="item-width">16</property>
+							<property name="item-height">16</property>
+							<property name="padding-left">6</property>
+							<property name="padding-right">6</property>
+							<property name="header-height">32</property>
+						</object>
+						<packing>
+							<property name="position">1</property>
+							<property name="expand">False</property>
+							<property name="fill">True</property>
+							<property name="pack-type">end</property>
+						</packing>
+					</child>
                   </object>
                   <packing>
                     <property name="resize">False</property>

@@ -18,6 +18,7 @@
  */
  
 #include <gtk/gtk.h>
+#include "gmpc-extras.h"
 #include "main.h"
 #include "playlist3.h"
 #include "plugin.h"
@@ -90,9 +91,12 @@ void main_window_update_status_icons(void)
 
 void main_window_add_status_icon(GtkWidget * icon)
 {
-    GtkWidget *hbox = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "status-icon-hbox"));
+    GtkWidget *hbox = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "status_icon_box"));
     g_return_if_fail(icon != NULL);
-    gtk_box_pack_start(GTK_BOX(hbox), icon, FALSE, TRUE, 0);
+//    gtk_box_pack_end(GTK_BOX(hbox), icon, FALSE, TRUE, 0);
+	gtk_container_add(GTK_CONTAINER(hbox), icon);
+	gtk_widget_show(icon);
+	gtk_widget_show(hbox);
 }
 
 void main_window_init_default_status_icons(void)
