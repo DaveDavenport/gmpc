@@ -943,11 +943,7 @@ void create_playlist3(void)
             G_TYPE_STRING,       /* display name */
             G_TYPE_STRING,       /* full path and stuff for backend */
             G_TYPE_STRING,       /* icon id */
-            G_TYPE_BOOLEAN,      /* cat proc */
-            G_TYPE_UINT,         /* icon size */
-            G_TYPE_STRING,       /* browser markup */
-            G_TYPE_INT,          /* ordering */
-            G_TYPE_STRING        /* Num items */
+            G_TYPE_INT          /* ordering */
         };
         /* song id, song title */
         pl3_tree = (GtkTreeModel *) gmpc_tools_liststore_sort_new();
