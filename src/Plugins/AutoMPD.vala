@@ -37,6 +37,8 @@ public class Gmpc.Plugins.AutoMPD:
     private string mpd_path = null;
 	private bool stop_mpd_on_close = true;
 	private bool ao_generate_pulse = true;
+	private Gtk.Widget status_icon = null;
+
     /**
      * Gmpc.Plugin.Base
      */
@@ -58,6 +60,32 @@ public class Gmpc.Plugins.AutoMPD:
         return N_("Automatic MPD");
     }
 
+	/**
+	 * Create status icon
+	 */
+	private bool create_status_icon()
+	{
+		if(status_icon != null){
+			status_icon.show();
+			return false;
+		}
+		status_icon = new Gtk.Image.from_icon_name("mpd", Gtk.IconSize.MENU); 
+        status_icon.show();
+		status_icon.set_no_show_all(true);
+        status_icon.set_tooltip_text(_("Local (started by GMPC) MPD is running"));
+        Gmpc.Playlist3.add_status_icon(status_icon);
+		return false;	
+	}
+
+	/**
+	 * Hide the status icon
+	 */
+	private void hide_status_icon()
+	{
+		if(status_icon == null) return;
+		status_icon.hide();
+	}
+
 	/****************************************************************************
 	 * START, STOPPING,  CHECKING MPD											*
 	 ****************************************************************************/
@@ -69,6 +97,8 @@ public class Gmpc.Plugins.AutoMPD:
 		if(check_mpd()){
 			GLib.log(log_domain_autompd, GLib.LogLevelFlags.LEVEL_DEBUG,
 					"Not starting MPD, allready running");
+			// create status icon.
+			GLib.Idle.add(create_status_icon);
 			return;
 		}
 		GLib.log(log_domain_autompd, GLib.LogLevelFlags.LEVEL_DEBUG,
@@ -83,6 +113,11 @@ public class Gmpc.Plugins.AutoMPD:
 			GLib.log(log_domain_autompd, GLib.LogLevelFlags.LEVEL_WARNING,
 				"Failed to start mpd: %s\n", e.message);
 		}
+		if(check_mpd())
+		{
+			// Create status icon.
+			GLib.Idle.add(create_status_icon);
+		}
     }
 	/**
 	 * Stop MPD
@@ -93,6 +128,8 @@ public class Gmpc.Plugins.AutoMPD:
 		if(!check_mpd()){
 			GLib.log(log_domain_autompd, GLib.LogLevelFlags.LEVEL_DEBUG,
 					"Not stopping MPD, allready stopped.");
+			// destroy status icon 
+			hide_status_icon();
 			return;
 		}
 		GLib.log(log_domain_autompd, GLib.LogLevelFlags.LEVEL_DEBUG,
@@ -102,11 +139,13 @@ public class Gmpc.Plugins.AutoMPD:
 		var full_path = GLib.Path.build_filename(c_dir,"gmpc", auto_mpd_id, "mpd.conf");
 		try{
 			GLib.Process.spawn_command_line_sync("mpd --kill '%s'".printf(full_path));
+			// destroy status icon
+			hide_status_icon();
 		}catch(SpawnError e) {
 			GLib.log(log_domain_autompd, GLib.LogLevelFlags.LEVEL_WARNING,
 				"Failed to stop mpd: %s\n", e.message);
 		}
-    }
+	}
 	/**
 	 * Check if MPD is running
 	 * First we read the pid file.
@@ -208,6 +247,7 @@ public class Gmpc.Plugins.AutoMPD:
 			fp.printf("}\n");
 		}
 	}
+
 	/**
 	 * Check if we found an MPD binary to use
 	 */
@@ -215,6 +255,10 @@ public class Gmpc.Plugins.AutoMPD:
 	{
 		return (mpd_path != null);
 	}
+
+	/**
+ 	 * Look through the paths, and try to find the MPD binary.
+	 */
     private void find_mpd_binary()
     {
         var path = GLib.Environment.get_variable("PATH");
@@ -232,6 +276,10 @@ public class Gmpc.Plugins.AutoMPD:
         GLib.log(log_domain_autompd, GLib.LogLevelFlags.LEVEL_DEBUG,
                 "No MPD found in path.");
     }
+
+	/**
+	 * Check lif a profile exists for the local MPD.
+	 */
 	private void check_local_profile()
 	{
 		var c_dir = GLib.Environment.get_user_cache_dir();
@@ -284,20 +332,9 @@ public class Gmpc.Plugins.AutoMPD:
 		}
 	}
 
-	/* Handle changing profiles. */
-	private void current_profile_changed(Profiles prof, string id)
-	{
-		if(have_mpd_binary())
-		{
-			if(id == auto_mpd_id) {
-				start_mpd();
-			}else{
-				stop_mpd();
-			}
-		}
-	}
-
-	// Constructor
+	/**
+	 * Constructor ()
+	 */
     construct {
 		// Check for the MPD binary
         find_mpd_binary();
@@ -311,9 +348,52 @@ public class Gmpc.Plugins.AutoMPD:
 			profiles.set_current.connect(current_profile_changed);
 			// Start mpd if current profile is AutoMPD profile.
 			current_profile_changed(profiles, profiles.get_current_id());
+			gmpcconn.connection_changed.connect(connection_changed);
 		}
 	}
-	/* Destructor */
+
+	/**
+	 * Handle changing profiles.
+	 *
+	 * If the user changes the profile to us, start_mpd().
+	 * If he moves away, stop_mpd().	
+	 */
+	private void current_profile_changed(Profiles prof, string id)
+	{
+		if(have_mpd_binary())
+		{
+			if(id == auto_mpd_id) {
+				start_mpd();
+			}else{
+				stop_mpd();
+			}
+		}
+	}
+
+	/**
+ 	 * Handle a connection changed.
+	 * If we get disconnected, check if mpd is still running, if not.
+	 * Remove the status icon
+	 */
+    private void connection_changed(Connection gc, MPD.Server server, int connection)
+    {
+        if(connection == 0)
+        {
+			/* we are disconnected, check if it was from our MPD */
+			if(profiles.get_current_id() == auto_mpd_id)
+			{
+				/* check if mpd is still runing */
+				if(!check_mpd())
+				{
+					/* not running, update status icon */
+					hide_status_icon();
+				}
+			}
+		}
+	}
+	/***
+	 * Destructor
+	 */
 	~AutoMPD()
 	{
 		/* Close mpd if desired */
