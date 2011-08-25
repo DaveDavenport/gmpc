@@ -30,14 +30,49 @@ private const string some_unique_name_autompd = Config.VERSION;
 private const string log_domain_autompd = "Gmpc.Plugins.AutoMPD";
 
 public class Gmpc.Plugins.AutoMPD:
-            Gmpc.Plugin.Base,
-            Gmpc.Plugin.PreferencesIface
+             Gmpc.Plugin.Base,
+             Gmpc.Plugin.PreferencesIface
 {
 	private const string auto_mpd_id = "autompdprofileid834724";
     private string mpd_path = null;
-	private bool stop_mpd_on_close = true;
-	private bool ao_generate_pulse = true;
 	private Gtk.Widget status_icon = null;
+
+    /**
+     * AutoMPD Options
+     */
+    public bool stop_mpd_on_close {
+            get{
+                return config.get_int_with_default(this.get_name(),
+                        "Stop On MPD", 1) == 1;
+            }
+            set{
+                config.set_int(this.get_name(), 
+                        "Stop On MPD",
+                        (value)?1:0);  
+            }
+    }
+    public bool ao_generate_pulse {
+            get{
+                return config.get_int_with_default(this.get_name(),
+                        "Generate Pulse",
+                        1) == 1;  
+            }
+            set{
+                config.set_int(this.get_name(),
+                        "Generate Pulse",
+                        (value)?1:0);  
+            }
+    }
+    public bool ao_generate_alsa {
+            get{
+                return config.get_int_with_default(this.get_name(),
+                        "Generate Alsa", 0) == 1;  
+            }
+            set{
+                config.set_int(this.get_name(),
+                        "Generate Alsa", (value)?1:0);  
+            }
+    }
 
     /**
      * Gmpc.Plugin.Base
@@ -191,7 +226,27 @@ public class Gmpc.Plugins.AutoMPD:
 	 * Create the config file MPD should use.
 	 * This should be re-created every time
 	 */
-	private void create_config_file()
+    private void create_config_generate_pulse(GLib.FileStream? fp)
+    {
+        fp.printf("# Pulse audio output\n");
+        fp.printf("audio_output {\n");
+        fp.printf("	type	\"pulse\"\n");
+        fp.printf("	name	\"AutoMPD pulse device\"\n");
+        fp.printf("}\n\n");
+    }
+    /**
+     * Create the config file MPD should use.
+     * This should be re-created every time
+     */
+    private void create_config_generate_alsa(GLib.FileStream? fp)
+    {
+        fp.printf("# Alsa audio output\n");
+        fp.printf("audio_output {\n");
+        fp.printf("	type	\"alsa\"\n");
+        fp.printf("	name	\"AutoMPD alsa device\"\n");
+        fp.printf("}\n\n");
+    }
+    private void create_config_file()
 	{
 		/* TODO: Check if profile exists */
 		if(profiles.get_id(auto_mpd_id) == null) {
@@ -206,46 +261,48 @@ public class Gmpc.Plugins.AutoMPD:
 		/* music directory */
 		var md = profiles.get_music_directory(auto_mpd_id);
 		fp.printf("# The directory MPD will search to discover music\n");
-		fp.printf("music_directory \"%s\"\n", md);
+		fp.printf("music_directory \"%s\"\n\n", md);
 
 		/* Playlist directory */
 		var pl_dir = GLib.Path.build_filename(full_path, "playlists");
 		fp.printf("# The directory MPD will use for internal playlists\n");
-		fp.printf("playlist_directory \"%s\"\n", pl_dir);
+		fp.printf("playlist_directory \"%s\"\n\n", pl_dir);
 
 		/* Log */
 		var log_file = GLib.Path.build_filename(full_path, "log","log.txt");
 		fp.printf("# MPD log file\n");
-		fp.printf("log_file \"%s\"\n", log_file);
+		fp.printf("log_file \"%s\"\n\n", log_file);
 
 		/* DB file*/
 		var database_file = GLib.Path.build_filename(full_path, "database.txt");
 		fp.printf("# MPD database file\n");
-		fp.printf("db_file \"%s\"\n", database_file);
+		fp.printf("db_file \"%s\"\n\n", database_file);
 
 		/* State file*/
 		var state_file = GLib.Path.build_filename(full_path, "state.txt");
 		fp.printf("# MPD state file\n");
-		fp.printf("state_file \"%s\"\n", state_file);
+		fp.printf("state_file \"%s\"\n\n", state_file);
 
 		/* Bind to address */
 		var hostname = profiles.get_profile_hostname(auto_mpd_id);
 		fp.printf("# Host to bind to\n");
-		fp.printf("bind_to_address  \"%s\"\n", hostname);
+		fp.printf("bind_to_address  \"%s\"\n\n", hostname);
 
 		/* Write pid file, so we can use mpd --kill */
 		var pid_file = GLib.Path.build_filename(full_path, "mpd.pid");
 		fp.printf("# MPD pid file\n");
-		fp.printf("pid_file \"%s\"\n", pid_file);
+		fp.printf("pid_file \"%s\"\n\n", pid_file);
 
 		/* audio output, default to pulse */
 		if(ao_generate_pulse)
 		{
-			fp.printf("audio_output {\n");
-			fp.printf("	type	\"pulse\"\n");
-			fp.printf("	name	\"AutoMPD pulse device\"\n");
-			fp.printf("}\n");
-		}
+            create_config_generate_pulse(fp);      
+        }
+		/* audio output, default to alsa */
+		if(ao_generate_alsa)
+		{
+            create_config_generate_alsa(fp);      
+        }
 	}
 
 	/**
@@ -402,15 +459,54 @@ public class Gmpc.Plugins.AutoMPD:
 				stop_mpd();
 		}
 	}
+
     /**
      * Preferences pane
      */
+     private Gtk.Builder pref_builder = null;
+
+     /* Destroy preferences construct */
      public void preferences_pane_construct(Gtk.Container container)
      {
+         if(pref_builder != null) return;
+         pref_builder = new Gtk.Builder(); 
+         try {
+             pref_builder.add_from_file(Gmpc.data_path("preferences-autompd.ui"));
+         }catch (GLib.Error e)
+         {
+             GLib.error("Failed to load GtkBuilder file: %s", e.message);
+         }
 
+         var b = pref_builder.get_object("autompdcontainer") as Gtk.Widget;
+         container.add(b);
+
+        // Close mpd on close.
+        var smoc = pref_builder.get_object("cb_stop_mpd_on_close") as Gtk.CheckButton;
+        smoc.active = stop_mpd_on_close;
+        smoc.toggled.connect((source)=> {
+            stop_mpd_on_close = source.active;
+        });
+
+        // Generate pulse output 
+        var cpo = pref_builder.get_object("cb_pulse_output") as Gtk.CheckButton;
+        cpo.active = ao_generate_pulse;
+        cpo.toggled.connect((source)=> {
+            ao_generate_pulse = source.active;
+        });
+
+        // Generate alsa output 
+        var cao = pref_builder.get_object("cb_alsa_output") as Gtk.CheckButton;
+        cao.active = ao_generate_alsa;
+        cao.toggled.connect((source)=> {
+                ao_generate_alsa = source.active;
+        });
+
+        b.show_all();
      }
+     /* Destroy preferences pane */
      public void preferences_pane_destroy(Gtk.Container container)
      {
-
+        container.remove((container as Gtk.Bin).get_child());
+        pref_builder = null;
      }
 }

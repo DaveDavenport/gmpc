@@ -11,6 +11,7 @@ appglade_DATA =\
 		preferences-connection.ui\
 		preferences-proxy.ui\
         preferences-metadata-appearance.ui\
+        preferences-autompd.ui\
 		password-dialog.ui\
 		playlist-save-dialog.ui\
 		playlist-message-window.ui\
