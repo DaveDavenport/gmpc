@@ -401,6 +401,14 @@ namespace Gmpc {
             [CCode (cname="connection_get_hostname", cheader_filename="mpdinteraction.h")]
             public string? get_hostname();
 
+			public unowned string? get_id(string id);
+			public unowned string? create_new_item_with_name(string id, string name);
+			public void set_music_directory(string id, string value);
+			public void set_hostname(string id, string hostname);
+			[CCode (cname="gmpc_profiles_get_hostname", cheader_filename="mpdinteraction.h")]
+			public unowned string? get_profile_hostname(string id); 
+
+			public signal void set_current(string id);
     }
 
     namespace Fix{
