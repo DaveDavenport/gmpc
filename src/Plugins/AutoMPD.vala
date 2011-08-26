@@ -17,10 +17,6 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-/**
- * This plugin queries HTBackdrops.com for artist images (backdrops)
- */
-
 using Config;
 using Gmpc;
 using Gmpc.Plugin;
@@ -30,7 +26,7 @@ private const string some_unique_name_autompd = Config.VERSION;
 private const string log_domain_autompd = "Gmpc.Plugins.AutoMPD";
 
 public class Gmpc.Plugins.AutoMPD:
-Gmpc.Plugin.Base,
+	Gmpc.Plugin.Base,
 	Gmpc.Plugin.PreferencesIface
 {
 	private const string auto_mpd_id = "autompdprofileid834724";
@@ -44,6 +40,7 @@ Gmpc.Plugin.Base,
 		} set{
 			if(profiles.get_current_id() == auto_mpd_id)
 			{
+				/* Send message about restarting */
 				Gmpc.Messages.show(_("Auto MPD's settings have changed, restart MPD to apply changes"), Gmpc.Messages.Level.INFO); 
 				var button = new Gtk.Button();
 				button.set_label("Restart MPD");
@@ -103,6 +100,30 @@ Gmpc.Plugin.Base,
 			config_changed = true;
 		}
 	}
+	public bool mpd_conf_generate_httpd_lame {
+		get{
+			return config.get_int_with_default(this.get_name(),
+					"Generate httpd lame", 0) == 1;  
+		}
+		set{
+			config.set_int(this.get_name(),
+					"Generate httpd lame", (value)?1:0);  
+			config_changed = true;
+		}
+	}
+
+	public bool mpd_conf_generate_httpd_vorbis {
+		get{
+			return config.get_int_with_default(this.get_name(),
+					"Generate httpd vorbis", 0) == 1;  
+		}
+		set{
+			config.set_int(this.get_name(),
+					"Generate httpd vorbis", (value)?1:0);  
+			config_changed = true;
+		}
+	}
+
 
 	/**
 	 * Gmpc.Plugin.Base
@@ -295,6 +316,30 @@ Gmpc.Plugin.Base,
 		fp.printf("	name	\"AutoMPD alsa device\"\n");
 		fp.printf("}\n\n");
 	}
+	private void create_config_generate_http_lame(GLib.FileStream? fp)
+	{
+		fp.printf("# HTTP mp3audio output\n");
+		fp.printf("audio_output {\n");
+		fp.printf("	type		\"httpd\"\n");
+		fp.printf("	name		\"AutoMPD httpd-mp3 device\"\n");
+		fp.printf(" encoder		\"lame\"\n");
+		fp.printf(" port		\"8000\"\n");
+		fp.printf(" bitrate		\"128\"\n");
+		fp.printf(" format		\"44100:16:2\"\n");
+		fp.printf("}\n\n");
+	}
+	private void create_config_generate_http_vorbis(GLib.FileStream? fp)
+	{
+		fp.printf("# HTTP mp3audio output\n");
+		fp.printf("audio_output {\n");
+		fp.printf("	type		\"httpd\"\n");
+		fp.printf("	name		\"AutoMPD httpd-ogg device\"\n");
+		fp.printf(" encoder		\"vorbis\"\n");
+		fp.printf(" port		\"8001\"\n");
+		fp.printf(" bitrate		\"128\"\n");
+		fp.printf(" format		\"44100:16:2\"\n");
+		fp.printf("}\n\n");
+	}
 	private void create_config_file()
 	{
 		/* TODO: Check if profile exists */
@@ -356,6 +401,14 @@ Gmpc.Plugin.Base,
 		if(ao_generate_alsa)
 		{
 			create_config_generate_alsa(fp);      
+		}
+		if(mpd_conf_generate_httpd_lame)
+		{
+			create_config_generate_http_lame(fp);
+		}
+		if(mpd_conf_generate_httpd_vorbis)
+		{
+			create_config_generate_http_vorbis(fp);
 		}
 	}
 
@@ -447,6 +500,10 @@ Gmpc.Plugin.Base,
 	 * Constructor ()
 	 */
 	construct {
+
+        // and internal plugin.
+        this.plugin_type = 8;
+
 		// Check for the MPD binary
 		find_mpd_binary();
 
@@ -473,6 +530,7 @@ Gmpc.Plugin.Base,
 	 */
 	private void current_profile_changed(Profiles prof, string id)
 	{
+		if(!this.get_enabled()) return;
 		if(have_mpd_binary())
 		{
 			if(id == auto_mpd_id) {
