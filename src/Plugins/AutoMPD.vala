@@ -36,8 +36,23 @@ public class Gmpc.Plugins.AutoMPD:
         private const string auto_mpd_id = "autompdprofileid834724";
         private string mpd_path = null;
         private Gtk.Widget status_icon = null;
-        private bool config_changed {get; set; default = false;}
-
+		/* Config changed signal */
+		private bool _config_changed = false;
+		private bool config_changed {
+					get{
+						return _config_changed;
+					} set{
+                        if(profiles.get_current_id() == auto_mpd_id)
+                        {
+							Gmpc.Messages.show(_("Auto MPD's settings have changed, restart MPD to apply changes"), Gmpc.Messages.Level.INFO); 
+							var button = new Gtk.Button();
+							button.set_label("Restart MPD");
+							button.clicked.connect(()=>{ restart_mpd();});
+							Gmpc.Messages.add_widget(button);
+                        }
+						_config_changed = value;
+					} 
+}
         /**
          * AutoMPD Options
          */
@@ -147,7 +162,12 @@ public class Gmpc.Plugins.AutoMPD:
                         if(!check_mpd())
                         {
                                 start_mpd();
-                                // Stop trying
+								/* we are disconnected, check if it was from our MPD */
+								if(profiles.get_current_id() == auto_mpd_id)
+								{
+									Gmpc.MpdInteraction.connect();
+								}
+								// Stop trying
                                 return false;
                         }
                         return true;
@@ -442,10 +462,6 @@ public class Gmpc.Plugins.AutoMPD:
                         gmpcconn.connection_changed.connect(connection_changed);
                 }
                 this.notify["config_changed"].connect(()=>{
-                        if(profiles.get_current_id() == auto_mpd_id)
-                        {
-                               Gmpc.Messages.show(_("Auto MPD's settings have changed, restart MPD to apply changes"), Gmpc.Messages.Level.INFO); 
-                        }
                 });
         }
 

@@ -199,6 +199,9 @@ namespace Gmpc {
 
     [CCode (cname = "playlist3_show_error_message", cheader_filename="playlist3-messages.h")]
     void show(string message, Gmpc.Messages.Level level);
+
+    [CCode (cname = "playlist3_error_add_widget", cheader_filename="playlist3-messages.h")]
+	void add_widget(Gtk.Widget widget);
    }
 
    namespace AsyncDownload {
@@ -387,6 +390,9 @@ namespace Gmpc {
         public void play_path(string path);
         [CCode (cname="submenu_for_song")]
         public void submenu_for_song(Gtk.Widget menu, MPD.Song song);
+
+		[CCode (cname="connect_to_mpd")]
+		public void connect();
     }
 
         [CCode (cheader_filename="gmpc-profiles.h")]
