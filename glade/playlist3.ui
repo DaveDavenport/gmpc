@@ -399,6 +399,11 @@
           <object class="GtkVBox" id="vbox_control">
             <property name="visible">True</property>
             <child>
+              <object class="GtkEventBox" id="header">
+                <property name="name">header</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <child>
               <object class="GtkAlignment" id="alignment1">
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
@@ -433,6 +438,7 @@
                             <child>
                               <object class="GtkHBox" id="pl3_button_control_box">
                                 <property name="visible">True</property>
+                                <property name="spacing">1</property>
                                 <child>
                                   <object class="GtkButton" id="button_previous">
                                     <property name="visible">True</property>
@@ -547,6 +553,8 @@
                     </child>
                   </object>
                 </child>
+                  </object>
+                </child>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -604,29 +612,102 @@
             </child>
             <child>
               <object class="GtkHPaned" id="hpaned1">
+                <property name="name">hpaned1</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="position">200</property>
                 <child>
-                  <object class="GtkVBox" id="vbox5">
+                  <object class="GtkVBox" id="sidebar">
+                    <property name="name">sidebar</property>
                     <property name="visible">True</property>
-                    <property name="spacing">6</property>
+                    <property name="spacing">0</property>
                     <child>
-                      <object class="GtkScrolledWindow" id="scrolledwindow2">
+                      <object class="GtkScrolledWindow" id="sidebar_scrolled_window">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="hscrollbar_policy">automatic</property>
                         <property name="vscrollbar_policy">automatic</property>
-                        <property name="shadow_type">etched-in</property>
+                        <property name="shadow_type">none</property>
                         <child>
-                          <object class="GtkTreeView" id="cat_tree">
+                          <object class="GtkViewport" id="viewport123">
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="headers_visible">False</property>
-                            <property name="rules_hint">True</property>
-                            <property name="enable_search">False</property>
-                            <signal name="button-press-event" handler="pl3_cat_tree_button_press_event" swapped="no"/>
-                            <signal name="button-release-event" handler="pl3_cat_tree_button_release_event" swapped="no"/>
+                            <property name="can_focus">False</property>
+                            <property name="shadow_type">none</property>
+                            <child>
+                              <object class="GtkVBox" id="vbox5">
+                                <property name="visible">True</property>
+                                <property name="spacing">16</property>
+                                <child>
+                                <object class="GtkVBox" id="browsers_vbox">
+                                <property name="visible">True</property>
+                                <property name="spacing">4</property>
+                                <child>
+                                  <object class="GtkAlignment" id="alignment21">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="top_padding">10</property>
+                                    <property name="bottom_padding">2</property>
+                                    <property name="left_padding">15</property>
+                                    <child>
+                                      <object class="GtkLabel" id="label1">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="xalign">0</property>
+                                        <property name="ypad">0</property>
+                                        <property name="label" translatable="yes">&lt;b&gt;Browsers&lt;/b&gt;</property>
+                                        <property name="use_markup">True</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="padding">0</property>
+                                    <property name="position">0</property>
+                                    <property name="pack_type">start</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkTreeView" id="cat_tree">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="headers_visible">False</property>
+                                    <property name="rules_hint">True</property>
+                                    <property name="enable_search">False</property>
+                                    <signal name="button-press-event" handler="pl3_cat_tree_button_press_event" swapped="no"/>
+                                    <signal name="button-release-event" handler="pl3_cat_tree_button_release_event" swapped="no"/>
+                                  </object>
+                                  </child>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">False</property>
+                                    <property name="padding">3</property>
+                                    <property name="position">1</property>
+                                    <property name="pack_type">start</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkVBox" id="sidebar_plugins_top">
+                                    <property name="visible">True</property>
+                                    <property name="spacing">25</property>
+                                    <child>
+                                      <object class="GtkAlignment" id="placeholder_do_not_remove">
+                                        <property name="visible">False</property>
+                                        <property name="can_focus">False</property>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">False</property>
+                                        <property name="padding">0</property>
+                                        <property name="position">0</property>
+                                        <property name="pack_type">start</property>
+                                      </packing>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
                           </object>
                         </child>
                       </object>
@@ -634,7 +715,43 @@
                         <property name="position">0</property>
                       </packing>
                     </child>
-					<child>
+                    <child>
+                      <object class="GtkAlignment" id="alignmentspb">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="top_padding">0</property>
+                        <property name="bottom_padding">0</property>
+                        <property name="left_padding">0</property>
+                        <property name="right_padding">0</property>
+                        <child>
+                      <object class="GtkVBox" id="sidebar_plugins_bottom">
+                        <property name="visible">True</property>
+                        <property name="spacing">3</property>
+                        <child>
+                          <object class="GtkAlignment" id="placeholder">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">False</property>
+                            <property name="padding">0</property>
+                            <property name="position">0</property>
+                            <property name="pack_type">end</property>
+                          </packing>
+                        </child>
+                      </object>
+                      </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                        <property name="padding">0</property>
+                        <property name="position">2</property>
+                        <property name="pack_type">end</property>
+                      </packing>
+                    </child>
+                    <child>
 						<object class="GmpcWidgetsQtable" id="status_icon_box">
 							<property name="spacing">3</property>
 							<property name="item-width">16</property>
@@ -650,6 +767,50 @@
 							<property name="pack-type">end</property>
 						</packing>
 					</child>
+                    <child>
+                      <object class="GtkAlignment" id="sidebar_artist_image_alignment">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="top_padding">0</property>
+                        <property name="bottom_padding">3</property>
+                        <property name="left_padding">0</property>
+                        <property name="right_padding">0</property>
+                        <child>
+                          <object class="GtkVBox" id="sidebar_artist_image">
+                            <property name="visible">True</property>
+                            <property name="spacing">0</property>
+                          </object>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                        <property name="padding">0</property>
+                        <property name="position">1</property>
+                        <property name="pack_type">end</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkAlignment" id="alignmentpb21">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="top_padding">0</property>
+                        <property name="bottom_padding">0</property>
+                        <property name="left_padding">2</property>
+                        <property name="right_padding">2</property>
+                        <child>
+                          <object class="GtkProgressBar" id="pl3_progressbar">
+                            <property name="pulse_step">0.100000</property>
+                          </object>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                        <property name="position">0</property>
+                        <property name="pack_type">end</property>
+                      </packing>
+                    </child>
                   </object>
                   <packing>
                     <property name="resize">False</property>
@@ -712,16 +873,7 @@
         <child>
           <object class="GtkHBox" id="hbox1">
             <property name="visible">True</property>
-            <child>
-              <object class="GtkProgressBar" id="pl3_progressbar">
-                <property name="pulse_step">0.100000</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
+
 <!--
             <child>
               <object class="GtkStatusbar" id="statusbar1">

@@ -872,6 +872,15 @@ static void playlist_connection_changed(MpdObj * mi, int connect, gpointer data)
 
 }
 
+void pl3_style_set_event( GtkWidget *widget,
+                          GtkStyle  *previous_style,
+                          gpointer   user_data)
+{
+    if (cfg_get_single_value_as_int_with_default(config, "Default", "use-dark-style-header", TRUE))
+    {
+        gtk_rc_parse_string("widget \"*header*\" style \"dark\"");
+    }
+}
 
 void create_playlist3(void)
 {
@@ -890,8 +899,8 @@ void create_playlist3(void)
     pl3_hidden = FALSE;
 
     /**
-     * If the playlist allready exists,
-     * It is probly coming from a hidden state,
+     * If the playlist already exists,
+     * It is probably coming from a hidden state,
      * so re-position the window
      */
     if (pl3_xml != NULL)
@@ -899,26 +908,12 @@ void create_playlist3(void)
         pl3_show_and_position_window();
         return;
     }
-    /* initial, setting the url hook */
-    gtk_about_dialog_set_url_hook((GtkAboutDialogActivateLinkFunc) about_dialog_activate, NULL, NULL);
-	TEC("Setup dialog url hook")
-    /* load gui desciption */
-    path = gmpc_get_full_glade_path("playlist3.ui");
-	TEC("get path")
-    pl3_xml = gtk_builder_new();
-	TEC("create builder")
-    if(gtk_builder_add_from_file(pl3_xml, path,&error) == 0)
+
+    /** Ambiance / Radiance theme "dark" header */
+    if (cfg_get_single_value_as_int_with_default(config, "Default", "use-dark-style-header", TRUE))
     {
-        /*
-         * Check if the file is loaded, if not then show an error message and abort the program
-        if (pl3_xml == NULL)
-        {
-        */
-        g_log(LOG_DOMAIN, G_LOG_LEVEL_WARNING, "Failed to open playlist3.glade: %s\n", error->message);
-        abort();
+        gtk_rc_parse_string("widget \"*header*\" style \"dark\"");
     }
-    g_free(path);
-	TEC("Load builder file")
 
     /** murrine hack */
     if (cfg_get_single_value_as_int_with_default(config, "Default", "murrine-hack", FALSE))
@@ -934,6 +929,45 @@ void create_playlist3(void)
             gtk_widget_set_default_colormap(colormap);
 		TEC("Murrine hack")
 	}
+
+    /** use background color for the sidebar treeview cells */
+    gtk_rc_parse_string (
+        "style \"sidebar-treeview\"\n"
+        "{\n"
+        "   GtkTreeView::odd-row-color = @bg_color\n"
+        "   GtkTreeView::even-row-color = @bg_color\n"
+        "}\n"
+        "widget \"*.sidebar.*\" style \"sidebar-treeview\"");
+
+    /** set handle size to 1px */
+    gtk_rc_parse_string (
+        "style \"hpaned1-style\"\n"
+        "{\n"
+        "   GtkPaned::handle-size = 1\n"
+        "}\n"
+        "widget \"*.hpaned1\" style \"hpaned1-style\"\n");
+
+    /* initial, setting the url hook */
+    gtk_about_dialog_set_url_hook((GtkAboutDialogActivateLinkFunc) about_dialog_activate, NULL, NULL);
+    TEC("Setup dialog url hook")
+    /* load gui desciption */
+    path = gmpc_get_full_glade_path("playlist3.ui");
+    TEC("get path")
+    pl3_xml = gtk_builder_new();
+    TEC("create builder")
+    if(gtk_builder_add_from_file(pl3_xml, path,&error) == 0)
+    {
+        /*
+         * Check if the file is loaded, if not then show an error message and abort the program
+        if (pl3_xml == NULL)
+        {
+        */
+        g_log(LOG_DOMAIN, G_LOG_LEVEL_WARNING, "Failed to open playlist3.glade: %s\n", error->message);
+        abort();
+    }
+    g_free(path);
+    TEC("Load builder file")
+
     /* create tree store for the "category" view */
     if (pl3_tree == NULL)
     {
@@ -962,14 +996,16 @@ void create_playlist3(void)
     gtk_tree_view_set_reorderable(GTK_TREE_VIEW(tree), TRUE);
 
     renderer = gtk_cell_renderer_pixbuf_new();
+    renderer->xalign = 1;
     column = gtk_tree_view_column_new();
     gtk_tree_view_column_pack_start(column, renderer, FALSE);
-    g_object_set(G_OBJECT(renderer), "stock-size", GTK_ICON_SIZE_DND, NULL);
+    g_object_set(G_OBJECT(renderer), "stock-size", GTK_ICON_SIZE_MENU, NULL);
     {
         int w, h;
-        if (gtk_icon_size_lookup(GTK_ICON_SIZE_DND, &w, &h))
+        if (gtk_icon_size_lookup(GTK_ICON_SIZE_MENU, &w, &h))
         {
-            g_object_set(G_OBJECT(renderer), "height", h, NULL);
+            g_object_set(G_OBJECT(renderer), "height", h+10, NULL);
+            g_object_set(G_OBJECT(renderer), "width", w+20, NULL);
         }
     }
     gtk_tree_view_column_set_attributes(column, renderer, "icon-name", PL3_CAT_ICON_ID, NULL);
@@ -1187,9 +1223,7 @@ void create_playlist3(void)
 
 	TEC("signal connn changed")
 
-    /** Remove statusbar border */
-    //statusbar = (GtkStatusbar *)gtk_builder_get_object(pl3_xml, "statusbar1");
-    //gtk_frame_set_shadow_type (GTK_FRAME (statusbar->frame), GTK_SHADOW_NONE);
+    g_signal_connect(G_OBJECT(playlist3_get_window()), "style-set", G_CALLBACK(pl3_style_set_event), NULL);
 
     /**
      * Add status icons
