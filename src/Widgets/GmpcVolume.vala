@@ -72,15 +72,21 @@ public class Gmpc.Widgets.Volume : Gtk.EventBox
     {
         int tvolume_level = _volume_level;
         if(event.direction ==  Gdk.ScrollDirection.UP) {
-            volume_level = tvolume_level + 5;
+            volume_level = tvolume_level + config.get_int_with_default("Volume", "scroll-sensitivity", 5);
         }else if(event.direction == Gdk.ScrollDirection.DOWN) {
-           volume_level  = tvolume_level - 5; 
+           volume_level  = tvolume_level - config.get_int_with_default("Volume", "scroll-sensitivity", 5);
         }
         return false;
     }
+    
     /* Mouse button got pressed over widget */
     public override bool button_press_event (Gdk.EventButton event) {
-        /* Inside X */
+        if (!(bool)config.get_int_with_default("Volume", "clickable", 1))
+        {
+            return false;
+        }
+
+        /* Inside X */            
         if(event.x > BORDER_WIDTH && event.x < (this.allocation.width-BORDER_WIDTH))
         {
             this.set_volume_level_from_y_pos(event.y);
@@ -95,6 +101,11 @@ public class Gmpc.Widgets.Volume : Gtk.EventBox
 
     /* Mouse pointer moved over widget */
     public override bool motion_notify_event (Gdk.EventMotion event) {
+        if (!(bool)config.get_int_with_default("Volume", "clickable", 1))
+        {
+            return false;
+        }
+    
         if((event.state&Gdk.ModifierType.BUTTON1_MASK) == Gdk.ModifierType.BUTTON1_MASK)
         {
             this.set_volume_level_from_y_pos(event.y);

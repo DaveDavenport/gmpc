@@ -234,16 +234,17 @@ static int tray_icon2_button_press_event(gpointer tray, GdkEventButton * event, 
     return TRUE;
 }
 
+
 static int tray_icon2_button_scroll_event(gpointer tray, GdkEventScroll * event, gpointer data)
 {
     if (event->direction == GDK_SCROLL_UP)
     {
         if (mpd_server_check_command_allowed(connection, "volume") && mpd_status_get_volume(connection) >= 0)
-            volume_up();
+            mpd_status_set_volume(connection, mpd_status_get_volume(connection) + cfg_get_single_value_as_int_with_default(config, "Volume", "scroll-sensitivity", 5));
     } else if (event->direction == GDK_SCROLL_DOWN)
     {
         if (mpd_server_check_command_allowed(connection, "volume") && mpd_status_get_volume(connection) >= 0)
-            volume_down();
+            mpd_status_set_volume(connection, mpd_status_get_volume(connection) - cfg_get_single_value_as_int_with_default(config, "Volume", "scroll-sensitivity", 5));
     } else if (event->direction == GDK_SCROLL_LEFT)
     {
         prev_song();
@@ -260,11 +261,11 @@ static int tray_icon2_button_scroll_event_appindicator(AppIndicator *this_indica
     if (direction == GDK_SCROLL_UP)
     {
         if (mpd_server_check_command_allowed(connection, "volume") && mpd_status_get_volume(connection) >= 0)
-            volume_up();
+            mpd_status_set_volume(connection, mpd_status_get_volume(connection) + cfg_get_single_value_as_int_with_default(config, "Volume", "scroll-sensitivity", 5));
     } else if (direction == GDK_SCROLL_DOWN)
     {
         if (mpd_server_check_command_allowed(connection, "volume") && mpd_status_get_volume(connection) >= 0)
-            volume_down();
+            mpd_status_set_volume(connection, mpd_status_get_volume(connection) - cfg_get_single_value_as_int_with_default(config, "Volume", "scroll-sensitivity", 5));
     } else if (direction == GDK_SCROLL_LEFT)
     {
         prev_song();
