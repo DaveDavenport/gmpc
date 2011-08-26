@@ -156,6 +156,16 @@
       </packing>
     </child>
     <child>
+        <object class="GtkButton" id="b_restart">
+                <property name="label">Restart MPD</property>
+        </object>
+        <packing>
+        <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">5</property>
+          </packing>
+    </child>
+    <child>
       <placeholder/>
     </child>
   </object>
@@ -164,6 +174,7 @@
       <widget name="label1"/>
       <widget name="label2"/>
       <widget name="label5"/>
+      <widget name="b_restart"/>
     </widgets>
   </object>
 </interface>
