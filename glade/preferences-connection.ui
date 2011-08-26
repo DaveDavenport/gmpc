@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <interface>
-  <!-- interface-requires gtk+ 2.12 -->
+  <!-- interface-requires gtk+ 2.16 -->
   <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkAdjustment" id="adjustment1">
     <property name="value">1.0499999523200001</property>
@@ -370,64 +370,6 @@
                     <property name="y_options"></property>
                   </packing>
                 </child>
-                <child>
-                  <object class="GtkHBox" id="hbox57">
-                    <property name="visible">True</property>
-                    <child>
-                      <object class="GtkButton" id="remove_butt">
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">False</property>
-                        <signal name="clicked" handler="connection_remove_profile"/>
-                        <child>
-                          <object class="GtkImage" id="remove_butt_image">
-                            <property name="visible">True</property>
-                            <property name="stock">gtk-remove</property>
-                          </object>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">False</property>
-                        <property name="pack_type">end</property>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkButton" id="add_butt">
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">False</property>
-                        <signal name="clicked" handler="connection_add_profile"/>
-                        <child>
-                          <object class="GtkImage" id="image85">
-                            <property name="visible">True</property>
-                            <property name="stock">gtk-add</property>
-                          </object>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">False</property>
-                        <property name="pack_type">end</property>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="right_attach">2</property>
-                    <property name="top_attach">6</property>
-                    <property name="bottom_attach">7</property>
-                    <property name="x_options">GTK_FILL</property>
-                  </packing>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
               </object>
             </child>
           </object>
@@ -457,6 +399,36 @@
                 <property name="position">1</property>
               </packing>
             </child>
+            <child>
+               <object class="GtkButton" id="add_butt">
+                 <property name="visible">True</property>
+                 <property name="can_focus">True</property>
+                 <property name="receives_default">False</property>
+                 <signal name="clicked" handler="connection_add_profile"/>
+                 <child>
+                   <object class="GtkLabel" id="label760">
+                     <property name="visible">True</property>
+                     <property name="label" translatable="yes">_New</property>
+                     <property name="use_underline">True</property>
+                   </object>
+                 </child>
+               </object>
+             </child>
+             <child>
+               <object class="GtkButton" id="remove_butt">
+                 <property name="visible">True</property>
+                 <property name="can_focus">True</property>
+                 <property name="receives_default">False</property>
+                 <signal name="clicked" handler="connection_remove_profile"/>
+                 <child>
+                   <object class="GtkLabel" id="label340">
+                     <property name="visible">True</property>
+                     <property name="label" translatable="yes">_Remove</property>
+                     <property name="use_underline">True</property>
+                   </object>
+                 </child>
+               </object>
+             </child>
           </object>
         </child>
       </object>
