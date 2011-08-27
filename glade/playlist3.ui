@@ -771,6 +771,7 @@
 							<property name="expand">False</property>
 							<property name="fill">True</property>
 							<property name="pack-type">end</property>
+                            <property name="padding">3</property>
 						</packing>
 					</child>
                     <child>
