@@ -389,6 +389,7 @@
         <child>
           <object class="GtkMenuBar" id="menubartest" constructor="uimanager1">
             <property name="visible">True</property>
+            <property name="name">menubar</property>
           </object>
           <packing>
             <property name="expand">False</property>

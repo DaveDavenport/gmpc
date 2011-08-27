@@ -947,6 +947,14 @@ void create_playlist3(void)
         "}\n"
         "widget \"*.hpaned1\" style \"hpaned1-style\"\n");
 
+    /** menubar */
+    gtk_rc_parse_string (
+        "style \"menubar-style\"\n"
+        "{\n"
+        "   GtkMenuBar::shadow-type = none\n"
+        "}\n"
+        "widget \"*.menubar\" style \"menubar-style\"\n");
+
     /* initial, setting the url hook */
     gtk_about_dialog_set_url_hook((GtkAboutDialogActivateLinkFunc) about_dialog_activate, NULL, NULL);
     TEC("Setup dialog url hook")
