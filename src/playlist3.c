@@ -394,7 +394,7 @@ static gboolean pl3_win_state_event(GtkWidget * window, GdkEventWindowState * ev
 		}
 		gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "bread_crumb")));
         gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "box_tab_bar")));
-        gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "vbox5")));
+        gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "sidebar")));
         gtk_widget_hide(p);
         gtk_widget_hide(h);
         gtk_widget_hide(b);
@@ -1590,7 +1590,7 @@ static void playlist_zoom_level_changed(void)
         g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "restore size %i %i\n", pl3_wsize.width, pl3_wsize.height);
         gtk_window_resize(GTK_WINDOW(pl3_win), pl3_wsize.width, pl3_wsize.height);
     }
-    gtk_widget_show(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "vbox5")));
+    gtk_widget_show(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "sidebar")));
     gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "bread_crumb")));
     gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "box_tab_bar")));
     gtk_action_set_visible(GTK_ACTION(gtk_builder_get_object(pl3_xml, "menu_go")),TRUE);
@@ -1619,10 +1619,10 @@ static void playlist_zoom_level_changed(void)
             }
             gtk_window_set_resizable(GTK_WINDOW(pl3_win), FALSE);
 
-            gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "vbox5")));
+            gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "sidebar")));
             break;
         case PLAYLIST_SMALL:
-            gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "vbox5")));
+            gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "sidebar")));
             if (!cfg_get_single_value_as_int_with_default(config, "playlist", "button-heading", FALSE))
                 gtk_widget_show(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "bread_crumb")));
             else
