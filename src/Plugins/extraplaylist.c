@@ -93,48 +93,47 @@ static void extra_playlist_remove(void) {
     GtkWidget *temp = NULL;
     if(pl3_xml == NULL) return;
     if(extraplaylist == NULL  && get_enabled() == FALSE) return;
+    if(extraplaylist == NULL) return;
 
-    if(extraplaylist){
-        if (includes_sidebar) {
-            temp = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "hpaned1"));
-            g_object_ref(temp);
+    if (includes_sidebar) {
+        temp = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "hpaned1"));
+        g_object_ref(temp);
 
-            extra_playlist_save();
-            /* Remove widget */
-            gtk_widget_hide(extraplaylist);
-            if(gtk_bin_get_child(GTK_BIN(extraplaylist)))
-                        gmpc_plugin_browser_iface_browser_unselected(GMPC_PLUGIN_BROWSER_IFACE(play_queue_plugin),GTK_CONTAINER(extraplaylist));
+        extra_playlist_save();
+        /* Remove widget */
+        gtk_widget_hide(extraplaylist);
+        if(gtk_bin_get_child(GTK_BIN(extraplaylist)))
+                    gmpc_plugin_browser_iface_browser_unselected(GMPC_PLUGIN_BROWSER_IFACE(play_queue_plugin),GTK_CONTAINER(extraplaylist));
 
-            /* Remove it from inserted widget */
-            gtk_container_remove(GTK_CONTAINER(extraplaylist_paned), temp);
+        /* Remove it from inserted widget */
+        gtk_container_remove(GTK_CONTAINER(extraplaylist_paned), temp);
 
-            /* Destroy the previously added stuff split view */
-            gtk_widget_destroy(extraplaylist);
-            extraplaylist = NULL;
-            gtk_widget_destroy(extraplaylist_paned);
-            extraplaylist = NULL;
-            gtk_container_add(GTK_CONTAINER(gtk_builder_get_object(pl3_xml,"hpaned1_vbox")), temp);
-        }
-        else {
-            temp = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "vbox7"));
-            g_object_ref(temp);
+        /* Destroy the previously added stuff split view */
+        gtk_widget_destroy(extraplaylist);
+        extraplaylist = NULL;
+        gtk_widget_destroy(extraplaylist_paned);
+        extraplaylist = NULL;
+        gtk_container_add(GTK_CONTAINER(gtk_builder_get_object(pl3_xml,"hpaned1_vbox")), temp);
+    }
+    else {
+        temp = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "vbox7"));
+        g_object_ref(temp);
 
-            extra_playlist_save();
-            /* Remove widget */
-            gtk_widget_hide(extraplaylist);
-            if(gtk_bin_get_child(GTK_BIN(extraplaylist)))
-                        gmpc_plugin_browser_iface_browser_unselected(GMPC_PLUGIN_BROWSER_IFACE(play_queue_plugin),GTK_CONTAINER(extraplaylist));
+        extra_playlist_save();
+        /* Remove widget */
+        gtk_widget_hide(extraplaylist);
+        if(gtk_bin_get_child(GTK_BIN(extraplaylist)))
+                    gmpc_plugin_browser_iface_browser_unselected(GMPC_PLUGIN_BROWSER_IFACE(play_queue_plugin),GTK_CONTAINER(extraplaylist));
 
-            /* Remove it from inserted widget */
-            gtk_container_remove(GTK_CONTAINER(extraplaylist_paned), temp);
+        /* Remove it from inserted widget */
+        gtk_container_remove(GTK_CONTAINER(extraplaylist_paned), temp);
 
-            /* Destroy the previously added stuff split view */
-            gtk_widget_destroy(extraplaylist);
-            extraplaylist = NULL;
-            gtk_widget_destroy(extraplaylist_paned);
-            extraplaylist = NULL;
-            gtk_paned_pack2(GTK_PANED(gtk_builder_get_object(pl3_xml,"hpaned1")),temp, TRUE, TRUE);
-        }
+        /* Destroy the previously added stuff split view */
+        gtk_widget_destroy(extraplaylist);
+        extraplaylist = NULL;
+        gtk_widget_destroy(extraplaylist_paned);
+        extraplaylist = NULL;
+        gtk_paned_pack2(GTK_PANED(gtk_builder_get_object(pl3_xml,"hpaned1")),temp, TRUE, TRUE);
     }
 
 }
@@ -147,6 +146,7 @@ static void extra_playlist_add(void) {
     GtkWidget *temp = NULL;
 	if(pl3_xml == NULL) return;
     if(extraplaylist == NULL  && get_enabled() == FALSE) return;
+    if(extraplaylist != NULL) return;
 
     if ((cfg_get_single_value_as_int_with_default(config, "extraplaylist", "include-sidebar",FALSE)) &&
        (cfg_get_single_value_as_int_with_default(config, "extraplaylist", "vertical-layout", TRUE))) {
@@ -236,7 +236,6 @@ static void set_enabled(int enable) {
         if(gtk_bin_get_child(GTK_BIN(extraplaylist)))
             gmpc_plugin_browser_iface_browser_unselected(GMPC_PLUGIN_BROWSER_IFACE(play_queue_plugin),GTK_CONTAINER(extraplaylist)); 
 	}
-    pl3_tool_menu_update();
 }
 
 /**
@@ -273,8 +272,8 @@ static  void preferences_construct(GtkWidget *container)
     gtk_frame_set_shadow_type(GTK_FRAME(frame), GTK_SHADOW_NONE);
     gtk_label_set_markup(GTK_LABEL(gtk_frame_get_label_widget(GTK_FRAME(frame))), "<b>Appearance</b>");
 
-    GtkAlignment *align = gtk_alignment_new(0,0,0,0);
-    gtk_alignment_set_padding(align, 12, 0, 12, 0);
+    GtkWidget *align = gtk_alignment_new(0,0,0,0);
+    gtk_alignment_set_padding(GTK_ALIGNMENT(align), 12, 0, 12, 0);
 
     /* The checkbox */
     label = gtk_check_button_new_with_label("Use horizontal layout");
@@ -287,8 +286,8 @@ static  void preferences_construct(GtkWidget *container)
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(cb_include_sidebar), cfg_get_single_value_as_int_with_default(config, "extraplaylist", "include-sidebar", FALSE));
     gtk_widget_set_sensitive(GTK_WIDGET(cb_include_sidebar), cfg_get_single_value_as_int_with_default(config, "extraplaylist", "vertical-layout", TRUE));
 
-    GtkAlignment *align2 = gtk_alignment_new(0,0,0,0);
-    gtk_alignment_set_padding(align2, 0, 0, 20, 0);
+    GtkWidget *align2 = gtk_alignment_new(0,0,0,0);
+    gtk_alignment_set_padding(GTK_ALIGNMENT(align2), 0, 0, 20, 0);
     gtk_container_add(GTK_CONTAINER(align2), cb_include_sidebar);
     gtk_box_pack_start(GTK_BOX(vbox), align2, FALSE, FALSE, 0);
     g_signal_connect(G_OBJECT(cb_include_sidebar), "toggled", G_CALLBACK(preferences_layout_sidebar_changed), NULL);
