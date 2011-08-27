@@ -611,6 +611,11 @@
               </packing>
             </child>
             <child>
+                              <object class="GtkVBox" id="hpaned1_vbox">
+                    <property name="visible">True</property>
+                    <property name="spacing">0</property>
+                    <child>
+            
               <object class="GtkHPaned" id="hpaned1">
                 <property name="name">hpaned1</property>
                 <property name="visible">True</property>
@@ -837,6 +842,8 @@
                     <property name="resize">True</property>
                     <property name="shrink">True</property>
                   </packing>
+                </child>
+              </object>
                 </child>
               </object>
               <packing>
