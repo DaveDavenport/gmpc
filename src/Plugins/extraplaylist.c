@@ -266,8 +266,15 @@ static void preferences_layout_sidebar_changed(GtkToggleButton *but, gpointer us
 
 static  void preferences_construct(GtkWidget *container)
 {
-    GtkWidget *vbox = gtk_vbox_new(FALSE, 6);
+    GtkWidget *vbox = gtk_vbox_new(FALSE, 3);
     GtkWidget *label = NULL;
+
+    GtkWidget *frame = gtk_frame_new("");
+    gtk_frame_set_shadow_type(GTK_FRAME(frame), GTK_SHADOW_NONE);
+    gtk_label_set_markup(GTK_LABEL(gtk_frame_get_label_widget(GTK_FRAME(frame))), "<b>Appearance</b>");
+
+    GtkAlignment *align = gtk_alignment_new(0,0,0,0);
+    gtk_alignment_set_padding(align, 12, 0, 12, 0);
 
     /* The checkbox */
     label = gtk_check_button_new_with_label("Use horizontal layout");
@@ -279,7 +286,11 @@ static  void preferences_construct(GtkWidget *container)
     cb_include_sidebar = gtk_check_button_new_with_label("Include sidebar");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(cb_include_sidebar), cfg_get_single_value_as_int_with_default(config, "extraplaylist", "include-sidebar", FALSE));
     gtk_widget_set_sensitive(GTK_WIDGET(cb_include_sidebar), cfg_get_single_value_as_int_with_default(config, "extraplaylist", "vertical-layout", TRUE));
-    gtk_box_pack_start(GTK_BOX(vbox), cb_include_sidebar, FALSE, FALSE, 0);
+
+    GtkAlignment *align2 = gtk_alignment_new(0,0,0,0);
+    gtk_alignment_set_padding(align2, 0, 0, 20, 0);
+    gtk_container_add(GTK_CONTAINER(align2), cb_include_sidebar);
+    gtk_box_pack_start(GTK_BOX(vbox), align2, FALSE, FALSE, 0);
     g_signal_connect(G_OBJECT(cb_include_sidebar), "toggled", G_CALLBACK(preferences_layout_sidebar_changed), NULL);
 
     /* The checkbox */
@@ -288,9 +299,12 @@ static  void preferences_construct(GtkWidget *container)
     gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, FALSE, 0);
     g_signal_connect(G_OBJECT(label), "toggled", G_CALLBACK(preferences_layout_swapped_changed), NULL);
    
+
     /* show and add */
-    gtk_widget_show_all(vbox);
-    gtk_container_add(GTK_CONTAINER(container), vbox);
+    gtk_container_add(GTK_CONTAINER(align), vbox);
+    gtk_container_add(GTK_CONTAINER(frame), GTK_WIDGET(align));
+    gtk_widget_show_all(frame);
+    gtk_container_add(GTK_CONTAINER(container), frame);
 
 }
 static void preferences_destroy(GtkWidget *container)
