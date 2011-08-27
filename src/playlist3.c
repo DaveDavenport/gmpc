@@ -300,6 +300,7 @@ int pl3_cat_tree_button_press_event(GtkTreeView * tree, GdkEventButton * event)
 
 void pl3_option_menu_activate(void)
 {
+
     GtkWidget *tree = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "cat_tree"));
     int i;
     gint type = pl3_cat_get_selected_browser();
@@ -309,7 +310,7 @@ void pl3_option_menu_activate(void)
     GtkUIManager *ui = GTK_UI_MANAGER(gtk_builder_get_object(pl3_xml, "uimanager1"));
     GtkMenuItem *m_item = GTK_MENU_ITEM(gtk_ui_manager_get_widget(ui, "/menubartest/menu_option"));
 
-    gtk_menu_item_set_submenu(m_item, NULL);
+    //gtk_menu_item_set_submenu(m_item, NULL);
 
     if (!mpd_check_connected(connection) || type == -1)
         return;
