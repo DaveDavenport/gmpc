@@ -78,9 +78,10 @@ void playlist3_new_header(void)
         GtkWidget *hbox = gtk_hbox_new(FALSE, 6);
         GtkWidget *vbox = gtk_vbox_new(FALSE, 0);
         // expand in width, align in middle
-        GtkAlignment *title_header_top_alignment = gtk_alignment_new(0,0.5,1.0,0);
+        GtkWidget *title_header_top_alignment;
+        title_header_top_alignment = gtk_alignment_new(0,0.5,1.0,0);
         // set a 3 px top/bottom border (looks better then 6)
-        gtk_alignment_set_padding(title_header_top_alignment, 3,3,0,0);
+        gtk_alignment_set_padding(GTK_ALIGNMENT(title_header_top_alignment), 3,3,0,0);
         
         // set minimum width 300 pixels.
         gtk_widget_set_size_request(title_header_top_alignment, 300, -1);

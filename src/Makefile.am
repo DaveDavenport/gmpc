@@ -97,6 +97,7 @@ gmpc_SOURCES=\
     vala/gmpc-url-fetching-gui.vala\
     vala/gmpc-test-plugin.vala\
     vala/gmpc-paned-size-group.vala\
+    vala/gmpc-sidebar-plugins.vala\
     MetaData/metadata-cache-sqlite.c\
     MetaData/metadata-cache.c\
     MetaData/metadata.c\

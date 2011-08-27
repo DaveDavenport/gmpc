@@ -265,16 +265,19 @@ namespace Gmpc {
     namespace Playlist {
         [CCode (cname="(GtkWindow *)playlist3_get_window", cheader_filename="plugin.h")]
         public unowned Gtk.Window get_window();
-[CCode (cname="playlist3_window_is_hidden", cheader_filename="plugin.h")]
+        [CCode (cname="playlist3_window_is_hidden", cheader_filename="plugin.h")]
         public bool is_hidden();
 
-[CCode (cname="pl3_hide", cheader_filename="plugin.h")]
+        [CCode (cname="pl3_hide", cheader_filename="plugin.h")]
         public void hide();
 
-[CCode (cname="create_playlist3", cheader_filename="plugin.h")]
+        [CCode (cname="create_playlist3", cheader_filename="plugin.h")]
         public void show();
         [CCode (cname="playlist3_get_accel_group", cheader_filename="playlist3.h")]
         public unowned Gtk.AccelGroup get_accel_group();
+        
+        [CCode (cname="playlist3_get_widget_by_id", cheader_filename="playlist3.h")]
+        public Gtk.Widget get_widget_by_id(string id);
     }
 
     namespace TrayIcon2 {

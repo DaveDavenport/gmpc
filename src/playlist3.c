@@ -106,6 +106,8 @@ void playlist3_server_update_db(void);
 
 void easy_command_help_window(void);
 
+void pl3_style_set_event(GtkWidget *widget, GtkStyle *previous_style, gpointer user_data);
+
 /* Old category browser style */
 static int old_type = -1;
 
@@ -891,7 +893,7 @@ void create_playlist3(void)
     GtkWidget *tree;
     GtkTreeSelection *sel;
     GtkTreeViewColumn *column = NULL;
-	GtkStatusbar *statusbar;
+    //GtkStatusbar *statusbar;
     gchar *path = NULL;
     GtkTreeIter iter;
     GError *error = NULL;
@@ -1263,6 +1265,10 @@ GtkTreeView *playlist3_get_category_tree_view(void)
     if (pl3_xml == NULL)
         return NULL;
     return (GtkTreeView *) gtk_builder_get_object(pl3_xml, "cat_tree");
+}
+
+GtkWidget* playlist3_get_widget_by_id(const char *id) {
+    return (GtkWidget *) gtk_builder_get_object(pl3_xml, id);
 }
 
 
