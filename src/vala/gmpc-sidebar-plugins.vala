@@ -87,43 +87,42 @@ public class Gmpc.Sidebar.Plugins {
     private static void reorder() {
         // assumption: liststore is sorted descending by position
         TreeIter iter;
-        string name;
-        int pos;
         VBox vbox;
         VBox sidebar_vbox;
         bool enabled;
-        List<VBox> list = new List<VBox> ();
+        int pos;
+        List<VBox> list_top = new List<VBox> ();
+        List<VBox> list_bottom = new List<VBox> ();
 
         store.get_iter_first(out iter);
-        
-        sidebar_vbox = (VBox)Playlist.get_widget_by_id("sidebar_plugins_bottom");
-        sidebar_vbox.ref();
 
         do {
-            store.get(iter, 0, out enabled, 1, out name, 2, out pos, 4, out vbox, -1);
-            
-            
+            store.get(iter, 0, out enabled, 2, out pos, 4, out vbox, -1);
             if ((vbox == null) || (!enabled))
                 continue;
             
             if (pos >= 0) {
-                    list.append(vbox);
+                list_top.append(vbox);
             } else {
-                pos = pos.abs();
-                sidebar_vbox.reorder_child(vbox, pos);
+                list_bottom.append(vbox);
             }
         
         } while (store.iter_next(ref iter));
 
         sidebar_vbox = (VBox)Playlist.get_widget_by_id("sidebar_plugins_top");
         sidebar_vbox.ref();
-        list.reverse();
-        for (int i = 0; i < list.length(); i++) {
+        list_top.reverse();
+        for (int i = 0; i < list_top.length(); i++) {
         
-            sidebar_vbox.reorder_child((Widget)list.nth_data(i), i);
+            sidebar_vbox.reorder_child((Widget)list_top.nth_data(i), i);
         }
-
-
+        
+        sidebar_vbox = (VBox)Playlist.get_widget_by_id("sidebar_plugins_bottom");
+        sidebar_vbox.ref();
+        for (int i = 0; i < list_bottom.length(); i++) {
+        
+            sidebar_vbox.reorder_child((Widget)list_bottom.nth_data(i), i);
+        }
     }
 
     private static void destroy(TreeIter iter) {
