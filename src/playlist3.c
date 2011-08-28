@@ -108,6 +108,8 @@ void easy_command_help_window(void);
 
 void pl3_style_set_event(GtkWidget *widget, GtkStyle *previous_style, gpointer user_data);
 
+void pl3_sidebar_plugins_init(void);
+
 /* Old category browser style */
 static int old_type = -1;
 
@@ -376,6 +378,17 @@ int pl3_cat_tree_button_release_event(GtkTreeView * tree, GdkEventButton * event
     return TRUE;
 }
 
+void pl3_sidebar_plugins_init(void)
+{
+    int i;
+    for (i = 0; i < num_plugins; i++)
+    {
+        if (GMPC_PLUGIN_IS_SIDEBAR_IFACE((plugins[i])->new))
+        {
+            gmpc_sidebar_plugins_init((GmpcPluginSidebarIface*)(plugins[i])->new);
+        }
+    }
+}
 
 /**********************************************************
  * MISC
@@ -1072,6 +1085,8 @@ void create_playlist3(void)
     /* Make sure change is applied */
 
     playlist3_new_header();
+
+    pl3_sidebar_plugins_init();
 
 	TEC("Init header")
     if (!cfg_get_single_value_as_int_with_default(config, "Interface", "hide-favorites-icon", FALSE))

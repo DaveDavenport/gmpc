@@ -25,7 +25,8 @@ PLUGIN_FILES=\
     Providers/DiscoGS.c\
     Providers/LastFM.c\
     Plugins/extraplaylist.c\
-    Plugins/AutoMPD.vala
+    Plugins/AutoMPD.vala\
+    Plugins/sidebar-search.vala
 
 
 

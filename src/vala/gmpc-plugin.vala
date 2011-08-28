@@ -127,6 +127,25 @@ namespace Gmpc {
             }
 
         }
+        public interface SidebarIface : Base {
+            /* This works similar to the preferences pane. The vbox will contain the generated
+             * title as first element if title is not epmty, and you can pack your own widgets
+             * into it. */
+            public abstract void sidebar_pane_construct (Gtk.VBox parent);
+            public abstract void sidebar_pane_destroy (Gtk.VBox parent);
+            
+            /* Override this if you want to give a custom title in the sidebar or
+             * an empty string to disable the automatic generated title */
+            public virtual string sidebar_get_title() {
+                return (string)null;
+            }
+            
+            /* set a default position in the sidebar. positive values add  in the scrolling pane
+             * below the browsers, negative values add sticking at the bottom  */
+            public virtual int sidebar_get_position() {
+                return 0;
+            }
+        }
         public interface IntegrateSearchIface : Base {
             public virtual bool field_supported (MPD.Tag.Type tag)
             {

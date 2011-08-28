@@ -125,6 +125,11 @@ void plugin_manager_load_internal_plugins(void)
     plugin_add_new((GmpcPluginBase *) 
             gmpc_plugins_auto_mpd_new(),
             0, NULL);
+
+    /*plugin_add_new((GmpcPluginBase *)
+            gmpc_plugins_sidebar_search_new(),
+            0, NULL);*/
+
 }
 
 void plugin_manager_initialize_plugins(void)

@@ -331,6 +331,20 @@ static void pref_plugin_enabled(GtkCellRendererToggle * rend, gchar * path, GtkL
         gtk_tree_model_get(GTK_TREE_MODEL(store), &iter, 0, &toggled, 3, &plug, -1);
         {
             gmpc_plugin_set_enabled(plug, !toggled);
+
+            if (GMPC_PLUGIN_IS_SIDEBAR_IFACE(plug->new))
+            {
+                if (gmpc_plugin_get_enabled(plug)) {
+                    gmpc_sidebar_plugins_enable((GmpcPluginSidebarIface*)plug->new);
+                }
+                else
+                {
+                    gmpc_sidebar_plugins_disable((GmpcPluginSidebarIface*)plug->new);
+                }
+
+            }
+
+
             preferences_window_update();
             gtk_list_store_set(store, &iter, 0, gmpc_plugin_get_enabled(plug), -1);
         }
@@ -413,6 +427,10 @@ static void plugin_stats_construct(GtkWidget * container)
                         gtk_list_store_set(store, &iter, 2, _("Unknown"), -1);
                         break;
 
+                }
+                if (GMPC_PLUGIN_IS_SIDEBAR_IFACE((plugins[i])->new))
+                {
+                    gtk_list_store_set(store, &iter, 2, _("Sidebar Extension"), -1);
                 }
             }
 
