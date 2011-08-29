@@ -47,7 +47,7 @@
         </child>
         <child>
           <object class="GtkToggleAction" id="ViewShowArtistImage">
-            <property name="label" translatable="true">_Show artist image</property>
+            <property name="label" translatable="true">_Show artist image in sidebar</property>
             <signal name="activate" handler="playlist_menu_artist_image_changed" swapped="no"/>
           </object>
         </child>
@@ -107,7 +107,7 @@
         </child>
         <child>
           <object class="GtkToggleAction" id="ViewExtraPlaylist">
-            <property name="label">_Extra playlist</property>
+            <property name="label">Show _extra playlist</property>
             <signal name="activate" handler="enable_extra_playlist" swapped="no"/>
           </object>
           <accelerator key="e" modifiers="GDK_CONTROL_MASK"/>

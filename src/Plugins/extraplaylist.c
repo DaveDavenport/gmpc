@@ -282,7 +282,7 @@ static  void preferences_construct(GtkWidget *container)
     g_signal_connect(G_OBJECT(label), "toggled", G_CALLBACK(preferences_layout_changed), NULL);
 
     /* The checkbox */
-    cb_include_sidebar = gtk_check_button_new_with_label("Include sidebar");
+    cb_include_sidebar = gtk_check_button_new_with_label("Use full width");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(cb_include_sidebar), cfg_get_single_value_as_int_with_default(config, "extraplaylist", "include-sidebar", FALSE));
     gtk_widget_set_sensitive(GTK_WIDGET(cb_include_sidebar), cfg_get_single_value_as_int_with_default(config, "extraplaylist", "vertical-layout", TRUE));
 
@@ -292,7 +292,6 @@ static  void preferences_construct(GtkWidget *container)
     gtk_box_pack_start(GTK_BOX(vbox), align2, FALSE, FALSE, 0);
     g_signal_connect(G_OBJECT(cb_include_sidebar), "toggled", G_CALLBACK(preferences_layout_sidebar_changed), NULL);
 
-    /* The checkbox */
     label = gtk_check_button_new_with_label("Swap position of the extra playlist");
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(label), cfg_get_single_value_as_int_with_default(config, "extraplaylist", "vertical-layout-swapped", FALSE));
     gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, FALSE, 0);
@@ -318,7 +317,7 @@ static void preferences_destroy(GtkWidget *container)
  };
 
 gmpcPlugin extraplaylist_plugin = {
-	.name = "Internal Extra Playlist View",
+    .name = "Extra playlist",
 	.version = {0, 0, 1},
 	.plugin_type = GMPC_PLUGIN_NO_GUI | GMPC_INTERNALL,
 	.init = extra_playlist_init,            /* initialization */
