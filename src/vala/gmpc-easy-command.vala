@@ -446,7 +446,7 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base {
 		var prenderer = new Gtk.CellRendererPixbuf();
 		var column = new Gtk.TreeViewColumn ();
 		tree.append_column(column);
-		column.set_title(_(""));
+		column.set_title("");
 		column.pack_start(prenderer, false);
 		column.add_attribute(prenderer, "icon-name", 6);
 		column.add_attribute(prenderer, "stock-id", 7);
