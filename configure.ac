@@ -251,6 +251,11 @@ AC_SUBST(libxml2_LIBS)
 AC_SUBST(libxml2_CFLAGS)
 
 
+#glyr
+PKG_CHECK_MODULES([glyr], libglyr)
+AC_SUBST(glyr_LIBS)
+AC_SUBST(glyr_CFLAGS)
+
 # installation paths
 AC_MSG_CHECKING(prefix)
 

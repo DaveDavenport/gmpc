@@ -24,6 +24,7 @@ PLUGIN_FILES=\
     Providers/ChartLyrics.vala\
     Providers/DiscoGS.c\
     Providers/LastFM.c\
+    Providers/GLyros.c\
     Plugins/extraplaylist.c\
     Plugins/AutoMPD.vala\
     Plugins/sidebar-search.vala
@@ -176,6 +177,7 @@ LIBS= \
 	@libxspf_LIBS@\
 	@libxml2_LIBS@\
 	@libx11_LIBS@\
+    @glyr_LIBS@\
 	@sqlite3_LIBS@\
 	-lz
 
@@ -208,6 +210,7 @@ AM_CFLAGS = @CFLAGS@\
     @libxml2_CFLAGS@\
     @libx11_CFLAGS@\
     @EXTRA_CFLAGS@\
+    @glyr_CFLAGS@\
 	-DPACKAGE_LIB_DIR=\""$(pkglibdir)"\"\
 	-DPACKAGE_DATA_DIR=\""$(datarootdir)"\"
 

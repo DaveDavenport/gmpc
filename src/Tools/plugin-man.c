@@ -45,6 +45,7 @@
 GmpcBrowsersMetadata *browsers_metadata = NULL;
 extern gmpcPlugin discogs_plugin;
 extern gmpcPlugin lastfm_plugin;
+extern gmpcPlugin glyros_plugin;
 
 void plugin_manager_load_internal_plugins(void)
 {
@@ -130,6 +131,7 @@ void plugin_manager_load_internal_plugins(void)
             gmpc_plugins_sidebar_search_new(),
             0, NULL);*/
 
+    plugin_add(&glyros_plugin, 0, NULL);
 }
 
 void plugin_manager_initialize_plugins(void)
