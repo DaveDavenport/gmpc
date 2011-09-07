@@ -21,12 +21,15 @@
 #include <stdio.h>
 #include <string.h>
 #include <glib.h>
+#include "config.h"
+
+#ifdef HAVE_GLYR
+
 #include <glyr/glyr.h>
 #include <gtk/gtk.h>
 #include <gmpc/plugin.h>
 #include <gmpc/metadata.h>
 
-#include "config.h"
 
 #define GLYROS_DEBUG TRUE
 
@@ -696,3 +699,4 @@ gmpcPlugin glyros_plugin =
     .get_enabled    = glyros_get_enabled,
     .set_enabled    = glyros_set_enabled,
 };
+#endif

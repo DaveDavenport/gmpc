@@ -73,6 +73,28 @@ fi
 
 
 PKG_PROG_PKG_CONFIG
+
+#glyr
+AC_ARG_ENABLE([glyr],
+              [--enable-glyr Enable glyr as provider plugin.],
+	          [case "${enableval}" in
+		            yes)    enable_glyr=true;;
+		             no)    enable_glyr=false;;
+		              *)    AC_MSG_ERROR([bad value ${enableval} for --enable-glyr]);;
+               esac],
+               [enable_glyr=true])
+
+#unused.
+if test "x$enable_glyr" = "xdetect"; then
+	PKG_CHECK_MODULES([libglyr], libglyr, enable_glyr=true, enable_glyr=false)
+fi
+if test "x$enable_glyr" = "xtrue"; then
+PKG_CHECK_MODULES([libglyr], libglyr)
+AC_SUBST(libglyr_LIBS)
+AC_SUBST(libglyr_CFLAGS)
+AC_DEFINE(HAVE_GLYR, 1, [Enable glyr])
+fi
+
 unique=0;
 AC_ARG_ENABLE([unique],
               [--enable-unique Use unique.],
@@ -153,6 +175,7 @@ AC_SUBST(GTK_REQUIRED)
 ##
 # User params
 ##
+
 
 # Maintainer mode
 AC_ARG_ENABLE([timing],
@@ -250,11 +273,6 @@ PKG_CHECK_MODULES([libxml2], libxml-2.0)
 AC_SUBST(libxml2_LIBS)
 AC_SUBST(libxml2_CFLAGS)
 
-
-#glyr
-PKG_CHECK_MODULES([glyr], libglyr)
-AC_SUBST(glyr_LIBS)
-AC_SUBST(glyr_CFLAGS)
 
 # installation paths
 AC_MSG_CHECKING(prefix)
@@ -548,6 +566,11 @@ if test "x$have_gdu" = "xyes"; then
 	echo "Use Gnome Documentation:          enabled"
 else
 	echo "Use Gnome Documentation:          disabled"
+fi
+if test "x$enable_glyr" = "xtrue"; then
+	echo "Use GLyr as metadata provider:    enabled"
+else
+	echo "Use GLyr as metadata provider:    disabled"
 fi
 echo "";
 echo "Now type make to build"
