@@ -606,14 +606,16 @@ static void pref_construct(GtkWidget * con)
     GtkWidget *top_box, *checkbox_frame, *vbox, *spinner_frame;
     GtkWidget *restore_hbox, *restore_button, *space_label;
     GtkWidget *spin_vbox, *text_box_vbox, *text_box_frame, *scrolled_window;
+
     scrolled_window = gtk_scrolled_window_new(NULL,NULL);
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolled_window),GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC);
-    top_box = gtk_vbox_new(FALSE,2);
+    gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(scrolled_window), GTK_SHADOW_NONE);
+    top_box = gtk_vbox_new(FALSE,6);
 
     checkbox_frame = gtk_frame_new("");
     gtk_label_set_markup(GTK_LABEL(gtk_frame_get_label_widget(GTK_FRAME(checkbox_frame))), "<b>Fetch</b>");
     vbox = gtk_vbox_new(FALSE,6);
-    gtk_container_set_border_width(GTK_CONTAINER(vbox), 12);
+    gtk_container_set_border_width(GTK_CONTAINER(vbox), 8);
     gtk_container_add(GTK_CONTAINER(checkbox_frame), vbox);
 
     pref_add_checkbox("Artist Images",META_ARTIST_ART,LOG_ARTIST_ART,vbox);
@@ -636,6 +638,8 @@ static void pref_construct(GtkWidget * con)
     pref_add_spinbutton("Max. similiar songs:   ",LOG_MSIMILISONG,20,0.0,1000.0,spin_vbox,OPT_MSIMILISONG,1);
     pref_add_spinbutton("Max parallel plugins:  ",LOG_PARALLEL,GLYR_DEFAULT_PARALLEL,0.0,42.0,spin_vbox,OPT_PARALLEL,1);
     pref_add_spinbutton("Quality/Speed ratio:   ",LOG_QSRATIO,GLYR_DEFAULT_QSRATIO*100,0.0,100.0,spin_vbox,OPT_QSRATIO,1);
+
+    gtk_container_set_border_width(GTK_CONTAINER(spin_vbox), 8);
     gtk_container_add(GTK_CONTAINER(spinner_frame), spin_vbox);
 
     if(!glyros_get_enabled()) {
@@ -644,8 +648,10 @@ static void pref_construct(GtkWidget * con)
 
     text_box_vbox  = gtk_vbox_new(FALSE,2);
     text_box_frame = gtk_frame_new("");
+    gtk_container_border_width(GTK_CONTAINER(text_box_vbox), 8);
     gtk_container_add(GTK_CONTAINER(text_box_frame),text_box_vbox);
     gtk_label_set_markup(GTK_LABEL(gtk_frame_get_label_widget(GTK_FRAME(text_box_frame))), "<b>Less important</b>");
+
     setup_text_view("Useragent: ","gmpc-glyros",GTK_BOX(text_box_vbox),LOG_USERAGENT);
     setup_text_view("Allowed providers:","all;",GTK_BOX(text_box_vbox),LOG_FROM);
 
@@ -656,12 +662,12 @@ static void pref_construct(GtkWidget * con)
     gtk_box_pack_start(GTK_BOX(top_box),text_box_frame, FALSE, TRUE,  2);
 
     restore_hbox = gtk_hbox_new(FALSE,2);
-    restore_button = gtk_button_new_with_label("Restore defaults");
     space_label = gtk_label_new("");
+    restore_button = gtk_button_new_with_label("Restore defaults");
     g_signal_connect(restore_button,"clicked",G_CALLBACK(restore_defaults),space_label);
 
-    gtk_box_pack_start(GTK_BOX(restore_hbox),space_label, TRUE, TRUE, 2);
-    gtk_box_pack_start(GTK_BOX(restore_hbox),restore_button, FALSE, TRUE, 2);
+    gtk_box_pack_start(GTK_BOX(restore_hbox),space_label, FALSE, TRUE, 2);
+    gtk_box_pack_end(GTK_BOX(restore_hbox),restore_button, FALSE, TRUE, 2);
     gtk_box_pack_start(GTK_BOX(top_box), restore_hbox, FALSE, TRUE,  2);
 
     gtk_widget_show_all(con);
