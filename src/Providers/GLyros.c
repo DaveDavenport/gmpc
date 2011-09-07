@@ -43,6 +43,7 @@
 #define LOG_SIMILIAR_GENRE  "fetch-similiar-genre"
 #define LOG_ARTIST_TXT      "fetch-biography-artist"
 #define LOG_SONG_TXT        "fetch-lyrics"
+#define LOG_GUITARTABS      "fetch-guitartabs"
 #define LOG_ALBUM_TXT       "fetch-album-txt"
 
 // other
@@ -332,16 +333,19 @@ static gpointer glyros_fetch_thread(void * data)
                 glyr_opt_type(&q, GLYR_GET_SIMILIAR_SONGS);
                 glyr_opt_number(&q, cfg_get_single_value_as_int_with_default(config,LOG_SUBCLASS,LOG_MSIMILISONG,20));
             }
-            else if (thread_data->type == META_SONG_GUITAR_TAB && thread_data->song->title != NULL)
-            {
-                /* not supported yet. */
-            }
+            else if (thread_data->type == META_SONG_GUITAR_TAB &&
+                    thread_data->song->title != NULL &&
+                     cfg_get_single_value_as_int_with_default(config,LOG_SUBCLASS,LOG_GUITARTABS,TRUE))
+             {
+                glyr_opt_type(&q, GLYR_GET_GUITARTABS);
+                content_type = META_DATA_CONTENT_TEXT;
+             }
         }
         else if (thread_data->song->genre != NULL)
         {
             if (thread_data->type == META_GENRE_SIMILAR)
             {
-                /* not supported yet. */
+                /* not supported yet. Ever? */
             }
         }
     }
@@ -383,9 +387,7 @@ static gpointer glyros_fetch_thread(void * data)
 #if GLYROS_DEBUG
             if(cache->data && (thread_data->type == META_SONG_TXT   ||
                         thread_data->type == META_ARTIST_TXT ||
-                        thread_data->type == META_ALBUM_TXT
-                        )
-              )
+                        thread_data->type == META_ALBUM_TXT  ))
             {
                 gchar * debug_text = g_strdup_printf("%s\n\n[From: %s | %s]\n",
                         cache->data,
@@ -465,6 +467,9 @@ static void pref_enable_fetch(GtkWidget *con, gpointer data)
         case META_ALBUM_TXT:
             cfg_set_single_value_as_int(config, LOG_SUBCLASS, LOG_ALBUM_TXT,state);
             break;
+	case META_SONG_GUITAR_TAB:
+	    cfg_set_single_value_as_int(config, LOG_SUBCLASS, LOG_GUITARTABS,state);
+	    break;
         default:
             break;
     }
@@ -617,9 +622,10 @@ static void pref_construct(GtkWidget * con)
     pref_add_checkbox("Artist Images",META_ARTIST_ART,LOG_ARTIST_ART,vbox);
     pref_add_checkbox("Artist Biography",META_ARTIST_TXT,LOG_ARTIST_TXT,vbox);
     pref_add_checkbox("Similar artist",META_ARTIST_SIMILAR,LOG_SIMILIAR_ARTIST,vbox);
-    pref_add_checkbox("Similar songs",META_SONG_SIMILAR,LOG_SIMILIAR_SONG,vbox); // -> seb
+    pref_add_checkbox("Similar songs",META_SONG_SIMILAR,LOG_SIMILIAR_SONG,vbox);
     pref_add_checkbox("Album cover",META_ALBUM_ART,LOG_COVER_NAME,vbox);
     pref_add_checkbox("Songlyrics",META_SONG_TXT,LOG_SONG_TXT,vbox);
+    pref_add_checkbox("Guitartabs",META_SONG_GUITAR_TAB,LOG_GUITARTABS,vbox);
     pref_add_checkbox("Album information",META_ALBUM_TXT,LOG_ALBUM_TXT,vbox);
 
     spinner_frame = gtk_frame_new("");
