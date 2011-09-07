@@ -560,11 +560,8 @@ static void pref_add_spinbutton(const gchar * descr, const gchar * log_to, gdoub
     /* Description  */
     gtk_box_pack_start(GTK_BOX(hbox_cont), descr_label, FALSE, TRUE, 0);
 
-    /* Spacer */
-    gtk_box_pack_start(GTK_BOX(hbox_cont), gtk_label_new(""), TRUE,TRUE,2);
-
     /* Spinbutton */
-    gtk_box_pack_start(GTK_BOX(hbox_cont), spinner, FALSE,TRUE,0);
+    gtk_box_pack_end(GTK_BOX(hbox_cont), spinner, FALSE,TRUE,0);
 
     /* Callback */
     g_signal_connect(G_OBJECT(spinner), "value-changed", G_CALLBACK(pref_spinner_callback), GINT_TO_POINTER(choice));
