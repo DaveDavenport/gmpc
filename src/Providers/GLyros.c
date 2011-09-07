@@ -27,8 +27,8 @@
 
 #include <glyr/glyr.h>
 #include <gtk/gtk.h>
-#include <gmpc/plugin.h>
-#include <gmpc/metadata.h>
+#include "plugin.h"
+#include "metadata.h"
 
 
 #define GLYROS_DEBUG TRUE

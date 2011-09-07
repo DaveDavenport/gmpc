@@ -288,9 +288,9 @@ namespace Gmpc {
         public bool have_appindicator_support();
     }
 
-   [CCode (cname = "config", cheader_filename="plugin.h")]
-    static Settings config;
-    [CCode (cheader_filename="config1.h")]
+	[CCode (cname = "config", cheader_filename="plugin.h")]
+	static Settings config;
+    [CCode (cheader_filename="config1.h",cname="config_obj")]
         [Compact]
         [Immutable]
     public class Settings {
