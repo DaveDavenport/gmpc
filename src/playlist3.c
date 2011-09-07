@@ -1151,7 +1151,8 @@ void create_playlist3(void)
     gmpc_metaimage_set_cover_na(GMPC_METAIMAGE(metaimage_album_art));
 
     metaimage_artist_art = gmpc_metaimage_new(META_ARTIST_ART);
-    gtk_box_pack_start(GTK_BOX(gtk_builder_get_object(pl3_xml, "sidebar_artist_image")), metaimage_artist_art, FALSE, TRUE, 0);
+//    gtk_box_pack_start(GTK_BOX(gtk_builder_get_object(pl3_xml, "sidebar_artist_image_alignment")), metaimage_artist_art, FALSE, TRUE, 0);
+    gtk_container_add(GTK_CONTAINER(gtk_builder_get_object(pl3_xml, "sidebar_artist_image_alignment")), metaimage_artist_art);
 
     gmpc_metaimage_set_no_cover_icon(GMPC_METAIMAGE(metaimage_artist_art), (char *)"no-artist");
     gmpc_metaimage_set_loading_cover_icon(GMPC_METAIMAGE(metaimage_artist_art), (char *)"fetching-artist");
