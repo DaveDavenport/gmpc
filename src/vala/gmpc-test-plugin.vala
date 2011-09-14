@@ -25,7 +25,7 @@ private const bool use_transition_tp = Gmpc.use_transition;
 
 public class Gmpc.MetaData.EditWindow : Gtk.Window {
     private const string some_unique_name = Config.VERSION;
-    private MPD.Song song = null;
+    private MPD.Song? song = null;
     private Gmpc.MetaData.Type query_type = Gmpc.MetaData.Type.ALBUM_ART;
 
     private GLib.List<unowned Gmpc.AsyncDownload.Handle> downloads = null;
@@ -481,7 +481,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
     {
         clear_itemslist();
         GLib.log("MetadataSelector", GLib.LogLevelFlags.LEVEL_DEBUG, "Query metadata");
-        MPD.Song ss = this.song;
+        MPD.Song ss = this.song.copy();
         ss.artist = this.artist_entry.get_text();
         ss.album = this.album_entry.get_text();
         ss.title = this.title_entry.get_text();
@@ -570,7 +570,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
     public
     EditWindow (MPD.Song song, Gmpc.MetaData.Type type) {
         var vbox = new Gtk.VBox(false, 6);
-        this.song = song;
+        this.song = song.copy();
         this.query_type = type;
         this.pbox = new Gtk.HBox(false, 6); 
         this.bar = new Gtk.ProgressBar();
@@ -791,7 +791,7 @@ public class  Gmpc.TestPlugin : Gmpc.Plugin.Base,Gmpc.Plugin.ToolMenuIface, Gmpc
         {
             if(model.get_iter(out iter, path))
             {
-                unowned MPD.Song song = null;
+                unowned MPD.Song? song = null;
                 model.get(iter,0, out song);
                 if(song != null)
                 {

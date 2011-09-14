@@ -26,30 +26,30 @@ namespace MPD {
 
     [CCode (cname = "mpd_Song",
     free_function = "mpd_freeSong",
-    copy_function = "mpd_songDup",
+	copy_function = "mpd_songDup",
+	has_type_id = false,
     cheader_filename = "libmpd/libmpdclient.h,libmpd/libmpd.h,misc.h")]
-    [Compact]
-    [Immutable]
+	[Compact]
     public class Song {
         [CCode (cname = "mpd_newSong")]
         public Song ();
-        public string file;
-        public string artist;
-        public string title;
-        public string album;
-        public string track;
-        public string name;
-        public string date;
-        public string genre;
-        public string performer;
-        public string disc;
-        public string comment;
-        public string albumartist;
+        public string? file;
+        public string? artist;
+        public string? title;
+        public string? album;
+        public string? track;
+        public string? name;
+        public string? date;
+        public string? genre;
+        public string? performer;
+        public string? disc;
+        public string? comment;
+        public string? albumartist;
         public int    time;
         public int    pos;
         public int    id;
         [CCode (cname="mpd_songDup0")]
-        public static Song copy (Song? s);
+        public Song copy ();
         [CCode (instance_pos = -1)]
         public void markup (char[] buffer, int length, string markup);
     }
@@ -147,7 +147,7 @@ namespace MPD {
             [Compact]
             public class Item {
                 public Data.Type type;
-                public MPD.Song  song;
+                public MPD.Song?  song;
                 public string tag;
                 public Playlist playlist;
               

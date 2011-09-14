@@ -55,7 +55,7 @@ public class Gmpc.Provider.HTBackdrops:
         return config.get_int_with_default(this.get_name(),"priority",0);
     }
 
-    public void get_metadata(MPD.Song song, Gmpc.MetaData.Type type, MetaDataCallback callback)
+    public void get_metadata(MPD.Song? song, Gmpc.MetaData.Type type, MetaDataCallback callback)
     {
 
         if(song == null || song.artist == null)

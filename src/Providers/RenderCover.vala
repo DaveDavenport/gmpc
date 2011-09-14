@@ -56,7 +56,7 @@ public class Gmpc.Provider.RenderCover:
         return config.get_int_with_default(this.get_name(),"priority",100);
     }
 
-    public void get_metadata(MPD.Song song, Gmpc.MetaData.Type type, MetaDataCallback callback)
+    public void get_metadata(MPD.Song? song, Gmpc.MetaData.Type type, MetaDataCallback callback)
     {
 
         if(song == null || song.artist == null || song.album == null)

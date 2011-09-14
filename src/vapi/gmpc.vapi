@@ -457,9 +457,9 @@ namespace Gmpc {
 		public void set_enabled(int e);
 		public bool is_browser();
 	}
-	[CCode (cheader_filename="main.h", cname="plugins")]
+	[CCode (cheader_filename="main.h", array_length = false, cname="plugins")]
 	static weak parentPlugin[] plugins;
-	[CCode (cheader_filename="main.h", cname="num_plugins")]
+	[CCode (cname="num_plugins",cheader_filename="main.h")]
 	static int num_plugins;
 
 

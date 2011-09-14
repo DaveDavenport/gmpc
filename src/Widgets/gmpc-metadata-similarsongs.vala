@@ -27,7 +27,7 @@ private const string some_unique_name_mdss = Config.VERSION;
 
 public class Gmpc.MetaData.Widgets.SimilarSongs : Gtk.Alignment
 {
-    private MPD.Song song = null;
+    private MPD.Song? song = null;
     private Gtk.Widget pchild = null;
     private uint idle_add = 0;
     ~SimilarSongs ()
@@ -40,7 +40,7 @@ public class Gmpc.MetaData.Widgets.SimilarSongs : Gtk.Alignment
 
     public SimilarSongs (MPD.Song song) 
     {
-        this.song = song;
+        this.song = song.copy();
         this.set(0.0f, 0.0f, 1.0f, 0.0f);
     }
     private void add_clicked(Gtk.Widget item)
@@ -55,7 +55,7 @@ public class Gmpc.MetaData.Widgets.SimilarSongs : Gtk.Alignment
         {
             if(model.get_iter(out iter, path))
             {
-                unowned MPD.Song song = null;
+                unowned MPD.Song? song = null;
                 model.get(iter, 0, out song, -1);
                 if(song != null)
                 {
@@ -79,7 +79,7 @@ public class Gmpc.MetaData.Widgets.SimilarSongs : Gtk.Alignment
             Gtk.TreePath path = list.data;
             if(model.get_iter(out iter, path))
             {
-                unowned MPD.Song song = null;
+                unowned MPD.Song? song = null;
                 model.get(iter, 0, out song, -1);
                 if(song != null)
                 {
@@ -100,7 +100,7 @@ public class Gmpc.MetaData.Widgets.SimilarSongs : Gtk.Alignment
         {
             if(model.get_iter(out iter, path))
             {
-                unowned MPD.Song song = null;
+                unowned MPD.Song? song = null;
                 model.get(iter, 0, out song, -1);
                 if(song != null)
                 {
@@ -125,7 +125,7 @@ public class Gmpc.MetaData.Widgets.SimilarSongs : Gtk.Alignment
         Gtk.TreeIter iter;
         if(model.get_iter(out iter, path))
         {
-            unowned MPD.Song song = null;
+            unowned MPD.Song? song = null;
             model.get(iter, 0, out song, -1);
             if(song != null)
             {

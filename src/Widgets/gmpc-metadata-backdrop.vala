@@ -75,7 +75,7 @@ namespace Gmpc
              */
             public void set_song(MPD.Song? song)
             {
-                cur_song = song;
+                cur_song = song.copy();
                 if(song == null) {
                     song_checksum = null;
                     set_from_item(null);

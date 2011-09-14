@@ -286,7 +286,7 @@ namespace Gmpc.Favorites{
         {
             if(this.song == null && song == null ) return;
             if(this.song != null  && song != null && this.song.file == song.file) return;
-            this.song = song;
+            this.song = song.copy();
             this.update(favorites);
         }
     }

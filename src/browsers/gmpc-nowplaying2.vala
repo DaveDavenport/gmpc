@@ -314,7 +314,7 @@ namespace Gmpc {
             private string song_checksum = null;
             private void update_playing()
             {
-                MPD.Song song = server.playlist_get_current_song();
+                unowned MPD.Song? song = server.playlist_get_current_song();
                 if(song == null) {
                     debug("GMPC Is playing, cannot get this");
        				if(use_backdrop)
@@ -932,7 +932,7 @@ namespace Gmpc {
                             var but_hbox = new Gtk.HBox(false, 6);
                             button.add(but_hbox);
                             var image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ALBUM_ART, 48);
-                            var but_song = iter.song;
+                            unowned MPD.Song but_song = iter.song;
                             image.set_squared(true);
                             image.update_from_song_delayed(but_song);
 

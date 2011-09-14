@@ -71,7 +71,7 @@ public class Gmpc.Widgets.Songlist : Gmpc.Widgets.Qtable
         wlabel.set_do_bold(true);
         wlabel.set_can_focus(true);
 
-        MPD.Song song_file = song;
+        MPD.Song song_file = song.copy();
         wlabel.clicked.connect((source, event) => {
                 artist_song_clicked(song_file);
         });
@@ -114,7 +114,7 @@ public class Gmpc.Widgets.Songlist : Gmpc.Widgets.Qtable
         wlabel.set_do_bold(true);
         wlabel.set_can_focus(true);
 
-        MPD.Song song_file = song;
+        MPD.Song song_file = song.copy();
         wlabel.clicked.connect((source) => {
                 album_song_clicked(song_file);
         });
@@ -196,7 +196,7 @@ public class Gmpc.Widgets.Songlist : Gmpc.Widgets.Qtable
         ali.add(event);
 
 
-        MPD.Song song_file = song;
+        MPD.Song song_file = song.copy();
         event.button_release_event.connect((source, event) => {
             if(event.button == 1) {
                 play_song_clicked(song_file);

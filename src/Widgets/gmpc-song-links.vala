@@ -37,7 +37,7 @@ public class Gmpc.MetaData.Widgets.SongLinks: Gtk.Frame
         SONG
     }
     private Type type = Type.ARTIST;
-    private MPD.Song song = null;
+    private MPD.Song? song = null;
 
     ~SongLinks()
     {
@@ -52,7 +52,7 @@ public class Gmpc.MetaData.Widgets.SongLinks: Gtk.Frame
     {
         debug("Links created");
         this.type = type;
-        this.song = song;
+        this.song = song.copy();
         var event = new Gtk.EventBox();
         var label = new Gtk.Label("");
         event.add(label);

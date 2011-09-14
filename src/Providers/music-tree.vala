@@ -82,7 +82,7 @@ public class Gmpc.Provider.MusicTree : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIfa
 	/********************************
 	 * metadata code                *
 	 ********************************/
-	public void get_metadata(MPD.Song song,
+	public void get_metadata(MPD.Song? song,
 		Gmpc.MetaData.Type type,
 		MetaDataCallback callback)
 	{
@@ -136,16 +136,16 @@ public class Gmpc.Provider.MusicTree : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIfa
 		switch(type)
 		{
 			case Gmpc.MetaData.Type.ALBUM_ART:
-				this.get_album_cover(directory, song, callback);
+				this.get_album_cover(directory, song.copy(), callback);
 				return;
 			case Gmpc.MetaData.Type.ARTIST_ART:
-				this.get_artist_art(directory, song, callback);
+				this.get_artist_art(directory, song.copy(), callback);
 				return;
 			case Gmpc.MetaData.Type.ARTIST_TXT:
-				this.get_biography(directory, song, callback);
+				this.get_biography(directory, song.copy(), callback);
 				return;
 			case  Gmpc.MetaData.Type.ALBUM_TXT:
-				this.get_album_info(directory,song,callback);
+				this.get_album_info(directory,song.copy(),callback);
 				return;
 				/*  Not yet supported  */
 			case  Gmpc.MetaData.Type.SONG_TXT:
@@ -260,7 +260,7 @@ public class Gmpc.Provider.MusicTree : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIfa
 	/**
 	 * Get artist art
 	 */
-	private async void get_artist_art(string directory, MPD.Song song, MetaDataCallback callback)
+	private async void get_artist_art(string directory, owned MPD.Song song, MetaDataCallback callback)
 	{
 		List<Gmpc.MetaData.Item> list = null;
         log(log_domain_cp, GLib.LogLevelFlags.LEVEL_DEBUG,
@@ -313,9 +313,10 @@ public class Gmpc.Provider.MusicTree : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIfa
 	/**
 	 * Get album cover
 	 */
-	private async void get_album_cover(string directory, MPD.Song song, MetaDataCallback callback)
+	private async void get_album_cover(string directory, owned MPD.Song tmp_song, MetaDataCallback callback)
 	{
 		List<Gmpc.MetaData.Item> list = null;
+		var song = tmp_song.copy();
 		log(log_domain_cp, GLib.LogLevelFlags.LEVEL_DEBUG,
 			"Query album cover");
 		// Create search query
@@ -366,9 +367,10 @@ public class Gmpc.Provider.MusicTree : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIfa
 	/**
 	 * Get biography
 	 */
-	private async void get_biography(string directory, MPD.Song song, MetaDataCallback callback)
+	private async void get_biography(string directory, owned MPD.Song tmp_song, MetaDataCallback callback)
 	{
 		List<Gmpc.MetaData.Item> list = null;
+		var song = tmp_song.copy();
 		log(log_domain_cp, GLib.LogLevelFlags.LEVEL_DEBUG,
 			"Query biography");
 		// Create search query
@@ -398,9 +400,10 @@ public class Gmpc.Provider.MusicTree : Gmpc.Plugin.Base, Gmpc.Plugin.MetaDataIfa
 	/**
 	 * Get album information
 	 */
-	private async void get_album_info(string directory, MPD.Song song, MetaDataCallback callback)
+	private async void get_album_info(string directory, owned MPD.Song tmp_song, MetaDataCallback callback)
 	{
 		List<Gmpc.MetaData.Item> list = null;
+		var song = tmp_song.copy();
 		log(log_domain_cp, GLib.LogLevelFlags.LEVEL_DEBUG,
 			"Query biography");
 		// Create search query

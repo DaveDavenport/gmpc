@@ -55,7 +55,7 @@ public class Gmpc.Provider.LyrDB: Gmpc.Plugin.Base,Gmpc.Plugin.MetaDataIface
 	}
 
 
-	public void get_metadata (MPD.Song song,
+	public void get_metadata (MPD.Song? song,
 		Gmpc.MetaData.Type type,
 		MetaDataCallback callback)
 	{
@@ -236,7 +236,7 @@ public class Gmpc.Provider.LyrDB: Gmpc.Plugin.Base,Gmpc.Plugin.MetaDataIface
 
 		Prop *p = new Prop();
 		p->this = this;
-		p->song = song;
+		p->song = song.copy();
 		p->callback = callback;
 		var path = query.printf(Gmpc.AsyncDownload.escape_uri(song.artist),
 			Gmpc.AsyncDownload.escape_uri(song.title));

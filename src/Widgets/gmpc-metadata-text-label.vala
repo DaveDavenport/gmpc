@@ -83,7 +83,7 @@ namespace Gmpc.MetaData.Widgets
             this.set_padding(4,4);
             this.set_selectable(true);
             cur_type = type;
-            cur_song = song;
+            cur_song = song.copy();
             song_checksum = Gmpc.Misc.song_checksum(song);
 
             metawatcher.data_changed.connect((csong, type, result, met) => {
@@ -102,7 +102,7 @@ namespace Gmpc.MetaData.Widgets
 
             /** Query */
             Gmpc.MetaData.Item item = null;
-            var a = metawatcher.query(song, type, out item);
+            var a = metawatcher.query(cur_song, type, out item);
             if(a == Gmpc.MetaData.Result.AVAILABLE) {
                 this.set_from_item(item);
             }else if (a == Gmpc.MetaData.Result.FETCHING) {
@@ -116,7 +116,7 @@ namespace Gmpc.MetaData.Widgets
                 mitem.set_image(
                     new Gtk.Image.from_stock("gtk-refresh", Gtk.IconSize.MENU));
                 mitem.activate.connect((source)=>{
-                    metawatcher.query(song, type|Gmpc.MetaData.Type.QUERY_NO_CACHE, out item);
+                    metawatcher.query(cur_song, type|Gmpc.MetaData.Type.QUERY_NO_CACHE, out item);
                  });
                  menu.append(mitem);
                  mitem.show();

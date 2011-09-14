@@ -27,7 +27,7 @@ private const string some_unique_name_mdsa = Config.VERSION;
 
 public class Gmpc.MetaData.Widgets.SimilarArtists : Gtk.Table
 {
-    private MPD.Song song = null;
+    private MPD.Song? song = null;
     private int columns = 1;
     private int button_width = 200;
     private void size_changed(Gdk.Rectangle alloc)
@@ -204,7 +204,7 @@ public class Gmpc.MetaData.Widgets.SimilarArtists : Gtk.Table
         var image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ARTIST_ART, 48);
         image.set_no_cover_icon("no-artist");
         image.set_loading_cover_icon("fetching-artist");
-        var song = new MPD.Song();
+        MPD.Song song = new MPD.Song();
         song.artist = artist;
         image.set_squared(true);
         image.update_from_song_delayed(song);
@@ -253,7 +253,7 @@ public class Gmpc.MetaData.Widgets.SimilarArtists : Gtk.Table
     }
     public SimilarArtists(MPD.Server server, MPD.Song song)
     {
-        this.song = song;
+        this.song = song.copy();
 
         this.set_homogeneous(true);
 

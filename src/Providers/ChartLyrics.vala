@@ -83,7 +83,7 @@ public class Gmpc.Provider.ChartLyrics: Gmpc.Plugin.Base,Gmpc.Plugin.MetaDataIfa
 
     const string query = "http://api.chartlyrics.com/apiv1.asmx/SearchLyricDirect?artist=%s&song=%s";
 
-    public void get_metadata (MPD.Song song,
+    public void get_metadata (MPD.Song? song,
         Gmpc.MetaData.Type type,
         MetaDataCallback callback)
     {
@@ -105,7 +105,7 @@ public class Gmpc.Provider.ChartLyrics: Gmpc.Plugin.Base,Gmpc.Plugin.MetaDataIfa
         /* intergrate fetcher here */
         Prop *p = new Prop();
         p->this = this;
-        p->song = song;
+        p->song = song.copy();
         p->callback = callback;
         var path = query.printf(Gmpc.AsyncDownload.escape_uri(song.artist),
             Gmpc.AsyncDownload.escape_uri(song.title));

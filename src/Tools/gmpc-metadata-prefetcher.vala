@@ -50,7 +50,7 @@ public class  Gmpc.Tools.MetadataPrefetcher : Gmpc.Plugin.Base {
             int next_song_id = server.player_get_next_song_id();
             if(next_song_id > 0)
             {
-                MPD.Song song = server.playlist_get_song(next_song_id);
+                MPD.Song? song = server.playlist_get_song(next_song_id);
                 if(song != null){
                     Gmpc.MetaData.Item met = null;
                     Gmpc.MetaData.Result md_result;

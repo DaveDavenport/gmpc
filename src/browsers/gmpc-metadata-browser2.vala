@@ -432,7 +432,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
       */
      private void song_add_clicked(Gtk.Widget item )
      {
-        MPD.Song? song = browser_get_selected_song();
+        unowned MPD.Song? song = browser_get_selected_song();
         if(song != null)
         {
             MPD.PlayQueue.add_song(server,song.file);
@@ -731,14 +731,14 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         }
         return null;
     }
-    private MPD.Song? browser_get_selected_song()
+    private unowned MPD.Song? browser_get_selected_song()
     {
         Gtk.TreeIter iter;
         var sel = this.tree_songs.get_selection();
         Gtk.TreeModel model;
         if(sel.get_selected(out model, out iter))
         {
-            unowned MPD.Song songs = null;
+            unowned MPD.Song? songs = null;
             this.model_songs .get(iter, 0,out songs, -1);
             return songs;
         }
@@ -851,7 +851,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
      {
         string artist = browser_get_selected_artist();
         string album = browser_get_selected_album();
-        MPD.Song? song = browser_get_selected_song();
+        unowned MPD.Song? song = browser_get_selected_song();
         if(song != null){
             MPD.PlayQueue.add_song(server,song.file);
             return;
@@ -893,7 +893,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
 
      private void play_selected_song(Gtk.Button button)
      {
-        MPD.Song? song = browser_get_selected_song();
+        unowned MPD.Song? song = browser_get_selected_song();
         if(song != null) {
             Gmpc.MpdInteraction.play_path(song.file);
         }
@@ -954,10 +954,11 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
          i++;
      }
 
-    public Gtk.Widget metadata_box_show_song(MPD.Song song, bool show_controls)
+    public Gtk.Widget metadata_box_show_song(MPD.Song tmp_song, bool show_controls)
     {
         var master_box = new Gtk.VBox (false, 6);
         var vbox = new Gtk.VBox (false,6);
+		var song = tmp_song.copy();
         vbox.border_width = 8;
 
         history_bc_header(HitemType.SONG, song.artist, song.album, song.title);
@@ -1935,15 +1936,15 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
             if(this.model_albums.get_iter_first(out titer))
             {
                 do{
-                    weak MPD.Song asong  = null;
+                    unowned MPD.Song? asong  = null;
                     this.model_albums.get(titer,0, &asong);
-                    if(song != null)
+                    if(asong != null)
                     {
                         /* Make a copy of the song. Otherwise only a reference is added to the
                          * button clicked handler.
                          * This reference can be invalid before click completed.
                          */
-                        MPD.Song but_song = asong;
+                        MPD.Song but_song = asong.copy();
 
                         /* Create button */
                         var but_hbox = new Gtk.VBox(false, 6);
@@ -2113,12 +2114,12 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         }
         string artist = browser_get_selected_artist();
         string album = browser_get_selected_album();
-        MPD.Song? song = browser_get_selected_song();
+        unowned MPD.Song? song = browser_get_selected_song();
 
         if(song != null) {
             /** Add item to history */
-            var item = Hitem();
-            item.song = song;
+            var item = new Hitem();
+            item.song = song.copy();
             item.type = HitemType.SONG;
             history_add(item);
 
@@ -2128,7 +2129,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
             this.metadata_box.show_all();
         }else if(album != null && artist != null) {
             /** Add item to history */
-            var item = Hitem();
+            var item = new Hitem();
             item.song = new MPD.Song();
             item.song.artist =artist;
             item.song.album = album;
@@ -2138,7 +2139,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
             metadata_box_show_album(artist,album);
         }else if (artist != null) {
             /** Add item to history */
-            var item = Hitem();
+            var item = new Hitem();
             item.song = new MPD.Song();
             item.song.artist =artist;
             item.type = HitemType.ARTIST;
@@ -2146,7 +2147,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
 
             metadata_box_show_artist(artist);
         }else {
-            var item = Hitem();
+            var item = new Hitem();
             item.search_string = null;
             item.type = HitemType.BASE;
             history_add(item);
@@ -2226,7 +2227,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         ALBUM,
         SONG
      }
-    private struct Hitem {
+    private class Hitem {
         public HitemType type;
         public MPD.Song? song;
         public string search_string ;
@@ -2294,7 +2295,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         var menu = new Gtk.Menu();
         unowned List<Hitem?> iter = history.last();
         while(iter!= null){
-            var i = iter.data;
+            unowned Hitem i = iter.data;
             string label = "";
             if(i.type == HitemType.ARTIST)
                 label = i.song.artist;
@@ -2608,8 +2609,8 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         }
 
         /** Add item to history */
-        var item = Hitem();
-        item.song = song;
+        var item = new Hitem();
+        item.song = song.copy();
         item.type = HitemType.SONG;
         history_add(item);
 
