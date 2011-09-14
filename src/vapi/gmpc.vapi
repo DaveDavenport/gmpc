@@ -31,7 +31,7 @@ namespace Gmpc {
 
     }
 
-
+   [CCode (cheader_filename="metadata.h")]
    namespace MetaData {
 
         [CCode (cname="MetaDataContentType", cprefix = "META_DATA_CONTENT_", cheader_filename = "libmpd/libmpd.h,metadata.h")]
@@ -44,10 +44,13 @@ namespace Gmpc {
             STRV,
             TEXT_LIST
         }
-        [CCode (cname="MetaData", cheader_filename="metadata.h")]
+
         [Compact]
-        [Immutable]
-        [CCode (free_function="meta_data_free")]
+        [CCode (
+	cname="MetaData",
+	free_function="meta_data_free",
+	has_type_id = false
+	)]
         public class Item {
             [CCode (cname="meta_data_new")]
             public Item ();

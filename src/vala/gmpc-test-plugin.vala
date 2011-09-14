@@ -276,7 +276,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
                             }
                         }else{
                             MetaData.Item *item = MetaData.Item.copy(md);
-                            var h =  Gmpc.AsyncDownload.download_vala(uri,(void *)item,image_downloaded);                                 
+                            unowned Gmpc.AsyncDownload.Handle h =  Gmpc.AsyncDownload.download_vala(uri,(void *)item,image_downloaded);                                 
                             if(h!=null)
                             {
                                 h.set_user_data(md.plugin_name);
@@ -406,7 +406,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
                     metawatcher.data_changed(this.song, this.query_type, Gmpc.MetaData.Result.UNAVAILABLE, met_false);  
                     metawatcher.data_changed(this.song, this.query_type, Gmpc.MetaData.Result.AVAILABLE, met);  
                 }else{
-                    var h = Gmpc.AsyncDownload.download(path, store_image); 
+                    unowned Gmpc.AsyncDownload.Handle h = Gmpc.AsyncDownload.download(path, store_image); 
                     if(h!=null)
                         this.downloads.append(h);
                 }
@@ -721,7 +721,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
         }
         this.downloads.first();
         while(this.downloads != null){
-            Gmpc.AsyncDownload.Handle handle = this.downloads.data;
+            unowned Gmpc.AsyncDownload.Handle handle = this.downloads.data;
             
             handle.cancel(); 
             this.downloads.first();
