@@ -241,7 +241,7 @@ static gpointer glyros_fetch_thread(void * data)
     MetaDataContentType content_type = META_DATA_CONTENT_RAW;
 
     /* query init */
-    glyr_init_query(&q);
+    glyr_query_init(&q);
 
     /* set metadata */
     glyr_opt_artist(&q,(char*)thread_data->song->artist);
@@ -414,7 +414,7 @@ static gpointer glyros_fetch_thread(void * data)
     }
 
     /* destroy */
-    glyr_destroy_query(&q);
+    glyr_query_destroy(&q);
     g_free(data);
 
     thread_data->callback(retv, thread_data->user_data);
@@ -470,6 +470,8 @@ static void pref_enable_fetch(GtkWidget *con, gpointer data)
 	case META_SONG_GUITAR_TAB:
 	    cfg_set_single_value_as_int(config, LOG_SUBCLASS, LOG_GUITARTABS,state);
 	    break;
+    case META_QUERY_DATA_TYPES:
+    case META_QUERY_NO_CACHE:
         default:
             break;
     }
