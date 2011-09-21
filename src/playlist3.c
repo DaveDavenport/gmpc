@@ -1694,9 +1694,9 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
                  * Update the image in the menu
                  */
                 gtk_action_set_stock_id(GTK_ACTION(gtk_builder_get_object(pl3_xml, "MPDPlayPause")), "gtk-media-pause");
-                gtk_image_set_from_stock(GTK_IMAGE
+                gtk_button_set_label(GTK_BUTTON
                     (gtk_builder_get_object
-                    (pl3_xml, "play_button_image")), "gtk-media-pause", GTK_ICON_SIZE_BUTTON);
+                    (pl3_xml, "play_button")), "gtk-media-pause");
 
                 /**
                  * Update window title
@@ -1731,9 +1731,9 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
                 /** Update menu and button images */
 
                 gtk_action_set_stock_id(GTK_ACTION(gtk_builder_get_object(pl3_xml, "MPDPlayPause")), "gtk-media-play");
-                gtk_image_set_from_stock(GTK_IMAGE
+                gtk_button_set_label(GTK_BUTTON
                     (gtk_builder_get_object
-                    (pl3_xml, "play_button_image")), "gtk-media-play", GTK_ICON_SIZE_BUTTON);
+                    (pl3_xml, "play_button")), "gtk-media-play");
 
                 /**
                  * Set paused in Window string
@@ -1766,9 +1766,9 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
                 /* Make sure it's reset correctly */
                 gmpc_progress_set_time(GMPC_PROGRESS(new_pb), 0, 0);
 
-                gtk_image_set_from_stock(GTK_IMAGE
+                gtk_button_set_label(GTK_BUTTON
                     (gtk_builder_get_object
-                    (pl3_xml, "play_button_image")), "gtk-media-play", GTK_ICON_SIZE_BUTTON);
+                    (pl3_xml, "play_button")), "gtk-media-play");
 
                 if (gmpc_profiles_get_number_of_profiles(gmpc_profiles) > 1)
                 {
