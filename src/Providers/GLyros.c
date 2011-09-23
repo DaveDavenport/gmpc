@@ -295,6 +295,7 @@ static gpointer glyros_fetch_thread(void * data)
             else if (thread_data->type == META_ARTIST_TXT &&
                     cfg_get_single_value_as_int_with_default(config,LOG_SUBCLASS,LOG_ARTIST_TXT,TRUE))
             {
+                glyr_opt_lang_aware_only(&q,TRUE);
                 glyr_opt_type(&q, GLYR_GET_ARTISTBIO);
                 content_type = META_DATA_CONTENT_TEXT;
             }
@@ -306,7 +307,7 @@ static gpointer glyros_fetch_thread(void * data)
                 content_type = META_DATA_CONTENT_TEXT;
             }
             else if (thread_data->type == META_ALBUM_ART &&
-                    thread_data->song->album != NULL    &&
+                    thread_data->song->album != NULL     &&
                     cfg_get_single_value_as_int_with_default(config,LOG_SUBCLASS,LOG_COVER_NAME,TRUE))
             {
                 glyr_opt_type(&q, GLYR_GET_COVERART);
@@ -345,13 +346,23 @@ static gpointer glyros_fetch_thread(void * data)
         {
             if (thread_data->type == META_GENRE_SIMILAR)
             {
-                /* not supported yet. Ever? */
+                /* not supported yet. Ever? Where is this shown anyway? */
             }
         }
     }
 
     /* get metadata */
     cache = glyr_get(&q,&err,NULL);
+
+    /* Retry with language set to english */
+    if(cache == NULL && thread_data->type == META_ARTIST_TXT &&
+       strstr(GLYR_DEFAULT_SUPPORTED_LANGS,q.lang) != NULL   &&
+       strstr("en;us;uk;ca",q.lang) == NULL)
+    {
+        glyr_opt_lang_aware_only(&q,false);
+        glyr_opt_lang(&q,(char*)"en");
+        cache = glyr_get(&q,&err,NULL);
+    }
 
 #if GLYROS_DEBUG
     if(err != GLYRE_OK)
