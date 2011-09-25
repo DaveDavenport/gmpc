@@ -443,14 +443,18 @@
                                 <child>
                                   <object class="GtkButton" id="button_previous">
                                     <property name="visible">True</property>
+                                    <property name="use_action_appearance">False</property>
                                     <property name="related-action">MPDPrevious</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
                                     <property name="relief">none</property>
                                     <property name="use_action_appearance">False</property>
-                                    <property name="visible">True</property>
-                                    <property name="label">gtk-media-previous</property>
-                                    <property name="use-stock">True</property>
+                                    <child>
+                                        <object class="GtkImage" id="button_previous_image">
+                                        <property name="visible">True</property>
+                                        <property name="stock">gtk-media-previous</property>
+                                        </object>
+                                    </child>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -459,15 +463,19 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkButton" id="top_button">
+                                  <object class="GtkButton" id="stop_button">
                                     <property name="visible">True</property>
+                                    <property name="use_action_appearance">False</property>
                                     <property name="related-action">MPDStop</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">True</property>
                                     <property name="relief">none</property>
-                                    <property name="use_action_appearance">False</property>
-                                    <property name="label">gtk-media-stop</property>
-                                    <property name="use-stock">True</property>
+                                    <child>
+                                        <object class="GtkImage" id="button_stop_image">
+                                        <property name="visible">True</property>
+                                        <property name="stock">gtk-media-stop</property>
+                                        </object>
+                                    </child>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -478,12 +486,17 @@
                                 <child>
                                   <object class="GtkButton" id="play_button">
                                     <property name="visible">True</property>
+                                    <property name="use_action_appearance">False</property>
                                     <property name="related-action">MPDPlayPause</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
                                     <property name="relief">none</property>
-                                    <property name="use-stock">True</property>
-                                    <property name="label">gtk-media-play</property>
+                                    <child>
+                                        <object class="GtkImage" id="play_button_image">
+                                        <property name="visible">True</property>
+                                        <property name="stock">gtk-media-play</property>
+                                        </object>
+                                    </child>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -494,21 +507,17 @@
                                 <child>
                                   <object class="GtkButton" id="next_button">
                                     <property name="visible">True</property>
+                                    <property name="use_action_appearance">False</property>
                                     <property name="related-action">MPDNext</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
-                                    <property name="use_action_appearance">False</property>
                                     <property name="relief">none</property>
-                                    <property name="label">gtk-media-next</property>
-                                    <property name="use-stock">True</property>
-                                    <!--
                                     <child>
-                                      <object class="GtkImage" id="image11">
+                                      <object class="GtkImage" id="next_button_image">
                                         <property name="visible">True</property>
                                         <property name="stock">gtk-media-next</property>
                                       </object>
                                     </child>
-                                    -->
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
