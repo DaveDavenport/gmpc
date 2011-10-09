@@ -46,7 +46,8 @@
 		</p>
 	</note>
 	<p>
-		Optional you can set alsa output and tell GMPC to keep the MPD running.
+		Optional you can set alsa output, a httpd output (mp3 on port 8000, ogg on port 8001),  accept remote connections (from the network),
+		and tell GMPC to keep the MPD running.
 	</p>
   <section id="figures">
     <title>Screenshots</title>

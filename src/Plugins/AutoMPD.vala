@@ -614,6 +614,26 @@ public class Gmpc.Plugins.AutoMPD:
 		cao.toggled.connect((source)=> {
 				ao_generate_alsa = source.active;
 				});
+
+		// Allow remote connections 
+		var arc = pref_builder.get_object("cb_allow_remote_connections") as Gtk.CheckButton;
+		arc.active = mpd_conf_remote_connections;
+		arc.toggled.connect((source)=> {
+				mpd_conf_remote_connections = source.active;
+		});
+
+		var auhv = pref_builder.get_object("cb_audio_output_httpd_vorbis") as Gtk.CheckButton;
+		auhv.active = mpd_conf_generate_httpd_vorbis;
+		auhv.toggled.connect((source)=>{
+				mpd_conf_generate_httpd_vorbis = source.active;
+		});
+
+		var auhl = pref_builder.get_object("cb_audio_output_httpd_lame") as Gtk.CheckButton;
+		auhl.active = mpd_conf_generate_httpd_lame;
+		auhl.toggled.connect((source)=>{
+				mpd_conf_generate_httpd_lame = source.active;
+		});
+
 		// Restart button
 		var rb = pref_builder.get_object("b_restart") as Gtk.Button;
 		rb.sensitive = have_mpd_binary();
