@@ -359,6 +359,14 @@ static void connect(gpointer data, const char *param)
     }
 }
 
+static void reset_playmode(gpointer data, const char *param)
+{
+	mpd_player_set_repeat(connection, FALSE);
+	mpd_player_set_random(connection, FALSE);
+	mpd_player_set_single(connection, FALSE);
+	mpd_player_set_consume(connection, FALSE);
+}
+
 void mpd_easy_commands_init(void)
 {
 	/* Player control */
@@ -377,6 +385,11 @@ void mpd_easy_commands_init(void)
 	gmpc_easy_command_add_entry_stock_id(gmpc_easy_command, _("stop"), "", _("stop playback"),
 								(GmpcEasyCommandCallback *) stop_song, NULL,
 								"gtk-media-stop");
+
+	gmpc_easy_command_add_entry_stock_id(gmpc_easy_command,
+								_("reset playmode"),
+								"",
+								_("Reset the play mode."), (GmpcEasyCommandCallback *) reset_playmode, NULL, GTK_STOCK_CLEAR);
 
 	gmpc_easy_command_add_entry_icon_name(gmpc_easy_command, _("random"), "(on|off|)", _("Random (on|off)"),
 								(GmpcEasyCommandCallback *) set_random, NULL, "stock_shuffle");
