@@ -32,7 +32,8 @@ DOC_PAGES = \
 	PreferencesTagBasedBrowser.page\
 	QuickStartGuide.page\
 	ProblemSolving.page\
-	TipsAndTricks.page
+	TipsAndTricks.page\
+	AutoMPD.page
 
 DOC_FIGURES=\
 Images/browser-pane-double.png\
@@ -92,6 +93,7 @@ Images/browser-playqueue.png\
 Images/browser-search.png\
 Images/preferences-internal-extra-playlist-view.png\
 Images/preferences-metadata-appearance.png\
+Images/gmpc-preferences-autompd.png\
 Images/preferences-plugins.png
 
 

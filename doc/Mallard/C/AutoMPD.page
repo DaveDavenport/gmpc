@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<page xmlns="http://projectmallard.org/1.0/" type="topic" id="AutoMPD">
+  <title>Auto MPD</title>
+	<p>
+		One of the hardest parts of getting GMPC to work is settings up MPD. 
+		GMPC can now setup and run a MPD for you.
+	</p>
+	<terms>
+		<title>Requirments</title>
+		<item>
+			<title>Installed MPD.</title>
+			<p>
+				GMPC will look in the current $PATH for an MPD binary. 
+			</p>
+		</item>
+	</terms>
+	<p>
+		If GMPC succesfully found a MPD binary it will add an 'AutoMPD' profile.
+		Switching to this profile will start MPD in the background, switching away from this profile
+		will stop MPD. By default MPD will be started with the following settings:
+	</p>
+	<terms>
+		<item>
+			<title>Music Directory</title>
+			<p>
+				If it exists it tries to find the XDG specified music directory, otherwise it defaults to 
+				<cmd>
+					~/Music.
+				</cmd>
+			</p>
+		</item>
+		<item>
+			<title>Audio Output</title>
+			<p>
+				By default an pulseaudio output is added. This should work on most desktops.
+			</p>
+		</item>
+	</terms>
+	<p>
+		Some of these settings can be customized in the preferences pane.
+		The music directory can be set in the connection pane (in the Auto MPD profile).
+	</p>
+	<note>
+		<p>
+			Once a setting has been changed, you must restart MPD using the <cmd>restart MPD</cmd> button.
+		</p>
+	</note>
+	<p>
+		Optional you can set alsa output and tell GMPC to keep the MPD running.
+	</p>
+  <section id="figures">
+    <title>Screenshots</title>
+    <figure>
+      <desc>Preferences pane</desc>
+      <media type="image" src="Images/gmpc-preferences-autompd.png"/>
+    </figure>
+  </section>
+</page>

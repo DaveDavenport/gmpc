@@ -620,6 +620,12 @@ public class Gmpc.Plugins.AutoMPD:
 		rb.clicked.connect((source)=>{
 				restart_mpd();
 				});
+
+
+		var hb = pref_builder.get_object("autompd_help_button") as Gtk.Button;
+		hb.clicked.connect((source)=>{
+			Gmpc.open_uri("ghelp:gmpc?AutoMPD");	
+			});
 		b.show_all();
 	}
 	/* Destroy preferences pane */
