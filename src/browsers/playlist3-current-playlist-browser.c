@@ -128,6 +128,10 @@ static void pl3_current_playlist_browser_clear_playlist(void);
 
 static void pl3_current_playlist_browser_init(PlayQueuePlugin * self);
 
+static void pl3_current_playlist_browser_clear_playlist_real(void)
+{
+	mpd_playlist_clear(connection);
+}
 static void pl3_cp_current_song_changed(GmpcMpdDataModelPlaylist * model2, GtkTreePath * path, GtkTreeIter * iter,
 										PlayQueuePlugin * self)
 {
@@ -223,9 +227,9 @@ static void pl3_cp_init(PlayQueuePlugin * self)
 								_("Switch to play queue"),
 								(GmpcEasyCommandCallback *) pl3_current_playlist_browser_activate, self);
 	gmpc_easy_command_add_entry(gmpc_easy_command,
-								_("Clear play queue"), "",
+								_("Clear"), "",
 								_("Clear play queue"),
-								(GmpcEasyCommandCallback *) pl3_current_playlist_browser_clear_playlist, self);
+								(GmpcEasyCommandCallback *) pl3_current_playlist_browser_clear_playlist_real, self);
 
 	gmpc_easy_command_add_entry(gmpc_easy_command,
 								_("Crop current song"), "",
@@ -1052,10 +1056,6 @@ static void pl3_current_playlist_save_playlist(void)
 	g_object_unref(xml);
 }
 
-static void pl3_current_playlist_browser_clear_playlist_real(void)
-{
-	mpd_playlist_clear(connection);
-}
 static void pl3_current_playlist_browser_clear_playlist(void)
 {
     GtkWidget *delete;
