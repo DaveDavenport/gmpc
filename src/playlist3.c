@@ -1587,7 +1587,7 @@ static void playlist_zoom_level_changed(void)
     gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "box_tab_bar")));
     gtk_action_set_visible(GTK_ACTION(gtk_builder_get_object(pl3_xml, "menu_go")),TRUE);
     gtk_action_set_visible(GTK_ACTION(gtk_builder_get_object(pl3_xml, "menu_option")),TRUE);
-	gtk_widget_show(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "sidebar_browsers_label")));
+	gtk_widget_show(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "sidebar_browsers_label_ali")));
 	/* restore pane position */
 	if (cfg_get_single_value_as_int(config, "playlist", "pane-pos") != CFG_INT_NOT_DEFINED)
 	{
@@ -1627,7 +1627,8 @@ static void playlist_zoom_level_changed(void)
 			gtk_cell_renderer_set_visible(sidebar_text, FALSE);
 			gtk_paned_set_position(GTK_PANED
 					(gtk_builder_get_object(pl3_xml, "hpaned1")),32);
-            gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "sidebar_browsers_label")));
+
+            gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "sidebar_browsers_label_ali")));
             //gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "sidebar")));
 /*
             if (!cfg_get_single_value_as_int_with_default(config, "playlist", "button-heading", FALSE))
