@@ -913,11 +913,11 @@ void create_playlist3(void)
         "}\n"
         "widget \"*.sidebar.*\" style \"sidebar-treeview\"");
 
-    /** set handle size to 1px */
+    /** set handle size to 3px */
     gtk_rc_parse_string (
         "style \"hpaned1-style\"\n"
         "{\n"
-        "   GtkPaned::handle-size = 1\n"
+        "   GtkPaned::handle-size = 3\n"
         "}\n"
         "widget \"*.hpaned1\" style \"hpaned1-style\"\n");
 
@@ -999,7 +999,6 @@ void create_playlist3(void)
     g_object_set(renderer, "ellipsize", PANGO_ELLIPSIZE_END, NULL);
     gtk_tree_view_append_column(GTK_TREE_VIEW(tree), column);
     gtk_tree_view_set_search_column(GTK_TREE_VIEW(tree), PL3_CAT_TITLE);
-
     g_signal_connect_after(G_OBJECT(sel), "changed", G_CALLBACK(pl3_cat_sel_changed), NULL);
 
 	TEC("setup cat_tree")
