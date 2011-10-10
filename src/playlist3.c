@@ -1460,10 +1460,12 @@ void playlist_menu_artist_image_changed(GtkToggleAction *ta)
 {
     int active = gtk_toggle_action_get_active(ta);
     cfg_set_single_value_as_int(config, "playlist", "cover-image-enable", active);
-
-    gmpc_metaimage_set_is_visible(GMPC_METAIMAGE(metaimage_artist_art), active);
-    if (active)
-        gtk_widget_show(metaimage_artist_art);
+	if(pl3_zoom < PLAYLIST_SMALL)
+	{
+		gmpc_metaimage_set_is_visible(GMPC_METAIMAGE(metaimage_artist_art), active);
+		if (active)
+			gtk_widget_show(metaimage_artist_art);
+	}
 }
 
 
@@ -1573,6 +1575,12 @@ static void playlist_zoom_level_changed(void)
         gtk_window_resize(GTK_WINDOW(pl3_win), pl3_wsize.width, pl3_wsize.height);
     }
     gtk_widget_show(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "sidebar")));
+
+    if (cfg_get_single_value_as_int_with_default(config, "playlist", "cover-image-enable", FALSE))
+    {
+        gmpc_metaimage_set_is_visible(GMPC_METAIMAGE(metaimage_artist_art), TRUE);
+		gtk_widget_show(metaimage_artist_art);
+	}
 	printf("set visible: on\n");
 	gtk_cell_renderer_set_visible(sidebar_text, TRUE);
 	gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "bread_crumb")));
@@ -1615,6 +1623,7 @@ static void playlist_zoom_level_changed(void)
             break;
 		case PLAYLIST_SMALL:
 			printf("set visible: off\n");
+			gmpc_metaimage_set_is_visible(GMPC_METAIMAGE(metaimage_artist_art), FALSE);
 			gtk_cell_renderer_set_visible(sidebar_text, FALSE);
 			gtk_paned_set_position(GTK_PANED
 					(gtk_builder_get_object(pl3_xml, "hpaned1")),32);
