@@ -55,6 +55,8 @@ static GtkTargetEntry target_table[] =
 GtkWidget *metaimage_album_art = NULL;
 GtkWidget *metaimage_artist_art = NULL;
 GmpcFavoritesButton *favorites_button = NULL;
+
+GtkCellRenderer *sidebar_text = NULL;
 /**
  * Widgets used in the header.
  * and the new progresbar
@@ -565,9 +567,10 @@ int pl3_hide(void)
             g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "pl3_hide: save size: %i %i\n", pl3_wsize.width, pl3_wsize.height);
             cfg_set_single_value_as_int(config, "playlist", "width", pl3_wsize.width);
             cfg_set_single_value_as_int(config, "playlist", "height", pl3_wsize.height);
+        }else if (pl3_zoom < PLAYLIST_SMALL) {
             cfg_set_single_value_as_int(config, "playlist", "pane-pos",
                 gtk_paned_get_position(GTK_PANED(gtk_builder_get_object(pl3_xml, "hpaned1"))));
-        }
+		}
         gtk_widget_hide(pl3_win);
         pl3_hidden = TRUE;
     }
@@ -992,7 +995,7 @@ void create_playlist3(void)
     }
     gtk_tree_view_column_set_attributes(column, renderer, "icon-name", PL3_CAT_ICON_ID, NULL);
 
-    renderer = gtk_cell_renderer_text_new();
+    sidebar_text = renderer = gtk_cell_renderer_text_new();
     /* insert the column in the tree */
     gtk_tree_view_column_pack_start(column, renderer, TRUE);
     gtk_tree_view_column_set_attributes(column, renderer, "text", PL3_CAT_TITLE, NULL);
@@ -1570,10 +1573,20 @@ static void playlist_zoom_level_changed(void)
         gtk_window_resize(GTK_WINDOW(pl3_win), pl3_wsize.width, pl3_wsize.height);
     }
     gtk_widget_show(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "sidebar")));
-    gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "bread_crumb")));
+	printf("set visible: on\n");
+	gtk_cell_renderer_set_visible(sidebar_text, TRUE);
+	gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "bread_crumb")));
     gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "box_tab_bar")));
     gtk_action_set_visible(GTK_ACTION(gtk_builder_get_object(pl3_xml, "menu_go")),TRUE);
     gtk_action_set_visible(GTK_ACTION(gtk_builder_get_object(pl3_xml, "menu_option")),TRUE);
+	gtk_widget_show(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "sidebar_browsers_label")));
+	/* restore pane position */
+	if (cfg_get_single_value_as_int(config, "playlist", "pane-pos") != CFG_INT_NOT_DEFINED)
+	{
+		gtk_paned_set_position(GTK_PANED
+				(gtk_builder_get_object(pl3_xml, "hpaned1")),
+				cfg_get_single_value_as_int(config, "playlist", "pane-pos"));
+	}
 
     /* Now start hiding */
     switch (pl3_zoom)
@@ -1600,13 +1613,19 @@ static void playlist_zoom_level_changed(void)
 
             gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "sidebar")));
             break;
-        case PLAYLIST_SMALL:
-            gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "sidebar")));
+		case PLAYLIST_SMALL:
+			printf("set visible: off\n");
+			gtk_cell_renderer_set_visible(sidebar_text, FALSE);
+			gtk_paned_set_position(GTK_PANED
+					(gtk_builder_get_object(pl3_xml, "hpaned1")),32);
+            gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "sidebar_browsers_label")));
+            //gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "sidebar")));
+/*
             if (!cfg_get_single_value_as_int_with_default(config, "playlist", "button-heading", FALSE))
                 gtk_widget_show(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "bread_crumb")));
             else
                 gtk_widget_show(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "box_tab_bar")));
-
+*/
             gtk_widget_grab_focus(pl3_win);
         default:
             break;
