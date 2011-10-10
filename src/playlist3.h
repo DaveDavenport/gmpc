@@ -28,8 +28,6 @@ extern GtkListStore *pl3_store;
 
 void pl3_show_window(void);
 void pl3_toggle_hidden(void);
-void pl3_push_statusbar_message(const char *mesg);
-void pl3_push_rsb_message(const gchar *string);
 int pl3_cat_get_selected_browser(void);
 
 typedef enum {

@@ -263,7 +263,6 @@ static void pl3_cat_sel_changed(GtkTreeSelection * selec, gpointer * userdata)
             gmpc_plugin_browser_unselected(plugins[plugin_get_pos(old_type)], container);
         }
         old_type = -1;
-        pl3_push_rsb_message("");
         /** if type changed give a selected signal */
         if ((old_type != type))
         {
@@ -475,45 +474,6 @@ int pl3_window_key_press_event(GtkWidget * mw, GdkEventKey * event)
     /* don't propagate */
     return FALSE;
 }
-
-
-/**
- * Remove message from the status bar
- * Used internally by timeout
- */
-static int pl3_pop_statusbar_message(gpointer data)
-{
-	return FALSE;
-    gint id = GPOINTER_TO_INT(data);
-    gtk_statusbar_pop(GTK_STATUSBAR(gtk_builder_get_object(pl3_xml, "statusbar1")), id);
-    return FALSE;
-}
-
-
-/**
- * Put message on status bar
- * This will be removed after 5 seconds
- */
-void pl3_push_statusbar_message(const char *mesg)
-{
-	return;
-    gint id = gtk_statusbar_get_context_id(GTK_STATUSBAR(gtk_builder_get_object(pl3_xml, "statusbar1")), mesg);
-    /* message auto_remove after 5 sec */
-    g_timeout_add_seconds(5, (GSourceFunc) pl3_pop_statusbar_message, GINT_TO_POINTER(id));
-    gtk_statusbar_push(GTK_STATUSBAR(gtk_builder_get_object(pl3_xml, "statusbar1")), id, mesg);
-}
-
-
-/**
- * Push message to 2nd status bar
- * Message overwrites the previous message
- */
-void pl3_push_rsb_message(const char *string)
-{
-	return;
-    gtk_statusbar_push(GTK_STATUSBAR(gtk_builder_get_object(pl3_xml, "statusbar1")), 0, string);
-}
-
 
 /**
  * Close the playlist and save position/size
@@ -801,7 +761,6 @@ static void playlist_connection_changed(MpdObj * mi, int connect, gpointer data)
 			g_strfreev(handlers);
 		}
         gtk_action_set_sensitive(GTK_ACTION(gtk_builder_get_object(pl3_xml, "open_local_file")), found);
-        pl3_push_rsb_message(_("Connected"));
     } else
     {
         gtk_widget_set_sensitive(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "vbox_playlist_player")), FALSE);
@@ -813,7 +772,6 @@ static void playlist_connection_changed(MpdObj * mi, int connect, gpointer data)
         gtk_action_set_sensitive(GTK_ACTION(gtk_builder_get_object(pl3_xml, "menu_view")), FALSE);
         gtk_action_set_sensitive(GTK_ACTION(gtk_builder_get_object(pl3_xml, "menu_option")), FALSE);
         gtk_action_set_sensitive(GTK_ACTION(gtk_builder_get_object(pl3_xml, "open_local_file")), FALSE);
-        pl3_push_rsb_message(_("Not Connected"));
     }
     /** Set back to the current borwser, and update window title */
     if (connect)
@@ -1029,7 +987,7 @@ void create_playlist3(void)
         if (gtk_icon_size_lookup(GTK_ICON_SIZE_MENU, &w, &h))
         {
             g_object_set(G_OBJECT(renderer), "height", h+10, NULL);
-            g_object_set(G_OBJECT(renderer), "width", w+20, NULL);
+            g_object_set(G_OBJECT(renderer), "width", w+6,NULL);
         }
     }
     gtk_tree_view_column_set_attributes(column, renderer, "icon-name", PL3_CAT_ICON_ID, NULL);
@@ -1815,11 +1773,6 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
     {
         if (mpd_check_connected(connection))
         {
-            char *string = g_strdup_printf(_("Repeat: %s"),
-                (mpd_player_get_repeat(connection)) ? _("On") : _("Off"));
-            pl3_push_statusbar_message(string);
-            g_free(string);
-
             gtk_toggle_action_set_active(GTK_TOGGLE_ACTION(gtk_builder_get_object(pl3_xml, "MPDRepeat")),
                 mpd_player_get_repeat(connection));
         }
@@ -1829,11 +1782,6 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
     {
         if (mpd_check_connected(connection))
         {
-            char *string = g_strdup_printf(_("Random: %s"),
-                (mpd_player_get_random(connection)) ? _("On") : _("Off"));
-            pl3_push_statusbar_message(string);
-            g_free(string);
-
             gtk_toggle_action_set_active(GTK_TOGGLE_ACTION(gtk_builder_get_object(pl3_xml, "MPDRandom")),
                 mpd_player_get_random(connection));
         }
@@ -1846,11 +1794,6 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
     {
         if (mpd_check_connected(connection))
         {
-            char *string = g_strdup_printf(_("Single mode: %s"),
-                (mpd_player_get_single(connection)) ? _("On") : _("Off"));
-            pl3_push_statusbar_message(string);
-            g_free(string);
-
             gtk_toggle_action_set_active(GTK_TOGGLE_ACTION(gtk_builder_get_object(pl3_xml, "MPDSingleMode")),
                 mpd_player_get_single(connection));
         }
@@ -1860,11 +1803,6 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
     {
         if (mpd_check_connected(connection))
         {
-            char *string = g_strdup_printf(_("Consume: %s"),
-                (mpd_player_get_consume(connection)) ? _("On") : _("Off"));
-            pl3_push_statusbar_message(string);
-            g_free(string);
-
             gtk_toggle_action_set_active(GTK_TOGGLE_ACTION(gtk_builder_get_object(pl3_xml, "MPDConsumeMode")),
                 mpd_player_get_consume(connection));
         }
@@ -2117,22 +2055,6 @@ static void pl3_profile_selected(GtkRadioMenuItem * radio, gpointer data)
 
 static void pl3_profiles_changed(GmpcProfiles * prof, const int changed, const int col, const gchar * id)
 {
-    if (changed == PROFILE_ADDED)
-    {
-        gchar *message = g_strdup_printf("%s '%s' %s  ", _("Profile"),
-            gmpc_profiles_get_name(prof, id), _("added"));
-        pl3_push_statusbar_message(message);
-        g_free(message);
-    } else if (changed == PROFILE_COL_CHANGED && col == PROFILE_COL_HOSTNAME)
-    {
-        gchar *message = g_strdup_printf("%s '%s' %s %s",
-            _("Profile"),
-            gmpc_profiles_get_name(prof, id),
-            _("changed hostname to:"),
-            gmpc_profiles_get_hostname(prof, id));
-        pl3_push_statusbar_message(message);
-        g_free(message);
-    }
     if (!mpd_check_connected(connection))
     {
         playlist_connection_changed(connection, 0, NULL);
@@ -2352,22 +2274,6 @@ void playlist3_destroy(void)
     gtk_widget_destroy(win);
     g_object_unref(pl3_xml);
 }
-
-
-gboolean playlist3_show_playtime(gulong playtime)
-{
-    if (playtime)
-    {
-        gchar *string = format_time(playtime);
-        pl3_push_rsb_message(string);
-        g_free(string);
-    } else
-    {
-        pl3_push_rsb_message("");
-    }
-    return FALSE;
-}
-
 
 GtkWidget *playlist3_get_window(void)
 {

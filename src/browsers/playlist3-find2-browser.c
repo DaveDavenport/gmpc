@@ -109,10 +109,6 @@ static void pl3_find2_combo_box_field_changed(GtkComboBox * cb, gpointer data)
 
 static void playtime_changed(GmpcMpdDataModel * model, gulong playtime)
 {
-	if (pl3_cat_get_selected_browser() == find2_browser_plug.id)
-	{
-		playlist3_show_playtime(playtime);
-	}
 }
 
 static void pl3_find2_browser_type_plugin_changed(GtkComboBox * box, gpointer user_data)
@@ -292,8 +288,6 @@ static void pl3_find2_browser_selected(GtkWidget * container)
 	gtk_container_add(GTK_CONTAINER(container), pl3_find2_vbox);
 	gtk_widget_grab_focus(pl3_find2_tree);
 	gtk_widget_show(pl3_find2_vbox);
-
-	playlist3_show_playtime(gmpc_mpddata_model_get_playtime(GMPC_MPDDATA_MODEL(pl3_find2_store2)));
 }
 
 static void pl3_find2_browser_unselected(GtkWidget * container)
@@ -505,12 +499,6 @@ static void pl3_find2_browser_add_selected(void)
 	}
 	/* if there are items in the add list add them to the playlist */
 	mpd_playlist_queue_commit(connection);
-	if (songs != 0)
-	{
-		gchar *message = g_strdup_printf("Added %i song%s", songs, (songs != 1) ? "s" : "");
-		pl3_push_statusbar_message(message);
-		q_free(message);
-	}
 
 	g_list_foreach(rows, (GFunc) gtk_tree_path_free, NULL);
 	g_list_free(rows);
@@ -544,12 +532,6 @@ static void pl3_find2_browser_add_all(void)
 	}
 	/* if there are items in the add list add them to the playlist */
 	mpd_playlist_queue_commit(connection);
-	if (songs != 0)
-	{
-		gchar *message = g_strdup_printf("Added %i song%s", songs, (songs != 1) ? "s" : "");
-		pl3_push_statusbar_message(message);
-		q_free(message);
-	}
 }
 
 static void pl3_find2_playlist_editor_add_to_playlist(GtkWidget * menu, gpointer cb_data)

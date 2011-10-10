@@ -655,7 +655,7 @@
                                     <property name="can_focus">False</property>
                                     <property name="top_padding">10</property>
                                     <property name="bottom_padding">2</property>
-                                    <property name="left_padding">15</property>
+                                    <property name="left_padding">6</property>
                                     <child>
                                       <object class="GtkLabel" id="label1">
                                         <property name="visible">True</property>

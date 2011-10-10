@@ -861,10 +861,6 @@ static void tag2_sentry_changed(GtkWidget * entry, tag_element * te)
 
 static void playtime_changed(GmpcMpdDataModel * model, gulong playtime)
 {
-	if (pl3_cat_get_selected_browser() == tag2_plug.id)
-	{
-		playlist3_show_playtime(playtime);
-	}
 }
 
 static void tag2_songlist_clear_selection(GtkWidget * button, tag_browser * browser)
@@ -1299,11 +1295,6 @@ static void tag2_browser_selected(GtkWidget * container)
 					gtk_container_add(GTK_CONTAINER(container), tb->tag2_vbox);
 					gtk_widget_show_all(container);
 					tag2_current = tb->tag2_vbox;
-
-					playlist3_show_playtime(gmpc_mpddata_model_get_playtime
-											(GMPC_MPDDATA_MODEL(gtk_tree_view_get_model(tb->tag_songlist))));
-				} else
-				{
 
 				}
 				g_free(key);

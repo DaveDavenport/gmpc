@@ -541,13 +541,6 @@ static void playlist_editor_list_add_songs(GtkButton * button, GtkTreeView * tre
 	mpd_playlist_queue_commit(connection);
 	g_list_foreach(list, (GFunc) gtk_tree_path_free, NULL);
 	g_list_free(list);
-	if (songs > 0)
-	{
-		gchar *added = g_strdup_printf("%s %i %s.", _("Added"), songs, ngettext("song", "songs", songs));
-		pl3_push_statusbar_message(added);
-		g_free(added);
-
-	}
 }
 
 static void playlist_editor_list_replace_songs(GtkButton * button, GtkTreeView * tree)
@@ -860,10 +853,6 @@ static gboolean playlist_editor_browser_button_release_event(GtkWidget * giv, Gd
 
 static void playtime_changed(GmpcMpdDataModel * model, gulong playtime)
 {
-	if (pl3_cat_get_selected_browser() == playlist_editor_plugin.id)
-	{
-		playlist3_show_playtime(playtime);
-	}
 }
 
 /**
@@ -1125,8 +1114,6 @@ void playlist_editor_browser_selected(GtkWidget * container)
 	}
 	gtk_container_add(GTK_CONTAINER(container), playlist_editor_browser);
 	gtk_widget_show_all(playlist_editor_browser);
-
-	playlist3_show_playtime(gmpc_mpddata_model_get_playtime(GMPC_MPDDATA_MODEL(playlist_editor_list_store)));
 }
 
 void playlist_editor_browser_unselected(GtkWidget * container)

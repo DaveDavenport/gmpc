@@ -150,10 +150,6 @@ static void pl3_file_browser_dir_row_activated(GtkTreeView * tree, GtkTreePath *
 
 static void playtime_changed(GmpcMpdDataModel * model, gulong playtime)
 {
-	if (pl3_cat_get_selected_browser() == file_browser_plug.id)
-	{
-		playlist3_show_playtime(playtime);
-	}
 }
 static void pl3_file_support_help_button_clicked(GObject *a)
 {
@@ -281,9 +277,6 @@ static void pl3_file_browser_add_folder(void)
 		char *message = NULL;
 		gtk_tree_model_get(model, &iter, PL3_FB_PATH, &path, PL3_FB_ICON, &icon, -1);
 
-		message = g_strdup_printf(_("Added folder '%s' recursively"), path);
-		pl3_push_statusbar_message(message);
-		q_free(message);
 		if (strcmp("media-playlist", icon))
 		{
 			mpd_playlist_queue_add(connection, path);
@@ -743,7 +736,6 @@ static void pl3_file_browser_selected(GtkWidget * container)
 	gtk_widget_grab_focus(pl3_fb_tree);
 	gtk_widget_show(pl3_fb_vbox);
 
-	playlist3_show_playtime(gmpc_mpddata_model_get_playtime(GMPC_MPDDATA_MODEL(pl3_fb_store2)));
 }
 
 static void pl3_file_browser_unselected(GtkWidget * container)
@@ -801,7 +793,6 @@ static void pl3_file_browser_row_activated(GtkTreeView * tree, GtkTreePath * tp)
 	}
 	if (r_type == MPD_DATA_TYPE_PLAYLIST)
 	{
-		pl3_push_statusbar_message(_("Loaded playlist"));
 		mpd_playlist_queue_load(connection, song_path);
 		mpd_playlist_queue_commit(connection);
 	} else if (r_type == MPD_DATA_TYPE_DIRECTORY)
@@ -1070,21 +1061,6 @@ static void pl3_file_browser_add_selected(void)
 	}
 	/* if there are items in the add list add them to the playlist */
 	mpd_playlist_queue_commit(connection);
-	if ((songs + dirs + pl) != 0)
-	{
-		GString *string = g_string_new(_("Added"));
-		if (songs)
-			g_string_append_printf(string, " %i %s%c", songs, ngettext("song", "songs", songs),
-								   (dirs + pl > 0) ? ',' : ' ');
-		if (dirs)
-			g_string_append_printf(string, " %i %s%c", dirs, ngettext("directory", "directories", dirs),
-								   (pl > 0) ? ',' : ' ');
-		if (pl)
-			g_string_append_printf(string, " %i %s", pl, ngettext("playlist", "playlists", pl));
-		pl3_push_statusbar_message(string->str);
-		g_string_free(string, TRUE);
-	}
-
 	g_list_foreach(rows, (GFunc) gtk_tree_path_free, NULL);
 	g_list_free(rows);
 }
