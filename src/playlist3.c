@@ -509,7 +509,7 @@ gboolean pl3_close(void)
         if (pl3_zoom < PLAYLIST_SMALL)
         {
             cfg_set_single_value_as_int(config, "playlist", "pane-pos",
-                gtk_paned_get_position(GTK_PANED(gtk_builder_get_object(pl3_xml, "hpaned1"))));
+                gtk_paned_get_position(GTK_PANED(gtk_builder_get_object(pl3_xml, "hpaned1-hbox"))));
         }
     }
 
@@ -535,7 +535,7 @@ gboolean pl3_close(void)
 /**
  * Hide the playlist.
  * Before hiding save current size and position
- */
+*/
 int pl3_hide(void)
 {
     GtkWidget *pl3_win = playlist3_get_window();
@@ -568,9 +568,9 @@ int pl3_hide(void)
             cfg_set_single_value_as_int(config, "playlist", "width", pl3_wsize.width);
             cfg_set_single_value_as_int(config, "playlist", "height", pl3_wsize.height);
         }else if (pl3_zoom < PLAYLIST_SMALL) {
-            cfg_set_single_value_as_int(config, "playlist", "pane-pos",
+/*            cfg_set_single_value_as_int(config, "playlist", "pane-pos",
                 gtk_paned_get_position(GTK_PANED(gtk_builder_get_object(pl3_xml, "hpaned1"))));
-		}
+*/		}
         gtk_widget_hide(pl3_win);
         pl3_hidden = TRUE;
     }
@@ -702,7 +702,7 @@ void pl3_pb_seek_event(GtkWidget * pb, guint seek_time, gpointer user_data)
 /**
  * When the position of the slider change, update the artist image
  */
-static void pl3_win_pane_changed(GtkWidget * panel, GParamSpec * arg1, gpointer data)
+/*static void pl3_win_pane_changed(GtkWidget * panel, GParamSpec * arg1, gpointer data)
 {
     gint position = 0;
     gint max_size = cfg_get_single_value_as_int_with_default(config, "playlist",
@@ -710,8 +710,8 @@ static void pl3_win_pane_changed(GtkWidget * panel, GParamSpec * arg1, gpointer 
     gint size;
     g_object_get(G_OBJECT(panel), "position", &position, NULL);
     position -= 6;
-    /* force minimum size 16 */
-    if (position < 6)
+  */  /* force minimum size 16 */
+  /*  if (position < 6)
         position = 6;
     size = ((position) > max_size) ? max_size : (position);
 
@@ -722,7 +722,7 @@ static void pl3_win_pane_changed(GtkWidget * panel, GParamSpec * arg1, gpointer 
     }
 
 }
-
+*/
 
 static void about_dialog_activate(GtkWidget * dialog, const gchar * uri, gpointer data)
 {
@@ -742,7 +742,7 @@ static void playlist_connection_changed(MpdObj * mi, int connect, gpointer data)
         char **handlers;
 		gboolean found = FALSE;
         gtk_widget_set_sensitive(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "vbox_playlist_player")), TRUE);
-        gtk_widget_set_sensitive(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "hpaned1")), TRUE);
+        gtk_widget_set_sensitive(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "hpaned1-hbox")), TRUE);
 
         gtk_action_set_sensitive(GTK_ACTION(gtk_builder_get_object(pl3_xml, "MPDConnect")), FALSE);
         gtk_action_set_sensitive(GTK_ACTION(gtk_builder_get_object(pl3_xml, "MPDDisconnect")), TRUE);
@@ -767,7 +767,7 @@ static void playlist_connection_changed(MpdObj * mi, int connect, gpointer data)
     } else
     {
         gtk_widget_set_sensitive(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "vbox_playlist_player")), FALSE);
-        gtk_widget_set_sensitive(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "hpaned1")), FALSE);
+        gtk_widget_set_sensitive(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "hpaned1-hbox")), FALSE);
 
         gtk_action_set_sensitive(GTK_ACTION(gtk_builder_get_object(pl3_xml, "MPDConnect")), TRUE);
         gtk_action_set_sensitive(GTK_ACTION(gtk_builder_get_object(pl3_xml, "MPDDisconnect")), FALSE);
@@ -1123,7 +1123,7 @@ void create_playlist3(void)
         gmpc_metaimage_set_is_visible(GMPC_METAIMAGE(metaimage_artist_art), FALSE);
     }
     gmpc_metaimage_set_squared(GMPC_METAIMAGE(metaimage_artist_art), FALSE);
-    gmpc_metaimage_set_size(GMPC_METAIMAGE(metaimage_artist_art), 200);
+    gmpc_metaimage_set_size(GMPC_METAIMAGE(metaimage_artist_art), 145);
 
 	TEC("Setup metaimages")
     /* restore the window's position and size, if the user wants this. */
@@ -1151,12 +1151,15 @@ void create_playlist3(void)
         }
 		TEC("resize window settings")
         /* restore pane position */
+		gtk_widget_set_size_request(GTK_WIDGET(gtk_builder_get_object(pl3_xml,"sidebar")), 150,-1); 
+/*
         if (cfg_get_single_value_as_int(config, "playlist", "pane-pos") != CFG_INT_NOT_DEFINED)
         {
             gtk_paned_set_position(GTK_PANED
                 (gtk_builder_get_object(pl3_xml, "hpaned1")),
                 cfg_get_single_value_as_int(config, "playlist", "pane-pos"));
         }
+*/
 		TEC("set pane window settings")
         if (maximized)
             gtk_window_maximize(GTK_WINDOW(playlist3_get_window()));
@@ -1196,12 +1199,12 @@ void create_playlist3(void)
 
 	TEC("setup drag")
     /* A signal that responses on change of pane position */
-    g_signal_connect(G_OBJECT(gtk_builder_get_object(pl3_xml, "hpaned1")),
-        "notify::position", G_CALLBACK(pl3_win_pane_changed), NULL);
+//    g_signal_connect(G_OBJECT(gtk_builder_get_object(pl3_xml, "hpaned1")),
+  //      "notify::position", G_CALLBACK(pl3_win_pane_changed), NULL);
 
     /* update it */
-    pl3_win_pane_changed(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "hpaned1")), NULL, NULL);
-	TEC("setup pos notify")
+//    pl3_win_pane_changed(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "hpaned1")), NULL, NULL);
+//	TEC("setup pos notify")
     /**
      *
      */
@@ -1563,7 +1566,7 @@ static void playlist_zoom_level_changed(void)
     }
 
     /* Show full view */
-    gtk_widget_show(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "hpaned1")));
+    gtk_widget_show(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "hpaned1-hbox")));
     gtk_widget_show(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "hbox1")));
     gtk_widget_show(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "hbox10")));
     /** Menu Bar */
@@ -1591,12 +1594,13 @@ static void playlist_zoom_level_changed(void)
     gtk_action_set_visible(GTK_ACTION(gtk_builder_get_object(pl3_xml, "menu_option")),TRUE);
 	gtk_widget_show(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "sidebar_browsers_label_ali")));
 	/* restore pane position */
-	if (cfg_get_single_value_as_int(config, "playlist", "pane-pos") != CFG_INT_NOT_DEFINED)
+	gtk_widget_set_size_request(GTK_WIDGET(gtk_builder_get_object(pl3_xml,"sidebar")), 150,-1); 
+	/*if (cfg_get_single_value_as_int(config, "playlist", "pane-pos") != CFG_INT_NOT_DEFINED)
 	{
 		gtk_paned_set_position(GTK_PANED
 				(gtk_builder_get_object(pl3_xml, "hpaned1")),
 				cfg_get_single_value_as_int(config, "playlist", "pane-pos"));
-	}
+	}*/
 
     /* Now start hiding */
     switch (pl3_zoom)
@@ -1604,7 +1608,7 @@ static void playlist_zoom_level_changed(void)
         case PLAYLIST_NO_ZOOM:
             break;
         case PLAYLIST_MINI:
-            gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "hpaned1")));
+            gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "hpaned1-hbox")));
             gtk_action_set_visible(GTK_ACTION(gtk_builder_get_object(pl3_xml, "menu_option")),FALSE);
             gtk_action_set_visible(GTK_ACTION(gtk_builder_get_object(pl3_xml, "menu_go")),FALSE);
             if (pl3_win->window)
@@ -1627,10 +1631,12 @@ static void playlist_zoom_level_changed(void)
 			printf("set visible: off\n");
 			gmpc_metaimage_set_is_visible(GMPC_METAIMAGE(metaimage_artist_art), FALSE);
 			gtk_cell_renderer_set_visible(sidebar_text, FALSE);
-			gtk_paned_set_position(GTK_PANED
+/*			gtk_paned_set_position(GTK_PANED
 					(gtk_builder_get_object(pl3_xml, "hpaned1")),32);
+*/
 
-            gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "sidebar_browsers_label_ali")));
+			gtk_widget_set_size_request(GTK_WIDGET(gtk_builder_get_object(pl3_xml,"sidebar")), 32,-1); 
+			gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "sidebar_browsers_label_ali")));
             //gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "sidebar")));
 /*
             if (!cfg_get_single_value_as_int_with_default(config, "playlist", "button-heading", FALSE))

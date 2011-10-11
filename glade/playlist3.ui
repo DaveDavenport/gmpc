@@ -620,11 +620,11 @@
                     <property name="spacing">0</property>
                     <child>
             
-              <object class="GtkHPaned" id="hpaned1">
+              <object class="GtkHBox" id="hpaned1-hbox">
                 <property name="name">hpaned1</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="position">200</property>
+<!--                <property name="position">200</property>-->
                 <child>
                   <object class="GtkVBox" id="sidebar">
                     <property name="name">sidebar</property>
@@ -825,8 +825,10 @@
                     </child>
                   </object>
                   <packing>
-                    <property name="resize">False</property>
-                    <property name="shrink">True</property>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+<!--                    <property name="resize">False</property>
+                    <property name="shrink">True</property>-->
                   </packing>
                 </child>
                 <child>
@@ -846,8 +848,10 @@
                     </child>
                   </object>
                   <packing>
-                    <property name="resize">True</property>
-                    <property name="shrink">True</property>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+<!--                    <property name="resize">True</property>
+                    <property name="shrink">True</property>-->
                   </packing>
                 </child>
               </object>
