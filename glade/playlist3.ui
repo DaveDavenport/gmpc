@@ -571,6 +571,7 @@
                 <property name="position">1</property>
               </packing>
             </child>
+<!--
             <child>
               <object class="GtkAlignment" id="alignment_bread_crumb">
                 <property name="visible">True</property>
@@ -612,7 +613,7 @@
                 <property name="expand">False</property>
                 <property name="position">3</property>
               </packing>
-            </child>
+            </child-->
             <child>
                               <object class="GtkVBox" id="hpaned1_vbox">
                     <property name="visible">True</property>

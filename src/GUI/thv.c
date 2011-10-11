@@ -16,7 +16,7 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
- 
+#if 0 
 #include <gtk/gtk.h>
 #include "playlist3.h"
 #include "thv.h"
@@ -315,3 +315,4 @@ void thv_init(GtkTreeModel *model)
 }
 
 /* vim: set noexpandtab ts=4 sw=4 sts=4 tw=80: */
+#endif

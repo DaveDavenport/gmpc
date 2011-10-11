@@ -50,8 +50,9 @@ gmpc_WIDGETS_FILES=\
     GUI/control_window.c\
     GUI/title_header.c\
     GUI/status_icon.c\
-    GUI/cmd.c\
-    GUI/thv.c
+    GUI/cmd.c
+
+#    GUI/thv.c
 
 gmpc_TOOLS_FILES=\
     Tools/gmpc-database-update-tracker.vala\
@@ -291,9 +292,10 @@ EXTRA_DIST=\
         GUI/control_window.h\
         GUI/title_header.h\
         GUI/cmd.h\
-        GUI/thv.h\
         $(VALA_VAPI_FILES)\
         $(gmpc_GOBFILES)
+
+#        GUI/thv.h
 
 DISTCLEANFILES=\
 			   revision.h\

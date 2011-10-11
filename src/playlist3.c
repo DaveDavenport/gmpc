@@ -30,7 +30,7 @@
 #include "revision.h"
 #include "gmpc-metaimage.h"
 #include "gmpc-extras.h"
-#include "GUI/thv.h"
+//#include "GUI/thv.h"
 #include "GUI/cmd.h"
 #include "GUI/status_icon.h"
 #include "GUI/title_header.h"
@@ -238,7 +238,7 @@ static void pl3_cat_sel_changed(GtkTreeSelection * selec, gpointer * userdata)
     GtkWidget *container = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "browser_container"));
     if (!model)
         return;
-    thv_set_button_state(-1);
+    //thv_set_button_state(-1);
     if (gtk_tree_selection_get_selected(selec, &model, &iter))
     {
         gint type;
@@ -250,12 +250,12 @@ static void pl3_cat_sel_changed(GtkTreeSelection * selec, gpointer * userdata)
         /**
          * Reposition the breadcrumb
          */
-        path = gtk_tree_model_get_path(model, &iter);
-        ind = gtk_tree_path_get_indices(path);
-        gtk_combo_box_set_active(GTK_COMBO_BOX(gtk_builder_get_object(pl3_xml, "cb_cat_selector")), ind[0]);
+//        path = gtk_tree_model_get_path(model, &iter);
+//        ind = gtk_tree_path_get_indices(path);
+//        gtk_combo_box_set_active(GTK_COMBO_BOX(gtk_builder_get_object(pl3_xml, "cb_cat_selector")), ind[0]);
 
-        thv_set_button_state(ind[0]);
-        gtk_tree_path_free(path);
+        //thv_set_button_state(ind[0]);
+ //       gtk_tree_path_free(path);
 
         /**
          * Start switching side view (if type changed )
@@ -408,8 +408,8 @@ static gboolean pl3_win_state_event(GtkWidget * window, GdkEventWindowState * ev
 			gtk_box_pack_start(GTK_BOX(vbox1), control_window, FALSE, FALSE, 0);
 //			gtk_box_reorder_child(GTK_BOX(vbox1), control_window, 0);
 		}
-		gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "bread_crumb")));
-        gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "box_tab_bar")));
+//		gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "bread_crumb")));
+//        gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "box_tab_bar")));
         gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "sidebar")));
         gtk_widget_hide(p);
         gtk_widget_hide(h);
@@ -970,8 +970,8 @@ void create_playlist3(void)
     }
 	TEC("Setup pl3_tree")
 
-	thv_init(pl3_tree);
-	TEC("thv_init")
+	//thv_init(pl3_tree);
+//	TEC("thv_init")
 
     tree = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "cat_tree"));
 
@@ -1008,7 +1008,7 @@ void create_playlist3(void)
     /**
      * Bread Crumb system.
      */
-    pl3_crumbs = (GtkListStore *) (pl3_tree);
+/*    pl3_crumbs = (GtkListStore *) (pl3_tree);
     gtk_combo_box_set_model(GTK_COMBO_BOX
         (gtk_builder_get_object(pl3_xml, "cb_cat_selector")), GTK_TREE_MODEL(pl3_crumbs));
     renderer = gtk_cell_renderer_pixbuf_new();
@@ -1026,8 +1026,9 @@ void create_playlist3(void)
         "changed", G_CALLBACK(pl3_cat_combo_changed), NULL);
 
 	TEC("setup breadcrumb")
-    /* initialize the category view */
-    pl3_initialize_tree();
+  */
+		/* initialize the category view */
+		pl3_initialize_tree();
 
 	TEC("Init category tree")
     gtk_widget_show(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "vbox_playlist_player")));
@@ -1301,7 +1302,7 @@ G_MODULE_EXPORT void ck_show_tooltip_enable_tb(GtkToggleButton * but)
 
 G_MODULE_EXPORT void ck_show_tabbed_heading_enable_cb(GtkToggleButton * but)
 {
-    int bool1 = gtk_toggle_button_get_active(but);
+/*    int bool1 = gtk_toggle_button_get_active(but);
     int old = cfg_get_single_value_as_int_with_default(config, "playlist",
         "button-heading", FALSE);
     if (old == FALSE && bool1 == TRUE)
@@ -1321,6 +1322,7 @@ G_MODULE_EXPORT void ck_show_tabbed_heading_enable_cb(GtkToggleButton * but)
         }
     }
     cfg_set_single_value_as_int(config, "playlist", "button-heading", bool1);
+*/
 }
 
 
@@ -1583,8 +1585,8 @@ static void playlist_zoom_level_changed(void)
 	}
 	printf("set visible: on\n");
 	gtk_cell_renderer_set_visible(sidebar_text, TRUE);
-	gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "bread_crumb")));
-    gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "box_tab_bar")));
+//	gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "bread_crumb")));
+//    gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "box_tab_bar")));
     gtk_action_set_visible(GTK_ACTION(gtk_builder_get_object(pl3_xml, "menu_go")),TRUE);
     gtk_action_set_visible(GTK_ACTION(gtk_builder_get_object(pl3_xml, "menu_option")),TRUE);
 	gtk_widget_show(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "sidebar_browsers_label_ali")));

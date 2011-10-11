@@ -1,5 +1,6 @@
 #ifndef __THV_H__
 #define __THV_H__
+#if 0
 
 /**
  * THV
@@ -20,4 +21,5 @@ void thv_set_button_state(int button);
  * Use model as backend
  */
 void thv_init(GtkTreeModel *model);
+#endif
 #endif
