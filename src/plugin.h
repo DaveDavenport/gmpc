@@ -61,6 +61,7 @@ typedef enum
 	PL3_CAT_INT_ID, /* id */
 	PL3_CAT_ICON_ID, /* icon id */
 	PL3_CAT_ORDER, /* int for sorting the list */
+	PL3_CAT_BOLD,
 	PL3_CAT_NROWS
 } pl3_cat_store;
 

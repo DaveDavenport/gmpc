@@ -203,7 +203,7 @@ static void pl3_cat_sel_changed(GtkTreeSelection * selec, gpointer * userdata)
     {
         gint type;
 
-        gtk_tree_model_get(model, &iter, 0, &type, -1);
+        gtk_tree_model_get(model, &iter, PL3_CAT_TYPE, &type, -1);
 
 
         /**
@@ -214,11 +214,15 @@ static void pl3_cat_sel_changed(GtkTreeSelection * selec, gpointer * userdata)
             gmpc_plugin_browser_unselected(plugins[plugin_get_pos(old_type)], container);
         }
         old_type = -1;
-        /** if type changed give a selected signal */
-        if ((old_type != type))
-        {
-            gmpc_plugin_browser_selected(plugins[plugin_get_pos(type)], container);
-        }
+		if(type > -1)
+		{
+			/** if type changed give a selected signal */
+			if ((old_type != type))
+			{
+				gmpc_plugin_browser_selected(plugins[plugin_get_pos(type)], container);
+
+			}
+		}
         /**
          * update old value, so get_selected_category is correct before calling selection_changed
          */
@@ -807,7 +811,17 @@ void pl3_style_set_event( GtkWidget *widget,
         gtk_rc_parse_string("widget \"*header*\" style \"dark\"");
     }
 }
-
+gboolean pl3_cat_select_function(GtkTreeSelection *select, GtkTreeModel *model, GtkTreePath *path, gboolean cur_select, gpointer data)
+{
+	GtkTreeIter iter;
+	if(gtk_tree_model_get_iter(model, &iter, path))
+	{
+        gint type =0 ;
+        gtk_tree_model_get(model, &iter, PL3_CAT_TYPE, &type, -1);
+		if(type >= 0) return TRUE;
+	}
+	return FALSE;
+}
 void create_playlist3(void)
 {
     GtkWidget *pb,*ali;
@@ -901,15 +915,25 @@ void create_playlist3(void)
             G_TYPE_STRING,       /* display name */
             G_TYPE_STRING,       /* full path and stuff for backend */
             G_TYPE_STRING,       /* icon id */
-            G_TYPE_INT          /* ordering */
+            G_TYPE_INT,          /* ordering */
+			G_TYPE_INT
         };
         /* song id, song title */
         pl3_tree = (GtkTreeModel *) gmpc_tools_liststore_sort_new();
         gtk_list_store_set_column_types(GTK_LIST_STORE(pl3_tree), PL3_CAT_NROWS, types);
     }
 	TEC("Setup pl3_tree")
+	{
+		GtkTreeIter iter;
+		playlist3_insert_browser(&iter, 2);
+		gtk_list_store_set(GTK_LIST_STORE(pl3_tree), &iter,
+				PL3_CAT_TYPE,-1, PL3_CAT_TITLE, _("Browsers"),PL3_CAT_BOLD, PANGO_WEIGHT_ULTRABOLD,-1);
+	}
+
 
     tree = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "cat_tree"));
+	gtk_tree_selection_set_select_function(gtk_tree_view_get_selection(GTK_TREE_VIEW(tree)),
+			pl3_cat_select_function, pl3_tree, NULL);
 
     gtk_tree_view_set_model(GTK_TREE_VIEW(tree), GTK_TREE_MODEL(pl3_tree));
     sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(tree));
@@ -934,8 +958,9 @@ void create_playlist3(void)
     sidebar_text = renderer = gtk_cell_renderer_text_new();
     /* insert the column in the tree */
     gtk_tree_view_column_pack_start(column, renderer, TRUE);
-    gtk_tree_view_column_set_attributes(column, renderer, "text", PL3_CAT_TITLE, NULL);
+    gtk_tree_view_column_set_attributes(column, renderer,"weight", PL3_CAT_BOLD, "text", PL3_CAT_TITLE, NULL);
     g_object_set(renderer, "ellipsize", PANGO_ELLIPSIZE_END, NULL);
+    g_object_set(renderer, "weight-set", TRUE, NULL);
     gtk_tree_view_append_column(GTK_TREE_VIEW(tree), column);
     gtk_tree_view_set_search_column(GTK_TREE_VIEW(tree), PL3_CAT_TITLE);
     g_signal_connect_after(G_OBJECT(sel), "changed", G_CALLBACK(pl3_cat_sel_changed), NULL);
@@ -2142,7 +2167,7 @@ void playlist3_insert_browser(GtkTreeIter * iter, gint position)
         } while (sib == NULL && gtk_tree_model_iter_next(model, &it));
     }
     gtk_list_store_insert_before(GTK_LIST_STORE(pl3_tree), iter, sib);
-    gtk_list_store_set(GTK_LIST_STORE(pl3_tree), iter, PL3_CAT_ORDER, position, -1);
+    gtk_list_store_set(GTK_LIST_STORE(pl3_tree), iter, PL3_CAT_ORDER, position, PL3_CAT_BOLD, PANGO_WEIGHT_NORMAL, -1);
 }
 
 
