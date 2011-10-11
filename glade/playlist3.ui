@@ -571,49 +571,6 @@
                 <property name="position">1</property>
               </packing>
             </child>
-<!--
-            <child>
-              <object class="GtkAlignment" id="alignment_bread_crumb">
-                <property name="visible">True</property>
-                <property name="top_padding">0</property>
-                <child>
-                  <object class="GtkHBox" id="bread_crumb">
-                    <property name="spacing">6</property>
-                    <child>
-                      <object class="GtkComboBox" id="cb_cat_selector">
-                        <property name="visible">True</property>
-                      </object>
-                      <packing>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                  </object>
-                </child>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="position">2</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkAlignment" id="alignment_tab_bar">
-                <property name="visible">True</property>
-                <property name="top_padding">2</property>
-                <child>
-                  <object class="GtkHBox" id="box_tab_bar">
-                    <property name="visible">True</property>
-                    <property name="homogeneous">True</property>
-                    <child>
-                      <placeholder/>
-                    </child>
-                  </object>
-                </child>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="position">3</property>
-              </packing>
-            </child-->
             <child>
                               <object class="GtkVBox" id="hpaned1_vbox">
                     <property name="visible">True</property>
@@ -624,7 +581,6 @@
                 <property name="name">hpaned1</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-<!--                <property name="position">200</property>-->
                 <child>
                   <object class="GtkVBox" id="sidebar">
                     <property name="name">sidebar</property>
@@ -827,8 +783,6 @@
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-<!--                    <property name="resize">False</property>
-                    <property name="shrink">True</property>-->
                   </packing>
                 </child>
                 <child>
@@ -850,8 +804,6 @@
                   <packing>
                     <property name="expand">True</property>
                     <property name="fill">True</property>
-<!--                    <property name="resize">True</property>
-                    <property name="shrink">True</property>-->
                   </packing>
                 </child>
               </object>
@@ -891,28 +843,6 @@
         <child>
           <object class="GtkHBox" id="hbox1">
             <property name="visible">True</property>
-
-<!--
-            <child>
-              <object class="GtkStatusbar" id="statusbar1">
-                <property name="visible">True</property>
-                <property name="has_resize_grip">False</property>
-              </object>
-              <packing>
-                <property name="position">3</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkHBox" id="status-icon-hbox">
-                <property name="visible">True</property>
-                <property name="spacing">6</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="position">5</property>
-              </packing>
-            </child>
--->
           </object>
           <packing>
             <property name="expand">False</property>

@@ -88,22 +88,6 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkCheckButton" id="ck_show_tabbed_heading">
-                    <property name="label" translatable="yes">Show buttons navigation in collapsed view</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">False</property>
-                    <property name="use_action_appearance">False</property>
-                    <property name="draw_indicator">True</property>
-                    <signal name="toggled" handler="ck_show_tabbed_heading_enable_cb" swapped="no"/>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">4</property>
-                  </packing>
-                </child>
-                <child>
                   <object class="GtkCheckButton" id="ck_search_as_you_type">
                     <property name="label" translatable="yes">Enable search as you type. (Might be slow)</property>
                     <property name="visible">True</property>

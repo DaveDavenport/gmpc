@@ -30,7 +30,6 @@
 #include "revision.h"
 #include "gmpc-metaimage.h"
 #include "gmpc-extras.h"
-//#include "GUI/thv.h"
 #include "GUI/cmd.h"
 #include "GUI/status_icon.h"
 #include "GUI/title_header.h"
@@ -188,45 +187,6 @@ static void pl3_initialize_tree(void)
 }
 
 
-static void pl3_cat_combo_changed(GtkComboBox * box)
-{
-    GtkTreeIter iter;
-    GtkTreeSelection *selec = gtk_tree_view_get_selection((GtkTreeView *) gtk_builder_get_object(pl3_xml, "cat_tree"));
-    GtkTreeModel *model = gtk_tree_view_get_model((GtkTreeView *) gtk_builder_get_object(pl3_xml, "cat_tree"));
-    if (gtk_combo_box_get_active_iter(box, &iter))
-    {
-        GtkTreeIter cat_iter;
-        GtkTreePath *path = NULL;
-
-        path = gtk_tree_model_get_path(gtk_combo_box_get_model(box), &iter);
-        if (path && gtk_tree_model_get_iter(GTK_TREE_MODEL(pl3_tree), &cat_iter, path))
-        {
-            GtkTreeIter piter;
-            if (gtk_tree_selection_get_selected(selec, &model, &piter))
-            {
-                GtkTreePath *ppath = gtk_tree_model_get_path(model, &piter);
-                if (ppath && gtk_tree_path_is_descendant(ppath, path))
-                {
-                    gtk_tree_path_free(path);
-                    gtk_tree_path_free(ppath);
-                    return;
-                }
-                gtk_tree_path_free(ppath);
-            }
-            if (gtk_tree_path_get_depth(path) > 0)
-            {
-                if (!gtk_tree_selection_iter_is_selected(selec, &cat_iter))
-                {
-                    gtk_tree_selection_select_iter(selec, &cat_iter);
-                }
-            }
-        }
-        if (path)
-            gtk_tree_path_free(path);
-    }
-}
-
-
 /**
  * Function to handle a change in category.
  */
@@ -242,20 +202,9 @@ static void pl3_cat_sel_changed(GtkTreeSelection * selec, gpointer * userdata)
     if (gtk_tree_selection_get_selected(selec, &model, &iter))
     {
         gint type;
-        gint *ind;
-        GtkTreePath *path;
 
         gtk_tree_model_get(model, &iter, 0, &type, -1);
 
-        /**
-         * Reposition the breadcrumb
-         */
-//        path = gtk_tree_model_get_path(model, &iter);
-//        ind = gtk_tree_path_get_indices(path);
-//        gtk_combo_box_set_active(GTK_COMBO_BOX(gtk_builder_get_object(pl3_xml, "cb_cat_selector")), ind[0]);
-
-        //thv_set_button_state(ind[0]);
- //       gtk_tree_path_free(path);
 
         /**
          * Start switching side view (if type changed )
@@ -862,12 +811,10 @@ void pl3_style_set_event( GtkWidget *widget,
 void create_playlist3(void)
 {
     GtkWidget *pb,*ali;
-    GtkListStore *pl3_crumbs = NULL;
     GtkCellRenderer *renderer;
     GtkWidget *tree;
     GtkTreeSelection *sel;
     GtkTreeViewColumn *column = NULL;
-    //GtkStatusbar *statusbar;
     gchar *path = NULL;
     GtkTreeIter iter;
     GError *error = NULL;
@@ -916,16 +863,8 @@ void create_playlist3(void)
         "}\n"
         "widget \"*.sidebar.*\" style \"sidebar-treeview\"");
 
-    /** set handle size to 3px */
-    gtk_rc_parse_string (
-        "style \"hpaned1-style\"\n"
-        "{\n"
-        "   GtkPaned::handle-size = 3\n"
-        "}\n"
-        "widget \"*.hpaned1\" style \"hpaned1-style\"\n");
-
-    /** menubar */
-    gtk_rc_parse_string (
+	/** menubar */
+	gtk_rc_parse_string (
         "style \"menubar-style\"\n"
         "{\n"
         "   GtkMenuBar::shadow-type = none\n"
@@ -970,9 +909,6 @@ void create_playlist3(void)
     }
 	TEC("Setup pl3_tree")
 
-	//thv_init(pl3_tree);
-//	TEC("thv_init")
-
     tree = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "cat_tree"));
 
     gtk_tree_view_set_model(GTK_TREE_VIEW(tree), GTK_TREE_MODEL(pl3_tree));
@@ -1004,31 +940,10 @@ void create_playlist3(void)
     gtk_tree_view_set_search_column(GTK_TREE_VIEW(tree), PL3_CAT_TITLE);
     g_signal_connect_after(G_OBJECT(sel), "changed", G_CALLBACK(pl3_cat_sel_changed), NULL);
 
-	TEC("setup cat_tree")
-    /**
-     * Bread Crumb system.
-     */
-/*    pl3_crumbs = (GtkListStore *) (pl3_tree);
-    gtk_combo_box_set_model(GTK_COMBO_BOX
-        (gtk_builder_get_object(pl3_xml, "cb_cat_selector")), GTK_TREE_MODEL(pl3_crumbs));
-    renderer = gtk_cell_renderer_pixbuf_new();
-    gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(gtk_builder_get_object(pl3_xml, "cb_cat_selector")), renderer, FALSE);
-    gtk_cell_layout_add_attribute(GTK_CELL_LAYOUT
-        (gtk_builder_get_object
-        (pl3_xml, "cb_cat_selector")), renderer, "icon-name", PL3_CAT_ICON_ID);
+	TEC("setup cat_tree");
 
-    renderer = gtk_cell_renderer_text_new();
-    gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(gtk_builder_get_object(pl3_xml, "cb_cat_selector")), renderer, TRUE);
-    gtk_cell_layout_add_attribute(GTK_CELL_LAYOUT
-        (gtk_builder_get_object(pl3_xml, "cb_cat_selector")), renderer, "text", PL3_CAT_TITLE);
-
-    g_signal_connect(gtk_builder_get_object(pl3_xml, "cb_cat_selector"),
-        "changed", G_CALLBACK(pl3_cat_combo_changed), NULL);
-
-	TEC("setup breadcrumb")
-  */
-		/* initialize the category view */
-		pl3_initialize_tree();
+	/* initialize the category view */
+	pl3_initialize_tree();
 
 	TEC("Init category tree")
     gtk_widget_show(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "vbox_playlist_player")));
@@ -1056,8 +971,6 @@ void create_playlist3(void)
         ali = gtk_alignment_new(0.0, 0.5, 0.0, 0.0);
         gtk_container_add(GTK_CONTAINER(ali), GTK_WIDGET(favorites_button));
         gtk_box_pack_start(GTK_BOX(gtk_builder_get_object(pl3_xml, "hbox10")), GTK_WIDGET(ali), FALSE, FALSE, 0);
-//		gtk_box_reorder_child(GTK_BOX(gtk_builder_get_object(pl3_xml,
-//						"hbox10")),ali,0);
 		gtk_widget_show_all(GTK_WIDGET(ali));
 		TEC("Init fav icon")
 	}
@@ -1112,7 +1025,6 @@ void create_playlist3(void)
     gmpc_metaimage_set_cover_na(GMPC_METAIMAGE(metaimage_album_art));
 
     metaimage_artist_art = gmpc_metaimage_new(META_ARTIST_ART);
-//    gtk_box_pack_start(GTK_BOX(gtk_builder_get_object(pl3_xml, "sidebar_artist_image_alignment")), metaimage_artist_art, FALSE, TRUE, 0);
     gtk_container_add(GTK_CONTAINER(gtk_builder_get_object(pl3_xml, "sidebar_artist_image_alignment")), metaimage_artist_art);
 
     gmpc_metaimage_set_no_cover_icon(GMPC_METAIMAGE(metaimage_artist_art), (char *)"no-artist");
@@ -1152,14 +1064,7 @@ void create_playlist3(void)
 		TEC("resize window settings")
         /* restore pane position */
 		gtk_widget_set_size_request(GTK_WIDGET(gtk_builder_get_object(pl3_xml,"sidebar")), 150,-1); 
-/*
-        if (cfg_get_single_value_as_int(config, "playlist", "pane-pos") != CFG_INT_NOT_DEFINED)
-        {
-            gtk_paned_set_position(GTK_PANED
-                (gtk_builder_get_object(pl3_xml, "hpaned1")),
-                cfg_get_single_value_as_int(config, "playlist", "pane-pos"));
-        }
-*/
+
 		TEC("set pane window settings")
         if (maximized)
             gtk_window_maximize(GTK_WINDOW(playlist3_get_window()));
@@ -1198,13 +1103,6 @@ void create_playlist3(void)
         "drag_data_received", GTK_SIGNAL_FUNC(playlist3_source_drag_data_recieved), NULL);
 
 	TEC("setup drag")
-    /* A signal that responses on change of pane position */
-//    g_signal_connect(G_OBJECT(gtk_builder_get_object(pl3_xml, "hpaned1")),
-  //      "notify::position", G_CALLBACK(pl3_win_pane_changed), NULL);
-
-    /* update it */
-//    pl3_win_pane_changed(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "hpaned1")), NULL, NULL);
-//	TEC("setup pos notify")
     /**
      *
      */
@@ -1258,7 +1156,6 @@ GtkWidget* playlist3_get_widget_by_id(const char *id) {
 /* prototyping for glade */
 void ck_stop_on_exit_toggled_cb(GtkToggleButton * but, gpointer data);
 void ck_show_tooltip_enable_tb(GtkToggleButton * but);
-void ck_show_tabbed_heading_enable_cb(GtkToggleButton * but);
 
 G_MODULE_EXPORT void show_cover_case_tb(GtkToggleButton * but)
 {
@@ -1300,32 +1197,6 @@ G_MODULE_EXPORT void ck_show_tooltip_enable_tb(GtkToggleButton * but)
 {
     int bool1 = gtk_toggle_button_get_active(but);
     cfg_set_single_value_as_int(config, "GmpcTreeView", "show-tooltip", bool1);
-}
-
-
-G_MODULE_EXPORT void ck_show_tabbed_heading_enable_cb(GtkToggleButton * but)
-{
-/*    int bool1 = gtk_toggle_button_get_active(but);
-    int old = cfg_get_single_value_as_int_with_default(config, "playlist",
-        "button-heading", FALSE);
-    if (old == FALSE && bool1 == TRUE)
-    {
-        if (pl3_zoom == PLAYLIST_SMALL)
-        {
-            gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "bread_crumb")));
-            gtk_widget_show(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "box_tab_bar")));
-        }
-    }
-    if (old == TRUE && bool1 == FALSE)
-    {
-        if (pl3_zoom == PLAYLIST_SMALL)
-        {
-            gtk_widget_show(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "bread_crumb")));
-            gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "box_tab_bar")));
-        }
-    }
-    cfg_set_single_value_as_int(config, "playlist", "button-heading", bool1);
-*/
 }
 
 
@@ -1393,12 +1264,6 @@ void playlist_pref_construct(GtkWidget * container)
             (playlist_pref_xml, "ck_show_tooltip")),
             cfg_get_single_value_as_int_with_default
             (config, "GmpcTreeView", "show-tooltip", TRUE));
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON
-            (gtk_builder_get_object
-            (playlist_pref_xml,
-            "ck_show_tabbed_heading")),
-            cfg_get_single_value_as_int_with_default
-            (config, "playlist", "button-heading", FALSE));
 
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON
             (gtk_builder_get_object
@@ -1588,19 +1453,12 @@ static void playlist_zoom_level_changed(void)
 	}
 	printf("set visible: on\n");
 	gtk_cell_renderer_set_visible(sidebar_text, TRUE);
-//	gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "bread_crumb")));
-//    gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "box_tab_bar")));
     gtk_action_set_visible(GTK_ACTION(gtk_builder_get_object(pl3_xml, "menu_go")),TRUE);
     gtk_action_set_visible(GTK_ACTION(gtk_builder_get_object(pl3_xml, "menu_option")),TRUE);
 	gtk_widget_show(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "sidebar_browsers_label_ali")));
 	/* restore pane position */
 	gtk_widget_set_size_request(GTK_WIDGET(gtk_builder_get_object(pl3_xml,"sidebar")), 150,-1); 
-	/*if (cfg_get_single_value_as_int(config, "playlist", "pane-pos") != CFG_INT_NOT_DEFINED)
-	{
-		gtk_paned_set_position(GTK_PANED
-				(gtk_builder_get_object(pl3_xml, "hpaned1")),
-				cfg_get_single_value_as_int(config, "playlist", "pane-pos"));
-	}*/
+
 
     /* Now start hiding */
     switch (pl3_zoom)
@@ -1631,19 +1489,8 @@ static void playlist_zoom_level_changed(void)
 			printf("set visible: off\n");
 			gmpc_metaimage_set_is_visible(GMPC_METAIMAGE(metaimage_artist_art), FALSE);
 			gtk_cell_renderer_set_visible(sidebar_text, FALSE);
-/*			gtk_paned_set_position(GTK_PANED
-					(gtk_builder_get_object(pl3_xml, "hpaned1")),32);
-*/
-
 			gtk_widget_set_size_request(GTK_WIDGET(gtk_builder_get_object(pl3_xml,"sidebar")), 32,-1); 
 			gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "sidebar_browsers_label_ali")));
-            //gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "sidebar")));
-/*
-            if (!cfg_get_single_value_as_int_with_default(config, "playlist", "button-heading", FALSE))
-                gtk_widget_show(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "bread_crumb")));
-            else
-                gtk_widget_show(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "box_tab_bar")));
-*/
             gtk_widget_grab_focus(pl3_win);
         default:
             break;
