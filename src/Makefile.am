@@ -47,6 +47,7 @@ gmpc_WIDGETS_FILES=\
     Widgets/gmpc-metadata-text-label.vala\
     Widgets/gmpc-metadata-similarsongs.vala\
     Widgets/gmpc-metadata-similarartists.vala\
+	Widgets/gmpc-sidebar-view.vala\
     GUI/control_window.c\
     GUI/title_header.c\
     GUI/status_icon.c\

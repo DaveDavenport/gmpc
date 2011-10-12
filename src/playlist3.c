@@ -928,6 +928,12 @@ void create_playlist3(void)
 		playlist3_insert_browser(&iter, 2);
 		gtk_list_store_set(GTK_LIST_STORE(pl3_tree), &iter,
 				PL3_CAT_TYPE,-1, PL3_CAT_TITLE, _("Browsers"),PL3_CAT_BOLD, PANGO_WEIGHT_ULTRABOLD,-1);
+		playlist3_insert_browser(&iter, 10);
+		gtk_list_store_set(GTK_LIST_STORE(pl3_tree), &iter,
+				PL3_CAT_TYPE,-1, PL3_CAT_TITLE, _("Online Media"),PL3_CAT_BOLD, PANGO_WEIGHT_ULTRABOLD,-1);
+		playlist3_insert_browser(&iter, 8);
+		gtk_list_store_set(GTK_LIST_STORE(pl3_tree), &iter,
+				PL3_CAT_TYPE,-1, PL3_CAT_TITLE, _("Plugins"),PL3_CAT_BOLD, PANGO_WEIGHT_ULTRABOLD,-1);
 	}
 
 
@@ -938,10 +944,10 @@ void create_playlist3(void)
     gtk_tree_view_set_model(GTK_TREE_VIEW(tree), GTK_TREE_MODEL(pl3_tree));
     sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(tree));
     gtk_tree_selection_set_mode(GTK_TREE_SELECTION(sel), GTK_SELECTION_BROWSE);
-    //gtk_tree_view_set_reorderable(GTK_TREE_VIEW(tree), TRUE);
+    gtk_tree_view_set_reorderable(GTK_TREE_VIEW(tree), TRUE);
 
-    renderer = gtk_cell_renderer_pixbuf_new();
-    renderer->xalign = 1;
+    sidebar_text = renderer = my_cell_renderer_new();//gtk_cell_renderer_pixbuf_new();
+    g_object_set(G_OBJECT(renderer), "xalign", 0.5,NULL);
     column = gtk_tree_view_column_new();
     gtk_tree_view_column_pack_start(column, renderer, FALSE);
     g_object_set(G_OBJECT(renderer), "stock-size", GTK_ICON_SIZE_MENU, NULL);
@@ -950,17 +956,22 @@ void create_playlist3(void)
         if (gtk_icon_size_lookup(GTK_ICON_SIZE_MENU, &w, &h))
         {
             g_object_set(G_OBJECT(renderer), "height", h+10, NULL);
-            g_object_set(G_OBJECT(renderer), "width", w+6,NULL);
+            g_object_set(G_OBJECT(renderer), "image-width", w,NULL);
         }
     }
-    gtk_tree_view_column_set_attributes(column, renderer, "icon-name", PL3_CAT_ICON_ID, NULL);
-
+    gtk_tree_view_column_set_attributes(column, renderer,
+			"icon-name", PL3_CAT_ICON_ID,
+			"text", PL3_CAT_TITLE, 
+			"weight", PL3_CAT_BOLD, NULL);
+    g_object_set(renderer, "weight-set", TRUE, NULL);
+/*
     sidebar_text = renderer = gtk_cell_renderer_text_new();
-    /* insert the column in the tree */
-    gtk_tree_view_column_pack_start(column, renderer, TRUE);
+  */  /* insert the column in the tree */
+   /* gtk_tree_view_column_pack_start(column, renderer, TRUE);
     gtk_tree_view_column_set_attributes(column, renderer,"weight", PL3_CAT_BOLD, "text", PL3_CAT_TITLE, NULL);
     g_object_set(renderer, "ellipsize", PANGO_ELLIPSIZE_END, NULL);
     g_object_set(renderer, "weight-set", TRUE, NULL);
+*/
     gtk_tree_view_append_column(GTK_TREE_VIEW(tree), column);
     gtk_tree_view_set_search_column(GTK_TREE_VIEW(tree), PL3_CAT_TITLE);
     g_signal_connect_after(G_OBJECT(sel), "changed", G_CALLBACK(pl3_cat_sel_changed), NULL);
@@ -1477,10 +1488,10 @@ static void playlist_zoom_level_changed(void)
 		gtk_widget_show(metaimage_artist_art);
 	}
 	printf("set visible: on\n");
-	gtk_cell_renderer_set_visible(sidebar_text, TRUE);
-    gtk_action_set_visible(GTK_ACTION(gtk_builder_get_object(pl3_xml, "menu_go")),TRUE);
+	//gtk_cell_renderer_set_visible(sidebar_text, TRUE);
+	g_object_set(sidebar_text, "show_text", TRUE, NULL);
+	gtk_action_set_visible(GTK_ACTION(gtk_builder_get_object(pl3_xml, "menu_go")),TRUE);
     gtk_action_set_visible(GTK_ACTION(gtk_builder_get_object(pl3_xml, "menu_option")),TRUE);
-	gtk_widget_show(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "sidebar_browsers_label_ali")));
 	/* restore pane position */
 	gtk_widget_set_size_request(GTK_WIDGET(gtk_builder_get_object(pl3_xml,"sidebar")), 150,-1); 
 
@@ -1513,9 +1524,9 @@ static void playlist_zoom_level_changed(void)
 		case PLAYLIST_SMALL:
 			printf("set visible: off\n");
 			gmpc_metaimage_set_is_visible(GMPC_METAIMAGE(metaimage_artist_art), FALSE);
-			gtk_cell_renderer_set_visible(sidebar_text, FALSE);
+			//gtk_cell_renderer_set_visible(sidebar_text, FALSE);
+			g_object_set(sidebar_text, "show_text", FALSE, NULL);
 			gtk_widget_set_size_request(GTK_WIDGET(gtk_builder_get_object(pl3_xml,"sidebar")), 32,-1); 
-			gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "sidebar_browsers_label_ali")));
             gtk_widget_grab_focus(pl3_win);
         default:
             break;
