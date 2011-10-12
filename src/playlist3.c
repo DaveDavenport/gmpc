@@ -425,6 +425,38 @@ int pl3_window_key_press_event(GtkWidget * mw, GdkEventKey * event)
             gmpc_plugin_browser_key_press_event(plugins[i], mw, event, type);
         }
     }
+	if((event->state&GDK_MOD1_MASK) > 0)
+	{
+		guint kev = event->keyval;
+		if(kev >= GDK_KEY_0 && kev <= GDK_KEY_9)
+		{
+			int index = 0;
+			GtkTreeIter iter;
+			kev-=GDK_KEY_0;
+			if (gtk_tree_model_get_iter_first(pl3_tree, &iter))
+			{
+				if(kev == 0) kev+=10;
+				do{
+					gint type =0 ;
+					gtk_tree_model_get(pl3_tree, &iter, PL3_CAT_TYPE, &type, -1);
+					if(type >= 0) index++;
+					if(index == kev && type >= 0) 
+					{
+						GtkWidget *cat_tree = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "cat_tree"));
+						GtkTreeSelection *select = gtk_tree_view_get_selection(GTK_TREE_VIEW(cat_tree));
+
+						// if this is allready selected, do +10. this allows us to go up to 20 browsers.
+						if(type == old_type  && gtk_tree_selection_iter_is_selected(select, &iter)) {
+							kev+=10;	
+						}else{
+							gtk_tree_selection_select_iter(select, &iter);
+							return;
+						}
+					}
+				}while(gtk_tree_model_iter_next(pl3_tree, &iter));
+			}
+		}
+	}
 
     /* don't propagate */
     return FALSE;
