@@ -367,7 +367,7 @@ static gboolean pl3_win_state_event(GtkWidget * window, GdkEventWindowState * ev
         gtk_widget_hide(p);
         gtk_widget_hide(h);
         gtk_widget_hide(b);
-    } else
+    } else if ((event->changed_mask) & GDK_WINDOW_STATE_FULLSCREEN)
     {
 		control_window_destroy(control_window);
 		control_window = NULL;
@@ -1442,6 +1442,7 @@ void playlist_zoom_in(void)
 static void playlist_zoom_level_changed(void)
 {
     GtkWidget *pl3_win = playlist3_get_window();
+	printf("playlist3 zoom level changed\n");
 
     if (pl3_old_zoom <= PLAYLIST_SMALL)
     {
