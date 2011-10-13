@@ -361,7 +361,7 @@ static void pl3_file_browser_add(GtkWidget * cat_tree)
 	pos = cfg_get_single_value_as_int_with_default(config, "file-browser", "position", 2);
 
 	TEC("get pos ")
-	playlist3_insert_browser(&iter, pos);
+	playlist3_insert_browser(&iter, PL3_CAT_BROWSER_LIBRARY+pos%PL3_CAT_BROWSER_LIBRARY);
 	TEC("insert browser")
 	gtk_list_store_set(GTK_LIST_STORE(pl3_tree), &iter,
 					   PL3_CAT_TYPE, file_browser_plug.id,

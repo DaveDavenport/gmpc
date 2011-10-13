@@ -2166,7 +2166,8 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         Gtk.ListStore store = (Gtk.ListStore)tree.get_model();
         Gtk.TreeModel model = tree.get_model();
         Gtk.TreeIter iter;
-        Gmpc.Browser.insert(out iter, config.get_int_with_default(this.get_name(), "position", 100));
+        Gmpc.Browser.insert(out iter, 
+Playlist.BrowserType.LIBRARY+config.get_int_with_default(this.get_name(), "position", 100)%Playlist.BrowserType.LIBRARY);
         store.set(iter, 0, this.id, 1, _(this.get_name()), 3, "gmpc-metabrowser");
         /* Create a row reference */
         this.rref = new Gtk.TreeRowReference(model,  model.get_path(iter));

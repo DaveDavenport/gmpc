@@ -444,7 +444,7 @@ static void pl3_current_playlist_browser_add(GmpcPluginBrowserIface * obj, GtkWi
 	GtkTreeIter iter;
 	GtkTreePath *path;
 	gint pos = cfg_get_single_value_as_int_with_default(config, "current-playlist", "position", 0);
-	playlist3_insert_browser(&iter, pos);
+	playlist3_insert_browser(&iter, PL3_CAT_BROWSER_TOP+1);
 	gtk_list_store_set(GTK_LIST_STORE(pl3_tree), &iter, PL3_CAT_TYPE, GMPC_PLUGIN_BASE(self)->id /*current_playlist_plug.id */ ,	/*PL3_CURRENT_PLAYLIST, */
 					   PL3_CAT_TITLE, _(gmpc_plugin_base_get_name(GMPC_PLUGIN_BASE(self))),
 					   PL3_CAT_ICON_ID, "playlist-browser", -1);

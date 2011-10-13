@@ -151,7 +151,7 @@ static void tag2_browser_add_browser(GtkWidget * cat_tree, char *key)
 	GtkListStore *tree = (GtkListStore *) gtk_tree_view_get_model(GTK_TREE_VIEW(cat_tree));
 	gint pos = cfg_get_single_value_as_int_with_default(config, group, "position", 50 + g_list_length(tag2_ht));
 	g_free(group);
-	playlist3_insert_browser(&iter, pos);
+	playlist3_insert_browser(&iter, PL3_CAT_BROWSER_LIBRARY+pos%PL3_CAT_BROWSER_LIBRARY);
 	gtk_list_store_set(tree, &iter,
 					   PL3_CAT_TYPE, tag2_plug.id,
 					   PL3_CAT_TITLE, name, PL3_CAT_INT_ID, key, PL3_CAT_ICON_ID, "tag-browser", -1);

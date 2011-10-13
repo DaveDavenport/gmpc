@@ -173,7 +173,7 @@ void playlist_editor_browser_add(GtkWidget * cat_tree)
 	if (!cfg_get_single_value_as_int_with_default(config, "playlist-plugin", "enable", TRUE))
 		return;
 
-	playlist3_insert_browser(&iter, pos);
+	playlist3_insert_browser(&iter, PL3_CAT_BROWSER_LIBRARY+pos%PL3_CAT_BROWSER_LIBRARY);
 	gtk_list_store_set(store, &iter,
 					   PL3_CAT_TYPE, playlist_editor_plugin.id,
 					   PL3_CAT_TITLE, _("Playlist Editor"), PL3_CAT_ICON_ID, "media-playlist", -1);

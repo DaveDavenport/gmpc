@@ -303,7 +303,7 @@ static void pl3_find2_browser_add(GtkWidget * cat_tree)
 	GtkTreePath *path = NULL;
 	GtkTreeIter iter;
 	gint pos = cfg_get_single_value_as_int_with_default(config, "find2-browser", "position", 4);
-	playlist3_insert_browser(&iter, pos);
+	playlist3_insert_browser(&iter, PL3_CAT_BROWSER_LIBRARY+pos%PL3_CAT_BROWSER_LIBRARY);
 	gtk_list_store_set(GTK_LIST_STORE(pl3_tree), &iter,
 					   PL3_CAT_TYPE, find2_browser_plug.id,
 					   PL3_CAT_TITLE, _("Search"), PL3_CAT_ICON_ID, "gtk-find", -1);

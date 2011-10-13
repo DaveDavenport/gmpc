@@ -175,7 +175,7 @@ namespace Gmpc {
                 Gtk.ListStore store = (Gtk.ListStore)tree.get_model();
                 Gtk.TreeModel model = tree.get_model();
                 Gtk.TreeIter iter;
-                Gmpc.Browser.insert(out iter, config.get_int_with_default(this.get_name(), "position", 0));
+                Gmpc.Browser.insert(out iter, Gmpc.Playlist.BrowserType.TOP);
                 store.set(iter, 0, this.id, 1, this.get_name(), 3, "media-audiofile");
                 /* Create a row reference */
                 this.np_ref = new Gtk.TreeRowReference(model,  model.get_path(iter));

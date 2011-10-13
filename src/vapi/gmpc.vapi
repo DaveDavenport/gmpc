@@ -266,6 +266,14 @@ namespace Gmpc {
 
 
     namespace Playlist {
+
+		[CCode (cname="Pl3CatBrowserType", cprefix="PL3_CAT_BROWSER_", cheader_filename="plugin.h")]
+		public enum BrowserType{
+			TOP,
+			LIBRARY,
+			ONLINE_MEDIA,
+			MISC
+		}
         [CCode (cname="(GtkWindow *)playlist3_get_window", cheader_filename="plugin.h")]
         public unowned Gtk.Window get_window();
         [CCode (cname="playlist3_window_is_hidden", cheader_filename="plugin.h")]
