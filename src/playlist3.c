@@ -968,7 +968,7 @@ void create_playlist3(void)
 
 		playlist3_insert_browser(&iter, PL3_CAT_BROWSER_MISC);
 		gtk_list_store_set(GTK_LIST_STORE(pl3_tree), &iter,
-				PL3_CAT_TYPE,-1, PL3_CAT_TITLE, _("Plugins"),PL3_CAT_BOLD, PANGO_WEIGHT_ULTRABOLD,-1);
+				PL3_CAT_TYPE,-1, PL3_CAT_TITLE, _("Misc."),PL3_CAT_BOLD, PANGO_WEIGHT_ULTRABOLD,-1);
 	}
 
 
