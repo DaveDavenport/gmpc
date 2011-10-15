@@ -611,7 +611,7 @@
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="headers_visible">False</property>
-                                    <property name="rules_hint">True</property>
+                                    <property name="rules_hint">False</property>
                                     <property name="enable_search">False</property>
                                     <signal name="button-press-event" handler="pl3_cat_tree_button_press_event" swapped="no"/>
                                     <signal name="button-release-event" handler="pl3_cat_tree_button_release_event" swapped="no"/>
