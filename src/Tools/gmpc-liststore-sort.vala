@@ -73,7 +73,35 @@ namespace Tools
             }
             return false;
         }
-    }
-    }
+		private
+		bool row_drop_possible (Gtk.TreePath dest_path, Gtk.SelectionData data)
+		{
+			if(dest_path != null)
+			{
+				Gtk.TreePath path = null;
+				Gtk.TreeModel model = null;
+				if(Gtk.tree_get_row_drag_data(data, out model, out path))
+				{
+					Gtk.TreeIter iter;
+					int source = -1;
+					int dest = -1;
+					if(model.get_iter(out iter, path)) {
+						model.get(iter, 4, out source);	
+						if(model.get_iter(out iter, dest_path))
+						{
+							model.get(iter, 4, out dest);
+							// only in current category, and not above the separator!!!
+							if(source/1000 == dest/1000 && dest%1000 != 0){
+								return true;
+							} 
+						}
+
+					}	
+				}
+			}
+			return false;
+		}
+	}
+}
 }
 

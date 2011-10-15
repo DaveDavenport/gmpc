@@ -979,7 +979,7 @@ void create_playlist3(void)
     gtk_tree_view_set_model(GTK_TREE_VIEW(tree), GTK_TREE_MODEL(pl3_tree));
     sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(tree));
     gtk_tree_selection_set_mode(GTK_TREE_SELECTION(sel), GTK_SELECTION_BROWSE);
-//    gtk_tree_view_set_reorderable(GTK_TREE_VIEW(tree), TRUE);
+    gtk_tree_view_set_reorderable(GTK_TREE_VIEW(tree), TRUE);
 
     sidebar_text = renderer = my_cell_renderer_new();//gtk_cell_renderer_pixbuf_new();
     g_object_set(G_OBJECT(renderer), "xalign", 0.5,NULL);
