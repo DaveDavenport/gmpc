@@ -96,7 +96,7 @@ static void extra_playlist_remove(void) {
     if(extraplaylist == NULL) return;
 
     if (includes_sidebar) {
-        temp = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "hpaned1"));
+        temp = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "hpaned1-hbox"));
         g_object_ref(temp);
 
         extra_playlist_save();
@@ -133,7 +133,7 @@ static void extra_playlist_remove(void) {
         extraplaylist = NULL;
         gtk_widget_destroy(extraplaylist_paned);
         extraplaylist = NULL;
-        gtk_paned_pack2(GTK_PANED(gtk_builder_get_object(pl3_xml,"hpaned1")),temp, TRUE, TRUE);
+        gtk_box_pack_end(GTK_BOX(gtk_builder_get_object(pl3_xml,"hpaned1-hbox")),temp, TRUE, TRUE,0);
     }
 
 }
@@ -151,7 +151,7 @@ static void extra_playlist_add(void) {
     if ((cfg_get_single_value_as_int_with_default(config, "extraplaylist", "include-sidebar",FALSE)) &&
        (cfg_get_single_value_as_int_with_default(config, "extraplaylist", "vertical-layout", TRUE))) {
         includes_sidebar = TRUE;
-        temp = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "hpaned1"));
+        temp = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "hpaned1-hbox"));
     }
     else {
         includes_sidebar = FALSE;
@@ -173,12 +173,11 @@ static void extra_playlist_add(void) {
         extraplaylist_paned = gtk_hpaned_new();
     }
 
-    if ((cfg_get_single_value_as_int_with_default(config, "extraplaylist", "include-sidebar",FALSE)) &&
-       (cfg_get_single_value_as_int_with_default(config, "extraplaylist", "vertical-layout", TRUE))) {
+    if (includes_sidebar) {
         gtk_container_remove(GTK_CONTAINER(gtk_builder_get_object(pl3_xml,"hpaned1_vbox")),temp);
     }
     else {
-        gtk_container_remove(GTK_CONTAINER(gtk_builder_get_object(pl3_xml,"hpaned1")),temp);
+        gtk_container_remove(GTK_CONTAINER(gtk_builder_get_object(pl3_xml,"hpaned1-hbox")),temp);
     }
 
     if(!cfg_get_single_value_as_int_with_default(config, "extraplaylist", "vertical-layout-swapped",FALSE))
@@ -190,16 +189,15 @@ static void extra_playlist_add(void) {
         gtk_paned_pack1(GTK_PANED(extraplaylist_paned), extraplaylist, TRUE, TRUE); 
     }
 
-    if ((cfg_get_single_value_as_int_with_default(config, "extraplaylist", "include-sidebar",FALSE)) &&
-       (cfg_get_single_value_as_int_with_default(config, "extraplaylist", "vertical-layout", TRUE))) {
+    if (includes_sidebar) {
         gtk_container_add(GTK_CONTAINER(gtk_builder_get_object(pl3_xml,"hpaned1_vbox")),extraplaylist_paned);
     }
     else {
-        gtk_paned_pack2(GTK_PANED(gtk_builder_get_object(pl3_xml, "hpaned1")), extraplaylist_paned,TRUE, TRUE);//, TRUE, TRUE, 0);
+        gtk_box_pack_end(GTK_BOX(gtk_builder_get_object(pl3_xml, "hpaned1-hbox")), extraplaylist_paned,TRUE, TRUE,0);
     }
 
 
-	gtk_paned_set_position(GTK_PANED(extraplaylist_paned),cfg_get_single_value_as_int_with_default(config, "extraplaylist", "paned-pos", 400));
+//	gtk_paned_set_position(GTK_PANED(extraplaylist_paned),cfg_get_single_value_as_int_with_default(config, "extraplaylist", "paned-pos", 400));
 
 	gtk_widget_show(extraplaylist_paned);
     gtk_widget_hide(extraplaylist);
