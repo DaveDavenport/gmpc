@@ -477,6 +477,7 @@ namespace Gmpc {
     namespace Preferences {
         [CCode (cname="preferences_window_update", cheader_filename="preferences.h")]
         public void update();
-
+		[CCode (cname="preferences_show_pref_window", cheader_filename="preferences.h")]
+		public void show(int id);
     }
 }

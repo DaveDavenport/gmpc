@@ -491,11 +491,6 @@ gboolean pl3_close(void)
             cfg_set_single_value_as_int(config, "playlist", "width", pl3_wsize.width);
             cfg_set_single_value_as_int(config, "playlist", "height", pl3_wsize.height);
         }
-        if (pl3_zoom < PLAYLIST_SMALL)
-        {
-            cfg_set_single_value_as_int(config, "playlist", "pane-pos",
-                gtk_paned_get_position(GTK_PANED(gtk_builder_get_object(pl3_xml, "hpaned1-hbox"))));
-        }
     }
 
     if (cfg_get_single_value_as_int_with_default(config, "playlist", "hide-on-close", FALSE))
@@ -552,10 +547,7 @@ int pl3_hide(void)
             g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "pl3_hide: save size: %i %i\n", pl3_wsize.width, pl3_wsize.height);
             cfg_set_single_value_as_int(config, "playlist", "width", pl3_wsize.width);
             cfg_set_single_value_as_int(config, "playlist", "height", pl3_wsize.height);
-        }else if (pl3_zoom < PLAYLIST_SMALL) {
-/*            cfg_set_single_value_as_int(config, "playlist", "pane-pos",
-                gtk_paned_get_position(GTK_PANED(gtk_builder_get_object(pl3_xml, "hpaned1"))));
-*/		}
+		}
         gtk_widget_hide(pl3_win);
         pl3_hidden = TRUE;
     }

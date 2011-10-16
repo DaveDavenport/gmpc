@@ -155,11 +155,21 @@ public class Gmpc.Plugins.AutoMPD:
 			status_icon.show();
 			return false;
 		}
-		status_icon = new Gtk.Image.from_icon_name("mpd", Gtk.IconSize.MENU); 
-		status_icon.show();
+		status_icon = new Gtk.EventBox();
+		var image =  new Gtk.Image.from_icon_name("mpd", Gtk.IconSize.MENU); 
+		(status_icon as Gtk.Container).add(image);
+		status_icon.show_all();
 		status_icon.set_no_show_all(true);
 		status_icon.set_tooltip_text(_("Local (started by GMPC) MPD is running"));
 		Gmpc.Playlist3.add_status_icon(status_icon);
+
+		status_icon.button_release_event.connect((source, event)=>{
+			if(event.button == 1) {
+				Gmpc.Preferences.show(this.id);
+
+			}
+			return false;
+		});
 		return false;	
 	}
 
