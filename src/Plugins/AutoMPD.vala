@@ -558,6 +558,21 @@ public class Gmpc.Plugins.AutoMPD:
 				{
 					/* not running, update status icon */
 					hide_status_icon();
+					// Restart MPD!!
+					start_mpd();
+				}
+			}
+		}
+		else
+		{
+			/* we are disconnected, check if it was from our MPD */
+			if(profiles.get_current_id() == auto_mpd_id)
+			{
+				/* check if mpd is still runing */
+				if(check_mpd())
+				{
+					/* not running, update status icon */
+					create_status_icon();
 				}
 			}
 		}
