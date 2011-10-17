@@ -877,21 +877,6 @@ void create_playlist3(void)
         gtk_rc_parse_string("widget \"*header*\" style \"dark\"");
     }
 
-    /** murrine hack */
-    if (cfg_get_single_value_as_int_with_default(config, "Default", "murrine-hack", FALSE))
-    {
-        GdkScreen *screen;
-        GdkColormap *colormap;
-        GtkWidget *win = playlist3_get_window();
-
-        screen = gtk_window_get_screen(GTK_WINDOW(win));
-        colormap = gdk_screen_get_rgba_colormap(screen);
-
-        if (colormap)
-            gtk_widget_set_default_colormap(colormap);
-		TEC("Murrine hack")
-	}
-
     /** use background color for the sidebar treeview cells */
     gtk_rc_parse_string (
         "style \"sidebar-treeview\"\n"
