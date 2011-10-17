@@ -22,6 +22,8 @@ using Gtk;
 using Gmpc;
 using Gmpc.Plugin;
 
+const string GSBP_LOG_DOMAIN  = "Gmpc.Sidebar.Plugins";
+
 public class Gmpc.Sidebar.Plugins {
     private static ListStore store;
     private static HashTable<SidebarIface, TreeIter?> hashtable;
@@ -162,7 +164,7 @@ public class Gmpc.Sidebar.Plugins {
                                      typeof(int),           // position
                                      typeof(SidebarIface),  // plugin
                                      typeof(VBox));         // Widget
-    
+		log(GSBP_LOG_DOMAIN, GLib.LogLevelFlags.LEVEL_DEBUG, "Initializing sidebar plugin");
         TreeIter iter;
         store.append(out iter);
         store.set(iter, 0, plugin.get_enabled(),

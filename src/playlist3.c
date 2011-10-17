@@ -198,7 +198,6 @@ static void pl3_cat_sel_changed(GtkTreeSelection * selec, gpointer * userdata)
     GtkWidget *container = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "browser_container"));
     if (!model)
         return;
-    //thv_set_button_state(-1);
     if (gtk_tree_selection_get_selected(selec, &model, &iter))
     {
         gint type;
@@ -337,9 +336,10 @@ void pl3_sidebar_plugins_init(void)
     int i;
     for (i = 0; i < num_plugins; i++)
     {
-        if (GMPC_PLUGIN_IS_SIDEBAR_IFACE((plugins[i])->new))
+		// This is implicitely done inside sidebar_init
+//        if (gmpc_plugin_is_sidebar(plugins[i]))
         {
-            gmpc_sidebar_plugins_init((GmpcPluginSidebarIface*)(plugins[i])->new);
+			gmpc_plugin_sidebar_init(plugins[i]);
         }
     }
 }
@@ -359,10 +359,7 @@ static gboolean pl3_win_state_event(GtkWidget * window, GdkEventWindowState * ev
 		if(control_window == NULL) {
 			control_window = create_control_window(window);
 			gtk_box_pack_start(GTK_BOX(vbox1), control_window, FALSE, FALSE, 0);
-//			gtk_box_reorder_child(GTK_BOX(vbox1), control_window, 0);
 		}
-//		gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "bread_crumb")));
-//        gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "box_tab_bar")));
         gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "sidebar")));
         gtk_widget_hide(p);
         gtk_widget_hide(h);
@@ -676,30 +673,6 @@ void pl3_pb_seek_event(GtkWidget * pb, guint seek_time, gpointer user_data)
 }
 
 
-/**
- * When the position of the slider change, update the artist image
- */
-/*static void pl3_win_pane_changed(GtkWidget * panel, GParamSpec * arg1, gpointer data)
-{
-    gint position = 0;
-    gint max_size = cfg_get_single_value_as_int_with_default(config, "playlist",
-        "artist-size", 300);
-    gint size;
-    g_object_get(G_OBJECT(panel), "position", &position, NULL);
-    position -= 6;
-  */  /* force minimum size 16 */
-  /*  if (position < 6)
-        position = 6;
-    size = ((position) > max_size) ? max_size : (position);
-
-    if (gmpc_metaimage_get_size(GMPC_METAIMAGE(metaimage_artist_art)) != size)
-    {
-        gmpc_metaimage_set_size(GMPC_METAIMAGE(metaimage_artist_art), size);
-        gmpc_metaimage_reload_image(GMPC_METAIMAGE(metaimage_artist_art));
-    }
-
-}
-*/
 
 static void about_dialog_activate(GtkWidget * dialog, const gchar * uri, gpointer data)
 {
@@ -976,14 +949,7 @@ void create_playlist3(void)
 			"text", PL3_CAT_TITLE, 
 			"weight", PL3_CAT_BOLD, NULL);
     g_object_set(renderer, "weight-set", TRUE, NULL);
-/*
-    sidebar_text = renderer = gtk_cell_renderer_text_new();
-  */  /* insert the column in the tree */
-   /* gtk_tree_view_column_pack_start(column, renderer, TRUE);
-    gtk_tree_view_column_set_attributes(column, renderer,"weight", PL3_CAT_BOLD, "text", PL3_CAT_TITLE, NULL);
-    g_object_set(renderer, "ellipsize", PANGO_ELLIPSIZE_END, NULL);
-    g_object_set(renderer, "weight-set", TRUE, NULL);
-*/
+
     gtk_tree_view_append_column(GTK_TREE_VIEW(tree), column);
     gtk_tree_view_set_search_column(GTK_TREE_VIEW(tree), PL3_CAT_TITLE);
     g_signal_connect_after(G_OBJECT(sel), "changed", G_CALLBACK(pl3_cat_sel_changed), NULL);
@@ -1500,8 +1466,6 @@ static void playlist_zoom_level_changed(void)
         gmpc_metaimage_set_is_visible(GMPC_METAIMAGE(metaimage_artist_art), TRUE);
 		gtk_widget_show(metaimage_artist_art);
 	}
-	printf("set visible: on\n");
-	//gtk_cell_renderer_set_visible(sidebar_text, TRUE);
 	g_object_set(sidebar_text, "show_text", TRUE, NULL);
 	gtk_action_set_visible(GTK_ACTION(gtk_builder_get_object(pl3_xml, "menu_go")),TRUE);
     gtk_action_set_visible(GTK_ACTION(gtk_builder_get_object(pl3_xml, "menu_option")),TRUE);
@@ -1535,9 +1499,7 @@ static void playlist_zoom_level_changed(void)
             gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "sidebar")));
             break;
 		case PLAYLIST_SMALL:
-			printf("set visible: off\n");
 			gmpc_metaimage_set_is_visible(GMPC_METAIMAGE(metaimage_artist_art), FALSE);
-			//gtk_cell_renderer_set_visible(sidebar_text, FALSE);
 			g_object_set(sidebar_text, "show_text", FALSE, NULL);
 			gtk_widget_set_size_request(GTK_WIDGET(gtk_builder_get_object(pl3_xml,"sidebar")), 32,-1); 
             gtk_widget_grab_focus(pl3_win);

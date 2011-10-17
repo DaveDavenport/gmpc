@@ -586,6 +586,22 @@ void gmpc_plugin_mpd_connection_changed(gmpcPluginParent * plug, MpdObj * mi,
         plug->old->mpd_connection_changed(mi, connected, data);
     }
 }
+gboolean gmpc_plugin_is_sidebar(gmpcPluginParent *plug)
+{
+	g_assert(plug != NULL);
+	if(plug->new)
+	{
+		return GMPC_PLUGIN_IS_SIDEBAR_IFACE(plug->new);
+	}
+	return FALSE;
+}
+void gmpc_plugin_sidebar_init(gmpcPluginParent *plug)
+{
+	if(gmpc_plugin_is_sidebar(plug))
+	{
+		gmpc_sidebar_plugins_init(GMPC_PLUGIN_SIDEBAR_IFACE(plug->new));	
+	}
+} 
 
 gboolean gmpc_plugin_is_browser(gmpcPluginParent * plug)
 {
