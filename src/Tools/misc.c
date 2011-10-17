@@ -346,6 +346,25 @@ void open_uri(const gchar * uri)
 	g_free(command);
 }
 
+/**
+ * Call yelp!
+ */
+void open_help(const char *uri)
+{	int result;
+	gchar *command;
+	GError *error = NULL;
+	command = g_strdup_printf("yelp %s", uri);
+	result = g_spawn_command_line_async(command, &error);
+	if (error)
+	{
+		/* Ignore errors for now */
+		g_error_free(error);
+		error = NULL;
+	}
+	g_free(command);
+
+}
+
 int *split_version(const char *uri)
 {
 	int *retv = g_malloc0(4 * sizeof(int));

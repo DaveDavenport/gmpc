@@ -43,6 +43,7 @@ void mpd_song_markup_escaped(char *buffer, int size, char *markup, mpd_Song *son
 void screenshot_add_border (GdkPixbuf *src);
 
 void open_uri(const gchar *uri);
+void open_help(const gchar *uri);
 int *split_version(const char *uri);
 
 MpdData * misc_sort_mpddata(MpdData *data, GCompareDataFunc func, void *user_data);

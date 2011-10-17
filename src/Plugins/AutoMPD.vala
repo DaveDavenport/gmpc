@@ -669,7 +669,7 @@ public class Gmpc.Plugins.AutoMPD:
 
 		var hb = pref_builder.get_object("autompd_help_button") as Gtk.Button;
 		hb.clicked.connect((source)=>{
-			Gmpc.open_uri("ghelp:gmpc?AutoMPD");	
+			Gmpc.open_help("ghelp:gmpc?AutoMPD");	
 			});
 		b.show_all();
 	}

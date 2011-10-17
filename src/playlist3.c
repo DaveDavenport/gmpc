@@ -2421,6 +2421,6 @@ void open_local_file(void)
 void show_user_manual(void);
 void show_user_manual(void)
 {
-	open_uri("ghelp:gmpc");
+	open_help("ghelp:gmpc");
 }
 /* vim: set noexpandtab ts=4 sw=4 sts=4 tw=80: */

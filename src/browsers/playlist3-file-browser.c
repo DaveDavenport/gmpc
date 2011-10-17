@@ -153,7 +153,7 @@ static void playtime_changed(GmpcMpdDataModel * model, gulong playtime)
 }
 static void pl3_file_support_help_button_clicked(GObject *a)
 {
-	open_uri("ghelp:gmpc#ProblemSolving");
+	open_help("ghelp:gmpc?ProblemSolving");
 }
 static void pl3_file_browser_init(void)
 {

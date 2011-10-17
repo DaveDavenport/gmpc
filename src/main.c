@@ -881,7 +881,7 @@ void send_password(void)
 
 static void playlist_support_help_button_clicked(GObject *a)
 {
-	open_uri("ghelp:gmpc#ProblemSolving");
+	open_help("ghelp:gmpc?ProblemSolving");
 
 }
 

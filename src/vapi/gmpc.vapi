@@ -263,6 +263,8 @@ namespace Gmpc {
     public string user_path(string file);
     [CCode (cname="open_uri", cheader_filename="misc.h")]
     public void open_uri(string uri);
+    [CCode (cname="open_help", cheader_filename="misc.h")]
+	public void open_help(string uri);
 
 
     namespace Playlist {
