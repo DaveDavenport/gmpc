@@ -127,12 +127,20 @@ namespace Gmpc {
             }
 
         }
+		public enum SidebarState {
+			FULL,
+			COLLAPSED
+		}
         public interface SidebarIface : Base {
             /* This works similar to the preferences pane. The vbox will contain the generated
              * title as first element if title is not epmty, and you can pack your own widgets
              * into it. */
             public abstract void sidebar_pane_construct (Gtk.VBox parent);
             public abstract void sidebar_pane_destroy (Gtk.VBox parent);
+
+			public virtual void sidebar_set_state(Gmpc.Plugin.SidebarState state)
+			{
+			}
             
             /* Override this if you want to give a custom title in the sidebar or
              * an empty string to disable the automatic generated title */

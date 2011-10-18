@@ -603,6 +603,14 @@ void gmpc_plugin_sidebar_init(gmpcPluginParent *plug)
 	}
 } 
 
+void gmpc_plugin_sidebar_set_state(gmpcPluginParent *plug, GmpcPluginSidebarState state)
+{
+	if(gmpc_plugin_is_sidebar(plug))
+	{
+		gmpc_plugin_sidebar_iface_sidebar_set_state(GMPC_PLUGIN_SIDEBAR_IFACE(plug->new), state);	
+	}
+} 
+
 gboolean gmpc_plugin_is_browser(gmpcPluginParent * plug)
 {
     if (plug->new)

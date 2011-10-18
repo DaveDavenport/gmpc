@@ -291,6 +291,9 @@ namespace Gmpc {
         
         [CCode (cname="playlist3_get_widget_by_id", cheader_filename="playlist3.h")]
         public Gtk.Widget get_widget_by_id(string id);
+
+		[CCode (cname="playlist3_get_sidebar_state", cheader_filename="plugin.h")]
+		public Gmpc.Plugin.SidebarState get_sidebar_state();
     }
 
     namespace TrayIcon2 {

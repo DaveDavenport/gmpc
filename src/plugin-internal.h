@@ -52,6 +52,7 @@ void gmpc_plugin_mpd_connection_changed(gmpcPluginParent * plug, MpdObj * mi,
 
 gboolean gmpc_plugin_is_browser(gmpcPluginParent * plug);
 gboolean gmpc_plugin_is_sidebar(gmpcPluginParent *plug);
+void gmpc_plugin_sidebar_set_state(gmpcPluginParent *plug, GmpcPluginSidebarState state);
 void gmpc_plugin_sidebar_init(gmpcPluginParent *plug);
 void gmpc_plugin_browser_unselected(gmpcPluginParent * plug,
                                     GtkWidget * container);

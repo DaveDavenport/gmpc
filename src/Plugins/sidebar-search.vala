@@ -30,7 +30,8 @@ private const string some_unique_name_ssearch = Config.VERSION;
 
 public class Gmpc.Plugins.SidebarSearch : Gmpc.Plugin.Base, Gmpc.Plugin.SidebarIface {
 
-    private const int[] version = {0,0,0};
+	private Entry entry = null;
+	private const int[] version = {0,0,0};
     public override unowned int[] get_version() {
         return this.version;
     }
@@ -49,11 +50,21 @@ public class Gmpc.Plugins.SidebarSearch : Gmpc.Plugin.Base, Gmpc.Plugin.SidebarI
     public int sidebar_get_position() {
         return -1;
     }
+	public void sidebar_set_state(Gmpc.Plugin.SidebarState state)
+	{
+		if(entry == null) return;
+		if(state == Plugin.SidebarState.COLLAPSED) 
+		{
+			entry.hide();
+		}else{
+			entry.show();
+		}
+	}
     
-    public void sidebar_pane_construct(Gtk.VBox parent) {
-        string searchText="Search";
-        Entry entry = new Entry();
-        entry.set_text(searchText);
+	const string searchText="Search";
+	public void sidebar_pane_construct(Gtk.VBox parent) {
+		entry = new Entry();
+		entry.set_text(searchText);
         
         entry.set_icon_from_stock(EntryIconPosition.PRIMARY, "gtk-find");
         entry.set_icon_from_stock(EntryIconPosition.SECONDARY, "gtk-clear");
@@ -90,7 +101,8 @@ public class Gmpc.Plugins.SidebarSearch : Gmpc.Plugin.Base, Gmpc.Plugin.SidebarI
         });
         
         entry.activate.connect( (source) => {
-            
+				Gmpc.Browser.Find.query_database(null, source.get_text()); 
+				entry.set_text(searchText);
         });
         
         Alignment align = new Alignment(1, 1, 1, 1);
@@ -99,6 +111,7 @@ public class Gmpc.Plugins.SidebarSearch : Gmpc.Plugin.Base, Gmpc.Plugin.SidebarI
         parent.pack_start(align, false, false, 0);
         
         parent.show_all();
+		this.sidebar_set_state(Gmpc.Playlist.get_sidebar_state());
     }
     
     public void sidebar_pane_destroy(Gtk.VBox parent) {
@@ -106,5 +119,6 @@ public class Gmpc.Plugins.SidebarSearch : Gmpc.Plugin.Base, Gmpc.Plugin.SidebarI
        {
            parent.remove(child);
        }
+		entry = null;
     }
 }

@@ -343,6 +343,15 @@ void pl3_sidebar_plugins_init(void)
         }
     }
 }
+static void pl3_sidebar_plugins_set_state(GmpcPluginSidebarState state)
+{
+    int i;
+    for (i = 0; i < num_plugins; i++)
+    {
+		gmpc_plugin_sidebar_set_state(plugins[i],state);
+	}
+
+}
 
 /**********************************************************
  * MISC
@@ -1466,12 +1475,18 @@ static void playlist_zoom_level_changed(void)
         gmpc_metaimage_set_is_visible(GMPC_METAIMAGE(metaimage_artist_art), TRUE);
 		gtk_widget_show(metaimage_artist_art);
 	}
-	g_object_set(sidebar_text, "show_text", TRUE, NULL);
 	gtk_action_set_visible(GTK_ACTION(gtk_builder_get_object(pl3_xml, "menu_go")),TRUE);
     gtk_action_set_visible(GTK_ACTION(gtk_builder_get_object(pl3_xml, "menu_option")),TRUE);
-	/* restore pane position */
-	gtk_widget_set_size_request(GTK_WIDGET(gtk_builder_get_object(pl3_xml,"sidebar")), 150,-1); 
 
+	gboolean st_shown;
+	g_object_get(G_OBJECT(sidebar_text), "show_text", &st_shown, NULL);
+	if(!st_shown)
+	{
+		/* restore pane position */
+		g_object_set(sidebar_text, "show_text", TRUE, NULL);
+		gtk_widget_set_size_request(GTK_WIDGET(gtk_builder_get_object(pl3_xml,"sidebar")), 150,-1); 
+		pl3_sidebar_plugins_set_state(GMPC_PLUGIN_SIDEBAR_STATE_FULL);
+	}
 
     /* Now start hiding */
     switch (pl3_zoom)
@@ -1500,9 +1515,12 @@ static void playlist_zoom_level_changed(void)
             break;
 		case PLAYLIST_SMALL:
 			gmpc_metaimage_set_is_visible(GMPC_METAIMAGE(metaimage_artist_art), FALSE);
-			g_object_set(sidebar_text, "show_text", FALSE, NULL);
-			gtk_widget_set_size_request(GTK_WIDGET(gtk_builder_get_object(pl3_xml,"sidebar")), 32,-1); 
-            gtk_widget_grab_focus(pl3_win);
+			if(st_shown) {
+				g_object_set(sidebar_text, "show_text", FALSE, NULL);
+				gtk_widget_set_size_request(GTK_WIDGET(gtk_builder_get_object(pl3_xml,"sidebar")), 32,-1); 
+				pl3_sidebar_plugins_set_state(GMPC_PLUGIN_SIDEBAR_STATE_COLLAPSED);
+			}
+			gtk_widget_grab_focus(pl3_win);
         default:
             break;
     }
@@ -2369,5 +2387,12 @@ void show_user_manual(void);
 void show_user_manual(void)
 {
 	open_help("ghelp:gmpc");
+}
+
+GmpcPluginSidebarState playlist3_get_sidebar_state(void)
+{
+	gboolean st_shown;
+	g_object_get(G_OBJECT(sidebar_text), "show_text", &st_shown, NULL);
+	return  st_shown? GMPC_PLUGIN_SIDEBAR_STATE_FULL:GMPC_PLUGIN_SIDEBAR_STATE_COLLAPSED;
 }
 /* vim: set noexpandtab ts=4 sw=4 sts=4 tw=80: */

@@ -263,6 +263,10 @@ extern GObject *paned_size_group;
 * show the main window 
 */
 void create_playlist3(void);
+/**
+ * Get the state of the sidebar 
+ */
+GmpcPluginSidebarState playlist3_get_sidebar_state(void);
 
 /**
 * hide the main window 
