@@ -189,6 +189,8 @@ public class Gmpc.Plugins.AutoMPD:
 	{
 		stop_mpd();
 		GLib.Timeout.add(500,()=>{
+				GLib.log(log_domain_autompd, GLib.LogLevelFlags.LEVEL_DEBUG, 
+					"Trying to restart GMPC");
 				// Check if MPD is stopped, when it is, start it again
 				if(!check_mpd())
 				{
@@ -198,10 +200,9 @@ public class Gmpc.Plugins.AutoMPD:
 					{
 						Gmpc.MpdInteraction.connect();
 					}
-					// Stop trying
-					return false;
+					return true;
 				}
-				return true;
+				return false;
 		});
 	}
 	/**
