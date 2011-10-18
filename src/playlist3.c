@@ -35,6 +35,54 @@
 #include "GUI/title_header.h"
 #include "GUI/control_window.h"
 
+#ifndef GDK_KEY_0
+#define GDK_KEY_0 GDK_0
+#endif
+
+#ifndef GDK_KEY_1
+#define GDK_KEY_1 GDK_1
+#endif
+
+#ifndef GDK_KEY_2
+#define GDK_KEY_2 GDK_2
+#endif
+
+
+#ifndef GDK_KEY_3
+#define GDK_KEY_3 GDK_3
+#endif
+
+#ifndef GDK_KEY_4
+#define GDK_KEY_4 GDK_4
+#endif
+
+
+#ifndef GDK_KEY_5
+#define GDK_KEY_5 GDK_5
+#endif
+
+
+#ifndef GDK_KEY_6
+#define GDK_KEY_6 GDK_6
+#endif
+
+
+#ifndef GDK_KEY_7
+#define GDK_KEY_7 GDK_7
+#endif
+
+
+#ifndef GDK_KEY_8
+#define GDK_KEY_8 GDK_8
+#endif
+
+
+#ifndef GDK_KEY_9
+#define GDK_KEY_9 GDK_9
+#endif
+
+
+
 #define ALBUM_SIZE_SMALL 42
 #define ALBUM_SIZE_LARGE 42
 
