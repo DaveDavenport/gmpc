@@ -26,7 +26,6 @@ const string GSBP_LOG_DOMAIN  = "Gmpc.Sidebar.Plugins";
 
 public class Gmpc.Sidebar.Plugins {
     private static ListStore store;
-    private static HashTable<SidebarIface, TreeIter?> hashtable;
 
     private static void embed(TreeIter iter) {
         SidebarIface plugin;
@@ -51,9 +50,9 @@ public class Gmpc.Sidebar.Plugins {
         
         if (title != "") {
             alignment = new Alignment(0, 0, 0, 0);
-            alignment.set_padding(0, 6, 15, 0);
+            alignment.set_padding(0, 6, 4, 0);
 
-            label = new Label("<b>%s</b>".printf(title));
+            label = new Label(GLib.Markup.printf_escaped("<b>%s</b>",title));
             label.set_use_markup(true);
             
             alignment.add(label);
@@ -137,17 +136,30 @@ public class Gmpc.Sidebar.Plugins {
         vbox = (VBox)null;
     }
     
-
+	private static TreeIter lookup_iter(SidebarIface plugin) {
+		TreeIter iter;
+		if(store.get_iter_first(out iter))
+		{
+			SidebarIface pl;
+			do{
+			store.get(iter, 3, out pl, -1);
+			if(pl == plugin) {
+				return iter;
+			}
+			}while(store.iter_next(ref iter));
+		}
+		GLib.error("Plugin not found in list");
+	}
     
     public static void enable(SidebarIface plugin) {
-        TreeIter iter = hashtable.lookup(plugin);
+        TreeIter iter = lookup_iter(plugin);
         plugin.set_enabled(true);
         store.set(iter, 0, true, -1);
         embed(iter);
     }
 
     public static void disable(SidebarIface plugin) {
-        TreeIter iter = hashtable.lookup(plugin);
+        TreeIter iter = lookup_iter(plugin);
         plugin.set_enabled(false);
         store.set(iter, 0, false, -1);
         destroy(iter);
@@ -155,9 +167,6 @@ public class Gmpc.Sidebar.Plugins {
 
 
     public static void init(SidebarIface plugin) {
-        if (hashtable == null)
-            hashtable = new HashTable<SidebarIface, TreeIter?> (direct_hash, direct_equal);
-    
         if (store == null)
             store = new ListStore(5, typeof(bool),          // enabled
                                      typeof(string),        // name
@@ -174,7 +183,6 @@ public class Gmpc.Sidebar.Plugins {
                         4, null,
                         -1);
                         
-        hashtable.insert(plugin, iter);
         
         store.set_sort_column_id(2, SortType.DESCENDING);
         
