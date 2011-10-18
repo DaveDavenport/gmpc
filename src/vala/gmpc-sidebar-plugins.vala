@@ -164,6 +164,18 @@ public class Gmpc.Sidebar.Plugins {
         store.set(iter, 0, false, -1);
         destroy(iter);
     }
+	public static void update_state(Gmpc.Plugin.SidebarState state)
+	{
+		TreeIter iter;
+		if(store.get_iter_first(out iter))
+		{
+			do{
+				SidebarIface pl;
+				store.get(iter, 3, out pl, -1);
+				pl.sidebar_set_state(state);
+			}while(store.iter_next(ref iter));
+		}
+	}
 
 
     public static void init(SidebarIface plugin) {

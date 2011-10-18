@@ -343,15 +343,6 @@ void pl3_sidebar_plugins_init(void)
         }
     }
 }
-static void pl3_sidebar_plugins_set_state(GmpcPluginSidebarState state)
-{
-    int i;
-    for (i = 0; i < num_plugins; i++)
-    {
-		gmpc_plugin_sidebar_set_state(plugins[i],state);
-	}
-
-}
 
 /**********************************************************
  * MISC
@@ -1485,7 +1476,7 @@ static void playlist_zoom_level_changed(void)
 		/* restore pane position */
 		g_object_set(sidebar_text, "show_text", TRUE, NULL);
 		gtk_widget_set_size_request(GTK_WIDGET(gtk_builder_get_object(pl3_xml,"sidebar")), 150,-1); 
-		pl3_sidebar_plugins_set_state(GMPC_PLUGIN_SIDEBAR_STATE_FULL);
+		gmpc_sidebar_plugins_update_state(GMPC_PLUGIN_SIDEBAR_STATE_FULL);
 	}
 
     /* Now start hiding */
@@ -1518,7 +1509,7 @@ static void playlist_zoom_level_changed(void)
 			if(st_shown) {
 				g_object_set(sidebar_text, "show_text", FALSE, NULL);
 				gtk_widget_set_size_request(GTK_WIDGET(gtk_builder_get_object(pl3_xml,"sidebar")), 32,-1); 
-				pl3_sidebar_plugins_set_state(GMPC_PLUGIN_SIDEBAR_STATE_COLLAPSED);
+				gmpc_sidebar_plugins_update_state(GMPC_PLUGIN_SIDEBAR_STATE_COLLAPSED);
 			}
 			gtk_widget_grab_focus(pl3_win);
         default:
