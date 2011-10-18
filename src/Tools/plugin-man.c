@@ -133,6 +133,9 @@ void plugin_manager_load_internal_plugins(void)
             gmpc_plugins_sidebar_search_new(),
             0, NULL);
 
+    plugin_add_new((GmpcPluginBase *)
+            gmpc_plugins_sidebar_next_song_new(),
+            0, NULL);
 #ifdef HAVE_GLYR
     plugin_add(&glyros_plugin, 0, NULL);
 #endif

@@ -161,6 +161,8 @@ namespace Gmpc {
             [CCode (cname="gmpc_metaimage_set_loading_cover_icon")]
             public void set_loading_cover_icon(string name);
 
+            [CCode (cname="gmpc_metaimage_set_cover_na")]
+            public void set_cover_na();
             [CCode (cname="gmpc_metaimage_set_scale_up")]
             public void set_scale_up(bool scale);
 

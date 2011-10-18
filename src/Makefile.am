@@ -27,7 +27,8 @@ PLUGIN_FILES=\
     Providers/GLyros.c\
     Plugins/extraplaylist.c\
     Plugins/AutoMPD.vala\
-    Plugins/sidebar-search.vala
+    Plugins/sidebar-search.vala\
+    Plugins/sidebar-next-song.vala
 
 
 
