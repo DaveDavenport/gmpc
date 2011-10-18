@@ -51,7 +51,7 @@ namespace MPD {
         [CCode (cname="mpd_songDup0")]
         public Song copy ();
         [CCode (instance_pos = -1)]
-        public void markup (char[] buffer, int length, string markup);
+        public void markup (char[] buffer, string markup);
     }
     namespace Sticker {
         namespace Song {

@@ -145,6 +145,7 @@ namespace Gmpc {
 
         [CCode ( cname="GmpcMetaImage", cheader_filename="gmpc-metaimage.h")]
         public class Image: Gtk.Widget {
+			public int size;
             [CCode (cname="gmpc_metaimage_new_size")]
             public Image(Type type, int size);
             [CCode (cname="gmpc_metaimage_update_cover_from_song")]

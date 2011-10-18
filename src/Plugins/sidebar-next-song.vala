@@ -32,7 +32,7 @@ public class Gmpc.Plugins.SidebarNextSong : Gmpc.Plugin.Base, Gmpc.Plugin.Sideba
 
 	private Box hbox = null;
 	private Gmpc.MetaData.Image AlbumImage = null;
-	private Gtk.Widget label = null;
+	private Label label = null;
 
 	private const int[] version = {0,0,0};
 	private void status_changed(MPD.Server mi, MPD.Status.Changed what)
@@ -62,38 +62,51 @@ public class Gmpc.Plugins.SidebarNextSong : Gmpc.Plugin.Base, Gmpc.Plugin.Sideba
         return "Next song:";
     }
     
-    /* We want to stick to the bottom  */
     public int sidebar_get_position() {
-        return 2;
+        return -1;
     }
 	public void sidebar_set_state(Gmpc.Plugin.SidebarState state)
 	{
 		if(hbox == null) return;
 		if(state == Plugin.SidebarState.COLLAPSED) 
 		{
-			hbox.hide();
+			AlbumImage.size = 24;
+			label.hide();
 		}else{
-			hbox.show();
+			AlbumImage.size = 32;
+			label.show();
 		}
+		update();
 	}
    	private void update()
 	{
 		int id= Gmpc.server.player_get_next_song_id();
 		if(id >= 0) {
 			MPD.Song? song = Gmpc.server.playlist_get_song(id);
+			AlbumImage.set_cover_na();
 			AlbumImage.update_from_song(song);
+			char[] buffer = new char[1024];
+			song.markup(buffer, "%title%[\n%artist%]");
+			label.set_text((string )buffer);
+			hbox.set_tooltip_text((string)buffer);
 		}else{
 			AlbumImage.set_cover_na();
+			label.set_text("");
 		}
 	} 
 	public void sidebar_pane_construct(Gtk.VBox parent)
 	{
 		hbox = new HBox(false, 6);
 
-		AlbumImage = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ALBUM_ART, 64);
-		hbox.pack_start(AlbumImage, false, false, 0);
+		AlbumImage = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ALBUM_ART, 32);
+		hbox.pack_start(AlbumImage, false, true, 0);
+		AlbumImage.has_tooltip = false;
 
-        
+       	label = new Gtk.Label(""); 
+		label.ellipsize = Pango.EllipsizeMode.END;
+		label.set_alignment(0f, 0.5f);
+		hbox.pack_start(label, true, true, 0);
+
         Alignment align = new Alignment(1, 1, 1, 1);
         align.set_padding(0,0,2,2);
         align.add(hbox);
