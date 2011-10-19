@@ -408,7 +408,7 @@ void glyr_fetcher_thread(void *user_data)
 		cache = glyr_get(&query,&err,NULL);
 		mtd->result = META_DATA_UNAVAILABLE;
 		mtd->met = NULL;
-		if(cache != NULL)
+		if(cache != NULL && cache->rating >= 0)
 		{
 			if(mtd->type != META_ARTIST_SIMILAR && mtd->type != META_SONG_SIMILAR)
 			{
@@ -424,7 +424,13 @@ void glyr_fetcher_thread(void *user_data)
 			}
 			glyr_free_list(cache);
 		}
-		else {
+		else if (cache == NULL){
+			cache = glyr_cache_new();
+			glyr_cache_set_data(cache, g_strdup(""), -1);
+			cache->rating = -1;
+			
+			glyr_db_insert(db,&query, cache);
+			glyr_free_list(cache);
 			printf("Cache is NULL\n");
 		}
 		glyr_query_destroy(&query);
