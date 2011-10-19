@@ -407,6 +407,7 @@ void glyr_fetcher_thread(void *user_data)
 		/* get metadata */
 		cache = glyr_get(&query,&err,NULL);
 		mtd->result = META_DATA_UNAVAILABLE;
+		mtd->met = NULL;
 		if(cache != NULL)
 		{
 			if(mtd->type != META_ARTIST_SIMILAR && mtd->type != META_SONG_SIMILAR)

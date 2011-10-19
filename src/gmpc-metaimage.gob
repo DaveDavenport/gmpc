@@ -514,6 +514,8 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                 if(met->content_type == META_DATA_CONTENT_URI){
                     const char *path = meta_data_get_uri(met);
                     self_set_cover_from_path(self,path); 
+				}else if (met->content_type == META_DATA_CONTENT_RAW) {
+					self_set_cover_raw(self, met->content, met->size);
                 }else{
                     self_set_cover_na(self);
                     g_log(LOG_DOMAIN, G_LOG_LEVEL_WARNING, "Method not implemented: %i", met->content_type);
@@ -646,6 +648,20 @@ class Gmpc:MetaImage from Gtk:Event:Box{
         }
 
     public	
+        void
+        set_cover_raw(self, unsigned char *data, uint size) 
+        {
+            self->_priv->state = STATE_IMAGE;
+            gmpc_meta_image_async_set_from_raw(GMPC_META_IMAGE_ASYNC(self->_priv->image),data, size, self->size,
+                    ((cfg_get_single_value_as_int_with_default(config, "metaimage", "addcase",TRUE) && self->image_type == META_ALBUM_ART))?
+                    GMPC_MODIFICATION_TYPE_CASING:GMPC_MODIFICATION_TYPE_BORDER
+                    
+                    );
+            if(self->squared) {
+                gtk_widget_set_size_request(GTK_WIDGET(self), self->size, self->size);
+            }
+		}
+	public	
         void
         set_cover_from_path(self, const gchar *path)
         {
