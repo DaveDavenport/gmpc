@@ -1271,6 +1271,8 @@ void metadata_get_list_cancel(gpointer data)
 }
 gpointer metadata_get_list(mpd_Song  *song, MetaDataType type, void (*callback)(gpointer handle,const gchar *plugin_name, GList *list, gpointer data), gpointer data)
 {
+	callback(NULL, NULL, NULL, data);
+	return NULL;
 	MLQuery *q = g_malloc0(sizeof(*q));
 	q->cancel =FALSE;
 	q->index = 0;
