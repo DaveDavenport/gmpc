@@ -31,10 +31,38 @@
 
 #define LOG_DOMAIN "MetaData"
 
+#include <glyr/glyr.h>
+#include <glyr/cache.h>
+
+#define LOG_SUBCLASS        "glyros"
+#define LOG_COVER_NAME      "fetch-art-album"
+#define LOG_ARTIST_ART      "fetch-art-artist"
+#define LOG_SIMILIAR_ARTIST "fetch-similiar-artist"
+#define LOG_SIMILIAR_SONG   "fetch-similiar-song"
+#define LOG_SIMILIAR_GENRE  "fetch-similiar-genre"
+#define LOG_ARTIST_TXT      "fetch-biography-artist"
+#define LOG_SONG_TXT        "fetch-lyrics"
+#define LOG_GUITARTABS      "fetch-guitartabs"
+#define LOG_ALBUM_TXT       "fetch-album-txt"
+
+// other
+#define LOG_FUZZYNESS      "fuzzyness"
+#define LOG_CMINSIZE       "cminsize"
+#define LOG_CMAXSIZE       "cmaxsize"
+#define LOG_MSIMILIARTIST  "msimiliartist"
+#define LOG_MSIMILISONG    "msimilisong"
+#define LOG_QSRATIO        "qsratio"
+#define LOG_PARALLEL       "parallel"
+#define LOG_USERAGENT      "useragent"
+#define LOG_FROM           "from"
 int meta_num_plugins=0;
 gmpcPluginParent **meta_plugins = NULL;
 static void meta_data_sort_plugins(void);
 GList *process_queue = NULL;
+
+GlyrDatabase *db = NULL;
+
+
 /**
  * This queue is used to send replies back.
  */
@@ -250,6 +278,15 @@ void meta_data_init(void)
 {
 	g_assert(meta_results == NULL );
 
+	/* Initialize..*/
+	glyr_init();
+
+	gchar *url = gmpc_get_covers_path("");
+	db = glyr_db_init(url);
+	g_free(url);
+		
+
+
 	metadata_cache_init();
 
 	/**
@@ -350,6 +387,9 @@ void meta_data_destroy(void)
 	TOC("test")
 	metadata_cache_destroy();
 	TOC("Config saved")
+
+	glyr_db_destroy(db);
+	glyr_cleanup();
 }
 gboolean meta_compare_func(meta_thread_data *mt1, meta_thread_data *mt2)
 {
@@ -820,8 +860,109 @@ static gboolean process_itterate(void)
 /**
  * Function called by the "client" 
  */
+
 MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData **met,MetaDataCallback callback, gpointer data)
 {
+	GlyrQuery query;
+    GLYR_ERROR err = GLYRE_OK;
+    MetaDataContentType content_type = META_DATA_CONTENT_RAW;
+	printf("new style query\n");
+    /* cache */
+    GlyrMemCache * cache = NULL;
+
+	glyr_query_init(&query);
+
+	/* Set some random settings */
+	glyr_opt_verbosity(&query,2);
+
+	/* Tell libglyr to automatically lookup before searching the web */
+	glyr_opt_lookup_db(&query, db);
+
+	/* Also tell it to write newly found items to the db */
+	glyr_opt_db_autowrite(&query, TRUE);
+
+
+    /* set metadata */
+    glyr_opt_artist(&query,(char*)tsong->artist);
+    glyr_opt_album (&query,(char*)tsong->album);
+    glyr_opt_title (&query,(char*)tsong->title);
+
+    /* Set force utf8 */
+    glyr_opt_force_utf8(&query, TRUE);
+
+    /* set default type */
+    glyr_opt_type(&query, GLYR_GET_UNSURE);
+
+	if (type == META_ARTIST_ART )
+	{
+		glyr_opt_type(&query, GLYR_GET_ARTIST_PHOTOS);
+                content_type = META_DATA_CONTENT_RAW;
+	}
+	else if (type == META_ARTIST_TXT)
+	{
+		glyr_opt_lang_aware_only(&query,TRUE);
+		glyr_opt_type(&query, GLYR_GET_ARTISTBIO);
+		content_type = META_DATA_CONTENT_TEXT;
+	}
+	else if (type == META_ARTIST_SIMILAR)
+	{
+		glyr_opt_type(&query, GLYR_GET_SIMILIAR_ARTISTS);
+		glyr_opt_number(&query, cfg_get_single_value_as_int_with_default(config,LOG_SUBCLASS,LOG_MSIMILIARTIST,20));
+		content_type = META_DATA_CONTENT_TEXT;
+	}
+	else if (type == META_ALBUM_ART &&
+			tsong->album != NULL)
+	{
+		glyr_opt_type(&query, GLYR_GET_COVERART);
+		content_type = META_DATA_CONTENT_RAW;
+	}
+	else if (type == META_ALBUM_TXT &&
+			tsong->album != NULL)
+	{
+		glyr_opt_type(&query, GLYR_GET_ALBUM_REVIEW);
+		content_type = META_DATA_CONTENT_TEXT;
+	}
+	else if (type == META_SONG_TXT &&
+			tsong->title != NULL)
+	{
+		glyr_opt_type(&query, GLYR_GET_LYRICS);
+		content_type = META_DATA_CONTENT_TEXT;
+	}
+	else if (type == META_SONG_SIMILAR &&
+			tsong->title != NULL) 
+	{
+		glyr_opt_type(&query, GLYR_GET_SIMILIAR_SONGS);
+		glyr_opt_number(&query, cfg_get_single_value_as_int_with_default(config,LOG_SUBCLASS,LOG_MSIMILISONG,20));
+	}
+	else if (type == META_SONG_GUITAR_TAB &&
+			tsong->title) 
+	{
+		glyr_opt_type(&query, GLYR_GET_GUITARTABS);
+		content_type = META_DATA_CONTENT_TEXT;
+	}
+	else {
+
+	}
+    /* get metadata */
+    cache = glyr_get(&query,&err,NULL);
+	if(cache != NULL)
+	{
+		if(type != META_ARTIST_SIMILAR && type != META_SONG_SIMILAR)
+		{
+            (*met) = meta_data_new();
+            (*met)->type = type;
+            (*met)->plugin_name = "glyr"; 
+            (*met)->content_type = content_type;
+
+            (*met)->content = g_malloc0(cache->size);
+            memcpy((*met)->content, cache->data, cache->size);
+            (*met)->size = cache->size;
+		}
+        glyr_free_list(cache);
+	}
+    glyr_query_destroy(&query);
+	return (*met)?META_DATA_AVAILABLE:META_DATA_UNAVAILABLE;
+
 	static int test_id = 0;
 	MetaDataResult ret;
 	meta_thread_data *mtd = NULL;
