@@ -71,6 +71,7 @@ GQueue *meta_results = NULL;
 /**
  * Structure holding a metadata query */
 typedef struct {
+	gboolean quit;
 	/* unique id for the query (unused)*/
 	guint id;
 	/* The callback to call when the query is done, or NULL */
@@ -508,6 +509,12 @@ void glyr_fetcher_thread(void *user_data)
 	while((d = g_async_queue_pop(gaq)))
 	{
 		meta_thread_data *mtd = (meta_thread_data*)d;
+		if(mtd->quit) {
+			printf("Quitting....");
+			/* Free the Request struct */
+			g_free(mtd);
+			return;
+		}
 
 		GlyrQuery query;
 		GLYR_ERROR err = GLYRE_OK;
@@ -571,6 +578,7 @@ void glyr_fetcher_thread(void *user_data)
 /**
  * Initialize
  */
+GThread *gaq_fetcher_thread = NULL;
 void meta_data_init(void)
 {
 	gchar *url;
@@ -587,7 +595,7 @@ void meta_data_init(void)
 
 	gaq = g_async_queue_new();
 	return_queue = g_async_queue_new();
-	g_thread_create(glyr_fetcher_thread, NULL, FALSE, NULL);
+	gaq_fetcher_thread = g_thread_create(glyr_fetcher_thread, NULL, TRUE, NULL);
 
 		
 
@@ -692,8 +700,62 @@ void meta_data_destroy(void)
 	TOC("test")
 	metadata_cache_destroy();
 	TOC("Config saved")
+	/**
+ 	 * Clear the request queue, and tell thread to quit 
+	 */
+	g_async_queue_lock(gaq);
+	while((mtd = g_async_queue_try_pop_unlocked(gaq))){
+		 /* Free any possible plugin results */
+		if(mtd->list){
+			g_list_foreach(mtd->list, (GFunc)meta_data_free, NULL);
+			g_list_free(mtd->list);
+		}
+		/* Free the result data */
+		if(mtd->met)
+			meta_data_free(mtd->met);
+		/* Free the copie and edited version of the songs */
+		if(mtd->song)
+			mpd_freeSong(mtd->song);
+		if(mtd->edited)
+			mpd_freeSong(mtd->edited);
+
+		/* Free the Request struct */
+		g_free(mtd);
+	}
+	mtd = g_malloc0(sizeof(*mtd));
+	mtd->quit = TRUE;
+	g_async_queue_push_unlocked(gaq, mtd);
+	mtd = NULL;
+	g_async_queue_unlock(gaq);
+	printf("Waiting for glyr to finish.....\n");
+	g_thread_join(gaq_fetcher_thread);
 	glyr_db_destroy(db);
 	glyr_cleanup();
+	/**
+ 	 * Wait for thread to quit 
+	 */
+	g_async_queue_lock(return_queue);
+	while((mtd = g_async_queue_try_pop_unlocked(return_queue))){
+		 /* Free any possible plugin results */
+		if(mtd->list){
+			g_list_foreach(mtd->list, (GFunc)meta_data_free, NULL);
+			g_list_free(mtd->list);
+		}
+		/* Free the result data */
+		if(mtd->met)
+			meta_data_free(mtd->met);
+		/* Free the copie and edited version of the songs */
+		if(mtd->song)
+			mpd_freeSong(mtd->song);
+		if(mtd->edited)
+			mpd_freeSong(mtd->edited);
+
+		/* Free the Request struct */
+		g_free(mtd);
+	}
+	g_async_queue_unlock(return_queue);
+	g_async_queue_unref(gaq);
+	g_async_queue_unref(return_queue);
 
 }
 gboolean meta_compare_func(meta_thread_data *mt1, meta_thread_data *mt2)
