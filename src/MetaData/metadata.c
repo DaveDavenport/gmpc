@@ -543,7 +543,8 @@ void glyr_fetcher_thread(void *user_data)
 			// Set dummy entry in cache, so we know
 			// we searched for this before.
 			cache = glyr_cache_new();
-			glyr_cache_set_data(cache, g_strdup(""), -1);
+			glyr_cache_set_data(cache, g_strdup("GMPC Dummy data"), -1);
+			cache->dscr = g_strdup("GMPC dummy URL");
 			cache->rating = -1;
 			
 			glyr_db_insert(db,&query, cache);
