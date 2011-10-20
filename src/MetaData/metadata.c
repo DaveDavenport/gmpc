@@ -318,6 +318,8 @@ static MetaDataContentType setup_glyr_query(GlyrQuery *query,
 	/* Force UTF 8 */
 	glyr_opt_force_utf8(query, TRUE);
 
+	glyr_opt_parrallel(query, 4);
+
 	/* set metadata */
 	glyr_opt_artist(query,(char*)mtd->song->artist);
 	glyr_opt_album (query,(char*)mtd->song->album);
