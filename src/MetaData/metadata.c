@@ -519,7 +519,7 @@ void glyr_fetcher_thread(void *user_data)
 		if(((mtd->type)&META_QUERY_NO_CACHE) == META_QUERY_NO_CACHE)
 		{
 			printf("Disable cache\n");
-			glyr_opt_from(&query, "all:-local");
+			glyr_opt_from(&query, "all;-local");
 			// Remove cache request.
 			mtd->type&=META_QUERY_DATA_TYPES;	
 		}
