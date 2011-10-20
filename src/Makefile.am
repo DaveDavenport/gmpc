@@ -103,8 +103,6 @@ gmpc_SOURCES=\
     vala/gmpc-test-plugin.vala\
     vala/gmpc-paned-size-group.vala\
     vala/gmpc-sidebar-plugins.vala\
-    MetaData/metadata-cache-sqlite.c\
-    MetaData/metadata-cache.c\
     MetaData/metadata.c\
     preferences.c\
     tray-icon2.c\
@@ -113,6 +111,11 @@ gmpc_SOURCES=\
     options.c\
     plugin.c\
     main.c
+
+#    MetaData/metadata-cache-sqlite.c\
+#    MetaData/metadata-cache.c\
+#
+
 
 nodist_gmpc_SOURCES=\
     $(gmpc_GOBCFILES)
@@ -276,8 +279,6 @@ EXTRA_DIST=\
 		Tools/mm-keys.h\
 		Tools/misc.h\
 		MetaData/metadata.h\
-		MetaData/metadata-cache.h\
-		MetaData/metadata-cache-sqlite.h\
 		egg/eggcolumnchooserdialog.h\
 		egg/eggcolumnmodel.h\
 		Tools/advanced-search.h\
@@ -298,6 +299,9 @@ EXTRA_DIST=\
         $(gmpc_GOBFILES)
 
 #        GUI/thv.h
+#		MetaData/metadata-cache.h\
+#		MetaData/metadata-cache-sqlite.h\
+#
 
 DISTCLEANFILES=\
 			   revision.h\

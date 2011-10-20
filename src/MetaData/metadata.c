@@ -24,7 +24,7 @@
 #include "main.h"
 
 #include "metadata.h"
-#include "metadata-cache.h"
+//#include "metadata-cache.h"
 #include "preferences.h"
 
 #include "gmpc_easy_download.h"
@@ -61,11 +61,20 @@ static void meta_data_sort_plugins(void);
 GList *process_queue = NULL;
 
 
+/**
+ * GLYR
+ */
+
+static GAsyncQueue *gaq = NULL;
+static GAsyncQueue *return_queue = NULL;
+const char *plug_name = "glyr";
+static GlyrDatabase *db = NULL;
+
 
 /**
  * This queue is used to send replies back.
  */
-GQueue *meta_results = NULL;
+//GQueue *meta_results = NULL;
 
 
 /**
@@ -93,10 +102,12 @@ typedef struct {
 	int index;
 	int do_rename;
 	int rename_done;
+#if 0
 	/* List with temporary result from plugin index */
 	GList *list;
 	/* The current position in the list */
 	GList *iter;
+#endif
 } meta_thread_data;
 
 gboolean meta_compare_func(meta_thread_data *mt1, meta_thread_data *mt2);
@@ -270,8 +281,6 @@ mpd_Song *rewrite_mpd_song(mpd_Song *tsong, MetaDataType type)
 	}
 	return edited;
 }
-static GAsyncQueue *gaq = NULL;
-static GAsyncQueue *return_queue = NULL;
 /**
  * If the metadata thread managed to handle a result this function
  * Will call the callback (from the main (gtk) thread)
@@ -291,11 +300,11 @@ static gboolean glyr_return_queue(void *user_data)
 		}
 
 		 /* Free any possible plugin results */
-		if(mtd->list){
+/*		if(mtd->list){
 			g_list_foreach(mtd->list, (GFunc)meta_data_free, NULL);
 			g_list_free(mtd->list);
 		}
-		/* Free the result data */
+*/		/* Free the result data */
 		if(mtd->met)
 			meta_data_free(mtd->met);
 		/* Free the copie and edited version of the songs */
@@ -383,7 +392,6 @@ static MetaDataContentType setup_glyr_query(GlyrQuery *query,
 	}
 	return content_type;
 }
-const char *plug_name = "glyr";
 static MetaData * glyr_get_similiar_song_names(GlyrMemCache * cache)
 {
     MetaData * mtd = NULL;
@@ -446,7 +454,7 @@ static MetaData * glyr_get_similiar_artist_names(GlyrMemCache * cache)
 /**
  * Convert GLYR result into gmpc result 
  */
-static gboolean process_glyr_result(const GlyrMemCache *cache, 
+static gboolean process_glyr_result(GlyrMemCache *cache, 
 	MetaDataContentType content_type,
 	meta_thread_data *mtd)
 {
@@ -497,7 +505,6 @@ static gboolean process_glyr_result(const GlyrMemCache *cache,
 	}
 	return retv;
 }
-static GlyrDatabase *db = NULL;
 
 /**
  * Thread that does the GLYR requests
@@ -582,7 +589,7 @@ GThread *gaq_fetcher_thread = NULL;
 void meta_data_init(void)
 {
 	gchar *url;
-	g_assert(meta_results == NULL );
+//	g_assert(meta_results == NULL );
 
 	/* Is this function thread safe? */
 	url = gmpc_get_covers_path("");
@@ -599,7 +606,7 @@ void meta_data_init(void)
 
 		
 
-
+#if 0
 	metadata_cache_init();
 
 	/**
@@ -610,6 +617,7 @@ void meta_data_init(void)
 	/**
 	 * Create the retrieval thread
 	 */
+#endif
 }
 
 void meta_data_add_plugin(gmpcPluginParent *plug)
@@ -653,7 +661,7 @@ void meta_data_check_plugin_changed(void)
 	if(old_amount < meta_num_plugins)
 	{
 		gtk_init_add(meta_data_check_plugin_changed_message, NULL);
-		metadata_cache_cleanup();
+		//metadata_cache_cleanup();
 	}
 	if(old_amount != meta_num_plugins)
 	{
@@ -667,7 +675,7 @@ void meta_data_destroy(void)
 {
 	meta_thread_data *mtd = NULL;
 	INIT_TIC_TAC();
-
+#if 0
 	if(process_queue) {
 		GList *iter;
 		/* Iterate through the list and destroy all entries */
@@ -700,17 +708,20 @@ void meta_data_destroy(void)
 	TOC("test")
 	metadata_cache_destroy();
 	TOC("Config saved")
+#endif
 	/**
  	 * Clear the request queue, and tell thread to quit 
 	 */
 	g_async_queue_lock(gaq);
 	while((mtd = g_async_queue_try_pop_unlocked(gaq))){
 		 /* Free any possible plugin results */
+/*
 		if(mtd->list){
 			g_list_foreach(mtd->list, (GFunc)meta_data_free, NULL);
 			g_list_free(mtd->list);
 		}
-		/* Free the result data */
+
+*/		/* Free the result data */
 		if(mtd->met)
 			meta_data_free(mtd->met);
 		/* Free the copie and edited version of the songs */
@@ -737,11 +748,11 @@ void meta_data_destroy(void)
 	g_async_queue_lock(return_queue);
 	while((mtd = g_async_queue_try_pop_unlocked(return_queue))){
 		 /* Free any possible plugin results */
-		if(mtd->list){
+/*		if(mtd->list){
 			g_list_foreach(mtd->list, (GFunc)meta_data_free, NULL);
 			g_list_free(mtd->list);
 		}
-		/* Free the result data */
+*/		/* Free the result data */
 		if(mtd->met)
 			meta_data_free(mtd->met);
 		/* Free the copie and edited version of the songs */
@@ -772,6 +783,7 @@ gboolean meta_compare_func(meta_thread_data *mt1, meta_thread_data *mt2)
 /**
  * new things *
  */
+#if 0
 static int counter = 0;
 static gboolean process_itterate(void);
 /**
@@ -800,6 +812,7 @@ static gboolean meta_data_handle_results(void)
 		 * Start cleaning up the meta_thead_data 
 		 */
 		 /* Free any possible plugin results */
+/
 		if(data->list){
 			g_list_foreach(data->list, (GFunc)meta_data_free, NULL);
 			g_list_free(data->list);
@@ -1223,7 +1236,7 @@ static gboolean process_itterate(void)
 	//process_itterate();
 	return FALSE;
 }
-
+#endif
 /**
  * Function called by the "client" 
  */
@@ -1677,6 +1690,7 @@ static void metadata_destroy_pref_pane(GtkWidget *container)
 /**
  * Get a list of urls, used by f.e. selector 
  */
+#if 0
 typedef struct MLQuery{
 	int index;
 	int cancel;
@@ -1737,15 +1751,19 @@ static void metadata_get_list_itterate(GList *list, gpointer data)
 	mpd_freeSong(q->song);
 	g_free(q);
 }
+#endif
 void metadata_get_list_cancel(gpointer data)
 {
+#if 0
 	MLQuery *q = (MLQuery *)data;
 	q->cancel = TRUE;
+#endif
 }
 gpointer metadata_get_list(mpd_Song  *song, MetaDataType type, void (*callback)(gpointer handle,const gchar *plugin_name, GList *list, gpointer data), gpointer data)
 {
 	callback(NULL, NULL, NULL, data);
 	return NULL;
+#if 0
 	MLQuery *q = g_malloc0(sizeof(*q));
 	q->cancel =FALSE;
 	q->index = 0;
@@ -1781,6 +1799,7 @@ gpointer metadata_get_list(mpd_Song  *song, MetaDataType type, void (*callback)(
 	g_log("MetaData", G_LOG_LEVEL_DEBUG, "Start first itteration idle");
 	g_idle_add(metadata_get_list_itterate_idle, q);
 	return q;
+#endif
 }
 /**
  * MetaData 

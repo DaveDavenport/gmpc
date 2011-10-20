@@ -365,7 +365,9 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
                 met.plugin_name = "User set";
                 met.content_type = MetaData.ContentType.URI;
                 met.set_uri(file);
-                Gmpc.MetaData.set_metadata(this.song, Gmpc.MetaData.Result.AVAILABLE, met); 
+				// @TODO fix this
+				GLib.error("needs implementing");
+                //Gmpc.MetaData.set_metadata(this.song, Gmpc.MetaData.Result.AVAILABLE, met); 
     
                 var met_false = new MetaData.Item();
                 met_false.type = this.query_type;
@@ -397,7 +399,9 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
                     met.plugin_name = "User set";
                     met.content_type = MetaData.ContentType.URI;
                     met.set_uri(path);
-                    Gmpc.MetaData.set_metadata(this.song, Gmpc.MetaData.Result.AVAILABLE, met); 
+					// @TODO fix this
+					GLib.error("needs implementing");
+					//Gmpc.MetaData.set_metadata(this.song, Gmpc.MetaData.Result.AVAILABLE, met); 
 
                     var met_false = new MetaData.Item();
                     met_false.type = this.query_type;
@@ -423,7 +427,9 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
                     met.plugin_name = "User set";
                     met.content_type = MetaData.ContentType.URI;
                     met.set_uri(filename);
-                    Gmpc.MetaData.set_metadata(this.song, Gmpc.MetaData.Result.AVAILABLE, met); 
+					// @TODO fix this
+					GLib.error("needs implementing");
+					//Gmpc.MetaData.set_metadata(this.song, Gmpc.MetaData.Result.AVAILABLE, met); 
 
                     var met_false = new MetaData.Item();
                     met_false.type = this.query_type;
@@ -448,7 +454,9 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
                 met.plugin_name = "User set";
                 met.content_type = MetaData.ContentType.URI;
                 met.set_uri(file);
-                Gmpc.MetaData.set_metadata(this.song, Gmpc.MetaData.Result.AVAILABLE, met); 
+				// @TODO fix this
+				GLib.error("needs implementing");
+				//Gmpc.MetaData.set_metadata(this.song, Gmpc.MetaData.Result.AVAILABLE, met); 
 
                 var met_false = new MetaData.Item();
                 met_false.type = this.query_type;
