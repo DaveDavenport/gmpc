@@ -501,14 +501,6 @@ static GlyrDatabase *db = NULL;
  */
 void glyr_fetcher_thread(void *user_data)
 {
-	/* TODO: Is this function thread safe? */
-	gchar *url = gmpc_get_covers_path("");
-
-	/* Initialize..*/
-	glyr_init();
-	db = glyr_db_init(url);
-	g_free(url);
-
 	void *d;
 	
 	while((d = g_async_queue_pop(gaq)))
@@ -571,8 +563,6 @@ void glyr_fetcher_thread(void *user_data)
 		g_idle_add(glyr_return_queue, NULL);
 	}
 
-	glyr_db_destroy(db);
-	glyr_cleanup();
 }
 
 /**
@@ -580,7 +570,16 @@ void glyr_fetcher_thread(void *user_data)
  */
 void meta_data_init(void)
 {
+	gchar *url;
 	g_assert(meta_results == NULL );
+
+	/* Is this function thread safe? */
+	url = gmpc_get_covers_path("");
+
+	/* Initialize..*/
+	glyr_init();
+	db = glyr_db_init(url);
+	g_free(url);
 
 
 	gaq = g_async_queue_new();
@@ -690,6 +689,8 @@ void meta_data_destroy(void)
 	TOC("test")
 	metadata_cache_destroy();
 	TOC("Config saved")
+	glyr_db_destroy(db);
+	glyr_cleanup();
 
 }
 gboolean meta_compare_func(meta_thread_data *mt1, meta_thread_data *mt2)
