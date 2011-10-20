@@ -318,7 +318,7 @@ static MetaDataContentType setup_glyr_query(GlyrQuery *query,
 	/* Force UTF 8 */
 	glyr_opt_force_utf8(query, TRUE);
 
-	glyr_opt_parrallel(query, 4);
+	glyr_opt_parallel(query, 4);
 
 	/* set metadata */
 	glyr_opt_artist(query,(char*)mtd->song->artist);
@@ -546,7 +546,7 @@ void glyr_fetcher_thread(void *user_data)
 			// we searched for this before.
 			cache = glyr_cache_new();
 			glyr_cache_set_data(cache, g_strdup("GMPC Dummy data"), -1);
-			cache->dscr = g_strdup("GMPC dummy URL");
+			cache->dsrc = g_strdup("GMPC dummy URL");
 			cache->rating = -1;
 			
 			glyr_db_insert(db,&query, cache);
