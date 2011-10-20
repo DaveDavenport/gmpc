@@ -450,7 +450,8 @@ static gboolean process_glyr_result(const GlyrMemCache *cache,
 	gboolean retv = FALSE;
 	mtd->result = META_DATA_UNAVAILABLE;
 	mtd->met = NULL;
-	if(cache != NULL && cache->rating >= 0)
+	if(cache == NULL) return retv;
+	if(cache->rating >= 0)
 	{
         if(mtd->type == META_ARTIST_SIMILAR)
         {
@@ -487,7 +488,8 @@ static gboolean process_glyr_result(const GlyrMemCache *cache,
 			// found something.
 			retv = TRUE;
 		}
-	}else if (cache != NULL && cache->rating == -1) {
+	}else { 
+		// Explicitely not found.
 		retv = TRUE;
 	}
 	return retv;
@@ -550,7 +552,6 @@ void glyr_fetcher_thread(void *user_data)
 			// we searched for this before.
 			cache = glyr_cache_new();
 			glyr_cache_set_data(cache, g_strdup(""), -1);
-			cache->dsrc = g_strdup("dummy");
 			cache->rating = -1;
 			
 			glyr_db_insert(db,&query, cache);
