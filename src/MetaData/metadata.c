@@ -111,7 +111,7 @@ typedef struct {
 } meta_thread_data;
 
 gboolean meta_compare_func(meta_thread_data *mt1, meta_thread_data *mt2);
-static gboolean meta_data_handle_results(void);
+//static gboolean meta_data_handle_results(void);
 
 
 /*
@@ -506,8 +506,8 @@ static gboolean process_glyr_result(GlyrMemCache *cache,
 	return retv;
 }
 
-GlyrQuery *glyr_exit_handle = NULL;
-GMutex *exit_handle_lock = NULL;
+static GlyrQuery *glyr_exit_handle = NULL;
+static GMutex *exit_handle_lock = NULL;
 
 /**
  * Thread that does the GLYR requests
@@ -515,11 +515,17 @@ GMutex *exit_handle_lock = NULL;
 void glyr_fetcher_thread(void *user_data)
 {
 	void *d;
-	
+	GlyrQuery query;
+
 	g_mutex_lock(exit_handle_lock);
 	while((d = g_async_queue_pop(gaq)))
 	{
-		meta_thread_data *mtd = (meta_thread_data*)d;
+		GLYR_ERROR          err          = GLYRE_OK;
+		MetaDataContentType content_type = META_DATA_CONTENT_RAW;
+		meta_thread_data    *mtd         = (meta_thread_data*)d;
+		GlyrMemCache        *cache       = NULL;
+
+		// Check if this is the quit command.
 		if(mtd->quit) {
 			printf("Quitting....");
 			g_mutex_unlock(exit_handle_lock);
@@ -528,15 +534,10 @@ void glyr_fetcher_thread(void *user_data)
 			return;
 		}
 
-		GlyrQuery query;
 		glyr_exit_handle = &query;
 		g_mutex_unlock(exit_handle_lock);
 
-		GLYR_ERROR err = GLYRE_OK;
-		MetaDataContentType content_type = META_DATA_CONTENT_RAW;
 		printf("new style query\n");
-		/* cache */
-		GlyrMemCache * cache = NULL;
 
 		glyr_query_init(&query);
 
@@ -557,7 +558,7 @@ void glyr_fetcher_thread(void *user_data)
 		/* Also tell it to write newly found items to the db */
 		glyr_opt_db_autowrite(&query, TRUE);
 
-
+		/* */
 		content_type = setup_glyr_query(&query, mtd);
 
 		/* get metadata */
@@ -580,15 +581,17 @@ void glyr_fetcher_thread(void *user_data)
 		}
 		// Cleanup
 		if(cache)glyr_free_list(cache);
-		
-		
+			
+		// Clear the query, and lock the handle again.
 		g_mutex_lock(exit_handle_lock);
 		glyr_exit_handle = NULL;
 		glyr_query_destroy(&query);
 
 		// Push back result, and tell idle handle to handle it.
 		g_async_queue_push(return_queue, mtd);
+		// invalidate pointer.
 		mtd = NULL;
+		// Schedule the result thread in idle time.
 		g_idle_add(glyr_return_queue, NULL);
 	}
 }
@@ -2414,7 +2417,7 @@ gmpcPlugin metadata_plug = {
 	.name           = N_("Metadata Handler"),
 	.version        = {1,1,1},
 	.plugin_type    = GMPC_INTERNALL,
-	.pref           = &metadata_pref_plug
+//	.pref           = &metadata_pref_plug
 };
 
 /* vim: set noexpandtab ts=4 sw=4 sts=4 tw=120: */
