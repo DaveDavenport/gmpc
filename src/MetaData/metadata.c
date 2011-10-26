@@ -591,7 +591,6 @@ void glyr_fetcher_thread(void *user_data)
 		mtd = NULL;
 		g_idle_add(glyr_return_queue, NULL);
 	}
-
 }
 
 /**
@@ -601,7 +600,6 @@ GThread *gaq_fetcher_thread = NULL;
 void meta_data_init(void)
 {
 	gchar *url;
-//	g_assert(meta_results == NULL );
 
 	/* Is this function thread safe? */
 	url = gmpc_get_covers_path("");
@@ -617,20 +615,6 @@ void meta_data_init(void)
 	return_queue = g_async_queue_new();
 	gaq_fetcher_thread = g_thread_create(glyr_fetcher_thread, NULL, TRUE, NULL);
 
-		
-
-#if 0
-	metadata_cache_init();
-
-	/**
-	 * the result queue
-	 */
-	meta_results = g_queue_new();
-
-	/**
-	 * Create the retrieval thread
-	 */
-#endif
 }
 
 void meta_data_add_plugin(gmpcPluginParent *plug)

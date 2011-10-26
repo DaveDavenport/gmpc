@@ -21,7 +21,6 @@ requires 2.0.0
 
 %ph{
 #include "main.h"
-#include "metadata-cache.h"
 #include "misc.h"
 #define LOG_DOMAIN "MetaImage"
 %}

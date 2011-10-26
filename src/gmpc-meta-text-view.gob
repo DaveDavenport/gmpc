@@ -28,7 +28,6 @@ requires 2.0.0
 %}
 %ph{
 #include "gmpc-extras.h"
-#include "metadata-cache.h"
 #include "main.h"
 %}
 

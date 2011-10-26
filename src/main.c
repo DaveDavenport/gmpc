@@ -39,7 +39,6 @@
 #include "setup-assistant.h"
 
 #include "gmpc-mpddata-model-playlist.h"
-#include "metadata-cache.h"
 #include "bug-information.h"
 
 #include "pixbuf-cache.h"
