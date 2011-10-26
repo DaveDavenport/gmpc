@@ -267,7 +267,7 @@ namespace Gmpc {
                     this.paned.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC);
                     this.paned.set_shadow_type(Gtk.ShadowType.NONE);
 					if(use_backdrop) {
-	                    this.container = new Gmpc.MetaData.Widgets.Backdrop(Gmpc.MetaData.Type.ARTIST_ART);
+	                    this.container = new Gmpc.MetaData.Widgets.Backdrop(Gmpc.MetaData.Type.BACKDROP_ART);
 					}else{
 						this.container = new Gtk.EventBox();
 					}

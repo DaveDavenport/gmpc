@@ -117,6 +117,7 @@ namespace Gmpc {
             SONG_SIMILAR    = 64,
             GENRE_SIMILAR   = 128,
             SONG_GUITAR_TAB = 256,
+			BACKDROP_ART	= 512,
             QUERY_DATA_TYPES = 65535,
             QUERY_NO_CACHE   = 65536
         }

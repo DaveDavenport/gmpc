@@ -343,6 +343,11 @@ static MetaDataContentType setup_glyr_query(GlyrQuery *query,
 		glyr_opt_type(query, GLYR_GET_ARTIST_PHOTOS);
 		content_type = META_DATA_CONTENT_RAW;
 	}
+	else if (mtd->type == META_BACKDROP_ART)
+	{
+		glyr_opt_type(query, GLYR_GET_BACKDROPS);
+		content_type = META_DATA_CONTENT_RAW;
+	}
 	else if(mtd->type == META_ARTIST_TXT)
 	{
 		glyr_opt_lang_aware_only(query,TRUE);
