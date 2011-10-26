@@ -506,6 +506,9 @@ static gboolean process_glyr_result(GlyrMemCache *cache,
 	return retv;
 }
 
+GlyrQuery *glyr_exit_handle = NULL;
+GMutex *exit_handle_lock = NULL;
+
 /**
  * Thread that does the GLYR requests
  */
@@ -513,17 +516,22 @@ void glyr_fetcher_thread(void *user_data)
 {
 	void *d;
 	
+	g_mutex_lock(exit_handle_lock);
 	while((d = g_async_queue_pop(gaq)))
 	{
 		meta_thread_data *mtd = (meta_thread_data*)d;
 		if(mtd->quit) {
 			printf("Quitting....");
+			g_mutex_unlock(exit_handle_lock);
 			/* Free the Request struct */
 			g_free(mtd);
 			return;
 		}
 
 		GlyrQuery query;
+		glyr_exit_handle = &query;
+		g_mutex_unlock(exit_handle_lock);
+
 		GLYR_ERROR err = GLYRE_OK;
 		MetaDataContentType content_type = META_DATA_CONTENT_RAW;
 		printf("new style query\n");
@@ -572,6 +580,10 @@ void glyr_fetcher_thread(void *user_data)
 		}
 		// Cleanup
 		if(cache)glyr_free_list(cache);
+		
+		
+		g_mutex_lock(exit_handle_lock);
+		glyr_exit_handle = NULL;
 		glyr_query_destroy(&query);
 
 		// Push back result, and tell idle handle to handle it.
@@ -593,7 +605,8 @@ void meta_data_init(void)
 
 	/* Is this function thread safe? */
 	url = gmpc_get_covers_path("");
-
+		
+	exit_handle_lock = g_mutex_new();
 	/* Initialize..*/
 	glyr_init();
 	db = glyr_db_init(url);
@@ -738,8 +751,15 @@ void meta_data_destroy(void)
 	g_async_queue_push_unlocked(gaq, mtd);
 	mtd = NULL;
 	g_async_queue_unlock(gaq);
+	// add lock? 
+	g_mutex_lock(exit_handle_lock);
+	if(glyr_exit_handle) glyr_signal_exit(glyr_exit_handle);
+	g_mutex_unlock(exit_handle_lock);
+
 	printf("Waiting for glyr to finish.....\n");
 	g_thread_join(gaq_fetcher_thread);
+	g_mutex_free(exit_handle_lock);
+
 	glyr_db_destroy(db);
 	glyr_cleanup();
 	/**
