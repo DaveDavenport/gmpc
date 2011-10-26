@@ -745,7 +745,10 @@ void meta_data_destroy(void)
 	g_async_queue_unlock(gaq);
 	// add lock? 
 	g_mutex_lock(exit_handle_lock);
-	if(glyr_exit_handle) glyr_signal_exit(glyr_exit_handle);
+	if(glyr_exit_handle) {
+		printf("Sending quit signal\n");
+		glyr_signal_exit(glyr_exit_handle);
+	}
 	g_mutex_unlock(exit_handle_lock);
 
 	printf("Waiting for glyr to finish.....\n");
