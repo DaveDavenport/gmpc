@@ -713,6 +713,7 @@ gchar *mpd_song_checksum_type(const mpd_Song * song, MetaDataType type)
      		    break;
 		    case META_ALBUM_ART:
 		    case META_ALBUM_TXT:
+			case META_BACKDROP_ART:
 	    		if (song->album)
 	           		g_checksum_update(cs, (guchar *) song->album, -1);
 	            if (song->artist)

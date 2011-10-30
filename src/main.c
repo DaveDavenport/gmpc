@@ -39,7 +39,6 @@
 #include "setup-assistant.h"
 
 #include "gmpc-mpddata-model-playlist.h"
-#include "metadata-cache.h"
 #include "bug-information.h"
 
 #include "pixbuf-cache.h"
@@ -292,9 +291,9 @@ int main(int argc, char **argv)
     {
         /* start the metadata system */
         meta_data_init();
-        printf("Cleaning up cover file..\n");
+        //printf("Cleaning up cover file..\n");
         /* Call the cleanup */
-        metadata_cache_cleanup();
+        //metadata_cache_cleanup();
         printf("Done..\n");
         /* Destroy the meta data system and exit. */
         meta_data_destroy();

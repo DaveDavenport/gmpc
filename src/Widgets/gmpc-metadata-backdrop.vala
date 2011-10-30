@@ -28,7 +28,7 @@ namespace Gmpc
         {
             private string song_checksum = null;
             private MPD.Song? cur_song = null;
-            private Gmpc.MetaData.Type cur_type = Gmpc.MetaData.Type.ARTIST_ART;
+            private Gmpc.MetaData.Type cur_type = Gmpc.MetaData.Type.BACKDROP_ART;
             /*   */
             private Gdk.Pixbuf pb = null;
             private ModificationType mod_type = (ModificationType)
@@ -66,7 +66,25 @@ namespace Gmpc
                             });
                         loader.set_from_file(uri, width, -1,mod_type);
                     }
-                }
+                }else if (item.content_type == Gmpc.MetaData.ContentType.RAW)
+				{
+					Gtk.Allocation req;
+					int width;
+					this.get_allocation(out req);
+					width = int.max(req.width, 400);
+					log(log_domain_mdbd, GLib.LogLevelFlags.LEVEL_DEBUG,
+							"Getting image with size: %u", width);
+					if(loader == null)
+						loader = new PixbufLoaderAsync();
+					loader.pixbuf_update.connect((source, pixbuf)=>{
+							this.pb = pixbuf;
+							log (log_domain_mdbd,GLib.LogLevelFlags.LEVEL_DEBUG,
+								"Updating background");
+							this.queue_draw();
+							});
+					unowned uchar[] data = item.get_raw();
+					loader.set_from_raw(data, width,-1, mod_type);
+				}
             }
             /**
              * @param The #MPD.Song to set the background for or NULL to clear.
@@ -101,7 +119,8 @@ namespace Gmpc
              */
             public Backdrop(Gmpc.MetaData.Type type)
             {
-                assert(type == Gmpc.MetaData.Type.ARTIST_ART ||
+                assert(type == Gmpc.MetaData.Type.BACKDROP_ART ||
+						type == Gmpc.MetaData.Type.ARTIST_ART||
                         type == Gmpc.MetaData.Type.ALBUM_ART);
                 cur_type = type;
 

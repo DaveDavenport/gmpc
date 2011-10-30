@@ -28,7 +28,6 @@ requires 2.0.0
 %}
 %ph{
 #include "gmpc-extras.h"
-#include "metadata-cache.h"
 #include "main.h"
 %}
 
@@ -215,7 +214,9 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
             }else {
                 met->content_type = META_DATA_CONTENT_EMPTY;
             }
-            meta_data_set_cache(self->_priv->song, META_DATA_AVAILABLE, met); 
+			/// TODO: fix this.
+			g_error("needs implementation");
+            //meta_data_set_cache(self->_priv->song, META_DATA_AVAILABLE, met); 
             gmpc_meta_watcher_data_changed(gmw, self->_priv->song, self->_priv->type, META_DATA_AVAILABLE, met);
             meta_data_free(met);
 
@@ -421,7 +422,9 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
         met->type = self->_priv->type;
         met->plugin_name = "User set";
         met->content_type = META_DATA_CONTENT_EMPTY;
-		meta_data_set_cache(self->_priv->song, META_DATA_UNAVAILABLE, met); 
+		/// TODO: fix this.
+		g_error("needs implementation");
+//		meta_data_set_cache(self->_priv->song, META_DATA_UNAVAILABLE, met); 
 		gmpc_meta_watcher_data_changed(gmw, self->_priv->song, self->_priv->type, META_DATA_UNAVAILABLE, NULL);
         meta_data_free(met);
 	}
@@ -462,7 +465,10 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
                     met->plugin_name = "User set";
                     met->content_type = META_DATA_CONTENT_URI;
                     met->content = filename; met->size =-1;
-					meta_data_set_cache(song, META_DATA_AVAILABLE, met); 
+
+					/// TODO: fix this.
+					g_error("needs implementation");
+					//meta_data_set_cache(song, META_DATA_AVAILABLE, met); 
                     cfg_set_single_value_as_string(config, "MetaData", "text-file-chooser", filename); 
 					gmpc_meta_watcher_data_changed(gmw, song, type, META_DATA_AVAILABLE, met);
 
