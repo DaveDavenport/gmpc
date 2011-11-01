@@ -156,8 +156,22 @@ namespace Gmpc
                 if(cur_song == null) return false;
                 if(event.button != 3) return false;
                 var menu = new Gtk.Menu();
+
+				var item =  new Gtk.ImageMenuItem.with_label(_("Refresh backdrop"));
+                item.set_image(new Gtk.Image.from_stock("gtk-refresh", Gtk.IconSize.MENU));
+                item.activate.connect((source)=>{
+						MetaData.Item mitem = null;
+						stdout.printf("Push backdrop update\n");
+						var a = metawatcher.query(cur_song, cur_type|Gmpc.MetaData.Type.QUERY_NO_CACHE, out mitem);
+						if(a == Gmpc.MetaData.Result.AVAILABLE) {
+						this.set_from_item(mitem);
+						}else {
+						this.set_from_item(null);
+						}
+						});
+                menu.append(item);
                 /*  Add selector */
-                var item = new Gtk.ImageMenuItem.with_label(_("Metadata selector"));
+                item = new Gtk.ImageMenuItem.with_label(_("Metadata selector"));
                 item.set_image(new Gtk.Image.from_stock("gtk-edit", Gtk.IconSize.MENU));
                 item.activate.connect((source)=>{
                     new Gmpc.MetaData.EditWindow(cur_song, cur_type);
