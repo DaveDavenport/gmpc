@@ -1288,6 +1288,7 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData *
 	 */
 	if((type&META_QUERY_NO_CACHE) == 0)
 	{
+		MetaDataResult mrd;
 		MetaDataContentType content_type = META_DATA_CONTENT_RAW;
 		GlyrQuery query;
 		GlyrMemCache * cache = NULL;
@@ -1304,14 +1305,21 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData *
 			// Cleanup
 			if(cache)glyr_free_list(cache);
 			glyr_query_destroy(&query);
+			
+			gmpc_meta_watcher_data_changed(gmw,mtd->song, (mtd->type)&META_QUERY_DATA_TYPES, mtd->result,mtd->met);
+			mrd = mtd->result;
+			*met = mtd->met;
+			mtd->met = NULL;
+			if(mtd->met)
+				meta_data_free(mtd->met);
+			/* Free the copie and edited version of the songs */
+			if(mtd->song)
+				mpd_freeSong(mtd->song);
+			if(mtd->edited)
+				mpd_freeSong(mtd->edited);
+			g_free(mtd);
 
-			// Push back result, and tell idle handle to handle it.
-			g_async_queue_push(return_queue, mtd);
-			mtd = NULL;
-			g_idle_add(glyr_return_queue, NULL);
-
-			printf("Got from cache\n");
-			return META_DATA_FETCHING;
+			return mrd;
 		}
 		if(cache)glyr_free_list(cache);
 		glyr_query_destroy(&query);

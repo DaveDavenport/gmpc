@@ -427,10 +427,11 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 			{
 				self_set_cover_fetching(self);
 			}else if (ret == META_DATA_AVAILABLE) {
-                    if(met->content_type == META_DATA_CONTENT_URI)
-                    {
+                    if(met->content_type == META_DATA_CONTENT_URI) {
                         const gchar *path = meta_data_get_uri(met);
                         self_set_cover_from_path(self,path); 
+					}else if (met->content_type == META_DATA_CONTENT_RAW) {
+						self_set_cover_raw(self, met->content, met->size);
                     }else{
                         self_set_cover_na(self);
                     }
@@ -452,10 +453,11 @@ class Gmpc:MetaImage from Gtk:Event:Box{
             {
                 self_set_cover_fetching(self);
             }else if (ret == META_DATA_AVAILABLE) {
-                if(met->content_type == META_DATA_CONTENT_URI)
-                {
+                if(met->content_type == META_DATA_CONTENT_URI) {
                     const gchar *path = meta_data_get_uri(met);
                     self_set_cover_from_path(self,path); 
+				}else if (met->content_type == META_DATA_CONTENT_RAW) {
+					self_set_cover_raw(self, met->content, met->size);
                 } else {
                     self_set_cover_na(self);
                 }
@@ -512,7 +514,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
         else
         {
             if(ret == META_DATA_AVAILABLE) {
-                if(met->content_type == META_DATA_CONTENT_URI){
+                if(met->content_type == META_DATA_CONTENT_URI) {
                     const char *path = meta_data_get_uri(met);
                     self_set_cover_from_path(self,path); 
 				}else if (met->content_type == META_DATA_CONTENT_RAW) {
@@ -719,10 +721,11 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 			{
 				self_set_cover_fetching(self);
 			}else if (ret == META_DATA_AVAILABLE) {
-				if(met->content_type == META_DATA_CONTENT_URI)
-				{
+				if(met->content_type == META_DATA_CONTENT_URI) {
 					const gchar *path = meta_data_get_uri(met);
 					self_set_cover_from_path(self,path); 
+				}else if (met->content_type == META_DATA_CONTENT_RAW) {
+					self_set_cover_raw(self, met->content, met->size);
 				}else{
 					g_log(LOG_DOMAIN, G_LOG_LEVEL_WARNING, "Not implemented");
 					self_set_cover_na(self);
