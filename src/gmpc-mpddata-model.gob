@@ -1187,12 +1187,7 @@ end:
                     {
                         int compare;
                         gchar *aa,*bb;
-                        aa = g_utf8_strdown(new->tag, -1);
-                        bb = g_utf8_strdown(original->tag, -1);
-                        compare = g_utf8_collate(aa,bb);
-                        g_free(aa);
-                        g_free(bb);
-                        //int compare = //strcmp(new->tag, original->tag);
+                        compare = g_utf8_collate(new->tag,original->tag);
                         if(compare < 0)
                         {
                             /* add */
