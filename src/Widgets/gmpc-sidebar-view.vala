@@ -139,14 +139,14 @@ public class MyCellRenderer : Gtk.CellRenderer
 			var ct = Gdk.cairo_create(window);
 			l.get_pixel_size(out pw, out ph);
 
-			ct.set_source_rgb(0.8,0.2,0.2);
-			ct.rectangle(cell_area.x+3, cell_area.y+cell_area.height/2-ph/2, pw+4, ph);
+			Gdk.cairo_set_source_color(ct, widget.style.bg[Gtk.StateType.SELECTED]);
+			ct.rectangle(cell_area.x, cell_area.y+cell_area.height/2-ph/2, pw+4, ph);
 			ct.fill_preserve();
-			ct.set_source_rgb(0,0,0);
+			Gdk.cairo_set_source_color(ct, widget.style.text[Gtk.StateType.SELECTED]);
 			ct.stroke();
 
-			ct.move_to(cell_area.x+2+3, cell_area.y+cell_area.height/2-ph/2);
-			ct.set_source_rgb(1,1,1);
+			ct.move_to(cell_area.x+2, cell_area.y+cell_area.height/2-ph/2);
+			Gdk.cairo_set_source_color(ct, widget.style.fg[Gtk.StateType.SELECTED]);
 			Pango.cairo_show_layout(ct, l);
 			ct.stroke();
 		}
