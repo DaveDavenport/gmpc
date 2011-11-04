@@ -140,18 +140,16 @@ public class MyCellRenderer : Gtk.CellRenderer
 			l.get_pixel_size(out pw, out ph);
 
 			Gdk.cairo_set_source_color(ct, widget.style.bg[Gtk.StateType.SELECTED]);
-			ct.rectangle(cell_area.x, cell_area.y+cell_area.height/2-ph/2, pw+4, ph);
+			ct.rectangle(cell_area.x, cell_area.y+cell_area.height/2-ph/2-0.5, pw+4, ph);
 			ct.fill_preserve();
 			Gdk.cairo_set_source_color(ct, widget.style.text[Gtk.StateType.SELECTED]);
 			ct.stroke();
 
-			ct.move_to(cell_area.x+2, cell_area.y+cell_area.height/2-ph/2);
+			ct.move_to(cell_area.x+2, cell_area.y+cell_area.height/2-ph/2-0.5);
 			Gdk.cairo_set_source_color(ct, widget.style.fg[Gtk.StateType.SELECTED]);
 			Pango.cairo_show_layout(ct, l);
 			ct.stroke();
 		}
 		return;
 	}
-
 }
-
