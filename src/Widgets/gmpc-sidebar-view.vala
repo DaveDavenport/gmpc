@@ -145,7 +145,7 @@ public class MyCellRenderer : Gtk.CellRenderer
 			Gdk.cairo_set_source_color(ct, widget.style.text[Gtk.StateType.SELECTED]);
 			ct.stroke();
 
-			ct.move_to(cell_area.x+2, cell_area.y+cell_area.height/2-ph/2-0.5);
+			ct.move_to(cell_area.x+2, cell_area.y+cell_area.height/2-ph/2-1.5);
 			Gdk.cairo_set_source_color(ct, widget.style.fg[Gtk.StateType.SELECTED]);
 			Pango.cairo_show_layout(ct, l);
 			ct.stroke();
