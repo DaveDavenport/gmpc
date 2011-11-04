@@ -141,7 +141,9 @@ public class MyCellRenderer : Gtk.CellRenderer
 
 			ct.set_source_rgb(0.8,0.2,0.2);
 			ct.rectangle(cell_area.x+3, cell_area.y+cell_area.height/2-ph/2, pw+4, ph);
-			ct.fill();
+			ct.fill_preserve();
+			ct.set_source_rgb(0,0,0);
+			ct.stroke();
 
 			ct.move_to(cell_area.x+2+3, cell_area.y+cell_area.height/2-ph/2);
 			ct.set_source_rgb(1,1,1);
