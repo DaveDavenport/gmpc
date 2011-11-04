@@ -456,7 +456,7 @@ gboolean alt_button_pressed = FALSE;
 
 int pl3_window_key_release_event(GtkWidget * mw, GdkEventKey * event)
 {
-	if(event->keyval ==65513 ) {
+	if(event->keyval == GDK_KEY_Alt_L || event->keyval == GDK_KEY_Alt_R) {
 		GtkWidget *tree = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "cat_tree"));
 		alt_button_pressed = FALSE;
 		gtk_widget_queue_draw(GTK_WIDGET(tree));
@@ -467,7 +467,7 @@ int pl3_window_key_press_event(GtkWidget * mw, GdkEventKey * event)
 {
     int i = 0;
     gint type = pl3_cat_get_selected_browser();
-	if(event->keyval ==65513 ) {
+	if(event->keyval == GDK_KEY_Alt_L || event->keyval == GDK_KEY_Alt_R) {
 		GtkWidget *tree = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "cat_tree"));
 		alt_button_pressed = TRUE;
 		gtk_widget_queue_draw(GTK_WIDGET(tree));
