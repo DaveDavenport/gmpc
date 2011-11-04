@@ -350,6 +350,7 @@ int pl3_cat_tree_button_release_event(GtkTreeView * tree, GdkEventButton * event
     gint type = pl3_cat_get_selected_browser();
     int menu_items = 0;
     GtkWidget *menu = NULL;
+
     if (type == -1 || !mpd_check_connected(connection) || event->button != 3)
     {
         /* no selections, or no usefull one.. so propagate the signal */
@@ -451,11 +452,26 @@ void pl3_window_fullscreen(void)
     }
 }
 
+gboolean alt_button_pressed = FALSE;
 
+int pl3_window_key_release_event(GtkWidget * mw, GdkEventKey * event)
+{
+	if(event->keyval ==65513 ) {
+		GtkWidget *tree = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "cat_tree"));
+		alt_button_pressed = FALSE;
+		gtk_widget_queue_draw(GTK_WIDGET(tree));
+	}
+	return FALSE;
+}
 int pl3_window_key_press_event(GtkWidget * mw, GdkEventKey * event)
 {
     int i = 0;
     gint type = pl3_cat_get_selected_browser();
+	if(event->keyval ==65513 ) {
+		GtkWidget *tree = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "cat_tree"));
+		alt_button_pressed = TRUE;
+		gtk_widget_queue_draw(GTK_WIDGET(tree));
+	}
     /**
      * Following key's are only valid when connected
      */
@@ -867,6 +883,44 @@ gboolean pl3_cat_select_function(GtkTreeSelection *select, GtkTreeModel *model, 
 	}
 	return FALSE;
 }
+void pl3_sidebar_text_get_key_number( GtkTreeViewColumn *column, 
+		GtkCellRenderer *renderer,
+		GtkTreeModel *model,
+		GtkTreeIter *d_iter,
+		gpointer data)
+{
+	int number = 0;
+	GtkTreeIter iter;
+	GtkTreePath *pa1 = gtk_tree_model_get_path(model, d_iter);
+	if(!alt_button_pressed) {
+		g_object_set(G_OBJECT(renderer), "show-number", FALSE, NULL);
+		return;
+	}
+	if (gtk_tree_model_get_iter_first(pl3_tree, &iter))
+	{
+		do{
+			gint type =0 ;
+			gtk_tree_model_get(pl3_tree, &iter, PL3_CAT_TYPE, &type, -1);
+			if(type >= 0) number++;
+			if( type >= 0) 
+			{
+				GtkTreePath *pa2 = gtk_tree_model_get_path(model, &iter);
+				if(gtk_tree_path_compare(pa2, pa1) == 0){
+					g_object_set(G_OBJECT(renderer), "number", number%10, NULL);
+					g_object_set(G_OBJECT(renderer), "show-number", TRUE, NULL);
+					gtk_tree_path_free(pa2);
+					gtk_tree_path_free(pa1);
+					return;
+				}
+				gtk_tree_path_free(pa2);
+			}
+		}while(gtk_tree_model_iter_next(pl3_tree, &iter));
+	}
+	gtk_tree_path_free(pa1);
+	g_object_set(G_OBJECT(renderer), "number", number, NULL);
+	g_object_set(G_OBJECT(renderer), "show-number", FALSE, NULL);
+}
+
 void create_playlist3(void)
 {
     GtkWidget *pb,*ali;
@@ -984,7 +1038,10 @@ void create_playlist3(void)
     sidebar_text = renderer = my_cell_renderer_new();//gtk_cell_renderer_pixbuf_new();
     g_object_set(G_OBJECT(renderer), "xalign", 0.5,NULL);
     column = gtk_tree_view_column_new();
+
+
     gtk_tree_view_column_pack_start(column, renderer, FALSE);
+	gtk_tree_view_column_set_cell_data_func(column, sidebar_text, pl3_sidebar_text_get_key_number, NULL, NULL);
     g_object_set(G_OBJECT(renderer), "stock-size", GTK_ICON_SIZE_MENU, NULL);
     {
         int w, h;

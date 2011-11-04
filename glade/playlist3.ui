@@ -381,6 +381,7 @@
     <property name="default_height">400</property>
     <property name="icon_name">gmpc</property>
     <signal name="key-press-event" handler="pl3_window_key_press_event" swapped="no"/>
+    <signal name="key-release-event" handler="pl3_window_key_release_event" swapped="no"/>
     <signal name="delete-event" handler="pl3_close" swapped="no"/>
     <child>
       <object class="GtkVBox" id="vbox1">

@@ -21,12 +21,15 @@
 using Config;
 using Gtk;
 using Gmpc;
+using Cairo;
 
 private const bool use_transition_sbv = Gmpc.use_transition;
 private const string some_unique_name_sbv = Config.VERSION;
 
 public class MyCellRenderer : Gtk.CellRenderer
 {
+	public bool show_number { set; get; default=false;} 
+	public int number { set; get; default=0;}
 	private CellRendererPixbuf cr_pb = new Gtk.CellRendererPixbuf();
 	private CellRendererText cr_text = new Gtk.CellRendererText();
 	public string icon_name {
@@ -128,6 +131,23 @@ public class MyCellRenderer : Gtk.CellRenderer
 		}
 		if(show_text)
 			cr_text.render(window, widget, background_area, ca, expose_area, flags);
+
+		if(show_number)
+		{
+			int pw,ph;
+			var l = widget.create_pango_layout("%0i".printf(number));
+			var ct = Gdk.cairo_create(window);
+			l.get_pixel_size(out pw, out ph);
+
+			ct.set_source_rgb(0.8,0.2,0.2);
+			ct.rectangle(cell_area.x+3, cell_area.y+cell_area.height/2-ph/2, pw+4, ph);
+			ct.fill();
+
+			ct.move_to(cell_area.x+2+3, cell_area.y+cell_area.height/2-ph/2);
+			ct.set_source_rgb(1,1,1);
+			Pango.cairo_show_layout(ct, l);
+			ct.stroke();
+		}
 		return;
 	}
 
