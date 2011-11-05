@@ -147,6 +147,7 @@ gboolean pl3_close(void);
 static void pl3_update_profiles_menu(GmpcProfiles * prof, const int changed, const int col, const gchar * id);
 gboolean playlist3_enter_notify_event(GtkWidget * wid, GdkEventCrossing * event, gpointer data);
 gboolean playlist3_leave_notify_event(GtkWidget * wid, GdkEventCrossing * event, gpointer data);
+gboolean pl3_window_focus_out_event(GtkWidget *window, GdkEventFocus *event, gpointer data);
 
 static void pl3_profiles_changed(GmpcProfiles * prof, const int changed, const int col, const gchar * id);
 static void playlist3_server_output_changed(GtkWidget * item, gpointer data);
@@ -425,6 +426,22 @@ static gboolean pl3_win_state_event(GtkWidget * window, GdkEventWindowState * ev
     return FALSE;
 }
 
+gboolean alt_button_pressed = FALSE;
+/**
+ * This avoids the 'keybinding help' to become sticky when moving the window, or chainging
+ * focus to other window.
+ */
+gboolean pl3_window_focus_out_event(GtkWidget *window, GdkEventFocus *event, gpointer data)
+{
+	if(alt_button_pressed)
+	{
+		GtkWidget *tree = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "cat_tree"));
+		alt_button_pressed = FALSE;
+		gtk_widget_queue_draw(GTK_WIDGET(tree));
+	}
+	return FALSE;
+}
+
 
 gboolean pl3_window_is_fullscreen(void)
 {
@@ -452,7 +469,6 @@ void pl3_window_fullscreen(void)
     }
 }
 
-gboolean alt_button_pressed = FALSE;
 
 int pl3_window_key_release_event(GtkWidget * mw, GdkEventKey * event)
 {
