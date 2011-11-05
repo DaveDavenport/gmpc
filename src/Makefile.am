@@ -17,14 +17,6 @@ VALA_VAPI_FILES=\
 
 
 PLUGIN_FILES=\
-    Providers/music-tree.vala\
-    Providers/HTBackdrops.vala\
-    Providers/RenderCover.vala\
-    Providers/LyrDB.vala\
-    Providers/ChartLyrics.vala\
-    Providers/DiscoGS.c\
-    Providers/LastFM.c\
-    Providers/GLyros.c\
     Plugins/extraplaylist.c\
     Plugins/AutoMPD.vala\
     Plugins/sidebar-search.vala\

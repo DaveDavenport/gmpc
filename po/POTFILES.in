@@ -96,7 +96,3 @@ src/GUI/title_header.c
 
 #Plugins
 src/Plugins/AutoMPD.c
-#Providers
-src/Providers/music-tree.c
-src/Providers/LastFM.c
-#src/Providers/gmc-plugin.c

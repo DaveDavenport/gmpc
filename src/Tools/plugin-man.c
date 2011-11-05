@@ -43,11 +43,6 @@
  *       hide this one
  */
 GmpcBrowsersMetadata *browsers_metadata = NULL;
-extern gmpcPlugin discogs_plugin;
-extern gmpcPlugin lastfm_plugin;
-#ifdef HAVE_GLYR
-extern gmpcPlugin glyros_plugin;
-#endif
 
 void plugin_manager_load_internal_plugins(void)
 {
@@ -107,24 +102,6 @@ void plugin_manager_load_internal_plugins(void)
     /* Initialize the message system */
     plugin_add_new(GMPC_PLUGIN_BASE(pl3_messages), 0, NULL);
     /** Provider */
-    plugin_add(&discogs_plugin, 0, NULL);
-    plugin_add(&lastfm_plugin, 0, NULL);
-    plugin_add_new((GmpcPluginBase *) 
-            gmpc_provider_music_tree_new(),
-            0, NULL);
-    plugin_add_new((GmpcPluginBase *) 
-            gmpc_provider_ht_backdrops_new(),
-            0, NULL);
-    plugin_add_new((GmpcPluginBase *) 
-            gmpc_provider_render_cover_new(),
-            0, NULL);
-    plugin_add_new((GmpcPluginBase *) 
-            gmpc_provider_lyr_db_new(),
-            0, NULL);
-    plugin_add_new((GmpcPluginBase *) 
-            gmpc_provider_chart_lyrics_new(),
-            0, NULL);
-
     plugin_add_new((GmpcPluginBase *) 
             gmpc_plugins_auto_mpd_new(),
             0, NULL);
@@ -136,9 +113,6 @@ void plugin_manager_load_internal_plugins(void)
     plugin_add_new((GmpcPluginBase *)
             gmpc_plugins_sidebar_next_song_new(),
             0, NULL);
-#ifdef HAVE_GLYR
-    plugin_add(&glyros_plugin, 0, NULL);
-#endif
 }
 
 void plugin_manager_initialize_plugins(void)
