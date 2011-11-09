@@ -216,7 +216,7 @@
             <property name="stock_id">gtk-media-next</property>
             <signal name="activate" handler="next_song" swapped="no"/>
           </object>
-          <accelerator key="Right" modifiers="GDK_CONTROL_MASK"/>
+          <accelerator key="Right" modifiers="GDK_MOD1_MASK"/>
         </child>
         <child>
           <object class="GtkAction" id="MPDPrevious">
@@ -226,7 +226,7 @@
             <property name="stock_id">gtk-media-previous</property>
             <signal name="activate" handler="prev_song" swapped="no"/>
           </object>
-          <accelerator key="Left" modifiers="GDK_CONTROL_MASK"/>
+          <accelerator key="Left" modifiers="GDK_MOD1_MASK"/>
         </child>
         <child>
           <object class="GtkAction" id="MPDStop">
@@ -235,7 +235,7 @@
             <property name="stock_id">gtk-media-stop</property>
             <signal name="activate" handler="stop_song" swapped="no"/>
           </object>
-          <accelerator key="Down" modifiers="GDK_CONTROL_MASK"/>
+          <accelerator key="Down" modifiers="GDK_MOD1_MASK"/>
         </child>
         <child>
           <object class="GtkAction" id="MPDPlayPause">
@@ -244,7 +244,7 @@
             <property name="stock_id">gtk-media-play</property>
             <signal name="activate" handler="play_song" swapped="no"/>
           </object>
-          <accelerator key="Up" modifiers="GDK_CONTROL_MASK"/>
+          <accelerator key="Up" modifiers="GDK_MOD1_MASK"/>
         </child>
       </object>
     </child>
@@ -374,6 +374,9 @@
       </menubar>
     </ui>
   </object>
+
+  <object class="GmpcToolsBindingOverlayNotify" id="binding_overlay_notify">
+  </object>
   <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkWindow" id="pl3_win">
     <property name="title" translatable="yes">gmpc - Playlist Manager</property>
@@ -443,21 +446,29 @@
                                 <property name="visible">True</property>
                                 <property name="spacing">1</property>
                                 <child>
-                                  <object class="GtkButton" id="button_previous">
-                                    <property name="visible">True</property>
-                                    <property name="use_action_appearance">False</property>
-                                    <property name="related-action">MPDPrevious</property>
-                                    <property name="can_focus">True</property>
-                                    <property name="receives_default">False</property>
-                                    <property name="relief">none</property>
-                                    <property name="use_action_appearance">False</property>
-                                    <child>
-                                        <object class="GtkImage" id="button_previous_image">
-                                        <property name="visible">True</property>
-                                        <property name="stock">gtk-media-previous</property>
-                                        </object>
-                                    </child>
-                                  </object>
+									<object class="GmpcWidgetsOverlay" id="button_prev_overlay">
+									<property name="visible">True</property>
+									<property name="show_overlay">False</property>
+									<property name="binding_overlay_notifier">binding_overlay_notify</property>
+									<property name="overlay_text">←</property>
+										<child>
+										<object class="GtkButton" id="button_previous">
+    	                                <property name="visible">True</property>
+        	                            <property name="use_action_appearance">False</property>
+            	                        <property name="related-action">MPDPrevious</property>
+                	                    <property name="can_focus">True</property>
+                    	                <property name="receives_default">False</property>
+                        	            <property name="relief">none</property>
+                            	        <property name="use_action_appearance">False</property>
+                                	    <child>
+                                    	    <object class="GtkImage" id="button_previous_image">
+                                        	<property name="visible">True</property>
+	                                        <property name="stock">gtk-media-previous</property>
+    	                                    </object>
+        	                            </child>
+            	                      </object>
+										</child>
+									</object>
                                   <packing>
                                     <property name="expand">False</property>
                                     <property name="fill">False</property>
@@ -465,20 +476,28 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkButton" id="stop_button">
-                                    <property name="visible">True</property>
-                                    <property name="use_action_appearance">False</property>
-                                    <property name="related-action">MPDStop</property>
-                                    <property name="can_focus">True</property>
-                                    <property name="receives_default">True</property>
-                                    <property name="relief">none</property>
-                                    <child>
-                                        <object class="GtkImage" id="button_stop_image">
-                                        <property name="visible">True</property>
-                                        <property name="stock">gtk-media-stop</property>
-                                        </object>
-                                    </child>
-                                  </object>
+									<object class="GmpcWidgetsOverlay" id="button_stop_overlay">
+									<property name="visible">True</property>
+									<property name="show_overlay">False</property>
+									<property name="overlay_text">↓</property>
+									<property name="binding_overlay_notifier">binding_overlay_notify</property>
+	                                <child>
+    	                              <object class="GtkButton" id="stop_button">
+        	                            <property name="visible">True</property>
+            	                        <property name="use_action_appearance">False</property>
+                	                    <property name="related-action">MPDStop</property>
+                    	                <property name="can_focus">True</property>
+                        	            <property name="receives_default">True</property>
+                            	        <property name="relief">none</property>
+                                    	<child>
+                                	        <object class="GtkImage" id="button_stop_image">
+                                        	<property name="visible">True</property>
+	                                        <property name="stock">gtk-media-stop</property>
+    	                                    </object>
+        	                            </child>
+										</object>
+									</child>
+									</object>
                                   <packing>
                                     <property name="expand">False</property>
                                     <property name="fill">False</property>
@@ -486,6 +505,12 @@
                                   </packing>
                                 </child>
                                 <child>
+									<object class="GmpcWidgetsOverlay" id="button_play_overlay">
+									<property name="visible">True</property>
+									<property name="show_overlay">False</property>
+									<property name="binding_overlay_notifier">binding_overlay_notify</property>
+									<property name="overlay_text">↑</property>
+										<child>
                                   <object class="GtkButton" id="play_button">
                                     <property name="visible">True</property>
                                     <property name="use_action_appearance">False</property>
@@ -499,6 +524,8 @@
                                         <property name="stock">gtk-media-play</property>
                                         </object>
                                     </child>
+									</object>
+									</child>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -507,6 +534,12 @@
                                   </packing>
                                 </child>
                                 <child>
+									<object class="GmpcWidgetsOverlay" id="button_next_overlay">
+									<property name="visible">True</property>
+									<property name="show_overlay">False</property>
+									<property name="binding_overlay_notifier">binding_overlay_notify</property>
+									<property name="overlay_text">→</property>
+										<child>
                                   <object class="GtkButton" id="next_button">
                                     <property name="visible">True</property>
                                     <property name="use_action_appearance">False</property>
@@ -521,6 +554,8 @@
                                       </object>
                                     </child>
                                   </object>
+									</child>
+									</object>
                                   <packing>
                                     <property name="expand">False</property>
                                     <property name="fill">False</property>

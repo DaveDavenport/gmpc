@@ -439,6 +439,8 @@ gboolean pl3_window_focus_out_event(GtkWidget *window, GdkEventFocus *event, gpo
 		alt_button_pressed = FALSE;
 		gtk_widget_queue_draw(GTK_WIDGET(tree));
 	}
+	GmpcToolsBindingOverlayNotify *p = gtk_builder_get_object(pl3_xml, "binding_overlay_notify");
+	gmpc_tools_binding_overlay_notify_key_released(p,GDK_MOD1_MASK|GDK_CONTROL_MASK);
 	return FALSE;
 }
 
@@ -476,6 +478,12 @@ int pl3_window_key_release_event(GtkWidget * mw, GdkEventKey * event)
 		GtkWidget *tree = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "cat_tree"));
 		alt_button_pressed = FALSE;
 		gtk_widget_queue_draw(GTK_WIDGET(tree));
+		GmpcToolsBindingOverlayNotify *p = gtk_builder_get_object(pl3_xml, "binding_overlay_notify");
+		gmpc_tools_binding_overlay_notify_key_released(p,GDK_MOD1_MASK);
+	}
+	if(event->keyval == GDK_KEY_Control_L || event->keyval == GDK_KEY_Control_R) {
+		GmpcToolsBindingOverlayNotify *p = gtk_builder_get_object(pl3_xml, "binding_overlay_notify");
+		gmpc_tools_binding_overlay_notify_key_released(p,GDK_CONTROL_MASK);
 	}
 	return FALSE;
 }
@@ -487,6 +495,13 @@ int pl3_window_key_press_event(GtkWidget * mw, GdkEventKey * event)
 		GtkWidget *tree = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "cat_tree"));
 		alt_button_pressed = TRUE;
 		gtk_widget_queue_draw(GTK_WIDGET(tree));
+		GmpcToolsBindingOverlayNotify *p = gtk_builder_get_object(pl3_xml, "binding_overlay_notify");
+		gmpc_tools_binding_overlay_notify_key_pressed(p,GDK_MOD1_MASK);
+	}
+	if(event->keyval == GDK_KEY_Control_L || event->keyval == GDK_KEY_Control_R) 
+	{
+		GmpcToolsBindingOverlayNotify *p = gtk_builder_get_object(pl3_xml, "binding_overlay_notify");
+		gmpc_tools_binding_overlay_notify_key_pressed(p,GDK_CONTROL_MASK);
 	}
     /**
      * Following key's are only valid when connected

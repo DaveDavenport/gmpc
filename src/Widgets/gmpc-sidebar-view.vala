@@ -139,7 +139,8 @@ public class MyCellRenderer : Gtk.CellRenderer
 			var ct = Gdk.cairo_create(window);
 			l.get_pixel_size(out pw, out ph);
 
-			Gdk.cairo_set_source_color(ct, widget.style.bg[Gtk.StateType.SELECTED]);
+//			Gdk.cairo_set_source_color(ct, widget.style.bg[Gtk.StateType.SELECTED]);
+			ct.set_source_rgb(0.8,0,0);
 			ct.rectangle(cell_area.x, cell_area.y+cell_area.height/2-ph/2-0.5, pw+4, ph);
 			ct.fill_preserve();
 			Gdk.cairo_set_source_color(ct, widget.style.text[Gtk.StateType.SELECTED]);
