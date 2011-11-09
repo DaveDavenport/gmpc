@@ -101,7 +101,7 @@ void main_window_add_status_icon(GtkWidget * icon)
 
 void main_window_init_default_status_icons(void)
 {
-    si_repeat = gtk_event_box_new();
+    si_repeat = gmpc_widgets_overlay_new();
     g_signal_connect(G_OBJECT(si_repeat), "button-release-event", G_CALLBACK(repeat_toggle), NULL);
     gtk_container_add(GTK_CONTAINER(si_repeat), gtk_image_new_from_icon_name("stock_repeat", GTK_ICON_SIZE_MENU));
     gtk_widget_show_all(si_repeat);

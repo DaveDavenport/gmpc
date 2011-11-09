@@ -44,7 +44,6 @@ namespace Gmpc
 			public string overlay_text {get; set; default= "left"; }
 			construct{
 				this.set_app_paintable(true);
-				this.set_above_child(false);
 			}
 			private Tools.BindingOverlayNotify notifier = null;
 			public Tools.BindingOverlayNotify binding_overlay_notifier {
