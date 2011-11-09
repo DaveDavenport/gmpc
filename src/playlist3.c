@@ -474,7 +474,7 @@ void pl3_window_fullscreen(void)
 
 int pl3_window_key_release_event(GtkWidget * mw, GdkEventKey * event)
 {
-	if(event->keyval == GDK_KEY_Alt_L || event->keyval == GDK_KEY_Alt_R) {
+	if(event->keyval == GDK_KEY_Alt_L || event->keyval == GDK_KEY_Alt_R || event->keyval == GDK_KEY_Meta_L|| event->keyval == GDK_KEY_Meta_R) {
 		GtkWidget *tree = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "cat_tree"));
 		alt_button_pressed = FALSE;
 		gtk_widget_queue_draw(GTK_WIDGET(tree));

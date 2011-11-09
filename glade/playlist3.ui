@@ -448,7 +448,6 @@
                                 <child>
 									<object class="GmpcWidgetsOverlay" id="button_prev_overlay">
 									<property name="visible">True</property>
-									<property name="show_overlay">False</property>
 									<property name="binding_overlay_notifier">binding_overlay_notify</property>
 									<property name="overlay_text">←</property>
 										<child>
@@ -478,7 +477,6 @@
                                 <child>
 									<object class="GmpcWidgetsOverlay" id="button_stop_overlay">
 									<property name="visible">True</property>
-									<property name="show_overlay">False</property>
 									<property name="overlay_text">↓</property>
 									<property name="binding_overlay_notifier">binding_overlay_notify</property>
 	                                <child>
@@ -507,7 +505,6 @@
                                 <child>
 									<object class="GmpcWidgetsOverlay" id="button_play_overlay">
 									<property name="visible">True</property>
-									<property name="show_overlay">False</property>
 									<property name="binding_overlay_notifier">binding_overlay_notify</property>
 									<property name="overlay_text">↑</property>
 										<child>
@@ -536,7 +533,6 @@
                                 <child>
 									<object class="GmpcWidgetsOverlay" id="button_next_overlay">
 									<property name="visible">True</property>
-									<property name="show_overlay">False</property>
 									<property name="binding_overlay_notifier">binding_overlay_notify</property>
 									<property name="overlay_text">→</property>
 										<child>

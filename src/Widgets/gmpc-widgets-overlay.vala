@@ -39,7 +39,8 @@ namespace Gmpc
 	{
 		public class Overlay : Gtk.EventBox, Gtk.Buildable
 		{
-			public bool show_overlay {get; set; default = true;}
+			public Gdk.ModifierType modifier {get; set; default = Gdk.ModifierType.MOD1_MASK;}
+			public bool show_overlay {get; set; default = false;}
 			public string overlay_text {get; set; default= "left"; }
 			construct{
 				this.set_app_paintable(true);
@@ -61,7 +62,7 @@ namespace Gmpc
 
 			private void key_changed(Gdk.ModifierType cur_state)
 			{
-				if((cur_state&Gdk.ModifierType.MOD1_MASK) == Gdk.ModifierType.MOD1_MASK) {
+				if((cur_state&modifier) == modifier) {
 					show_overlay = true;
 				}else{
 					show_overlay = false;
