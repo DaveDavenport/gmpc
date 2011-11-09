@@ -61,7 +61,7 @@ namespace Gmpc
 
 			private void key_changed(Gdk.ModifierType cur_state)
 			{
-				if((cur_state&modifier) == modifier) {
+				if((cur_state) == modifier) {
 					show_overlay = true;
 				}else{
 					show_overlay = false;

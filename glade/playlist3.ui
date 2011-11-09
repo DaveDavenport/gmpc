@@ -166,7 +166,7 @@
             <property name="icon-name">stock_repeat</property>
             <signal name="activate" handler="playlist_menu_repeat_changed" swapped="no"/>
           </object>
-          <accelerator key="r" modifiers="GDK_CONTROL_MASK"/>
+          <accelerator key="r" modifiers="GDK_MOD1_MASK"/>
         </child>
         <child>
           <object class="GtkToggleAction" id="MPDRandom">
@@ -176,7 +176,7 @@
             <property name="icon-name">stock_shuffle</property>
             <signal name="activate" handler="playlist_menu_random_changed" swapped="no"/>
           </object>
-          <accelerator key="s" modifiers="GDK_CONTROL_MASK"/>
+          <accelerator key="s" modifiers="GDK_MOD1_MASK"/>
         </child>
         <child>
           <object class="GtkToggleAction" id="MPDSingleMode">
@@ -186,7 +186,7 @@
             <property name="icon-name">media-repeat-single</property>
             <signal name="activate" handler="playlist_menu_single_mode_changed" swapped="no"/>
           </object>
-          <accelerator key="t" modifiers="GDK_CONTROL_MASK"/>
+          <accelerator key="t" modifiers="GDK_MOD1_MASK"/>
         </child>
         <child>
           <object class="GtkAction" id="MPDMuted">
@@ -206,7 +206,7 @@
             <property name="icon-name">media-consume</property>
             <signal name="activate" handler="playlist_menu_consume_changed" swapped="no"/>
           </object>
-          <accelerator key="y" modifiers="GDK_CONTROL_MASK"/>
+          <accelerator key="y" modifiers="GDK_MOD1_MASK"/>
         </child>
         <child>
           <object class="GtkAction" id="MPDNext">
