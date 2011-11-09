@@ -176,7 +176,7 @@
             <property name="icon-name">stock_shuffle</property>
             <signal name="activate" handler="playlist_menu_random_changed" swapped="no"/>
           </object>
-          <accelerator key="s" modifiers="GDK_MOD1_MASK"/>
+          <accelerator key="f" modifiers="GDK_MOD1_MASK"/>
         </child>
         <child>
           <object class="GtkToggleAction" id="MPDSingleMode">

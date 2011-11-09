@@ -119,7 +119,7 @@ void main_window_init_default_status_icons(void)
 
 	g_object_set(G_OBJECT(si_random),
 				"modifier", GDK_MOD1_MASK,
-				"overlay-text", "s",
+				"overlay-text", "f",
 				"binding-overlay-notifier", p,
 				NULL);
 
