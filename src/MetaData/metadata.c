@@ -550,18 +550,28 @@ void glyr_fetcher_thread(void *user_data)
 		printf("new style query\n");
 
 		glyr_query_init(&query);
+
+
 		if(md != NULL && mtd->song->file != NULL)
 		{
 			const char *path = g_build_filename(md, mtd->song->file, NULL);
 			glyr_opt_musictree_path(&query, path);
 			g_free(path);
 		}
+
+
+		/* Set up the query */
+		content_type = setup_glyr_query(&query, mtd);
+
+		/* If cache disabled, remove the entry in the db */
 		if(((mtd->type)&META_QUERY_NO_CACHE) == META_QUERY_NO_CACHE)
 		{
 			printf("Disable cache\n");
 			glyr_opt_from(&query, "all;-local");
 			// Remove cache request.
 			mtd->type&=META_QUERY_DATA_TYPES;	
+			// Delete the entry.
+			glyr_db_delete(db, &query);
 		}
 
 		/* Set some random settings */
@@ -573,8 +583,6 @@ void glyr_fetcher_thread(void *user_data)
 		/* Also tell it to write newly found items to the db */
 		glyr_opt_db_autowrite(&query, TRUE);
 
-		/* */
-		content_type = setup_glyr_query(&query, mtd);
 
 		/* get metadata */
 		cache = glyr_get(&query,&err,NULL);
@@ -815,6 +823,9 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData *
 {
 	static int test_id = 0;
 	meta_thread_data *mtd = NULL;
+	
+	INIT_TIC_TAC()
+
 	/**
 	 * unique id 
 	 * Not needed, but can be usefull for debugging
@@ -875,6 +886,8 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData *
 				mpd_freeSong(mtd->edited);
 			g_free(mtd);
 			printf("Got from cache\n");
+
+			TEC("Got from cache");
 			return mrd;
 		}
 		if(cache)glyr_free_list(cache);
@@ -882,18 +895,6 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData *
 	}
 	else
 	{
-		printf("Remove from cache\n");
-		// Delete from cache.
-		GlyrQuery query;
-		glyr_query_init(&query);
-		/* Set some random settings */
-		glyr_opt_verbosity(&query,2);
-
-		setup_glyr_query(&query, mtd);
-
-		glyr_db_delete(db, &query);
-		glyr_query_destroy(&query);
-
 		gmpc_meta_watcher_data_changed(gmw,mtd->song, (mtd->type)&META_QUERY_DATA_TYPES, META_DATA_FETCHING,NULL);
 		if(mtd->callback)
 		{
@@ -901,6 +902,8 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData *
 		}
 	}
 	printf("start query\n");
+
+	TEC("Pushing actual query");
 
 	g_async_queue_push(gaq, mtd);
 	mtd = NULL;
