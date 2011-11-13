@@ -35,8 +35,11 @@
 #include "GUI/title_header.h"
 #include "GUI/control_window.h"
 
+// Collapsed mode.
 #define SIDEBAR_SMALL 32
+// Default size.
 #define SIDEBAR_LARGE -1 
+
 #ifndef GDK_KEY_0
 #define GDK_KEY_0 GDK_0
 #endif
