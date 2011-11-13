@@ -36,7 +36,7 @@
 #include "GUI/control_window.h"
 
 #define SIDEBAR_SMALL 32
-#define SIDEBAR_LARGE 160
+#define SIDEBAR_LARGE -1 
 #ifndef GDK_KEY_0
 #define GDK_KEY_0 GDK_0
 #endif
