@@ -35,6 +35,8 @@
 #include "GUI/title_header.h"
 #include "GUI/control_window.h"
 
+#define SIDEBAR_SMALL 32
+#define SIDEBAR_LARGE 160
 #ifndef GDK_KEY_0
 #define GDK_KEY_0 GDK_0
 #endif
@@ -1071,7 +1073,7 @@ void create_playlist3(void)
     column = gtk_tree_view_column_new();
 
 
-    gtk_tree_view_column_pack_start(column, renderer, FALSE);
+    gtk_tree_view_column_pack_start(column, renderer, TRUE);
 	gtk_tree_view_column_set_cell_data_func(column, sidebar_text, pl3_sidebar_text_get_key_number, NULL, NULL);
     g_object_set(G_OBJECT(renderer), "stock-size", GTK_ICON_SIZE_MENU, NULL);
     {
@@ -1215,8 +1217,8 @@ void create_playlist3(void)
         }
 		TEC("resize window settings")
         /* restore pane position */
-		gtk_widget_set_size_request(GTK_WIDGET(gtk_builder_get_object(pl3_xml,"sidebar")), 150,-1); 
-
+		gtk_widget_set_size_request(GTK_WIDGET(gtk_builder_get_object(pl3_xml,"sidebar")), 
+				SIDEBAR_LARGE,-1); 
 		TEC("set pane window settings")
         if (maximized)
             gtk_window_maximize(GTK_WINDOW(playlist3_get_window()));
@@ -1613,7 +1615,8 @@ static void playlist_zoom_level_changed(void)
 	{
 		/* restore pane position */
 		g_object_set(sidebar_text, "show_text", TRUE, NULL);
-		gtk_widget_set_size_request(GTK_WIDGET(gtk_builder_get_object(pl3_xml,"sidebar")), 150,-1); 
+		gtk_widget_set_size_request(GTK_WIDGET(gtk_builder_get_object(pl3_xml,"sidebar")), 
+				SIDEBAR_LARGE,-1); 
 		gmpc_sidebar_plugins_update_state(GMPC_PLUGIN_SIDEBAR_STATE_FULL);
 	}
 
@@ -1646,7 +1649,10 @@ static void playlist_zoom_level_changed(void)
 			gmpc_metaimage_set_is_visible(GMPC_METAIMAGE(metaimage_artist_art), FALSE);
 			if(st_shown) {
 				g_object_set(sidebar_text, "show_text", FALSE, NULL);
-				gtk_widget_set_size_request(GTK_WIDGET(gtk_builder_get_object(pl3_xml,"sidebar")), 32,-1); 
+				gtk_widget_set_size_request(GTK_WIDGET(gtk_builder_get_object(pl3_xml,"sidebar")),
+						SIDEBAR_SMALL,-1); 
+
+				gtk_widget_queue_draw(GTK_WIDGET(gtk_builder_get_object(pl3_xml,"sidebar")));
 				gmpc_sidebar_plugins_update_state(GMPC_PLUGIN_SIDEBAR_STATE_COLLAPSED);
 			}
 			gtk_widget_grab_focus(pl3_win);
