@@ -787,7 +787,7 @@
                       </object>
                       <packing>
                         <property name="expand">False</property>
-                        <property name="fill"></property>
+                        <property name="fill">True</property>
                       </packing>
                     </child>
                     <child>
