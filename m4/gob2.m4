@@ -54,5 +54,5 @@ AC_DEFUN([GOB2_HOOK],[
 ])
 
 AC_DEFUN([GOB2_CHECK],[
-	GOB2_HOOK($1,[],[AC_MSG_WARN([Cannot find GOB-2, check http://www.5z.com/jirka/gob.html])])
+	GOB2_HOOK($1,[],[AC_MSG_ERROR([Cannot find GOB-2, check http://www.5z.com/jirka/gob.html])])
 ])
