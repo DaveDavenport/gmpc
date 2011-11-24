@@ -5,7 +5,7 @@ m4_define([package_minor_version], [8])
 m4_define([package_micro_version], [90])
 m4_define([package_version], [package_major_version.package_minor_version.package_micro_version])
 
-AC_INIT([gmpc], [11.8.90], [qball@gmpclient.org])
+AC_INIT([gmpc],[11.8.90],[qball@gmpclient.org])
 
 #Define variable
 m4_define([package_tagline],       "All hail the Greg")
@@ -38,18 +38,18 @@ AC_DEFINE(GMPC_WEBSITE,		package_website,	["Gmpc's website"])
 AC_DEFINE(GMPC_BUGTRACKER,      package_bugtracker,	["Gmpc's bugtracker"])
 AC_DEFINE(GMPC_COPYRIGHT,       package_copyright,	["Gmpc's Copyright"])
 
-
-AC_PREREQ(2.59)
+AC_PREREQ([2.68])
 
 # Remove the check for c++ and fortran compiler
-LT_INIT
+LT_INIT([win32-dll])
+LT_LANG([Windows Resource])
 m4_defun([_LT_AC_LANG_CXX_CONFIG], [:])
 m4_defun([_LT_AC_LANG_F77_CONFIG], [:])
 AC_REPLACE_FUNCS(strndup)
 
 
 #intltool, libtool. Check for CC compiler
-AC_PROG_INTLTOOL([0.21])
+IT_PROG_INTLTOOL([0.21])
 
 # Check for intltool version, needed for make dist.
 AM_CONDITIONAL([INTLTOOL_HIGHER_04000], [test ${INTLTOOL_APPLIED_VERSION_AS_INT} -ge 4000])
@@ -57,10 +57,8 @@ AM_CONDITIONAL([INTLTOOL_HIGHER_04000], [test ${INTLTOOL_APPLIED_VERSION_AS_INT}
 
 AC_PROG_CC
 AM_PROG_CC_C_O
-LT_AC_PROG_RC
-AC_LIBTOOL_WIN32_DLL
-AC_LIBTOOL_RC
-AC_PROG_LIBTOOL
+LT_PROG_RC
+
 # test for zlib
 zlib=0
 AC_CHECK_LIB(z, inflate,zlib=1,zlib=0)
@@ -423,7 +421,7 @@ fi
 
 GNOME_DOC_INIT([0.18.0], [have_gdu=yes], [have_gdu=no])
 
-AC_OUTPUT([
+AC_CONFIG_FILES([
 shave
 shave-libtool
 Makefile
@@ -529,6 +527,7 @@ test/Misc/Makefile
 test/DiscoGS/Makefile
 test/LastFM/Makefile
 ])
+AC_OUTPUT
 echo ""
 echo ""
 echo "------------------ Status ------------------"
