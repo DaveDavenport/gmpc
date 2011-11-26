@@ -38,7 +38,7 @@ AC_DEFINE(GMPC_WEBSITE,		package_website,	["Gmpc's website"])
 AC_DEFINE(GMPC_BUGTRACKER,      package_bugtracker,	["Gmpc's bugtracker"])
 AC_DEFINE(GMPC_COPYRIGHT,       package_copyright,	["Gmpc's Copyright"])
 
-AC_PREREQ([2.68])
+AC_PREREQ([2.67])
 
 # Remove the check for c++ and fortran compiler
 LT_INIT([win32-dll])
