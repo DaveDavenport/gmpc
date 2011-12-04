@@ -164,4 +164,8 @@ gpointer metadata_get_list(mpd_Song  *song, MetaDataType type, void (*callback)(
 void metadata_get_list_cancel(gpointer data);
 mpd_Song *rewrite_mpd_song(mpd_Song *tsong, MetaDataType type);
 
+/**
+ * Clear an entry in the db.
+ */
+void meta_data_clear_entry(mpd_Song *song, MetaDataType type);
 #endif

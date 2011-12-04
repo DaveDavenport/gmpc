@@ -74,13 +74,17 @@ static GlyrDatabase *db = NULL;
 /**
  * This queue is used to send replies back.
  */
-//GQueue *meta_results = NULL;
-
+enum MTD_Action {
+	MTD_ACTION_QUERY_METADATA,
+	MTD_ACTION_CLEAR_ENTRY,
+	MTD_ACTION_QUIT
+};
 
 /**
  * Structure holding a metadata query */
 typedef struct {
-	gboolean quit;
+	/* The type of action todo */
+	enum MTD_Action action;
 	/* unique id for the query (unused)*/
 	guint id;
 	/* The callback to call when the query is done, or NULL */
@@ -98,8 +102,6 @@ typedef struct {
 	MetaDataResult result;
 	/* The actual result data */
 	MetaData *met;
-	/* The index of the plugin being queried */
-	int index;
 	int do_rename;
 	int rename_done;
 #if 0
@@ -291,20 +293,21 @@ static gboolean glyr_return_queue(void *user_data)
 	meta_thread_data *mtd = (meta_thread_data*)g_async_queue_try_pop(return_queue);
 	if(mtd)
 	{
-		printf("%s: results\n", __FUNCTION__);
-
-		gmpc_meta_watcher_data_changed(gmw,mtd->song, (mtd->type)&META_QUERY_DATA_TYPES, mtd->result,mtd->met);
-		if(mtd->callback)
+		if(mtd->action == MTD_ACTION_QUERY_METADATA)
 		{
-			mtd->callback(mtd->song, mtd->result, mtd->met, mtd->data);
+			printf("%s: results\n", __FUNCTION__);
+
+			gmpc_meta_watcher_data_changed(gmw,mtd->song, (mtd->type)&META_QUERY_DATA_TYPES, mtd->result,mtd->met);
+			if(mtd->callback)
+			{
+				mtd->callback(mtd->song, mtd->result, mtd->met, mtd->data);
+			}
+		}else if (mtd->action == MTD_ACTION_CLEAR_ENTRY) {
+			// Signal that this item is now no longer available.
+			gmpc_meta_watcher_data_changed(gmw, mtd->song, (mtd->type)&META_QUERY_DATA_TYPES, META_DATA_UNAVAILABLE, NULL);
 		}
 
-		 /* Free any possible plugin results */
-/*		if(mtd->list){
-			g_list_foreach(mtd->list, (GFunc)meta_data_free, NULL);
-			g_list_free(mtd->list);
-		}
-*/		/* Free the result data */
+		/* Free the result data */
 		if(mtd->met)
 			meta_data_free(mtd->met);
 		/* Free the copie and edited version of the songs */
@@ -528,94 +531,139 @@ void glyr_fetcher_thread(void *user_data)
 	g_mutex_lock(exit_handle_lock);
 	while((d = g_async_queue_pop(gaq)))
 	{
-		// Check if this is thread safe.
-		const char 			*md			 = connection_get_music_directory();
-		GLYR_ERROR          err          = GLYRE_OK;
-		MetaDataContentType content_type = META_DATA_CONTENT_RAW;
 		meta_thread_data    *mtd         = (meta_thread_data*)d;
-		GlyrMemCache        *cache       = NULL;
 
 		// Check if this is the quit command.
-		if(mtd->quit) {
+		if(mtd->action == MTD_ACTION_QUIT) {
 			printf("Quitting....");
 			g_mutex_unlock(exit_handle_lock);
 			/* Free the Request struct */
 			g_free(mtd);
 			return;
 		}
-
-		glyr_exit_handle = &query;
-		g_mutex_unlock(exit_handle_lock);
-
-		printf("new style query\n");
-
-		glyr_query_init(&query);
-
-
-		if(md != NULL && mtd->song->file != NULL)
+		else if (mtd->action == MTD_ACTION_CLEAR_ENTRY)
 		{
-			const char *path = g_build_filename(md, mtd->song->file, NULL);
-			glyr_opt_musictree_path(&query, path);
-			g_free(path);
-		}
+			GlyrMemCache        *cache       = NULL;
+			// Setup cancel lock
+			glyr_exit_handle = &query;
+			g_mutex_unlock(exit_handle_lock);
 
+			/* Set up the query */
+			glyr_query_init(&query);
+			setup_glyr_query(&query, mtd);
 
-		/* Set up the query */
-		content_type = setup_glyr_query(&query, mtd);
-
-		/* If cache disabled, remove the entry in the db */
-		if(((mtd->type)&META_QUERY_NO_CACHE) == META_QUERY_NO_CACHE)
-		{
-			printf("Disable cache\n");
-			glyr_opt_from(&query, "all;-local");
-			// Remove cache request.
-			mtd->type&=META_QUERY_DATA_TYPES;	
-			// Delete the entry.
-			glyr_db_delete(db, &query);
-		}
-
-		/* Set some random settings */
-		glyr_opt_verbosity(&query,2);
-
-		/* Tell libglyr to automatically lookup before searching the web */
-		glyr_opt_lookup_db(&query, db);
-
-		/* Also tell it to write newly found items to the db */
-		glyr_opt_db_autowrite(&query, TRUE);
-
-
-		/* get metadata */
-		cache = glyr_get(&query,&err,NULL);
-
-		if(cache == NULL){
 			// Set dummy entry in cache, so we know
 			// we searched for this before.
 			cache = glyr_cache_new();
 			glyr_cache_set_data(cache, g_strdup("GMPC Dummy data"), -1);
 			cache->dsrc = g_strdup("GMPC dummy URL");
 			cache->rating = -1;
-			
-			glyr_db_insert(db,&query, cache);
-			printf("Cache is Empty\n");
-			// Set unavailable 
-			mtd->result = META_DATA_UNAVAILABLE; 
-		}else{
-			process_glyr_result(cache,content_type, mtd);
-		}
-		// Cleanup
-		if(cache)glyr_free_list(cache);
-			
-		// Clear the query, and lock the handle again.
-		g_mutex_lock(exit_handle_lock);
-		glyr_exit_handle = NULL;
-		glyr_query_destroy(&query);
 
-		// Push back result, and tell idle handle to handle it.
-		g_async_queue_push(return_queue, mtd);
-		// invalidate pointer.
-		mtd = NULL;
-		// Schedule the result thread in idle time.
-		g_idle_add(glyr_return_queue, NULL);
+			// Delete the entry.
+			glyr_db_delete(db, &query);
+			// Add dummy entry
+			glyr_db_insert(db,&query, cache);
+
+			// Cleanup
+			if(cache)glyr_free_list(cache);
+
+			// Clear the query, and lock the handle again.
+			g_mutex_lock(exit_handle_lock);
+			glyr_exit_handle = NULL;
+			glyr_query_destroy(&query);
+
+			// Push back result, and tell idle handle to handle it.
+			g_async_queue_push(return_queue, mtd);
+			// invalidate pointer.
+			mtd = NULL;
+			// Schedule the result thread in idle time.
+			g_idle_add(glyr_return_queue, NULL);
+		}
+		// QUERY database
+		else if (mtd->action == MTD_ACTION_QUERY_METADATA)
+		{
+			// Check if this is thread safe.
+			const char 			*md			 = connection_get_music_directory();
+			GLYR_ERROR          err          = GLYRE_OK;
+			MetaDataContentType content_type = META_DATA_CONTENT_RAW;
+			GlyrMemCache        *cache       = NULL;
+
+			glyr_exit_handle = &query;
+			g_mutex_unlock(exit_handle_lock);
+
+			printf("new style query\n");
+
+			glyr_query_init(&query);
+
+
+			if(md != NULL && mtd->song->file != NULL)
+			{
+				const char *path = g_build_filename(md, mtd->song->file, NULL);
+				glyr_opt_musictree_path(&query, path);
+				g_free(path);
+			}
+
+
+			/* Set up the query */
+			content_type = setup_glyr_query(&query, mtd);
+
+			/* If cache disabled, remove the entry in the db */
+			if(((mtd->type)&META_QUERY_NO_CACHE) == META_QUERY_NO_CACHE)
+			{
+				printf("Disable cache\n");
+				glyr_opt_from(&query, "all;-local");
+				// Remove cache request.
+				mtd->type&=META_QUERY_DATA_TYPES;	
+				// Delete the entry.
+				glyr_db_delete(db, &query);
+			}
+
+			/* Set some random settings */
+			glyr_opt_verbosity(&query,2);
+
+			/* Tell libglyr to automatically lookup before searching the web */
+			glyr_opt_lookup_db(&query, db);
+
+			/* Also tell it to write newly found items to the db */
+			glyr_opt_db_autowrite(&query, TRUE);
+
+
+			/* get metadata */
+			cache = glyr_get(&query,&err,NULL);
+
+			if(cache == NULL){
+				// Set dummy entry in cache, so we know
+				// we searched for this before.
+				cache = glyr_cache_new();
+				glyr_cache_set_data(cache, g_strdup("GMPC Dummy data"), -1);
+				cache->dsrc = g_strdup("GMPC dummy URL");
+				cache->rating = -1;
+
+				glyr_db_insert(db,&query, cache);
+				printf("Cache is Empty\n");
+				// Set unavailable 
+				mtd->result = META_DATA_UNAVAILABLE; 
+			}else{
+				process_glyr_result(cache,content_type, mtd);
+			}
+			// Cleanup
+			if(cache)glyr_free_list(cache);
+
+			// Clear the query, and lock the handle again.
+			g_mutex_lock(exit_handle_lock);
+			glyr_exit_handle = NULL;
+			glyr_query_destroy(&query);
+
+			// Push back result, and tell idle handle to handle it.
+			g_async_queue_push(return_queue, mtd);
+			// invalidate pointer.
+			mtd = NULL;
+			// Schedule the result thread in idle time.
+			g_idle_add(glyr_return_queue, NULL);
+		}else {
+			g_error("Unknown type of query to perform");
+			return;
+		}
 	}
 }
 
@@ -759,7 +807,7 @@ void meta_data_destroy(void)
 		g_free(mtd);
 	}
 	mtd = g_malloc0(sizeof(*mtd));
-	mtd->quit = TRUE;
+	mtd->action = MTD_ACTION_QUIT;
 	g_async_queue_push_unlocked(gaq, mtd);
 	mtd = NULL;
 	g_async_queue_unlock(gaq);
@@ -815,13 +863,30 @@ gboolean meta_compare_func(meta_thread_data *mt1, meta_thread_data *mt2)
 	return FALSE;
 }
 
+
+static int test_id = 0;
+
+void meta_data_clear_entry(mpd_Song *song, MetaDataType type)
+{
+	meta_thread_data *mtd = g_malloc0(sizeof(*mtd));
+	mtd->action = MTD_ACTION_CLEAR_ENTRY;
+	mtd->id = ++test_id;
+	/* Create a copy of the original song */
+	mtd->song = mpd_songDup(song);
+	/* Set the type */
+	mtd->type = type;
+	/* set result NULL */
+	mtd->met = NULL;
+
+	g_async_queue_push(gaq, mtd);
+	mtd = NULL;
+}
 /**
  * Function called by the "client" 
  */
 
 MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData **met,MetaDataCallback callback, gpointer data)
 {
-	static int test_id = 0;
 	meta_thread_data *mtd = NULL;
 	
 	INIT_TIC_TAC()
@@ -832,6 +897,7 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData *
 	 */
 	
 	mtd = g_malloc0(sizeof(*mtd));
+	mtd->action = MTD_ACTION_QUERY_METADATA;
 	mtd->id = ++test_id;
 	/* Create a copy of the original song */
 	mtd->song = mpd_songDup(tsong);
@@ -842,7 +908,6 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData *
 	/* the callback data */
 	mtd->data = data;
 	/* start at the first plugin */
-	mtd->index = 0;
 	mtd->do_rename = cfg_get_single_value_as_int_with_default(config, "metadata", "rename", FALSE);
 	mtd->rename_done = FALSE;
 	/* Set that we are fetching */
@@ -1179,7 +1244,6 @@ gpointer metadata_get_list(mpd_Song  *song, MetaDataType type, void (*callback)(
 #if 0
 	MLQuery *q = g_malloc0(sizeof(*q));
 	q->cancel =FALSE;
-	q->index = 0;
 	q->callback = callback;
 	q->userdata = data;
 	q->type = type;
