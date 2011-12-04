@@ -639,8 +639,9 @@ void glyr_fetcher_thread(void *user_data)
 				// we searched for this before.
 				cache = glyr_cache_new();
 				glyr_cache_set_data(cache, g_strdup("GMPC Dummy data"), -1);
-				cache->dsrc = g_strdup("GMPC dummy URL");
+				cache->dsrc = g_strdup("GMPC dummy insert");
 				cache->prov = g_strdup("none");
+				cache->img_format = g_strdup("");
 				cache->rating = -1;
 
 				glyr_db_insert(db,&query, cache);
