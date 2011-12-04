@@ -935,12 +935,7 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData *
 		
 		content_type = setup_glyr_query(&query, mtd);
 
-		/* Tell libglyr to automatically lookup before searching the web */
-		glyr_opt_lookup_db(&query, db);
-
-		//cache = glyr_db_lookup(db, &query);
-		glyr_opt_from(&query, "local");
-		cache = glyr_get(&query,&err,NULL);
+		cache = glyr_db_lookup(db, &query);
 		printf("cache: %p\n", cache);
 		if(process_glyr_result(cache,content_type, mtd))
 		{
