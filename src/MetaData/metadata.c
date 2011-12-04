@@ -552,17 +552,18 @@ void glyr_fetcher_thread(void *user_data)
 			glyr_query_init(&query);
 			setup_glyr_query(&query, mtd);
 
+			// Delete existing entries.
+			glyr_db_delete(db, &query);
+
 			// Set dummy entry in cache, so we know
 			// we searched for this before.
 			cache = glyr_cache_new();
 			glyr_cache_set_data(cache, g_strdup("GMPC Dummy data"), -1);
-			cache->dsrc = g_strdup("GMPC dummy URL");
-			cache->prov = g_strdup("GMPC, dummy provider");
+			cache->dsrc = g_strdup("GMPC dummy insert");
+			cache->prov = g_strdup("none");
 			cache->img_format = g_strdup("");
 			cache->rating = -1;
 
-			// Delete the entry.
-			glyr_db_delete(db, &query);
 			// Add dummy entry
 			glyr_db_insert(db,&query, cache);
 
@@ -598,7 +599,7 @@ void glyr_fetcher_thread(void *user_data)
 			glyr_query_init(&query);
 
 
-			if(md != NULL && mtd->song->file != NULL)
+			if(md != NULL && md[0] !=  '\0'&& mtd->song->file != NULL)
 			{
 				const char *path = g_build_filename(md, mtd->song->file, NULL);
 				glyr_opt_musictree_path(&query, path);
@@ -639,6 +640,7 @@ void glyr_fetcher_thread(void *user_data)
 				cache = glyr_cache_new();
 				glyr_cache_set_data(cache, g_strdup("GMPC Dummy data"), -1);
 				cache->dsrc = g_strdup("GMPC dummy URL");
+				cache->prov = g_strdup("none");
 				cache->rating = -1;
 
 				glyr_db_insert(db,&query, cache);
@@ -923,6 +925,7 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData *
 	if((type&META_QUERY_NO_CACHE) == 0)
 	{
 		GLYR_ERROR          err          = GLYRE_OK;
+		const char 			*md			 = connection_get_music_directory();
 		MetaDataResult mrd;
 		MetaDataContentType content_type = META_DATA_CONTENT_RAW;
 		GlyrQuery query;
@@ -933,6 +936,13 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData *
 		/* Set some random settings */
 		glyr_opt_verbosity(&query,3);
 		
+		if(md != NULL && md[0] !=  '\0' && mtd->song->file != NULL)
+		{
+			const char *path = g_build_filename(md, mtd->song->file, NULL);
+			glyr_opt_musictree_path(&query, path);
+			g_free(path);
+		}
+
 		content_type = setup_glyr_query(&query, mtd);
 
 		cache = glyr_db_lookup(db, &query);
