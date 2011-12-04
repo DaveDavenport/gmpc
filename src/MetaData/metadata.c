@@ -557,6 +557,8 @@ void glyr_fetcher_thread(void *user_data)
 			cache = glyr_cache_new();
 			glyr_cache_set_data(cache, g_strdup("GMPC Dummy data"), -1);
 			cache->dsrc = g_strdup("GMPC dummy URL");
+			cache->prov = g_strdup("GMPC, dummy provider");
+			cache->img_format = g_strdup("");
 			cache->rating = -1;
 
 			// Delete the entry.
@@ -619,7 +621,7 @@ void glyr_fetcher_thread(void *user_data)
 			}
 
 			/* Set some random settings */
-			glyr_opt_verbosity(&query,2);
+			glyr_opt_verbosity(&query,3);
 
 			/* Tell libglyr to automatically lookup before searching the web */
 			glyr_opt_lookup_db(&query, db);
@@ -644,6 +646,7 @@ void glyr_fetcher_thread(void *user_data)
 				// Set unavailable 
 				mtd->result = META_DATA_UNAVAILABLE; 
 			}else{
+				printf("Provider: %s\n", cache->prov);
 				process_glyr_result(cache,content_type, mtd);
 			}
 			// Cleanup
@@ -919,19 +922,26 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData *
 	 */
 	if((type&META_QUERY_NO_CACHE) == 0)
 	{
+		GLYR_ERROR          err          = GLYRE_OK;
 		MetaDataResult mrd;
 		MetaDataContentType content_type = META_DATA_CONTENT_RAW;
 		GlyrQuery query;
 		GlyrMemCache * cache = NULL;
 		printf("Try querying cache\n");
+
 		glyr_query_init(&query);
 		/* Set some random settings */
-		glyr_opt_verbosity(&query,5);
+		glyr_opt_verbosity(&query,3);
 		
 		content_type = setup_glyr_query(&query, mtd);
 
-		cache = glyr_db_lookup(db, &query);
-		if(cache == NULL) printf("cache: %p\n", cache);
+		/* Tell libglyr to automatically lookup before searching the web */
+		glyr_opt_lookup_db(&query, db);
+
+		//cache = glyr_db_lookup(db, &query);
+		glyr_opt_from(&query, "local");
+		cache = glyr_get(&query,&err,NULL);
+		printf("cache: %p\n", cache);
 		if(process_glyr_result(cache,content_type, mtd))
 		{
 			// Cleanup
@@ -1887,7 +1897,6 @@ gmpcPlugin metadata_plug = {
 	.name           = N_("Metadata Handler"),
 	.version        = {1,1,1},
 	.plugin_type    = GMPC_INTERNALL,
-//	.pref           = &metadata_pref_plug
 };
 
 /* vim: set noexpandtab ts=4 sw=4 sts=4 tw=120: */
