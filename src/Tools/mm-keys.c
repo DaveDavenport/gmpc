@@ -66,6 +66,8 @@ enum
 	MM_SHOW_NOTIFICATION,
 	MM_TOGGLE_MUTE,
 	MM_SHOW_EASY_COMMAND,
+	MM_PLAY,
+	MM_PAUSE,
 	LAST_SIGNAL
 };
 
@@ -86,6 +88,8 @@ const char *keynames[LAST_SIGNAL] = {
 	N_("Show song"),	/** MM_SHOW_NOTIFICATION */
 	N_("Toggle Mute"),	/** MM_TOGGLE_MUTE */
 	N_("Show easy command entry"),
+	N_("Play"), /** MM_PLAY */
+	N_("Pause"), /** MM_PAUSE */
 };
 
 static GObjectClass *parent_class;
@@ -194,6 +198,14 @@ static void mmkeys_class_init(MmKeysClass * klass)
 					 G_TYPE_FROM_CLASS(klass),
 					 G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_VOID__INT, G_TYPE_NONE, 1, G_TYPE_INT);
 
+	signals[MM_PLAY] =
+		g_signal_new("mm_play",
+					 G_TYPE_FROM_CLASS(klass),
+					 G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_VOID__INT, G_TYPE_NONE, 1, G_TYPE_INT);
+	signals[MM_PAUSE] =
+		g_signal_new("mm_pause",
+					 G_TYPE_FROM_CLASS(klass),
+					 G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_VOID__INT, G_TYPE_NONE, 1, G_TYPE_INT);
 }
 
 static void mmkeys_finalize(GObject * object)

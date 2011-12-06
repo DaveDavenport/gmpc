@@ -1165,6 +1165,14 @@ static void  gmpc_mmkeys_connect_signals(GObject *keys)
 			G_CALLBACK(play_song), NULL);
 
 	g_signal_connect(keys,
+			"mm_play",
+			G_CALLBACK(play_song), NULL);
+
+	g_signal_connect(keys,
+			"mm_pause",
+			G_CALLBACK(pause_song), NULL);
+
+	g_signal_connect(keys,
 			"mm_next",
 			G_CALLBACK(next_song), NULL);
 
