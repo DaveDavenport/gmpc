@@ -21,6 +21,8 @@
 #define __MPDINTERACTION_H__
 int play_song(void);
 int pause_song(void);
+int real_play_song(void);
+int real_pause_song(void);
 int stop_song(void);
 int next_song(void);
 int prev_song(void);

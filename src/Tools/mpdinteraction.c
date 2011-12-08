@@ -242,6 +242,23 @@ pause_song(void)
 	return FALSE;
 }
 
+int real_play_song(void)
+{
+	if (mpd_server_check_command_allowed(connection, "play") == MPD_SERVER_COMMAND_ALLOWED)
+		mpd_player_play(connection);
+	return FALSE;
+}
+
+int real_pause_song(void)
+{
+	int state = mpd_player_get_state(connection);
+	if (state == MPD_PLAYER_PLAY)
+	{
+		if (mpd_server_check_command_allowed(connection, "pause") == MPD_SERVER_COMMAND_ALLOWED)
+			mpd_player_pause(connection);
+	}
+	return FALSE;
+}
 int play_song(void)
 {
 	int state = mpd_player_get_state(connection);
