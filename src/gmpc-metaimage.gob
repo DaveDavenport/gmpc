@@ -646,7 +646,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 
     public	
         void
-        set_cover_raw(self, unsigned char *data, uint size) 
+        set_cover_raw(self, unsigned char *data, unsigned int size) 
 		{
 			self->_priv->state = STATE_IMAGE;
 			gmpc_meta_image_async_set_from_raw(GMPC_META_IMAGE_ASYNC(self->_priv->image),data, size, self->size,
