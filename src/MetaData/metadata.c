@@ -115,10 +115,6 @@ typedef struct {
 gboolean meta_compare_func(meta_thread_data *mt1, meta_thread_data *mt2);
 //static gboolean meta_data_handle_results(void);
 
-
-/*
-   static gboolean meta_data_handler_data_match(meta_thread_data *data, gpointer data2);
- */
 mpd_Song *rewrite_mpd_song(mpd_Song *tsong, MetaDataType type)
 {
 	mpd_Song *edited = NULL;
@@ -220,7 +216,6 @@ mpd_Song *rewrite_mpd_song(mpd_Song *tsong, MetaDataType type)
 	}
 	/**
 	 * Artist renaming, Clapton, Eric -> Eric Clapton
-	 */
 	if(edited->artist && cfg_get_single_value_as_int_with_default(config, "metadata", "rename", FALSE))
 	{
 		gchar **str = g_strsplit(edited->artist, ",", 2);
@@ -232,7 +227,7 @@ mpd_Song *rewrite_mpd_song(mpd_Song *tsong, MetaDataType type)
 		g_strfreev(str);
 		g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "string converted to: '%s'", edited->artist);
 	}
-
+	*/
 	/**
 	 * Sanitize album name and so (remove () (
 	 */
@@ -906,7 +901,7 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData *
 	mtd->action = MTD_ACTION_QUERY_METADATA;
 	mtd->id = ++test_id;
 	/* Create a copy of the original song */
-	mtd->song = mpd_songDup(tsong);
+	mtd->song = rewrite_mpd_song(tsong, type);//(mpd_songDup(tsong);
 	/* Set the type */
 	mtd->type = type;
 	/* the callback */
