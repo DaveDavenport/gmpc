@@ -72,7 +72,7 @@ typedef struct {
     /* The name of the plugin that provided the data 
      * This can be NULL if unknown.
      **/
-    const gchar *plugin_name;
+    gchar *plugin_name;
     /* The data type */
     MetaDataContentType content_type;
     /* The contents */

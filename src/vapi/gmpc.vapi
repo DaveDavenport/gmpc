@@ -220,10 +220,9 @@ namespace Gmpc {
             CANCELLED
         }
 
-        [CCode (cname="GEADAsyncHandler", cheader_filename="gmpc_easy_download.h")]
+        [CCode (cname="GEADAsyncHandler", cheader_filename="gmpc_easy_download.h",ref_function="", unref_function ="")]
         [Compact]
         [Immutable]
-        [CCode (ref_function="", unref_function ="")]
         public class Handle {
             [CCode (cname="gmpc_easy_async_cancel", cheader_filename="gmpc_easy_download.h")]
             public void cancel ();

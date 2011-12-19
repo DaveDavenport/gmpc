@@ -425,7 +425,7 @@ static MetaData * glyr_get_similiar_song_names(GlyrMemCache * cache)
                 if(!mtd) {
                     mtd = meta_data_new();
                     mtd->type = META_SONG_SIMILAR;
-                    mtd->plugin_name = plug_name; 
+                    mtd->plugin_name = g_strdup(cache->prov); 
                     mtd->content_type = META_DATA_CONTENT_TEXT_LIST;
                     mtd->size = 0;
                 }
@@ -456,7 +456,7 @@ static MetaData * glyr_get_similiar_artist_names(GlyrMemCache * cache)
                 if(!mtd) {
                     mtd = meta_data_new();
                     mtd->type = META_ARTIST_SIMILAR;
-                    mtd->plugin_name = plug_name; 
+                    mtd->plugin_name = g_strdup(cache->prov); 
                     mtd->content_type = META_DATA_CONTENT_TEXT_LIST;
                     mtd->size = 0;
                 }
@@ -513,7 +513,7 @@ static gboolean process_glyr_result(GlyrMemCache *cache,
 		{
 			(mtd->met) = meta_data_new();
 			(mtd->met)->type = mtd->type;
-			(mtd->met)->plugin_name = plug_name; 
+			(mtd->met)->plugin_name = g_strdup(cache->prov); 
 			(mtd->met)->content_type = content_type;
 
 			(mtd->met)->content = g_malloc0(cache->size);
@@ -1442,6 +1442,7 @@ void meta_data_free(MetaData *data)
 	}
 	if(data->thumbnail_uri) g_free(data->thumbnail_uri);
 	data->thumbnail_uri = NULL;
+	if(data->plugin_name) g_free(data->plugin_name);
 	g_free(data);
 }
 
@@ -1454,7 +1455,7 @@ MetaData *meta_data_dup(MetaData *data)
 	/* Copy the type of the data */
 	retv->content_type = data->content_type;
 	/* Copy the name of the providing plugin. (const char * so only copy pointer ) */
-	retv->plugin_name = data->plugin_name;
+	retv->plugin_name = g_strdup(data->plugin_name);
 	/* copy the content */
 	retv->size = data->size;
 	if(retv->content_type == META_DATA_CONTENT_TEXT_VECTOR) {
@@ -1503,7 +1504,7 @@ MetaData *meta_data_dup_steal(MetaData *data)
 	/* Copy the type of the data */
 	retv->content_type = data->content_type;
 	/* Copy the name of the providing plugin. (const char * so only copy pointer ) */
-	retv->plugin_name = data->plugin_name;
+	retv->plugin_name = g_strdup(data->plugin_name);
 	/* copy the content */
 	retv->size = data->size;
 	retv->content = data->content;
