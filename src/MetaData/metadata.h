@@ -90,6 +90,7 @@ typedef struct {
 
 
 typedef void (*MetaDataCallback)(mpd_Song *song, MetaDataResult result, MetaData *met, gpointer data);
+typedef void (*MetaDataListCallback)(gpointer handle, const char *plugin_name, GList *results, gpointer data);
 /**
  * Create empty MetaData
  */
