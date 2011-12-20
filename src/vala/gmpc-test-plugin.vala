@@ -116,9 +116,9 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
         var ali = new Gtk.Alignment(0f,0f,0f,0f);
         var button = new Gtk.Button.with_label(_("Set"));
         if(!is_raw) {
-            button.set_data_full("path",(void *)uri.dup(),(GLib.DestroyNotify)g_free);
+            button.set_data("path",uri);
         }else{
-            button.set_data_full("data",(void *)uri.dup(),(GLib.DestroyNotify)g_free);
+            button.set_data("data",uri);
         }
         ali.add(button);
         hbox.pack_start(ali, false, true, 0);
@@ -157,7 +157,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
 
         var ali = new Gtk.Alignment(0f,0f,0f,0f);
         var button = new Gtk.Button.with_label(_("Set"));
-        button.set_data_full("lyrics",(void *)text.dup(),(GLib.DestroyNotify)g_free);
+        button.set_data("lyrics",text);
         ali.add(button);
         hbox.pack_start(ali, false, true, 0);
         button.clicked.connect(set_metadata);
