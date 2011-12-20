@@ -94,9 +94,6 @@ typedef struct {
 	gpointer data;
 	/* The song the data is queries for */
 	mpd_Song *song;
-	/* The song modified by the search system.
-	 * This does albumartist, tag cleanup etc */
-	mpd_Song *edited;
 	/* The type of metadata */
 	MetaDataType type;
 	/* Result  */
@@ -112,6 +109,25 @@ typedef struct {
 #endif
 } meta_thread_data;
 
+
+
+static void meta_thread_data_free(meta_thread_data *mtd)
+{
+	/* Free the result data */
+	if(mtd->met)
+		meta_data_free(mtd->met);
+	if(mtd->met_results) {
+		g_list_foreach(mtd->met_results, (GFunc)meta_data_free, NULL);
+		g_list_free(mtd->met_results);
+		mtd->met_results = NULL;
+	}
+	/* Free the copie and edited version of the songs */
+	if(mtd->song)
+		mpd_freeSong(mtd->song);
+
+	/* Free the Request struct */
+	g_free(mtd);
+}
 gboolean meta_compare_func(meta_thread_data *mt1, meta_thread_data *mt2);
 //static gboolean meta_data_handle_results(void);
 
@@ -311,22 +327,40 @@ static gboolean glyr_return_queue(void *user_data)
 			gmpc_meta_watcher_data_changed(gmw, mtd->song, (mtd->type)&META_QUERY_DATA_TYPES, META_DATA_UNAVAILABLE, NULL);
 		}
 
-		/* Free the result data */
-		if(mtd->met)
-			meta_data_free(mtd->met);
-		if(mtd->met_results) {
-			g_list_foreach(mtd->met_results, (GFunc)meta_data_free, NULL);
-			g_list_free(mtd->met_results);
-			mtd->met_results = NULL;
+		// Queue locking
+#if 0
+		g_async_queue_lock(gaq);
+		
+		GList *items = NULL;
+		meta_thread_data *mtd_c = g_async_queue_try_pop_unlocked(gaq);
+		while(mtd_c != NULL) {
+			if(!meta_compare_func(mtd, mtd_c) && mtd->action == MTD_ACTION_QUERY_METADATA)
+			{
+				printf("%s: remove double results\n", __FUNCTION__);
+				if(mtd_c->callback)
+				{
+					mtd_c->callback(mtd_c->song, mtd_c->result, mtd_c->met, mtd_c->data);
+				}
+				// Free
+				meta_thread_data_free(mtd_c);
+			}else{
+				items = g_list_prepend(items, mtd_c);	
+			}
+			mtd_c = g_async_queue_try_pop_unlocked(gaq);
 		}
-		/* Free the copie and edited version of the songs */
-		if(mtd->song)
-			mpd_freeSong(mtd->song);
-		if(mtd->edited)
-			mpd_freeSong(mtd->edited);
-
-		/* Free the Request struct */
-		g_free(mtd);
+		items = g_list_reverse(items);
+		for(items = g_list_first(items); items != NULL; items = g_list_next(items))
+		{
+			printf("repopulate\n");
+			g_async_queue_push_unlocked(gaq, items->data);
+		}
+	
+		g_list_free(items);
+		// Unqueue lock.
+		g_async_queue_unlock(gaq);
+#endif
+		
+		meta_thread_data_free(mtd);
 		return true;
 	}
 	return false;
@@ -835,68 +869,13 @@ void meta_data_destroy(void)
 {
 	meta_thread_data *mtd = NULL;
 	INIT_TIC_TAC();
-#if 0
-	if(process_queue) {
-		GList *iter;
-		/* Iterate through the list and destroy all entries */
-		for(iter = g_list_first(process_queue); iter; iter = iter->next)
-		{
-			mtd = iter->data;
-
-			/* Free any possible plugin results */
-			g_list_foreach(mtd->list, (GFunc)meta_data_free, NULL);
-			g_list_free(mtd->list);
-			mtd->list = mtd->iter = NULL;
-			/* Destroy the result */
-			if(mtd->met) 
-				meta_data_free(mtd->met);
-			/* destroy the copied and modified song */
-			if(mtd->song)
-				mpd_freeSong(mtd->song);
-			if(mtd->edited)
-				mpd_freeSong(mtd->edited);
-
-			/* Free the Request struct */
-			g_free(mtd);
-		}
-		g_list_free(process_queue);
-		process_queue = NULL;
-	}
-
-	g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG,"Done..");
-	/* Close the cover database  */
-	TOC("test")
-	metadata_cache_destroy();
-	TOC("Config saved")
-#endif
 	/**
  	 * Clear the request queue, and tell thread to quit 
 	 */
 	g_async_queue_lock(gaq);
 	while((mtd = g_async_queue_try_pop_unlocked(gaq))){
-		 /* Free any possible plugin results */
-/*
-		if(mtd->list){
-			g_list_foreach(mtd->list, (GFunc)meta_data_free, NULL);
-			g_list_free(mtd->list);
-		}
-
-*/		/* Free the result data */
-		if(mtd->met)
-			meta_data_free(mtd->met);
-		if(mtd->met_results) {
-			g_list_foreach(mtd->met_results, (GFunc)meta_data_free, NULL);
-			g_list_free(mtd->met_results);
-			mtd->met_results = NULL;
-		}
-		/* Free the copie and edited version of the songs */
-		if(mtd->song)
-			mpd_freeSong(mtd->song);
-		if(mtd->edited)
-			mpd_freeSong(mtd->edited);
-
-		/* Free the Request struct */
-		g_free(mtd);
+		/* Free */	
+		meta_thread_data_free(mtd);
 	}
 	mtd = g_malloc0(sizeof(*mtd));
 	mtd->action = MTD_ACTION_QUIT;
@@ -923,21 +902,7 @@ void meta_data_destroy(void)
 	g_async_queue_lock(return_queue);
 	while((mtd = g_async_queue_try_pop_unlocked(return_queue))){
 		 /* Free any possible plugin results */
-/*		if(mtd->list){
-			g_list_foreach(mtd->list, (GFunc)meta_data_free, NULL);
-			g_list_free(mtd->list);
-		}
-*/		/* Free the result data */
-		if(mtd->met)
-			meta_data_free(mtd->met);
-		/* Free the copie and edited version of the songs */
-		if(mtd->song)
-			mpd_freeSong(mtd->song);
-		if(mtd->edited)
-			mpd_freeSong(mtd->edited);
-
-		/* Free the Request struct */
-		g_free(mtd);
+		meta_thread_data_free(mtd);
 	}
 	g_async_queue_unlock(return_queue);
 	g_async_queue_unref(gaq);
@@ -946,6 +911,8 @@ void meta_data_destroy(void)
 }
 gboolean meta_compare_func(meta_thread_data *mt1, meta_thread_data *mt2)
 {
+	if(mt1->action != mt2->action) return TRUE;
+	
 	if((mt1->type&META_QUERY_DATA_TYPES) != (mt2->type&META_QUERY_DATA_TYPES))
 		return TRUE;
 	if(!gmpc_meta_watcher_match_data(mt1->type&META_QUERY_DATA_TYPES, mt1->song, mt2->song))
@@ -992,7 +959,7 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData *
 	mtd->action = MTD_ACTION_QUERY_METADATA;
 	mtd->id = ++test_id;
 	/* Create a copy of the original song */
-	mtd->song = rewrite_mpd_song(tsong, type);//(mpd_songDup(tsong);
+	mtd->song = rewrite_mpd_song(tsong, type);
 	/* Set the type */
 	mtd->type = type;
 	/* the callback */
@@ -1037,19 +1004,12 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData *
 			if(cache)glyr_free_list(cache);
 			glyr_query_destroy(&query);
 			
-			//gmpc_meta_watcher_data_changed(gmw,mtd->song, (mtd->type)&META_QUERY_DATA_TYPES, mtd->result,mtd->met);
 			mrd = mtd->result;
 			*met = mtd->met;
 			mtd->met = NULL;
-			if(mtd->met)
-				meta_data_free(mtd->met);
-			/* Free the copie and edited version of the songs */
-			if(mtd->song)
-				mpd_freeSong(mtd->song);
-			if(mtd->edited)
-				mpd_freeSong(mtd->edited);
-			g_free(mtd);
+			// Free mtd
 			printf("Got from cache\n");
+			meta_thread_data_free(mtd);
 
 			TEC("Got from cache");
 			return mrd;
@@ -1352,7 +1312,7 @@ gpointer metadata_get_list(mpd_Song  *song, MetaDataType type, void (*callback)(
 	mtd->action = MTD_ACTION_QUERY_LIST;
 	mtd->id = ++test_id;
 	/* Create a copy of the original song */
-	mtd->song = rewrite_mpd_song(song, type);//(mpd_songDup(tsong);
+	mtd->song = rewrite_mpd_song(song, type);
 	/* Set the type */
 	mtd->type = type;
 	/* the callback */
