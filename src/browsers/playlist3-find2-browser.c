@@ -306,7 +306,9 @@ static void pl3_find2_browser_add(GtkWidget * cat_tree)
 	playlist3_insert_browser(&iter, PL3_CAT_BROWSER_LIBRARY+pos%PL3_CAT_BROWSER_LIBRARY);
 	gtk_list_store_set(GTK_LIST_STORE(pl3_tree), &iter,
 					   PL3_CAT_TYPE, find2_browser_plug.id,
-					   PL3_CAT_TITLE, _("Search"), PL3_CAT_ICON_ID, GTK_STOCK_FIND, -1);
+					   PL3_CAT_TITLE, _("Search"),
+					   PL3_CAT_STOCK_ID, GTK_STOCK_FIND,
+					   -1);
 
 	if (pl3_find2_ref)
 	{

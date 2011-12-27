@@ -37,6 +37,11 @@ public class MyCellRenderer : Gtk.CellRenderer
 				cr_pb.icon_name = value;
 			}
 	}
+	public string stock_id {
+			set{
+				cr_pb.stock_id = value;
+			}
+	}
 
 	public int weight { set { cr_text.weight = value;}}
 	public bool weight_set { set { cr_text.weight_set = value;}}
@@ -122,7 +127,7 @@ public class MyCellRenderer : Gtk.CellRenderer
 		ca.width = image_width+6;//cell_area.height;
 		ca.height = cell_area.height;
 		
-		if(cr_pb.icon_name != null )
+		if(cr_pb.icon_name != null || cr_pb.stock_id != null )
 		{
 			cr_pb.render(window, widget, background_area, ca, expose_area, flags);
 

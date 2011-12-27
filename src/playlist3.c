@@ -1036,7 +1036,8 @@ void create_playlist3(void)
             G_TYPE_STRING,       /* full path and stuff for backend */
             G_TYPE_STRING,       /* icon id */
             G_TYPE_INT,          /* ordering */
-			G_TYPE_INT
+			G_TYPE_INT,			 /* Bold */
+            G_TYPE_STRING       /* stock id */
         };
         /* song id, song title */
         pl3_tree = (GtkTreeModel *) gmpc_tools_liststore_sort_new();
@@ -1089,6 +1090,7 @@ void create_playlist3(void)
     }
     gtk_tree_view_column_set_attributes(column, renderer,
 			"icon-name", PL3_CAT_ICON_ID,
+			"stock-id", PL3_CAT_STOCK_ID,
 			"text", PL3_CAT_TITLE, 
 			"weight", PL3_CAT_BOLD, NULL);
     g_object_set(renderer, "weight-set", TRUE, NULL);
