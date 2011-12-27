@@ -147,7 +147,7 @@ static int connected_to_mpd(mpd_Connection * mpd_conn)
 
 static void connection_thread(void)
 {
-	mpd_Connection *conn = mpd_newConnection(connection_get_hostname(), connection_get_port(), DEFAULT_TIMEOUT);
+	mpd_Connection *conn = mpd_newConnection(connection_get_hostname(), connection_get_port(), cfg_get_single_value_as_float_with_default(config, "connection", "timeout", DEFAULT_TIMEOUT));
 	g_idle_add((GSourceFunc) connected_to_mpd, conn);
 	return;
 }
