@@ -208,7 +208,8 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
         foreach(unowned MetaData.Item md in list)
         {
 
-            if(this.query_type == Gmpc.MetaData.Type.ALBUM_ART || this.query_type == Gmpc.MetaData.Type.ARTIST_ART)
+            if(this.query_type == Gmpc.MetaData.Type.ALBUM_ART || this.query_type == Gmpc.MetaData.Type.ARTIST_ART ||
+				this.query_type == Gmpc.MetaData.Type.BACKDROP_ART)
             {
 /*
                 if(md.content_type == Gmpc.MetaData.ContentType.URI)
@@ -454,6 +455,15 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
            }
            else this.warning_label.show();
         }
+		else if ( active == 6) {
+           this.query_type = Gmpc.MetaData.Type.BACKDROP_ART;  
+           if(this.song.artist != null)
+           {
+                this.artist_entry.sensitive = true;
+                this.refresh.sensitive = true;
+           }
+           else this.warning_label.show();
+		}
     }
 
     public
@@ -505,6 +515,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
         list.insert_with_values(null, -1, 0, "media-album",     1, _("Album Info"));
         list.insert_with_values(null, -1, 0, "media-artist",    1, _("Artist Biography"));
         list.insert_with_values(null, -1, 0, "media-album",     1, _("Guitar Tab"));
+        list.insert_with_values(null, -1, 0, "media-artist",    1, _("Backdrop"));
 
         this.combo = new Gtk.ComboBox.with_model(list); 
        
@@ -562,7 +573,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
 
         vbox.pack_start(qhbox, false, false, 0);
 
-        if(type != Gmpc.MetaData.Type.ALBUM_ART)
+        if(type != Gmpc.MetaData.Type.ALBUM_ART || type != Gmpc.MetaData.Type.BACKDROP_ART)
             this.album_entry.sensitive = false;
 
 
@@ -597,6 +608,8 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
         else if(type == Gmpc.MetaData.Type.ALBUM_TXT)  this.combo.set_active(3);
         else if(type == Gmpc.MetaData.Type.ARTIST_TXT)this.combo.set_active(4);
         else if(type == Gmpc.MetaData.Type.SONG_GUITAR_TAB)this.combo.set_active(5);
+        else if(type == Gmpc.MetaData.Type.BACKDROP_ART)this.combo.set_active(6);
+
         refresh_query(button);
     }
     public void b_cancel(){

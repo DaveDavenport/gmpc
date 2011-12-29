@@ -621,7 +621,9 @@ void glyr_fetcher_thread(void *user_data)
 			glyr_opt_verbosity(&query,3);
 
 			// Delete existing entries.
+			printf("Do delete\n");
 			glyr_db_delete(db, &query);
+			printf("Do delete done\n");
 
 			// Set dummy entry in cache, so we know
 			// we searched for this before.
@@ -823,8 +825,10 @@ void glyr_fetcher_thread(void *user_data)
 			/* Set some random settings */
 			glyr_opt_verbosity(&query,3);
 
+			printf("do delete\n");
 			// Delete existing entries.
 			glyr_db_delete(db, &query);
+			printf("do delete done\n");
 
 			// Set dummy entry in cache, so we know
 			// we searched for this before.
@@ -832,7 +836,9 @@ void glyr_fetcher_thread(void *user_data)
 			{
 				mtd->met->cache->rating = 9;
 				// Add dummy entry
+				printf("do insert\n");
 				glyr_db_insert(db,&query, mtd->met->cache);
+				printf("do insert done\n");
 			}
 
 			// Clear the query, and lock the handle again.
