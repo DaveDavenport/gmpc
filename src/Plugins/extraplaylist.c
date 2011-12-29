@@ -197,7 +197,8 @@ static void extra_playlist_add(void) {
     }
 
 
-//	gtk_paned_set_position(GTK_PANED(extraplaylist_paned),cfg_get_single_value_as_int_with_default(config, "extraplaylist", "paned-pos", 400));
+	gtk_paned_set_position(GTK_PANED(extraplaylist_paned),
+			cfg_get_single_value_as_int_with_default(config, "extraplaylist", "paned-pos", 400));
 
 	gtk_widget_show(extraplaylist_paned);
     gtk_widget_hide(extraplaylist);
