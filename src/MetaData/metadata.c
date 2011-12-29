@@ -549,7 +549,12 @@ static gboolean process_glyr_result(GlyrMemCache *cache,
 		{
 			(mtd->met) = meta_data_new();
 			(mtd->met)->type = mtd->type;
-			(mtd->met)->plugin_name = g_strdup(cache->prov); 
+			if(cache->cached)
+			{
+				(mtd->met)->plugin_name = g_strdup_printf("%s (cached)", cache->prov); 
+			}else{
+				(mtd->met)->plugin_name = g_strdup(cache->prov); 
+			}
 			(mtd->met)->content_type = content_type;
 
 			(mtd->met)->content = g_malloc0(cache->size);
@@ -605,6 +610,9 @@ void glyr_fetcher_thread(void *user_data)
 			/* Set up the query */
 			glyr_query_init(&query);
 			setup_glyr_query(&query, mtd);
+			glyr_opt_number(&query, 0);
+			/* Set some random settings */
+			glyr_opt_verbosity(&query,3);
 
 			// Delete existing entries.
 			glyr_db_delete(db, &query);
@@ -984,8 +992,8 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData *
 	 */
 	if((type&META_QUERY_NO_CACHE) == 0)
 	{
-		GLYR_ERROR          err          = GLYRE_OK;
 		const char 			*md			 = connection_get_music_directory();
+		GLYR_ERROR          err          = GLYRE_OK;
 		MetaDataResult mrd;
 		MetaDataContentType content_type = META_DATA_CONTENT_RAW;
 		GlyrQuery query;
