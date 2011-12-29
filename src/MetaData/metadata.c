@@ -304,6 +304,7 @@ static gboolean glyr_return_queue(void *user_data)
 	meta_thread_data *mtd = (meta_thread_data*)g_async_queue_try_pop(return_queue);
 	if(mtd)
 	{
+		printf("Process results: %i\n", mtd->action);
 		if(mtd->action == MTD_ACTION_QUERY_METADATA)
 		{
 			printf("%s: results\n", __FUNCTION__);
@@ -323,6 +324,7 @@ static gboolean glyr_return_queue(void *user_data)
 				cb(NULL, "", NULL, mtd->data);
 			}		
 		}else if (mtd->action == MTD_ACTION_CLEAR_ENTRY) {
+			printf("Signal no longer available.\n");
 			// Signal that this item is now no longer available.
 			gmpc_meta_watcher_data_changed(gmw, mtd->song, (mtd->type)&META_QUERY_DATA_TYPES, META_DATA_UNAVAILABLE, NULL);
 		}
@@ -591,7 +593,11 @@ void glyr_fetcher_thread(void *user_data)
 		}
 		else if (mtd->action == MTD_ACTION_CLEAR_ENTRY)
 		{
+			GTimer *t = g_timer_new();
 			GlyrMemCache        *cache       = NULL;
+
+			printf("Do clearing entry\n");
+
 			// Setup cancel lock
 			glyr_exit_handle = &query;
 			g_mutex_unlock(exit_handle_lock);
@@ -623,12 +629,15 @@ void glyr_fetcher_thread(void *user_data)
 			glyr_exit_handle = NULL;
 			glyr_query_destroy(&query);
 
+			printf("Push back result\n");
 			// Push back result, and tell idle handle to handle it.
 			g_async_queue_push(return_queue, mtd);
 			// invalidate pointer.
 			mtd = NULL;
 			// Schedule the result thread in idle time.
 			g_idle_add(glyr_return_queue, NULL);
+			printf("Deleting took: %f\n", g_timer_elapsed(t,NULL));
+			g_timer_destroy(t);
 		}
 		else if (mtd->action == MTD_ACTION_QUERY_LIST)
 		{
@@ -936,7 +945,7 @@ void meta_data_clear_entry(mpd_Song *song, MetaDataType type)
 	mtd->type = type;
 	/* set result NULL */
 	mtd->met = NULL;
-
+	printf("Request clearing entry\n");
 	g_async_queue_push(gaq, mtd);
 	mtd = NULL;
 }
