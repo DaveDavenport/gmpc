@@ -49,6 +49,7 @@ namespace Gmpc {
         [CCode (
 	cname="MetaData",
 	free_function="meta_data_free",
+	copy_function="meta_data_dup",
 	has_type_id = false
 	)]
         public class Item {
@@ -57,6 +58,10 @@ namespace Gmpc {
             public Gmpc.MetaData.Type type;
             [CCode (cname="meta_data_dup")]
             public static Item copy(Item item);
+			[CCode (cname="meta_data_dup")]
+			public Item dup();
+
+			
            public unowned string plugin_name;
            public int size;
            public void * content;
@@ -130,6 +135,7 @@ namespace Gmpc {
         }
 
 
+
         public delegate void Callback (void *handle,string? plugin_name, GLib.List<MetaData.Item>? list);
         [CCode ( cname="metadata_get_list", cheader_filename="libmpd/libmpd.h,metadata.h" )]
         public void* get_list(MPD.Song song, Type type, Callback callback);
@@ -138,8 +144,8 @@ namespace Gmpc {
         public void* get_list_cancel(void *handle);
 
 
-        [CCode ( cname="meta_data_set_cache", cheader_filename="metadata-cache.h")]
-        public void set_metadata(MPD.Song song, Result result, Gmpc.MetaData.Item met);
+        [CCode ( cname="meta_data_set_entry", cheader_filename="metadata.h")]
+        public void set_metadata(MPD.Song song, Gmpc.MetaData.Item met);
 
         [CCode ( cname="gmpc_get_metadata_filename", cheader_filename="libmpd/libmpd.h,metadata.h")]
         public string get_metadata_filename(Type type, MPD.Song song, string? extension);

@@ -77,6 +77,7 @@ static GlyrDatabase *db = NULL;
 enum MTD_Action {
 	MTD_ACTION_QUERY_METADATA,
 	MTD_ACTION_CLEAR_ENTRY,
+	MTD_ACTION_SET_ENTRY,
 	MTD_ACTION_QUERY_LIST,
 	MTD_ACTION_QUIT
 };
@@ -414,6 +415,7 @@ static MetaDataContentType setup_glyr_query(GlyrQuery *query,
 	else if(type == META_ALBUM_ART &&
 			mtd->song->album != NULL)
 	{
+		printf("set mode cover art: %s\n", mtd->song->album);
 		glyr_opt_type(query, GLYR_GET_COVERART);
 		content_type = META_DATA_CONTENT_RAW;
 	}
@@ -563,6 +565,10 @@ static gboolean process_glyr_result(GlyrMemCache *cache,
 			mtd->result = META_DATA_AVAILABLE;
 			// found something.
 			retv = TRUE;
+		}
+		// Copy the cache.
+		if(mtd->met != NULL) {
+			(mtd->met)->cache = glyr_cache_copy(cache);
 		}
 	}else { 
 		// Explicitely not found.
@@ -798,6 +804,56 @@ void glyr_fetcher_thread(void *user_data)
 			mtd = NULL;
 			// Schedule the result thread in idle time.
 			g_idle_add(glyr_return_queue, NULL);
+		}
+		else if (mtd->action == MTD_ACTION_SET_ENTRY)
+		{
+			GTimer *t = g_timer_new();
+			GlyrMemCache        *cache       = NULL;
+
+			printf("Do clearing entry first.\n");
+
+			// Setup cancel lock
+			glyr_exit_handle = &query;
+			g_mutex_unlock(exit_handle_lock);
+
+			/* Set up the query */
+			glyr_query_init(&query);
+			setup_glyr_query(&query, mtd);
+			glyr_opt_number(&query, 0);
+			/* Set some random settings */
+			glyr_opt_verbosity(&query,3);
+
+			// Delete existing entries.
+			glyr_db_delete(db, &query);
+
+			// Set dummy entry in cache, so we know
+			// we searched for this before.
+			if(mtd->met->cache)
+			{
+				mtd->met->cache->rating = 9;
+				// Add dummy entry
+				glyr_db_insert(db,&query, mtd->met->cache);
+			}
+
+			// Clear the query, and lock the handle again.
+			g_mutex_lock(exit_handle_lock);
+			glyr_exit_handle = NULL;
+			glyr_query_destroy(&query);
+
+			printf("Push back result\n");
+			// Push back result, and tell idle handle to handle it.
+			// set it to query metadata to get the right handle behaviour.
+			mtd->action = MTD_ACTION_QUERY_METADATA; 
+			g_async_queue_push(return_queue, mtd);
+			// invalidate pointer.
+			mtd = NULL;
+
+
+			// Schedule the result thread in idle time.
+			g_idle_add(glyr_return_queue, NULL);
+
+			printf("Deleting and replacing took: %f\n", g_timer_elapsed(t,NULL));
+			g_timer_destroy(t);
 		}else {
 			g_error("Unknown type of query to perform");
 			return;
@@ -941,6 +997,28 @@ gboolean meta_compare_func(meta_thread_data *mt1, meta_thread_data *mt2)
 
 
 static int test_id = 0;
+
+void meta_data_set_entry ( mpd_Song *song, MetaData *met)
+{
+	if(song == NULL || met == NULL)
+	{
+		g_warning("Trying to set metadata entry with insufficient information");
+		return;	
+	}
+
+	meta_thread_data *mtd = g_malloc0(sizeof(*mtd));
+	mtd->action = MTD_ACTION_SET_ENTRY;
+	mtd->id = ++test_id;
+	/* Create a copy of the original song */
+	mtd->song = mpd_songDup(song);
+	/* Set the type */
+	mtd->type = met->type;
+	/* set result NULL */
+	mtd->met = meta_data_dup(met);;
+	printf("Request setting entry\n");
+	g_async_queue_push(gaq, mtd);
+	mtd = NULL;
+}
 
 void meta_data_clear_entry(mpd_Song *song, MetaDataType type)
 {
@@ -1470,6 +1548,12 @@ MetaData *meta_data_dup(MetaData *data)
 	if(data->thumbnail_uri != NULL) {
 		retv->thumbnail_uri = g_strdup(data->thumbnail_uri);
 	}
+
+	/* Copy the GlyrCache */
+	if(data->cache != NULL)
+	{
+		retv->cache = glyr_cache_copy(data->cache);
+	}
 	return retv;
 }
 MetaData *meta_data_dup_steal(MetaData *data)
@@ -1489,6 +1573,13 @@ MetaData *meta_data_dup_steal(MetaData *data)
 	data->content = NULL;
 	retv->thumbnail_uri = data->thumbnail_uri;
 	data->thumbnail_uri = NULL;
+
+	/* Steal the GlyrCache */
+	if(data->cache != NULL)
+	{
+		retv->cache = data->cache;
+		data->cache = NULL;
+	}
 	return retv;
 }
 gboolean meta_data_is_empty(const MetaData *data)

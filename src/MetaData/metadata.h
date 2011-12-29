@@ -21,6 +21,9 @@
 #define __METADATA_H__
 #include <libmpd/libmpd.h>
 
+#include <glyr/glyr.h>
+#include <glyr/cache.h>
+
 typedef enum {
 	META_ALBUM_ART 			= 1,		/* Album Cover art 	*/
 	META_ARTIST_ART 		= 2,		/* Artist  image 	*/
@@ -81,6 +84,11 @@ typedef struct {
      * null terminated anyway.
      */
     gsize size;
+
+	/**
+     * The original result from the Metadata object.
+	 */
+	GlyrMemCache *cache;
     /**
      * If type is an image (album art/artist art). 
      */
@@ -169,4 +177,8 @@ mpd_Song *rewrite_mpd_song(mpd_Song *tsong, MetaDataType type);
  * Clear an entry in the db.
  */
 void meta_data_clear_entry(mpd_Song *song, MetaDataType type);
+/**
+ * Set an entry in the db.
+ */
+void meta_data_set_entry ( mpd_Song *song, MetaData *met);
 #endif
