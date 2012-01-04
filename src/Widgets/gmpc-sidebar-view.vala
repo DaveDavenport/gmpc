@@ -155,6 +155,28 @@ public class MyCellRenderer : Gtk.CellRenderer
 			Gdk.cairo_set_source_color(ct, widget.style.fg[Gtk.StateType.SELECTED]);
 			Pango.cairo_show_layout(ct, l);
 			ct.stroke();
+
+
+
+
+
+			
+		}
+		// Draw arrow.
+		if((flags&Gtk.CellRendererState.SELECTED) == Gtk.CellRendererState.SELECTED) {
+			double cax = background_area.width*0.9;
+			double bld = background_area.width*0.1;
+			var ct = Gdk.cairo_create(window);
+			if(!show_text) cax = background_area.x+image_width+3;
+
+			ct.move_to(background_area.x+cax, background_area.y);
+			ct.line_to(background_area.x+cax+bld, background_area.y+background_area.height/2);
+			ct.line_to(background_area.x+cax, background_area.y+background_area.height);
+			ct.line_to(background_area.x+cax+bld, background_area.y+background_area.height);
+			ct.line_to(background_area.x+cax+bld, background_area.y);
+			ct.line_to(background_area.x+cax, background_area.y);
+			Gdk.cairo_set_source_color(ct, widget.style.bg[Gtk.StateType.NORMAL]);
+			ct.fill();
 		}
 		return;
 	}
