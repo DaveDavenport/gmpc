@@ -184,8 +184,6 @@ int main(int argc, char **argv)
 
 	log_init();
 
-    egg_sm_client_set_mode(EGG_SM_CLIENT_MODE_NO_RESTART);
-
     /**
      * Setup NLS
      */
@@ -269,11 +267,6 @@ int main(int argc, char **argv)
 		gtk_settings_set_string_property(gtk_settings_get_default(),
 				"gtk-icon-theme-name" , settings.icon_theme,NULL);
 	}
-    /* connect signal to Session manager to quit */
-    g_signal_connect(
-		egg_sm_client_get(), "quit",
-		G_CALLBACK(main_quit), NULL);
-    TEC("EggSmClient");
 
     /**
      * Call create_gmpc_paths();

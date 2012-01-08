@@ -44,7 +44,6 @@
  * Some gobjects
  */
 #include "gmpc-profiles.h"
-#include "smclient/eggsmclient.h"
 
 extern int 				gmpc_connected;
 extern GtkTreeModel 	*playlist;

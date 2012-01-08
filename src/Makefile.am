@@ -113,9 +113,7 @@ gmpc_SOURCES=\
 nodist_gmpc_SOURCES=\
     $(gmpc_GOBCFILES)
 
-gmpc_LDADD=\
-           libeggsmclient.la
-
+gmpc_LDADD=
 
 if WIN32 
 gmpc_LDADD += gmpc-win32.o
@@ -341,64 +339,3 @@ gmpc_GOBHFILES=\
 gmpc_egg_FILES=\
 	egg/eggcolumnchooserdialog.c\
 	egg/eggcolumnmodel.c
-
-###
-# SM CLIENT STUFF
-###
-
-if PLATFORM_WIN32
-platform_sources = smclient/eggsmclient-win32.c
-platform_logout_test_ldflags = -mwindows
-else
-if PLATFORM_OSX
-platform_defines = -xobjective-c
-platform_ldflags = -framework Carbon
-platform_session_end_ldflags = -framework Carbon
-platform_logout_test_ldflags = -framework Carbon
-platform_sources = smclient/eggsmclient-osx.c
-else
-platform_defines = -DEGG_SM_CLIENT_BACKEND_XSMP
-platform_ltlibraries =                   \
-	libeggdesktopfile.la             
-platform_libs = libeggdesktopfile.la -lSM -lICE
-platform_sources = smclient/eggsmclient-xsmp.c
-endif
-endif
-
-libeggsmclient_la_INCLUDES = \
-	-DG_LOG_DOMAIN=\""EggSMClient"\" \
-	$(platform_defines)              \
-	$(glib_CFLAGS)           \
-    $(gtk_CFLAGS)
-
-noinst_LTLIBRARIES =                     \
-	libeggsmclient.la                \
-	$(platform_ltlibraries)
-
-libeggsmclient_la_LIBADD =               \
-	$(glib_LIBS)             \
-	$(gtk_LIBS)             \
-	$(platform_libs)
-
-libeggsmclient_la_LDFLAGS =              \
-	$(platform_ldflags)
-
-libeggsmclient_la_SOURCES =              \
-	smclient/eggsmclient.c                    \
-	$(platform_sources)
-
-libeggdesktopfile_la_LIBADD =            \
-	$(EGG_LIBS)
-
-libeggdesktopfile_la_SOURCES =           \
-	smclient/eggdesktopfile.c                 
-
-EXTRA_DIST+=\
-	smclient/eggsmclient.h                    \
-	smclient/eggsmclient-private.h            \
-	smclient/eggdesktopfile.h
-
-EXTRA_DIST +=                             \
-	smclient/eggsmclient-osx.c                \
-	smclient/eggsmclient-win32.c              \
-	smclient/eggsmclient-xsmp.c
