@@ -1,5 +1,13 @@
-See http://sarine.nl/gmpc/ and http://mpd.wikia.com
+See http://gmpclient.org/ and http://mpd.wikia.com
 
 Requirements:
 * libmpd
-* gob2 (for svn compilation)
+* gob2 (for git compilation)
+* vala
+* libsoup2.4
+* glyr
+* libunique
+* libxspf (optional)
+* gmodule
+* libsqlite3
+* libxml2 
