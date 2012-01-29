@@ -484,7 +484,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 	meta_callback(GmpcMetaWatcher *gmv, mpd_Song *song, MetaDataType type, MetaDataResult ret, MetaData *met,gpointer data)
     {
         Self *self = data;
-		printf("MetaCallback : %p - %p\n", song, self);
         if(!song || !self || !self->_priv || !self->_priv->song)
             return;
 
