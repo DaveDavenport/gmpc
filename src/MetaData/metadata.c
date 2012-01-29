@@ -127,7 +127,7 @@ static void meta_thread_data_free(meta_thread_data *mtd)
 		mpd_freeSong(mtd->song);
 
 	/* Free the Request struct */
-	g_free(mtd);
+	g_slice_free(meta_thread_data, mtd);
 }
 gboolean meta_compare_func(meta_thread_data *mt1, meta_thread_data *mt2);
 //static gboolean meta_data_handle_results(void);
@@ -599,7 +599,7 @@ void glyr_fetcher_thread(void *user_data)
 			printf("Quitting....");
 			g_mutex_unlock(exit_handle_lock);
 			/* Free the Request struct */
-			g_free(mtd);
+			meta_thread_data_free(mtd);		
 			return;
 		}
 		else if (mtd->action == MTD_ACTION_CLEAR_ENTRY)
@@ -956,7 +956,7 @@ void meta_data_destroy(void)
 		/* Free */	
 		meta_thread_data_free(mtd);
 	}
-	mtd = g_malloc0(sizeof(*mtd));
+	mtd = g_slice_new0(meta_thread_data);//g_malloc0(sizeof(*mtd));
 	mtd->action = MTD_ACTION_QUIT;
 	g_async_queue_push_unlocked(gaq, mtd);
 	mtd = NULL;
@@ -1012,7 +1012,8 @@ void meta_data_set_entry ( mpd_Song *song, MetaData *met)
 		return;	
 	}
 
-	meta_thread_data *mtd = g_malloc0(sizeof(*mtd));
+//	meta_thread_data *mtd = g_malloc0(sizeof(*mtd));
+	meta_thread_data *mtd = g_slice_new0(meta_thread_data);//g_malloc0(sizeof(*mtd));
 	mtd->action = MTD_ACTION_SET_ENTRY;
 	mtd->id = ++test_id;
 	/* Create a copy of the original song */
@@ -1028,7 +1029,8 @@ void meta_data_set_entry ( mpd_Song *song, MetaData *met)
 
 void meta_data_clear_entry(mpd_Song *song, MetaDataType type)
 {
-	meta_thread_data *mtd = g_malloc0(sizeof(*mtd));
+	//meta_thread_data *mtd = g_malloc0(sizeof(*mtd));
+	meta_thread_data *mtd = g_slice_new0(meta_thread_data);//g_malloc0(sizeof(*mtd));
 	mtd->action = MTD_ACTION_CLEAR_ENTRY;
 	mtd->id = ++test_id;
 	/* Create a copy of the original song */
@@ -1056,7 +1058,8 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData *
 	 * Not needed, but can be usefull for debugging
 	 */
 	
-	mtd = g_malloc0(sizeof(*mtd));
+	//mtd = g_malloc0(sizeof(*mtd));
+    mtd = g_slice_new0(meta_thread_data);//g_malloc0(sizeof(*mtd));
 	mtd->action = MTD_ACTION_QUERY_METADATA;
 	mtd->id = ++test_id;
 	/* Create a copy of the original song */
@@ -1082,7 +1085,7 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData *
 		MetaDataContentType content_type = META_DATA_CONTENT_RAW;
 		GlyrQuery query;
 		GlyrMemCache * cache = NULL;
-		printf("Try querying cache\n");
+		TOC("try querying cache");
 
 		glyr_query_init(&query);
 		/* Set some random settings */
@@ -1114,7 +1117,7 @@ TOC("end db lookup");
 			printf("Got from cache\n");
 			meta_thread_data_free(mtd);
 
-			TEC("Got from cache");
+			TOC("Got from cache");
 			return mrd;
 		}
 		if(cache)glyr_free_list(cache);
@@ -1411,7 +1414,8 @@ gpointer metadata_get_list(mpd_Song  *song, MetaDataType type, void (*callback)(
 	 * Not needed, but can be usefull for debugging
 	 */
 	
-	mtd = g_malloc0(sizeof(*mtd));
+	//mtd = g_malloc0(sizeof(*mtd));
+	mtd = g_slice_new0(meta_thread_data);//g_malloc0(sizeof(*mtd));
 	mtd->action = MTD_ACTION_QUERY_LIST;
 	mtd->id = ++test_id;
 	/* Create a copy of the original song */
