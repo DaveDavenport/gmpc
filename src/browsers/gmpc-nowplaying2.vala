@@ -600,9 +600,17 @@ namespace Gmpc {
 					var text_view = new Gmpc.MetaData.Widgets.TextLabel(song, Gmpc.MetaData.Type.SONG_TXT);
 					alib.add(text_view);
 					notebook.append_page(alib, new Gtk.Label("Lyrics"));
-					var button = new Gtk.RadioButton.with_label(group,("Lyrics"));
+					var button = new Gtk.RadioButton(group);//.with_label(group,("Lyrics"));
+					var label = new Gtk.Label(_("Lyrics"));
+					label.ellipsize = Pango.EllipsizeMode.END;
+					label.set_alignment(0.0f, 0.5f);
+//					button.add(label);
+
+					if(group != null) 
+						hboxje.pack_start(new Gtk.VSeparator(), false, false, 0);
 					group = button.get_group();
 					hboxje.pack_start(button, false, false, 0);
+					hboxje.pack_start(label, true, true, 0);
 					var j = i;
 					button.clicked.connect((source) => {
 							if((source as Gtk.CheckButton).get_active()) {
@@ -622,9 +630,16 @@ namespace Gmpc {
 					var alib = new Gtk.Alignment(0f,0f,1f,0f);
 					var text_view_queried = false;
 					notebook.append_page(alib, new Gtk.Label(_("Guitar Tabs")));
-					var button = new Gtk.RadioButton.with_label(group,_("Guitar Tabs"));
+					var button = new Gtk.RadioButton(group);//.with_label(group,_("Guitar Tabs"));
+					var label = new Gtk.Label(_("Guitar Tabs"));
+					label.ellipsize = Pango.EllipsizeMode.END;
+					label.set_alignment(0.0f, 0.5f);
+					//button.add(label);
+					if(group != null) 
+						hboxje.pack_start(new Gtk.VSeparator(), false, false, 0);
 					group = button.get_group();
 					hboxje.pack_start(button, false, false, 0);
+					hboxje.pack_start(label, true, true, 0);
 					var j = i;
 					/* Only query the guitar-tab when opened or first notebook page*/
 					button.clicked.connect((source) => {
@@ -659,9 +674,16 @@ namespace Gmpc {
 
 					notebook.append_page(similar_songs_box, new Gtk.Label(_("Similar Songs")));
 
-					var button = new Gtk.RadioButton.with_label(group,_("Similar Songs"));
+					var button = new Gtk.RadioButton(group);//.with_label(group,_("Similar Songs"));
+					var label = new Gtk.Label(_("Similar Songs"));
+					label.ellipsize = Pango.EllipsizeMode.END;
+					label.set_alignment(0.0f, 0.5f);
+					//button.add(label);
+					if(group != null) 
+						hboxje.pack_start(new Gtk.VSeparator(), false, false, 0);
 					group = button.get_group();
 					hboxje.pack_start(button, false, false, 0);
+					hboxje.pack_start(label, true, true, 0);
 
 					var j = i;
 					/* Only query when opened or first notebook page*/
@@ -697,9 +719,16 @@ namespace Gmpc {
 
 					notebook.append_page(similar_artist, new Gtk.Label(_("Similar Artist")));
 
-					var button = new Gtk.RadioButton.with_label(group,_("Similar Artist"));
+					var button = new Gtk.RadioButton(group);//.with_label(group,_("Similar Artist"));
+					var label = new Gtk.Label(_("Similar Artist"));
+					label.ellipsize = Pango.EllipsizeMode.END;
+					label.set_alignment(0.0f, 0.5f);
+					//button.add(label);
+					if(group != null) 
+						hboxje.pack_start(new Gtk.VSeparator(), false, false, 0);
 					group = button.get_group();
 					hboxje.pack_start(button, false, false, 0);
+					hboxje.pack_start(label, true, true, 0);
 
 					var j = i;
 					button.clicked.connect((source) => {
@@ -718,9 +747,16 @@ namespace Gmpc {
 
 					var song_links = new Gmpc.MetaData.Widgets.SongLinks(Gmpc.MetaData.Widgets.SongLinks.Type.SONG,song);
 					notebook.append_page(song_links, new Gtk.Label(_("Web Links")));
-					var button = new Gtk.RadioButton.with_label(group,_("Web Links"));
+					var button = new Gtk.RadioButton(group);//with_label(group,_("Web Links"));
+					var label = new Gtk.Label(_("Web Links"));
+					label.ellipsize = Pango.EllipsizeMode.END;
+					label.set_alignment(0.0f, 0.5f);
+					//button.add(label);
+					if(group != null) 
+						hboxje.pack_start(new Gtk.VSeparator(), false, false, 0);
 					group = button.get_group();
 					hboxje.pack_start(button, false, false, 0);
+					hboxje.pack_start(label, true, true, 0);
 					var j = i;
 					button.clicked.connect((source) => {
 							if((source as Gtk.CheckButton).get_active()) {
@@ -738,9 +774,16 @@ namespace Gmpc {
 					var text_view_queried = false;
 
 					notebook.append_page(alib, new Gtk.Label(_("Artist information")));
-					var button = new Gtk.RadioButton.with_label(group,_("Artist information"));
+					var button = new Gtk.RadioButton(group);//.with_label(group,_("Artist information"));
+					var label = new Gtk.Label(_("Artist information"));
+					label.ellipsize = Pango.EllipsizeMode.END;
+					label.set_alignment(0.0f, 0.5f);
+					//button.add(label);
+					if(group != null) 
+						hboxje.pack_start(new Gtk.VSeparator(), false, false, 0);
 					group = button.get_group();
 					hboxje.pack_start(button, false, false, 0);
+					hboxje.pack_start(label, true, true, 0);
 					var j = i;
 					/* Only query the guitar-tab when opened or first notebook page*/
 					button.clicked.connect((source) => {
@@ -770,9 +813,16 @@ namespace Gmpc {
 					var text_view_queried = false;
 
 					notebook.append_page(alib, new Gtk.Label(_("Songs from album")));
-					var button = new Gtk.RadioButton.with_label(group,_("Songs from album"));
+					var button = new Gtk.RadioButton(group);//.with_label(group,_("Songs from album"));
+					var label = new Gtk.Label(_("Songs from album"));
+					label.ellipsize = Pango.EllipsizeMode.END;
+					label.set_alignment(0.0f, 0.5f);
+					//button.add(label);
+					if(group != null) 
+						hboxje.pack_start(new Gtk.VSeparator(), false, false, 0);
 					group = button.get_group();
 					hboxje.pack_start(button, false, false, 0);
+					hboxje.pack_start(label, true, true, 0);
 					var j = i;
 					var sl = new Gmpc.Widgets.Songlist();
 
@@ -855,13 +905,13 @@ namespace Gmpc {
 					}
 				}
 
-				ali = new Gtk.Alignment(0.0f, 0.5f,0f,0f);
+				ali = new Gtk.Alignment(0.0f, 0.5f,1f,0f);
 				ali.add(hboxje);
 
 				/* Create pane in 2. */
 				var bottom_hbox = new Gtk.HBox(false, 6);
 				/* left pane */
-				var metadata_vbox = new Gtk.VBox(false, 6);
+				var metadata_vbox = new Gtk.VBox(false, 0);
 				metadata_vbox.pack_start(ali, false, false, 0);
 				sep = new Gtk.HSeparator();
 				sep.set_size_request(-1, 1);
