@@ -378,7 +378,7 @@ static MetaDataContentType setup_glyr_query(GlyrQuery *query,
 	/* Force UTF 8 */
 	glyr_opt_force_utf8(query, TRUE);
 
-	glyr_opt_parallel(query, 4);
+	glyr_opt_parallel(query, 1);
 	glyr_opt_number(query, 1);
 
 	/* set metadata */
