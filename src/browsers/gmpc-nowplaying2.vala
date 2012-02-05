@@ -808,6 +808,7 @@ namespace Gmpc {
 					i++;
 				}
 
+				if(config.get_int_with_default("MetaData", "show-songs-from-album",1) == 1)
 				{
 					var alib = new Gtk.Alignment(0f,0f,1f,0f);
 					var text_view_queried = false;

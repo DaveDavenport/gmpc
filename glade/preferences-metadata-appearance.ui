@@ -114,6 +114,22 @@
                 <property name="position">5</property>
               </packing>
             </child>
+            <child>
+              <object class="GtkCheckButton" id="checkbutton_show_songs_from_album">
+                <property name="label" translatable="yes">Songs from album (only in Now Playing)</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">False</property>
+                <property name="use_action_appearance">False</property>
+                <property name="draw_indicator">True</property>
+                <signal name="toggled" handler="gmpc_tools_metadata_appearance_on_checkbutton_show_songs_from_album_toggled" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">6</property>
+              </packing>
+            </child>
           </object>
         </child>
       </object>

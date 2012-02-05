@@ -81,6 +81,12 @@ public class Gmpc.Tools.MetadataAppearance : Gmpc.Plugin.Base, Gmpc.Plugin.Prefe
     {
         config.set_int("MetaData", "show-guitar-tabs", (int)source.get_active());
     }
+
+    public static void
+    on_checkbutton_show_songs_from_album_toggled(CheckButton source)
+    {
+        config.set_int("MetaData", "show-songs-from-album", (int)source.get_active());
+    }
     
     public void
     preferences_pane_construct(Gtk.Container container)
@@ -112,6 +118,8 @@ public class Gmpc.Tools.MetadataAppearance : Gmpc.Plugin.Base, Gmpc.Plugin.Prefe
             builderWidget = builder.get_object("checkbutton_show_guitar_tabs") as CheckButton;
             ((CheckButton)builderWidget).set_active((bool)config.get_int_with_default("MetaData", "show-guitar-tabs", 1));
 
+            builderWidget = builder.get_object("checkbutton_show_songs_from_albums") as CheckButton;
+            ((CheckButton)builderWidget).set_active((bool)config.get_int_with_default("MetaData", "show-songs-from-album", 1));
         } catch (Error e) {
             stderr.printf("Could not load UI: %s\n", e.message);
         }
