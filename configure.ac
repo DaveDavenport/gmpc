@@ -59,6 +59,9 @@ AC_PROG_CC
 AM_PROG_CC_C_O
 LT_PROG_RC
 
+dnl Checks for libm 
+AC_CHECK_LIB([m],[floor])
+
 # test for zlib
 zlib=0
 AC_CHECK_LIB(z, inflate,zlib=1,zlib=0)
