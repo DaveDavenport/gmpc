@@ -330,39 +330,6 @@ static gboolean glyr_return_queue(void *user_data)
 			gmpc_meta_watcher_data_changed(gmw, mtd->song, (mtd->type)&META_QUERY_DATA_TYPES, META_DATA_UNAVAILABLE, NULL);
 		}
 
-		// Queue locking
-#if 0
-		g_async_queue_lock(gaq);
-		
-		GList *items = NULL;
-		meta_thread_data *mtd_c = g_async_queue_try_pop_unlocked(gaq);
-		while(mtd_c != NULL) {
-			if(!meta_compare_func(mtd, mtd_c) && mtd->action == MTD_ACTION_QUERY_METADATA)
-			{
-				printf("%s: remove double results\n", __FUNCTION__);
-				if(mtd_c->callback)
-				{
-					mtd_c->callback(mtd_c->song, mtd_c->result, mtd_c->met, mtd_c->data);
-				}
-				// Free
-				meta_thread_data_free(mtd_c);
-			}else{
-				items = g_list_prepend(items, mtd_c);	
-			}
-			mtd_c = g_async_queue_try_pop_unlocked(gaq);
-		}
-		items = g_list_reverse(items);
-		for(items = g_list_first(items); items != NULL; items = g_list_next(items))
-		{
-			printf("repopulate\n");
-			g_async_queue_push_unlocked(gaq, items->data);
-		}
-	
-		g_list_free(items);
-		// Unqueue lock.
-		g_async_queue_unlock(gaq);
-#endif
-		
 		meta_thread_data_free(mtd);
 		return true;
 	}
