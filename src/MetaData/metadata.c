@@ -533,10 +533,6 @@ static gboolean process_glyr_result(GlyrMemCache *cache,
 			// found something.
 			retv = TRUE;
 		}
-		// Copy the cache.
-		if(mtd->met != NULL) {
-			(mtd->met)->cache = glyr_cache_copy(cache);
-		}
 	}else { 
 		// Explicitely not found.
 		printf("Cache sais empty\n");
@@ -557,8 +553,9 @@ static GMutex *exit_handle_lock = NULL;
  *
  * @returns nothing.
  */
-static void glyr_fetcher_thread_load_uri(meta_thread_data *mtd)
+static GlyrMemCache *glyr_fetcher_thread_load_uri(meta_thread_data *mtd)
 {
+	GlyrMemCache *cache = NULL;
 	const char *path = meta_data_get_uri(mtd->met);
 	gchar *scheme = g_uri_parse_scheme(path);
 
@@ -571,15 +568,24 @@ static void glyr_fetcher_thread_load_uri(meta_thread_data *mtd)
 		g_free(mtd->met->content);
 		// set it to raw.
 		mtd->met->content_type = META_DATA_CONTENT_RAW;
-		mtd->met->cache = glyr_cache_new();
-		glyr_cache_set_data(mtd->met->cache, content, length);
+		cache = glyr_cache_new();
+		glyr_cache_set_data(cache, content, length);
 		mtd->met->content = g_memdup(content, length);
 		mtd->met->size = length;
 		content = NULL;
 	}
 	g_free(scheme);
+	return cache;
 }
 
+static GlyrMemCache *glyr_fetcher_thread_load_raw(meta_thread_data *mtd)
+{
+	GlyrMemCache *cache = NULL;
+	cache = glyr_cache_new();
+	glyr_cache_set_data(cache, 
+			g_memdup(mtd->met->content, mtd->met->size), 
+			mtd->met->size);
+}
 /**
  * Thread that does the GLYR requests
  */
@@ -603,10 +609,7 @@ void glyr_fetcher_thread(void *user_data)
 		}
 		else if (mtd->action == MTD_ACTION_CLEAR_ENTRY)
 		{
-			GTimer *t = g_timer_new();
 			GlyrMemCache        *cache       = NULL;
-
-			printf("Do clearing entry\n");
 
 			// Setup cancel lock
 			glyr_exit_handle = &query;
@@ -620,9 +623,7 @@ void glyr_fetcher_thread(void *user_data)
 			glyr_opt_verbosity(&query,3);
 
 			// Delete existing entries.
-			printf("Do delete\n");
 			glyr_db_delete(db, &query);
-			printf("Do delete done\n");
 
 			// Set dummy entry in cache, so we know
 			// we searched for this before.
@@ -630,7 +631,6 @@ void glyr_fetcher_thread(void *user_data)
 			glyr_cache_set_data(cache, g_strdup("GMPC Dummy data"), -1);
 			cache->dsrc = g_strdup("GMPC dummy insert");
 			cache->prov = g_strdup("none");
-			cache->img_format = g_strdup("");
 			cache->rating = -1;
 
 			// Add dummy entry
@@ -651,8 +651,6 @@ void glyr_fetcher_thread(void *user_data)
 			mtd = NULL;
 			// Schedule the result thread in idle time.
 			g_idle_add(glyr_return_queue, NULL);
-			printf("Deleting took: %f\n", g_timer_elapsed(t,NULL));
-			g_timer_destroy(t);
 		}
 		else if (mtd->action == MTD_ACTION_QUERY_LIST)
 		{
@@ -699,7 +697,6 @@ void glyr_fetcher_thread(void *user_data)
 			{
 				GlyrMemCache *iter = cache;
 				while(iter){
-					printf("Provider: %s\n", iter->prov);
 					process_glyr_result(iter,content_type, mtd);
 					iter = iter->next;
 				}
@@ -780,7 +777,6 @@ void glyr_fetcher_thread(void *user_data)
 				glyr_cache_set_data(cache, g_strdup("GMPC Dummy data"), -1);
 				cache->dsrc = g_strdup("GMPC dummy insert");
 				cache->prov = g_strdup("none");
-				cache->img_format = g_strdup("");
 				cache->rating = -1;
 
 				glyr_db_insert(db,&query, cache);
@@ -808,10 +804,7 @@ void glyr_fetcher_thread(void *user_data)
 		}
 		else if (mtd->action == MTD_ACTION_SET_ENTRY)
 		{
-			GTimer *t = g_timer_new();
 			GlyrMemCache        *cache       = NULL;
-
-			printf("Do clearing entry first.\n");
 
 			// Setup cancel lock
 			glyr_exit_handle = &query;
@@ -824,29 +817,27 @@ void glyr_fetcher_thread(void *user_data)
 			/* Set some random settings */
 			glyr_opt_verbosity(&query,3);
 
-			printf("do delete\n");
 			// Delete existing entries.
 			glyr_db_delete(db, &query);
-			printf("do delete done\n");
-
 
 			// load data
-			if(mtd->met->cache == NULL)
+			if(meta_data_is_uri(mtd->met))
 			{
-				if(meta_data_is_uri(mtd->met))
-				{
-					glyr_fetcher_thread_load_uri(mtd);
-				}	
+				// try to load cache from file.
+				cache = glyr_fetcher_thread_load_uri(mtd);
 			}
-
-
-			if(mtd->met->cache)
+			else if (meta_data_is_raw(mtd->met))
 			{
-				mtd->met->cache->rating = 9;
+				// try to load cache from raw.
+				cache = glyr_fetcher_thread_load_raw(mtd);
+			}	
+
+			// Cache.
+			if(cache)
+			{
+				cache->rating = 9;
 				// Add dummy entry
-				printf("do insert\n");
-				glyr_db_insert(db,&query, mtd->met->cache);
-				printf("do insert done\n");
+				glyr_db_insert(db,&query, cache);
 			}
 
 			// Clear the query, and lock the handle again.
@@ -854,7 +845,6 @@ void glyr_fetcher_thread(void *user_data)
 			glyr_exit_handle = NULL;
 			glyr_query_destroy(&query);
 
-			printf("Push back result\n");
 			// Push back result, and tell idle handle to handle it.
 			// set it to query metadata to get the right handle behaviour.
 			mtd->action = MTD_ACTION_QUERY_METADATA; 
@@ -865,9 +855,6 @@ void glyr_fetcher_thread(void *user_data)
 
 			// Schedule the result thread in idle time.
 			g_idle_add(glyr_return_queue, NULL);
-
-			printf("Deleting and replacing took: %f\n", g_timer_elapsed(t,NULL));
-			g_timer_destroy(t);
 		}else {
 			g_error("Unknown type of query to perform");
 			return;
@@ -1039,8 +1026,7 @@ void meta_data_set_entry ( mpd_Song *song, MetaData *met )
 
 void meta_data_clear_entry(mpd_Song *song, MetaDataType type)
 {
-	//meta_thread_data *mtd = g_malloc0(sizeof(*mtd));
-	meta_thread_data *mtd = g_slice_new0(meta_thread_data);//g_malloc0(sizeof(*mtd));
+	meta_thread_data *mtd = g_slice_new0(meta_thread_data);
 	mtd->action = MTD_ACTION_CLEAR_ENTRY;
 	mtd->id = ++test_id;
 	/* Create a copy of the original song */
@@ -1520,6 +1506,7 @@ void meta_data_free(MetaData *data)
 	if(data->thumbnail_uri) g_free(data->thumbnail_uri);
 	data->thumbnail_uri = NULL;
 	if(data->plugin_name) g_free(data->plugin_name);
+
 	g_free(data);
 }
 
@@ -1571,11 +1558,6 @@ MetaData *meta_data_dup(MetaData *data)
 		retv->thumbnail_uri = g_strdup(data->thumbnail_uri);
 	}
 
-	/* Copy the GlyrCache */
-	if(data->cache != NULL)
-	{
-		retv->cache = glyr_cache_copy(data->cache);
-	}
 	return retv;
 }
 MetaData *meta_data_dup_steal(MetaData *data)
@@ -1596,12 +1578,6 @@ MetaData *meta_data_dup_steal(MetaData *data)
 	retv->thumbnail_uri = data->thumbnail_uri;
 	data->thumbnail_uri = NULL;
 
-	/* Steal the GlyrCache */
-	if(data->cache != NULL)
-	{
-		retv->cache = data->cache;
-		data->cache = NULL;
-	}
 	return retv;
 }
 gboolean meta_data_is_empty(const MetaData *data)

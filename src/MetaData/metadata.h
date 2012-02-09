@@ -85,10 +85,6 @@ typedef struct {
      */
     gsize size;
 
-	/**
-     * The original result from the Metadata object.
-	 */
-	GlyrMemCache *cache;
     /**
      * If type is an image (album art/artist art). 
      */
