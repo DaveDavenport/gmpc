@@ -549,6 +549,38 @@ static GlyrQuery *glyr_exit_handle = NULL;
 static GMutex *exit_handle_lock = NULL;
 
 /**
+ * Load a file from an URI
+ * 
+ * @param mtd A meta_thread_data.
+ * 
+ * Loads a file from a hard-drive. 
+ *
+ * @returns nothing.
+ */
+static void glyr_fetcher_thread_load_uri(meta_thread_data *mtd)
+{
+	const char *path = meta_data_get_uri(mtd->met);
+	gchar *scheme = g_uri_parse_scheme(path);
+
+	if(scheme == NULL || strcmp(scheme, "file") == 0)
+	{
+		char *content = NULL;
+		gsize length =0;
+		g_file_get_contents(path, &content,&length, NULL); 
+		// Clean old content.
+		g_free(mtd->met->content);
+		// set it to raw.
+		mtd->met->content_type = META_DATA_CONTENT_RAW;
+		mtd->met->cache = glyr_cache_new();
+		glyr_cache_set_data(mtd->met->cache, content, length);
+		mtd->met->content = g_memdup(content, length);
+		mtd->met->size = length;
+		content = NULL;
+	}
+	g_free(scheme);
+}
+
+/**
  * Thread that does the GLYR requests
  */
 void glyr_fetcher_thread(void *user_data)
@@ -797,8 +829,17 @@ void glyr_fetcher_thread(void *user_data)
 			glyr_db_delete(db, &query);
 			printf("do delete done\n");
 
-			// Set dummy entry in cache, so we know
-			// we searched for this before.
+
+			// load data
+			if(mtd->met->cache == NULL)
+			{
+				if(meta_data_is_uri(mtd->met))
+				{
+					glyr_fetcher_thread_load_uri(mtd);
+				}	
+			}
+
+
 			if(mtd->met->cache)
 			{
 				mtd->met->cache->rating = 9;
@@ -971,7 +1012,7 @@ gboolean meta_compare_func(meta_thread_data *mt1, meta_thread_data *mt2)
 
 static int test_id = 0;
 
-void meta_data_set_entry ( mpd_Song *song, MetaData *met)
+void meta_data_set_entry ( mpd_Song *song, MetaData *met )
 {
 	if(song == NULL || met == NULL)
 	{
@@ -979,8 +1020,7 @@ void meta_data_set_entry ( mpd_Song *song, MetaData *met)
 		return;	
 	}
 
-//	meta_thread_data *mtd = g_malloc0(sizeof(*mtd));
-	meta_thread_data *mtd = g_slice_new0(meta_thread_data);//g_malloc0(sizeof(*mtd));
+	meta_thread_data *mtd = g_slice_new0(meta_thread_data);
 	mtd->action = MTD_ACTION_SET_ENTRY;
 	mtd->id = ++test_id;
 	/* Create a copy of the original song */
@@ -989,6 +1029,9 @@ void meta_data_set_entry ( mpd_Song *song, MetaData *met)
 	mtd->type = met->type;
 	/* set result NULL */
 	mtd->met = meta_data_dup(met);;
+	/* signal we are fetching. */
+	gmpc_meta_watcher_data_changed(gmw,mtd->song, (mtd->type)&META_QUERY_DATA_TYPES, META_DATA_FETCHING,NULL);
+	/* Set entry */
 	printf("Request setting entry\n");
 	g_async_queue_push(gaq, mtd);
 	mtd = NULL;

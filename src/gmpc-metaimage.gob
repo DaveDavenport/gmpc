@@ -250,31 +250,18 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 
                         /* try to open it */
                         if(path && gdk_pixbuf_get_file_info(path, NULL,NULL))
-                        {
-                            mpd_Song *song = mpd_songDup(self->_priv->song);
-                            /* Create MetaData object */
-                            MetaData* met = meta_data_new();
-                            met->type = self->image_type;
-                            met->plugin_name = g_strdup("User set");
-                            met->content_type = META_DATA_CONTENT_RAW;
-							met->content = NULL;
-							met->size = 0;
+						{
+							/* Create MetaData object */
+							MetaData* met = meta_data_new();
+							met->type = self->image_type;
+							met->plugin_name = g_strdup("User set");
+							met->content_type = META_DATA_CONTENT_URI;
+							meta_data_set_uri(met, path);
 
-							char *content = NULL;
-							gsize length =0;
-							g_file_get_contents(path, &content,&length, NULL); 
-							met->cache = glyr_cache_new();
-							glyr_cache_set_data(met->cache, content, length);
-							met->content = g_memdup(content, length);
-							met->size = length;
-							content = NULL;
-
-							meta_data_set_entry(song, met);
+							meta_data_set_entry(self->_priv->song, met);
 							/* free Metadata object */
-                            meta_data_free(met);
-                            found = TRUE;
-                            mpd_freeSong(song);
-                        }
+							meta_data_free(met);
+						}
                         g_free(path);
                     }
                     g_strfreev(uri);
@@ -843,29 +830,16 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 				{	
 					gchar *filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(fcd));
 					{
-						char *content = NULL;
-						gsize length =0;
-
-						//mpd_Song *song = mpd_songDup(self->_priv->song);
 						/* Create MetaData object */
 						MetaData* met = meta_data_new();
 						met->type = self->image_type;
 						met->plugin_name = g_strdup("User set");
-						met->content_type = META_DATA_CONTENT_RAW;
-
-
-						// set content.
-						met->cache = glyr_cache_new();
-						g_file_get_contents(filename, &content,&length, NULL); 
-						glyr_cache_set_data(met->cache, content, length);
-						met->content = g_memdup(content, length);
-						met->size = length;
-						content = NULL;
+						met->content_type = META_DATA_CONTENT_URI;
+						meta_data_set_uri(met, filename);
 
 						meta_data_set_entry(self->_priv->song, met);
 						/* free Metadata object */
 						meta_data_free(met);
-						//mpd_freeSong(song);
 
 						cfg_set_single_value_as_string(config, "MetaData", "image-file-chooser", filename); 
 					}
