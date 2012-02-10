@@ -308,8 +308,6 @@ static gboolean glyr_return_queue(void *user_data)
 		printf("Process results: %i\n", mtd->action);
 		if(mtd->action == MTD_ACTION_QUERY_METADATA)
 		{
-			printf("%s: results\n", __FUNCTION__);
-
 			gmpc_meta_watcher_data_changed(gmw,mtd->song, (mtd->type)&META_QUERY_DATA_TYPES, mtd->result,mtd->met);
 			if(mtd->callback)
 			{
@@ -382,7 +380,6 @@ static MetaDataContentType setup_glyr_query(GlyrQuery *query,
 	else if(type == META_ALBUM_ART &&
 			mtd->song->album != NULL)
 	{
-		printf("set mode cover art: %s\n", mtd->song->album);
 		glyr_opt_type(query, GLYR_GET_COVERART);
 		content_type = META_DATA_CONTENT_RAW;
 	}
@@ -569,6 +566,8 @@ static GlyrMemCache *glyr_fetcher_thread_load_uri(meta_thread_data *mtd)
 		// set it to raw.
 		mtd->met->content_type = META_DATA_CONTENT_RAW;
 		cache = glyr_cache_new();
+		cache->dsrc = g_strdup("GMPC dummy insert");
+		cache->prov = g_strdup("none");
 		glyr_cache_set_data(cache, content, length);
 		mtd->met->content = g_memdup(content, length);
 		mtd->met->size = length;
@@ -582,9 +581,23 @@ static GlyrMemCache *glyr_fetcher_thread_load_raw(meta_thread_data *mtd)
 {
 	GlyrMemCache *cache = NULL;
 	cache = glyr_cache_new();
+	cache->dsrc = g_strdup("GMPC dummy insert");
+	cache->prov = g_strdup("none");
 	glyr_cache_set_data(cache, 
 			g_memdup(mtd->met->content, mtd->met->size), 
 			mtd->met->size);
+}
+
+static GlyrMemCache *glyr_fetcher_thread_load_text(meta_thread_data *mtd)
+{
+	printf("Set load text: %s\n", mtd->met->content);
+	GlyrMemCache *cache = NULL;
+	cache = glyr_cache_new();
+	cache->dsrc = g_strdup("GMPC dummy insert");
+	cache->prov = g_strdup("none");
+	glyr_cache_set_data(cache, 
+			g_strdup(mtd->met->content), 
+			-1);
 }
 /**
  * Thread that does the GLYR requests
@@ -784,7 +797,6 @@ void glyr_fetcher_thread(void *user_data)
 				// Set unavailable 
 				mtd->result = META_DATA_UNAVAILABLE; 
 			}else{
-				printf("Provider: %s\n", cache->prov);
 				process_glyr_result(cache,content_type, mtd);
 			}
 			// Cleanup
@@ -830,6 +842,10 @@ void glyr_fetcher_thread(void *user_data)
 			{
 				// try to load cache from raw.
 				cache = glyr_fetcher_thread_load_raw(mtd);
+			} else if (meta_data_is_text(mtd->met) || meta_data_is_html(mtd->met))
+			{
+				// try to load cache from text.
+				cache = glyr_fetcher_thread_load_text(mtd);
 			}	
 
 			// Cache.
@@ -878,7 +894,6 @@ void meta_data_init(void)
 	printf("open glyr db: %s\n", url);
 	glyr_init();
 	db = glyr_db_init(url);
-	printf("db: %p\n", db);
 	g_free(url);
 
 
