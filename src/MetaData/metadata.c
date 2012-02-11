@@ -345,7 +345,8 @@ static MetaDataContentType setup_glyr_query(GlyrQuery *query,
 
 	glyr_opt_parallel(query, 1);
 	glyr_opt_number(query, 1);
-
+	// timeout 5 seconds.
+	glyr_opt_timeout(query, 5);
 	/* set metadata */
 	glyr_opt_artist(query,(char*)mtd->song->artist);
 	glyr_opt_album (query,(char*)mtd->song->album);
@@ -566,12 +567,21 @@ static GlyrMemCache *glyr_fetcher_thread_load_uri(meta_thread_data *mtd)
 		// set it to raw.
 		mtd->met->content_type = META_DATA_CONTENT_RAW;
 		cache = glyr_cache_new();
-		cache->dsrc = g_strdup("GMPC dummy insert");
-		cache->prov = g_strdup("none");
+		cache->dsrc = g_strdup(path);
 		glyr_cache_set_data(cache, content, length);
 		mtd->met->content = g_memdup(content, length);
 		mtd->met->size = length;
 		content = NULL;
+
+
+		// Testing force image type.
+		if(mtd->met->type == META_ALBUM_ART || mtd->met->type == META_ARTIST_ART ||
+			mtd->met->type == META_BACKDROP_ART)
+		{
+			cache->is_image = TRUE;
+			cache->img_format = g_strdup("jpeg");	
+		}
+
 	}
 	g_free(scheme);
 	return cache;
@@ -581,11 +591,17 @@ static GlyrMemCache *glyr_fetcher_thread_load_raw(meta_thread_data *mtd)
 {
 	GlyrMemCache *cache = NULL;
 	cache = glyr_cache_new();
-	cache->dsrc = g_strdup("GMPC dummy insert");
-	cache->prov = g_strdup("none");
 	glyr_cache_set_data(cache, 
 			g_memdup(mtd->met->content, mtd->met->size), 
 			mtd->met->size);
+	// Testing force image type.
+	if(mtd->met->type == META_ALBUM_ART || mtd->met->type == META_ARTIST_ART ||
+			mtd->met->type == META_BACKDROP_ART)
+	{
+		cache->is_image = TRUE;
+		cache->img_format = g_strdup("jpeg");	
+	}
+	return cache;
 }
 
 static GlyrMemCache *glyr_fetcher_thread_load_text(meta_thread_data *mtd)
@@ -593,11 +609,10 @@ static GlyrMemCache *glyr_fetcher_thread_load_text(meta_thread_data *mtd)
 	printf("Set load text: %s\n", mtd->met->content);
 	GlyrMemCache *cache = NULL;
 	cache = glyr_cache_new();
-	cache->dsrc = g_strdup("GMPC dummy insert");
-	cache->prov = g_strdup("none");
 	glyr_cache_set_data(cache, 
 			g_strdup(mtd->met->content), 
 			-1);
+	return cache;
 }
 /**
  * Thread that does the GLYR requests
@@ -633,7 +648,7 @@ void glyr_fetcher_thread(void *user_data)
 			setup_glyr_query(&query, mtd);
 			glyr_opt_number(&query, 0);
 			/* Set some random settings */
-			glyr_opt_verbosity(&query,3);
+			glyr_opt_verbosity(&query,4);
 
 			// Delete existing entries.
 			glyr_db_delete(db, &query);
@@ -641,12 +656,15 @@ void glyr_fetcher_thread(void *user_data)
 			// Set dummy entry in cache, so we know
 			// we searched for this before.
 			cache = glyr_cache_new();
-			glyr_cache_set_data(cache, g_strdup("GMPC Dummy data"), -1);
-			cache->dsrc = g_strdup("GMPC dummy insert");
-			cache->prov = g_strdup("none");
+			// TODO: Remove this randomize hack.
+			glyr_cache_set_data(cache,
+					g_strdup_printf("GMPC Dummy2 data: %llu",
+						0), -1);
 			cache->rating = -1;
 
 			// Add dummy entry
+			printf("Inserting dummy item\n");
+			printf("%p %p %p\n", db, query, cache);
 			glyr_db_insert(db,&query, cache);
 
 			// Cleanup
@@ -787,9 +805,10 @@ void glyr_fetcher_thread(void *user_data)
 				// Set dummy entry in cache, so we know
 				// we searched for this before.
 				cache = glyr_cache_new();
-				glyr_cache_set_data(cache, g_strdup("GMPC Dummy data"), -1);
-				cache->dsrc = g_strdup("GMPC dummy insert");
-				cache->prov = g_strdup("none");
+				// TODO: Remove this randomize hack.
+				glyr_cache_set_data(cache,
+						g_strdup_printf("GMPC Dummy2 data: %llu",
+							0), -1);
 				cache->rating = -1;
 
 				glyr_db_insert(db,&query, cache);
@@ -832,6 +851,11 @@ void glyr_fetcher_thread(void *user_data)
 			// Delete existing entries.
 			glyr_db_delete(db, &query);
 
+			glyr_query_init(&query);
+			setup_glyr_query(&query, mtd);
+			glyr_opt_number(&query, 0);
+			/* Set some random settings */
+			glyr_opt_verbosity(&query,3);
 			// load data
 			if(meta_data_is_uri(mtd->met))
 			{
@@ -852,7 +876,7 @@ void glyr_fetcher_thread(void *user_data)
 			if(cache)
 			{
 				cache->rating = 9;
-				// Add dummy entry
+				printf("Do DB insert\n");
 				glyr_db_insert(db,&query, cache);
 			}
 
@@ -1026,7 +1050,7 @@ void meta_data_set_entry ( mpd_Song *song, MetaData *met )
 	mtd->action = MTD_ACTION_SET_ENTRY;
 	mtd->id = ++test_id;
 	/* Create a copy of the original song */
-	mtd->song = mpd_songDup(song);
+	mtd->song = rewrite_mpd_song(song, met->type);
 	/* Set the type */
 	mtd->type = met->type;
 	/* set result NULL */
@@ -1045,7 +1069,8 @@ void meta_data_clear_entry(mpd_Song *song, MetaDataType type)
 	mtd->action = MTD_ACTION_CLEAR_ENTRY;
 	mtd->id = ++test_id;
 	/* Create a copy of the original song */
-	mtd->song = mpd_songDup(song);
+	//mtd->song = mpd_songDup(song);
+	mtd->song = rewrite_mpd_song(song, type);
 	/* Set the type */
 	mtd->type = type;
 	/* set result NULL */
