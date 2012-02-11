@@ -578,7 +578,7 @@ static gboolean process_glyr_result(GlyrMemCache *cache,
 }
 
 static GlyrQuery *glyr_exit_handle = NULL;
-static GMutex exit_handle_lock;
+static GStaticMutex exit_handle_lock = G_STATIC_MUTEX_INIT;
 
 /**
  * Load a file from an URI
@@ -661,7 +661,7 @@ static void glyr_fetcher_thread(void *user_data)
 	void *d;
 	GlyrQuery query;
 
-	g_mutex_lock(&exit_handle_lock);
+	g_static_mutex_lock(&exit_handle_lock);
 	while((d = g_async_queue_pop(gaq)))
 	{
 		meta_thread_data    *mtd         = (meta_thread_data*)d;
@@ -669,7 +669,7 @@ static void glyr_fetcher_thread(void *user_data)
 		// Check if this is the quit command.
 		if(mtd->action == MTD_ACTION_QUIT) {
 			printf("Quitting....");
-			g_mutex_unlock(&exit_handle_lock);
+			g_static_mutex_unlock(&exit_handle_lock);
 			/* Free the Request struct */
 			meta_thread_data_free(mtd);		
 			return;
@@ -680,7 +680,7 @@ static void glyr_fetcher_thread(void *user_data)
 
 			// Setup cancel lock
 			glyr_exit_handle = &query;
-			g_mutex_unlock(&exit_handle_lock);
+			g_static_mutex_unlock(&exit_handle_lock);
 
 			/* Set up the query */
 			glyr_query_init(&query);
@@ -709,7 +709,7 @@ static void glyr_fetcher_thread(void *user_data)
 			if(cache)glyr_free_list(cache);
 
 			// Clear the query, and lock the handle again.
-			g_mutex_lock(&exit_handle_lock);
+			g_static_mutex_lock(&exit_handle_lock);
 			glyr_exit_handle = NULL;
 			glyr_query_destroy(&query);
 
@@ -730,7 +730,7 @@ static void glyr_fetcher_thread(void *user_data)
 			GlyrMemCache        *cache       = NULL;
 
 			glyr_exit_handle = &query;
-			g_mutex_unlock(&exit_handle_lock);
+			g_static_mutex_unlock(&exit_handle_lock);
 
 			printf("new style query\n");
 
@@ -776,7 +776,7 @@ static void glyr_fetcher_thread(void *user_data)
 			if(cache)glyr_free_list(cache);
 
 			// Clear the query, and lock the handle again.
-			g_mutex_lock(&exit_handle_lock);
+			g_static_mutex_lock(&exit_handle_lock);
 			glyr_exit_handle = NULL;
 			glyr_query_destroy(&query);
 
@@ -797,7 +797,7 @@ static void glyr_fetcher_thread(void *user_data)
 			GlyrMemCache        *cache       = NULL;
 
 			glyr_exit_handle = &query;
-			g_mutex_unlock(&exit_handle_lock);
+			g_static_mutex_unlock(&exit_handle_lock);
 
 			printf("new style query\n");
 
@@ -860,7 +860,7 @@ static void glyr_fetcher_thread(void *user_data)
 			if(cache)glyr_free_list(cache);
 
 			// Clear the query, and lock the handle again.
-			g_mutex_lock(&exit_handle_lock);
+			g_static_mutex_lock(&exit_handle_lock);
 			glyr_exit_handle = NULL;
 			glyr_query_destroy(&query);
 
@@ -877,7 +877,7 @@ static void glyr_fetcher_thread(void *user_data)
 
 			// Setup cancel lock
 			glyr_exit_handle = &query;
-			g_mutex_unlock(&exit_handle_lock);
+			g_static_mutex_unlock(&exit_handle_lock);
 
 			/* Set up the query */
 			glyr_query_init(&query);
@@ -919,7 +919,7 @@ static void glyr_fetcher_thread(void *user_data)
 			}
 
 			// Clear the query, and lock the handle again.
-			g_mutex_lock(&exit_handle_lock);
+			g_static_mutex_lock(&exit_handle_lock);
 			glyr_exit_handle = NULL;
 			glyr_query_destroy(&query);
 
@@ -951,7 +951,7 @@ void meta_data_init(void)
 	/* Is this function thread safe? */
 	url = gmpc_get_covers_path("");
 		
-	g_mutex_init(&exit_handle_lock);
+	//g_mutex_init(&exit_handle_lock);
 	/* Initialize..*/
 	printf("open glyr db: %s\n", url);
 	glyr_init();
@@ -961,7 +961,11 @@ void meta_data_init(void)
 
 	gaq = g_async_queue_new();
 	return_queue = g_async_queue_new();
+#if GLIB_CHECK_VERSION(2, 31, 0)
 	gaq_fetcher_thread = g_thread_new("Glyr thread fetch", (GThreadFunc)glyr_fetcher_thread, NULL);
+#else
+	gaq_fetcher_thread = g_thread_create(glyr_fetcher_thread, NULL, TRUE, NULL);
+#endif
 
 }
 
@@ -1033,16 +1037,16 @@ void meta_data_destroy(void)
 	mtd = NULL;
 	g_async_queue_unlock(gaq);
 	// add lock? 
-	g_mutex_lock(&exit_handle_lock);
+	g_static_mutex_lock(&exit_handle_lock);
 	if(glyr_exit_handle) {
 		printf("Sending quit signal\n");
 		glyr_signal_exit(glyr_exit_handle);
 	}
-	g_mutex_unlock(&exit_handle_lock);
+	g_static_mutex_unlock(&exit_handle_lock);
 
 	printf("Waiting for glyr to finish.....\n");
 	g_thread_join(gaq_fetcher_thread);
-	g_mutex_clear(&exit_handle_lock);
+	//g_mutex_clear(&exit_handle_lock);
 
 	glyr_db_destroy(db);
 	glyr_cleanup();
