@@ -111,6 +111,44 @@ typedef struct {
 } meta_thread_data;
 
 
+// Validate if enough information is available for the query.
+static gboolean meta_data_validate_query(mpd_Song *tsong, MetaDataType type)
+{
+	switch(type)
+	{
+		case META_GENRE_SIMILAR:
+			if(tsong->genre == NULL || tsong->genre[0] == '\0')
+				return FALSE;
+			break;
+		case META_SONG_GUITAR_TAB:
+		case META_SONG_TXT:
+		case META_SONG_SIMILAR:
+			if(tsong->title == NULL || tsong->title[0] == '\0')
+				return FALSE;
+			if(tsong->artist == NULL || tsong->artist[0] == '\0')
+				return FALSE;
+			break;
+		case META_ALBUM_ART:
+		case META_ALBUM_TXT:
+			if(tsong->album == NULL || tsong->album[0] == '\0')
+				return FALSE;
+		case META_ARTIST_TXT:
+		case META_ARTIST_SIMILAR:
+		case META_BACKDROP_ART:
+		case META_ARTIST_ART:
+			if(tsong->artist == NULL|| tsong->artist[0] == '\0')
+				return FALSE;
+			break;
+		// other items.
+		case META_QUERY_DATA_TYPES:
+		case META_QUERY_NO_CACHE:
+		default:
+			return FALSE;
+
+	}
+	return TRUE;
+}
+
 
 static void meta_thread_data_free(meta_thread_data *mtd)
 {
@@ -540,7 +578,7 @@ static gboolean process_glyr_result(GlyrMemCache *cache,
 }
 
 static GlyrQuery *glyr_exit_handle = NULL;
-static GMutex *exit_handle_lock = NULL;
+static GMutex exit_handle_lock;
 
 /**
  * Load a file from an URI
@@ -562,13 +600,15 @@ static GlyrMemCache *glyr_fetcher_thread_load_uri(meta_thread_data *mtd)
 		char *content = NULL;
 		gsize length =0;
 		g_file_get_contents(path, &content,&length, NULL); 
-		// Clean old content.
-		g_free(mtd->met->content);
 		// set it to raw.
 		mtd->met->content_type = META_DATA_CONTENT_RAW;
 		cache = glyr_cache_new();
 		cache->dsrc = g_strdup(path);
 		glyr_cache_set_data(cache, content, length);
+
+
+		// Clean old content.
+		g_free(mtd->met->content);
 		mtd->met->content = g_memdup(content, length);
 		mtd->met->size = length;
 		content = NULL;
@@ -606,7 +646,6 @@ static GlyrMemCache *glyr_fetcher_thread_load_raw(meta_thread_data *mtd)
 
 static GlyrMemCache *glyr_fetcher_thread_load_text(meta_thread_data *mtd)
 {
-	printf("Set load text: %s\n", mtd->met->content);
 	GlyrMemCache *cache = NULL;
 	cache = glyr_cache_new();
 	glyr_cache_set_data(cache, 
@@ -617,12 +656,12 @@ static GlyrMemCache *glyr_fetcher_thread_load_text(meta_thread_data *mtd)
 /**
  * Thread that does the GLYR requests
  */
-void glyr_fetcher_thread(void *user_data)
+static void glyr_fetcher_thread(void *user_data)
 {
 	void *d;
 	GlyrQuery query;
 
-	g_mutex_lock(exit_handle_lock);
+	g_mutex_lock(&exit_handle_lock);
 	while((d = g_async_queue_pop(gaq)))
 	{
 		meta_thread_data    *mtd         = (meta_thread_data*)d;
@@ -630,7 +669,7 @@ void glyr_fetcher_thread(void *user_data)
 		// Check if this is the quit command.
 		if(mtd->action == MTD_ACTION_QUIT) {
 			printf("Quitting....");
-			g_mutex_unlock(exit_handle_lock);
+			g_mutex_unlock(&exit_handle_lock);
 			/* Free the Request struct */
 			meta_thread_data_free(mtd);		
 			return;
@@ -641,7 +680,7 @@ void glyr_fetcher_thread(void *user_data)
 
 			// Setup cancel lock
 			glyr_exit_handle = &query;
-			g_mutex_unlock(exit_handle_lock);
+			g_mutex_unlock(&exit_handle_lock);
 
 			/* Set up the query */
 			glyr_query_init(&query);
@@ -658,20 +697,19 @@ void glyr_fetcher_thread(void *user_data)
 			cache = glyr_cache_new();
 			// TODO: Remove this randomize hack.
 			glyr_cache_set_data(cache,
-					g_strdup_printf("GMPC Dummy2 data: %llu",
-						0), -1);
+					g_strdup("GMPC Dummy"),
+					-1);
 			cache->rating = -1;
 
 			// Add dummy entry
 			printf("Inserting dummy item\n");
-			printf("%p %p %p\n", db, query, cache);
 			glyr_db_insert(db,&query, cache);
 
 			// Cleanup
 			if(cache)glyr_free_list(cache);
 
 			// Clear the query, and lock the handle again.
-			g_mutex_lock(exit_handle_lock);
+			g_mutex_lock(&exit_handle_lock);
 			glyr_exit_handle = NULL;
 			glyr_query_destroy(&query);
 
@@ -692,7 +730,7 @@ void glyr_fetcher_thread(void *user_data)
 			GlyrMemCache        *cache       = NULL;
 
 			glyr_exit_handle = &query;
-			g_mutex_unlock(exit_handle_lock);
+			g_mutex_unlock(&exit_handle_lock);
 
 			printf("new style query\n");
 
@@ -701,7 +739,7 @@ void glyr_fetcher_thread(void *user_data)
 
 			if(md != NULL && md[0] !=  '\0'&& mtd->song->file != NULL)
 			{
-				const char *path = g_build_filename(md, mtd->song->file, NULL);
+				char *path = g_build_filename(md, mtd->song->file, NULL);
 				glyr_opt_musictree_path(&query, path);
 				g_free(path);
 			}
@@ -738,7 +776,7 @@ void glyr_fetcher_thread(void *user_data)
 			if(cache)glyr_free_list(cache);
 
 			// Clear the query, and lock the handle again.
-			g_mutex_lock(exit_handle_lock);
+			g_mutex_lock(&exit_handle_lock);
 			glyr_exit_handle = NULL;
 			glyr_query_destroy(&query);
 
@@ -759,7 +797,7 @@ void glyr_fetcher_thread(void *user_data)
 			GlyrMemCache        *cache       = NULL;
 
 			glyr_exit_handle = &query;
-			g_mutex_unlock(exit_handle_lock);
+			g_mutex_unlock(&exit_handle_lock);
 
 			printf("new style query\n");
 
@@ -768,7 +806,7 @@ void glyr_fetcher_thread(void *user_data)
 
 			if(md != NULL && md[0] !=  '\0'&& mtd->song->file != NULL)
 			{
-				const char *path = g_build_filename(md, mtd->song->file, NULL);
+				char *path = g_build_filename(md, mtd->song->file, NULL);
 				glyr_opt_musictree_path(&query, path);
 				g_free(path);
 			}
@@ -807,8 +845,8 @@ void glyr_fetcher_thread(void *user_data)
 				cache = glyr_cache_new();
 				// TODO: Remove this randomize hack.
 				glyr_cache_set_data(cache,
-						g_strdup_printf("GMPC Dummy2 data: %llu",
-							0), -1);
+						g_strdup("GMPC Dummy"),
+						-1);
 				cache->rating = -1;
 
 				glyr_db_insert(db,&query, cache);
@@ -822,7 +860,7 @@ void glyr_fetcher_thread(void *user_data)
 			if(cache)glyr_free_list(cache);
 
 			// Clear the query, and lock the handle again.
-			g_mutex_lock(exit_handle_lock);
+			g_mutex_lock(&exit_handle_lock);
 			glyr_exit_handle = NULL;
 			glyr_query_destroy(&query);
 
@@ -839,7 +877,7 @@ void glyr_fetcher_thread(void *user_data)
 
 			// Setup cancel lock
 			glyr_exit_handle = &query;
-			g_mutex_unlock(exit_handle_lock);
+			g_mutex_unlock(&exit_handle_lock);
 
 			/* Set up the query */
 			glyr_query_init(&query);
@@ -881,7 +919,7 @@ void glyr_fetcher_thread(void *user_data)
 			}
 
 			// Clear the query, and lock the handle again.
-			g_mutex_lock(exit_handle_lock);
+			g_mutex_lock(&exit_handle_lock);
 			glyr_exit_handle = NULL;
 			glyr_query_destroy(&query);
 
@@ -913,7 +951,7 @@ void meta_data_init(void)
 	/* Is this function thread safe? */
 	url = gmpc_get_covers_path("");
 		
-	exit_handle_lock = g_mutex_new();
+	g_mutex_init(&exit_handle_lock);
 	/* Initialize..*/
 	printf("open glyr db: %s\n", url);
 	glyr_init();
@@ -923,7 +961,7 @@ void meta_data_init(void)
 
 	gaq = g_async_queue_new();
 	return_queue = g_async_queue_new();
-	gaq_fetcher_thread = g_thread_create(glyr_fetcher_thread, NULL, TRUE, NULL);
+	gaq_fetcher_thread = g_thread_new("Glyr thread fetch", (GThreadFunc)glyr_fetcher_thread, NULL);
 
 }
 
@@ -981,7 +1019,6 @@ void meta_data_check_plugin_changed(void)
 void meta_data_destroy(void)
 {
 	meta_thread_data *mtd = NULL;
-	INIT_TIC_TAC();
 	/**
  	 * Clear the request queue, and tell thread to quit 
 	 */
@@ -996,16 +1033,16 @@ void meta_data_destroy(void)
 	mtd = NULL;
 	g_async_queue_unlock(gaq);
 	// add lock? 
-	g_mutex_lock(exit_handle_lock);
+	g_mutex_lock(&exit_handle_lock);
 	if(glyr_exit_handle) {
 		printf("Sending quit signal\n");
 		glyr_signal_exit(glyr_exit_handle);
 	}
-	g_mutex_unlock(exit_handle_lock);
+	g_mutex_unlock(&exit_handle_lock);
 
 	printf("Waiting for glyr to finish.....\n");
 	g_thread_join(gaq_fetcher_thread);
-	g_mutex_free(exit_handle_lock);
+	g_mutex_clear(&exit_handle_lock);
 
 	glyr_db_destroy(db);
 	glyr_cleanup();
@@ -1040,13 +1077,14 @@ static int test_id = 0;
 
 void meta_data_set_entry ( mpd_Song *song, MetaData *met )
 {
-	if(song == NULL || met == NULL)
+	meta_thread_data *mtd = NULL; 
+	if(song == NULL || met == NULL || !meta_data_validate_query(song, met->type)) 
 	{
 		g_warning("Trying to set metadata entry with insufficient information");
 		return;	
 	}
 
-	meta_thread_data *mtd = g_slice_new0(meta_thread_data);
+	mtd = g_slice_new0(meta_thread_data);
 	mtd->action = MTD_ACTION_SET_ENTRY;
 	mtd->id = ++test_id;
 	/* Create a copy of the original song */
@@ -1065,7 +1103,13 @@ void meta_data_set_entry ( mpd_Song *song, MetaData *met )
 
 void meta_data_clear_entry(mpd_Song *song, MetaDataType type)
 {
-	meta_thread_data *mtd = g_slice_new0(meta_thread_data);
+	meta_thread_data *mtd = NULL; 
+	if(!meta_data_validate_query(song, type))
+	{
+		g_warning("Trying to clear metadata entry with insufficient information");
+		return;	
+	} 
+	mtd = g_slice_new0(meta_thread_data);
 	mtd->action = MTD_ACTION_CLEAR_ENTRY;
 	mtd->id = ++test_id;
 	/* Create a copy of the original song */
@@ -1079,6 +1123,7 @@ void meta_data_clear_entry(mpd_Song *song, MetaDataType type)
 	g_async_queue_push(gaq, mtd);
 	mtd = NULL;
 }
+
 /**
  * Function called by the "client" 
  */
@@ -1086,8 +1131,13 @@ void meta_data_clear_entry(mpd_Song *song, MetaDataType type)
 MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData **met,MetaDataCallback callback, gpointer data)
 {
 	meta_thread_data *mtd = NULL;
-	
 	INIT_TIC_TAC()
+
+	if(!meta_data_validate_query(tsong, type)) 
+	{
+		*met = NULL;
+		return META_DATA_UNAVAILABLE;
+	}
 
 	/**
 	 * unique id 
@@ -1129,7 +1179,7 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData *
 		
 		if(md != NULL && md[0] !=  '\0' && mtd->song->file != NULL)
 		{
-			const char *path = g_build_filename(md, mtd->song->file, NULL);
+			char *path = g_build_filename(md, mtd->song->file, NULL);
 			glyr_opt_musictree_path(&query, path);
 			g_free(path);
 		}
