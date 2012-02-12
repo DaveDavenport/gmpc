@@ -562,8 +562,10 @@ static gboolean process_glyr_result(GlyrMemCache *cache,
 			}
 			(mtd->met)->content_type = content_type;
 
-			(mtd->met)->content = g_malloc0(cache->size);
+			(mtd->met)->content = g_malloc(cache->size+1);
+			((char*)(mtd->met)->content)[cache->size] = 0;
 			memcpy((mtd->met)->content, cache->data, cache->size);
+
 			(mtd->met)->size = cache->size;
 			mtd->result = META_DATA_AVAILABLE;
 			// found something.
