@@ -83,7 +83,7 @@ namespace Gmpc
 							this.queue_draw();
 							});
 					unowned uchar[] data = item.get_raw();
-					loader.set_from_raw(data, width,-1, mod_type);
+					loader.set_from_raw(data, width,-1, mod_type, item.md5sum);
 				}
             }
             /**

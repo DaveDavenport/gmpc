@@ -571,6 +571,8 @@ static gboolean process_glyr_result(GlyrMemCache *cache,
 			// found something.
 			retv = TRUE;
 		}
+		memcpy(&(mtd->met->md5sum), &(cache->md5sum), 16);
+		mtd->met->md5sum[16] = '\0';
 	}else { 
 		// Explicitely not found.
 		printf("Cache sais empty\n");
@@ -623,6 +625,8 @@ static GlyrMemCache *glyr_fetcher_thread_load_uri(meta_thread_data *mtd)
 			cache->is_image = TRUE;
 			cache->img_format = g_strdup("jpeg");	
 		}
+		memcpy(&(mtd->met->md5sum), &(cache->md5sum), 16);
+		mtd->met->md5sum[16] = '\0';
 
 	}
 	g_free(scheme);
@@ -643,6 +647,8 @@ static GlyrMemCache *glyr_fetcher_thread_load_raw(meta_thread_data *mtd)
 		cache->is_image = TRUE;
 		cache->img_format = g_strdup("jpeg");	
 	}
+	memcpy(mtd->met->md5sum, cache->md5sum, 16);
+	mtd->met->md5sum[16] = '\0';
 	return cache;
 }
 
@@ -653,6 +659,8 @@ static GlyrMemCache *glyr_fetcher_thread_load_text(meta_thread_data *mtd)
 	glyr_cache_set_data(cache, 
 			g_strdup(mtd->met->content), 
 			-1);
+	memcpy(mtd->met->md5sum, cache->md5sum, 16);
+	mtd->met->md5sum[16] = '\0';
 	return cache;
 }
 /**
@@ -1654,6 +1662,9 @@ MetaData *meta_data_dup(MetaData *data)
 		retv->thumbnail_uri = g_strdup(data->thumbnail_uri);
 	}
 
+	memcpy(&(retv->md5sum),&(data->md5sum), 16); 
+	retv->md5sum[16] = '\0';
+
 	return retv;
 }
 MetaData *meta_data_dup_steal(MetaData *data)
@@ -1673,6 +1684,9 @@ MetaData *meta_data_dup_steal(MetaData *data)
 	data->content = NULL;
 	retv->thumbnail_uri = data->thumbnail_uri;
 	data->thumbnail_uri = NULL;
+
+	memcpy(&(retv->md5sum),&(data->md5sum), 16); 
+	retv->md5sum[16] = '\0';
 
 	return retv;
 }

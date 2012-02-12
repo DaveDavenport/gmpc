@@ -65,7 +65,9 @@ namespace Gmpc {
            public unowned string plugin_name;
            public int size;
            public void * content;
-           public Gmpc.MetaData.ContentType content_type;
+		   [CCode (array_length = false)]
+		   public uchar[] md5sum;
+		   public Gmpc.MetaData.ContentType content_type;
 
            [CCode (cname="meta_data_is_empty")]
            public bool is_empty();
@@ -458,9 +460,9 @@ namespace Gmpc {
     [CCode (cheader_filename="pixbuf-cache.h")]
     namespace PixbufCache {
         [CCode (cname="pixbuf_cache_lookup_icon")]
-            public Gdk.Pixbuf? lookup_icon(int size, string url);
+            public Gdk.Pixbuf? lookup_icon(int size,[CCode (array_length = false)] uchar[] url);
         [CCode (cname="pixbuf_cache_add_icon")]
-            public void add_icon(int size, string url, Gdk.Pixbuf pb);
+            public void add_icon(int size,[CCode (array_length = false)] uchar[] url, Gdk.Pixbuf pb);
 
     }
     [CCode (cheader_filename="advanced-search.h")]

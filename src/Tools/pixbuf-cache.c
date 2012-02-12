@@ -160,12 +160,19 @@ void pixbuf_cache_destroy(void)
 
 void pixbuf_cache_add_icon(int size, const gchar * url, GdkPixbuf * pb)
 {
+	int *mdd= (int *)url;
 	GTimer *t = g_timer_new();
 	gchar *key;
 	g_assert(pb_cache != NULL);
     if(size > MAX_SIZE) return;
 
-	key = g_strdup_printf("%i:%s", size, url);
+	key = g_strdup_printf("%i:%X%X%X%X", size, 
+			mdd[0],
+			mdd[1],
+			mdd[2],
+			mdd[3]
+			);
+
 
 	if (g_hash_table_lookup(pb_cache, key) == NULL)
 	{
@@ -185,13 +192,19 @@ void pixbuf_cache_add_icon(int size, const gchar * url, GdkPixbuf * pb)
 
 GdkPixbuf *pixbuf_cache_lookup_icon(int size, const gchar * url)
 {
+	int *mdd= (int *)url;
 	GTimer *t = g_timer_new();
-	gchar *key = g_strdup_printf("%i:%s", size, url);
+	gchar *key = g_strdup_printf("%i:%X%X%X%X", size, 
+			mdd[0],
+			mdd[1],
+			mdd[2],
+			mdd[3]	
+			);
 	DCE *retv = NULL;
 	retv = g_hash_table_lookup(pb_cache, key);
+	g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Found entry: %p", key);
 	g_free(key);
 
-	g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Found entry: %p", key);
 	if (retv)
 	{
 		retv->in_use = TRUE;

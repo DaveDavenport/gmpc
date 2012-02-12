@@ -21,8 +21,8 @@
 #define __METADATA_H__
 #include <libmpd/libmpd.h>
 
-#include <glyr/glyr.h>
-#include <glyr/cache.h>
+//#include <glyr/glyr.h>
+//#include <glyr/cache.h>
 
 typedef enum {
 	META_ALBUM_ART 			= 1,		/* Album Cover art 	*/
@@ -84,6 +84,9 @@ typedef struct {
      * null terminated anyway.
      */
     gsize size;
+
+	/* md5sum */
+	unsigned char md5sum[16];
 
     /**
      * If type is an image (album art/artist art). 
