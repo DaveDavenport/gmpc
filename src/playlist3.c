@@ -1048,22 +1048,6 @@ void create_playlist3(void)
         gtk_list_store_set_column_types(GTK_LIST_STORE(pl3_tree), PL3_CAT_NROWS, types);
     }
 	TEC("Setup pl3_tree")
-	{
-		GtkTreeIter iter;
-
-		playlist3_insert_browser(&iter, PL3_CAT_BROWSER_LIBRARY);
-		gtk_list_store_set(GTK_LIST_STORE(pl3_tree), &iter,
-				PL3_CAT_TYPE,-1, PL3_CAT_TITLE, _("Library"),PL3_CAT_BOLD, PANGO_WEIGHT_ULTRABOLD,-1);
-
-		playlist3_insert_browser(&iter, PL3_CAT_BROWSER_ONLINE_MEDIA);
-		gtk_list_store_set(GTK_LIST_STORE(pl3_tree), &iter,
-				PL3_CAT_TYPE,-1, PL3_CAT_TITLE, _("Online Media"),PL3_CAT_BOLD, PANGO_WEIGHT_ULTRABOLD,-1);
-
-		playlist3_insert_browser(&iter, PL3_CAT_BROWSER_MISC);
-		gtk_list_store_set(GTK_LIST_STORE(pl3_tree), &iter,
-				PL3_CAT_TYPE,-1, PL3_CAT_TITLE, _("Misc."),PL3_CAT_BOLD, PANGO_WEIGHT_ULTRABOLD,-1);
-	}
-
 
     tree = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "cat_tree"));
 	gtk_tree_selection_set_select_function(gtk_tree_view_get_selection(GTK_TREE_VIEW(tree)),
@@ -2314,6 +2298,36 @@ void playlist3_insert_browser(GtkTreeIter * iter, gint position)
                 sib = &it;
         } while (sib == NULL && gtk_tree_model_iter_next(model, &it));
     }
+
+	// first check breaks recursion. Do not check for header when adding a header.
+	// Next check checks if the header is allready there.
+	if(position%1000 != 0 && (pos/1000) != (position/1000))
+	{
+		// insert category
+		pos = pos-pos%1000;
+
+		if(pos == PL3_CAT_BROWSER_LIBRARY)
+		{
+			playlist3_insert_browser(&it, PL3_CAT_BROWSER_LIBRARY);
+			gtk_list_store_set(GTK_LIST_STORE(pl3_tree), &it,
+				PL3_CAT_TYPE,-1, PL3_CAT_TITLE, _("Library"),PL3_CAT_BOLD, PANGO_WEIGHT_ULTRABOLD,-1);
+			sib = &it;
+		}
+		else if (pos == PL3_CAT_BROWSER_ONLINE_MEDIA)
+		{
+			playlist3_insert_browser(&it, PL3_CAT_BROWSER_ONLINE_MEDIA);
+			gtk_list_store_set(GTK_LIST_STORE(pl3_tree), &it,
+				PL3_CAT_TYPE,-1, PL3_CAT_TITLE, _("Online Media"),PL3_CAT_BOLD, PANGO_WEIGHT_ULTRABOLD,-1);
+			sib = &it;
+		}
+		else if  (pos == PL3_CAT_BROWSER_MISC)
+		{
+			playlist3_insert_browser(&it, PL3_CAT_BROWSER_MISC);
+			gtk_list_store_set(GTK_LIST_STORE(pl3_tree), &it,
+					PL3_CAT_TYPE,-1, PL3_CAT_TITLE, _("Misc."),PL3_CAT_BOLD, PANGO_WEIGHT_ULTRABOLD,-1);
+			sib = &it;
+		}
+	}
     gtk_list_store_insert_before(GTK_LIST_STORE(pl3_tree), iter, sib);
     gtk_list_store_set(GTK_LIST_STORE(pl3_tree), iter, PL3_CAT_ORDER, position, PL3_CAT_BOLD, PANGO_WEIGHT_NORMAL, -1);
 }
