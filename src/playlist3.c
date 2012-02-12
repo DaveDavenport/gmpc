@@ -137,6 +137,7 @@ gboolean playlist_player_volume_changed(GtkWidget * vol_but, int new_vol);
 void about_window(void);
 int pl3_cat_tree_button_press_event(GtkTreeView *, GdkEventButton *);
 int pl3_cat_tree_button_release_event(GtkTreeView *, GdkEventButton *);
+int pl3_window_key_release_event(GtkWidget * mw, GdkEventKey * event);
 
 void cur_song_center_enable_tb(GtkToggleButton *);
 void show_cover_case_tb(GtkToggleButton * but);
@@ -438,13 +439,13 @@ gboolean alt_button_pressed = FALSE;
  */
 gboolean pl3_window_focus_out_event(GtkWidget *window, GdkEventFocus *event, gpointer data)
 {
+	GmpcToolsBindingOverlayNotify *p = (GmpcToolsBindingOverlayNotify *)gtk_builder_get_object(pl3_xml, "binding_overlay_notify");
 	if(alt_button_pressed)
 	{
 		GtkWidget *tree = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "cat_tree"));
 		alt_button_pressed = FALSE;
 		gtk_widget_queue_draw(GTK_WIDGET(tree));
 	}
-	GmpcToolsBindingOverlayNotify *p = gtk_builder_get_object(pl3_xml, "binding_overlay_notify");
 	gmpc_tools_binding_overlay_notify_key_released(p,GDK_MOD1_MASK|GDK_CONTROL_MASK);
 	return FALSE;
 }
@@ -480,14 +481,14 @@ void pl3_window_fullscreen(void)
 int pl3_window_key_release_event(GtkWidget * mw, GdkEventKey * event)
 {
 	if(event->keyval == GDK_KEY_Alt_L || event->keyval == GDK_KEY_Alt_R || event->keyval == GDK_KEY_Meta_L|| event->keyval == GDK_KEY_Meta_R) {
+		GmpcToolsBindingOverlayNotify *p = (GmpcToolsBindingOverlayNotify *)gtk_builder_get_object(pl3_xml, "binding_overlay_notify");
 		GtkWidget *tree = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "cat_tree"));
 		alt_button_pressed = FALSE;
 		gtk_widget_queue_draw(GTK_WIDGET(tree));
-		GmpcToolsBindingOverlayNotify *p = gtk_builder_get_object(pl3_xml, "binding_overlay_notify");
 		gmpc_tools_binding_overlay_notify_key_released(p,GDK_MOD1_MASK);
 	}
 	if(event->keyval == GDK_KEY_Control_L || event->keyval == GDK_KEY_Control_R) {
-		GmpcToolsBindingOverlayNotify *p = gtk_builder_get_object(pl3_xml, "binding_overlay_notify");
+		GmpcToolsBindingOverlayNotify *p =(GmpcToolsBindingOverlayNotify *) gtk_builder_get_object(pl3_xml, "binding_overlay_notify");
 		gmpc_tools_binding_overlay_notify_key_released(p,GDK_CONTROL_MASK);
 	}
 	return FALSE;
@@ -497,15 +498,15 @@ int pl3_window_key_press_event(GtkWidget * mw, GdkEventKey * event)
     int i = 0;
     gint type = pl3_cat_get_selected_browser();
 	if(event->keyval == GDK_KEY_Alt_L || event->keyval == GDK_KEY_Alt_R) {
+		GmpcToolsBindingOverlayNotify *p = (GmpcToolsBindingOverlayNotify *)gtk_builder_get_object(pl3_xml, "binding_overlay_notify");
 		GtkWidget *tree = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "cat_tree"));
 		alt_button_pressed = TRUE;
 		gtk_widget_queue_draw(GTK_WIDGET(tree));
-		GmpcToolsBindingOverlayNotify *p = gtk_builder_get_object(pl3_xml, "binding_overlay_notify");
 		gmpc_tools_binding_overlay_notify_key_pressed(p,GDK_MOD1_MASK);
 	}
 	if(event->keyval == GDK_KEY_Control_L || event->keyval == GDK_KEY_Control_R) 
 	{
-		GmpcToolsBindingOverlayNotify *p = gtk_builder_get_object(pl3_xml, "binding_overlay_notify");
+		GmpcToolsBindingOverlayNotify *p =(GmpcToolsBindingOverlayNotify *) gtk_builder_get_object(pl3_xml, "binding_overlay_notify");
 		gmpc_tools_binding_overlay_notify_key_pressed(p,GDK_CONTROL_MASK);
 	}
     /**
@@ -527,7 +528,7 @@ int pl3_window_key_press_event(GtkWidget * mw, GdkEventKey * event)
 		guint kev = event->keyval;
 		if(kev >= GDK_KEY_0 && kev <= GDK_KEY_9)
 		{
-			int index = 0;
+			guint i_index = 0;
 			GtkTreeIter iter;
 			kev-=GDK_KEY_0;
 			if (gtk_tree_model_get_iter_first(pl3_tree, &iter))
@@ -536,8 +537,8 @@ int pl3_window_key_press_event(GtkWidget * mw, GdkEventKey * event)
 				do{
 					gint type =0 ;
 					gtk_tree_model_get(pl3_tree, &iter, PL3_CAT_TYPE, &type, -1);
-					if(type >= 0) index++;
-					if(index == kev && type >= 0) 
+					if(type >= 0) i_index++;
+					if(i_index == kev && type >= 0) 
 					{
 						GtkWidget *cat_tree = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "cat_tree"));
 						GtkTreeSelection *select = gtk_tree_view_get_selection(GTK_TREE_VIEW(cat_tree));
@@ -547,7 +548,7 @@ int pl3_window_key_press_event(GtkWidget * mw, GdkEventKey * event)
 							kev+=10;	
 						}else{
 							gtk_tree_selection_select_iter(select, &iter);
-							return;
+							return FALSE;
 						}
 					}
 				}while(gtk_tree_model_iter_next(pl3_tree, &iter));
@@ -908,7 +909,7 @@ void pl3_style_set_event( GtkWidget *widget,
         gtk_rc_parse_string("widget \"*header*\" style \"dark\"");
     }
 }
-gboolean pl3_cat_select_function(GtkTreeSelection *select, GtkTreeModel *model, GtkTreePath *path, gboolean cur_select, gpointer data)
+static gboolean pl3_cat_select_function(GtkTreeSelection *select, GtkTreeModel *model, GtkTreePath *path, gboolean cur_select, gpointer data)
 {
 	GtkTreeIter iter;
 	if(gtk_tree_model_get_iter(model, &iter, path))
@@ -927,11 +928,14 @@ void pl3_sidebar_text_get_key_number( GtkTreeViewColumn *column,
 {
 	int number = 0;
 	GtkTreeIter iter;
-	GtkTreePath *pa1 = gtk_tree_model_get_path(model, d_iter);
+	GtkTreePath *pa1 = NULL;
+
 	if(!alt_button_pressed) {
 		g_object_set(G_OBJECT(renderer), "show-number", FALSE, NULL);
 		return;
 	}
+
+	pa1 = gtk_tree_model_get_path(model, d_iter);
 	if (gtk_tree_model_get_iter_first(pl3_tree, &iter))
 	{
 		do{
@@ -1532,6 +1536,7 @@ void playlist_zoom_in(void)
  */
 static void playlist_zoom_level_changed(void)
 {
+	gboolean st_shown;
     GtkWidget *pl3_win = playlist3_get_window();
 	printf("playlist3 zoom level changed\n");
 
@@ -1614,7 +1619,6 @@ static void playlist_zoom_level_changed(void)
 	gtk_action_set_visible(GTK_ACTION(gtk_builder_get_object(pl3_xml, "menu_go")),TRUE);
     gtk_action_set_visible(GTK_ACTION(gtk_builder_get_object(pl3_xml, "menu_option")),TRUE);
 
-	gboolean st_shown;
 	g_object_get(G_OBJECT(sidebar_text), "show_text", &st_shown, NULL);
 	if(!st_shown)
 	{
