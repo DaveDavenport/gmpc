@@ -2301,10 +2301,10 @@ void playlist3_insert_browser(GtkTreeIter * iter, gint position)
 
 	// first check breaks recursion. Do not check for header when adding a header.
 	// Next check checks if the header is allready there.
-	if(position%1000 != 0 && (pos/1000) != (position/1000))
+	if(position%1000 != 0 && (pos-pos%1000) != (position-position%1000))
 	{
 		// insert category
-		pos = pos-pos%1000;
+		pos = position-position%1000;
 
 		if(pos == PL3_CAT_BROWSER_LIBRARY)
 		{
@@ -2312,6 +2312,7 @@ void playlist3_insert_browser(GtkTreeIter * iter, gint position)
 			gtk_list_store_set(GTK_LIST_STORE(pl3_tree), &it,
 				PL3_CAT_TYPE,-1, PL3_CAT_TITLE, _("Library"),PL3_CAT_BOLD, PANGO_WEIGHT_ULTRABOLD,-1);
 			sib = &it;
+			gtk_list_store_insert_after(GTK_LIST_STORE(pl3_tree), iter, sib);
 		}
 		else if (pos == PL3_CAT_BROWSER_ONLINE_MEDIA)
 		{
@@ -2319,6 +2320,7 @@ void playlist3_insert_browser(GtkTreeIter * iter, gint position)
 			gtk_list_store_set(GTK_LIST_STORE(pl3_tree), &it,
 				PL3_CAT_TYPE,-1, PL3_CAT_TITLE, _("Online Media"),PL3_CAT_BOLD, PANGO_WEIGHT_ULTRABOLD,-1);
 			sib = &it;
+			gtk_list_store_insert_after(GTK_LIST_STORE(pl3_tree), iter, sib);
 		}
 		else if  (pos == PL3_CAT_BROWSER_MISC)
 		{
@@ -2326,10 +2328,14 @@ void playlist3_insert_browser(GtkTreeIter * iter, gint position)
 			gtk_list_store_set(GTK_LIST_STORE(pl3_tree), &it,
 					PL3_CAT_TYPE,-1, PL3_CAT_TITLE, _("Misc."),PL3_CAT_BOLD, PANGO_WEIGHT_ULTRABOLD,-1);
 			sib = &it;
+			gtk_list_store_insert_after(GTK_LIST_STORE(pl3_tree), iter, sib);
 		}
 	}
-    gtk_list_store_insert_before(GTK_LIST_STORE(pl3_tree), iter, sib);
-    gtk_list_store_set(GTK_LIST_STORE(pl3_tree), iter, PL3_CAT_ORDER, position, PL3_CAT_BOLD, PANGO_WEIGHT_NORMAL, -1);
+	else
+	{
+	    gtk_list_store_insert_before(GTK_LIST_STORE(pl3_tree), iter, sib);
+    }
+	gtk_list_store_set(GTK_LIST_STORE(pl3_tree), iter, PL3_CAT_ORDER, position, PL3_CAT_BOLD, PANGO_WEIGHT_NORMAL, -1);
 }
 
 

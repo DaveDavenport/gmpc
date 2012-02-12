@@ -172,7 +172,7 @@ void pixbuf_cache_add_icon(int size, const gchar * url, GdkPixbuf * pb)
 			mdd[2],
 			mdd[3]
 			);
-
+	printf("key: %s\n", key);
 
 	if (g_hash_table_lookup(pb_cache, key) == NULL)
 	{
@@ -200,6 +200,7 @@ GdkPixbuf *pixbuf_cache_lookup_icon(int size, const gchar * url)
 			mdd[2],
 			mdd[3]	
 			);
+	printf("key: %s\n", key);
 	DCE *retv = NULL;
 	retv = g_hash_table_lookup(pb_cache, key);
 	g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Found entry: %p", key);

@@ -1179,6 +1179,7 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData *
 	 */
 	if((type&META_QUERY_NO_CACHE) == 0)
 	{
+		GTimer *t = g_timer_new();
 		const char 			*md			 = connection_get_music_directory();
 		GLYR_ERROR          err          = GLYRE_OK;
 		MetaDataResult mrd;
@@ -1214,14 +1215,16 @@ TOC("end db lookup");
 			*met = mtd->met;
 			mtd->met = NULL;
 			// Free mtd
-			printf("Got from cache\n");
+			printf("Got from cache: %f\n", g_timer_elapsed(t, NULL));
 			meta_thread_data_free(mtd);
 
 			TOC("Got from cache");
+			g_timer_destroy(t);
 			return mrd;
 		}
 		if(cache)glyr_free_list(cache);
 		glyr_query_destroy(&query);
+		g_timer_destroy(t);
 	}
 	else
 	{
