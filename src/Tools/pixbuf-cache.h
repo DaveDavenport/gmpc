@@ -15,25 +15,20 @@ void pixbuf_cache_create(void);
 
 /**
  * @param size the size of the icon.
- * @param url the url off the icon.
+ * @param mdd the md5 off the icon (16 bytes).
  * @param pb the pixbuf.
  * 
  * Add an icon to the pixbuf cache 
  */
-void pixbuf_cache_add_icon(int size,const gchar *url, GdkPixbuf *pb);
+void pixbuf_cache_add_icon(int size,const gchar *mdd, GdkPixbuf *pb);
 /**
  * @param size the size of the icon 
- * @param url off the icon.
+ * @param mdd the md5 off the icon (16 bytes).
  *
  * Lookup an icon in the pixbuf cache.
  *
  * @return If found returns the pixbuf. (no reference added)
  */
-GdkPixbuf *pixbuf_cache_lookup_icon(int size, const gchar *url);
-/**
- * @param url the pixbuf location to update. 
- *
- * Invalidate entries in the cache
- */
-void pixbuf_cache_invalidate_pixbuf_entry(const gchar *url);
+GdkPixbuf *pixbuf_cache_lookup_icon(int size, const gchar *mdd);
+
 #endif

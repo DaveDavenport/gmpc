@@ -561,12 +561,16 @@ static gboolean process_glyr_result(GlyrMemCache *cache,
 				(mtd->met)->plugin_name = g_strdup(cache->prov); 
 			}
 			(mtd->met)->content_type = content_type;
-
+/*
 			(mtd->met)->content = g_malloc(cache->size+1);
 			((char*)(mtd->met)->content)[cache->size] = 0;
 			memcpy((mtd->met)->content, cache->data, cache->size);
-
+*/
+			// Steal the data.
+			mtd->met->content = cache->data;
+			cache->data = NULL;
 			(mtd->met)->size = cache->size;
+			cache->size = 0;
 			mtd->result = META_DATA_AVAILABLE;
 			// found something.
 			retv = TRUE;
