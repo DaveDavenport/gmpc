@@ -1,6 +1,18 @@
 #ifndef __PIXBUF_CACHE_H__
 #define __PIXBUF_CACHE_H__
 
+
+typedef enum {
+	COVER_SMALL,
+	COVER_DEFAULT,
+	COVER_LARGE,
+	COVER_BROWSER,
+	COVER_TOOLTIP,
+	NUM_COVER_SIZES
+}CoverSize;
+
+
+int pixbuf_cache_get_closest_size(int size);
 /**
  * Destroy the pixbuf cache.
  *

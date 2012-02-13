@@ -41,6 +41,28 @@ typedef struct
 	gboolean in_use;
 } DCE;
 static guint timeout = 0;
+
+
+const int sizes[] = {
+	32, // Small
+	48, // Default
+	80, // Large
+	250, // Browser
+	500 // Tooltip
+};
+
+int pixbuf_cache_get_closest_size(int size)
+{
+	int i = 0;
+	for(;i<NUM_COVER_SIZES;i++)
+	{
+		if(size <= sizes[i]) return sizes[i];
+	}
+	return sizes[NUM_COVER_SIZES-1];
+}
+
+
+
 /* Creates a new cache entry */
 static DCE *create_cache_entry(void)
 {

@@ -79,7 +79,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 
 	/** Public */
 
-	public int size = {64};
+	public int size = {48};
 	public MetaDataType image_type = {META_ALBUM_ART};
 	public MpdObj *connection= {NULL};
 	public gboolean hide_on_na = {FALSE};
@@ -105,7 +105,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 	property INT size
 		(nick = "Size",
 		blurb = "Size of the image",
-		default_value = 64,
+		default_value = 48,
 		export,
 		link);
 
@@ -287,7 +287,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
         {
             Self *gmi =  GET_NEW;
             gmi->image_type = type;
-            gmi->size = size;
+            gmi->size = size;//pixbuf_cache_get_closest_size(size);
 
 
             gtk_event_box_set_visible_window(GTK_EVENT_BOX(gmi), FALSE);
