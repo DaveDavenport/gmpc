@@ -37,7 +37,6 @@ namespace Gmpc
     }
     public class PixbufLoaderAsync : GLib.Object
     {
-//        private weak GLib.Cancellable? pcancel = null; 
         public string uri = null;
         public Gdk.Pixbuf pixbuf {set;get;default=null;}
         private Gtk.TreeRowReference rref = null;
@@ -70,7 +69,6 @@ namespace Gmpc
 
         ~PixbufLoaderAsync() {
             GLib.log(LOG_DOMAIN,GLib.LogLevelFlags.LEVEL_DEBUG,"Free the image loading");
-//            if(this.pcancel != null) pcancel.cancel();
         }
 
         private Gdk.Pixbuf? modify_pixbuf(owned Gdk.Pixbuf? pix, int size,ModificationType casing) 
@@ -135,11 +133,6 @@ namespace Gmpc
 		{
             width = req_width;
             height = req_height;
-            /*  If running cancel the current action. */
-            this.cancel();
-
- //           GLib.Cancellable cancel= new GLib.Cancellable();
-//            this.pcancel = cancel;
             var pb = Gmpc.PixbufCache.lookup_icon(int.max(width,height), md5sum);
             if(pb != null)
             {
@@ -171,21 +164,9 @@ namespace Gmpc
                 pixbuf_update(null);
                 call_row_changed();
                 loader = null;
-//                this.pcancel = null;
-                /* Failed to load the image */
                 return;
             }
-/*
-            if(cancel.is_cancelled())
-            {
-                GLib.log(LOG_DOMAIN,GLib.LogLevelFlags.LEVEL_DEBUG,"Cancelled loading of image");
-                pixbuf_update(null);
-                cancel.reset();
-                loader = null;
-                this.pcancel = null;
-                return;
-            }
-*/
+
             Gdk.Pixbuf pix = loader.get_pixbuf();
             /* Maybe another thread allready fetched it in the mean time, we want to use that... */
             var final = Gmpc.PixbufCache.lookup_icon(int.max(height, width), md5sum);
@@ -198,43 +179,9 @@ namespace Gmpc
 			this.pixbuf = final; 
             pixbuf_update(pixbuf);
             call_row_changed();
-//            this.pcancel = null;
             loader = null;
 		}
 
-		public void set_from_file(string uri, int req_width, int req_height, ModificationType border)
-        {
-			GLib.error("set from file not implemented\n");
-		/*
-            width = req_width;
-            height = req_height;
-          */  /*  If running cancel the current action. */
-            /*this.cancel();
-
-            this.pcancel = null;
-            this.uri = uri;
-
-            var pb = Gmpc.PixbufCache.lookup_icon(int.max(width,height), uri);
-            if(pb != null)
-            {
-                this.pixbuf = pb;
-                pixbuf_update(pixbuf);
-                call_row_changed();
-                return;
-            }
-            GLib.Cancellable cancel= new GLib.Cancellable();
-            this.pcancel = cancel;
-            this.load_from_file_async(uri, width,height , cancel, border);
-*/
-        }
-        public void cancel()
-        {
-            GLib.log(LOG_DOMAIN,GLib.LogLevelFlags.LEVEL_DEBUG,"Cancel the image loading");
-// @TODO: fix this.
-//            if(this.pcancel != null) {
-  //              this.pcancel.cancel();
-    //        }
-        }
         private void size_prepare(Gdk.PixbufLoader loader,int  gwidth, int gheight)
         {
              double dsize = (double)(int.max(width,height)); 
@@ -253,83 +200,8 @@ namespace Gmpc
              }
              loader.set_size(nwidth, nheight);
         }
-#if 0
-        private async void load_from_file_async(string uri, int req_width, int req_height, GLib.Cancellable cancel, ModificationType border)
-        {
-             width = req_width;
-            height = req_height;
-            GLib.File file = GLib.File.new_for_path(uri);
-            size_t result = 0;
-            Gdk.PixbufLoader loader = new Gdk.PixbufLoader();
-            loader.size_prepared.connect(size_prepare);
-                    /*
-            loader.area_prepared.connect((source) => {
-                    var apix = loader.get_pixbuf();
-                    var afinal = this.modify_pixbuf((owned)apix, int.max(height, width),border);
-
-                    pixbuf = afinal;
-                    pixbuf_update(pixbuf);
-                    call_row_changed();
-                    });*/
-            try{
-                var stream = yield file.read_async(0, cancel);
-                if(!cancel.is_cancelled() && stream != null )
-                {
-                    do{
-                        try {
-                            uchar data[1024]; 
-                            result = yield stream.read_async(data,0, cancel);
-                            Gmpc.Fix.write_loader(loader,(string)data, result);
-                        }catch ( Error erro) {
-                            warning("Error trying to fetch image: %s::%s", erro.message,uri);
-                            cancel.cancel();
-                        }
-                    }while(!cancel.is_cancelled() && result > 0);
-                }      
-            }catch ( Error e) {
-                warning("Error trying to fetch image: %s::%s", e.message,uri);
-            }
-            try {
-                loader.close();
-            }catch (Error err) {
-                debug("Error trying to parse image: %s::%s? query cancelled?", err.message,uri);
-                pixbuf_update(null);
-                call_row_changed();
-                loader = null;
-//                this.pcancel = null;
-
-                /* Failed to load the image */
-                return;
-            }
-
-            if(cancel.is_cancelled())
-            {
-                GLib.log(LOG_DOMAIN,GLib.LogLevelFlags.LEVEL_DEBUG,"Cancelled loading of image");
-                pixbuf_update(null);
-                cancel.reset();
-                loader = null;
-//                this.pcancel = null;
-                return;
-            }
-
-            Gdk.Pixbuf pix = loader.get_pixbuf();
-            /* Maybe another thread allready fetched it in the mean time, we want to use that... */
-            var final = Gmpc.PixbufCache.lookup_icon(int.max(height, width), uri);
-            if(final == null)
-            {
-                final = this.modify_pixbuf((owned)pix, int.max(height, width),border);
-                Gmpc.PixbufCache.add_icon(int.max(height, width),uri, final);
-            }
-            this.pixbuf = final;
-            pixbuf_update(pixbuf);
-            call_row_changed();
-//            this.pcancel = null;
-            loader = null;
-        }
-#endif
-    }
-
-    public class MetaImageAsync : Gtk.Image
+	}
+	public class MetaImageAsync : Gtk.Image
     {
         private Gmpc.PixbufLoaderAsync? loader = null;
         public string uri = null;
@@ -349,38 +221,8 @@ namespace Gmpc
                         });
             }
             loader.set_from_raw(data, size,size, border,md5sum);
-/*
-            Gdk.PixbufLoader loader = new Gdk.PixbufLoader();
-			Gmpc.Fix.write_loader(loader,(string)data, data.length);
-			loader.close();
-            Gdk.Pixbuf pix = loader.get_pixbuf();
-			this.set_from_pixbuf(pix);
-*/
 		}
 
-
-        public new void set_from_file(string uri, int size, ModificationType border)
-        {
-            this.uri = uri;
-            if(loader == null) {
-                loader = new PixbufLoaderAsync(); 
-                loader.pixbuf_update.connect((source, pixbuf)=>{
-                        this.set_from_pixbuf(pixbuf);
-                        });
-            }
-            loader.set_from_file(uri, size,size, border);
-        }
-        public new void set_from_file_at_size(string uri, int width,int height, ModificationType border)
-        {
-            this.uri = uri;
-            if(loader == null) {
-                loader = new PixbufLoaderAsync(); 
-                loader.pixbuf_update.connect((source, pixbuf)=>{
-                        this.set_from_pixbuf(pixbuf);
-                        });
-            }
-            loader.set_from_file(uri, width,height, border);
-        }
         public void clear_now()
         {
             this.loader = null;

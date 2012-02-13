@@ -24,7 +24,6 @@
 #include "main.h"
 
 #include "metadata.h"
-//#include "metadata-cache.h"
 #include "preferences.h"
 
 #include "gmpc_easy_download.h"
@@ -34,41 +33,19 @@
 #include <glyr/glyr.h>
 #include <glyr/cache.h>
 
-#define LOG_SUBCLASS        "glyros"
-#define LOG_COVER_NAME      "fetch-art-album"
-#define LOG_ARTIST_ART      "fetch-art-artist"
-#define LOG_SIMILIAR_ARTIST "fetch-similiar-artist"
-#define LOG_SIMILIAR_SONG   "fetch-similiar-song"
-#define LOG_SIMILIAR_GENRE  "fetch-similiar-genre"
-#define LOG_ARTIST_TXT      "fetch-biography-artist"
-#define LOG_SONG_TXT        "fetch-lyrics"
-#define LOG_GUITARTABS      "fetch-guitartabs"
-#define LOG_ALBUM_TXT       "fetch-album-txt"
-
-// other
-#define LOG_FUZZYNESS      "fuzzyness"
-#define LOG_CMINSIZE       "cminsize"
-#define LOG_CMAXSIZE       "cmaxsize"
-#define LOG_MSIMILIARTIST  "msimiliartist"
-#define LOG_MSIMILISONG    "msimilisong"
-#define LOG_QSRATIO        "qsratio"
-#define LOG_PARALLEL       "parallel"
-#define LOG_USERAGENT      "useragent"
-#define LOG_FROM           "from"
 int meta_num_plugins=0;
 gmpcPluginParent **meta_plugins = NULL;
 static void meta_data_sort_plugins(void);
-GList *process_queue = NULL;
+
 
 
 /**
  * GLYR
  */
-
-static GAsyncQueue *gaq = NULL;
-static GAsyncQueue *return_queue = NULL;
-const char *plug_name = "glyr";
-static GlyrDatabase *db = NULL;
+static GList        *process_queue = NULL;
+static GAsyncQueue  *gaq           = NULL;
+static GAsyncQueue  *return_queue  = NULL;
+static GlyrDatabase *db            = NULL;
 
 
 /**
@@ -102,12 +79,6 @@ typedef struct {
 	/* The actual result data */
 	MetaData *met;
 	GList	*met_results;
-#if 0
-	/* List with temporary result from plugin index */
-	GList *list;
-	/* The current position in the list */
-	GList *iter;
-#endif
 } meta_thread_data;
 
 
@@ -452,6 +423,9 @@ static MetaDataContentType setup_glyr_query(GlyrQuery *query,
 	}
 	return content_type;
 }
+/**
+ * Convert cache to MetaData object.
+ */
 static MetaData * glyr_get_similiar_song_names(GlyrMemCache * cache)
 {
     MetaData * mtd = NULL;
@@ -484,6 +458,9 @@ static MetaData * glyr_get_similiar_song_names(GlyrMemCache * cache)
     return mtd;
 }
 
+/**
+ * Convert cache to MetaData object.
+ */
 static MetaData * glyr_get_similiar_artist_names(GlyrMemCache * cache)
 {
     MetaData * mtd = NULL;

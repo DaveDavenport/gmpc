@@ -413,11 +413,8 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 			{
 				self_set_cover_fetching(self);
 			}else if (ret == META_DATA_AVAILABLE) {
-                    if(met->content_type == META_DATA_CONTENT_URI) {
-                        const gchar *path = meta_data_get_uri(met);
-                        self_set_cover_from_path(self,path); 
-					}else if (met->content_type == META_DATA_CONTENT_RAW) {
-						self_set_cover_raw(self, met->content, met->size,met->md5sum);
+				if (met->content_type == META_DATA_CONTENT_RAW) {
+					self_set_cover_raw(self, met->content, met->size,met->md5sum);
                     }else{
                         self_set_cover_na(self);
                     }
@@ -439,10 +436,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
             {
                 self_set_cover_fetching(self);
             }else if (ret == META_DATA_AVAILABLE) {
-                if(met->content_type == META_DATA_CONTENT_URI) {
-                    const gchar *path = meta_data_get_uri(met);
-                    self_set_cover_from_path(self,path); 
-				}else if (met->content_type == META_DATA_CONTENT_RAW) {
+				if (met->content_type == META_DATA_CONTENT_RAW) {
 					self_set_cover_raw(self, met->content, met->size,met->md5sum);
                 } else {
                     self_set_cover_na(self);
@@ -502,10 +496,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
         else
         {
             if(ret == META_DATA_AVAILABLE) {
-                if(met->content_type == META_DATA_CONTENT_URI) {
-                    const char *path = meta_data_get_uri(met);
-                    self_set_cover_from_path(self,path); 
-				}else if (met->content_type == META_DATA_CONTENT_RAW) {
+				if (met->content_type == META_DATA_CONTENT_RAW) {
 					self_set_cover_raw(self, met->content, met->size,met->md5sum);
                 }else{
                     self_set_cover_na(self);
@@ -659,37 +650,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 					md5sum	
 					);
 		}
-	public	
-        void
-        set_cover_from_path(self, const gchar *path)
-        {
-            self->_priv->state = STATE_IMAGE;
-            
-            if(self->_priv->image_url)
-            {
-                if(strcmp(path, self->_priv->image_url) == 0) {
-                    return;
-                }
-                q_free(self->_priv->image_url);
-                self->_priv->image_url = NULL;
-            }
-            self->_priv->image_url = g_strdup(path); 
-            gmpc_meta_image_async_set_from_file(GMPC_META_IMAGE_ASYNC(self->_priv->image), self->_priv->image_url, self->size,
-                    ((cfg_get_single_value_as_int_with_default(config, "metaimage", "addcase",TRUE) && self->image_type == META_ALBUM_ART))?
-                    GMPC_MODIFICATION_TYPE_CASING:GMPC_MODIFICATION_TYPE_BORDER
-                    
-                    );
-            if(self->squared) {
-                gtk_widget_set_size_request(GTK_WIDGET(self), self->size, self->size);
-            }
-           
-			// Update tooltip.
-			gmpc_meta_image_async_set_from_file(GMPC_META_IMAGE_ASYNC(self->_priv->tooltip_image),
-					self->_priv->image_url, 350,
-					0	
-					);
-            return;
-		}
 
 	public 
 		void
@@ -721,10 +681,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 			{
 				self_set_cover_fetching(self);
 			}else if (ret == META_DATA_AVAILABLE) {
-				if(met->content_type == META_DATA_CONTENT_URI) {
-					const gchar *path = meta_data_get_uri(met);
-					self_set_cover_from_path(self,path); 
-				}else if (met->content_type == META_DATA_CONTENT_RAW) {
+				if (met->content_type == META_DATA_CONTENT_RAW) {
 					self_set_cover_raw(self, met->content, met->size,met->md5sum);
 				}else{
 					g_log(LOG_DOMAIN, G_LOG_LEVEL_WARNING, "Not implemented");
@@ -872,11 +829,14 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 			case STATE_IMAGE:
                     if(self->_priv->image_url)
                     {
+						// How to fix this? for raw image.
+	/*
                         gchar *temp = self->_priv->image_url;
                         self->_priv->image_url = NULL;
 
                         self_set_cover_from_path(self, temp);
                         g_free(temp);
+*/
                     }
             /* fix bitching */
             case STATE_EMPTY:
