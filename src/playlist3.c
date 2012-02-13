@@ -2330,6 +2330,11 @@ void playlist3_insert_browser(GtkTreeIter * iter, gint position)
 			sib = &it;
 			gtk_list_store_insert_after(GTK_LIST_STORE(pl3_tree), iter, sib);
 		}
+		else
+		{
+			// Insert item.
+			gtk_list_store_insert_before(GTK_LIST_STORE(pl3_tree), iter, sib);
+		}
 	}
 	else
 	{
