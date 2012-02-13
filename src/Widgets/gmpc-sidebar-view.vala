@@ -116,6 +116,7 @@ public class MyCellRenderer : Gtk.CellRenderer
 			Gdk.Rectangle expose_area,
 			Gtk.CellRendererState flags)
 	{
+		var ct = Gdk.cairo_create(window);
 		int x_o=0;
 		int y_o =0;
 		int w=0;
@@ -126,7 +127,7 @@ public class MyCellRenderer : Gtk.CellRenderer
 		ca.y = cell_area.y;
 		ca.width = image_width+6;//cell_area.height;
 		ca.height = cell_area.height;
-		
+
 		if(cr_pb.icon_name != null || cr_pb.stock_id != null )
 		{
 			cr_pb.render(window, widget, background_area, ca, expose_area, flags);
@@ -141,7 +142,6 @@ public class MyCellRenderer : Gtk.CellRenderer
 		{
 			int pw,ph;
 			var l = widget.create_pango_layout("%0i".printf(number));
-			var ct = Gdk.cairo_create(window);
 			l.get_pixel_size(out pw, out ph);
 
 //			Gdk.cairo_set_source_color(ct, widget.style.bg[Gtk.StateType.SELECTED]);
@@ -155,18 +155,11 @@ public class MyCellRenderer : Gtk.CellRenderer
 			Gdk.cairo_set_source_color(ct, widget.style.fg[Gtk.StateType.SELECTED]);
 			Pango.cairo_show_layout(ct, l);
 			ct.stroke();
-
-
-
-
-
-			
 		}
 		// Draw arrow.
 		if((flags&Gtk.CellRendererState.SELECTED) == Gtk.CellRendererState.SELECTED) {
 			double cax = background_area.width*0.9;
 			double bld = background_area.width*0.1;
-			var ct = Gdk.cairo_create(window);
 			if(!show_text) cax = background_area.x+image_width+3;
 
 			ct.move_to(background_area.x+cax, background_area.y);
