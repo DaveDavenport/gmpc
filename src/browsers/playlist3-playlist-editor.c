@@ -1221,8 +1221,12 @@ static void favorites_add_current_song(void)
 	mpd_Song *song = mpd_playlist_get_current_song(connection);
 	if (song->file)
 	{
-		mpd_database_playlist_list_add(connection, _("Favorites"), song->file);
-		playlist3_show_error_message(_("Added playing song to favorites list."), ERROR_INFO);
+		if(favorites)
+		{
+			gmpc_favorites_list_set_favorite(favorites, song->file,
+					!gmpc_favorites_list_is_favorite(favorites, song->file));
+			playlist3_show_error_message(_("Added playing song to favorites list."), ERROR_INFO);
+		}
 	}
 }
 
