@@ -30,9 +30,11 @@ AM_MAINTAINER_MODE
 [GMPC_MAJOR_VERSION]=package_major_version
 [GMPC_MINOR_VERSION]=package_minor_version
 [GMPC_MICRO_VERSION]=package_micro_version
+[GMPC_COPYRIGHT]=package_copyright
 AC_SUBST([GMPC_MAJOR_VERSION])
 AC_SUBST([GMPC_MINOR_VERSION])
 AC_SUBST([GMPC_MICRO_VERSION])
+AC_SUBST([GMPC_COPYRIGHT])
 AC_DEFINE(GMPC_TAGLINE,         package_tagline,	["Gmpc's tagline"])
 AC_DEFINE(GMPC_WEBSITE,		package_website,	["Gmpc's website"])
 AC_DEFINE(GMPC_BUGTRACKER,      package_bugtracker,	["Gmpc's bugtracker"])
@@ -414,6 +416,7 @@ shave-libtool
 Makefile
 src/Makefile
 src/gmpc-version.h
+src/gmpc-win32.rc
 glade/Makefile
 data/Makefile
 po/Makefile.in

@@ -115,7 +115,8 @@ nodist_gmpc_SOURCES=\
 
 gmpc_LDADD=
 
-if WIN32 
+if WIN32
+gmpc_DEPENDENCIES = gmpc-win32.o
 gmpc_LDADD += gmpc-win32.o
 endif
 

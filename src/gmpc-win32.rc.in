@@ -1,0 +1,34 @@
+#include <windows.h>
+
+#define VERSION_NUMBER @GMPC_MAJOR_VERSION@,@GMPC_MINOR_VERSION@,@GMPC_MICRO_VERSION@,0
+#define VERSION_NUMBER_STR "@GMPC_MAJOR_VERSION@,@GMPC_MINOR_VERSION@,@GMPC_MICRO_VERSION@,0"
+
+NCMPC_ICON ICON "@top_srcdir@/pixmaps/gmpc.ico"
+
+1 VERSIONINFO
+FILETYPE VFT_APP
+FILEOS VOS__WINDOWS32
+PRODUCTVERSION VERSION_NUMBER
+
+FILEVERSION VERSION_NUMBER
+BEGIN
+	BLOCK "StringFileInfo"
+	BEGIN
+		BLOCK "040904B0"
+		BEGIN
+			VALUE "CompanyName", "The Music Player Daemon Project"
+			VALUE "ProductName", "GTK+ Music Player Client"
+			VALUE "ProductVersion", VERSION_NUMBER_STR
+			VALUE "InternalName", "gmpc"
+			VALUE "OriginalFilename", "gmpc"
+			VALUE "FileVersion", "@VERSION@"
+			VALUE "FileDescription", "GTK+ Music Player Client @VERSION@"
+			VALUE "LegalCopyright", "@GMPC_COPYRIGHT@"
+		END
+	END
+
+	BLOCK "VarFileInfo"
+	BEGIN
+		VALUE "Translation", 0x409, 1200
+	END
+END
