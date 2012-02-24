@@ -274,7 +274,6 @@ static void pl3_file_browser_add_folder(void)
 	if (gtk_tree_selection_get_selected(selec, &model, &iter))
 	{
 		char *path, *icon;
-		char *message = NULL;
 		gtk_tree_model_get(model, &iter, PL3_FB_PATH, &path, PL3_FB_ICON, &icon, -1);
 
 		if (strcmp("media-playlist", icon))
@@ -736,6 +735,18 @@ static void pl3_file_browser_selected(GtkWidget * container)
 	gtk_widget_grab_focus(pl3_fb_tree);
 	gtk_widget_show(pl3_fb_vbox);
 
+	/* Make sure root node is always open. */
+	{
+		GtkTreeIter child;
+		if(gtk_tree_model_get_iter_first(GTK_TREE_MODEL(pl3_fb_dir_store), &child))
+		{
+			GtkTreePath *path = NULL;
+			path = gtk_tree_model_get_path(GTK_TREE_MODEL(pl3_fb_dir_store), &child);
+			gtk_tree_view_expand_row(GTK_TREE_VIEW(pl3_fb_dir_tree), path,FALSE);
+			gtk_tree_path_free(path);
+		}
+	}
+
 }
 
 static void pl3_file_browser_unselected(GtkWidget * container)
@@ -893,8 +904,6 @@ static void pl3_file_browser_add_to_playlist(GtkWidget * menu, gpointer cb_data)
 
 static gboolean pl3_file_browser_button_release_event(GtkWidget * but, GdkEventButton * event)
 {
-
-	int has_item = 0;
 	GtkWidget *item;
 	GtkWidget *menu = NULL;
 	GtkTreeSelection *sel = NULL;
@@ -926,14 +935,12 @@ static gboolean pl3_file_browser_button_release_event(GtkWidget * but, GdkEventB
 					item = gtk_image_menu_item_new_from_stock(GTK_STOCK_DIALOG_INFO, NULL);
 					gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 					g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_file_browser_show_info), NULL);
-					has_item = 1;
 				}
 			} else if (row_type == MPD_DATA_TYPE_PLAYLIST)
 			{
 				item = gtk_image_menu_item_new_from_stock(GTK_STOCK_DELETE, NULL);
 				gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 				g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_file_browser_delete_playlist), NULL);
-				has_item = 1;
 			} else if (row_type == MPD_DATA_TYPE_DIRECTORY)
 			{
 				item = gtk_image_menu_item_new_with_label(_("Update"));
@@ -942,7 +949,6 @@ static gboolean pl3_file_browser_button_release_event(GtkWidget * but, GdkEventB
 				gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 				g_signal_connect(G_OBJECT(item), "activate",
 								 G_CALLBACK(pl3_file_browser_update_folder_left_pane), NULL);
-				has_item = 1;
 			}
 			if (row_type != -1)
 			{
@@ -959,7 +965,6 @@ static gboolean pl3_file_browser_button_release_event(GtkWidget * but, GdkEventB
 				g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_file_browser_add_selected), NULL);
 
 				playlist_editor_right_mouse(menu, pl3_file_browser_add_to_playlist, NULL);
-				has_item = 1;
 			}
 
 			tree_path = list->data;
@@ -988,7 +993,6 @@ static gboolean pl3_file_browser_button_release_event(GtkWidget * but, GdkEventB
 		item = gtk_image_menu_item_new_from_stock(GTK_STOCK_ADD, NULL);
 		gtk_menu_shell_prepend(GTK_MENU_SHELL(menu), item);
 		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_file_browser_add_selected), NULL);
-		has_item = 1;
 	}
 	gmpc_mpddata_treeview_right_mouse_intergration(GMPC_MPDDATA_TREEVIEW(pl3_fb_tree), GTK_MENU(menu));
 	/*  if(has_item) */
