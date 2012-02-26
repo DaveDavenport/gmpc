@@ -176,7 +176,7 @@ mpd_Song *rewrite_mpd_song(mpd_Song *tsong, MetaDataType type)
 
 			}
 		}
-		if(type&(META_ARTIST_ART|META_ARTIST_TXT) && tsong->artist)
+		else if(type&(META_ARTIST_ART|META_ARTIST_TXT) && tsong->artist)
 		{
 			MpdData *data2 = NULL;
 			mpd_database_search_start(connection, TRUE);
@@ -302,6 +302,7 @@ mpd_Song *rewrite_mpd_song(mpd_Song *tsong, MetaDataType type)
 
 
 	}
+	//
 	return edited;
 }
 /**
@@ -1126,7 +1127,6 @@ void meta_data_clear_entry(mpd_Song *song, MetaDataType type)
 MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData **met,MetaDataCallback callback, gpointer data)
 {
 	meta_thread_data *mtd = NULL;
-	INIT_TIC_TAC()
 
 	if(!meta_data_validate_query(tsong, type)) 
 	{
@@ -1160,14 +1160,12 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData *
 	 */
 	if((type&META_QUERY_NO_CACHE) == 0)
 	{
-		GTimer *t = g_timer_new();
 		const char 			*md			 = connection_get_music_directory();
 		GLYR_ERROR          err          = GLYRE_OK;
 		MetaDataResult mrd;
 		MetaDataContentType content_type = META_DATA_CONTENT_RAW;
 		GlyrQuery query;
 		GlyrMemCache * cache = NULL;
-		TOC("try querying cache");
 
 		glyr_query_init(&query);
 		/* Set some random settings */
@@ -1180,12 +1178,8 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData *
 			g_free(path);
 		}
 
-TOC("start glyr setup");
 		content_type = setup_glyr_query(&query, mtd);
-TOC("setup glyr done, start db lookup");
 		cache = glyr_db_lookup(db, &query);
-TOC("end db lookup");
-		printf("cache: %p\n", cache);
 		if(process_glyr_result(cache,content_type, mtd))
 		{
 			// Cleanup
@@ -1196,16 +1190,12 @@ TOC("end db lookup");
 			*met = mtd->met;
 			mtd->met = NULL;
 			// Free mtd
-			printf("Got from cache: %f\n", g_timer_elapsed(t, NULL));
 			meta_thread_data_free(mtd);
 
-			TOC("Got from cache");
-			g_timer_destroy(t);
 			return mrd;
 		}
 		if(cache)glyr_free_list(cache);
 		glyr_query_destroy(&query);
-		g_timer_destroy(t);
 	}
 	else
 	{
@@ -1217,7 +1207,6 @@ TOC("end db lookup");
 	}
 	printf("start query\n");
 
-	TEC("Pushing actual query");
 
 	g_async_queue_push(gaq, mtd);
 	mtd = NULL;

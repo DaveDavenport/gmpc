@@ -142,6 +142,11 @@ namespace Gmpc
 				loader_data = null;
 				loader_md5sum = null;
 				loader_timeout = 0;
+				try{
+	                loader.close();
+				}catch (Error e) {
+					// Ignore this.
+				}
 				loader = null;
 			}
         }
@@ -160,6 +165,11 @@ namespace Gmpc
 				loader_data = null;
 				loader_md5sum = null;
 				loader_timeout = 0;
+				try{
+	                loader.close();
+				}catch (Error e) {
+					// Ignore this.
+				}
 				loader = null;
 			}
 
@@ -183,6 +193,7 @@ namespace Gmpc
 
 
 			loader_timeout = GLib.Idle.add(loader_idle_callback);
+//			loader_timeout = GLib.Timeout.add(200, loader_idle_callback);
 			return;
 		}
 

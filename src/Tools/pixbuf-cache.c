@@ -150,7 +150,6 @@ void pixbuf_cache_destroy(void)
 void pixbuf_cache_add_icon(int size, const gchar * url, GdkPixbuf * pb)
 {
 	int *mdd= (int *)url;
-	GTimer *t = g_timer_new();
 	gchar *key;
 	g_assert(pb_cache != NULL);
     if(size > MAX_SIZE) return;
@@ -161,7 +160,6 @@ void pixbuf_cache_add_icon(int size, const gchar * url, GdkPixbuf * pb)
 			mdd[2],
 			mdd[3]
 			);
-	printf("key: %s\n", key);
 
 	if (g_hash_table_lookup(pb_cache, key) == NULL)
 	{
@@ -171,41 +169,28 @@ void pixbuf_cache_add_icon(int size, const gchar * url, GdkPixbuf * pb)
 		e->in_use = TRUE;
 		g_object_add_toggle_ref(G_OBJECT(pb), (GToggleNotify) pixbuf_cache_entry_toggle_ref, (gpointer) key);
 		g_hash_table_insert(pb_cache, key, e);
-		g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "%i Add entry: %s", g_hash_table_size(pb_cache), key);
 	}
     else g_free(key);
-	g_timer_stop(t);
-	g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Add icon took %.6f", g_timer_elapsed(t, NULL));
-	g_timer_destroy(t);
 }
 
 GdkPixbuf *pixbuf_cache_lookup_icon(int size, const gchar * url)
 {
 	int *mdd= (int *)url;
-	GTimer *t = g_timer_new();
 	gchar *key = g_strdup_printf("%i:%X%X%X%X", size, 
 			mdd[0],
 			mdd[1],
 			mdd[2],
 			mdd[3]	
 			);
-	printf("key: %s\n", key);
 	DCE *retv = NULL;
 	retv = g_hash_table_lookup(pb_cache, key);
-	g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Found entry: %p", key);
 	g_free(key);
 
 	if (retv)
 	{
 		retv->in_use = TRUE;
 
-		g_timer_stop(t);
-		g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Lookup icon took %.6f", g_timer_elapsed(t, NULL));
-		g_timer_destroy(t);
 		return g_object_ref(retv->pb);
 	}
-	g_timer_stop(t);
-	g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Lookup icon took %.6f", g_timer_elapsed(t, NULL));
-	g_timer_destroy(t);
 	return NULL;
 }

@@ -449,7 +449,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
             {
                 meta_data_free(met);
             }
-
             return FALSE;
         }
 	public 
