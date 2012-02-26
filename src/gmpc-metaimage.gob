@@ -643,12 +643,14 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 				gtk_widget_set_size_request(GTK_WIDGET(self), self->size, self->size);
 			}
 			// Update tooltip.
-
-			gmpc_meta_image_async_set_from_raw(GMPC_META_IMAGE_ASYNC(self->_priv->tooltip_image),
+			if(gtk_widget_get_has_tooltip(GTK_WIDGET(self)))
+			{
+				gmpc_meta_image_async_set_from_raw(GMPC_META_IMAGE_ASYNC(self->_priv->tooltip_image),
 					data, size, 350,
 					0,
 					md5sum	
 					);
+			}
 		}
 
 	public 
