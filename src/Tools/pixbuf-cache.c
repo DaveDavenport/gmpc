@@ -30,7 +30,7 @@
 /* The hash table looking up the entries */
 static GHashTable *pb_cache = NULL;
 guint32 total_size = 0;
-#define MAX_SIZE 400
+#define MAX_SIZE 500
 
 /* The structure holding the cache entry */
 typedef struct
