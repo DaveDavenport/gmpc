@@ -67,9 +67,6 @@ namespace Gmpc
             GLib.log(LOG_DOMAIN,GLib.LogLevelFlags.LEVEL_DEBUG,"Create the image loading\n" );
         }
 
-        ~PixbufLoaderAsync() {
-            GLib.log(LOG_DOMAIN,GLib.LogLevelFlags.LEVEL_DEBUG,"Free the image loading");
-        }
 
         private Gdk.Pixbuf? modify_pixbuf(owned Gdk.Pixbuf? pix, int size,ModificationType casing) 
         {
@@ -136,6 +133,18 @@ namespace Gmpc
 		private uchar[]				loader_md5sum		= null;
 		private ModificationType	loader_border		= ModificationType.NONE;
 
+        ~PixbufLoaderAsync() {
+            GLib.log(LOG_DOMAIN,GLib.LogLevelFlags.LEVEL_DEBUG,"Free the image loading");
+			// Cancel previous load.
+			if ( loader_timeout > 0) {
+				GLib.Source.remove(loader_timeout);
+
+				loader_data = null;
+				loader_md5sum = null;
+				loader_timeout = 0;
+				loader = null;
+			}
+        }
 
 
 

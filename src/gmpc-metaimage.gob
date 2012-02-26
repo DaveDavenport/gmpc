@@ -616,7 +616,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
             if(self->squared) {
                 gtk_widget_set_size_request(GTK_WIDGET(self), self->size, self->size);
             } else {
-//                gtk_widget_set_size_request(GTK_WIDGET(self), gdk_pixbuf_get_width(pb2), gdk_pixbuf_get_height(pb2));
                 gmpc_meta_image_async_clear_now(GMPC_META_IMAGE_ASYNC(self->_priv->image));
             }
 
