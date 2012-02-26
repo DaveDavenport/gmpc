@@ -1144,7 +1144,7 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData *
 	mtd->action = MTD_ACTION_QUERY_METADATA;
 	mtd->id = ++test_id;
 	/* Create a copy of the original song */
-	mtd->song = rewrite_mpd_song(tsong, type);
+	mtd->song = mpd_songDup(tsong);
 	/* Set the type */
 	mtd->type = type;
 	/* the callback */
@@ -1170,14 +1170,14 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData *
 		glyr_query_init(&query);
 		/* Set some random settings */
 		glyr_opt_verbosity(&query,3);
-		
+	/*	
 		if(md != NULL && md[0] !=  '\0' && mtd->song->file != NULL)
 		{
 			char *path = g_build_filename(md, mtd->song->file, NULL);
 			glyr_opt_musictree_path(&query, path);
 			g_free(path);
 		}
-
+*/
 		content_type = setup_glyr_query(&query, mtd);
 		cache = glyr_db_lookup(db, &query);
 		if(process_glyr_result(cache,content_type, mtd))
@@ -1205,7 +1205,10 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData *
 			mtd->callback(mtd->song, META_DATA_FETCHING, NULL, mtd->data);
 		}
 	}
-	printf("start query\n");
+
+	// Rewrite for query 
+	if(mtd->song != NULL) mpd_freeSong(mtd->song);
+	mtd->song = rewrite_mpd_song(tsong, type);
 
 
 	g_async_queue_push(gaq, mtd);
