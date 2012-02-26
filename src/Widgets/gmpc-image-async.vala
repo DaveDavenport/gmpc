@@ -129,10 +129,32 @@ namespace Gmpc
         }
 
 
+		private uint 				loader_timeout 	= 0;
+		private Gdk.PixbufLoader? 	loader 			= null;
+		private uchar[]				loader_data			= null;
+		private uint				loader_data_offset	= 0;
+		private uchar[]				loader_md5sum		= null;
+		private ModificationType	loader_border		= ModificationType.NONE;
+
+
+
+
         public void set_from_raw(uchar[] data, int req_width, int req_height, ModificationType border,[CCode (array_length = false)]uchar[] md5sum)
 		{
             width = req_width;
             height = req_height;
+
+			// Cancel previous load.
+			if ( loader_timeout > 0) {
+				GLib.Source.remove(loader_timeout);
+
+				loader_data = null;
+				loader_md5sum = null;
+				loader_timeout = 0;
+				loader = null;
+			}
+
+
             var pb = Gmpc.PixbufCache.lookup_icon(int.max(width,height), md5sum);
             if(pb != null)
             {
@@ -142,44 +164,64 @@ namespace Gmpc
                 return;
             }
 
-            Gdk.PixbufLoader loader = new Gdk.PixbufLoader();
+            loader = new Gdk.PixbufLoader();
             loader.size_prepared.connect(size_prepare);
-            loader.area_prepared.connect((source) => {
-                    var apix = loader.get_pixbuf();
-                    var afinal = this.modify_pixbuf((owned)apix, int.max(height, width),border);
 
-                    pixbuf = afinal;
-                    pixbuf_update(pixbuf);
-                    call_row_changed();
-                    });
+			loader_data = data;
+			loader_data_offset = 0;
+			loader_md5sum = md5sum[0:16];
+			loader_border = border;
+
+
+			loader_timeout = GLib.Idle.add(loader_idle_callback);
+			return;
+		}
+
+		private bool loader_idle_callback()
+		{
+
             try{
-				Gmpc.Fix.write_loader(loader, (string)data, data.length);
+				uint end = uint.min(loader_data_offset+2048, loader_data.length);
+				Gmpc.Fix.write_loader(loader, (string)loader_data[loader_data_offset:end], 2048);
+				loader_data_offset = end;;
             }catch ( Error e) {
-                warning("Error trying to fetch image: %s::%s", e.message,uri);
+                warning("Error trying to load image: %s::%s", e.message,uri);
             }
+			if(loader_data_offset < loader_data.length) return true;
+
             try {
                 loader.close();
             }catch (Error err) {
                 debug("Error trying to parse image: %s::%s? query cancelled?", err.message,uri);
                 pixbuf_update(null);
                 call_row_changed();
-                loader = null;
-                return;
+
+				loader_data = null;
+				loader_md5sum = null;
+				loader = null;
+				loader_timeout = 0;
+				return false;
             }
 
             Gdk.Pixbuf pix = loader.get_pixbuf();
             /* Maybe another thread allready fetched it in the mean time, we want to use that... */
-            var final = Gmpc.PixbufCache.lookup_icon(int.max(height, width), md5sum);
+            var final = Gmpc.PixbufCache.lookup_icon(int.max(height, width), loader_md5sum);
             if(final == null)
             {
-				final = this.modify_pixbuf((owned)pix, int.max(height, width),border);
-				Gmpc.PixbufCache.add_icon(int.max(height, width),md5sum, final);
+				final = this.modify_pixbuf((owned)pix, int.max(height, width),loader_border);
+				Gmpc.PixbufCache.add_icon(int.max(height, width),loader_md5sum, final);
             }
 
 			this.pixbuf = final; 
             pixbuf_update(pixbuf);
             call_row_changed();
+
+			// Cleanup
             loader = null;
+			loader_data = null;
+			loader_md5sum = null;
+			loader_timeout = 0;
+			return false;
 		}
 
         private void size_prepare(Gdk.PixbufLoader loader,int  gwidth, int gheight)
