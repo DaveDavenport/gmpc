@@ -72,6 +72,10 @@ typedef struct {
 	gpointer data;
 	/* The song the data is queries for */
 	mpd_Song *song;
+
+	/* Original (for sending the right signal) */
+	mpd_Song *ori_song;
+
 	/* The type of metadata */
 	MetaDataType type;
 	/* Result  */
@@ -85,7 +89,7 @@ typedef struct {
 // Validate if enough information is available for the query.
 static gboolean meta_data_validate_query(mpd_Song *tsong, MetaDataType type)
 {
-	switch(type)
+	switch(type&META_QUERY_DATA_TYPES)
 	{
 		case META_GENRE_SIMILAR:
 			if(tsong->genre == NULL || tsong->genre[0] == '\0')
@@ -134,6 +138,9 @@ static void meta_thread_data_free(meta_thread_data *mtd)
 	/* Free the copie and edited version of the songs */
 	if(mtd->song)
 		mpd_freeSong(mtd->song);
+
+	if(mtd->ori_song)
+		mpd_freeSong(mtd->ori_song);
 
 	/* Free the Request struct */
 	g_slice_free(meta_thread_data, mtd);
@@ -318,10 +325,10 @@ static gboolean glyr_return_queue(void *user_data)
 		printf("Process results: %i\n", mtd->action);
 		if(mtd->action == MTD_ACTION_QUERY_METADATA)
 		{
-			gmpc_meta_watcher_data_changed(gmw,mtd->song, (mtd->type)&META_QUERY_DATA_TYPES, mtd->result,mtd->met);
+			gmpc_meta_watcher_data_changed(gmw,mtd->ori_song, (mtd->type)&META_QUERY_DATA_TYPES, mtd->result,mtd->met);
 			if(mtd->callback)
 			{
-				mtd->callback(mtd->song, mtd->result, mtd->met, mtd->data);
+				mtd->callback(mtd->ori_song, mtd->result, mtd->met, mtd->data);
 			}
 		} else if (mtd->action == MTD_ACTION_QUERY_LIST)
 		{
@@ -335,7 +342,7 @@ static gboolean glyr_return_queue(void *user_data)
 		}else if (mtd->action == MTD_ACTION_CLEAR_ENTRY) {
 			printf("Signal no longer available.\n");
 			// Signal that this item is now no longer available.
-			gmpc_meta_watcher_data_changed(gmw, mtd->song, (mtd->type)&META_QUERY_DATA_TYPES, META_DATA_UNAVAILABLE, NULL);
+			gmpc_meta_watcher_data_changed(gmw, mtd->ori_song, (mtd->type)&META_QUERY_DATA_TYPES, META_DATA_UNAVAILABLE, NULL);
 		}
 
 		meta_thread_data_free(mtd);
@@ -1085,12 +1092,13 @@ void meta_data_set_entry ( mpd_Song *song, MetaData *met )
 	mtd->id = ++test_id;
 	/* Create a copy of the original song */
 	mtd->song = rewrite_mpd_song(song, met->type);
+	mtd->ori_song = mpd_songDup(song);
 	/* Set the type */
 	mtd->type = met->type;
 	/* set result NULL */
 	mtd->met = meta_data_dup(met);;
 	/* signal we are fetching. */
-	gmpc_meta_watcher_data_changed(gmw,mtd->song, (mtd->type)&META_QUERY_DATA_TYPES, META_DATA_FETCHING,NULL);
+	gmpc_meta_watcher_data_changed(gmw,mtd->ori_song, (mtd->type)&META_QUERY_DATA_TYPES, META_DATA_FETCHING,NULL);
 	/* Set entry */
 	printf("Request setting entry\n");
 	g_async_queue_push(gaq, mtd);
@@ -1111,6 +1119,7 @@ void meta_data_clear_entry(mpd_Song *song, MetaDataType type)
 	/* Create a copy of the original song */
 	//mtd->song = mpd_songDup(song);
 	mtd->song = rewrite_mpd_song(song, type);
+	mtd->ori_song = mpd_songDup(song);
 	/* Set the type */
 	mtd->type = type;
 	/* set result NULL */
@@ -1130,6 +1139,7 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData *
 
 	if(!meta_data_validate_query(tsong, type)) 
 	{
+		printf("Query invalid");
 		*met = NULL;
 		return META_DATA_UNAVAILABLE;
 	}
@@ -1145,6 +1155,7 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData *
 	mtd->id = ++test_id;
 	/* Create a copy of the original song */
 	mtd->song = mpd_songDup(tsong);
+	mtd->ori_song = mpd_songDup(tsong);
 	/* Set the type */
 	mtd->type = type;
 	/* the callback */
@@ -1199,10 +1210,11 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData *
 	}
 	else
 	{
-		gmpc_meta_watcher_data_changed(gmw,mtd->song, (mtd->type)&META_QUERY_DATA_TYPES, META_DATA_FETCHING,NULL);
+		printf("signal fetching\n");
+		gmpc_meta_watcher_data_changed(gmw,mtd->ori_song, (mtd->type)&META_QUERY_DATA_TYPES, META_DATA_FETCHING,NULL);
 		if(mtd->callback)
 		{
-			mtd->callback(mtd->song, META_DATA_FETCHING, NULL, mtd->data);
+			mtd->callback(mtd->ori_song, META_DATA_FETCHING, NULL, mtd->data);
 		}
 	}
 
@@ -1496,6 +1508,7 @@ gpointer metadata_get_list(mpd_Song  *song, MetaDataType type, void (*callback)(
 	mtd->id = ++test_id;
 	/* Create a copy of the original song */
 	mtd->song = rewrite_mpd_song(song, type);
+	mtd->ori_song = mpd_songDup(song);
 	/* Set the type */
 	mtd->type = type;
 	/* the callback */
