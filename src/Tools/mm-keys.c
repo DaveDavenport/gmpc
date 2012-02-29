@@ -1,5 +1,5 @@
 /* Gnome Music Player Client (GMPC)
- * Copyright (C) 2004-2011 Qball Cow <qball@gmpclient.org>
+ * Copyright (C) 2004-2012 Qball Cow <qball@gmpclient.org>
  * Borrowed from Lee Willis <lee@leewillis.co.uk> that
  * Borrowed heavily from code by Jan Arne Petersen <jpetersen@uni-bonn.de>
  * This projects' homepage is: http://gmpclient.org/
