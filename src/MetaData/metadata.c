@@ -8,6 +8,7 @@
  * (at your option) any later version.
 
  * This program is distributed in the hope that it will be useful,
+#include "gmpc_easy_download.h"
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -26,13 +27,12 @@
 #include "metadata.h"
 #include "preferences.h"
 
-#include "gmpc_easy_download.h"
-
 #define LOG_DOMAIN "MetaData"
 
 #include <glyr/glyr.h>
 #include <glyr/cache.h>
 
+// Number of metadata plugin.
 int meta_num_plugins=0;
 gmpcPluginParent **meta_plugins = NULL;
 static void meta_data_sort_plugins(void);
@@ -148,11 +148,11 @@ static void meta_thread_data_free(meta_thread_data *mtd)
 gboolean meta_compare_func(meta_thread_data *mt1, meta_thread_data *mt2);
 //static gboolean meta_data_handle_results(void);
 
-mpd_Song *rewrite_mpd_song(mpd_Song *tsong, MetaDataType type)
+mpd_Song *rewrite_mpd_song(mpd_Song *tsong, MetaDataType type, gboolean query_mpd)
 {
 	mpd_Song *edited = NULL;
 	/* If it is not a mpd got song */
-	if(tsong->file == NULL )
+	if(tsong->file == NULL  && query_mpd)
 	{
 		if(type&(META_ALBUM_ART|META_ALBUM_TXT) && tsong->artist && tsong->album)
 		{
@@ -213,7 +213,7 @@ mpd_Song *rewrite_mpd_song(mpd_Song *tsong, MetaDataType type)
 			edited->artist = g_strdup(edited->albumartist);
 
 		}
-		else if(edited->album && edited->file)
+		else if(edited->album && edited->file && query_mpd)
 		{
 			int i=0;
 			MpdData *data2;
@@ -309,7 +309,6 @@ mpd_Song *rewrite_mpd_song(mpd_Song *tsong, MetaDataType type)
 
 
 	}
-	//
 	return edited;
 }
 /**
@@ -1091,7 +1090,7 @@ void meta_data_set_entry ( mpd_Song *song, MetaData *met )
 	mtd->action = MTD_ACTION_SET_ENTRY;
 	mtd->id = ++test_id;
 	/* Create a copy of the original song */
-	mtd->song = rewrite_mpd_song(song, met->type);
+	mtd->song = rewrite_mpd_song(song, met->type, TRUE);
 	mtd->ori_song = mpd_songDup(song);
 	/* Set the type */
 	mtd->type = met->type;
@@ -1118,7 +1117,7 @@ void meta_data_clear_entry(mpd_Song *song, MetaDataType type)
 	mtd->id = ++test_id;
 	/* Create a copy of the original song */
 	//mtd->song = mpd_songDup(song);
-	mtd->song = rewrite_mpd_song(song, type);
+	mtd->song = rewrite_mpd_song(song, type,TRUE);
 	mtd->ori_song = mpd_songDup(song);
 	/* Set the type */
 	mtd->type = type;
@@ -1154,7 +1153,7 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData *
 	mtd->action = MTD_ACTION_QUERY_METADATA;
 	mtd->id = ++test_id;
 	/* Create a copy of the original song */
-	mtd->song = mpd_songDup(tsong);
+	mtd->song = rewrite_mpd_song(tsong, type, FALSE);//mpd_songDup(tsong);
 	mtd->ori_song = mpd_songDup(tsong);
 	/* Set the type */
 	mtd->type = type;
@@ -1181,14 +1180,7 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData *
 		glyr_query_init(&query);
 		/* Set some random settings */
 		glyr_opt_verbosity(&query,3);
-	/*	
-		if(md != NULL && md[0] !=  '\0' && mtd->song->file != NULL)
-		{
-			char *path = g_build_filename(md, mtd->song->file, NULL);
-			glyr_opt_musictree_path(&query, path);
-			g_free(path);
-		}
-*/
+
 		content_type = setup_glyr_query(&query, mtd);
 		cache = glyr_db_lookup(db, &query);
 		if(process_glyr_result(cache,content_type, mtd))
@@ -1220,7 +1212,7 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData *
 
 	// Rewrite for query 
 	if(mtd->song != NULL) mpd_freeSong(mtd->song);
-	mtd->song = rewrite_mpd_song(tsong, type);
+	mtd->song = rewrite_mpd_song(tsong, type, TRUE);
 
 
 	g_async_queue_push(gaq, mtd);
@@ -1507,7 +1499,7 @@ gpointer metadata_get_list(mpd_Song  *song, MetaDataType type, void (*callback)(
 	mtd->action = MTD_ACTION_QUERY_LIST;
 	mtd->id = ++test_id;
 	/* Create a copy of the original song */
-	mtd->song = rewrite_mpd_song(song, type);
+	mtd->song = rewrite_mpd_song(song, type, TRUE);
 	mtd->ori_song = mpd_songDup(song);
 	/* Set the type */
 	mtd->type = type;
