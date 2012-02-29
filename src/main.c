@@ -479,13 +479,6 @@ int main(int argc, char **argv)
 	plugin_manager_initialize_plugins();
 
     /**
-     * Ask user about added/removed provider plugins
-     */
-    if (!settings.disable_plugins)
-        meta_data_check_plugin_changed();
-    TEC("Metadata plugin changed check");
-
-    /**
      * Create the main window
      */
     create_playlist3();

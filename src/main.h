@@ -67,11 +67,6 @@ void show_error_message(const gchar *string);
 
 
 /**
- * Metadata 
- */
-
-void meta_data_add_plugin(gmpcPluginParent *plug);
-/**
  * TODO move this 
  */
 void url_start_real(const gchar *url);

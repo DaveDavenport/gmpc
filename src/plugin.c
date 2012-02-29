@@ -230,11 +230,6 @@ void plugin_add(gmpcPlugin * plug, int plugin, GError ** error)
     plugins = g_realloc(plugins, (num_plugins + 1) * sizeof(gmpcPlugin **));
     plugins[num_plugins - 1] = parent;
     plugins[num_plugins] = NULL;
-
-    if (gmpc_plugin_is_metadata(parent))
-    {
-        meta_data_add_plugin(parent);
-    }
 }
 
 void plugin_add_new(GmpcPluginBase * plug, int plugin, GError ** error)
@@ -254,11 +249,6 @@ void plugin_add_new(GmpcPluginBase * plug, int plugin, GError ** error)
     plugins = g_realloc(plugins, (num_plugins + 1) * sizeof(gmpcPlugin **));
     plugins[num_plugins - 1] = parent;
     plugins[num_plugins] = NULL;
-
-    if (plug->plugin_type & GMPC_PLUGIN_META_DATA)
-    {
-        meta_data_add_plugin(parent);
-    }
 }
 
 static int plugin_load(const char *path, const char *file, GError ** error)

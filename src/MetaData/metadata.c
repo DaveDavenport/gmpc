@@ -8,7 +8,6 @@
  * (at your option) any later version.
 
  * This program is distributed in the hope that it will be useful,
-#include "gmpc_easy_download.h"
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -32,17 +31,9 @@
 #include <glyr/glyr.h>
 #include <glyr/cache.h>
 
-// Number of metadata plugin.
-int meta_num_plugins=0;
-gmpcPluginParent **meta_plugins = NULL;
-static void meta_data_sort_plugins(void);
-
-
-
 /**
  * GLYR
  */
-static GList        *process_queue = NULL;
 static GAsyncQueue  *gaq           = NULL;
 static GAsyncQueue  *return_queue  = NULL;
 static GlyrDatabase *db            = NULL;
@@ -545,11 +536,7 @@ static gboolean process_glyr_result(GlyrMemCache *cache,
 				(mtd->met)->plugin_name = g_strdup(cache->prov); 
 			}
 			(mtd->met)->content_type = content_type;
-/*
-			(mtd->met)->content = g_malloc(cache->size+1);
-			((char*)(mtd->met)->content)[cache->size] = 0;
-			memcpy((mtd->met)->content, cache->data, cache->size);
-*/
+
 			// Steal the data.
 			mtd->met->content = cache->data;
 			cache->data = NULL;
@@ -560,7 +547,6 @@ static gboolean process_glyr_result(GlyrMemCache *cache,
 			retv = TRUE;
 		}
 		memcpy(&(mtd->met->md5sum), &(cache->md5sum), 16);
-		mtd->met->md5sum[16] = '\0';
 	}else { 
 		// Explicitely not found.
 		printf("Cache sais empty\n");
@@ -614,7 +600,6 @@ static GlyrMemCache *glyr_fetcher_thread_load_uri(meta_thread_data *mtd)
 			cache->img_format = g_strdup("jpeg");	
 		}
 		memcpy(&(mtd->met->md5sum), &(cache->md5sum), 16);
-		mtd->met->md5sum[16] = '\0';
 
 	}
 	g_free(scheme);
@@ -636,7 +621,6 @@ static GlyrMemCache *glyr_fetcher_thread_load_raw(meta_thread_data *mtd)
 		cache->img_format = g_strdup("jpeg");	
 	}
 	memcpy(mtd->met->md5sum, cache->md5sum, 16);
-	mtd->met->md5sum[16] = '\0';
 	return cache;
 }
 
@@ -648,7 +632,6 @@ static GlyrMemCache *glyr_fetcher_thread_load_text(meta_thread_data *mtd)
 			g_strdup(mtd->met->content), 
 			-1);
 	memcpy(mtd->met->md5sum, cache->md5sum, 16);
-	mtd->met->md5sum[16] = '\0';
 	return cache;
 }
 /**
@@ -967,54 +950,6 @@ void meta_data_init(void)
 
 }
 
-void meta_data_add_plugin(gmpcPluginParent *plug)
-{
-	g_assert(plug != NULL);
-
-	meta_num_plugins++;
-	meta_plugins = g_realloc(meta_plugins,(meta_num_plugins+1)*sizeof(gmpcPluginParent **));
-	meta_plugins[meta_num_plugins-1] = plug;
-	meta_plugins[meta_num_plugins] = NULL;
-	meta_data_sort_plugins();
-}
-
-static void meta_data_sort_plugins(void)
-{
-	int i;
-	int changed = FALSE;	
-	do{	
-		changed=0;
-		for(i=0; i< (meta_num_plugins-1);i++)
-		{
-			if(gmpc_plugin_metadata_get_priority(meta_plugins[i]) > gmpc_plugin_metadata_get_priority(meta_plugins[i+1]))
-			{
-				gmpcPluginParent *temp = meta_plugins[i];
-				changed=1;
-				meta_plugins[i] = meta_plugins[i+1];
-				meta_plugins[i+1] = temp;
-			}
-		}
-	}while(changed);
-}
-
-static gboolean meta_data_check_plugin_changed_message(gpointer data)
-{
-	playlist3_show_error_message(_("A new metadata plugin was added, gmpc has purged all failed hits from the cache"), ERROR_INFO);
-	return FALSE;
-}
-void meta_data_check_plugin_changed(void)
-{
-	int old_amount= cfg_get_single_value_as_int_with_default(config, "metadata", "num_plugins", 0);
-	if(old_amount < meta_num_plugins)
-	{
-		gtk_init_add(meta_data_check_plugin_changed_message, NULL);
-		//metadata_cache_cleanup();
-	}
-	if(old_amount != meta_num_plugins)
-	{
-		cfg_set_single_value_as_int(config, "metadata", "num_plugins", meta_num_plugins);
-	}
-}
 /**
  * TODO: Can we guarantee that all the downloads are stopped? 
  */
@@ -1075,7 +1010,7 @@ gboolean meta_compare_func(meta_thread_data *mt1, meta_thread_data *mt2)
 }
 
 
-static int test_id = 0;
+static guint meta_data_thread_data_uid = 0;
 
 void meta_data_set_entry ( mpd_Song *song, MetaData *met )
 {
@@ -1088,7 +1023,7 @@ void meta_data_set_entry ( mpd_Song *song, MetaData *met )
 
 	mtd = g_slice_new0(meta_thread_data);
 	mtd->action = MTD_ACTION_SET_ENTRY;
-	mtd->id = ++test_id;
+	mtd->id = ++meta_data_thread_data_uid;
 	/* Create a copy of the original song */
 	mtd->song = rewrite_mpd_song(song, met->type, TRUE);
 	mtd->ori_song = mpd_songDup(song);
@@ -1114,9 +1049,8 @@ void meta_data_clear_entry(mpd_Song *song, MetaDataType type)
 	} 
 	mtd = g_slice_new0(meta_thread_data);
 	mtd->action = MTD_ACTION_CLEAR_ENTRY;
-	mtd->id = ++test_id;
+	mtd->id = ++meta_data_thread_data_uid;
 	/* Create a copy of the original song */
-	//mtd->song = mpd_songDup(song);
 	mtd->song = rewrite_mpd_song(song, type,TRUE);
 	mtd->ori_song = mpd_songDup(song);
 	/* Set the type */
@@ -1143,17 +1077,11 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData *
 		return META_DATA_UNAVAILABLE;
 	}
 
-	/**
-	 * unique id 
-	 * Not needed, but can be usefull for debugging
-	 */
-	
-	//mtd = g_malloc0(sizeof(*mtd));
-    mtd = g_slice_new0(meta_thread_data);//g_malloc0(sizeof(*mtd));
+    mtd = g_slice_new0(meta_thread_data);
 	mtd->action = MTD_ACTION_QUERY_METADATA;
-	mtd->id = ++test_id;
+	mtd->id = ++meta_data_thread_data_uid;
 	/* Create a copy of the original song */
-	mtd->song = rewrite_mpd_song(tsong, type, FALSE);//mpd_songDup(tsong);
+	mtd->song = rewrite_mpd_song(tsong, type, FALSE);
 	mtd->ori_song = mpd_songDup(tsong);
 	/* Set the type */
 	mtd->type = type;
@@ -1170,8 +1098,6 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData *
 	 */
 	if((type&META_QUERY_NO_CACHE) == 0)
 	{
-		const char 			*md			 = connection_get_music_directory();
-		GLYR_ERROR          err          = GLYRE_OK;
 		MetaDataResult mrd;
 		MetaDataContentType content_type = META_DATA_CONTENT_RAW;
 		GlyrQuery query;
@@ -1268,17 +1194,6 @@ gchar * gmpc_get_metadata_filename(MetaDataType  type, mpd_Song *song, char *ext
 		/* TODO: Add error checking */
 
 		dirname = g_filename_from_utf8(song->artist, -1, NULL, NULL, NULL);
-		/*
-		   if (g_get_charset (&charset))
-		   {
-		   g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Locale is utf-8, just copying");
-		   dirname = g_strdup(song->artist);
-		   }else{
-		   g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Locale is %s converting to UTF-8", charset);
-		   dirname = g_convert_with_fallback (song->artist, -1,
-		   charset, "UTF-8","-", NULL, NULL, &error);
-		   }
-		 */
 		if(dirname == NULL)
 		{
 			const gchar *charset;
@@ -1286,7 +1201,6 @@ gchar * gmpc_get_metadata_filename(MetaDataType  type, mpd_Song *song, char *ext
 			dirname = g_convert_with_fallback (song->artist, -1,
 					charset, "UTF-8",(char *)"-", NULL, NULL, &error);
 		}
-		//dirname = g_filename_from_utf8(song->artist,-1,NULL,NULL,&error); 
 		if(error) {
 			g_log(LOG_DOMAIN, G_LOG_LEVEL_WARNING, "Failed to convert %s to file encoding. '%s'", song->artist, error->message);
 			g_error_free(error);
@@ -1336,148 +1250,9 @@ gchar * gmpc_get_metadata_filename(MetaDataType  type, mpd_Song *song, char *ext
 	}
 	return retv;
 }
-static void metadata_pref_priority_changed(GtkCellRenderer *renderer, char *path, char *new_text, GtkListStore *store)
-{
-	GtkTreeIter iter;
-	if(gtk_tree_model_get_iter_from_string(GTK_TREE_MODEL(store), &iter, path))
-	{
-		gmpcPluginParent *plug;
-		gtk_tree_model_get(GTK_TREE_MODEL(store), &iter, 0, &plug, -1);
-		if(plug)
-		{
-			gmpc_plugin_metadata_set_priority(plug,(gint)g_ascii_strtoull(new_text, NULL, 0));
-			gtk_list_store_set(GTK_LIST_STORE(store), &iter, 2, gmpc_plugin_metadata_get_priority(plug),-1);
-			meta_data_sort_plugins();
-		}
-	}
-}
-/**
- * Get the enabled state directly from the plugin
- */
-static void __column_data_func_enabled(GtkTreeViewColumn *column, 
-										GtkCellRenderer *cell,
-										GtkTreeModel *model,
-										GtkTreeIter *iter,
-										gpointer data)
-{
-		gmpcPluginParent *plug;
-		gtk_tree_model_get(GTK_TREE_MODEL(model), iter, 0, &plug, -1);
-		if(plug)
-		{
-			gboolean active = gmpc_plugin_get_enabled(plug);
-			g_object_set(G_OBJECT(cell), "active", active, NULL);
-		}
-}
 /**
  * Set enabled
  */
-static void __column_toggled_enabled(GtkCellRendererToggle *renderer,
-										char *path,
-										gpointer store)
-{
-	GtkTreeIter iter;
-	if(gtk_tree_model_get_iter_from_string(GTK_TREE_MODEL(store), &iter, path))
-	{
-		gmpcPluginParent *plug;
-		gtk_tree_model_get(GTK_TREE_MODEL(store), &iter, 0, &plug, -1);
-		if(plug)
-		{
-			gboolean state = !gtk_cell_renderer_toggle_get_active(renderer);
-			gmpc_plugin_set_enabled(plug,state);
-			preferences_window_update();
-		}
-	}
-}
-static void metadata_construct_pref_pane(GtkWidget *container)
-{
-	GtkObject *adjustment;
-	int i = 0;
-	GtkCellRenderer *renderer;
-	GtkWidget *vbox, *sw;
-	GtkWidget *treeview;
-	GtkWidget *label = NULL;
-	GtkListStore *store = gtk_list_store_new(3, 
-			G_TYPE_POINTER, /* The GmpcPlugin */
-			G_TYPE_STRING, /* Name */
-			G_TYPE_INT /* The priority */
-			);
-	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (store),
-			2, GTK_SORT_ASCENDING);
-
-
-	/* Create vbox */
-	vbox = gtk_vbox_new(FALSE, 6);
-	/* tree + container */
-	sw = gtk_scrolled_window_new(NULL, NULL);
-	gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(sw), GTK_SHADOW_ETCHED_IN);
-	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-	treeview = gtk_tree_view_new_with_model(GTK_TREE_MODEL(store));
-	gtk_container_add(GTK_CONTAINER(sw), treeview);
-
-
-	/* enable column */
-	renderer = gtk_cell_renderer_toggle_new();
-	gtk_tree_view_insert_column_with_data_func(GTK_TREE_VIEW(treeview),
-			-1,
-			"Enabled",
-			renderer,
-			(GtkTreeCellDataFunc)__column_data_func_enabled,
-			NULL,
-			NULL);
-	g_object_set(G_OBJECT(renderer), "activatable", TRUE, NULL);
-	g_signal_connect(G_OBJECT(renderer), "toggled" ,
-			G_CALLBACK(__column_toggled_enabled), store);
-
-	/* Build the columns */
-	renderer = gtk_cell_renderer_text_new();
-	gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(treeview),
-			-1,
-			"Name",
-			renderer,
-			"text", 1,
-			NULL);
-	renderer = gtk_cell_renderer_spin_new();
-
-	adjustment = gtk_adjustment_new (0, 0, 100, 1, 0, 0);
-	g_object_set(G_OBJECT(renderer), "editable", TRUE, NULL);
-	g_object_set (renderer, "adjustment", adjustment, NULL);
-	g_signal_connect(G_OBJECT(renderer), "edited", G_CALLBACK(metadata_pref_priority_changed), store);
-	gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(treeview),
-			-1,
-			"Priority",
-			renderer,
-			"text", 2,
-			NULL);
-
-
-	/* Add the list to the vbox */
-	gtk_box_pack_start(GTK_BOX(vbox), sw, TRUE, TRUE, 0);
-
-	gtk_container_add(GTK_CONTAINER(container), vbox);
-	/* add plugins to list */
-	for(i=0; i< meta_num_plugins;i++)
-	{
-		GtkTreeIter iter;
-		gtk_list_store_insert_with_values(store, &iter, -1, 
-				0, meta_plugins[i],
-				1, gmpc_plugin_get_name(meta_plugins[i]),
-				2, gmpc_plugin_metadata_get_priority(meta_plugins[i]),
-				-1);
-	}
-
-	label = gtk_label_new("Plugins are evaluated from low priority to high");
-	gtk_misc_set_alignment(GTK_MISC(label), 0.0, 0.5);
-	gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, FALSE, 0);
-	gtk_widget_show_all(container);
-}
-static void metadata_destroy_pref_pane(GtkWidget *container)
-{
-	GtkWidget *child = gtk_bin_get_child(GTK_BIN(container));
-	if(child)
-	{
-		gtk_widget_destroy(child);
-	}
-}
 
 void metadata_get_list_cancel(gpointer data)
 {
@@ -1487,17 +1262,9 @@ gpointer metadata_get_list(mpd_Song  *song, MetaDataType type, void (*callback)(
 {
 	meta_thread_data *mtd = NULL;
 	
-	INIT_TIC_TAC()
-
-	/**
-	 * unique id 
-	 * Not needed, but can be usefull for debugging
-	 */
-	
-	//mtd = g_malloc0(sizeof(*mtd));
-	mtd = g_slice_new0(meta_thread_data);//g_malloc0(sizeof(*mtd));
+	mtd = g_slice_new0(meta_thread_data);
 	mtd->action = MTD_ACTION_QUERY_LIST;
-	mtd->id = ++test_id;
+	mtd->id = ++meta_data_thread_data_uid;
 	/* Create a copy of the original song */
 	mtd->song = rewrite_mpd_song(song, type, TRUE);
 	mtd->ori_song = mpd_songDup(song);
@@ -1514,50 +1281,9 @@ gpointer metadata_get_list(mpd_Song  *song, MetaDataType type, void (*callback)(
 	mtd->met_results = NULL;
 	printf("start query\n");
 
-	TEC("Pushing actual query");
-
 	g_async_queue_push(gaq, mtd);
 	mtd = NULL;
 	return NULL;
-//}
-//	callback(NULL, NULL, NULL, data);
-//	return NULL;
-#if 0
-	MLQuery *q = g_malloc0(sizeof(*q));
-	q->cancel =FALSE;
-	q->callback = callback;
-	q->userdata = data;
-	q->type = type;
-	q->calls =1;
-	/**
-	 * Create a copy, so song is guarantee to be valid during queries of plugins
-	 */
-	q->song = mpd_songDup(song);
-	/* Check cache */
-	{
-		MetaData *met = NULL;
-		int retv = meta_data_get_from_cache(q->song, q->type,&met); 
-		g_log("MetaData", G_LOG_LEVEL_DEBUG, "Queried cache: %i",retv); 
-		if(retv == META_DATA_AVAILABLE)
-		{
-			GList *list = g_list_append(NULL, met);
-
-			g_log("MetaData", G_LOG_LEVEL_DEBUG, "Callback");
-			q->callback(q, met->plugin_name,list, q->userdata);
-			g_log("MetaData", G_LOG_LEVEL_DEBUG, "Cleanup");
-			g_list_foreach(g_list_first(list),(GFunc) meta_data_free, NULL);
-			g_list_free(list);
-			g_log("MetaData", G_LOG_LEVEL_DEBUG, "Cleanup done");
-			met = NULL;
-		}
-		if(met)
-			meta_data_free(met);
-	}
-	
-	g_log("MetaData", G_LOG_LEVEL_DEBUG, "Start first itteration idle");
-	g_idle_add(metadata_get_list_itterate_idle, q);
-	return q;
-#endif
 }
 /**
  * MetaData 
@@ -1644,7 +1370,6 @@ MetaData *meta_data_dup(MetaData *data)
 	}
 
 	memcpy(&(retv->md5sum),&(data->md5sum), 16); 
-	retv->md5sum[16] = '\0';
 
 	return retv;
 }
@@ -1667,7 +1392,6 @@ MetaData *meta_data_dup_steal(MetaData *data)
 	data->thumbnail_uri = NULL;
 
 	memcpy(&(retv->md5sum),&(data->md5sum), 16); 
-	retv->md5sum[16] = '\0';
 
 	return retv;
 }
@@ -2170,10 +1894,6 @@ const GList *meta_data_get_text_list(const MetaData *data)
  * Plugin structure
  */
 
-gmpcPrefPlugin metadata_pref_plug = {
-	.construct      = metadata_construct_pref_pane,
-	.destroy        =  metadata_destroy_pref_pane
-};
 gmpcPlugin metadata_plug = {
 	.name           = N_("Metadata Handler"),
 	.version        = {1,1,1},

@@ -156,7 +156,6 @@ extern GmpcMetaWatcher *gmw;
 /*guint meta_data_get_path_callback(mpd_Song *song, MetaDataType type, MetaDataCallback callback, gpointer data);*/
 
 void meta_data_init(void);
-void meta_data_check_plugin_changed(void);
 void meta_data_handle_remove_request(guint id);
 void meta_data_destroy(void);
 
