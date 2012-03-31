@@ -843,10 +843,12 @@ static gboolean tag2_sentry_changed_real(tag_element * te)
 
 	g_free(te2);
 	te->timeout = 0;
+/*	Disable: #3480 
 	if (strlen(gtk_entry_get_text(GTK_ENTRY(te->sentry))) == 0)
 	{
 		gtk_widget_hide(te->sentry);
 	}
+*/
 	return FALSE;
 }
 
@@ -912,7 +914,14 @@ static void tag_browser_clear_search_entry(GtkEntry * entry, GtkEntryIconPositio
 {
 	if (icon_pos == GTK_ENTRY_ICON_SECONDARY)
 	{
-		gtk_entry_set_text(GTK_ENTRY(entry), "");
+		if (strlen(gtk_entry_get_text(GTK_ENTRY(entry))) == 0)
+		{
+			gtk_widget_hide(entry);
+		}
+		else
+		{
+			gtk_entry_set_text(GTK_ENTRY(entry), "");
+		}
 	}
 
 }
