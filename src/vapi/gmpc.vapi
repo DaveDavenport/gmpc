@@ -21,7 +21,10 @@ namespace Gmpc {
     [CCode (cname = "gmpc_easy_command", cheader_filename="plugin.h")]
     static Easy.Command  easy_command;
 
-    [CCode (cheader_filename="gmpc-meta-watcher.h")]
+	[CCode (cname = "playlist", cheader_filename="main.h")]
+	static Gmpc.MpdData.ModelPlaylist playlist;
+
+    [CCode (cheader_filename="gmpc-meta-watcher.h")	]
     public class MetaWatcher {
         public signal void data_changed(MPD.Song song,  Gmpc.MetaData.Type type, Gmpc.MetaData.Result result,MetaData.Item? met);
 
@@ -344,7 +347,9 @@ namespace Gmpc {
 
 
         [CCode (cname="format_time_real", cheader_filename="misc.h")]
-        public string format_time(ulong seconds, string pre);
+        public string format_time(ulong seconds, string pre="");
+        [CCode (cname="format_time_real_newline", cheader_filename="misc.h")]
+        public string format_time_newline(ulong seconds, string pre="");
     }
 
     /* Browser */
@@ -405,6 +410,13 @@ namespace Gmpc {
             public unowned string get_request_artist();
             public int icon_size;
         }
+        [CCode (cheader_filename="gmpc-mpddata-model-playlist.h")]
+        public class ModelPlaylist : Gmpc.MpdData.Model {
+			public signal void total_playtime_changed(ulong loaded_songs, ulong total_playtime);
+
+            [CCode (cname="gmpc_mpddata_model_playlist_get_total_playtime")]
+			public void get_total_playtime( out ulong loaded_song, out ulong total_playtime);
+		}
     }
 
 
@@ -413,6 +425,7 @@ namespace Gmpc {
         public string? song_checksum(MPD.Song? song);
         [CCode (cname="mpd_song_checksum_type",cheader_filename="misc.h")]
         public string? song_checksum_type(MPD.Song? song, Gmpc.MetaData.Type type);
+
 
     }
     namespace MpdInteraction {

@@ -194,6 +194,8 @@ namespace MPD {
         public void queue_commit(MPD.Server server);
         [CCode (cname="mpd_playlist_clear")]
         public void clear(MPD.Server server);
+		[CCode (cname="mpd_playlist_get_playlist_length")]
+		public int length(MPD.Server server);
         
         public void add_artist(MPD.Server server, string artist)
         {

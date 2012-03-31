@@ -20,6 +20,7 @@ PLUGIN_FILES=\
     Plugins/extraplaylist.c\
     Plugins/AutoMPD.vala\
     Plugins/sidebar-search.vala\
+	Plugins/sidebar-play-queue-time.vala\
     Plugins/sidebar-next-song.vala
 
 

@@ -76,6 +76,56 @@ gchar *format_time_real(unsigned long seconds, const gchar * data)
 	g_string_free(str, FALSE);
 	return ret;
 }
+gchar *format_time_real_newline(unsigned long seconds, const gchar * data)
+{
+	GString *str = NULL;
+	int days = seconds / 86400;
+	int hours = (seconds % 86400) / 3600;
+	int minutes = (seconds % 3600) / 60;
+	int set = 0;
+	char *ret;
+	if (seconds == 0)
+	{
+		return g_strdup("");
+	}
+	str = g_string_new(data);
+	if (days != 0)
+	{
+		if(set != 0) {
+			g_string_append_c(str, '\n');
+		}
+		g_string_append_printf(str, "%i %s ", days, ngettext("day", "days", days));
+		set = 1;
+	}
+	if (hours != 0)
+	{
+		if(set != 0) {
+			g_string_append_c(str, '\n');
+		}
+		g_string_append_printf(str, "%i %s ", hours, ngettext("hour", "hours", hours));
+		set = 1;
+	}
+	if (minutes != 0)
+	{
+		if(set != 0) {
+			g_string_append_c(str, '\n');
+		}
+		g_string_append_printf(str, "%i %s ", minutes, ngettext("minute", "minutes", minutes));
+		set = 1;
+	}
+	if((seconds%60) != 0)
+	{
+		if(set != 0) {
+			g_string_append_c(str, '\n');
+		}
+		g_string_append_printf(str, "%lu %s ", (seconds%60), ngettext("second", "seconds", (seconds%60)));
+		set = 1;
+	}
+
+	ret = str->str;
+	g_string_free(str, FALSE);
+	return ret;
+}
 
 /**
  * Wrapper around mpd_song_markup, that escapes the entries for use with pango markup
