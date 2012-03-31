@@ -861,11 +861,55 @@ static void pl3_current_playlist_browser_unselected(GmpcPluginBrowserIface * obj
 	PlayQueuePlugin *self = (PlayQueuePlugin *) obj;
 	gtk_container_remove(GTK_CONTAINER(container), self->priv->pl3_cp_vbox);
 }
+static void pl3_current_playlist_add_after_current_song(GtkWidget *item, GtkTreeView *tree)
+{
+	GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(tree));
+	int cur_song_pos = mpd_player_get_current_song_pos(connection);
+	GList *list;
+	GtkTreeModel  *model;
+	list = gtk_tree_selection_get_selected_rows(selection, &model);
+	if(list)
+	{
+		GtkTreeIter iter;
+		GtkTreePath *path  = (GtkTreePath *)list->data;
+		/* Convert the path into an actual iter we can use to get values from the model */
+		if(gtk_tree_model_get_iter(model, &iter,path))
+		{
+			mpd_Song*song = NULL;
+			gtk_tree_model_get(model, &iter, MPDDATA_MODEL_COL_MPDSONG, &song, -1);
+			if(song != NULL && song->file != NULL)
+			{
+				int songid = mpd_playlist_add_get_id(connection, (gchar *) song->file);
+				if(cur_song_pos >= 0)
+				{
+					cur_song_pos++;
+					mpd_playlist_move_id(connection, songid, cur_song_pos);	
+				}
+			}
+		}
+        g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);
+        g_list_free (list);
+	}	
+}
+
+static int pl3_current_playlist_song_list_option_menu (GmpcPluginBrowserIface *obj, GtkWidget *tree, GtkMenu *menu)
+{
+	printf("list option menu\n");
+	if(mpd_check_connected(connection) && !mpd_player_get_random(connection))
+	{
+		GtkWidget *item = gtk_image_menu_item_new_with_label(_("Add after current song"));
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+		g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_current_playlist_add_after_current_song), tree);
+		return 1;
+	}
+	return 0;
+}
 
 static int pl3_current_playlist_browser_option_menu(GmpcPluginBrowserIface * obj, GtkMenu * menu)
 {
 	/* here we have:  Save, Clear */
 	GtkWidget *item;
+
 	/* add the save widget */
 	item = gtk_image_menu_item_new_from_stock(GTK_STOCK_SAVE, NULL);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
@@ -1229,6 +1273,11 @@ static void play_queue_browser_iface_init(GmpcPluginBrowserIfaceIface * iface)
 	iface->browser_add_go_menu = pl3_current_playlist_browser_add_go_menu;
 }
 
+static void play_queue_song_list_iface_init(GmpcPluginSongListIfaceIface *iface)
+{
+	iface->song_list = pl3_current_playlist_song_list_option_menu;
+}
+
 /**
  * Tool menu interface
  */
@@ -1297,6 +1346,10 @@ GType play_queue_plugin_get_type(void)
 			(GInterfaceInitFunc) play_queue_browser_iface_init,
 			(GInterfaceFinalizeFunc) NULL, NULL
 		};
+		static const GInterfaceInfo iface_song_list = {
+			(GInterfaceInitFunc) play_queue_song_list_iface_init,
+			(GInterfaceFinalizeFunc) NULL, NULL
+		};
 		static const GInterfaceInfo iface_tm_info = {
 			(GInterfaceInitFunc) play_queue_plugin_tool_menu_iface_init,
 			(GInterfaceFinalizeFunc) NULL, NULL
@@ -1311,6 +1364,7 @@ GType play_queue_plugin_get_type(void)
 		g_type_add_interface_static(play_queue_plugin_type_id, GMPC_PLUGIN_TYPE_BROWSER_IFACE, &iface_info);
 		g_type_add_interface_static(play_queue_plugin_type_id, GMPC_PLUGIN_TYPE_TOOL_MENU_IFACE, &iface_tm_info);
 		g_type_add_interface_static(play_queue_plugin_type_id, GMPC_PLUGIN_TYPE_INTEGRATE_SEARCH_IFACE, &iface_is_info);
+		g_type_add_interface_static(play_queue_plugin_type_id, GMPC_PLUGIN_TYPE_SONG_LIST_IFACE, &iface_song_list);
 	}
 	return play_queue_plugin_type_id;
 }
