@@ -865,25 +865,28 @@ static void pl3_current_playlist_add_after_current_song(GtkWidget *item, GtkTree
 {
 	GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(tree));
 	int cur_song_pos = mpd_player_get_current_song_pos(connection);
-	GList *list;
+	GList *list, *list_iter;
 	GtkTreeModel  *model;
 	list = gtk_tree_selection_get_selected_rows(selection, &model);
 	if(list)
 	{
-		GtkTreeIter iter;
-		GtkTreePath *path  = (GtkTreePath *)list->data;
-		/* Convert the path into an actual iter we can use to get values from the model */
-		if(gtk_tree_model_get_iter(model, &iter,path))
+		for(list_iter = g_list_first(list); list_iter != NULL; list_iter = g_list_next(list_iter))
 		{
-			mpd_Song*song = NULL;
-			gtk_tree_model_get(model, &iter, MPDDATA_MODEL_COL_MPDSONG, &song, -1);
-			if(song != NULL && song->file != NULL)
+			GtkTreeIter iter;
+			GtkTreePath *path  = (GtkTreePath *)list_iter->data;
+			/* Convert the path into an actual iter we can use to get values from the model */
+			if(gtk_tree_model_get_iter(model, &iter,path))
 			{
-				int songid = mpd_playlist_add_get_id(connection, (gchar *) song->file);
-				if(cur_song_pos >= 0)
+				mpd_Song*song = NULL;
+				gtk_tree_model_get(model, &iter, MPDDATA_MODEL_COL_MPDSONG, &song, -1);
+				if(song != NULL && song->file != NULL)
 				{
-					cur_song_pos++;
-					mpd_playlist_move_id(connection, songid, cur_song_pos);	
+					int songid = mpd_playlist_add_get_id(connection, (gchar *) song->file);
+					if(cur_song_pos >= 0)
+					{
+						cur_song_pos++;
+						mpd_playlist_move_id(connection, songid, cur_song_pos);	
+					}
 				}
 			}
 		}
