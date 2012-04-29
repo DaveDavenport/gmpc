@@ -202,6 +202,10 @@ public class Gmpc.Widgets.Songlist : Gmpc.Widgets.Qtable
                 play_song_clicked(song_file);
                 return true;
                 }
+			else if (event.button == 2) {
+				play_song_menu_clicked(song_file);
+				return true;
+			}
             return false;
         });
 
@@ -219,6 +223,9 @@ public class Gmpc.Widgets.Songlist : Gmpc.Widgets.Qtable
 
         /* add the label */
         box.pack_start(wlabel, false, false, 0);
+		wlabel.context_menu.connect((source) => {
+				play_song_menu_clicked(song_file);
+		});
 
         wlabel.clicked.connect((source, alt) => {
             if(alt)
@@ -234,7 +241,8 @@ public class Gmpc.Widgets.Songlist : Gmpc.Widgets.Qtable
 
      /* User click on the title */
      public signal void song_clicked(MPD.Song song);
-     /* user clicked on the play */
+	 public signal void play_song_menu_clicked(MPD.Song song);
+	 /* user clicked on the play */
      public signal void play_song_clicked(MPD.Song song);
      /* user clicked on the album */
      public signal void album_song_clicked(MPD.Song song);

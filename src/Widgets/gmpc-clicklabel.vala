@@ -125,7 +125,9 @@ public class Gmpc.Clicklabel : Gtk.EventBox
                     if(event.button == 1) {
                         clicked((event.state&Gdk.ModifierType.MOD1_MASK) 
                                             == Gdk.ModifierType.MOD1_MASK);
-                    }
+                    }else if (event.button == 2) {
+						context_menu();
+					}
                     return false;
                 });
 
@@ -223,6 +225,8 @@ public class Gmpc.Clicklabel : Gtk.EventBox
     }
 
     public signal void clicked (bool alt = false);
+
+    public signal void context_menu ();
 
     /**
      * Private functions
