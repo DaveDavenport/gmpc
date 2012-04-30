@@ -1379,6 +1379,20 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
                     Gmpc.MpdInteraction.play_path(song.file);
                 }
             });
+		result_hbox.song_context_menu.connect((source, song) => {
+			var menu = new Gtk.Menu();
+
+			var item = new Gtk.ImageMenuItem.from_stock("gtk-open",null);
+			MPD.Song song_pass = song.copy();
+			item.activate.connect((source)=>{
+				this.set_song(song_pass);
+			});
+			menu.append(item);
+
+			stdout.printf("song context menu show\n");
+			menu.show_all();
+			menu.popup(null, null, null, 3, Gtk.get_current_event_time());
+		});
 
         MetadataBoxShowBaseEntry.activate.connect((source) => {
             string value = source.get_text();
@@ -1583,6 +1597,20 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
                 }
             });
 
+			sl.song_context_menu.connect((source,song)=>{
+					var menu = new Gtk.Menu();
+
+					var item = new Gtk.ImageMenuItem.from_stock("gtk-open",null);
+					MPD.Song song_pass = song.copy();
+					item.activate.connect((source)=>{
+						this.set_song(song_pass);
+						});
+					menu.append(item);
+
+					stdout.printf("song context menu show\n");
+					menu.show_all();
+					menu.popup(null, null, null, 3, Gtk.get_current_event_time());
+					});
 
             notebook.append_page(slhbox, new Gtk.Label(_("Song list")));
             var rbutton = new Gtk.RadioButton.with_label(group,_("Song list"));
@@ -1872,6 +1900,20 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
                     Gmpc.MpdInteraction.play_path(song.file);
                 }
             });
+			sl.song_context_menu.connect((source,song)=>{
+					var menu = new Gtk.Menu();
+
+					var item = new Gtk.ImageMenuItem.from_stock("gtk-open",null);
+					MPD.Song song_pass = song.copy();
+					item.activate.connect((source)=>{
+						this.set_song(song_pass);
+						});
+					menu.append(item);
+
+					stdout.printf("song context menu show\n");
+					menu.show_all();
+					menu.popup(null, null, null, 3, Gtk.get_current_event_time());
+					});
 
 
             notebook.append_page(slhbox, new Gtk.Label(_("Song list")));

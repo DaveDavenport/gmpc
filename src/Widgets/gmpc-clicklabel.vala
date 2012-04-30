@@ -35,13 +35,14 @@ public class Gmpc.Clicklabel : Gtk.EventBox
         ENTER_NOTIFY,
         LEAVE_NOTIFY,
         BUTTON_RELEASE,
+		BUTTON_PRESS,
         KEY_RELEASE,
         FOCUS_IN,
         FOCUS_OUT,
         NUM_SIGNALS
     }
     /* 6 == Sighandler.NUM_SIGNALS  vala stupidity. */
-    private ulong handlers[6];
+    private ulong handlers[7];
     
 
     /**
@@ -120,13 +121,26 @@ public class Gmpc.Clicklabel : Gtk.EventBox
                     return false;
                 });
 
+
+            handlers[Sighandler.BUTTON_PRESS] = this.button_press_event.connect(
+                (source, event) => {
+                    if(event.button == 1) {
+						return true;
+                    }else if (event.button == 3) {
+						return true;
+					}
+                    return false;
+                });
+
             handlers[Sighandler.BUTTON_RELEASE] = this.button_release_event.connect(
                 (source, event) => {
                     if(event.button == 1) {
                         clicked((event.state&Gdk.ModifierType.MOD1_MASK) 
                                             == Gdk.ModifierType.MOD1_MASK);
-                    }else if (event.button == 2) {
+                    }else if (event.button == 3) {
+						stdout.printf("click-label context menu\n");
 						context_menu();
+						return true;
 					}
                     return false;
                 });
