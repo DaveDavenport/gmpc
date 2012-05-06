@@ -1145,12 +1145,12 @@ void playlist_editor_right_mouse(GtkWidget * menu, void (*add_to_playlist) (GtkW
 	GtkWidget *sitem;
 	GtkWidget *item;
 	GtkWidget *smenu;
-
+/*
 	if (!mpd_server_check_version(connection, 0, 13, 0))
 	{
 		return;
 	}
-
+*/
 	smenu = gtk_menu_new();
 
 	sitem = gtk_image_menu_item_new_from_stock(GTK_STOCK_NEW, NULL);

@@ -1116,6 +1116,39 @@ static void tag2_songlist_replace_selected_songs(GtkWidget * bug, tag_browser * 
 }
 
 /**
+ * Callback function for right-mouse menu on a song.
+ */
+static void pl3_tag_browser_add_to_playlist(GtkWidget * menu, gpointer cb_data)
+{
+	GtkWidget *tree = GTK_TREE_VIEW(cb_data);
+	GtkTreeModel *model = gtk_tree_view_get_model(tree);
+	GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(tree));
+	gchar *data = g_object_get_data(G_OBJECT(menu), "playlist");
+	GList *iter, *list = gtk_tree_selection_get_selected_rows(selection, &model);
+	if (list)
+	{
+		iter = g_list_first(list);
+		do
+		{
+			GtkTreeIter giter;
+			if (gtk_tree_model_get_iter(model, &giter, (GtkTreePath *) iter->data))
+			{
+				gchar *file = NULL;
+				int type = 0;
+				gtk_tree_model_get(model, &giter, MPDDATA_MODEL_COL_PATH, &file, MPDDATA_MODEL_ROW_TYPE, &type, -1);
+				if (type == MPD_DATA_TYPE_SONG)
+				{
+					mpd_database_playlist_list_add(connection, data, file);
+				} 
+				g_free(file);
+			}
+		} while ((iter = g_list_next(iter)));
+
+		g_list_foreach(list, (GFunc) gtk_tree_path_free, NULL);
+		g_list_free(list);
+	}
+}
+/**
  * Handles right mouse release on song list
  */
 static gboolean tag2_song_list_button_release_event(GtkTreeView * tree, GdkEventButton * event, tag_browser * browser)
@@ -1168,6 +1201,7 @@ static gboolean tag2_song_list_button_release_event(GtkTreeView * tree, GdkEvent
 			}
 		}
 
+		playlist_editor_right_mouse(menu, pl3_tag_browser_add_to_playlist, tree);
 		gmpc_mpddata_treeview_right_mouse_intergration(GMPC_MPDDATA_TREEVIEW(tree), GTK_MENU(menu));
 		/* popup */
 		gtk_widget_show_all(GTK_WIDGET(menu));
