@@ -183,6 +183,16 @@ namespace MPD {
                 [ReturnsModifiedPointer ()]
                 public void append_new();
             }
+
+            [CCode (cname = "mpd_SearchStats",
+                free_function = "mpd_freeSearchStats",
+                cheader_filename = "libmpd/libmpdclient.h")]
+            [Compact]
+            public class SearchStats
+            {
+                public int numberOfSongs;
+                public ulong playTime;
+            }
     }
     namespace PlayQueue {
         [CCode (cname="mpd_playlist_add")]
@@ -261,6 +271,10 @@ namespace MPD {
         [CCode (cname="mpd_database_search_start")]
         public void search_start(MPD.Server server,bool exact);
         public MPD.Data.Item? search_commit(MPD.Server server);
+
+        [CCode (cname="mpd_database_search_stats_start")]
+        public void search_stats_start(MPD.Server server);
+        public MPD.Data.SearchStats? search_stats_commit(MPD.Server server);
 
         [CCode (cname="mpd_database_search_add_constraint")]
         public void search_add_constraint(MPD.Server server, MPD.Tag.Type type, string value);

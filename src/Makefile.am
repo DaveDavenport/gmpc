@@ -42,6 +42,7 @@ gmpc_WIDGETS_FILES=\
     Widgets/gmpc-metadata-similarsongs.vala\
     Widgets/gmpc-metadata-similarartists.vala\
 	Widgets/gmpc-sidebar-view.vala\
+    Widgets/gmpc-stats-label.vala\
 	Widgets/gmpc-widgets-overlay.vala\
     GUI/control_window.c\
     GUI/title_header.c\
@@ -316,8 +317,7 @@ gmpc_GOBFILES = \
 		gmpc-mpddata-model.gob\
 		gmpc-mpddata-model-playlist.gob\
 		gmpc-mpddata-model-sort.gob\
-		gmpc-mpddata-treeview.gob\
-		gmpc-stats-label.gob
+		gmpc-mpddata-treeview.gob
 
 gmpc_GOBSTAMPFILES=\
 	$(gmpc_GOBFILES:.gob=.gob.stamp)

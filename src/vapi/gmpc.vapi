@@ -180,22 +180,6 @@ namespace Gmpc {
             public void set_scale_up(bool scale);
 
         }
-        [CCode ( cname="GmpcStatsLabel", cheader_filename="gmpc-stats-label.h")]
-        public class StatsLabel : Gtk.Label {
-            [CCode (cprefix="")]
-            public enum Type {
-                ARTIST_NUM_SONGS,
-                ARTIST_PLAYTIME_SONGS,
-                ARTIST_GENRES_SONGS,
-                ARTIST_DATES_SONGS,
-                ALBUM_NUM_SONGS,
-                ALBUM_PLAYTIME_SONGS,
-                ALBUM_GENRES_SONGS,
-                ALBUM_DATES_SONGS
-            }
-            [CCode (cname="gmpc_stats_label_new")]
-            public StatsLabel(Type type, MPD.Song song);
-        }
         [CCode ( cname="GmpcMetaTextView", cheader_filename="gmpc-meta-text-view.h")]
         public class TextView: Gtk.TextView {
                 public bool use_monospace;
