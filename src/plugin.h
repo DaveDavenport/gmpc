@@ -22,7 +22,6 @@
 #include "metadata.h"
 #include "config1.h"
 #include "gmpc-extras.h"
-#include "gmpc-profiles.h"
 #include "gmpc-mpddata-treeview.h"
 
 //#include "gmpc-paned-size-group.h"

@@ -1234,7 +1234,7 @@ void create_playlist3(void)
     pl3_update_go_menu();
 	TEC("Go menu")
     /* make it update itself */
-    pl3_update_profiles_menu(gmpc_profiles, PROFILE_ADDED, -1, NULL);
+    pl3_update_profiles_menu(gmpc_profiles, GMPC_PROFILES_ACTION_ADDED, -1, NULL);
     g_signal_connect(G_OBJECT(gmpc_profiles), "changed", G_CALLBACK(pl3_update_profiles_menu), NULL);
     g_signal_connect(G_OBJECT(gmpc_profiles), "changed", G_CALLBACK(pl3_profiles_changed), NULL);
 
@@ -2112,7 +2112,7 @@ static void pl3_update_profiles_menu(GmpcProfiles * prof, const int changed, con
     GtkMenuItem *m_item = GTK_MENU_ITEM(gtk_ui_manager_get_widget(ui, "/menubartest/menu_music/menu_profiles"));
     /* check if there is anything changed that is important for us. */
 
-    if (changed == PROFILE_COL_CHANGED && col != PROFILE_COL_NAME)
+    if (changed == GMPC_PROFILES_ACTION_COL_CHANGED && col != GMPC_PROFILES_COLUMN_NAME)
     {
         g_free(current);
         return;
@@ -2158,7 +2158,6 @@ static void pl3_update_profiles_menu(GmpcProfiles * prof, const int changed, con
 
             items++;
         } while ((iter = g_list_next(iter)));
-        g_list_foreach(mult, (GFunc) g_free, NULL);
         g_list_free(mult);
 
     }

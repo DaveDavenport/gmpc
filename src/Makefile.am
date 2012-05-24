@@ -41,6 +41,7 @@ gmpc_WIDGETS_FILES=\
     Widgets/gmpc-metadata-text-label.vala\
     Widgets/gmpc-metadata-similarsongs.vala\
     Widgets/gmpc-metadata-similarartists.vala\
+    Widgets/gmpc-profiles.vala\
 	Widgets/gmpc-sidebar-view.vala\
     Widgets/gmpc-stats-label.vala\
 	Widgets/gmpc-widgets-overlay.vala\
@@ -229,7 +230,6 @@ endif
 
 
 nodist_gmpcinclude_HEADERS=\
-        gmpc-profiles.h\
         gmpc-meta-watcher.h\
         gmpc-mpddata-model.h\
         gmpc-mpddata-model-sort.h\
@@ -310,7 +310,6 @@ CLEANFILES=\
 # GOB stuff
 ##
 gmpc_GOBFILES = \
-		gmpc-profiles.gob\
 		gmpc-meta-watcher.gob\
 		gmpc-metaimage.gob\
 		gmpc-meta-text-view.gob\

@@ -304,16 +304,39 @@ namespace Gmpc {
 
 	[CCode (cname = "config", cheader_filename="plugin.h")]
 	static Settings config;
-    [CCode (cheader_filename="config1.h",cname="config_obj")]
+    [CCode (cheader_filename="config1.h",cname="config_obj", free_function="cfg_close")]
         [Compact]
         [Immutable]
     public class Settings {
+        [CCode (cname="cfg_open", cheader_filename="config1.h")]
+        public Settings.from_file(string file);
         [CCode (cname="cfg_get_single_value_as_string_with_default", cheader_filename="config1.h")]
         public string get_string_with_default(string class, string key, string value);
+        [CCode (cname="cfg_get_single_value_as_string", cheader_filename="config1.h")]
+        public string get_string(string @class, string key);
         [CCode (cname="cfg_get_single_value_as_int_with_default", cheader_filename="config1.h")]
         public int get_int_with_default(string class, string key, int value);
+        [CCode (cname="cfg_get_single_value_as_int", cheader_filename="config1.h")]
+        public int get_int(string @class, string key);
+        [CCode (cname="cfg_get_single_value_as_int", cheader_filename="config1.h")]
+        public bool get_bool(string @class, string key);
+        [CCode (cname="cfg_set_single_value_as_string", cheader_filename="config1.h")]
+        public void set_string(string @class, string key, string @value);
         [CCode (cname="cfg_set_single_value_as_int", cheader_filename="config1.h")]
         public int set_int(string class, string key, int value);
+        [CCode (cname="cfg_set_single_value_as_int", cheader_filename="config1.h")]
+        public int set_bool(string @class, string key, bool @value);
+        [CCode (cname="cfg_get_class_list", cheader_filename="config1.h")]
+        public SettingsList get_class_list();
+    }
+    [CCode (cheader_filename="config1.h", cname="conf_mult_obj", free_function="cfg_free_multiple")]
+        [Compact]
+        [Immutable]
+    public class SettingsList {
+        public string key;
+        public string @value;
+        public SettingsList next;
+        public unowned SettingsList prev;
     }
 
     namespace Misc{
@@ -418,30 +441,13 @@ namespace Gmpc {
         [CCode (cname="submenu_for_song")]
         public void submenu_for_song(Gtk.Widget menu, MPD.Song song);
 
+        [CCode (cname="connection_set_current_profile")]
+        public void set_current_profile(string id);
+
 		[CCode (cname="connect_to_mpd")]
 		public void connect();
-    }
-
-        [CCode (cheader_filename="gmpc-profiles.h")]
-        [Compact]
-        [Immutable]
-        class Profiles {
-            [CCode (cname="gmpc_profiles_get_current",cheader_filename="gmpc-profiles.h")]
-            public string? get_current_id();
-            public void set_db_update_time(string id, int value);
-            public int get_db_update_time(string id);
-            public unowned string? get_music_directory(string id);
-            [CCode (cname="connection_get_hostname", cheader_filename="mpdinteraction.h")]
-            public string? get_hostname();
-
-			public unowned string? get_id(string id);
-			public unowned string? create_new_item_with_name(string id, string name);
-			public void set_music_directory(string id, string value);
-			public void set_hostname(string id, string hostname);
-			[CCode (cname="gmpc_profiles_get_hostname", cheader_filename="mpdinteraction.h")]
-			public unowned string? get_profile_hostname(string id); 
-
-			public signal void set_current(string id);
+        [CCode (cname="disconnect_from_mpd")]
+        public void disconnect();
     }
 
     namespace Fix{

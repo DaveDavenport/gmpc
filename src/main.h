@@ -43,7 +43,6 @@
 /**
  * Some gobjects
  */
-#include "gmpc-profiles.h"
 
 extern int 				gmpc_connected;
 extern GtkTreeModel 	*playlist;

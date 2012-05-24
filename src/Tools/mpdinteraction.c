@@ -715,41 +715,46 @@ static void server_pref_construct(GtkWidget * container)
 /**************************************************
  * Connection Preferences *
  */
-static void gmpc_profiles_changed_pref_win(GmpcProfiles * prof, const int changed, const int col, const char *id,
+static void gmpc_profiles_changed_pref_win(GmpcProfiles * prof, GmpcProfilesAction changed, GmpcProfilesColumn col, const char *id,
 										   GtkBuilder * xml)
 {
-	if (changed == PROFILE_ADDED)
+	switch (changed)
 	{
-		GtkComboBox *combo = GTK_COMBO_BOX(gtk_builder_get_object(xml, "cb_profiles"));
-		GtkTreeIter iter;
-		const char *name = gmpc_profiles_get_name(prof, id);
-		GtkTreeModel *store = gtk_combo_box_get_model(combo);
-		gtk_list_store_append(GTK_LIST_STORE(store), &iter);
-		gtk_list_store_set(GTK_LIST_STORE(store), &iter, 0, id, 1, name, -1);
-	}
-	if (changed == PROFILE_REMOVED)
-	{
-		/* TODO: */
-
-	}
-	if (changed == PROFILE_COL_CHANGED)
-	{
-		GtkTreeIter iter;
-		GtkComboBox *combo = (GtkComboBox *) gtk_builder_get_object(xml, "cb_profiles");
-		GtkListStore *store = (GtkListStore *) gtk_combo_box_get_model(combo);
-		/* tell it to update all the information in the view.
-		 * might be to much work, so check id*/
-		gchar *uid;
-		if (gtk_combo_box_get_active_iter(combo, &iter) && id)
+		case GMPC_PROFILES_ACTION_ADDED:
 		{
-
-			gtk_tree_model_get(GTK_TREE_MODEL(store), &iter, 0, &uid, -1);
-			if (strcmp(uid, id) == 0)
-			{
-				connection_profiles_changed(combo, NULL);
-			}
-			g_free(uid);
+			GtkComboBox *combo = GTK_COMBO_BOX(gtk_builder_get_object(xml, "cb_profiles"));
+			GtkTreeIter iter;
+			const char *name = gmpc_profiles_get_name(prof, id);
+			GtkTreeModel *store = gtk_combo_box_get_model(combo);
+			gtk_list_store_append(GTK_LIST_STORE(store), &iter);
+			gtk_list_store_set(GTK_LIST_STORE(store), &iter, 0, id, 1, name, -1);
+			break;
 		}
+		case GMPC_PROFILES_ACTION_REMOVED:
+			/* TODO: */
+			break;
+		case GMPC_PROFILES_ACTION_COL_CHANGED:
+		{
+			GtkTreeIter iter;
+			GtkComboBox *combo = (GtkComboBox *) gtk_builder_get_object(xml, "cb_profiles");
+			GtkListStore *store = (GtkListStore *) gtk_combo_box_get_model(combo);
+			/* tell it to update all the information in the view.
+			 * might be to much work, so check id*/
+			gchar *uid;
+			if (gtk_combo_box_get_active_iter(combo, &iter) && id)
+			{
+
+				gtk_tree_model_get(GTK_TREE_MODEL(store), &iter, 0, &uid, -1);
+				if (strcmp(uid, id) == 0)
+				{
+					connection_profiles_changed(combo, NULL);
+				}
+				g_free(uid);
+			}
+			break;
+		}
+		default:
+			break;
 	}
 }
 
@@ -1171,7 +1176,6 @@ static void connection_pref_construct(GtkWidget * container)
 			}
 			i++;
 		} while ((iter = g_list_next(iter)));
-		g_list_foreach(mult, (GFunc) g_free, NULL);
 		g_list_free(mult);
 	} else
 	{

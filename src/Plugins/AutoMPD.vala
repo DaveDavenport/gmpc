@@ -38,7 +38,7 @@ public class Gmpc.Plugins.AutoMPD:
 		get{
 			return _config_changed;
 		} set{
-			if(profiles.get_current_id() == auto_mpd_id)
+			if(profiles.get_current() == auto_mpd_id)
 			{
 				/* Send message about restarting */
 				Gmpc.Messages.show(_("Auto MPD's settings have changed, restart MPD to apply changes"), Gmpc.Messages.Level.INFO); 
@@ -208,7 +208,7 @@ public class Gmpc.Plugins.AutoMPD:
 				{
 					start_mpd();
 					/* we are disconnected, check if it was from our MPD */
-					if(profiles.get_current_id() == auto_mpd_id)
+					if(profiles.get_current() == auto_mpd_id)
 					{
 						Gmpc.MpdInteraction.connect();
 					}
@@ -403,7 +403,7 @@ public class Gmpc.Plugins.AutoMPD:
 		fp.printf("state_file \"%s\"\n\n", state_file);
 
 		/* Bind to address */
-		var hostname = profiles.get_profile_hostname(auto_mpd_id);
+		var hostname = profiles.get_hostname(auto_mpd_id);
 		fp.printf("# Host to bind to\n");
 		fp.printf("bind_to_address  \"%s\"\n\n", hostname);
 		if(mpd_conf_remote_connections)
@@ -538,9 +538,9 @@ public class Gmpc.Plugins.AutoMPD:
 			check_local_profile();
 			// For testing
 			create_config_file();
-			profiles.set_current.connect(current_profile_changed);
+			profiles.profile_changed.connect(current_profile_changed);
 			// Start mpd if current profile is AutoMPD profile.
-			current_profile_changed(profiles, profiles.get_current_id());
+			current_profile_changed(profiles, profiles.get_current());
 			gmpcconn.connection_changed.connect(connection_changed);
 		}
 		this.notify["config_changed"].connect(()=>{
@@ -576,7 +576,7 @@ public class Gmpc.Plugins.AutoMPD:
 		if(connection == 0)
 		{
 			/* we are disconnected, check if it was from our MPD */
-			if(profiles.get_current_id() == auto_mpd_id)
+			if(profiles.get_current() == auto_mpd_id)
 			{
 				/* check if mpd is still runing */
 				if(!check_mpd())
@@ -591,7 +591,7 @@ public class Gmpc.Plugins.AutoMPD:
 		else
 		{
 			/* we are disconnected, check if it was from our MPD */
-			if(profiles.get_current_id() == auto_mpd_id)
+			if(profiles.get_current() == auto_mpd_id)
 			{
 				/* check if mpd is still runing */
 				if(check_mpd())

@@ -21,7 +21,7 @@
 #include <gtk/gtk.h>
 #include <libmpd/libmpd.h>
 #include "metadata.h"
-#include "gmpc-profiles.h"
+#include "gmpc-extras.h"
 #include "gmpc-mpddata-model.h"
 #include "gmpc-mpddata-treeview.h"
 

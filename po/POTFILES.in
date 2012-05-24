@@ -50,7 +50,6 @@ src/egg/eggcolumnchooserdialog.c
 src/gmpc-mpddata-model.gob
 src/gmpc-mpddata-model-sort.gob
 src/gmpc-mpddata-treeview.gob
-src/gmpc-profiles.gob
 src/gmpc-meta-text-view.gob
 src/gmpc-metaimage.gob
 src/gmpc-meta-watcher.gob
@@ -88,6 +87,7 @@ src/Widgets/gmpc-song-links.c
 src/Widgets/playlist3-messages.c
 src/Widgets/gmpc-metadata-text-label.c
 src/Widgets/gmpc-metadata-backdrop.c
+src/Widgets/gmpc-profiles.c
 src/Widgets/gmpc-stats-label.c
 src/GUI/status_icon.c
 src/GUI/title_header.c

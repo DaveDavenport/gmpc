@@ -72,7 +72,7 @@ public class  Gmpc.Tools.DatabaseUpdateTracker : Gmpc.Plugin.Base {
     {
         if(connection == 1)
         {
-            string id = Gmpc.profiles.get_current_id();
+            string id = Gmpc.profiles.get_current();
             if(id != null)
             {
                 var dut =  Gmpc.profiles.get_db_update_time(id);
@@ -107,7 +107,7 @@ public class  Gmpc.Tools.DatabaseUpdateTracker : Gmpc.Plugin.Base {
 
         if((what&MPD.Status.Changed.DATABASE) == MPD.Status.Changed.DATABASE)
         {
-            string id = Gmpc.profiles.get_current_id();
+            string id = Gmpc.profiles.get_current();
             if(id != null)
             {
                 var dut =  Gmpc.profiles.get_db_update_time(id);
