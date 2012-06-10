@@ -371,15 +371,15 @@ void open_uri(const gchar * uri)
 	GError *error = NULL;
 #ifdef WIN32
 	gchar *browser_command =
-		cfg_get_single_value_as_string_with_default(config, "Misc", "browser-win32", "cmd /c start %s");
+		cfg_get_single_value_as_string_with_default(config, "External", "browser-win32", "cmd /c start \"%s\"");
 #else
 #ifdef OSX
-	gchar *browser_command = cfg_get_single_value_as_string_with_default(config, "Misc", "browser-osx", "open '%s'");
+	gchar *browser_command = cfg_get_single_value_as_string_with_default(config, "External", "browser-osx", "open \"%s\"");
 #else
-	gchar *browser_command = cfg_get_single_value_as_string_with_default(config, "Misc", "browser", "xdg-open '%s'");
+	gchar *browser_command = cfg_get_single_value_as_string_with_default(config, "External", "browser", "xdg-open \"%s\"");
 #endif
 #endif
-	gchar *escaped_uri = g_strdup(uri);
+	gchar *escaped_uri = g_strescape(uri, "");
 	command = g_strdup_printf(browser_command, escaped_uri);
 	g_free(escaped_uri);
 	result = g_spawn_command_line_async(command, &error);
