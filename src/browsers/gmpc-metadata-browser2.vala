@@ -1261,22 +1261,6 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
             similar_artist.show();
             i++;
         }
-        if(config.get_int_with_default("MetaData", "show-web-links",1) == 1)
-        {
-
-            var song_links = new Gmpc.MetaData.Widgets.SongLinks(Gmpc.MetaData.Widgets.SongLinks.Type.SONG,song);
-            notebook.append_page(song_links, new Gtk.Label(_("Web Links")));
-            var button = new Gtk.RadioButton.with_label(group,_("Web Links"));
-            group = button.get_group();
-            hboxje.pack_start(button, false, false, 0);
-            var j = i;
-            button.clicked.connect((source) => {
-                    debug("notebook page %i clicked", j);
-                    notebook.set_current_page(j);
-                    });
-            song_links.show();
-            i++;
-        }
         /* Track changed pages */
         notebook.notify["page"].connect((source,spec) => {
                 var page = notebook.get_current_page();
@@ -1659,22 +1643,6 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
             slhbox.show();
             i++;
         }
-        /* Show web links */
-        if(config.get_int_with_default("MetaData", "show-web-links",1) == 1)
-        {
-            var song_links = new Gmpc.MetaData.Widgets.SongLinks(Gmpc.MetaData.Widgets.SongLinks.Type.ALBUM,song);
-            notebook.append_page(song_links, new Gtk.Label(_("Web Links")));
-            var rbutton = new Gtk.RadioButton.with_label(group,_("Web Links"));
-            group = rbutton.get_group();
-            hboxje.pack_start(rbutton, false, false, 0);
-            var j = i;
-            rbutton.clicked.connect((source) => {
-                    debug("notebook page %i clicked", j);
-                    notebook.set_current_page(j);
-                    });
-            song_links.show();
-            i++;
-        }
         /* Track changed pages */
         notebook.notify["page"].connect((source,spec) => {
                 var page = notebook.get_current_page();
@@ -1942,24 +1910,6 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
                     }
                     });
             slhbox.show();
-            i++;
-        }
-        /* Show web links */
-        if(config.get_int_with_default("MetaData", "show-web-links",1) == 1)
-        {
-            var song_links = new Gmpc.MetaData.Widgets.SongLinks(Gmpc.MetaData.Widgets.SongLinks.Type.ARTIST,song);
-            notebook.append_page(song_links, new Gtk.Label(_("Web Links")));
-            var button_sl = new Gtk.RadioButton.with_label(group,_("Web Links"));
-            group = button_sl.get_group();
-            hboxje.pack_start(button_sl, false, false, 0);
-            var j = i;
-            button_sl.clicked.connect((source) => {
-                    if((source as Gtk.CheckButton).get_active()) {
-                        debug("notebook page %i clicked", j);
-                        notebook.set_current_page(j);
-                    }
-            });
-            song_links.show();
             i++;
         }
 

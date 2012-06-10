@@ -742,32 +742,6 @@ namespace Gmpc {
 					i++;
 				}
 				GLib.log(np2_LOG_DOMAIN, GLib.LogLevelFlags.LEVEL_DEBUG, "similar Artist took: %.6f seconds.", t.elapsed());
-				if(config.get_int_with_default("MetaData", "show-web-links",1) == 1)
-				{
-
-					var song_links = new Gmpc.MetaData.Widgets.SongLinks(Gmpc.MetaData.Widgets.SongLinks.Type.SONG,song);
-					notebook.append_page(song_links, new Gtk.Label(_("Web Links")));
-					var button = new Gtk.RadioButton(group);//with_label(group,_("Web Links"));
-					var label = new Gtk.Label(_("Web Links"));
-					label.ellipsize = Pango.EllipsizeMode.END;
-					label.set_alignment(0.0f, 0.5f);
-					//button.add(label);
-					if(group != null) 
-						hboxje.pack_start(new Gtk.VSeparator(), false, false, 0);
-					group = button.get_group();
-					hboxje.pack_start(button, false, false, 0);
-					hboxje.pack_start(label, true, true, 0);
-					var j = i;
-					button.clicked.connect((source) => {
-							if((source as Gtk.CheckButton).get_active()) {
-							GLib.log(np2_LOG_DOMAIN,GLib.LogLevelFlags.LEVEL_DEBUG, "song link notebook page %i clicked", j);
-							notebook.set_current_page(j);
-							}
-							});
-					song_links.show();
-					i++;
-				}
-				GLib.log(np2_LOG_DOMAIN, GLib.LogLevelFlags.LEVEL_DEBUG, "Web links took: %.6f seconds.", t.elapsed());
 				if(config.get_int_with_default("MetaData", "show-artist-information",1) == 1)
 				{
 					var alib = new Gtk.Alignment(0f,0f,1f,0f);

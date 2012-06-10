@@ -59,12 +59,6 @@ public class Gmpc.Tools.MetadataAppearance : Gmpc.Plugin.Base, Gmpc.Plugin.Prefe
     }
 
     public static void
-    on_checkbutton_show_web_links_toggled(CheckButton source)
-    {
-        config.set_int("MetaData", "show-web-links", (int)source.get_active());
-    }
-    
-    public static void
     on_checkbutton_show_similar_artists_toggled(CheckButton source)
     {
         config.set_int("MetaData", "show-similar-artist", (int)source.get_active());
@@ -105,9 +99,6 @@ public class Gmpc.Tools.MetadataAppearance : Gmpc.Plugin.Base, Gmpc.Plugin.Prefe
             
             builderWidget = builder.get_object("checkbutton_show_artist_information") as CheckButton;
             ((CheckButton)builderWidget).set_active((bool)config.get_int_with_default("MetaData", "show-artist-information", 1));
-            
-            builderWidget = builder.get_object("checkbutton_show_web_links") as CheckButton;
-            ((CheckButton)builderWidget).set_active((bool)config.get_int_with_default("MetaData", "show-web-links", 1));
             
             builderWidget = builder.get_object("checkbutton_show_similar_artists") as CheckButton;
             ((CheckButton)builderWidget).set_active((bool)config.get_int_with_default("MetaData", "show-similar-artist", 1));

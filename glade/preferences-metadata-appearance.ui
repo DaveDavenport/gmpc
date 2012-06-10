@@ -83,22 +83,6 @@
               </packing>
             </child>
             <child>
-              <object class="GtkCheckButton" id="checkbutton_show_web_links">
-                <property name="label" translatable="yes">Web Links</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
-                <property name="use_action_appearance">False</property>
-                <property name="draw_indicator">True</property>
-                <signal name="toggled" handler="gmpc_tools_metadata_appearance_on_checkbutton_show_web_links_toggled" swapped="no"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">4</property>
-              </packing>
-            </child>
-            <child>
               <object class="GtkCheckButton" id="checkbutton_show_artist_information">
                 <property name="label" translatable="yes">Artist information</property>
                 <property name="visible">True</property>

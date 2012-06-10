@@ -32,7 +32,6 @@ gmpc_WIDGETS_FILES=\
     Widgets/gmpc-song-list.vala\
     Widgets/gmpc-clicklabel.vala\
     Widgets/playlist3-messages.c\
-    Widgets/gmpc-song-links.vala\
     Widgets/gmpc-image-async.vala\
     Widgets/advanced_settings.vala\
     Widgets/gmpc-widgets-qtable.vala\
