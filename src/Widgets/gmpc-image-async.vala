@@ -202,7 +202,7 @@ namespace Gmpc
 
             try{
 				uint end = uint.min(loader_data_offset+2048, loader_data.length);
-				Gmpc.Fix.write_loader(loader, (string)loader_data[loader_data_offset:end], 2048);
+				Gmpc.Fix.write_loader(loader, (string)loader_data[loader_data_offset:end], end-loader_data_offset);
 				loader_data_offset = end;;
             }catch ( Error e) {
                 warning("Error trying to load image: %s::%s", e.message,uri);
