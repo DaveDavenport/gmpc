@@ -90,7 +90,7 @@ public static void advanced_settings()
     vbox.add_header(label);	
 
 	for(int i =0; i< Gmpc.num_plugins;i++) {
-		unowned Gmpc.parentPlugin p = Gmpc.plugins[i];
+		unowned Gmpc.ParentPlugin p = Gmpc.plugins[i];
 		if(p.is_browser() && p.has_enabled())
 		{
 			ck = new Gtk.CheckButton.with_label(p.get_name());	
