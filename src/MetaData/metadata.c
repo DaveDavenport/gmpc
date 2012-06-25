@@ -721,6 +721,7 @@ static void glyr_fetcher_thread(void *user_data)
 			if(md != NULL && md[0] !=  '\0'&& mtd->song->file != NULL)
 			{
 				char *path = g_build_filename(md, mtd->song->file, NULL);
+				printf("music directory: \"%s\"\n", path);
 				glyr_opt_musictree_path(&query, path);
 				g_free(path);
 			}
@@ -788,6 +789,7 @@ static void glyr_fetcher_thread(void *user_data)
 			if(md != NULL && md[0] !=  '\0'&& mtd->song->file != NULL)
 			{
 				char *path = g_build_filename(md, mtd->song->file, NULL);
+				printf("music directory: \"%s\"\n", path);
 				glyr_opt_musictree_path(&query, path);
 				g_free(path);
 			}
