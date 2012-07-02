@@ -504,7 +504,10 @@ static void accel_cleared_callback(GtkCellRendererText * cell, const char *path_
 static void
 accel_edited_callback(GtkCellRendererText * cell,
 					  const char *path_string,
-					  guint keyval, GdkModifierType mask, guint hardware_keycode, gpointer data)
+					  guint keyval,
+                      GdkModifierType mask,
+                      guint hardware_keycode,
+                      gpointer data)
 {
 	GtkTreeModel *model = (GtkTreeModel *) data;
 	GtkTreePath *path = gtk_tree_path_new_from_string(path_string);
@@ -521,6 +524,12 @@ accel_edited_callback(GtkCellRendererText * cell,
 	}
 
 	gtk_tree_model_get(model, &iter, 1, &key, -1);
+
+
+    // Translate virtual (aka super, hyper, meta) to the X-used key.
+    gdk_keymap_map_virtual_modifiers(gdk_keymap_get_default(), &mask);
+    // Mask off the special Super.
+    mask &= 0xFFFF;
 
 	/* Check for duplicates */
 	for (i = 0; i < LAST_SIGNAL; i++)
