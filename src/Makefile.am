@@ -70,7 +70,7 @@ gmpc_TOOLS_FILES=\
     Tools/log.c\
     Tools/ipc.c
 
-## 
+##
 # Browsers
 ##
 gmpc_BROWSERS_FILES=\
@@ -137,7 +137,7 @@ revisiont.h:
 		echo "static const char *revision = \"$(REVISION)""\"; " > revision.h;\
 	fi;
 
-revision.h:	
+revision.h:
 	echo "static const char *revision = \"$(REVISION)""\"; " > revision.h;
 
 INCLUDES=\
@@ -216,7 +216,7 @@ AM_CFLAGS = @CFLAGS@\
 
 
 if HAVE_UNIQUE
-    AM_CFLAGS += @unique_CFLAGS@ 
+    AM_CFLAGS += @unique_CFLAGS@
 endif
 
 if HAVE_APP_INDICATOR
@@ -272,6 +272,7 @@ EXTRA_DIST=\
 		Tools/mm-keys.h\
 		Tools/misc.h\
 		MetaData/metadata.h\
+        MetaData/html2utf8.h\
 		egg/eggcolumnchooserdialog.h\
 		egg/eggcolumnmodel.h\
 		Tools/advanced-search.h\
@@ -305,7 +306,7 @@ CLEANFILES=\
 	$(gmpc_GOBHFILES)\
 	$(gmpc_GOBSTAMPFILES)
 
-## 
+##
 # GOB stuff
 ##
 gmpc_GOBFILES = \
