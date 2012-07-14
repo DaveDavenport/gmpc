@@ -1059,18 +1059,25 @@ static void pl3_current_playlist_save_playlist(void)
 static void pl3_current_playlist_browser_clear_playlist(void)
 {
     GtkWidget *delete;
+    if(cfg_get_single_value_as_int(config, "playlist","no-confirm-clear") != 1)
+    {
 
-    delete = gtk_button_new_from_stock(GTK_STOCK_CLEAR);
-    g_signal_connect(G_OBJECT(delete),
-            "clicked",
-            G_CALLBACK(pl3_current_playlist_browser_clear_playlist_real),
-            NULL);
+    	delete = gtk_button_new_from_stock(GTK_STOCK_CLEAR);
+    	g_signal_connect(G_OBJECT(delete),
+    		"clicked",
+    		G_CALLBACK(pl3_current_playlist_browser_clear_playlist_real),
+    		NULL);
 
     /* show message */
-    playlist3_message_show(pl3_messages,
-            _("Are you sure you want to clear the play queue?")
-            ,USER_FEEDBACK);
-    playlist3_message_add_widget(pl3_messages, delete);
+    	playlist3_message_show(pl3_messages,
+    		_("Are you sure you want to clear the play queue?")
+    		,USER_FEEDBACK);
+    	playlist3_message_add_widget(pl3_messages, delete);
+    	gtk_widget_grab_focus(GTK_WIDGET(delete));
+    	
+    } else {
+    	pl3_current_playlist_browser_clear_playlist_real();
+    }
 }
 
 static void pl3_current_playlist_browser_shuffle_playlist(void)
