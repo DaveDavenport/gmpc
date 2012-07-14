@@ -136,8 +136,6 @@ static void meta_thread_data_free(meta_thread_data *mtd)
 	/* Free the Request struct */
 	g_slice_free(meta_thread_data, mtd);
 }
-gboolean meta_compare_func(meta_thread_data *mt1, meta_thread_data *mt2);
-//static gboolean meta_data_handle_results(void);
 
 mpd_Song *rewrite_mpd_song(mpd_Song *tsong, MetaDataType type, gboolean query_mpd)
 {
@@ -162,7 +160,7 @@ mpd_Song *rewrite_mpd_song(mpd_Song *tsong, MetaDataType type, gboolean query_mp
 			{
 				mpd_database_search_start(connection, TRUE);
 				mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ALBUM_ARTIST, tsong->albumartist);
-				mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ALBUM,  tsong->album); 
+				mpd_database_search_add_constraint(connection, MPD_TAG_ITEM_ALBUM,  tsong->album);
 				data2 = mpd_database_search_commit(connection);
 				if(data2)
 				{
@@ -239,20 +237,6 @@ mpd_Song *rewrite_mpd_song(mpd_Song *tsong, MetaDataType type, gboolean query_mp
 		}
 	}
 	/**
-	 * Artist renaming, Clapton, Eric -> Eric Clapton
-	if(edited->artist && cfg_get_single_value_as_int_with_default(config, "metadata", "rename", FALSE))
-	{
-		gchar **str = g_strsplit(edited->artist, ",", 2);
-
-		if(str[0] && str[1]) {
-			g_free(edited->artist);
-			edited->artist = g_strdup_printf("%s %s", g_strstrip(str[1]), g_strstrip(str[0]));
-		}
-		g_strfreev(str);
-		g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "string converted to: '%s'", edited->artist);
-	}
-	*/
-	/**
 	 * Sanitize album name and so (remove () (
 	 */
 	if(cfg_get_single_value_as_int_with_default(config, "metadata", "sanitize", TRUE))
@@ -308,12 +292,12 @@ mpd_Song *rewrite_mpd_song(mpd_Song *tsong, MetaDataType type, gboolean query_mp
  */
 static gboolean glyr_return_queue(void *user_data)
 {
-	
+
 	meta_thread_data *mtd = (meta_thread_data*)g_async_queue_try_pop(return_queue);
 	if(mtd)
 	{
-		printf("Process results: %i\n", mtd->action);
-		if(mtd->action == MTD_ACTION_QUERY_METADATA)
+        g_log(LOG_DOMAIN, G_LOG_LEVEL_MESSAGE,"Process results: %i\n", mtd->action);
+        if(mtd->action == MTD_ACTION_QUERY_METADATA)
 		{
 			gmpc_meta_watcher_data_changed(gmw,mtd->ori_song, (mtd->type)&META_QUERY_DATA_TYPES, mtd->result,mtd->met);
 			if(mtd->callback)
@@ -328,10 +312,10 @@ static gboolean glyr_return_queue(void *user_data)
 				cb(NULL, "", mtd->met_results, mtd->data);
 				// Send done.
 				cb(NULL, "", NULL, mtd->data);
-			}		
+			}
 		}else if (mtd->action == MTD_ACTION_CLEAR_ENTRY) {
-			printf("Signal no longer available.\n");
-			// Signal that this item is now no longer available.
+            g_log(LOG_DOMAIN, G_LOG_LEVEL_MESSAGE,"Signal no longer available.\n");
+            // Signal that this item is now no longer available.
 			gmpc_meta_watcher_data_changed(gmw, mtd->ori_song, (mtd->type)&META_QUERY_DATA_TYPES, META_DATA_UNAVAILABLE, NULL);
 		}
 
@@ -341,20 +325,32 @@ static gboolean glyr_return_queue(void *user_data)
 	return false;
 }
 
+/**
+ * This configures the GlyrQuery for the current request.
+ * It returns the type of the return value.
+ */
 static MetaDataContentType setup_glyr_query(GlyrQuery *query,
-	const meta_thread_data *mtd)
+	const meta_thread_data const *mtd)
 {
 	MetaDataContentType content_type = META_DATA_CONTENT_RAW;
-	MetaDataType type = mtd->type&META_QUERY_DATA_TYPES;	
+	MetaDataType type = mtd->type&META_QUERY_DATA_TYPES;
+
+
+    /**** Default Options ****/
 
 	/* Force UTF 8 */
 	glyr_opt_force_utf8(query, TRUE);
 
+    /* Do not do parallel queries. */
 	glyr_opt_parallel(query, 1);
+
+    /* Normally, we only want 1 result. */
 	glyr_opt_number(query, 1);
-	// timeout 5 seconds.
+
+	/* timeout 5 seconds. */
 	glyr_opt_timeout(query, 5);
-	/* set metadata */
+
+	/* set metadata (artist, album, title)*/
 	glyr_opt_artist(query,(char*)mtd->song->artist);
 	glyr_opt_album (query,(char*)mtd->song->album);
 	glyr_opt_title (query,(char*)mtd->song->title);
@@ -381,7 +377,7 @@ static MetaDataContentType setup_glyr_query(GlyrQuery *query,
 	else if(type == META_ARTIST_SIMILAR)
 	{
 		glyr_opt_type(query, GLYR_GET_SIMILIAR_ARTISTS);
-		// cfg_* is no longer thread safe 
+		// cfg_* is no longer thread safe
 		glyr_opt_number(query,20);
 		content_type = META_DATA_CONTENT_TEXT;
 	}
@@ -404,14 +400,14 @@ static MetaDataContentType setup_glyr_query(GlyrQuery *query,
 		content_type = META_DATA_CONTENT_TEXT;
 	}
 	else if(type == META_SONG_SIMILAR &&
-			mtd->song->title != NULL) 
+			mtd->song->title != NULL)
 	{
 		glyr_opt_type(query, GLYR_GET_SIMILIAR_SONGS);
-		// cfg_* is no longer thread safe 
-		glyr_opt_number(query,20); 
+		// cfg_* is no longer thread safe
+		glyr_opt_number(query,20);
 	}
 	else if (type == META_SONG_GUITAR_TAB &&
-			mtd->song->title) 
+			mtd->song->title)
 	{
 		glyr_opt_type(query, GLYR_GET_GUITARTABS);
 		content_type = META_DATA_CONTENT_TEXT;
@@ -438,7 +434,7 @@ static MetaData * glyr_get_similiar_song_names(GlyrMemCache * cache)
                 if(!mtd) {
                     mtd = meta_data_new();
                     mtd->type = META_SONG_SIMILAR;
-                    mtd->plugin_name = g_strdup(cache->prov); 
+                    mtd->plugin_name = g_strdup(cache->prov);
                     mtd->content_type = META_DATA_CONTENT_TEXT_LIST;
                     mtd->size = 0;
                 }
@@ -472,7 +468,7 @@ static MetaData * glyr_get_similiar_artist_names(GlyrMemCache * cache)
                 if(!mtd) {
                     mtd = meta_data_new();
                     mtd->type = META_ARTIST_SIMILAR;
-                    mtd->plugin_name = g_strdup(cache->prov); 
+                    mtd->plugin_name = g_strdup(cache->prov);
                     mtd->content_type = META_DATA_CONTENT_TEXT_LIST;
                     mtd->size = 0;
                 }
@@ -487,9 +483,9 @@ static MetaData * glyr_get_similiar_artist_names(GlyrMemCache * cache)
     return mtd;
 }
 /**
- * Convert GLYR result into gmpc result 
+ * Convert GLYR result into gmpc result
  */
-static gboolean process_glyr_result(GlyrMemCache *cache, 
+static gboolean process_glyr_result(GlyrMemCache *cache,
 	MetaDataContentType content_type,
 	meta_thread_data *mtd)
 {
@@ -531,9 +527,9 @@ static gboolean process_glyr_result(GlyrMemCache *cache,
 			(mtd->met)->type = mtd->type;
 			if(cache->cached)
 			{
-				(mtd->met)->plugin_name = g_strdup_printf("%s (cached)", cache->prov); 
+				(mtd->met)->plugin_name = g_strdup_printf("%s (cached)", cache->prov);
 			}else{
-				(mtd->met)->plugin_name = g_strdup(cache->prov); 
+				(mtd->met)->plugin_name = g_strdup(cache->prov);
 			}
 			(mtd->met)->content_type = content_type;
 
@@ -547,10 +543,10 @@ static gboolean process_glyr_result(GlyrMemCache *cache,
 			retv = TRUE;
 		}
 		memcpy(&(mtd->met->md5sum), &(cache->md5sum), 16);
-	}else { 
+	}else {
 		// Explicitely not found.
-		printf("Cache sais empty\n");
-		retv = TRUE;
+        g_log(LOG_DOMAIN, G_LOG_LEVEL_MESSAGE,"Cache sais empty\n");
+        retv = TRUE;
 	}
 	return retv;
 }
@@ -560,10 +556,10 @@ static GStaticMutex exit_handle_lock = G_STATIC_MUTEX_INIT;
 
 /**
  * Load a file from an URI
- * 
+ *
  * @param mtd A meta_thread_data.
- * 
- * Loads a file from a hard-drive. 
+ *
+ * Loads a file from a hard-drive.
  *
  * @returns nothing.
  */
@@ -577,7 +573,7 @@ static GlyrMemCache *glyr_fetcher_thread_load_uri(meta_thread_data *mtd)
 	{
 		char *content = NULL;
 		gsize length =0;
-		g_file_get_contents(path, &content,&length, NULL); 
+		g_file_get_contents(path, &content,&length, NULL);
 		// set it to raw.
 		mtd->met->content_type = META_DATA_CONTENT_RAW;
 		cache = glyr_cache_new();
@@ -597,7 +593,7 @@ static GlyrMemCache *glyr_fetcher_thread_load_uri(meta_thread_data *mtd)
 			mtd->met->type == META_BACKDROP_ART)
 		{
 			cache->is_image = TRUE;
-			cache->img_format = g_strdup("jpeg");	
+			cache->img_format = g_strdup("jpeg");
 		}
 		memcpy(&(mtd->met->md5sum), &(cache->md5sum), 16);
 
@@ -610,15 +606,15 @@ static GlyrMemCache *glyr_fetcher_thread_load_raw(meta_thread_data *mtd)
 {
 	GlyrMemCache *cache = NULL;
 	cache = glyr_cache_new();
-	glyr_cache_set_data(cache, 
-			g_memdup(mtd->met->content, mtd->met->size), 
+	glyr_cache_set_data(cache,
+			g_memdup(mtd->met->content, mtd->met->size),
 			mtd->met->size);
 	// Testing force image type.
 	if(mtd->met->type == META_ALBUM_ART || mtd->met->type == META_ARTIST_ART ||
 			mtd->met->type == META_BACKDROP_ART)
 	{
 		cache->is_image = TRUE;
-		cache->img_format = g_strdup("jpeg");	
+		cache->img_format = g_strdup("jpeg");
 	}
 	memcpy(mtd->met->md5sum, cache->md5sum, 16);
 	return cache;
@@ -628,8 +624,8 @@ static GlyrMemCache *glyr_fetcher_thread_load_text(meta_thread_data *mtd)
 {
 	GlyrMemCache *cache = NULL;
 	cache = glyr_cache_new();
-	glyr_cache_set_data(cache, 
-			g_strdup(mtd->met->content), 
+	glyr_cache_set_data(cache,
+			g_strdup(mtd->met->content),
 			-1);
 	memcpy(mtd->met->md5sum, cache->md5sum, 16);
 	return cache;
@@ -649,10 +645,10 @@ static void glyr_fetcher_thread(void *user_data)
 
 		// Check if this is the quit command.
 		if(mtd->action == MTD_ACTION_QUIT) {
-			printf("Quitting....");
-			g_static_mutex_unlock(&exit_handle_lock);
+            g_log(LOG_DOMAIN, G_LOG_LEVEL_MESSAGE,"Quitting....");
+            g_static_mutex_unlock(&exit_handle_lock);
 			/* Free the Request struct */
-			meta_thread_data_free(mtd);		
+			meta_thread_data_free(mtd);
 			return;
 		}
 		else if (mtd->action == MTD_ACTION_CLEAR_ENTRY)
@@ -683,8 +679,8 @@ static void glyr_fetcher_thread(void *user_data)
 			cache->rating = -1;
 
 			// Add dummy entry
-			printf("Inserting dummy item\n");
-			glyr_db_insert(db,&query, cache);
+            g_log(LOG_DOMAIN, G_LOG_LEVEL_MESSAGE,"Inserting dummy item\n");
+            glyr_db_insert(db,&query, cache);
 
 			// Cleanup
 			if(cache)glyr_free_list(cache);
@@ -694,8 +690,8 @@ static void glyr_fetcher_thread(void *user_data)
 			glyr_exit_handle = NULL;
 			glyr_query_destroy(&query);
 
-			printf("Push back result\n");
-			// Push back result, and tell idle handle to handle it.
+            g_log(LOG_DOMAIN, G_LOG_LEVEL_MESSAGE,"Push back result\n");
+            // Push back result, and tell idle handle to handle it.
 			g_async_queue_push(return_queue, mtd);
 			// invalidate pointer.
 			mtd = NULL;
@@ -713,7 +709,7 @@ static void glyr_fetcher_thread(void *user_data)
 			glyr_exit_handle = &query;
 			g_static_mutex_unlock(&exit_handle_lock);
 
-			printf("new style query\n");
+            g_log(LOG_DOMAIN, G_LOG_LEVEL_MESSAGE,"new style query\n");
 
 			glyr_query_init(&query);
 
@@ -721,8 +717,8 @@ static void glyr_fetcher_thread(void *user_data)
 			if(md != NULL && md[0] !=  '\0'&& mtd->song->file != NULL)
 			{
 				char *path = g_build_filename(md, mtd->song->file, NULL);
-				printf("music directory: \"%s\"\n", path);
-				glyr_opt_musictree_path(&query, path);
+                g_log(LOG_DOMAIN, G_LOG_LEVEL_MESSAGE,"music directory: \"%s\"\n", path);
+                glyr_opt_musictree_path(&query, path);
 				g_free(path);
 			}
 
@@ -781,7 +777,7 @@ static void glyr_fetcher_thread(void *user_data)
 			glyr_exit_handle = &query;
 			g_static_mutex_unlock(&exit_handle_lock);
 
-			printf("new style query\n");
+            g_log(LOG_DOMAIN, G_LOG_LEVEL_MESSAGE,"new style query\n");
 
 			glyr_query_init(&query);
 
@@ -789,8 +785,8 @@ static void glyr_fetcher_thread(void *user_data)
 			if(md != NULL && md[0] !=  '\0'&& mtd->song->file != NULL)
 			{
 				char *path = g_build_filename(md, mtd->song->file, NULL);
-				printf("music directory: \"%s\"\n", path);
-				glyr_opt_musictree_path(&query, path);
+                g_log(LOG_DOMAIN, G_LOG_LEVEL_MESSAGE,"music directory: \"%s\"\n", path);
+                glyr_opt_musictree_path(&query, path);
 				g_free(path);
 			}
 
@@ -801,10 +797,10 @@ static void glyr_fetcher_thread(void *user_data)
 			/* If cache disabled, remove the entry in the db */
 			if(((mtd->type)&META_QUERY_NO_CACHE) == META_QUERY_NO_CACHE)
 			{
-				printf("Disable cache\n");
-				glyr_opt_from(&query, "all;-local");
+                g_log(LOG_DOMAIN, G_LOG_LEVEL_MESSAGE,"Disable cache\n");
+                glyr_opt_from(&query, "all;-local");
 				// Remove cache request.
-				mtd->type&=META_QUERY_DATA_TYPES;	
+				mtd->type&=META_QUERY_DATA_TYPES;
 				// Delete the entry.
 				glyr_db_delete(db, &query);
 			}
@@ -833,9 +829,9 @@ static void glyr_fetcher_thread(void *user_data)
 				cache->rating = -1;
 
 				glyr_db_insert(db,&query, cache);
-				printf("Cache is Empty\n");
-				// Set unavailable 
-				mtd->result = META_DATA_UNAVAILABLE; 
+                g_log(LOG_DOMAIN, G_LOG_LEVEL_MESSAGE,"Cache is Empty\n");
+                // Set unavailable
+				mtd->result = META_DATA_UNAVAILABLE;
 			}else{
 				process_glyr_result(cache,content_type, mtd);
 			}
@@ -891,14 +887,14 @@ static void glyr_fetcher_thread(void *user_data)
 			{
 				// try to load cache from text.
 				cache = glyr_fetcher_thread_load_text(mtd);
-			}	
+			}
 
 			// Cache.
 			if(cache)
 			{
 				cache->rating = 9;
-				printf("Do DB insert\n");
-				glyr_db_insert(db,&query, cache);
+                g_log(LOG_DOMAIN, G_LOG_LEVEL_MESSAGE,"Do DB insert\n");
+                glyr_db_insert(db,&query, cache);
 			}
 
 			// Clear the query, and lock the handle again.
@@ -908,7 +904,7 @@ static void glyr_fetcher_thread(void *user_data)
 
 			// Push back result, and tell idle handle to handle it.
 			// set it to query metadata to get the right handle behaviour.
-			mtd->action = MTD_ACTION_QUERY_METADATA; 
+			mtd->action = MTD_ACTION_QUERY_METADATA;
 			g_async_queue_push(return_queue, mtd);
 			// invalidate pointer.
 			mtd = NULL;
@@ -933,11 +929,11 @@ void meta_data_init(void)
 
 	/* Is this function thread safe? */
 	url = gmpc_get_covers_path("");
-		
+
 	//g_mutex_init(&exit_handle_lock);
 	/* Initialize..*/
-	printf("open glyr db: %s\n", url);
-	glyr_init();
+    g_log(LOG_DOMAIN, G_LOG_LEVEL_MESSAGE,"open glyr db: %s\n", url);
+    glyr_init();
 	db = glyr_db_init(url);
 	g_free(url);
 
@@ -953,40 +949,47 @@ void meta_data_init(void)
 }
 
 /**
- * TODO: Can we guarantee that all the downloads are stopped? 
+ * Tell glyr to stop, clear the queue, and exit.
  */
 void meta_data_destroy(void)
 {
 	meta_thread_data *mtd = NULL;
+
+
 	/**
- 	 * Clear the request queue, and tell thread to quit 
+ 	 * Clear the request queue, and tell thread to quit
 	 */
 	g_async_queue_lock(gaq);
-	while((mtd = g_async_queue_try_pop_unlocked(gaq))){
-		/* Free */	
-		meta_thread_data_free(mtd);
-	}
-	mtd = g_slice_new0(meta_thread_data);//g_malloc0(sizeof(*mtd));
-	mtd->action = MTD_ACTION_QUIT;
-	g_async_queue_push_unlocked(gaq, mtd);
-	mtd = NULL;
+    /* locked */ {
+        while((mtd = g_async_queue_try_pop_unlocked(gaq)) != NULL)
+        {
+            /* Free */
+            meta_thread_data_free(mtd);
+        }
+        mtd = g_slice_new0(meta_thread_data);//g_malloc0(sizeof(*mtd));
+        mtd->action = MTD_ACTION_QUIT;
+        g_async_queue_push_unlocked(gaq, mtd);
+        mtd = NULL;
+    }
 	g_async_queue_unlock(gaq);
-	// add lock? 
+
+
+	// add lock?
 	g_static_mutex_lock(&exit_handle_lock);
 	if(glyr_exit_handle) {
-		printf("Sending quit signal\n");
-		glyr_signal_exit(glyr_exit_handle);
+        g_log(LOG_DOMAIN, G_LOG_LEVEL_MESSAGE,"Sending quit signal\n");
+        glyr_signal_exit(glyr_exit_handle);
 	}
 	g_static_mutex_unlock(&exit_handle_lock);
 
-	printf("Waiting for glyr to finish.....\n");
-	g_thread_join(gaq_fetcher_thread);
-	//g_mutex_clear(&exit_handle_lock);
+    g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Waiting for glyr to finish.....\n");
+    g_thread_join(gaq_fetcher_thread);
 
 	glyr_db_destroy(db);
 	glyr_cleanup();
 	/**
- 	 * Wait for thread to quit 
+ 	 * Wait for thread to quit
+     * Then cleanup the result queue.
 	 */
 	g_async_queue_lock(return_queue);
 	while((mtd = g_async_queue_try_pop_unlocked(return_queue))){
@@ -996,31 +999,17 @@ void meta_data_destroy(void)
 	g_async_queue_unlock(return_queue);
 	g_async_queue_unref(gaq);
 	g_async_queue_unref(return_queue);
-
 }
-gboolean meta_compare_func(meta_thread_data *mt1, meta_thread_data *mt2)
-{
-	if(mt1->action != mt2->action) return TRUE;
-	
-	if((mt1->type&META_QUERY_DATA_TYPES) != (mt2->type&META_QUERY_DATA_TYPES))
-		return TRUE;
-	if(!gmpc_meta_watcher_match_data(mt1->type&META_QUERY_DATA_TYPES, mt1->song, mt2->song))
-	{
-		return TRUE;
-	}
-	return FALSE;
-}
-
 
 static guint meta_data_thread_data_uid = 0;
 
 void meta_data_set_entry ( mpd_Song *song, MetaData *met )
 {
-	meta_thread_data *mtd = NULL; 
-	if(song == NULL || met == NULL || !meta_data_validate_query(song, met->type)) 
+	meta_thread_data *mtd = NULL;
+	if(song == NULL || met == NULL || !meta_data_validate_query(song, met->type))
 	{
 		g_warning("Trying to set metadata entry with insufficient information");
-		return;	
+		return;
 	}
 
 	mtd = g_slice_new0(meta_thread_data);
@@ -1036,19 +1025,19 @@ void meta_data_set_entry ( mpd_Song *song, MetaData *met )
 	/* signal we are fetching. */
 	gmpc_meta_watcher_data_changed(gmw,mtd->ori_song, (mtd->type)&META_QUERY_DATA_TYPES, META_DATA_FETCHING,NULL);
 	/* Set entry */
-	printf("Request setting entry\n");
-	g_async_queue_push(gaq, mtd);
+    g_log(LOG_DOMAIN, G_LOG_LEVEL_MESSAGE,"Request setting entry\n");
+    g_async_queue_push(gaq, mtd);
 	mtd = NULL;
 }
 
 void meta_data_clear_entry(mpd_Song *song, MetaDataType type)
 {
-	meta_thread_data *mtd = NULL; 
+	meta_thread_data *mtd = NULL;
 	if(!meta_data_validate_query(song, type))
 	{
 		g_warning("Trying to clear metadata entry with insufficient information");
-		return;	
-	} 
+		return;
+	}
 	mtd = g_slice_new0(meta_thread_data);
 	mtd->action = MTD_ACTION_CLEAR_ENTRY;
 	mtd->id = ++meta_data_thread_data_uid;
@@ -1059,23 +1048,23 @@ void meta_data_clear_entry(mpd_Song *song, MetaDataType type)
 	mtd->type = type;
 	/* set result NULL */
 	mtd->met = NULL;
-	printf("Request clearing entry\n");
-	g_async_queue_push(gaq, mtd);
+    g_log(LOG_DOMAIN, G_LOG_LEVEL_MESSAGE,"Request clearing entry\n");
+    g_async_queue_push(gaq, mtd);
 	mtd = NULL;
 }
 
 /**
- * Function called by the "client" 
+ * Function called by the "client"
  */
 
 MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData **met,MetaDataCallback callback, gpointer data)
 {
 	meta_thread_data *mtd = NULL;
 
-	if(!meta_data_validate_query(tsong, type)) 
+	if(!meta_data_validate_query(tsong, type))
 	{
-		printf("Query invalid");
-		*met = NULL;
+        g_log(LOG_DOMAIN, G_LOG_LEVEL_MESSAGE,"Query invalid");
+        *met = NULL;
 		return META_DATA_UNAVAILABLE;
 	}
 
@@ -1096,7 +1085,7 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData *
 	/* set result NULL */
 	mtd->met = NULL;
 	/**
-     * If requested query the cache first 
+     * If requested query the cache first
 	 */
 	if((type&META_QUERY_NO_CACHE) == 0)
 	{
@@ -1116,7 +1105,7 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData *
 			// Cleanup
 			if(cache)glyr_free_list(cache);
 			glyr_query_destroy(&query);
-			
+
 			mrd = mtd->result;
 			*met = mtd->met;
 			mtd->met = NULL;
@@ -1130,15 +1119,15 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData *
 	}
 	else
 	{
-		printf("signal fetching\n");
-		gmpc_meta_watcher_data_changed(gmw,mtd->ori_song, (mtd->type)&META_QUERY_DATA_TYPES, META_DATA_FETCHING,NULL);
+        g_log(LOG_DOMAIN, G_LOG_LEVEL_MESSAGE,"signal fetching\n");
+        gmpc_meta_watcher_data_changed(gmw,mtd->ori_song, (mtd->type)&META_QUERY_DATA_TYPES, META_DATA_FETCHING,NULL);
 		if(mtd->callback)
 		{
 			mtd->callback(mtd->ori_song, META_DATA_FETCHING, NULL, mtd->data);
 		}
 	}
 
-	// Rewrite for query 
+	// Rewrite for query
 	if(mtd->song != NULL) mpd_freeSong(mtd->song);
 	mtd->song = rewrite_mpd_song(tsong, type, TRUE);
 
@@ -1185,7 +1174,7 @@ gchar * gmpc_get_metadata_filename(MetaDataType  type, mpd_Song *song, char *ext
 	/* home dir */
 	const gchar *homedir = g_get_user_cache_dir();
 	g_assert(song->artist != NULL);
-	g_assert(type < META_QUERY_DATA_TYPES); 
+	g_assert(type < META_QUERY_DATA_TYPES);
 
 	{
 		GError *error = NULL;
@@ -1204,8 +1193,8 @@ gchar * gmpc_get_metadata_filename(MetaDataType  type, mpd_Song *song, char *ext
 					charset, "UTF-8",(char *)"-", NULL, NULL, &error);
 		}
 		if(error) {
-			g_log(LOG_DOMAIN, G_LOG_LEVEL_WARNING, "Failed to convert %s to file encoding. '%s'", song->artist, error->message);
-			g_error_free(error);
+            g_log(LOG_DOMAIN, G_LOG_LEVEL_WARNING, "Failed to convert %s to file encoding. '%s'", song->artist, error->message);
+            g_error_free(error);
 			if(dirname) g_free(dirname);
 			dirname = g_strdup("invalid");
 		}
@@ -1225,7 +1214,7 @@ gchar * gmpc_get_metadata_filename(MetaDataType  type, mpd_Song *song, char *ext
 		if(type&(META_ALBUM_ART|META_ALBUM_TXT)) {
 			gchar *temp ;
 			g_assert(song->album != NULL);
-			temp =g_filename_from_utf8(song->album,-1,NULL,NULL,NULL); 
+			temp =g_filename_from_utf8(song->album,-1,NULL,NULL,NULL);
 			filename = g_strdup_printf("%s.%s", temp,extension);
 			g_free(temp);
 		}else if(type&META_ARTIST_ART){
@@ -1235,13 +1224,13 @@ gchar * gmpc_get_metadata_filename(MetaDataType  type, mpd_Song *song, char *ext
 		}else if (type&META_SONG_TXT) {
 			gchar *temp ;
 			g_assert(song->title != NULL);
-			temp =g_filename_from_utf8(song->title,-1,NULL,NULL,NULL); 
+			temp =g_filename_from_utf8(song->title,-1,NULL,NULL,NULL);
 			filename = g_strdup_printf("%s_LYRIC.%s", temp,extension);
 			g_free(temp);
 		}else if (type&META_SONG_GUITAR_TAB) {
 			gchar *temp ;
 			g_assert(song->title != NULL);
-			temp =g_filename_from_utf8(song->title,-1,NULL,NULL,NULL); 
+			temp =g_filename_from_utf8(song->title,-1,NULL,NULL,NULL);
 			filename = g_strdup_printf("%s_GUITAR_TAB.%s", temp,extension);
 			g_free(temp);
 		}
@@ -1263,7 +1252,7 @@ void metadata_get_list_cancel(gpointer data)
 gpointer metadata_get_list(mpd_Song  *song, MetaDataType type, void (*callback)(gpointer handle,const gchar *plugin_name, GList *list, gpointer data), gpointer data)
 {
 	meta_thread_data *mtd = NULL;
-	
+
 	mtd = g_slice_new0(meta_thread_data);
 	mtd->action = MTD_ACTION_QUERY_LIST;
 	mtd->id = ++meta_data_thread_data_uid;
@@ -1281,14 +1270,14 @@ gpointer metadata_get_list(mpd_Song  *song, MetaDataType type, void (*callback)(
 	/* set result NULL */
 	mtd->met = NULL;
 	mtd->met_results = NULL;
-	printf("start query\n");
+    g_log(LOG_DOMAIN, G_LOG_LEVEL_MESSAGE,"start query\n");
 
 	g_async_queue_push(gaq, mtd);
 	mtd = NULL;
 	return NULL;
 }
 /**
- * MetaData 
+ * MetaData
  */
 MetaData *meta_data_new(void)
 {
@@ -1371,7 +1360,7 @@ MetaData *meta_data_dup(MetaData *data)
 		retv->thumbnail_uri = g_strdup(data->thumbnail_uri);
 	}
 
-	memcpy(&(retv->md5sum),&(data->md5sum), 16); 
+	memcpy(&(retv->md5sum),&(data->md5sum), 16);
 
 	return retv;
 }
@@ -1393,7 +1382,7 @@ MetaData *meta_data_dup_steal(MetaData *data)
 	retv->thumbnail_uri = data->thumbnail_uri;
 	data->thumbnail_uri = NULL;
 
-	memcpy(&(retv->md5sum),&(data->md5sum), 16); 
+	memcpy(&(retv->md5sum),&(data->md5sum), 16);
 
 	return retv;
 }
@@ -1841,7 +1830,7 @@ static gchar * strip_tags(gchar *html)
 	unsigned depth = 0;
 	while(html[i] != '\0') {
 		if(html[i] == '<') depth++;
-		else if(html[i] == '>') depth--;	
+		else if(html[i] == '>') depth--;
 		else if(depth == 0) {
 			html[j] = html[i];
 			j++;
@@ -1892,14 +1881,5 @@ const GList *meta_data_get_text_list(const MetaData *data)
 	g_assert(meta_data_is_text_list(data));
 	return (const GList *)data->content;
 }
-/**
- * Plugin structure
- */
-
-gmpcPlugin metadata_plug = {
-	.name           = N_("Metadata Handler"),
-	.version        = {1,1,1},
-	.plugin_type    = GMPC_INTERNALL,
-};
 
 /* vim: set noexpandtab ts=4 sw=4 sts=4 tw=120: */

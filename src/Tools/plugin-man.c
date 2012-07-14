@@ -74,7 +74,6 @@ void plugin_manager_load_internal_plugins(void)
     plugin_add(&playlist_editor_plugin, 0, NULL);
 
     plugin_add(&statistics_plugin, 0, NULL);
-    plugin_add(&metadata_plug, 0, NULL);
     plugin_add(&proxyplug, 0, NULL);
 
     plugin_add(&extraplaylist_plugin, 0, NULL);
@@ -102,7 +101,7 @@ void plugin_manager_load_internal_plugins(void)
     /* Initialize the message system */
     plugin_add_new(GMPC_PLUGIN_BASE(pl3_messages), 0, NULL);
     /** Provider */
-    plugin_add_new((GmpcPluginBase *) 
+    plugin_add_new((GmpcPluginBase *)
             gmpc_plugins_auto_mpd_new(),
             0, NULL);
 
@@ -128,9 +127,9 @@ void plugin_manager_initialize_plugins(void)
     {
         gmpc_plugin_init(plugins[i]);
         TEC("Initializing plugin: %s", gmpc_plugin_get_name(plugins[i]));
-        g_log(LOG_DOMAIN, 
-                G_LOG_LEVEL_DEBUG, 
-                "Initializing '%s'", 
+        g_log(LOG_DOMAIN,
+                G_LOG_LEVEL_DEBUG,
+                "Initializing '%s'",
                 gmpc_plugin_get_name(plugins[i]));
     }
 
@@ -144,9 +143,9 @@ void plugin_manager_destroy_plugins(void)
     for (; i < num_plugins && plugins[i] != NULL; i++)
     {
         TEC("Destroying plugin: %s", gmpc_plugin_get_name(plugins[i]));
-        g_log(LOG_DOMAIN, 
-                G_LOG_LEVEL_DEBUG, 
-                "Telling '%s' to destroy itself", 
+        g_log(LOG_DOMAIN,
+                G_LOG_LEVEL_DEBUG,
+                "Telling '%s' to destroy itself",
                 gmpc_plugin_get_name(plugins[i]));
         gmpc_plugin_destroy(plugins[i]);
     }
@@ -204,7 +203,7 @@ static void plugin_manager_load_userspace_plugins(void)
      */
     if (g_file_test(url, G_FILE_TEST_IS_DIR))
     {
-        g_log(LOG_DOMAIN, 
+        g_log(LOG_DOMAIN,
 				G_LOG_LEVEL_DEBUG,
 				"Trying to load plugins in: %s", url);
   		plugin_load_dir(url);
