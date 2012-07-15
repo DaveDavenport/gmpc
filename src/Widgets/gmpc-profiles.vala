@@ -223,7 +223,7 @@ namespace Gmpc
          * get password
          */
         public
-        unowned string?
+        string?
         get_password(string id)
         {
             Profile prof = this.list.lookup(id);

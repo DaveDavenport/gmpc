@@ -147,7 +147,10 @@ static int connected_to_mpd(mpd_Connection * mpd_conn)
 
 static void connection_thread(void)
 {
-    mpd_Connection *conn = mpd_newConnection(connection_get_hostname(), connection_get_port(), cfg_get_single_value_as_float_with_default(config, "connection", "timeout", DEFAULT_TIMEOUT));
+    gchar * hostname = connection_get_hostname();
+    mpd_Connection *conn = mpd_newConnection(hostname, connection_get_port(), cfg_get_single_value_as_float_with_default(config, "connection", "timeout", DEFAULT_TIMEOUT));
+    g_free(hostname);
+
     g_idle_add((GSourceFunc) connected_to_mpd, conn);
     return;
 }
@@ -169,6 +172,7 @@ int connect_to_mpd(void)
      */
     string = connection_get_hostname();
     mpd_set_hostname(connection, string);
+    g_free(string);
     /**
      * Set port
      */
@@ -184,6 +188,7 @@ int connect_to_mpd(void)
     {
         string = connection_get_password();
         mpd_set_password(connection, string);
+        g_free(string);
     } else
     {
         mpd_set_password(connection, "");
@@ -1046,14 +1051,14 @@ void connection_profiles_changed(GtkComboBox * combo, gpointer data)
         /**
          * Set password check, and entry
          */
-        string = g_strdup(gmpc_profiles_get_password(gmpc_profiles, uid));
+        string = gmpc_profiles_get_password(gmpc_profiles, uid);
         gtk_toggle_button_set_active((GtkToggleButton *)
                                      gtk_builder_get_object(xml, "ck_auth"),
                                      gmpc_profiles_get_do_auth(gmpc_profiles, uid));
         gtk_widget_set_sensitive((GtkWidget *) gtk_builder_get_object(xml, "entry_auth"),
                                  gmpc_profiles_get_do_auth(gmpc_profiles, uid));
 
-        gtk_entry_set_text(GTK_ENTRY((GtkWidget *) gtk_builder_get_object(xml, "entry_auth")),    /*string); */
+        gtk_entry_set_text(GTK_ENTRY((GtkWidget *) gtk_builder_get_object(xml, "entry_auth")),
                            string);
         g_free(string);
 
