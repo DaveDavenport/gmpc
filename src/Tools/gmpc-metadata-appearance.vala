@@ -29,22 +29,26 @@ private const bool use_transition_tma = Gmpc.use_transition;
 private const string some_unique_name_tma = Config.VERSION;
 
 
-public class Gmpc.Tools.MetadataAppearance : Gmpc.Plugin.Base, Gmpc.Plugin.PreferencesIface {
+public class Gmpc.Tools.MetadataAppearance : Gmpc.Plugin.Base, Gmpc.Plugin.PreferencesIface
+{
 
     private const int[] version = {0,0,0};
-    public override unowned int[] get_version() {
+    public override unowned int[] get_version()
+    {
         return this.version;
     }
-    
-    public override unowned string get_name() {
+
+    public override unowned string get_name()
+    {
         return "Metadata Appearance";
     }
-    
-    construct {
+
+    construct
+    {
         /* Mark the plugin as an internal and dummy */
         this.plugin_type = 8+4;
     }
-    
+
     /* preferences pane */
     public static void
     on_checkbutton_show_lyrics_toggled(CheckButton source)
@@ -63,13 +67,13 @@ public class Gmpc.Tools.MetadataAppearance : Gmpc.Plugin.Base, Gmpc.Plugin.Prefe
     {
         config.set_int("MetaData", "show-similar-artist", (int)source.get_active());
     }
-    
+
     public static void
     on_checkbutton_show_similar_songs_toggled(CheckButton source)
     {
         config.set_int("MetaData", "show-similar-songs", (int)source.get_active());
     }
-    
+
     public static void
     on_checkbutton_show_guitar_tabs_toggled(CheckButton source)
     {
@@ -81,11 +85,12 @@ public class Gmpc.Tools.MetadataAppearance : Gmpc.Plugin.Base, Gmpc.Plugin.Prefe
     {
         config.set_int("MetaData", "show-songs-from-album", (int)source.get_active());
     }
-    
+
     public void
     preferences_pane_construct(Gtk.Container container)
     {
-        try {
+        try
+        {
             var builder = new Builder();
             string preferences_ui_file = Gmpc.data_path("preferences-metadata-appearance.ui");
             builder.add_from_file(preferences_ui_file);
@@ -93,35 +98,37 @@ public class Gmpc.Tools.MetadataAppearance : Gmpc.Plugin.Base, Gmpc.Plugin.Prefe
             Widget builderWidget = builder.get_object("frame_metadata_appearance_settings") as Frame;
             container.add(builderWidget);
             builderWidget.show_all();
-            
+
             builderWidget = builder.get_object("checkbutton_show_lyrics") as CheckButton;
             ((CheckButton)builderWidget).set_active((bool)config.get_int_with_default("MetaData", "show-lyrics", 1));
-            
+
             builderWidget = builder.get_object("checkbutton_show_artist_information") as CheckButton;
             ((CheckButton)builderWidget).set_active((bool)config.get_int_with_default("MetaData", "show-artist-information", 1));
-            
+
             builderWidget = builder.get_object("checkbutton_show_similar_artists") as CheckButton;
             ((CheckButton)builderWidget).set_active((bool)config.get_int_with_default("MetaData", "show-similar-artist", 1));
-            
+
             builderWidget = builder.get_object("checkbutton_show_similar_songs") as CheckButton;
             ((CheckButton)builderWidget).set_active((bool)config.get_int_with_default("MetaData", "show-similar-songs", 1));
-            
+
             builderWidget = builder.get_object("checkbutton_show_guitar_tabs") as CheckButton;
             ((CheckButton)builderWidget).set_active((bool)config.get_int_with_default("MetaData", "show-guitar-tabs", 1));
 
             builderWidget = builder.get_object("checkbutton_show_songs_from_album") as CheckButton;
             ((CheckButton)builderWidget).set_active((bool)config.get_int_with_default("MetaData", "show-songs-from-album", 1));
-        } catch (Error e) {
+        }
+        catch (Error e)
+        {
             stderr.printf("Could not load UI: %s\n", e.message);
         }
     }
-    
+
     public void
     preferences_pane_destroy(Gtk.Container container)
     {
-       foreach(Gtk.Widget child in container.get_children())
-       {
-           container.remove(child);
-       }
+        foreach(Gtk.Widget child in container.get_children())
+        {
+            container.remove(child);
+        }
     }
 }

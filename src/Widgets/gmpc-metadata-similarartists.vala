@@ -1,7 +1,7 @@
 /* Gnome Music Player Client (GMPC)
  * Copyright (C) 2004-2012 Qball Cow <qball@gmpclient.org>
  * Project homepage: http://gmpclient.org/
- 
+
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -32,41 +32,42 @@ public class Gmpc.MetaData.Widgets.SimilarArtists : Gtk.Table
     private int button_width = 200;
     private void size_changed(Gdk.Rectangle alloc)
     {
-		int t_column = alloc.width/button_width;
+        int t_column = alloc.width/button_width;
         t_column = (t_column < 1)?1:t_column;
         if(t_column != columns )
-		{
-			var list = this.get_children();
-			foreach(Gtk.Widget child in list) {
-				child.ref();
-				this.remove(child);
-			}
+        {
+            var list = this.get_children();
+            foreach(Gtk.Widget child in list)
+            {
+                child.ref();
+                this.remove(child);
+            }
 
-			columns = t_column;
-			int i = 0;
+            columns = t_column;
+            int i = 0;
 
-			this.resize(list.length()/columns+1, columns);
-			foreach(Gtk.Widget item in list)
-			{
-				this.attach(item, 
-						i%columns,i%columns+1,i/columns,i/columns+1,
-						Gtk.AttachOptions.EXPAND|Gtk.AttachOptions.FILL,
-						Gtk.AttachOptions.SHRINK, 0,0);
-				i++;
-			}
-			this.show_all();
-		}
+            this.resize(list.length()/columns+1, columns);
+            foreach(Gtk.Widget item in list)
+            {
+                this.attach(item,
+                            i%columns,i%columns+1,i/columns,i/columns+1,
+                            Gtk.AttachOptions.EXPAND|Gtk.AttachOptions.FILL,
+                            Gtk.AttachOptions.SHRINK, 0,0);
+                i++;
+            }
+            this.show_all();
+        }
 
-    } 
+    }
 
     /**
      * Handle signals from the metadata object.
      */
-    private void metadata_changed(MetaWatcher gmw2, 
-            MPD.Song song, 
-            Gmpc.MetaData.Type type, 
-            Gmpc.MetaData.Result result, 
-            Gmpc.MetaData.Item? met)
+    private void metadata_changed(MetaWatcher gmw2,
+                                  MPD.Song song,
+                                  Gmpc.MetaData.Type type,
+                                  Gmpc.MetaData.Result result,
+                                  Gmpc.MetaData.Item? met)
     {
         /* only listen to the same artist and the same type */
         if(type != Gmpc.MetaData.Type.ARTIST_SIMILAR) return;
@@ -86,13 +87,15 @@ public class Gmpc.MetaData.Widgets.SimilarArtists : Gtk.Table
             this.attach(label, 0,1,0,1,Gtk.AttachOptions.SHRINK, Gtk.AttachOptions.SHRINK, 0,0);
         }
         /* if fetching set that in a label*/
-        else if(result == Gmpc.MetaData.Result.FETCHING){
+        else if(result == Gmpc.MetaData.Result.FETCHING)
+        {
             var label = new Gtk.Label(_("Fetching"));
             this.attach(label, 0,1,0,1,Gtk.AttachOptions.SHRINK, Gtk.AttachOptions.SHRINK, 0,0);
-        
+
         }
         /* Set result */
-        else {
+        else
+        {
             List<Gtk.Widget> in_db_list = null;
             GLib.List<unowned string> list = met.get_text_list().copy();
             list.sort((GLib.CompareFunc)string.collate);
@@ -102,7 +105,7 @@ public class Gmpc.MetaData.Widgets.SimilarArtists : Gtk.Table
             int i = 0;
             if(list != null)
             {
-                unowned List<unowned string> liter= null;                 
+                unowned List<unowned string> liter= null;
                 MPD.Database.search_field_start(server, MPD.Tag.Type.ARTIST);
                 var data = MPD.Database.search_commit(server);
 
@@ -116,12 +119,14 @@ public class Gmpc.MetaData.Widgets.SimilarArtists : Gtk.Table
 
                     liter = list.first();
                     string artist = "";
-                    if(iter.tag.validate() == false) {
-                        error("Failed to validate"); 
+                    if(iter.tag.validate() == false)
+                    {
+                        error("Failed to validate");
                     }
-                    if(iter.tag != null) 
-                        artist = iter.tag.casefold(); 
-                    do{
+                    if(iter.tag != null)
+                        artist = iter.tag.casefold();
+                    do
+                    {
                         var res = liter.data.casefold().collate(artist);
                         q++;
                         if(res == 0)
@@ -136,26 +141,29 @@ public class Gmpc.MetaData.Widgets.SimilarArtists : Gtk.Table
                             if(iter != null)
                                 artist = iter.tag.casefold();
                         }
-                        else if (res > 0) {
+                        else if (res > 0)
+                        {
                             //list.remove(liter.data);
 
                             iter.next(false);
                             if(iter != null)
-                                artist = iter.tag.casefold(); 
+                                artist = iter.tag.casefold();
                         }
-                        else {
+                        else
+                        {
                             liter = liter.next;
                         }
-                    }while(iter != null && liter != null && i < items);
+                    }
+                    while(iter != null && liter != null && i < items);
                 }
 
                 liter= list.first();
-                while(liter != null && i < items) 
+                while(liter != null && i < items)
                 {
                     var artist = liter.data;
                     in_db_list.prepend(new_artist_button(artist, false));
                     i++;
-                    liter = liter.next; 
+                    liter = liter.next;
                 }
 
             }
@@ -164,14 +172,14 @@ public class Gmpc.MetaData.Widgets.SimilarArtists : Gtk.Table
             this.hide();
             uint llength = in_db_list.length();
             columns = this.allocation.width/button_width;
-	    columns = (columns < 1)?1:columns;
+            columns = (columns < 1)?1:columns;
             this.resize(llength/columns+1, columns);
             foreach(Gtk.Widget item in in_db_list)
             {
-                this.attach(item, 
-                        i%columns,i%columns+1,i/columns,i/columns+1,
-                        Gtk.AttachOptions.EXPAND|Gtk.AttachOptions.FILL,
-                        Gtk.AttachOptions.SHRINK, 0,0);
+                this.attach(item,
+                            i%columns,i%columns+1,i/columns,i/columns+1,
+                            Gtk.AttachOptions.EXPAND|Gtk.AttachOptions.FILL,
+                            Gtk.AttachOptions.SHRINK, 0,0);
                 i++;
             }
         }
@@ -191,9 +199,9 @@ public class Gmpc.MetaData.Widgets.SimilarArtists : Gtk.Table
     {
         var hbox = new Gtk.HBox(false, 6);
         hbox.border_width = 4;
-/*
-        var event = new Gtk.Frame(null);
-        */
+        /*
+                var event = new Gtk.Frame(null);
+                */
 
         var event = new Gtk.EventBox();
         event.app_paintable = true;
@@ -214,7 +222,7 @@ public class Gmpc.MetaData.Widgets.SimilarArtists : Gtk.Table
         label.set_tooltip_text(artist);
         label.set_selectable(true);
         label.set_alignment(0.0f, 0.5f);
-        label.ellipsize = Pango.EllipsizeMode.END; 
+        label.ellipsize = Pango.EllipsizeMode.END;
         hbox.pack_start(label,true,true,0);
 
         if(in_db)
@@ -246,7 +254,7 @@ public class Gmpc.MetaData.Widgets.SimilarArtists : Gtk.Table
             Gmpc.MetaData.Result gm_result = metawatcher.query(song, Gmpc.MetaData.Type.ARTIST_SIMILAR,out item);
             if(gm_result == Gmpc.MetaData.Result.AVAILABLE)
             {
-                this.metadata_changed(metawatcher, this.song, Gmpc.MetaData.Type.ARTIST_SIMILAR, gm_result, item); 
+                this.metadata_changed(metawatcher, this.song, Gmpc.MetaData.Type.ARTIST_SIMILAR, gm_result, item);
             }
             first_show_b = true;
         }

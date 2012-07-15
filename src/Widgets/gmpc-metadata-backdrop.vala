@@ -23,8 +23,8 @@ private const string log_domain_mdbd = "Gmpc.Widgets.MetaData.Backdrop";
 namespace Gmpc
 {
     namespace MetaData.Widgets
-	{
-		class Backdrop : Gtk.EventBox
+    {
+        class Backdrop : Gtk.EventBox
         {
             private string song_checksum = null;
             private MPD.Song? cur_song = null;
@@ -32,8 +32,8 @@ namespace Gmpc
             /*   */
             private Gdk.Pixbuf pb = null;
             private ModificationType mod_type = (ModificationType)
-                        config.get_int_with_default(
-                            "Backdrop", "alterations",2);
+                                                config.get_int_with_default(
+                                                    "Backdrop", "alterations",2);
 
             // Image loading
             private Gmpc.PixbufLoaderAsync? loader = null;
@@ -42,28 +42,29 @@ namespace Gmpc
                 pb = null;
                 if(item == null || song_checksum == null)
                 {
-                   this.queue_draw();
-                   return;
+                    this.queue_draw();
+                    return;
                 }
                 if (item.content_type == Gmpc.MetaData.ContentType.RAW)
-				{
-					Gtk.Allocation req;
-					int width;
-					this.get_allocation(out req);
-					width = int.max(req.width, 400);
-					log(log_domain_mdbd, GLib.LogLevelFlags.LEVEL_DEBUG,
-							"Getting image with size: %u", width);
-					if(loader == null)
-						loader = new PixbufLoaderAsync();
-					loader.pixbuf_update.connect((source, pixbuf)=>{
-							this.pb = pixbuf;
-							log (log_domain_mdbd,GLib.LogLevelFlags.LEVEL_DEBUG,
-								"Updating background");
-							this.queue_draw();
-							});
-					unowned uchar[] data = item.get_raw();
-					loader.set_from_raw(data, width,-1, mod_type, item.md5sum);
-				}
+                {
+                    Gtk.Allocation req;
+                    int width;
+                    this.get_allocation(out req);
+                    width = int.max(req.width, 400);
+                    log(log_domain_mdbd, GLib.LogLevelFlags.LEVEL_DEBUG,
+                        "Getting image with size: %u", width);
+                    if(loader == null)
+                        loader = new PixbufLoaderAsync();
+                    loader.pixbuf_update.connect((source, pixbuf)=>
+                    {
+                        this.pb = pixbuf;
+                        log (log_domain_mdbd,GLib.LogLevelFlags.LEVEL_DEBUG,
+                        "Updating background");
+                        this.queue_draw();
+                    });
+                    unowned uchar[] data = item.get_raw();
+                    loader.set_from_raw(data, width,-1, mod_type, item.md5sum);
+                }
             }
             /**
              * @param The #MPD.Song to set the background for or NULL to clear.
@@ -73,7 +74,8 @@ namespace Gmpc
             public void set_song(MPD.Song? song)
             {
                 cur_song = song.copy();
-                if(song == null) {
+                if(song == null)
+                {
                     song_checksum = null;
                     set_from_item(null);
                     return;
@@ -85,9 +87,12 @@ namespace Gmpc
                 song_checksum = Gmpc.Misc.song_checksum_type(song, cur_type);
                 Gmpc.MetaData.Item item = null;
                 var a = metawatcher.query(song, cur_type, out item);
-                if(a == Gmpc.MetaData.Result.AVAILABLE) {
+                if(a == Gmpc.MetaData.Result.AVAILABLE)
+                {
                     this.set_from_item(item);
-                }else {
+                }
+                else
+                {
                     this.set_from_item(null);
                 }
             }
@@ -99,30 +104,35 @@ namespace Gmpc
             public Backdrop(Gmpc.MetaData.Type type)
             {
                 assert(type == Gmpc.MetaData.Type.BACKDROP_ART ||
-						type == Gmpc.MetaData.Type.ARTIST_ART||
-                        type == Gmpc.MetaData.Type.ALBUM_ART);
+                       type == Gmpc.MetaData.Type.ARTIST_ART||
+                       type == Gmpc.MetaData.Type.ALBUM_ART);
                 cur_type = type;
 
 
-                this.realize.connect((source)=>{
-                        source.window.set_back_pixmap(null, true);
-                        });
+                this.realize.connect((source)=>
+                {
+                    source.window.set_back_pixmap(null, true);
+                });
                 // Set visible window
                 this.set_visible_window(true);
                 // Set paintable
                 this.set_app_paintable(true);
                 // Watch changes */
-                metawatcher.data_changed.connect((csong, type, result, met) => {
-                        if(song_checksum != null &&
-                            type == cur_type &&
-                            song_checksum == Gmpc.Misc.song_checksum_type(csong,cur_type))
+                metawatcher.data_changed.connect((csong, type, result, met) =>
+                {
+                    if(song_checksum != null &&
+                    type == cur_type &&
+                    song_checksum == Gmpc.Misc.song_checksum_type(csong,cur_type))
+                    {
+                        if(met != null && result == Gmpc.MetaData.Result.AVAILABLE)
                         {
-                            if(met != null && result == Gmpc.MetaData.Result.AVAILABLE) {
-                                this.set_from_item(met);
-                            } else {
-                                this.set_from_item(null);
-                            }
+                            this.set_from_item(met);
                         }
+                        else
+                        {
+                            this.set_from_item(null);
+                        }
+                    }
                 });
 
                 // Add expose event
@@ -136,25 +146,29 @@ namespace Gmpc
                 if(event.button != 3) return false;
                 var menu = new Gtk.Menu();
 
-				var item =  new Gtk.ImageMenuItem.with_label(_("Refresh backdrop"));
+                var item =  new Gtk.ImageMenuItem.with_label(_("Refresh backdrop"));
                 item.set_image(new Gtk.Image.from_stock("gtk-refresh", Gtk.IconSize.MENU));
-                item.activate.connect((source)=>{
-						MetaData.Item mitem = null;
-						stdout.printf("Push backdrop update\n");
-						var a = metawatcher.query(cur_song, cur_type|Gmpc.MetaData.Type.QUERY_NO_CACHE, out mitem);
-						if(a == Gmpc.MetaData.Result.AVAILABLE) {
-						this.set_from_item(mitem);
-						}else {
-						this.set_from_item(null);
-						}
-						});
+                item.activate.connect((source)=>
+                {
+                    MetaData.Item mitem = null;
+                    stdout.printf("Push backdrop update\n");
+                    var a = metawatcher.query(cur_song, cur_type|Gmpc.MetaData.Type.QUERY_NO_CACHE, out mitem);
+                    if(a == Gmpc.MetaData.Result.AVAILABLE)
+                    {
+                        this.set_from_item(mitem);
+                    }
+                    else {
+                        this.set_from_item(null);
+                    }
+                });
                 menu.append(item);
                 /*  Add selector */
                 item = new Gtk.ImageMenuItem.with_label(_("Metadata selector"));
                 item.set_image(new Gtk.Image.from_stock("gtk-edit", Gtk.IconSize.MENU));
-                item.activate.connect((source)=>{
+                item.activate.connect((source)=>
+                {
                     new Gmpc.MetaData.EditWindow(cur_song, cur_type);
-                    });
+                });
                 menu.append(item);
                 menu.show_all();
                 menu.popup(null, null, null, event.button, event.time);

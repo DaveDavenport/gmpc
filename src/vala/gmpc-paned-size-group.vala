@@ -1,7 +1,7 @@
 /* Gnome Music Player Client (GMPC)
  * Copyright (C) 2004-2012 Qball Cow <qball@gmpclient.org>
  * Project homepage: http://gmpclient.org/
- 
+
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -21,58 +21,62 @@ using GLib;
 using MPD;
 
 
-namespace Gmpc{
-	public class PanedSizeGroup : GLib.Object {
-		private List<unowned Gtk.Paned> list = null;
+namespace Gmpc
+{
+    public class PanedSizeGroup : GLib.Object
+    {
+        private List<unowned Gtk.Paned> list = null;
         private int position = config.get_int_with_default("paned-size-group", "position", 150);
 
-		public 
-		PanedSizeGroup () {
+        public
+        PanedSizeGroup ()
+        {
 
-		}
-		~PanedSizeGroup () {
+        }
+        ~PanedSizeGroup ()
+        {
             config.set_int("paned-size-group", "position", position);
 
-		}
-		private bool 
-		child_destroy_event(Gtk.Widget paned, Gdk.Event event)
-		{
-			list.remove((Gtk.Paned)paned);
+        }
+        private bool
+        child_destroy_event(Gtk.Widget paned, Gdk.Event event)
+        {
+            list.remove((Gtk.Paned)paned);
 
-			return false;
-		}
-		private bool block_changed_callback = false;
-		private
-		void
-		child_position_changed(GLib.Object paned, ParamSpec spec)
-		{
-			if(block_changed_callback) return;
-			block_changed_callback = true;
+            return false;
+        }
+        private bool block_changed_callback = false;
+        private
+        void
+        child_position_changed(GLib.Object paned, ParamSpec spec)
+        {
+            if(block_changed_callback) return;
+            block_changed_callback = true;
 
-			var pane = (Gtk.Paned) paned;
-			position = pane.get_position();
-			foreach(unowned Gtk.Paned p in list)
-			{
-				if(p != paned)
-				{
-					p.set_position(position);
-				}
-			}
+            var pane = (Gtk.Paned) paned;
+            position = pane.get_position();
+            foreach(unowned Gtk.Paned p in list)
+            {
+                if(p != paned)
+                {
+                    p.set_position(position);
+                }
+            }
 
-			block_changed_callback = false;
-		}
-		public
-		void
-		add_paned(Gtk.Paned paned)
-		{
-			paned.notify["position"].connect(child_position_changed);
-			paned.destroy_event.connect(child_destroy_event);
+            block_changed_callback = false;
+        }
+        public
+        void
+        add_paned(Gtk.Paned paned)
+        {
+            paned.notify["position"].connect(child_position_changed);
+            paned.destroy_event.connect(child_destroy_event);
 
-			block_changed_callback = true;
+            block_changed_callback = true;
             paned.set_position(position);
-			block_changed_callback = false;
+            block_changed_callback = false;
 
-			list.append(paned);
-		}
-	} 
+            list.append(paned);
+        }
+    }
 }

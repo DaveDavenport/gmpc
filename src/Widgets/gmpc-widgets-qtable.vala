@@ -26,7 +26,8 @@ private const string some_unique_name_gav = Config.VERSION;
 [compact]
 private class QtableEntry
 {
-    public enum Type {
+    public enum Type
+    {
         HEADER,
         ITEM
     }
@@ -43,141 +44,158 @@ public class Gmpc.Widgets.Qtable : Gtk.Container, Gtk.Buildable
     private int max_columns_real    = 0;
     private int num_items       = 0;
     private int columns         = 3;
-	public  int spacing {get;set;default=8;}
-	public int padding_left {get;set;default=0;}
-	public int padding_right{get;set;default=0;}
-	public int max_columns {
-	        get {
-	            return max_columns_real;
-	        }
-	        set {
-	            max_columns_real = value;
-	            this.queue_resize();
-	        }
-	    }
+public  int spacing {get; set; default=8;}
+    public int padding_left {get; set; default=0;}
+        public int padding_right {get; set; default=0;}
+                public int max_columns
+            {
+                get {
+                    return max_columns_real;
+                }
+                set {
+                    max_columns_real = value;
+                    this.queue_resize();
+                }
+            }
 
-	public int item_width {
-			get {
-				return item_width_real;
-			}
-			set {
-				item_width_real = value;
-				this.queue_resize();
-			}
-	}
+    public int item_width
+    {
+        get {
+            return item_width_real;
+        }
+        set {
+            item_width_real = value;
+            this.queue_resize();
+        }
+    }
 
-	public int item_height {
-			get {
-				return item_height_real;
-			}
-			set {
-				item_height_real = value;
-				this.queue_resize();
-			}
-	}
-	public int header_height {
-			get {
-				return header_height_real;
-			}
-			set {
-				header_height_real = value;
-				this.queue_resize();
-			}
-	}
+    public int item_height
+    {
+        get {
+            return item_height_real;
+        }
+        set {
+            item_height_real = value;
+            this.queue_resize();
+        }
+    }
+    public int header_height
+    {
+        get {
+            return header_height_real;
+        }
+        set {
+            header_height_real = value;
+            this.queue_resize();
+        }
+    }
 
 
     private List<QtableEntry> children = null;
-	/* GtkBuildable override */
-	public void add_child(Gtk.Builder build, GLib.Object child, string? type)
-	{
-		if(!(child is Gtk.Widget)) {
-			GLib.warning("Trying to add non widget");
-			return;
-		}
-		if(type != null && type == "header") {
-			add_header(child as Gtk.Widget);
-		}else{
-			add(child as Gtk.Widget);
-		}
-	}
+    /* GtkBuildable override */
+    public void add_child(Gtk.Builder build, GLib.Object child, string? type)
+    {
+        if(!(child is Gtk.Widget))
+        {
+            GLib.warning("Trying to add non widget");
+            return;
+        }
+        if(type != null && type == "header")
+        {
+            add_header(child as Gtk.Widget);
+        }
+        else
+        {
+            add(child as Gtk.Widget);
+        }
+    }
 
 
-	construct{
+    construct
+    {
         this.set_has_window(false);
         this.set_redraw_on_allocate(false);
-	}
+    }
     public Qtable()
     {
     }
 
-	/**
+    /**
      * Calculates the size of the widget.
-	 */
-	public override void size_request(out Gtk.Requisition req)
+     */
+    public override void size_request(out Gtk.Requisition req)
     {
         req = Gtk.Requisition();
-		int cover_width = item_width_real;
-		int cover_height= item_height_real;
-		int header_height = header_height_real;
+        int cover_width = item_width_real;
+        int cover_height= item_height_real;
+        int header_height = header_height_real;
         int width = 0;
         int items = 0;
 
-		/* determine max width/height */
-		foreach ( var child in children)
-		{
-			if(child.widget.get_visible())
-			{
-				if(child.type == QtableEntry.Type.ITEM) {
-					Gtk.Requisition cr = {0,0};
-					child.widget.size_request(out cr);
-					cover_width = int.max(cr.width,cover_width);
-					cover_height = int.max(cr.height,cover_height);
-				}else{
-					Gtk.Requisition cr = {0,0};
-					child.widget.size_request(out cr);
-					width = int.max(cr.width,width);
-					header_height = int.max(cr.height,header_height);
-				}
-			}
-		}
-		if(spacing>0) {
-			cover_width		+= spacing;
-			cover_height	+= spacing;
-			header_height	+= spacing;
-		}
-		int rows = 0;
-		foreach ( var child in children)
-		{
-			if(child.widget.get_visible())
-			{
-				if(child.type == QtableEntry.Type.ITEM) {
-					items++;
-				}else{
-					if(items != 0)
-					{
-						int nrows = items/columns;
-						int remain = (items%columns >0)?1:0;
-						rows = rows + (nrows+remain)*cover_height;
-					}
-					items = 0;
-					rows+=header_height;
-				}
-			}
-		}
-		if(items != 0)
-		{
-			int nrows = items/columns;
-			int remain = (items%columns >0)?1:0;
-			rows = rows + (nrows+remain)*cover_height;
-		}
-		/* Width of one column */
+        /* determine max width/height */
+        foreach ( var child in children)
+        {
+            if(child.widget.get_visible())
+            {
+                if(child.type == QtableEntry.Type.ITEM)
+                {
+                    Gtk.Requisition cr = {0,0};
+                    child.widget.size_request(out cr);
+                    cover_width = int.max(cr.width,cover_width);
+                    cover_height = int.max(cr.height,cover_height);
+                }
+                else
+                {
+                    Gtk.Requisition cr = {0,0};
+                    child.widget.size_request(out cr);
+                    width = int.max(cr.width,width);
+                    header_height = int.max(cr.height,header_height);
+                }
+            }
+        }
+        if(spacing>0)
+        {
+            cover_width		+= spacing;
+            cover_height	+= spacing;
+            header_height	+= spacing;
+        }
+        int rows = 0;
+        foreach ( var child in children)
+        {
+            if(child.widget.get_visible())
+            {
+                if(child.type == QtableEntry.Type.ITEM)
+                {
+                    items++;
+                }
+                else
+                {
+                    if(items != 0)
+                    {
+                        int nrows = items/columns;
+                        int remain = (items%columns >0)?1:0;
+                        rows = rows + (nrows+remain)*cover_height;
+                    }
+                    items = 0;
+                    rows+=header_height;
+                }
+            }
+        }
+        if(items != 0)
+        {
+            int nrows = items/columns;
+            int remain = (items%columns >0)?1:0;
+            rows = rows + (nrows+remain)*cover_height;
+        }
+        /* Width of one column */
         req.width =  cover_width;
         req.height = rows;
     }
 
     public override void add(Gtk.Widget widget)
     {
-        if(widget != null) {
+        if(widget != null)
+        {
             QtableEntry a = new QtableEntry();
             a.type = QtableEntry.Type.ITEM;
             a.widget = widget;
@@ -189,7 +207,8 @@ public class Gmpc.Widgets.Qtable : Gtk.Container, Gtk.Buildable
     }
     public void add_header(Gtk.Widget widget)
     {
-        if(widget != null) {
+        if(widget != null)
+        {
             QtableEntry a = new QtableEntry();
             a.type = QtableEntry.Type.HEADER;
             a.widget = widget;
@@ -206,15 +225,18 @@ public class Gmpc.Widgets.Qtable : Gtk.Container, Gtk.Buildable
     }
     public override void remove(Gtk.Widget widget)
     {
-        if(widget != null ) {
+        if(widget != null )
+        {
             QtableEntry a = null;
             /*
                if((a = children.find_custom(widget,compare)) == null) {
                GLib.error("Failed to find widget in container");
                }
              */
-            foreach(QtableEntry f in this.children) {
-                if(f.widget == widget) {
+            foreach(QtableEntry f in this.children)
+            {
+                if(f.widget == widget)
+                {
                     a = f;
                     break;
                 }
@@ -233,55 +255,61 @@ public class Gmpc.Widgets.Qtable : Gtk.Container, Gtk.Buildable
     }
     public override void size_allocate(Gdk.Rectangle alloc)
     {
-		int cover_width = item_width_real;
-		int cover_height= item_height_real;
-		int header_height = header_height_real;
+        int cover_width = item_width_real;
+        int cover_height= item_height_real;
+        int header_height = header_height_real;
         /* Hack to avvoid pointless resizes,
          * I get this "1" size when a child widget changes */
         if(alloc.width == 1) return;
-		int width = alloc.width;
+        int width = alloc.width;
         int new_columns = 0;
         int rows = 0;
         int item = 0;
         // This fixes it so the correct taborder is calculated.
         this.allocation = (Gtk.Allocation)alloc;
 
-		foreach ( var child in children)
-		{
-			if(child.widget.get_visible())
-			{
-
-				if(child.type == QtableEntry.Type.ITEM) {
-					Gtk.Requisition cr = {0,0};
-					child.widget.size_request(out cr);
-					cover_width = int.max(cr.width,cover_width);
-					cover_height = int.max(cr.height,cover_height);
-					item++;
-				}else{
-					Gtk.Requisition cr = {0,0};
-					child.widget.size_request(out cr);
-					item = 0;
-
-					width = int.max(cr.width,width);
-					header_height = int.max(cr.height,header_height);
-				}
-			}
-		}
-		if(spacing>0) {
-			cover_width		+= spacing;
-			cover_height	+= spacing;
-			header_height	+= spacing;
-		}
-		new_columns = int.max((width-padding_left - padding_right+spacing)/cover_width, 1);
-		if(max_columns_real > 0) {
-		    new_columns = int.min(new_columns,max_columns_real);
-		}
-		item = 0;
-		foreach ( var child in children)
-		{
+        foreach ( var child in children)
+        {
             if(child.widget.get_visible())
             {
-                if(child.type == QtableEntry.Type.ITEM) {
+
+                if(child.type == QtableEntry.Type.ITEM)
+                {
+                    Gtk.Requisition cr = {0,0};
+                    child.widget.size_request(out cr);
+                    cover_width = int.max(cr.width,cover_width);
+                    cover_height = int.max(cr.height,cover_height);
+                    item++;
+                }
+                else
+                {
+                    Gtk.Requisition cr = {0,0};
+                    child.widget.size_request(out cr);
+                    item = 0;
+
+                    width = int.max(cr.width,width);
+                    header_height = int.max(cr.height,header_height);
+                }
+            }
+        }
+        if(spacing>0)
+        {
+            cover_width		+= spacing;
+            cover_height	+= spacing;
+            header_height	+= spacing;
+        }
+        new_columns = int.max((width-padding_left - padding_right+spacing)/cover_width, 1);
+        if(max_columns_real > 0)
+        {
+            new_columns = int.min(new_columns,max_columns_real);
+        }
+        item = 0;
+        foreach ( var child in children)
+        {
+            if(child.widget.get_visible())
+            {
+                if(child.type == QtableEntry.Type.ITEM)
+                {
                     Gdk.Rectangle ca = {0,0,0,0};
                     ca.x = alloc.x + (item%columns)*cover_width+padding_left;
                     ca.y = rows+alloc.y + (item/columns)*cover_height;
@@ -290,12 +318,14 @@ public class Gmpc.Widgets.Qtable : Gtk.Container, Gtk.Buildable
 
                     child.widget.size_allocate(ca);
                     item++;
-                }else{
+                }
+                else
+                {
                     if(item != 0)
                     {
-						int nrows = item/columns;
-						int remain = (item%columns >0)?1:0;
-						rows = rows + (nrows+remain)*cover_height;
+                        int nrows = item/columns;
+                        int remain = (item%columns >0)?1:0;
+                        rows = rows + (nrows+remain)*cover_height;
                     }
                     item = 0;
 
@@ -310,7 +340,8 @@ public class Gmpc.Widgets.Qtable : Gtk.Container, Gtk.Buildable
                 }
             }
         }
-        if(new_columns != columns) {
+        if(new_columns != columns)
+        {
             columns = new_columns;
             this.queue_resize();
         }
@@ -322,7 +353,8 @@ public class Gmpc.Widgets.Qtable : Gtk.Container, Gtk.Buildable
         /* Somehow it fails when doing a foreach() construction,
             weird vala bug I guess */
         /* would be  nice if I could filter out say only the visible ones */
-        while(iter != null) {
+        while(iter != null)
+        {
             weak QtableEntry child = iter.data;
             iter = iter.next;
             callback(child.widget);
@@ -330,7 +362,8 @@ public class Gmpc.Widgets.Qtable : Gtk.Container, Gtk.Buildable
     }
     public void clear()
     {
-        foreach(var a in children) {
+        foreach(var a in children)
+        {
             a.widget.unparent();
             num_items--;
         }

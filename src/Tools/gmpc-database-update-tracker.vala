@@ -2,7 +2,7 @@
 /* Gnome Music Player Client (GMPC)
  * Copyright (C) 2004-2012 Qball Cow <qball@gmpclient.org>
  * Project homepage: http://gmpclient.org/
- 
+
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -24,19 +24,23 @@ using Gmpc;
 private const bool use_transition_mb = Gmpc.use_transition;
 private const string some_unique_name_mb = Config.VERSION;
 
-public class  Gmpc.Tools.DatabaseUpdateTracker : Gmpc.Plugin.Base {
+public class  Gmpc.Tools.DatabaseUpdateTracker : Gmpc.Plugin.Base
+{
     private Gtk.Image image = null;
 
     private const int[] version = {0,0,2};
-    public override unowned int[] get_version() {
+    public override unowned int[] get_version()
+    {
         return this.version;
     }
 
-    public override unowned string get_name() {
+    public override unowned string get_name()
+    {
         return "Database Update Tracker";
     }
 
-    construct {
+    construct
+    {
         /* Mark the plugin as an internal dummy */
         this.plugin_type = 8+4;
         /* Attach status changed signal */
@@ -47,7 +51,7 @@ public class  Gmpc.Tools.DatabaseUpdateTracker : Gmpc.Plugin.Base {
     private void start_updating()
     {
         if(this.image != null) return;
-        this.image = new Gtk.Image.from_icon_name("gtk-refresh", Gtk.IconSize.MENU); 
+        this.image = new Gtk.Image.from_icon_name("gtk-refresh", Gtk.IconSize.MENU);
         this.image.show();
         this.image.set_tooltip_text(_("MPD is rescanning the database"));
         Gmpc.Playlist3.add_status_icon(this.image);
@@ -76,7 +80,7 @@ public class  Gmpc.Tools.DatabaseUpdateTracker : Gmpc.Plugin.Base {
             if(id != null)
             {
                 var dut =  Gmpc.profiles.get_db_update_time(id);
-                var serv_dut = server.get_database_update_time(); 
+                var serv_dut = server.get_database_update_time();
                 if(dut != serv_dut)
                 {
                     show_message(serv_dut);
@@ -88,7 +92,8 @@ public class  Gmpc.Tools.DatabaseUpdateTracker : Gmpc.Plugin.Base {
                 start_updating();
             }
         }
-        else{
+        else
+        {
             /* Remove icon on disconnect */
             stop_updating();
         }
@@ -98,9 +103,12 @@ public class  Gmpc.Tools.DatabaseUpdateTracker : Gmpc.Plugin.Base {
         if(!this.get_enabled()) return;
         if((what&MPD.Status.Changed.UPDATING) == MPD.Status.Changed.UPDATING)
         {
-            if(server.is_updating_database()) {
+            if(server.is_updating_database())
+            {
                 start_updating();
-            }else{
+            }
+            else
+            {
                 stop_updating();
             }
         }
@@ -111,7 +119,7 @@ public class  Gmpc.Tools.DatabaseUpdateTracker : Gmpc.Plugin.Base {
             if(id != null)
             {
                 var dut =  Gmpc.profiles.get_db_update_time(id);
-                var serv_dut = Gmpc.server.get_database_update_time(); 
+                var serv_dut = Gmpc.server.get_database_update_time();
                 if(dut != serv_dut)
                 {
                     show_message(serv_dut);

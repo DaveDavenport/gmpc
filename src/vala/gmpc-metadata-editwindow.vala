@@ -23,7 +23,8 @@ using Gmpc;
 
 private const bool use_transition_tp = Gmpc.use_transition;
 
-public class Gmpc.MetaData.EditWindow : Gtk.Window {
+public class Gmpc.MetaData.EditWindow : Gtk.Window
+{
     private const string some_unique_name = Config.VERSION;
     private MPD.Song? song = null;
     private Gmpc.MetaData.Type query_type = Gmpc.MetaData.Type.ALBUM_ART;
@@ -48,22 +49,23 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
 
     private Gtk.VBox itemslist = new Gtk.VBox(false, 6);
 
-    construct {
+    construct
+    {
         this.type = Gtk.WindowType.TOPLEVEL;
         int height = config.get_int_with_default(
-                "Metadata Selector" , "window_height", 600);
+            "Metadata Selector" , "window_height", 600);
         int width = config.get_int_with_default(
-                "Metadata Selector" , "window_width", 480);
+            "Metadata Selector" , "window_width", 480);
 
         this.resize(width,height);
         this.set_border_width(8);
         /* Connect to allocation changes so I can store new size */
         this.size_allocate.connect((source, alloc) => {
-                config.set_int(
-                    "Metadata Selector" , "window_width", alloc.width);
+            config.set_int(
+                "Metadata Selector" , "window_width", alloc.width);
 
-                config.set_int(
-                    "Metadata Selector" , "window_height", alloc.height);
+            config.set_int(
+                "Metadata Selector" , "window_height", alloc.height);
         });
     }
 
@@ -71,7 +73,8 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
     {
         string a;
         a = "";// Markup.printf_escaped("<b>%s</b>: %s",_("Uri"),uri);
-        if(provider != null) {
+        if(provider != null)
+        {
             a+= Markup.printf_escaped("\n<b>%s</b>:  %s",_("Provider"), provider);
         }
         if(format != null)
@@ -80,16 +83,20 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
         }
         if(pb != null)
         {
-            if(is_thumbnail) {
+            if(is_thumbnail)
+            {
                 a+="\n<b>%s</b>: %ix%i (%s) (%s)".printf(_("Size"), pb.width, pb.height,_("width x height"),
                         _("high-res image will be downloaded"));
-            }else{
+            }
+            else
+            {
                 a+="\n<b>%s</b>: %ix%i (%s)".printf(_("Size"), pb.width, pb.height,_("width x height"));
-           }
+            }
 
         }
         int new_h, new_w;
-        if(pb.width < pb.height) {
+        if(pb.width < pb.height)
+        {
             new_h = 150;
             new_w = (int)((150.0/(double)pb.height)*pb.width);
         }
@@ -116,7 +123,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
         var ali = new Gtk.Alignment(0f,0f,0f,0f);
         var button = new Gtk.Button.with_label(_("Set"));
 
-		button.set_data<Gmpc.MetaData.Item>("metadata", met.dup());
+        button.set_data<Gmpc.MetaData.Item>("metadata", met.dup());
         ali.add(button);
         hbox.pack_start(ali, false, true, 0);
         button.clicked.connect(set_metadata);
@@ -134,7 +141,8 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
     {
         string a;
         a = "";// "<b>%s</b>: %s".printf(_("Uri"),uri);
-        if(provider != null) {
+        if(provider != null)
+        {
             a+="\n<b>%s</b>:  %s".printf(_("Provider"), provider);
         }
         var hbox = new Gtk.HBox(false, 6);
@@ -155,7 +163,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
         var ali = new Gtk.Alignment(0f,0f,0f,0f);
         var button = new Gtk.Button.with_label(_("Set"));
         button.set_data("lyrics",text);
-		button.set_data<MetaData.Item>("metadata", item.dup());
+        button.set_data<MetaData.Item>("metadata", item.dup());
 
 
         ali.add(button);
@@ -173,7 +181,8 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
     public void callback(void *handle,string? plugin_name,GLib.List<MetaData.Item>? list)
     {
         bar.pulse();
-        if(list == null) {
+        if(list == null)
+        {
             if(this.handle == handle)
             {
                 this.handle = null;
@@ -203,53 +212,65 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
         {
 
             if(this.query_type == Gmpc.MetaData.Type.ALBUM_ART || this.query_type == Gmpc.MetaData.Type.ARTIST_ART ||
-				this.query_type == Gmpc.MetaData.Type.BACKDROP_ART)
+                    this.query_type == Gmpc.MetaData.Type.BACKDROP_ART)
             {
-				if (md.content_type == Gmpc.MetaData.ContentType.RAW){
-					var data = md.get_raw();
+                if (md.content_type == Gmpc.MetaData.ContentType.RAW)
+                {
+                    var data = md.get_raw();
                     var load = new Gdk.PixbufLoader();
-                    try {
+                    try
+                    {
                         load.write(data);
-                    }catch (Error e) {
+                    }
+                    catch (Error e)
+                    {
                         GLib.debug("Failed to load raw data: %s\n",e.message);
                     }
-                    try {
+                    try
+                    {
                         load.close();
-                    }catch (Error e) {
+                    }
+                    catch (Error e)
+                    {
                         GLib.debug("Failed to close loader: %s\n",e.message);
                     }
 
                     Gdk.Pixbuf pb = load.get_pixbuf();
-                    if(pb!= null){
+                    if(pb!= null)
+                    {
                         var base16 = GLib.Base64.encode(data);
                         this.add_entry_image(md, md.plugin_name,base16,load.get_format(),pb,true);
                     }
                 }
-            }else{
+            }
+            else
+            {
 
                 if(md.content_type == Gmpc.MetaData.ContentType.TEXT)
                 {
                     unowned string uri = md.get_text();
                     add_entry_text(md, md.plugin_name, "n/a", uri);
                 }
-                else
-                if(md.content_type == Gmpc.MetaData.ContentType.HTML)
+                else if(md.content_type == Gmpc.MetaData.ContentType.HTML)
                 {
                     string uri = md.get_text_from_html();
                     add_entry_text(md, md.plugin_name, "n/a", uri);
                 }
-                else
-                if(md.content_type == Gmpc.MetaData.ContentType.URI)
+                else if(md.content_type == Gmpc.MetaData.ContentType.URI)
                 {
                     unowned string uri = md.get_uri();
-                    if(uri[0] == '/'){
-                        try {
+                    if(uri[0] == '/')
+                    {
+                        try
+                        {
                             string content;
                             if(GLib.FileUtils.get_contents(uri,out content))
                             {
-                               add_entry_text(md, md.plugin_name,uri, content);
+                                add_entry_text(md, md.plugin_name,uri, content);
                             }
-                        }catch (Error e) {
+                        }
+                        catch (Error e)
+                        {
 
                         }
                     }
@@ -263,11 +284,11 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
     private void
     set_metadata(Gtk.Button button)
     {
-		unowned MetaData.Item? item = button.get_data<MetaData.Item>("metadata");
-		if(item != null)
-		{
-			Gmpc.MetaData.set_metadata(this.song, item);
-		}
+        unowned MetaData.Item? item = button.get_data<MetaData.Item>("metadata");
+        if(item != null)
+        {
+            Gmpc.MetaData.set_metadata(this.song, item);
+        }
     }
     public
     void
@@ -279,7 +300,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
     {
         foreach(Gtk.Widget client in this.itemslist.get_children())
         {
-           client.destroy();
+            client.destroy();
         }
 
     }
@@ -292,7 +313,8 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
         ss.album = this.album_entry.get_text();
         ss.title = this.title_entry.get_text();
 
-        if(this.handle == null && this.handle2 == null) {
+        if(this.handle == null && this.handle2 == null)
+        {
             this.pbox.show();
             this.refresh.sensitive = false;
             this.combo.sensitive = false;
@@ -314,76 +336,88 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
         this.warning_label.hide();
         if(active == 0)
         {
-           this.query_type = Gmpc.MetaData.Type.ARTIST_ART;
-           if(this.song.artist != null)
-           {
+            this.query_type = Gmpc.MetaData.Type.ARTIST_ART;
+            if(this.song.artist != null)
+            {
                 this.artist_entry.sensitive = true;
                 this.refresh.sensitive = true;
-           }
-           else this.warning_label.show();
-        }else  if (active == 1) {
-           this.query_type = Gmpc.MetaData.Type.ALBUM_ART;
-
-           if(this.song.artist != null && this.song.album != null)
-           {
-                this.artist_entry.sensitive = true;
-                this.album_entry.sensitive = true;
-                this.refresh.sensitive = true;
-           }
-           else this.warning_label.show();
-        } else  if (active == 2) {
-           this.query_type = Gmpc.MetaData.Type.SONG_TXT;
-
-           if(this.song.artist != null && this.song.title != null)
-           {
-                this.artist_entry.sensitive = true;
-                this.title_entry.sensitive = true;
-                this.refresh.sensitive = true;
-           }
-           else this.warning_label.show();
-        }else  if (active == 3) {
-           this.query_type = Gmpc.MetaData.Type.ALBUM_TXT;
-
-           if(this.song.artist != null && this.song.album != null)
-           {
-                this.artist_entry.sensitive = true;
-                this.album_entry.sensitive = true;
-                this.refresh.sensitive = true;
-           }
-           else this.warning_label.show();
-        }else  if (active == 4) {
-           this.query_type = Gmpc.MetaData.Type.ARTIST_TXT;
-
-           if(this.song.artist != null)
-           {
-                this.artist_entry.sensitive = true;
-                this.refresh.sensitive = true;
-           }
-           else this.warning_label.show();
-        }else  if (active == 5) {
-           this.query_type = Gmpc.MetaData.Type.SONG_GUITAR_TAB;
-
-           if(this.song.artist != null && this.song.title != null)
-           {
-                this.artist_entry.sensitive = true;
-                this.title_entry.sensitive = true;
-                this.refresh.sensitive = true;
-           }
-           else this.warning_label.show();
+            }
+            else this.warning_label.show();
         }
-		else if ( active == 6) {
-           this.query_type = Gmpc.MetaData.Type.BACKDROP_ART;
-           if(this.song.artist != null)
-           {
+        else  if (active == 1)
+        {
+            this.query_type = Gmpc.MetaData.Type.ALBUM_ART;
+
+            if(this.song.artist != null && this.song.album != null)
+            {
+                this.artist_entry.sensitive = true;
+                this.album_entry.sensitive = true;
+                this.refresh.sensitive = true;
+            }
+            else this.warning_label.show();
+        }
+        else  if (active == 2)
+        {
+            this.query_type = Gmpc.MetaData.Type.SONG_TXT;
+
+            if(this.song.artist != null && this.song.title != null)
+            {
+                this.artist_entry.sensitive = true;
+                this.title_entry.sensitive = true;
+                this.refresh.sensitive = true;
+            }
+            else this.warning_label.show();
+        }
+        else  if (active == 3)
+        {
+            this.query_type = Gmpc.MetaData.Type.ALBUM_TXT;
+
+            if(this.song.artist != null && this.song.album != null)
+            {
+                this.artist_entry.sensitive = true;
+                this.album_entry.sensitive = true;
+                this.refresh.sensitive = true;
+            }
+            else this.warning_label.show();
+        }
+        else  if (active == 4)
+        {
+            this.query_type = Gmpc.MetaData.Type.ARTIST_TXT;
+
+            if(this.song.artist != null)
+            {
                 this.artist_entry.sensitive = true;
                 this.refresh.sensitive = true;
-           }
-           else this.warning_label.show();
-		}
+            }
+            else this.warning_label.show();
+        }
+        else  if (active == 5)
+        {
+            this.query_type = Gmpc.MetaData.Type.SONG_GUITAR_TAB;
+
+            if(this.song.artist != null && this.song.title != null)
+            {
+                this.artist_entry.sensitive = true;
+                this.title_entry.sensitive = true;
+                this.refresh.sensitive = true;
+            }
+            else this.warning_label.show();
+        }
+        else if ( active == 6)
+        {
+            this.query_type = Gmpc.MetaData.Type.BACKDROP_ART;
+            if(this.song.artist != null)
+            {
+                this.artist_entry.sensitive = true;
+                this.refresh.sensitive = true;
+            }
+            else this.warning_label.show();
+        }
     }
 
     public
-    EditWindow (MPD.Song song, Gmpc.MetaData.Type type) {
+    EditWindow (MPD.Song song, Gmpc.MetaData.Type type)
+    {
         var vbox = new Gtk.VBox(false, 6);
         this.song = song.copy();
         this.query_type = type;
@@ -509,8 +543,9 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
         this.itemslist.border_width = 8;
         ilevent.visible_window = true;
         ilevent.modify_bg(Gtk.StateType.NORMAL,this.style.base[Gtk.StateType.NORMAL]);
-        this.style_set.connect((source, old) => {
-                this.itemslist.get_parent().modify_bg(Gtk.StateType.NORMAL,this.style.base[Gtk.StateType.NORMAL]);
+        this.style_set.connect((source, old) =>
+        {
+            this.itemslist.get_parent().modify_bg(Gtk.StateType.NORMAL,this.style.base[Gtk.StateType.NORMAL]);
         });
         ilevent.add(itemslist);
         sw.add_with_viewport(ilevent);
@@ -526,17 +561,21 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
 
         refresh_query(button);
     }
-    public void b_cancel(){
-        if(this.handle != null){
+    public void b_cancel()
+    {
+        if(this.handle != null)
+        {
             Gmpc.MetaData.get_list_cancel(this.handle);
             this.handle = null;
         }
-        if(this.handle2 != null){
+        if(this.handle2 != null)
+        {
             Gmpc.MetaData.get_list_cancel(this.handle2);
             this.handle2 = null;
         }
         this.downloads.first();
-        while(this.downloads != null){
+        while(this.downloads != null)
+        {
             unowned Gmpc.AsyncDownload.Handle handle = this.downloads.data;
 
             handle.cancel();
@@ -547,7 +586,8 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window {
         this.refresh.sensitive = true;
         this.combo.sensitive = true;
     }
-    ~EditWindow() {
+    ~EditWindow()
+    {
         this.b_cancel();
     }
 }

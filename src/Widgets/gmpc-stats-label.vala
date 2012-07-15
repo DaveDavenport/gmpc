@@ -54,13 +54,17 @@ namespace Gmpc.MetaData
                 case Type.ALBUM_NUM_SONGS:
                     MPD.Database.search_stats_start(server);
                     MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, this.song.artist);
-                    if(this.ltype == Type.ALBUM_NUM_SONGS) {
+                    if(this.ltype == Type.ALBUM_NUM_SONGS)
+                    {
                         MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM, this.song.album);
                     }
                     var stats = MPD.Database.search_stats_commit(server);
-                    if(stats != null) {
+                    if(stats != null)
+                    {
                         this.set_text(stats.numberOfSongs.to_string());
-                    } else {
+                    }
+                    else
+                    {
                         this.set_text("");
                     }
                     break;
@@ -68,13 +72,17 @@ namespace Gmpc.MetaData
                 case Type.ALBUM_PLAYTIME_SONGS:
                     MPD.Database.search_stats_start(server);
                     MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, this.song.artist);
-                    if(this.ltype ==Type. ALBUM_PLAYTIME_SONGS) {
+                    if(this.ltype ==Type. ALBUM_PLAYTIME_SONGS)
+                    {
                         MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM, this.song.album);
                     }
                     var stats = MPD.Database.search_stats_commit(server);
-                    if(stats != null) {
+                    if(stats != null)
+                    {
                         this.set_text(Misc.format_time(stats.playTime));
-                    } else {
+                    }
+                    else
+                    {
                         this.set_text("");
                     }
                     break;
@@ -82,18 +90,22 @@ namespace Gmpc.MetaData
                 case Type.ALBUM_GENRES_SONGS:
                     MPD.Database.search_field_start(server, MPD.Tag.Type.GENRE);
                     MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, this.song.artist);
-                    if(this.ltype == Type.ALBUM_GENRES_SONGS) {
+                    if(this.ltype == Type.ALBUM_GENRES_SONGS)
+                    {
                         MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM, this.song.album);
                     }
                     string[] text = {};
-                    for(var data = MPD.Database.search_commit(server);data != null;data.next_free())
+                    for(var data = MPD.Database.search_commit(server); data != null; data.next_free())
                     {
                         if(data.tag.length > 0)
                             text += data.tag;
                     }
-                    if(text.length >0) {
+                    if(text.length >0)
+                    {
                         this.set_text(string.joinv(", ", text));
-                    } else {
+                    }
+                    else
+                    {
                         this.set_text(_("n/a"));
                     }
                     break;
@@ -101,18 +113,22 @@ namespace Gmpc.MetaData
                 case Type.ALBUM_DATES_SONGS:
                     MPD.Database.search_field_start(server, MPD.Tag.Type.DATE);
                     MPD.Database.search_add_constraint(server, MPD.Tag.Type.ARTIST, this.song.artist);
-                    if(this.ltype == Type.ALBUM_GENRES_SONGS) {
+                    if(this.ltype == Type.ALBUM_GENRES_SONGS)
+                    {
                         MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM, this.song.album);
                     }
                     string[] text = {};
-                    for(var data = MPD.Database.search_commit(server);data != null;data.next_free())
+                    for(var data = MPD.Database.search_commit(server); data != null; data.next_free())
                     {
                         if(data.tag.length > 0)
                             text += data.tag;
                     }
-                    if(text.length >0) {
+                    if(text.length >0)
+                    {
                         this.set_text(string.joinv(", ", text));
-                    } else {
+                    }
+                    else
+                    {
                         this.set_text(_("n/a"));
                     }
                     break;
@@ -129,7 +145,8 @@ namespace Gmpc.MetaData
             var text = GLib.Markup.printf_escaped("<i>%s</i>", _("Loading"));
             this.set_markup(text);
             this.idle_handler();
-            if(this.ll_signal != 0) {
+            if(this.ll_signal != 0)
+            {
                 GLib.SignalHandler.disconnect(this, this.ll_signal);
                 this.ll_signal = 0;
             }

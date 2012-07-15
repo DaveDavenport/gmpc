@@ -1,7 +1,7 @@
 /* Gnome Music Player Client (GMPC)
  * Copyright (C) 2004-2012 Qball Cow <qball@gmpclient.org>
  * Project homepage: http://gmpclient.org/
- 
+
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -32,13 +32,14 @@ public class Gmpc.MetaData.Widgets.SimilarSongs : Gtk.Alignment
     private uint idle_add = 0;
     ~SimilarSongs ()
     {
-        if(this.idle_add > 0){
+        if(this.idle_add > 0)
+        {
             GLib.Source.remove(this.idle_add);
             this.idle_add = 0;
         }
     }
 
-    public SimilarSongs (MPD.Song song) 
+    public SimilarSongs (MPD.Song song)
     {
         this.song = song.copy();
         this.set(0.0f, 0.0f, 1.0f, 0.0f);
@@ -59,7 +60,7 @@ public class Gmpc.MetaData.Widgets.SimilarSongs : Gtk.Alignment
                 model.get(iter, 0, out song, -1);
                 if(song != null)
                 {
-                   MPD.PlayQueue.queue_add_song(server, song.file); 
+                    MPD.PlayQueue.queue_add_song(server, song.file);
                 }
             }
         }
@@ -104,8 +105,8 @@ public class Gmpc.MetaData.Widgets.SimilarSongs : Gtk.Alignment
                 model.get(iter, 0, out song, -1);
                 if(song != null)
                 {
-                   MPD.PlayQueue.queue_add_song(server, song.file); 
-                   found = true;
+                    MPD.PlayQueue.queue_add_song(server, song.file);
+                    found = true;
                 }
             }
         }
@@ -164,17 +165,19 @@ public class Gmpc.MetaData.Widgets.SimilarSongs : Gtk.Alignment
     private unowned List <unowned string> current = null;
     private bool update_sim_song()
     {
-        if(current == null){
-           current = copy.get_text_list(); 
-           pchild = new Gtk.ProgressBar();
-           this.add(pchild);
-           this.show_all();
+        if(current == null)
+        {
+            current = copy.get_text_list();
+            pchild = new Gtk.ProgressBar();
+            this.add(pchild);
+            this.show_all();
         }
         ((Gtk.ProgressBar)pchild).pulse();
         if(current != null)
         {
             string entry = current.data;
-            if(entry != null){
+            if(entry != null)
+            {
                 var split = entry.split("::",2);
                 if(split.length == 2)
                 {
@@ -189,7 +192,7 @@ public class Gmpc.MetaData.Widgets.SimilarSongs : Gtk.Alignment
                     var data = MPD.Database.search_commit(server);
                     if(data != null)
                     {
-                        item.concatenate((owned)data); 
+                        item.concatenate((owned)data);
                     }
                 }
             }
@@ -198,7 +201,7 @@ public class Gmpc.MetaData.Widgets.SimilarSongs : Gtk.Alignment
         }
         this.pchild.destroy();
         if(item != null)
-            {
+        {
             var model = new Gmpc.MpdData.Model();
             item.remove_duplicate_songs();
             model.set_mpd_data((owned)item);
@@ -209,7 +212,9 @@ public class Gmpc.MetaData.Widgets.SimilarSongs : Gtk.Alignment
             this.add(tree);
 
             this.pchild = tree;
-        }else {
+        }
+        else
+        {
             var label = new Gtk.Label(_("Unavailable"));
             label.set_alignment(0.0f, 0.0f);
             this.add(label);
@@ -226,27 +231,33 @@ public class Gmpc.MetaData.Widgets.SimilarSongs : Gtk.Alignment
     {
         if(this.song.artist.collate(song.artist)!=0) return;
         if(type != Gmpc.MetaData.Type.SONG_SIMILAR) return;
-        
-        if(this.pchild != null) this.pchild.destroy(); 
 
-        if(result == Gmpc.MetaData.Result.FETCHING) {
+        if(this.pchild != null) this.pchild.destroy();
+
+        if(result == Gmpc.MetaData.Result.FETCHING)
+        {
             var label = new Gtk.Label(_("Fetching .. "));
             label.set_alignment(0.0f, 0.0f);
             this.add(label);
             this.pchild = label;
-        }else if (result == Gmpc.MetaData.Result.UNAVAILABLE)
+        }
+        else if (result == Gmpc.MetaData.Result.UNAVAILABLE)
         {
             var label = new Gtk.Label(_("Unavailable"));
             label.set_alignment(0.0f, 0.0f);
             this.add(label);
             this.pchild = label;
-        }else{
+        }
+        else
+        {
             if(met.is_text_list())
             {
                 this.copy = met.dup_steal();
                 this.idle_add =  GLib.Idle.add(this.update_sim_song);
                 return;
-            }else {
+            }
+            else
+            {
                 var label = new Gtk.Label(_("Unavailable"));
                 label.set_alignment(0.0f, 0.0f);
                 this.add(label);
@@ -261,7 +272,7 @@ public class Gmpc.MetaData.Widgets.SimilarSongs : Gtk.Alignment
         MetaData.Item item = null;
         metawatcher.data_changed.connect(metadata_changed);
         Gmpc.MetaData.Result gm_result = metawatcher.query(song, Gmpc.MetaData.Type.SONG_SIMILAR,out item);
-        this.metadata_changed(metawatcher, this.song, Gmpc.MetaData.Type.SONG_SIMILAR, gm_result, item); 
+        this.metadata_changed(metawatcher, this.song, Gmpc.MetaData.Type.SONG_SIMILAR, gm_result, item);
     }
 
 }

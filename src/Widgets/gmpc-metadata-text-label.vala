@@ -1,7 +1,7 @@
-/* Gnome Music Player Client 
+/* Gnome Music Player Client
  * Copyright (C) 2011-2012 Qball Cow <qball@gmpclient.org>
  * Project homepage: http://gmpclient.org/
- 
+
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -29,34 +29,37 @@ namespace Gmpc.MetaData.Widgets
     {
         private MPD.Song? cur_song = null;
         private string song_checksum = null;
-        private Gmpc.MetaData.Type cur_type = Gmpc.MetaData.Type.ALBUM_TXT; 
+        private Gmpc.MetaData.Type cur_type = Gmpc.MetaData.Type.ALBUM_TXT;
         private void set_from_item(Gmpc.MetaData.Item? item)
         {
             if(item != null )
             {
                 if(item.content_type == Gmpc.MetaData.ContentType.TEXT)
                 {
-                   string res = item.get_text();
-                   this.set_text(res);
+                    string res = item.get_text();
+                    this.set_text(res);
                 }
                 else if(item.content_type == Gmpc.MetaData.ContentType.HTML)
-                { 
+                {
 
-                   string res = item.get_text_from_html();
-                   this.set_text(res);
+                    string res = item.get_text_from_html();
+                    this.set_text(res);
                 }
                 else if(item.content_type == Gmpc.MetaData.ContentType.URI )
                 {
                     string path = item.get_uri();
                     string res = null;
-                    try{
+                    try
+                    {
                         GLib.FileUtils.get_contents( path, out res);
                         this.set_text(res);
-                    }catch (Error e) {
+                    }
+                    catch (Error e)
+                    {
                         this.set_text(_("Error reading file: %s").printf(e.message));
                     }
                 }
-                else 
+                else
                 {
                     this.set_text(_("Not available"));
                 }
@@ -69,12 +72,12 @@ namespace Gmpc.MetaData.Widgets
 
         /**
          * @param song The #MPD.Song to display the text for.
-         * @param type The #Gmpc.MetaData.Type of metadata to display. 
-         * Create a text label for Song, that displays 
+         * @param type The #Gmpc.MetaData.Type of metadata to display.
+         * Create a text label for Song, that displays
          * Text metadata
          * @return a #TextLabel or type #Gtk.Label
          */
-       
+
         public TextLabel(MPD.Song song,Gmpc.MetaData.Type type)
         {
             this.set_line_wrap(true);
@@ -86,50 +89,62 @@ namespace Gmpc.MetaData.Widgets
             cur_song = song.copy();
             song_checksum = Gmpc.Misc.song_checksum(song);
 
-            metawatcher.data_changed.connect((csong, type, result, met) => {
+            metawatcher.data_changed.connect((csong, type, result, met) =>
+            {
                 if(type == cur_type && song_checksum == Gmpc.Misc.song_checksum(csong))
                 {
-                    if(result == Gmpc.MetaData.Result.AVAILABLE) {
-                            this.set_from_item(met);
-                     }else if (result == Gmpc.MetaData.Result.FETCHING) {
-                            this.set_text(_("Fetching..."));
-                     }else {
-                            this.set_from_item(null);
+                    if(result == Gmpc.MetaData.Result.AVAILABLE)
+                    {
+                        this.set_from_item(met);
                     }
-                    
+                    else if (result == Gmpc.MetaData.Result.FETCHING)
+                    {
+                        this.set_text(_("Fetching..."));
+                    }
+                    else
+                    {
+                        this.set_from_item(null);
+                    }
+
                 }
             });
 
             /** Query */
             Gmpc.MetaData.Item item = null;
             var a = metawatcher.query(cur_song, type, out item);
-            if(a == Gmpc.MetaData.Result.AVAILABLE) {
+            if(a == Gmpc.MetaData.Result.AVAILABLE)
+            {
                 this.set_from_item(item);
-            }else if (a == Gmpc.MetaData.Result.FETCHING) {
+            }
+            else if (a == Gmpc.MetaData.Result.FETCHING)
+            {
                 this.set_text(_("Fetching..."));
-            }else {
+            }
+            else
+            {
                 this.set_from_item(null);
             }
-            this.populate_popup.connect((source, menu)=>{
+            this.populate_popup.connect((source, menu)=>
+            {
                 /*  Add refetch */
                 var mitem = new Gtk.ImageMenuItem.with_label(_("Refetch"));
                 mitem.set_image(
                     new Gtk.Image.from_stock("gtk-refresh", Gtk.IconSize.MENU));
                 mitem.activate.connect((source)=>{
                     metawatcher.query(cur_song, type|Gmpc.MetaData.Type.QUERY_NO_CACHE, out item);
-                 });
-                 menu.append(mitem);
-                 mitem.show();
-                             
+                });
+                menu.append(mitem);
+                mitem.show();
+
                 /*  Add selector */
                 mitem = new Gtk.ImageMenuItem.with_label(_("Metadata selector"));
                 mitem.set_image(
                     new Gtk.Image.from_stock("gtk-edit", Gtk.IconSize.MENU));
                 mitem.activate.connect((source)=>{
                     new Gmpc.MetaData.EditWindow(cur_song, cur_type);
-                 });
-                 menu.append(mitem);
-                 mitem.show();
+                });
+                menu.append(mitem);
+                mitem.show();
             });
 
         }

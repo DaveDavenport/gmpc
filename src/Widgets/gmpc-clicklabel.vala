@@ -1,7 +1,7 @@
 /* Gnome Music Player Client (GMPC)
  * Copyright (C) 2004-2012 Qball Cow <qball@gmpclient.org>
  * Project homepage: http://gmpclient.org/
- 
+
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -24,18 +24,19 @@ public class Gmpc.Clicklabel : Gtk.EventBox
 {
     private Gtk.Label label                 = null;
     private new bool sensitive              = false;
-    private int size                        = 10*Pango.SCALE; 
+    private int size                        = 10*Pango.SCALE;
     private bool italic                     = false;
     private bool bold                       = false;
     private bool underline                  = false;
     private Pango.AttrList attributes       = null;
     private bool mouseCursorInside          = false;
-    
-    private enum Sighandler {
+
+    private enum Sighandler
+    {
         ENTER_NOTIFY,
         LEAVE_NOTIFY,
         BUTTON_RELEASE,
-		BUTTON_PRESS,
+        BUTTON_PRESS,
         KEY_RELEASE,
         FOCUS_IN,
         FOCUS_OUT,
@@ -43,19 +44,19 @@ public class Gmpc.Clicklabel : Gtk.EventBox
     }
     /* 6 == Sighandler.NUM_SIGNALS  vala stupidity. */
     private ulong handlers[7];
-    
+
 
     /**
-     * Constructor 
+     * Constructor
      */
     public Clicklabel(string value)
     {
         /**
-         * Attribute list 
+         * Attribute list
          */
         attributes = new Pango.AttrList();
 
-        /* evenbox has no window, otherwise it shows ugly 
+        /* evenbox has no window, otherwise it shows ugly
          * with gradient themes
          */
         this.set_visible_window(false);
@@ -71,7 +72,7 @@ public class Gmpc.Clicklabel : Gtk.EventBox
         var pfd = fd.get_font_description();
         /* set size */
         this.size = pfd.get_size();
-          
+
 
         update();
         /* Set our own attributes */
@@ -79,109 +80,130 @@ public class Gmpc.Clicklabel : Gtk.EventBox
 
         /* pack label */
         this.add(label);
-        
+
         /* keep track of cursor */
-        this.enter_notify_event.connect( (source, event) => {
+        this.enter_notify_event.connect( (source, event) =>
+        {
             this.mouseCursorInside = true;
             return false;
         });
-        this.leave_notify_event.connect( (source, event) => {
+        this.leave_notify_event.connect( (source, event) =>
+        {
             this.mouseCursorInside = false;
             return false;
         });
-        
+
         /* Set widget sensitive */
         this.set_sensitive(true);
 
     }
-    
+
     /**
      * Set sensitive
      */
-    public new void set_sensitive(bool sensitive_state) {
-        if (this.sensitive == sensitive_state) {
+    public new void set_sensitive(bool sensitive_state)
+    {
+        if (this.sensitive == sensitive_state)
+        {
             return;
         }
-        else if (sensitive_state == true){
+        else if (sensitive_state == true)
+        {
             /**
              * Underline text when focus in
              */
             handlers[Sighandler.ENTER_NOTIFY] = this.enter_notify_event.connect(
-                (source, event) => {
-                    this.set_do_underline(true);
-                    return false;
-                });
+                                                    (source, event) =>
+            {
+                this.set_do_underline(true);
+                return false;
+            });
 
             /**
-             * Change back when focus out 
+             * Change back when focus out
              */
             handlers[Sighandler.LEAVE_NOTIFY] = this.leave_notify_event.connect(
-                (source, event) => {
-                    this.set_do_underline(false);
-                    return false;
-                });
+                                                    (source, event) =>
+            {
+                this.set_do_underline(false);
+                return false;
+            });
 
 
             handlers[Sighandler.BUTTON_PRESS] = this.button_press_event.connect(
-                (source, event) => {
-                    if(event.button == 1) {
-						return true;
-                    }else if (event.button == 3) {
-						return true;
-					}
-                    return false;
-                });
+                                                    (source, event) =>
+            {
+                if(event.button == 1)
+                {
+                    return true;
+                }
+                else if (event.button == 3)
+                {
+                    return true;
+                }
+                return false;
+            });
 
             handlers[Sighandler.BUTTON_RELEASE] = this.button_release_event.connect(
-                (source, event) => {
-                    if(event.button == 1) {
-                        clicked((event.state&Gdk.ModifierType.MOD1_MASK) 
-                                            == Gdk.ModifierType.MOD1_MASK);
-                    }else if (event.button == 3) {
-						stdout.printf("click-label context menu\n");
-						context_menu();
-						return true;
-					}
-                    return false;
-                });
+                    (source, event) =>
+            {
+                if(event.button == 1)
+                {
+                    clicked((event.state&Gdk.ModifierType.MOD1_MASK)
+                    == Gdk.ModifierType.MOD1_MASK);
+                }
+                else if (event.button == 3)
+                {
+                    stdout.printf("click-label context menu\n");
+                    context_menu();
+                    return true;
+                }
+                return false;
+            });
 
             handlers[Sighandler.KEY_RELEASE] = this.key_release_event.connect(
-                (source, event) => {
-                    if(event.keyval == 65293 /* enter */ ) {
-                        clicked((event.state&Gdk.ModifierType.MOD1_MASK) 
-                                            == Gdk.ModifierType.MOD1_MASK);
-                    }
-                    return false;
-                });
+                                                   (source, event) =>
+            {
+                if(event.keyval == 65293 /* enter */ )
+                {
+                    clicked((event.state&Gdk.ModifierType.MOD1_MASK)
+                    == Gdk.ModifierType.MOD1_MASK);
+                }
+                return false;
+            });
 
             handlers[Sighandler.FOCUS_IN] = this.focus_in_event.connect(
-                (source, event) => {
-                    this.set_do_underline(true);
-                    return false;
-                });
+                                                (source, event) =>
+            {
+                this.set_do_underline(true);
+                return false;
+            });
             handlers[Sighandler.FOCUS_OUT] = this.focus_out_event.connect(
-                (source, event) => {
-                    this.set_do_underline(false);
-                    return false;
-                });
-            
+                                                 (source, event) =>
+            {
+                this.set_do_underline(false);
+                return false;
+            });
+
             /* Show underline, if mouse already inside */
-            if (this.mouseCursorInside) {
+            if (this.mouseCursorInside)
+            {
                 this.set_do_underline(true);
             }
 
             this.sensitive = true;
         }
-        else {
+        else
+        {
             /**
              * disconnect all events
              */
             for (int i = 0; i < Sighandler.NUM_SIGNALS; i++)
                 this.disconnect(handlers[i]);
-                
+
             /* don't show underline if insensitive  */
             this.set_do_underline(false);
-                
+
             this.sensitive = false;
         }
     }
@@ -189,16 +211,17 @@ public class Gmpc.Clicklabel : Gtk.EventBox
     /**
      * Get sensitivity state
      */
-    public new bool get_sensitive() {
+    public new bool get_sensitive()
+    {
         return this.sensitive;
     }
 
     /**
-     * Set font size 
+     * Set font size
      */
     public void font_size(int nsize)
     {
-        this.size = nsize*Pango.SCALE; 
+        this.size = nsize*Pango.SCALE;
         update();
     }
 
@@ -245,37 +268,46 @@ public class Gmpc.Clicklabel : Gtk.EventBox
     /**
      * Private functions
      */
-     private void update()
-     {
+    private void update()
+    {
         /* TODO: Broken by vala */
         Pango.Attribute attr    = null;
 
         /* Set style  */
         /* italic */
-        if(this.italic) {
-            attr                = Pango.attr_style_new(Pango.Style.ITALIC); 
-        }else {
-            attr                = Pango.attr_style_new(Pango.Style.NORMAL); 
+        if(this.italic)
+        {
+            attr                = Pango.attr_style_new(Pango.Style.ITALIC);
+        }
+        else
+        {
+            attr                = Pango.attr_style_new(Pango.Style.NORMAL);
         }
         attr.start_index        = 0;
         attr.end_index          = -1;
         Gmpc.Fix.change(attributes,(owned)attr);
 
         /* bold */
-        if(this.bold) {
-            attr                = Pango.attr_weight_new(Pango.Weight.BOLD); 
-        }else {
-            attr                = Pango.attr_weight_new(Pango.Weight.NORMAL); 
+        if(this.bold)
+        {
+            attr                = Pango.attr_weight_new(Pango.Weight.BOLD);
+        }
+        else
+        {
+            attr                = Pango.attr_weight_new(Pango.Weight.NORMAL);
         }
         attr.start_index        = 0;
         attr.end_index          = -1;
         Gmpc.Fix.change(attributes,(owned)attr);
 
         /* underline */
-        if(this.underline) {
-            attr                = Pango.attr_underline_new(Pango.Underline.SINGLE); 
-        }else {
-            attr                = Pango.attr_underline_new(Pango.Underline.NONE); 
+        if(this.underline)
+        {
+            attr                = Pango.attr_underline_new(Pango.Underline.SINGLE);
+        }
+        else
+        {
+            attr                = Pango.attr_underline_new(Pango.Underline.NONE);
         }
         attr.start_index        = 0;
         attr.end_index          = -1;
@@ -288,5 +320,5 @@ public class Gmpc.Clicklabel : Gtk.EventBox
         //attributes.change((owned)attr);
         Gmpc.Fix.change(attributes,(owned)attr);
         label.set_attributes(attributes);
-     }
+    }
 }

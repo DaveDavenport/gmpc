@@ -204,7 +204,7 @@ namespace Gmpc
         {
             Profile prof = this.list.lookup(id);
             if(prof == null)
-              return null;
+                return null;
             return prof.name;
         }
         /**
@@ -361,7 +361,9 @@ namespace Gmpc
                     var iter = GLib.HashTableIter<string, Profile>(this.list);
                     iter.next(out id, out prof);
                     this.set_current(id);
-                } else {
+                }
+                else
+                {
                     this.add_default();
                     this.load_from_config();
                     this.changed_internal(Action.ADDED, Column.NUM_COLS, "Default");
@@ -519,7 +521,8 @@ namespace Gmpc
         void
         set_profile_from_name(string name)
         {
-            var prof = this.list.find((id, prof) => {
+            var prof = this.list.find((id, prof) =>
+            {
                 return (name == prof.name);
             });
             MpdInteraction.set_current_profile(prof.id);

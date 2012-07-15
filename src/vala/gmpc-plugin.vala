@@ -1,7 +1,7 @@
 /* Gnome Music Player Client (GMPC)
  * Copyright (C) 2004-2012 Qball Cow <qball@gmpclient.org>
  * Project homepage: http://gmpclient.org/
- 
+
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -23,14 +23,17 @@ using Gmpc;
 using MPD;
 
 
-namespace Gmpc {
-    namespace Plugin {
+namespace Gmpc
+{
+    namespace Plugin
+    {
         /**
          * This is the base class that a plugin should inherit from.
          *
          */
-        public abstract class Base : GLib.Object { 
-            /* This string tell gmpc what translation domain to use when trying to translate the plugins name. 
+        public abstract class Base : GLib.Object
+        {
+            /* This string tell gmpc what translation domain to use when trying to translate the plugins name.
              * If NULL then gmpc's translation domain is used.
              */
             public unowned string translation_domain = null;
@@ -43,7 +46,7 @@ namespace Gmpc {
              */
             public int id;
             /**
-             * The type of the plugin. see #PluginType. 
+             * The type of the plugin. see #PluginType.
              * This is inherited from the old style plugins and no longer used.
              * It will be used to mark a plugin internal
              */
@@ -60,15 +63,15 @@ namespace Gmpc {
              * This is called before the plugin is destroyed. Plugins should save it state here.
              *
              * A Browser plugin should store the position in the side-tree here.
-             * Optional function. 
+             * Optional function.
              */
-            public virtual void save_yourself () 
+            public virtual void save_yourself ()
             {
             }
             /**
              * Function used by gmpc to check if the plugin is enabled.
              * By default it is stored in the get_name() category under the enabled key.
-             * 
+             *
              * @return The state (true or false)
              */
             public virtual bool get_enabled ()
@@ -80,15 +83,15 @@ namespace Gmpc {
             /**
              * Function to enable/disable the plugin
              * @param state the enable state to set the plugin in. (true or false)
-             * 
-             * Function used by gmpc to enable/disable the plugin. 
+             *
+             * Function used by gmpc to enable/disable the plugin.
              * By default it is stored in the get_name() category under the enabled key.
              * If something needs to be done on enable/disable override this function.
              */
             public virtual void set_enabled (bool state)
             {
                 if(this.get_name() != null)
-                    Gmpc.config.set_int(this.get_name(), "enabled", (int)state); 
+                    Gmpc.config.set_int(this.get_name(), "enabled", (int)state);
             }
 
         }
@@ -97,18 +100,24 @@ namespace Gmpc {
          * If need to remove or undate an entry call pl3_tool_menu_update(). This will tell gmpc
          * To clear the menu, and call this function again on every plugin.
          */
-        public interface ToolMenuIface : Base {
+public interface ToolMenuIface :
+        Base
+        {
             public abstract int tool_menu_integration(Gtk.Menu menu);
         }
         public delegate void MetaDataCallback(owned GLib.List<Gmpc.MetaData.Item>? list);
         /* untested */
-        public interface MetaDataIface : Base {
+public interface MetaDataIface :
+        Base
+        {
             public abstract void get_metadata (MPD.Song? song, Gmpc.MetaData.Type type, MetaDataCallback callback);
             /* Set get priority */
             public abstract int get_priority ();
             public abstract void set_priority (int priority);
         }
-        public interface BrowserIface : Base {
+public interface BrowserIface :
+        Base
+        {
             /* Function is called by gmpc, the plugin should then insert itself in the left tree  */
             public abstract  void browser_add (Gtk.Widget category_tree);
             /* This gets called, the plugin should add it view in container */
@@ -127,48 +136,59 @@ namespace Gmpc {
             }
 
         }
-		public enum SidebarState {
-			FULL,
-			COLLAPSED
-		}
-        public interface SidebarIface : Base {
+        public enum SidebarState
+        {
+            FULL,
+            COLLAPSED
+        }
+public interface SidebarIface :
+        Base
+        {
             /* This works similar to the preferences pane. The vbox will contain the generated
              * title as first element if title is not epmty, and you can pack your own widgets
              * into it. */
             public abstract void sidebar_pane_construct (Gtk.VBox parent);
             public abstract void sidebar_pane_destroy (Gtk.VBox parent);
 
-			public virtual void sidebar_set_state(Gmpc.Plugin.SidebarState state)
-			{
-			}
-            
+            public virtual void sidebar_set_state(Gmpc.Plugin.SidebarState state)
+            {
+            }
+
             /* Override this if you want to give a custom title in the sidebar or
              * an empty string to disable the automatic generated title */
-            public virtual string sidebar_get_title() {
+            public virtual string sidebar_get_title()
+            {
                 return (string)null;
             }
-            
+
             /* set a default position in the sidebar. positive values add  in the scrolling pane
              * below the browsers, negative values add sticking at the bottom  */
-            public virtual int sidebar_get_position() {
+            public virtual int sidebar_get_position()
+            {
                 return 0;
             }
         }
-        public interface IntegrateSearchIface : Base {
+public interface IntegrateSearchIface :
+        Base
+        {
             public virtual bool field_supported (MPD.Tag.Type tag)
             {
                 return true;
             }
             public abstract MPD.Data.Item ? search(MPD.Tag.Type tag, string search_query);
         }
-        public interface PreferencesIface : Base {
+public interface PreferencesIface :
+        Base
+        {
             public abstract void preferences_pane_construct (Gtk.Container container);
             public abstract void preferences_pane_destroy (Gtk.Container container);
 
         }
 
         /* untested */
-        public interface SongListIface : Base {
+public interface SongListIface :
+        Base
+        {
             public abstract int song_list (Gtk.Widget tree, Gtk.Menu menu);
 
         }
