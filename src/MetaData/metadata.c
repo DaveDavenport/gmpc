@@ -60,6 +60,7 @@ typedef struct {
     guint id;
     /* The callback to call when the query is done, or NULL */
     MetaDataCallback callback;
+    MetaDataListCallback callback_list;
     /* Callback user_data pointer*/
     gpointer data;
     /* The song the data is queries for */
@@ -307,8 +308,8 @@ static gboolean glyr_return_queue(void *user_data)
             }
         } else if (mtd->action == MTD_ACTION_QUERY_LIST)
         {
-            if(mtd->callback){
-                MetaDataListCallback cb = (MetaDataListCallback)mtd->callback;
+            if(mtd->callback_list){
+                MetaDataListCallback cb = mtd->callback_list;
                 // TODO: Update callback for current usecase.
                 cb(NULL, "", mtd->met_results, mtd->data);
                 // Send done.
@@ -1250,7 +1251,7 @@ void metadata_get_list_cancel(gpointer data)
 {
 }
 
-gpointer metadata_get_list(mpd_Song  *song, MetaDataType type, void (*callback)(gpointer handle,const gchar *plugin_name, GList *list, gpointer data), gpointer data)
+gpointer metadata_get_list(mpd_Song  *song, MetaDataType type, MetaDataListCallback callback, gpointer data)
 {
     meta_thread_data *mtd = NULL;
 
@@ -1263,7 +1264,7 @@ gpointer metadata_get_list(mpd_Song  *song, MetaDataType type, void (*callback)(
     /* Set the type */
     mtd->type = type;
     /* the callback */
-    mtd->callback = callback;
+    mtd->callback_list = callback;
     /* the callback data */
     mtd->data = data;
     /* Set that we are fetching */

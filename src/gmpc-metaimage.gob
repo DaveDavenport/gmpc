@@ -1,7 +1,7 @@
 /* Gnome Music Player Client (GMPC)
  * Copyright (C) 2004-2012 Qball Cow <qball@gmpclient.org>
  * Project homepage: http://gmpclient.org/
- 
+
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -34,7 +34,7 @@ requires 2.0.0
 
 %{
 static unsigned int num_drag_targets = 4; /* skip hyperlinks for now */
-static GtkTargetEntry data_image_drag_target[] = 
+static GtkTargetEntry data_image_drag_target[] =
 {
     { (gchar *)"image/jpeg", 0, 0 },
     { (gchar *)"image/png",  0, 1 },
@@ -95,13 +95,13 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 	 */
 	public gboolean is_visible = {TRUE};
 
-	property INT image_type 
+	property INT image_type
 		(nick = "Image type",
 		blurb = "Type of the image, like artist art",
 		default_value = META_ALBUM_ART,
 		export,
 		link);
-		 
+
 	property INT size
 		(nick = "Size",
 		blurb = "Size of the image",
@@ -151,15 +151,15 @@ class Gmpc:MetaImage from Gtk:Event:Box{
         self->connection = conn;
         if(conn)
         {
-            self->_priv->status_signal = g_signal_connect_swapped(G_OBJECT(gmpcconn), 
+            self->_priv->status_signal = g_signal_connect_swapped(G_OBJECT(gmpcconn),
                     "status_changed",
                     G_CALLBACK(self_update_cover),
                     G_OBJECT(self));
 
-            self->_priv->connect_signal = g_signal_connect_swapped(G_OBJECT(gmpcconn), 
+            self->_priv->connect_signal = g_signal_connect_swapped(G_OBJECT(gmpcconn),
                     "connection_changed",
                     G_CALLBACK(self_connection_changed),
-                    G_OBJECT(self));                            		
+                    G_OBJECT(self));
         }
     }
     private GtkWidget *image = { (GtkWidget *)gmpc_meta_image_async_new()} ;
@@ -168,7 +168,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
     init (self)
     {
 	    GtkWidget *win = NULL;
-	    gtk_container_add(GTK_CONTAINER(self), self->_priv->image);		
+	    gtk_container_add(GTK_CONTAINER(self), self->_priv->image);
 	    gtk_container_set_resize_mode(GTK_CONTAINER(self), GTK_RESIZE_IMMEDIATE);
 	    gtk_widget_show_all(GTK_WIDGET(self));
 
@@ -177,7 +177,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 	    gtk_widget_add_events(GTK_WIDGET(self->_priv->image), GDK_POINTER_MOTION_MASK);
 	    gtk_widget_set_no_show_all(GTK_WIDGET(self),TRUE);
 
-	    win = gtk_window_new(GTK_WINDOW_POPUP); 
+	    win = gtk_window_new(GTK_WINDOW_POPUP);
 	    gtk_window_set_resizable(GTK_WINDOW(win), FALSE);
 	    gtk_widget_modify_bg(win, GTK_STATE_NORMAL, &(GTK_WIDGET(self)->style->black));
 	    gtk_container_set_border_width(GTK_CONTAINER(win), 6);
@@ -186,7 +186,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 	    gtk_widget_set_tooltip_window(GTK_WIDGET(self), GTK_WINDOW(win));
 	    g_signal_connect(G_OBJECT(self), "query-tooltip", G_CALLBACK(self_tooltip_query), win);
     }
-    private 
+    private
     gboolean tooltip_query(self, gint x, gint y,gboolean keyboard_mode, GtkTooltip *tip, GtkWidget *win)
     {
         if(self->_priv->state == STATE_IMAGE)
@@ -198,10 +198,10 @@ class Gmpc:MetaImage from Gtk:Event:Box{
     }
 
 	override (G:Object)
-		void 
+		void
 		dispose(G:Object *obj)
 		{
-			Self *self = GMPC_METAIMAGE(obj); 
+			Self *self = GMPC_METAIMAGE(obj);
             if(self->_priv->meta_id)
 			{
 				g_signal_handler_disconnect(G_OBJECT(gmw),self->_priv->meta_id);
@@ -225,8 +225,8 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 			}
 			PARENT_HANDLER(obj);
 		}
-    private 
-        void 
+    private
+        void
         drag_data_recieved (self,
                 GdkDragContext     *context,
                 gint                x,
@@ -242,7 +242,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
             {
                 if(info < num_drag_targets)
                 {
-                    gchar **uri =  gtk_selection_data_get_uris(data);   
+                    gchar **uri =  gtk_selection_data_get_uris(data);
                     /* Only one uri is interresting */
                     if(uri && uri[0])
                     {
@@ -272,8 +272,8 @@ class Gmpc:MetaImage from Gtk:Event:Box{
         }
         /* hack to make the "delayed" image load when it gets visible"
          */
-        private 
-        gboolean 
+        private
+        gboolean
         expose_event(self, GdkEventExpose *event, gpointer data)
         {
             g_signal_handler_disconnect(G_OBJECT(self), self->_priv->expose_id);
@@ -303,7 +303,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 
             return gmi;
         }
-	public 
+	public
 		GtkWidget * new (int type)
 		{
 			Self *gmi =  GET_NEW;
@@ -320,7 +320,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
             return (GtkWidget *)gmi;
 		}
 
-	public	
+	public
 		void
 		update_cover(self, MpdObj *mi, ChangedStatusType what, GmpcConnection *gc)
 		{
@@ -337,16 +337,16 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 					mpd_Song *song = mpd_playlist_get_current_song(self->connection);
 					if(song)
 					{
-                        if( self->_priv->refresh == FALSE && 
-                            self->_priv->song && 
-                            self->_priv->song->artist && 
-                            song->artist && 
+                        if( self->_priv->refresh == FALSE &&
+                            self->_priv->song &&
+                            self->_priv->song->artist &&
+                            song->artist &&
                             strcmp(song->artist, self->_priv->song->artist) == 0)
                         {
                             /* If we are artist iamge, don't update, same artist */
                             if(self->image_type == META_ARTIST_ART ) return;
                             /* If we are album, check if album matches too */
-                            else if(self->image_type == META_ALBUM_ART && 
+                            else if(self->image_type == META_ALBUM_ART &&
                                 self->_priv->song->album && song->album &&
                                 strcmp(self->_priv->song->album, song->album) == 0){
                                 return;
@@ -389,7 +389,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 
 		}
 
-	public 
+	public
 		void
 		update_cover_from_song(self, const mpd_Song *song)
 		{
@@ -423,7 +423,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 			}
 			if(met)
 			{
-			    meta_data_free(met);	
+			    meta_data_free(met);
 			}
 		}
         private
@@ -451,7 +451,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
             }
             return FALSE;
         }
-	public 
+	public
 		void
 		update_cover_from_song_delayed(self, mpd_Song *song)
         {
@@ -463,7 +463,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
             /* hack to make it load when it gets visible */
             self->_priv->expose_id = g_signal_connect(G_OBJECT(self), "expose-event", G_CALLBACK(self_expose_event) , NULL);
         }
-		
+
 	private
 	void
 	meta_callback(GmpcMetaWatcher *gmv, mpd_Song *song, MetaDataType type, MetaDataResult ret, MetaData *met,gpointer data)
@@ -510,13 +510,13 @@ class Gmpc:MetaImage from Gtk:Event:Box{
     }
 
 
-	public 
+	public
 		void
 		set_cover_na(self)
         {
             int border = FALSE;
             GError *error = NULL;
-            GdkPixbuf *pb2 = NULL; 
+            GdkPixbuf *pb2 = NULL;
 
 
 	    if(self->_priv->state == STATE_NA) {
@@ -531,7 +531,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                 self->_priv->image_url = NULL;
             }
             if(self->hide_on_na)
-            {		
+            {
                 gtk_widget_hide(GTK_WIDGET(self));
                 return;
             }
@@ -568,7 +568,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                 gmpc_meta_image_async_clear_now(GMPC_META_IMAGE_ASYNC(self->_priv->image));
             }
         }
-	public 
+	public
 		void
 		set_cover_fetching(self)
         {
@@ -587,7 +587,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                 self->_priv->image_url = NULL;
             }
             if(self->hide_on_na)
-            {		
+            {
                 gtk_widget_hide(GTK_WIDGET(self));
             }
 
@@ -627,9 +627,9 @@ class Gmpc:MetaImage from Gtk:Event:Box{
             }
         }
 
-    public	
+    public
         void
-        set_cover_raw(self, unsigned char *data, unsigned int size, unsigned char *md5sum) 
+        set_cover_raw(self, unsigned char *data, unsigned int size, unsigned char *md5sum)
 		{
 			self->_priv->state = STATE_IMAGE;
 			gmpc_meta_image_async_set_from_raw(GMPC_META_IMAGE_ASYNC(self->_priv->image),data, size, self->size,
@@ -646,12 +646,12 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 				gmpc_meta_image_async_set_from_raw(GMPC_META_IMAGE_ASYNC(self->_priv->tooltip_image),
 					data, size, 350,
 					0,
-					md5sum	
+					md5sum
 					);
 			}
 		}
 
-	public 
+	public
 		void
 		set_is_visible(self, gboolean is_visible)
 		{
@@ -667,7 +667,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 			}
 		}
 
-	public 
+	public
 	void
 	query_refetch(self)
 	{
@@ -703,14 +703,14 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 
     }
 
-	private 
-	gboolean	
+	private
+	gboolean
 	menu_populate_callback(self,GdkEventButton *event,  gpointer data)
 	{
 		if(self->_priv->song && event->button == 3)
 		{
 			GtkWidget *menu = gtk_menu_new();
-			GtkWidget *item = NULL; 
+			GtkWidget *item = NULL;
 
             self_menu_populate_client(self,GTK_MENU(menu));
 
@@ -759,7 +759,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 	{
         gchar *p;
 		mpd_Song *song = mpd_songDup(self->_priv->song);
-		MetaDataType type = self->image_type;
 		GtkFileFilter *gff = gtk_file_filter_new();
 		GtkWidget *fcd = gtk_file_chooser_dialog_new(_("Select File"),NULL,
 					 GTK_FILE_CHOOSER_ACTION_OPEN,
@@ -768,16 +767,16 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 				      NULL);
 		gtk_file_filter_set_name(gff, _("Images"));
 		gtk_file_filter_add_pixbuf_formats(gff);
-		gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(fcd), gff);   
+		gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(fcd), gff);
 
 		gff = gtk_file_filter_new();
 		gtk_file_filter_set_name(gff, _("All"));
 		gtk_file_filter_add_pattern(gff, "*");
-		gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(fcd), gff);   
+		gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(fcd), gff);
 
 		gtk_widget_show_all(fcd);
-             
-        p = cfg_get_single_value_as_string(config, "MetaData", "image-file-chooser"); 
+
+        p = cfg_get_single_value_as_string(config, "MetaData", "image-file-chooser");
         if(p) {
             gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(fcd), p);
             g_free(p);
@@ -785,7 +784,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
         switch(gtk_dialog_run(GTK_DIALOG(fcd)))
 		{
 			case GTK_RESPONSE_ACCEPT:
-				{	
+				{
 					gchar *filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(fcd));
 					{
 						/* Create MetaData object */
@@ -799,13 +798,13 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 						/* free Metadata object */
 						meta_data_free(met);
 
-						cfg_set_single_value_as_string(config, "MetaData", "image-file-chooser", filename); 
+						cfg_set_single_value_as_string(config, "MetaData", "image-file-chooser", filename);
 					}
 
 				}
 			default:
 				break;
-		} 
+		}
 		gtk_widget_destroy(fcd);
 		mpd_freeSong(song);
 	}
@@ -814,7 +813,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 	void
 	reload_image(self)
 	{
-		//gmpc_meta_image_async_clear(GMPC_META_IMAGE_ASYNC(self->_priv->image)); 
+		//gmpc_meta_image_async_clear(GMPC_META_IMAGE_ASYNC(self->_priv->image));
         gmpc_meta_image_async_clear_now(GMPC_META_IMAGE_ASYNC(self->_priv->image));
         switch(self->_priv->state)
 		{

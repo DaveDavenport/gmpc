@@ -180,6 +180,7 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window
 
     public void callback(void *handle,string? plugin_name,GLib.List<MetaData.Item>? list)
     {
+        stdout.printf("result callback\n");
         bar.pulse();
         if(list == null)
         {

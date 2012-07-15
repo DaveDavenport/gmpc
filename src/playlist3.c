@@ -535,16 +535,16 @@ int pl3_window_key_press_event(GtkWidget * mw, GdkEventKey * event)
             {
                 if(kev == 0) kev+=10;
                 do{
-                    gint type =0 ;
-                    gtk_tree_model_get(pl3_tree, &iter, PL3_CAT_TYPE, &type, -1);
-                    if(type >= 0) i_index++;
-                    if(i_index == kev && type >= 0)
+                    gint new_type =0 ;
+                    gtk_tree_model_get(pl3_tree, &iter, PL3_CAT_TYPE, &new_type, -1);
+                    if(new_type >= 0) i_index++;
+                    if(i_index == kev && new_type >= 0)
                     {
                         GtkWidget *cat_tree = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "cat_tree"));
                         GtkTreeSelection *select = gtk_tree_view_get_selection(GTK_TREE_VIEW(cat_tree));
 
                         // if this is allready selected, do +10. this allows us to go up to 20 browsers.
-                        if(type == old_type  && gtk_tree_selection_iter_is_selected(select, &iter)) {
+                        if(new_type == old_type  && gtk_tree_selection_iter_is_selected(select, &iter)) {
                             kev+=10;
                         }else{
                             gtk_tree_selection_select_iter(select, &iter);
@@ -920,7 +920,7 @@ static gboolean pl3_cat_select_function(GtkTreeSelection *select, GtkTreeModel *
     }
     return FALSE;
 }
-void pl3_sidebar_text_get_key_number( GtkTreeViewColumn *column,
+static void pl3_sidebar_text_get_key_number( GtkTreeViewColumn *column,
         GtkCellRenderer *renderer,
         GtkTreeModel *model,
         GtkTreeIter *d_iter,
@@ -1060,7 +1060,7 @@ void create_playlist3(void)
     // Enable tooltip on the treeview.
     gtk_tree_view_set_tooltip_column(GTK_TREE_VIEW(tree), PL3_CAT_TITLE);
 
-    sidebar_text = renderer = my_cell_renderer_new();//gtk_cell_renderer_pixbuf_new();
+    sidebar_text = renderer = GTK_CELL_RENDERER(my_cell_renderer_new());
     g_object_set(G_OBJECT(renderer), "xalign", 0.5,NULL);
     column = gtk_tree_view_column_new();
 
