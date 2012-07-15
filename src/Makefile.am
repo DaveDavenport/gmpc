@@ -330,7 +330,7 @@ gmpc_GOBHFILES=\
 
 %.gob.stamp: %.gob
 	$(QUIET_GE) echo "  GOB   $< - $(top_builddir)/src/gob/"
-	@GOB2@ --always-private-header $<
+	@GOB2@ --no-lines --always-private-header $<
 	@touch $(top_builddir)/src/$@
 
 
