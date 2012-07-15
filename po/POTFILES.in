@@ -61,7 +61,7 @@ src/vala/gmpc-favorites.c
 src/vala/gmpc-mpddata-treeview-tooltip.c
 src/vala/gmpc-paned-size-group.c
 src/vala/gmpc-plugin.c
-src/vala/gmpc-test-plugin.c
+src/vala/gmpc-metadata-editwindow.c
 src/vala/gmpc-url-fetching-gui.c
 
 # Tools

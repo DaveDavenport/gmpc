@@ -95,7 +95,7 @@ gmpc_SOURCES=\
     vala/gmpc-mpddata-treeview-tooltip.vala\
     vala/gmpc-plugin.vala\
     vala/gmpc-url-fetching-gui.vala\
-    vala/gmpc-test-plugin.vala\
+    vala/gmpc-metadata-editwindow.vala\
     vala/gmpc-paned-size-group.vala\
     vala/gmpc-sidebar-plugins.vala\
     MetaData/metadata.c\
