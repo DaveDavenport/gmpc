@@ -1,7 +1,7 @@
 /* Gnome Music Player Client (GMPC)
  * Copyright (C) 2004-2012 Qball Cow <qball@gmpclient.org>
  * Project homepage: http://gmpclient.org/
- 
+
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -35,19 +35,19 @@
 extern config_obj *config;
 extern MpdObj *connection;
 extern GmpcProfiles *gmpc_profiles;
-extern GmpcConnection 	*gmpcconn;
+extern GmpcConnection     *gmpcconn;
 
 
 typedef struct _gmpcPluginParent gmpcPluginParent;
 /* Plugin Type's */
 /* This is a bitmask.*/
 typedef enum {
-	GMPC_PLUGIN_DUMMY		= 1,
-	GMPC_PLUGIN_PL_BROWSER	= 2,
-	GMPC_PLUGIN_NO_GUI		= 4,
-	GMPC_INTERNALL			= 8,
-	GMPC_DEPRECATED			= 16,
-	GMPC_PLUGIN_META_DATA	= 32,
+    GMPC_PLUGIN_DUMMY        = 1,
+    GMPC_PLUGIN_PL_BROWSER    = 2,
+    GMPC_PLUGIN_NO_GUI        = 4,
+    GMPC_INTERNALL            = 8,
+    GMPC_DEPRECATED            = 16,
+    GMPC_PLUGIN_META_DATA    = 32,
     /* Make compiler happy about GMPC_PLUGIN_PL_BROWSER|GMPC_PLUGIN_METADATA */
     GMPC_BROWSER_META       = 34
 } PluginType;
@@ -55,22 +55,22 @@ typedef enum {
 /* the gtk_tree_store row's */
 typedef enum
 {
-	PL3_CAT_TYPE, /** Plugin id */
-	PL3_CAT_TITLE, /** title that is showed */
-	PL3_CAT_INT_ID, /* id */
-	PL3_CAT_ICON_ID, /* icon id */
-	PL3_CAT_ORDER, /* int for sorting the list */
-	PL3_CAT_BOLD,
-	PL3_CAT_STOCK_ID,
-	PL3_CAT_NROWS
+    PL3_CAT_TYPE, /** Plugin id */
+    PL3_CAT_TITLE, /** title that is showed */
+    PL3_CAT_INT_ID, /* id */
+    PL3_CAT_ICON_ID, /* icon id */
+    PL3_CAT_ORDER, /* int for sorting the list */
+    PL3_CAT_BOLD,
+    PL3_CAT_STOCK_ID,
+    PL3_CAT_NROWS
 } pl3_cat_store;
 
 typedef enum
 {
-PL3_CAT_BROWSER_TOP 			= 0,
-PL3_CAT_BROWSER_LIBRARY 		= 1000,
-PL3_CAT_BROWSER_ONLINE_MEDIA 	= 2000,
-PL3_CAT_BROWSER_MISC			= 3000
+PL3_CAT_BROWSER_TOP             = 0,
+PL3_CAT_BROWSER_LIBRARY         = 1000,
+PL3_CAT_BROWSER_ONLINE_MEDIA     = 2000,
+PL3_CAT_BROWSER_MISC            = 3000
 } Pl3CatBrowserType;
 /* structures */
 /** gmpcPrefPlugin: need to be instant apply.
@@ -78,8 +78,8 @@ PL3_CAT_BROWSER_MISC			= 3000
  * if destroy is called, it needs to detacht it from the container (gtk_container_remove)
  */
 typedef struct {
-	void (*construct)(GtkWidget *container);
-	void (*destroy)(GtkWidget *container);
+    void (*construct)(GtkWidget *container);
+    void (*destroy)(GtkWidget *container);
     /* Padding */
     void (*padding1)                (void);
     void (*padding2)                (void);
@@ -89,24 +89,24 @@ typedef struct {
 /** gmpcPlBrowserPlugin, functions needed for intergration with the playlist browser
  */
 typedef struct {
-	/**
-	 * Adding to the left side tree */
-	void (*add)						(GtkWidget *cat_tree);
-	/**
-	 * If selected,  you need to fill the right screen */
-	void (*selected)				(GtkWidget *container);
-	/** 
-	 * if unselected, you need to remove youself from the container
-	 */
-	void (*unselected)				(GtkWidget *container);
-	int  (*cat_right_mouse_menu)	(GtkWidget *menu, int type, GtkWidget *tree,GdkEventButton *event);
-	void (*cat_key_press)			(GtkWidget *tree, GdkEventKey *event, int selected_type) G_GNUC_DEPRECATED;
-	/****** GO MENU ********/
-	int  (*add_go_menu)				(GtkWidget *menu); 
-	/****** Key presses (in the whole window) **/
-	int  (*key_press_event)			(GtkWidget *mw, GdkEventKey *event, int type);
+    /**
+     * Adding to the left side tree */
+    void (*add)                        (GtkWidget *cat_tree);
+    /**
+     * If selected,  you need to fill the right screen */
+    void (*selected)                (GtkWidget *container);
+    /**
+     * if unselected, you need to remove youself from the container
+     */
+    void (*unselected)                (GtkWidget *container);
+    int  (*cat_right_mouse_menu)    (GtkWidget *menu, int type, GtkWidget *tree,GdkEventButton *event);
+    void (*cat_key_press)            (GtkWidget *tree, GdkEventKey *event, int selected_type) G_GNUC_DEPRECATED;
+    /****** GO MENU ********/
+    int  (*add_go_menu)                (GtkWidget *menu);
+    /****** Key presses (in the whole window) **/
+    int  (*key_press_event)            (GtkWidget *mw, GdkEventKey *event, int type);
     /** Song list right mouse menu intergration.
-     * This is only called (And allowed to be called) if the treeview is a GmpcMpdDataTreeview with songs 
+     * This is only called (And allowed to be called) if the treeview is a GmpcMpdDataTreeview with songs
      */
     int (*song_list_option_menu)    (GmpcMpdDataTreeview *tree, GtkMenu *menu);
     /* Padding */
@@ -122,9 +122,9 @@ typedef struct {
 
 typedef struct {
     /* Set and get priority */
-	int (*get_priority)				(void);
+    int (*get_priority)                (void);
     void (*set_priority)            (int priority);
-	int (*get_image)				(mpd_Song *song, MetaDataType type, char **path) G_GNUC_DEPRECATED;
+    int (*get_image)                (mpd_Song *song, MetaDataType type, char **path) G_GNUC_DEPRECATED;
 
     /* Padding */
     void (*get_uris)                (mpd_Song *song, MetaDataType type, void (*callback)(GList *uris, gpointer data), gpointer data) G_GNUC_DEPRECATED;
@@ -138,52 +138,52 @@ typedef struct {
 /* 17 == 0.15.5 release         */
 /* 18 ==       16 december      */
 /* 19 == 0.16*  24 december     */
-/* 20 == 0.16.5 release         */ 
+/* 20 == 0.16.5 release         */
 /* 21 == 0.17.0 release -> adding padding so abi wont break next time */
 #define PLUGIN_API_VERSION 21
 
 /* sturcture */
 typedef struct {
-	/* Name of the plugin */
-	const char						*name;		
-	/* Version number */
-	const int						version[3];	
-	/* Type of Plugin */
-	PluginType						plugin_type;	
-	/* unique plugin id */
-	/* do not fill in, is done by gmpc */
-	int								id; 
+    /* Name of the plugin */
+    const char                        *name;
+    /* Version number */
+    const int                        version[3];
+    /* Type of Plugin */
+    PluginType                        plugin_type;
+    /* unique plugin id */
+    /* do not fill in, is done by gmpc */
+    int                                id;
 
-	/* path where the plugin is (only directory) can be used to get location of f.e. glade/images 
-	 * Don't use this anymore use: gmpc_get.*_path */
-	/* Do not fill in, done by gmpc */
-	char							*path;	
-	/* function gets called on startup */
-	void							(*init)(void);
-	/* Plugin should destroy all it's widgets and free all allocated space */
-	void                    		(*destroy)(void);
-	/* Browser Plugins */
-	gmpcPlBrowserPlugin				*browser;
-	/* plugin with one signal for changes on Mpd */
-	StatusChangedCallback			mpd_status_changed;
-	/* (dis)connect signal */
-	ConnectionChangedCallback 		mpd_connection_changed;
-	/* structure to let the plugin intergrate it's preferences */
-	gmpcPrefPlugin					*pref;
-	/** Meta data */
-	gmpcMetaDataPlugin 				*metadata;
+    /* path where the plugin is (only directory) can be used to get location of f.e. glade/images
+     * Don't use this anymore use: gmpc_get.*_path */
+    /* Do not fill in, done by gmpc */
+    char                            *path;
+    /* function gets called on startup */
+    void                            (*init)(void);
+    /* Plugin should destroy all it's widgets and free all allocated space */
+    void                            (*destroy)(void);
+    /* Browser Plugins */
+    gmpcPlBrowserPlugin                *browser;
+    /* plugin with one signal for changes on Mpd */
+    StatusChangedCallback            mpd_status_changed;
+    /* (dis)connect signal */
+    ConnectionChangedCallback         mpd_connection_changed;
+    /* structure to let the plugin intergrate it's preferences */
+    gmpcPrefPlugin                    *pref;
+    /** Meta data */
+    gmpcMetaDataPlugin                 *metadata;
 
-	/** Plugin control functions
-	 */
-	int	 							(*get_enabled)(void);
-	void							(*set_enabled)(int enable);
-	/* Function that is called when the plugin is going to be destroyed, 
-	 * This is the place if you want to save settings
-	 */
-	void							(*save_yourself)(void);
+    /** Plugin control functions
+     */
+    int                                 (*get_enabled)(void);
+    void                            (*set_enabled)(int enable);
+    /* Function that is called when the plugin is going to be destroyed,
+     * This is the place if you want to save settings
+     */
+    void                            (*save_yourself)(void);
 
     /* Padding */
-    gint    (*tool_menu_integration)    (GtkMenu *menu); 
+    gint    (*tool_menu_integration)    (GtkMenu *menu);
     const gchar*  (*get_translation_domain)   (void);
     void (*padding3)                (void);
 } gmpcPlugin;
@@ -195,14 +195,14 @@ typedef struct {
 extern GmpcEasyCommand *gmpc_easy_command;
 
 /**
- * Playlist function 
+ * Playlist function
  */
 
 /**
  * Get the treeview and tree_store of the category list on the left.
  */
-GtkListStore *	playlist3_get_category_tree_store(void);
-GtkTreeView *	playlist3_get_category_tree_view(void);
+GtkListStore *    playlist3_get_category_tree_store(void);
+GtkTreeView *    playlist3_get_category_tree_view(void);
 
 /**
  * Get this GtkWindow of the playlist.
@@ -215,7 +215,7 @@ GtkWidget * playlist3_get_window(void);
 gboolean    playlist3_window_is_hidden(void);
 
 /** plugin functions */
-gmpcPluginParent * 	plugin_get_from_id(int id);
+gmpcPluginParent *     plugin_get_from_id(int id);
 
 
 /**
@@ -223,10 +223,10 @@ gmpcPluginParent * 	plugin_get_from_id(int id);
  */
 
 char  *         gmpc_get_full_glade_path(const char *filename);
-gchar * 		gmpc_get_covers_path(const gchar *filename);
-gchar * 		gmpc_get_user_path(const gchar *filename);
+gchar *         gmpc_get_covers_path(const gchar *filename);
+gchar *         gmpc_get_user_path(const gchar *filename);
 gchar *         gmpc_get_cache_directory(const gchar *filename);
-void 			playlist3_insert_browser(GtkTreeIter *iter, gint position);
+void             playlist3_insert_browser(GtkTreeIter *iter, gint position);
 
 
 void pl3_option_menu_activate(void);
@@ -260,16 +260,16 @@ extern GObject *paned_size_group;
 
 
 /**
-* show the main window 
+* show the main window
 */
 void create_playlist3(void);
 /**
- * Get the state of the sidebar 
+ * Get the state of the sidebar
  */
 GmpcPluginSidebarState playlist3_get_sidebar_state(void);
 
 /**
-* hide the main window 
+* hide the main window
 */
 int pl3_hide(void);
 #endif

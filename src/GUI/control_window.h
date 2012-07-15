@@ -36,7 +36,7 @@ void control_window_destroy(GtkWidget *cw);
 /**
  * @param mi the #MpdObj that tirggered the update.
  * @param what a #ChangeStatusType bitmask indicating what changed.
- * @param cw the ControlWindow widget 
+ * @param cw the ControlWindow widget
  *
  * Signal changes to the control_window.
  */

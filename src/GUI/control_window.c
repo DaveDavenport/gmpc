@@ -65,7 +65,7 @@ static void control_window_modify_colors(GtkWidget *base)
     GList *iter;
     if(GTK_IS_HSCALE(base) == FALSE)
     {
-        gtk_widget_modify_bg(base, 
+        gtk_widget_modify_bg(base,
                 GTK_STATE_NORMAL,&(base->style->black));
         gtk_widget_modify_fg(base,
                 GTK_STATE_NORMAL,&(base->style->white));
@@ -96,27 +96,27 @@ static void control_window_leave_fullscreen(GtkWidget *button, GtkWidget *parent
  * Hiding code
  */
 static guint timeout = 0;
-static gboolean control_window_leave_notify_event(GtkWidget *base, 
+static gboolean control_window_leave_notify_event(GtkWidget *base,
         GdkEventCrossing *ev, gpointer data)
 {
-	GtkWidget *hbox = (GtkWidget *)g_object_get_data(G_OBJECT(base), "hbox");
+    GtkWidget *hbox = (GtkWidget *)g_object_get_data(G_OBJECT(base), "hbox");
     if(timeout > 0) {
         g_source_remove(timeout);
         timeout = 0;
     }
     timeout = g_timeout_add_seconds(5, (GSourceFunc) gtk_widget_hide, hbox);
-	return TRUE;
+    return TRUE;
 }
 static gboolean control_window_enter_notify_event(GtkWidget *base,
         GdkEventCrossing *ev, gpointer data)
 {
-	GtkWidget *hbox = (GtkWidget *)g_object_get_data(G_OBJECT(base), "hbox");
+    GtkWidget *hbox = (GtkWidget *)g_object_get_data(G_OBJECT(base), "hbox");
     if(timeout > 0) {
         g_source_remove(timeout);
         timeout = 0;
     }
-	gtk_widget_show(hbox);
-	return TRUE;
+    gtk_widget_show(hbox);
+    return TRUE;
 }
 
 /**
@@ -130,7 +130,7 @@ GtkWidget *create_control_window(GtkWidget *parent)
     /* Create window */
     GtkWidget *base = gtk_event_box_new();
     GtkWidget *ali = gtk_alignment_new(0.5,0,0.6,1);
-    g_signal_connect(G_OBJECT(base), "enter-notify-event" , 
+    g_signal_connect(G_OBJECT(base), "enter-notify-event" ,
             G_CALLBACK(control_window_enter_notify_event), NULL);
     g_signal_connect(G_OBJECT(base), "leave-notify-event" ,
             G_CALLBACK(control_window_leave_notify_event), NULL);
@@ -167,7 +167,7 @@ GtkWidget *create_control_window(GtkWidget *parent)
     gmpc_progress_set_hide_text(GMPC_PROGRESS(progress), FALSE);
     gtk_box_pack_start(GTK_BOX(hbox), progress, TRUE, TRUE, 0);
     g_object_set_data(G_OBJECT(base), "progress", progress);
-    g_signal_connect(G_OBJECT(progress), "seek-event", G_CALLBACK(pl3_pb_seek_event), 
+    g_signal_connect(G_OBJECT(progress), "seek-event", G_CALLBACK(pl3_pb_seek_event),
             NULL);
 
     /* Previous button */
@@ -263,7 +263,7 @@ void control_window_status_update(MpdObj * mi, ChangedStatusType what, GtkWidget
                 GMPC_WIDGETS_VOLUME(volume_button));
         int new_volume = mpd_status_get_volume(connection);
         if (new_volume >= 0 &&
-            mpd_server_check_command_allowed(connection, "setvol") == 
+            mpd_server_check_command_allowed(connection, "setvol") ==
             MPD_SERVER_COMMAND_ALLOWED
            )
         {

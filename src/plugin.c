@@ -54,13 +54,13 @@ typedef struct _Blacklist {
 }Blacklist;
 
 static const int num_blacklisted_plugins = 7;
-static Blacklist blacklist[] = 
+static Blacklist blacklist[] =
 {
     {"Lyrdb.com lyric source", "Plugin is intergrated into GMPC"},
     {"Extra Playlist View", "Plugin is intergrated into GMPC"},
     {"Statistics", "Plugin is intergrated into GMPC"},
     {"DiscoGS Artist and Album Image Fetcher", "Plugin is intergrated into GMPC"},
-	{"Last FM metadata fetcher", "Plugin is intergrated into GMPC"},
+    {"Last FM metadata fetcher", "Plugin is intergrated into GMPC"},
     {"Fullscreen Info", "Plugin is intergrated into GMPC"},
     {"WikiPedia", "Plugin ddos'es Wikipedia"}
 };
@@ -73,10 +73,10 @@ static int plugin_manager_blacklist(gmpcPluginParent *p, GError **error)
     for(i = 0; i<num_blacklisted_plugins; i++) {
         if(strcmp(name, blacklist[i].plugin_name) == 0) {
             g_set_error(error, plugin_quark(), 0,
-                 "pluging has with name: %s is blacklisted: '%s'", name, 
+                 "pluging has with name: %s is blacklisted: '%s'", name,
                   blacklist[i].reason);
             g_log(PLUGIN_LOG_DOMAIN, G_LOG_LEVEL_CRITICAL,
-                  "pluging has with name: %s is blacklisted: '%s'", name, 
+                  "pluging has with name: %s is blacklisted: '%s'", name,
                   blacklist[i].reason);
             return TRUE;
         }
@@ -210,8 +210,8 @@ void plugin_add(gmpcPlugin * plug, int plugin, GError ** error)
     gmpcPluginParent *parent = g_malloc0(sizeof(*parent));
     parent->old = plug;
     parent->new = NULL;
-    
-        
+
+
     if(plugin_manager_blacklist(parent, error))
     {
         if(error && *error != NULL)
@@ -222,7 +222,7 @@ void plugin_add(gmpcPlugin * plug, int plugin, GError ** error)
         }
         return ;
     }
-     
+
     /* set plugin id */
     plug->id = num_plugins | ((plugin) ? PLUGIN_ID_MARK : PLUGIN_ID_INTERNALL);
     /* put it in the list */
@@ -578,28 +578,28 @@ void gmpc_plugin_mpd_connection_changed(gmpcPluginParent * plug, MpdObj * mi,
 }
 gboolean gmpc_plugin_is_sidebar(gmpcPluginParent *plug)
 {
-	g_assert(plug != NULL);
-	if(plug->new)
-	{
-		return GMPC_PLUGIN_IS_SIDEBAR_IFACE(plug->new);
-	}
-	return FALSE;
+    g_assert(plug != NULL);
+    if(plug->new)
+    {
+        return GMPC_PLUGIN_IS_SIDEBAR_IFACE(plug->new);
+    }
+    return FALSE;
 }
 void gmpc_plugin_sidebar_init(gmpcPluginParent *plug)
 {
-	if(gmpc_plugin_is_sidebar(plug))
-	{
-		gmpc_sidebar_plugins_init(GMPC_PLUGIN_SIDEBAR_IFACE(plug->new));	
-	}
-} 
+    if(gmpc_plugin_is_sidebar(plug))
+    {
+        gmpc_sidebar_plugins_init(GMPC_PLUGIN_SIDEBAR_IFACE(plug->new));
+    }
+}
 
 void gmpc_plugin_sidebar_set_state(gmpcPluginParent *plug, GmpcPluginSidebarState state)
 {
-	if(gmpc_plugin_is_sidebar(plug))
-	{
-		gmpc_plugin_sidebar_iface_sidebar_set_state(GMPC_PLUGIN_SIDEBAR_IFACE(plug->new), state);	
-	}
-} 
+    if(gmpc_plugin_is_sidebar(plug))
+    {
+        gmpc_plugin_sidebar_iface_sidebar_set_state(GMPC_PLUGIN_SIDEBAR_IFACE(plug->new), state);
+    }
+}
 
 gboolean gmpc_plugin_is_browser(gmpcPluginParent * plug)
 {

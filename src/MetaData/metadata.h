@@ -1,7 +1,7 @@
 /* Gnome Music Player Client (GMPC)
  * Copyright (C) 2004-2012 Qball Cow <qball@gmpclient.org>
  * Project homepage: http://gmpclient.org/
- 
+
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -25,24 +25,24 @@
 //#include <glyr/cache.h>
 
 typedef enum {
-	META_ALBUM_ART 			= 1,		/* Album Cover art 	*/
-	META_ARTIST_ART 		= 2,		/* Artist  image 	*/
-	META_ALBUM_TXT 			= 4,		/* Album story 		*/
-	META_ARTIST_TXT 		= 8, 		/* Artist biography 	*/
-	META_SONG_TXT			= 16,		/* Lyrics 		*/
-	META_ARTIST_SIMILAR 	= 32,		/* Similar artists */
-	META_SONG_SIMILAR       = 64,       /* Similar songs */
+    META_ALBUM_ART             = 1,        /* Album Cover art     */
+    META_ARTIST_ART         = 2,        /* Artist  image     */
+    META_ALBUM_TXT             = 4,        /* Album story         */
+    META_ARTIST_TXT         = 8,         /* Artist biography     */
+    META_SONG_TXT            = 16,        /* Lyrics         */
+    META_ARTIST_SIMILAR     = 32,        /* Similar artists */
+    META_SONG_SIMILAR       = 64,       /* Similar songs */
     META_GENRE_SIMILAR      = 128,
     META_SONG_GUITAR_TAB    = 256,
-	META_BACKDROP_ART		= 512,		/* Backdrop */
-	META_QUERY_DATA_TYPES  	= 65535,		/* Bitmask for getting the metadata types only */
-	META_QUERY_NO_CACHE 	= 65536 /* Do the query withouth checking the cache first */
+    META_BACKDROP_ART        = 512,        /* Backdrop */
+    META_QUERY_DATA_TYPES      = 65535,        /* Bitmask for getting the metadata types only */
+    META_QUERY_NO_CACHE     = 65536 /* Do the query withouth checking the cache first */
 }MetaDataType;
 
 typedef enum {
-	META_DATA_AVAILABLE,
-	META_DATA_UNAVAILABLE,
-	META_DATA_FETCHING
+    META_DATA_AVAILABLE,
+    META_DATA_UNAVAILABLE,
+    META_DATA_FETCHING
 } MetaDataResult;
 
 
@@ -51,7 +51,7 @@ typedef enum {
  */
 
 /**
- * This can be extended 
+ * This can be extended
  */
 typedef enum {
     META_DATA_CONTENT_EMPTY,
@@ -72,7 +72,7 @@ typedef enum {
 typedef struct {
     /* The MetaDataType this holds */
     MetaDataType type;
-    /* The name of the plugin that provided the data 
+    /* The name of the plugin that provided the data
      * This can be NULL if unknown.
      **/
     gchar *plugin_name;
@@ -80,16 +80,16 @@ typedef struct {
     MetaDataContentType content_type;
     /* The contents */
     void  *content;
-    /* size is only used for raw data. Might be set for text, but that needs to be 
+    /* size is only used for raw data. Might be set for text, but that needs to be
      * null terminated anyway.
      */
     gsize size;
 
-	/* md5sum */
-	unsigned char md5sum[16];
+    /* md5sum */
+    unsigned char md5sum[16];
 
     /**
-     * If type is an image (album art/artist art). 
+     * If type is an image (album art/artist art).
      */
     /** This allows us to be a bit more friendly for image providers */
     char *thumbnail_uri;

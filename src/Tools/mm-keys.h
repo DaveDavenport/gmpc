@@ -3,7 +3,7 @@
  * Borrowed from Lee Willis <lee@leewillis.co.uk> that
  * Borrowed heavily from code by Jan Arne Petersen <jpetersen@uni-bonn.de>
  * This projects' homepage is: http://gmpclient.org/
- 
+
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -42,12 +42,12 @@ typedef struct _MmKeysClass MmKeysClass;
 
 struct _MmKeys
 {
-		GObject parent;
+        GObject parent;
 };
 
 struct _MmKeysClass
 {
-		GObjectClass parent_class;
+        GObjectClass parent_class;
 };
 
 MmKeys *mmkeys_new      (void);

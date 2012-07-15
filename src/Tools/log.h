@@ -13,7 +13,7 @@ void log_set_debug_level(int debug_level);
 
 /**
  * Used by options to enable extra logging for sub-systems.
- */ 
+ */
 gboolean log_add_filter(
         const gchar * option_name,
         const gchar * value,

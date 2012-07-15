@@ -31,10 +31,10 @@ void pl3_toggle_hidden(void);
 int pl3_cat_get_selected_browser(void);
 
 typedef enum {
-	PLAYLIST_NO_ZOOM,
-	PLAYLIST_SMALL,
-	PLAYLIST_MINI,
-	PLAYLIST_ZOOM_LEVELS
+    PLAYLIST_NO_ZOOM,
+    PLAYLIST_SMALL,
+    PLAYLIST_MINI,
+    PLAYLIST_ZOOM_LEVELS
 }PlaylistZoom;
 extern int pl3_zoom;
 

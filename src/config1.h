@@ -1,7 +1,7 @@
 /* Gnome Music Player Client (GMPC)
  * Copyright (C) 2004-2012 Qball Cow <qball@gmpclient.org>
  * Project homepage: http://gmpclient.org/
- 
+
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -21,7 +21,7 @@
 #ifndef __CONFIG_1_H__
 #define __CONFIG_1_H__
 
-/** 
+/**
  * \defgroup Config1 Config
  * \brief GMPC config system.
  */
@@ -44,14 +44,14 @@ typedef struct conf_mult_obj
  * @param url The path to the config file to open.
  *
  * Open the config file.
- * 
+ *
  * @returns A #config_obj if opened succesful #NULL on failure.
  */
 config_obj *cfg_open(const gchar * url);
 
 /**
  * @param cfgo The #config_obj to close
- * 
+ *
  * Free's the #config_obj and if needed saves it.
  */
 void cfg_close(config_obj * cfgo);
@@ -61,14 +61,14 @@ void cfg_close(config_obj * cfgo);
  * @param cfg The #config_obj.
  * @param class The config subclass.
  * @param key The key to get.
- * 
+ *
  * Get a single config value as a string.
  *
  * F.e. #cfg_get_single_value_as_string(cfg, "aap", "mies");
  * Will get the value of key mies in class aap.
- * 
  *
- * @returns NULL when the value is not availible, an allocated string if 
+ *
+ * @returns NULL when the value is not availible, an allocated string if
  * found. (needs to be free'ed)
  */
 char *cfg_get_single_value_as_string(config_obj * cfg, const char *class,
@@ -88,7 +88,7 @@ void cfg_set_single_value_as_string(config_obj * cfg, const char *class,
  * @param class The config subclass.
  * @param key The key to get.
  * @param def The value to return if class:key is not found.
- * 
+ *
  * Get single string value.
  *
  * @returns The value off class:key converted to a string or def is not found.
@@ -101,7 +101,7 @@ char *cfg_get_single_value_as_string_with_default(config_obj * cfg,
  * @param cfg The #config_obj.
  * @param class The config subclass.
  * @param key The key to get.
- * 
+ *
  * Get a single config value as a int.
  *
  *
@@ -124,7 +124,7 @@ void cfg_set_single_value_as_int(config_obj * cfg, const char *class,
  * @param class The config subclass.
  * @param key The key to get.
  * @param def The value to return if class:key is not found.
- * 
+ *
  * Get single int value.
  * @returns The value off class:key converted to a int or def is not found.
  */
@@ -136,7 +136,7 @@ int cfg_get_single_value_as_int_with_default(config_obj * cfg,
  * @param cfg The #config_obj.
  * @param class The config subclass.
  * @param key The key to get.
- * 
+ *
  * Get a single config value as a float.
  *
  *
@@ -159,7 +159,7 @@ void cfg_set_single_value_as_float(config_obj * cfg, const char *class,
  * @param class The config subclass.
  * @param key The key to get.
  * @param def The value to return if class:key is not found.
- * 
+ *
  * Get single float value.
  * @returns The value off class:key converted to a float or def is not found.
  */
@@ -197,7 +197,7 @@ conf_mult_obj *cfg_get_key_list(config_obj * data, const char *class);
 
 /**
  * @param data The #conf_mult_obj to free
- * 
+ *
  * Free's the #conf_mult_obj.
  */
 void cfg_free_multiple(conf_mult_obj * data);

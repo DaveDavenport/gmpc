@@ -1,7 +1,7 @@
 /* Gnome Music Player Client (GMPC)
  * Copyright (C) 2004-2012 Qball Cow <qball@gmpclient.org>
  * Project homepage: http://gmpclient.org/
- 
+
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -37,15 +37,15 @@
 #include "gmpc-extras.h"
 #include "mpdinteraction.h"
 
-#include "playlist3-messages.h" 
+#include "playlist3-messages.h"
 
 
 /**
  * Some gobjects
  */
 
-extern int 				gmpc_connected;
-extern GtkTreeModel 	*playlist;
+extern int                 gmpc_connected;
+extern GtkTreeModel     *playlist;
 
 /* the plugin list */
 extern gmpcPluginParent **plugins;
@@ -66,17 +66,17 @@ void show_error_message(const gchar *string);
 
 
 /**
- * TODO move this 
+ * TODO move this
  */
 void url_start_real(const gchar *url);
 void url_start_easy_command(void *data,char *param, void *d );
 void url_start(void);
 
-void url_start_custom(const gchar *url, 
-	void (*error_callback)(const gchar *error_msg, gpointer user_data),
-	void (*result_callback)(GList *result,gpointer user_data),
-	void (*progress_callback)(gdouble progress, gpointer user_data),
-	gpointer user_data);
+void url_start_custom(const gchar *url,
+    void (*error_callback)(const gchar *error_msg, gpointer user_data),
+    void (*result_callback)(GList *result,gpointer user_data),
+    void (*progress_callback)(gdouble progress, gpointer user_data),
+    gpointer user_data);
 /*
  * functions to get patch to different files.
  * This is needed to make the windows port work.
@@ -98,7 +98,7 @@ void tray_icon2_update_menu(void);
 
 void mpd_interaction_update_supported_tags(void);
 /**
- * Playlist functions 
+ * Playlist functions
  */
 
 /* Check if the playlist is fullscreen, this queries the _actual_ state */
@@ -124,7 +124,7 @@ void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userd
 
 #define TAC(a,ARGS...) g_get_current_time(&stop123);\
     TIMER_SUB(start123, stop123, diff123);\
-    printf("%lu.%06lu:%s: "a"\n", (unsigned long)( diff123.tv_sec),(unsigned long)( diff123.tv_usec),__FUNCTION__,##ARGS);    
+    printf("%lu.%06lu:%s: "a"\n", (unsigned long)( diff123.tv_sec),(unsigned long)( diff123.tv_usec),__FUNCTION__,##ARGS);
 
 #define TOC(a,ARGS...) TAC(a,##ARGS);\
     start123 = stop123;

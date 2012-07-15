@@ -1,7 +1,7 @@
 /* Gnome Music Player Client (GMPC)
  * Copyright (C) 2004-2012 Qball Cow <qball@gmpclient.org>
  * Project homepage: http://gmpclient.org/
- 
+
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -48,7 +48,7 @@ int update_mpd_status(void);
 
 extern gmpcPlugin server_plug;
 /**
- * Connection stuff 
+ * Connection stuff
  */
 void connection_set_password(char *password);
 int connection_use_auth(void);

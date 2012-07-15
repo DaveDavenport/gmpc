@@ -7,7 +7,7 @@
 void create_preferences_window(void);
 
 /**
- * If a plugin state changed (enabled/disable) this forces the preferences 
+ * If a plugin state changed (enabled/disable) this forces the preferences
  * window to update
  * the list.
  */

@@ -2,7 +2,7 @@
 #define __TITLE_HEADER_H__
 
 /**
- * Create the header. 
+ * Create the header.
  * (this could not be done from GtkBuilder/GLade because it are
  * custom widgets (maybe GtkBuilder can? Glade failed!)
  */

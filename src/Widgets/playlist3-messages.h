@@ -1,7 +1,7 @@
 /* Gnome Music Player Client (GMPC)
  * Copyright (C) 2004-2012 Qball Cow <qball@gmpclient.org>
  * Project homepage: http://gmpclient.org/
- 
+
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -28,10 +28,10 @@ typedef struct _Playlist3MessagePluginClass Playlist3MessagePluginClass;
 typedef struct _Playlist3MessagePluginPrivate Playlist3MessagePluginPrivate;
 
 typedef enum {
-	ERROR_INFO,
-	ERROR_WARNING,
-	ERROR_CRITICAL,
-	USER_FEEDBACK
+    ERROR_INFO,
+    ERROR_WARNING,
+    ERROR_CRITICAL,
+    USER_FEEDBACK
 } ErrorLevel;
 
 extern Playlist3MessagePlugin* pl3_messages;

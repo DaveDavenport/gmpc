@@ -25,19 +25,19 @@
 #include "options.h"
 
 /* Set default values */
-Options settings = 
+Options settings =
 {
-	.show_version = FALSE,
-	.disable_plugins = FALSE,
-	.start_hidden = FALSE,
-	.clean_config = FALSE,
-	.quit = FALSE,
-	.show_bug_information = FALSE,
-	.fullscreen = FALSE,
-	.config_path = NULL,
-	.debug_level = -1,
-	.profile_name = NULL,
-	.icon_theme = NULL
+    .show_version = FALSE,
+    .disable_plugins = FALSE,
+    .start_hidden = FALSE,
+    .clean_config = FALSE,
+    .quit = FALSE,
+    .show_bug_information = FALSE,
+    .fullscreen = FALSE,
+    .config_path = NULL,
+    .debug_level = -1,
+    .profile_name = NULL,
+    .icon_theme = NULL
 };
 gboolean parse_options(int *argc, char ***argv)
 {
@@ -97,15 +97,15 @@ gboolean parse_options(int *argc, char ***argv)
 
         {NULL}
     };
-	INIT_TIC_TAC();
+    INIT_TIC_TAC();
     context = g_option_context_new(_("Gnome Music Player Client"));
-	TEC("context new")
+    TEC("context new")
     g_option_context_add_main_entries(context, entries, "gmpc");
-	TEC(" add main context")
+    TEC(" add main context")
     g_option_context_add_group(context, gtk_get_option_group(TRUE));
-	TEC("Add gtk option group")
+    TEC("Add gtk option group")
     g_option_context_parse(context, argc, argv, &error);
-	TEC("Parse option group")
+    TEC("Parse option group")
     g_option_context_free(context);
     if (error)
     {

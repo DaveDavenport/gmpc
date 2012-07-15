@@ -3,12 +3,12 @@
 
 
 typedef enum {
-	COVER_SMALL,
-	COVER_DEFAULT,
-	COVER_LARGE,
-	COVER_BROWSER,
-	COVER_TOOLTIP,
-	NUM_COVER_SIZES
+    COVER_SMALL,
+    COVER_DEFAULT,
+    COVER_LARGE,
+    COVER_BROWSER,
+    COVER_TOOLTIP,
+    NUM_COVER_SIZES
 }CoverSize;
 
 
@@ -29,12 +29,12 @@ void pixbuf_cache_create(void);
  * @param size the size of the icon.
  * @param mdd the md5 off the icon (16 bytes).
  * @param pb the pixbuf.
- * 
- * Add an icon to the pixbuf cache 
+ *
+ * Add an icon to the pixbuf cache
  */
 void pixbuf_cache_add_icon(int size,const gchar *mdd, GdkPixbuf *pb);
 /**
- * @param size the size of the icon 
+ * @param size the size of the icon
  * @param mdd the md5 off the icon (16 bytes).
  *
  * Lookup an icon in the pixbuf cache.

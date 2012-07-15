@@ -42,21 +42,21 @@ typedef struct _EggColumnChooserDialogClass EggColumnChooserDialogClass;
 
 
 struct _EggColumnChooserDialog {
-	GtkDialog parent_instance;
+    GtkDialog parent_instance;
 
-	EggColumnModel *column_model;
+    EggColumnModel *column_model;
 
-	GtkWidget *show_button;
-	GtkWidget *hide_button;
+    GtkWidget *show_button;
+    GtkWidget *hide_button;
 
-	GtkWidget *move_down_button;
-	GtkWidget *move_up_button;
+    GtkWidget *move_down_button;
+    GtkWidget *move_up_button;
 
-	GtkWidget *tree_view;
+    GtkWidget *tree_view;
 };
 
 struct _EggColumnChooserDialogClass {
-	GtkDialogClass parent_class;
+    GtkDialogClass parent_class;
 };
 
 GType      egg_column_chooser_get_type        (void);

@@ -94,7 +94,7 @@ static void connection_changed_real(
     gpointer data);
 
 static void gmpc_status_changed_callback_real(
-	GmpcConnection * gmpcconn,
+    GmpcConnection * gmpcconn,
     MpdObj * mi,
     ChangedStatusType what,
     gpointer data);
@@ -110,9 +110,9 @@ static void connection_changed(MpdObj * mi, int connect, gpointer data);
 
 /** Error callback */
 static int error_callback(MpdObj * mi,
-	int error_id,
-	char *error_msg,
-	gpointer data);
+    int error_id,
+    char *error_msg,
+    gpointer data);
 
 /** init stock icons */
 static void init_stock_icons(void);
@@ -182,7 +182,7 @@ int main(int argc, char **argv)
 
     INIT_TIC_TAC();
 
-	log_init();
+    log_init();
 
     /**
      * Setup NLS
@@ -208,8 +208,8 @@ int main(int argc, char **argv)
     }
     TEC("Parsing command line options");
 
-	log_set_debug_level(settings.debug_level);
-	TEC("Set debug level")
+    log_set_debug_level(settings.debug_level);
+    TEC("Set debug level")
     /* Show the bug-information dialog */
     if (settings.show_bug_information)
     {
@@ -247,12 +247,12 @@ int main(int argc, char **argv)
     /**
      * This loads an extra gtk rc file on windows.
      * This is used to re-enable rule-hint in the treeview.
-	 * (this is forced off on windows).
+     * (this is forced off on windows).
      */
     packagedir = g_win32_get_package_installation_directory_of_module(NULL);
     url = g_build_filename(packagedir,
-			"share", "gmpc",
-			"gmpc-gtk-win32.rc", NULL);
+            "share", "gmpc",
+            "gmpc-gtk-win32.rc", NULL);
     q_free(packagedir);
     gtk_rc_add_default_file(url);
     g_free(url);
@@ -262,16 +262,16 @@ int main(int argc, char **argv)
     gtk_init(&argc, &argv);
     TEC("Gtk init");
 
-	/* Hack to override the icon theme, on recursive zeltak request */
-	if(settings.icon_theme != NULL) {
-		gtk_settings_set_string_property(gtk_settings_get_default(),
-				"gtk-icon-theme-name" , settings.icon_theme,NULL);
-	}
+    /* Hack to override the icon theme, on recursive zeltak request */
+    if(settings.icon_theme != NULL) {
+        gtk_settings_set_string_property(gtk_settings_get_default(),
+                "gtk-icon-theme-name" , settings.icon_theme,NULL);
+    }
 
     /**
      * Call create_gmpc_paths();
      * This function checks if the path needed path are available
-	 * and creates them if needed.
+     * and creates them if needed.
      */
     create_gmpc_paths();
     TEC("Check version and create paths");
@@ -313,7 +313,7 @@ int main(int argc, char **argv)
      * Open it
      */
     g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG,
-			"Trying to open the config file: %s", url);
+            "Trying to open the config file: %s", url);
     config = cfg_open(url);
 
    /**
@@ -322,9 +322,9 @@ int main(int argc, char **argv)
     if (config == NULL)
     {
         g_log(LOG_DOMAIN, G_LOG_LEVEL_ERROR,
-			"Failed to save/load configuration:\n%s\n", url);
+            "Failed to save/load configuration:\n%s\n", url);
         show_error_message(_("Failed to load the configuration system."));
-		return EXIT_FAILURE;
+        return EXIT_FAILURE;
     }
     TEC("Opening config file: %s", url);
     q_free(url);
@@ -372,14 +372,14 @@ int main(int argc, char **argv)
         return EXIT_SUCCESS;
     }
 
-	/* Easy command */
+    /* Easy command */
     gmpc_easy_command = gmpc_easy_command_new();
     TEC("Init easy command")
-	gmpc_easy_command_set_default_entries();
-	TEC("Set easy commands")
+    gmpc_easy_command_set_default_entries();
+    TEC("Set easy commands")
     mpd_easy_commands_init();
     TEC("Set MPD Easy commands");
-	/* Advanced search */
+    /* Advanced search */
     advanced_search_init();
     TEC("Init advanced search");
 
@@ -391,7 +391,7 @@ int main(int argc, char **argv)
     if (settings.profile_name)
     {
        gmpc_profiles_set_profile_from_name(gmpc_profiles,
-   											settings.profile_name);
+                                               settings.profile_name);
     }
     TEC("Setting up gmpc idle,signals and profiles");
     /**
@@ -419,8 +419,8 @@ int main(int argc, char **argv)
          * if failed, print error message
          */
         g_log(LOG_DOMAIN,
-			 G_LOG_LEVEL_ERROR,
-			 "Failed to create connection object\n");
+             G_LOG_LEVEL_ERROR,
+             "Failed to create connection object\n");
         show_error_message(_("Failed to setup libmpd"));
         abort();
     }
@@ -429,21 +429,21 @@ int main(int argc, char **argv)
      * Connect signals to the connection object
      */
     mpd_signal_connect_status_changed(connection,
-			GmpcStatusChangedCallback, NULL);
+            GmpcStatusChangedCallback, NULL);
     mpd_signal_connect_error(connection,
-			error_callback, NULL);
+            error_callback, NULL);
     mpd_signal_connect_connection_changed(connection,
-			connection_changed, NULL);
+            connection_changed, NULL);
     /**
      * Just some trick to provide glib signals
      */
     gmpcconn = (GmpcConnection *) gmpc_connection_new();
     g_signal_connect(G_OBJECT(gmpcconn),
-			"connection_changed",
-			G_CALLBACK(connection_changed_real), NULL);
+            "connection_changed",
+            G_CALLBACK(connection_changed_real), NULL);
     g_signal_connect(G_OBJECT(gmpcconn),
-			"status_changed",
-			G_CALLBACK(gmpc_status_changed_callback_real), NULL);
+            "status_changed",
+            G_CALLBACK(gmpc_status_changed_callback_real), NULL);
 
     TEC("Setting up mpd object signal system");
     /**
@@ -458,14 +458,14 @@ int main(int argc, char **argv)
     pl3_messages = playlist3_message_plugin_new();
 
     playlist = (GtkTreeModel*)gmpc_mpddata_model_playlist_new(
-												gmpcconn,
-												connection);
+                                                gmpcconn,
+                                                connection);
     gmpc_mpddata_model_disable_image(GMPC_MPDDATA_MODEL(playlist));
 
     /**
      * Add the internall plugins
      */
-	 plugin_manager_load_internal_plugins();
+     plugin_manager_load_internal_plugins();
 
 
     /**
@@ -473,10 +473,10 @@ int main(int argc, char **argv)
      */
     if (!settings.disable_plugins)
     {
-		plugin_manager_load_plugins();
+        plugin_manager_load_plugins();
     }
     /* time todo some initialisation of plugins */
-	plugin_manager_initialize_plugins();
+    plugin_manager_initialize_plugins();
 
     /**
      * Create the main window
@@ -498,9 +498,9 @@ int main(int argc, char **argv)
      * the user getting started.
      */
     if (cfg_get_single_value_as_int_with_default(config,
-			"Default",
-			"first-run",
-			1))
+            "Default",
+            "first-run",
+            1))
     {
         setup_assistant();
         cfg_set_single_value_as_int(config, "Default", "first-run", 0);
@@ -511,9 +511,9 @@ int main(int argc, char **argv)
      * If autoconnect is enabled, tell gmpc that it's in state it should connect
      */
     if (cfg_get_single_value_as_int_with_default(config,
-			"connection",
-			"autoconnect",
-			DEFAULT_AUTOCONNECT))
+            "connection",
+            "autoconnect",
+            DEFAULT_AUTOCONNECT))
     {
         gmpc_connected = TRUE;
     }
@@ -531,7 +531,7 @@ int main(int argc, char **argv)
      * if you are still connected, and reconnects you if not.
      */
     autoconnect_timeout = g_timeout_add_seconds(5,
-			(GSourceFunc) autoconnect_callback, NULL);
+            (GSourceFunc) autoconnect_callback, NULL);
 
     /**
      * Call this when entering the main loop,
@@ -548,10 +548,10 @@ int main(int argc, char **argv)
      * call pl3_hide after the mainloop started running
      */
     if (cfg_get_single_value_as_int_with_default(config,
-			"Default",
-			"start-hidden",
-			FALSE) ||
-			settings.start_hidden)
+            "Default",
+            "start-hidden",
+            FALSE) ||
+            settings.start_hidden)
     {
         g_timeout_add(250, (GSourceFunc) hide_on_start, NULL);
     }
@@ -562,8 +562,8 @@ int main(int argc, char **argv)
      * Setup Multimedia Keys
      */
     keys = mmkeys_new();
-	gmpc_mmkeys_connect_signals(G_OBJECT(keys));
-	TEC("Setting up multimedia keys");
+    gmpc_mmkeys_connect_signals(G_OBJECT(keys));
+    TEC("Setting up multimedia keys");
     #endif
 
     url = gmpc_get_user_path("gmpc.key");
@@ -594,7 +594,7 @@ int main(int argc, char **argv)
     gmpc_easy_async_quit();
 
     /* tell the plugins to save themself. */
-	plugin_manager_save_state();
+    plugin_manager_save_state();
 
     /* Should fix some possible crashes */
     gtk_tree_view_set_model(playlist3_get_category_tree_view(), NULL);
@@ -605,7 +605,7 @@ int main(int argc, char **argv)
     meta_data_destroy();
 
     /* time todo some destruction of plugins */
-	plugin_manager_destroy_plugins();
+    plugin_manager_destroy_plugins();
 
     playlist3_destroy();
 
@@ -633,7 +633,7 @@ int main(int argc, char **argv)
      */
     mpd_free(connection);
 
-	/* Reset xml error function and cleanup */
+    /* Reset xml error function and cleanup */
     initGenericErrorDefaultFunc((xmlGenericErrorFunc *) NULL);
     xmlCleanupParser();
     /* cleanup */
@@ -672,7 +672,7 @@ void main_quit(void)
     if (mpd_check_connected(connection))
     {
         if (cfg_get_single_value_as_int_with_default(config,
-    				"connection", "stop-on-exit", FALSE))
+                    "connection", "stop-on-exit", FALSE))
         {
             mpd_player_stop(connection);
         }
@@ -705,7 +705,7 @@ static int autoconnect_callback(void)
          */
         if (gmpc_connected
             && cfg_get_single_value_as_int_with_default(config,
-        			"connection", "autoconnect", DEFAULT_AUTOCONNECT))
+                    "connection", "autoconnect", DEFAULT_AUTOCONNECT))
         {
             connect_to_mpd();
         }
@@ -716,7 +716,7 @@ static int autoconnect_callback(void)
     if (autoconnect_timeout)
         g_source_remove(autoconnect_timeout);
     autoconnect_timeout = g_timeout_add_seconds(5 + autoconnect_backoff,
-			(GSourceFunc) autoconnect_callback, NULL);
+            (GSourceFunc) autoconnect_callback, NULL);
     return FALSE;
 }
 
@@ -734,7 +734,7 @@ static void init_stock_icons(void)
     #ifdef WIN32
     /* The Windows gtkrc sets this to 0, so images don't work on buttons */
     gtk_settings_set_long_property(gtk_settings_get_default(),
-				"gtk-button-images", TRUE, "main");
+                "gtk-button-images", TRUE, "main");
     #endif
 
     return;
@@ -746,8 +746,8 @@ static void init_stock_icons(void)
  * This involves propegating the signal
  */
 void GmpcStatusChangedCallback(MpdObj * mi,
-								ChangedStatusType what,
-								void *userdata)
+                                ChangedStatusType what,
+                                void *userdata)
 {
     g_signal_emit_by_name(gmpcconn, "status-changed", mi, what);
 }
@@ -755,9 +755,9 @@ void GmpcStatusChangedCallback(MpdObj * mi,
 
 /* The actual handling of the status changed signal */
 static void gmpc_status_changed_callback_real(GmpcConnection * conn,
-											MpdObj * mi,
-											ChangedStatusType what,
-											gpointer data)
+                                            MpdObj * mi,
+                                            ChangedStatusType what,
+                                            gpointer data)
 {
     /* When permission changes, update the advanced search regex */
     if (what & MPD_CST_PERMISSION)
@@ -767,7 +767,7 @@ static void gmpc_status_changed_callback_real(GmpcConnection * conn,
     /**
      * Make the plugins recieve the signals
      */
-	 plugin_manager_status_changed(mi, what);
+     plugin_manager_status_changed(mi, what);
 }
 
 
@@ -777,9 +777,9 @@ static void gmpc_status_changed_callback_real(GmpcConnection * conn,
  */
 
 static void password_dialog_response(
-				GtkWidget * dialog,
-				gint response,
-				gpointer data)
+                GtkWidget * dialog,
+                gint response,
+                gpointer data)
 {
     gchar *path;
     switch (response)
@@ -789,13 +789,13 @@ static void password_dialog_response(
         case GTK_RESPONSE_OK:
         {
             path = (char *)gtk_entry_get_text(
-        				GTK_ENTRY(gtk_builder_get_object(xml_password_window,
-        				"pass_entry")));
+                        GTK_ENTRY(gtk_builder_get_object(xml_password_window,
+                        "pass_entry")));
             mpd_set_password(connection, path);
             if (gtk_toggle_button_get_active
                 (GTK_TOGGLE_BUTTON(gtk_builder_get_object(
-            		xml_password_window,
-            		"ck_save_pass"))))
+                    xml_password_window,
+                    "ck_save_pass"))))
             {
                 connection_set_password(path);
             }
@@ -804,18 +804,18 @@ static void password_dialog_response(
         break;
         default:
             if (mpd_server_check_command_allowed(connection, "status") !=
-        					 MPD_SERVER_COMMAND_ALLOWED)
+                             MPD_SERVER_COMMAND_ALLOWED)
             {
                 playlist3_show_error_message(
-            		_("GMPC has insufficient permissions on the mpd server."),
-            		ERROR_CRITICAL);
+                    _("GMPC has insufficient permissions on the mpd server."),
+                    ERROR_CRITICAL);
                 mpd_disconnect(connection);
             }
             break;
     }
     gtk_widget_destroy(
-		(GtkWidget *) gtk_builder_get_object(xml_password_window,
-		"password-dialog"));
+        (GtkWidget *) gtk_builder_get_object(xml_password_window,
+        "password-dialog"));
     g_object_unref(xml_password_window);
     xml_password_window = NULL;
 }
@@ -839,17 +839,17 @@ static void password_dialog(int failed)
     if (failed)
     {
         path = g_strdup_printf(
-    		_("Failed to set password on: '%s'\nPlease try again"),
-    		mpd_get_hostname(connection));
+            _("Failed to set password on: '%s'\nPlease try again"),
+            mpd_get_hostname(connection));
     } else
     {
         path = g_strdup_printf(
-    		_("Please enter your password for: '%s'"),
-    		mpd_get_hostname(connection));
+            _("Please enter your password for: '%s'"),
+            mpd_get_hostname(connection));
     }
     gtk_label_set_text(
-		GTK_LABEL(gtk_builder_get_object(xml_password_window, "pass_label")),
-		path);
+        GTK_LABEL(gtk_builder_get_object(xml_password_window, "pass_label")),
+        path);
     q_free(path);
 
     g_signal_connect(G_OBJECT
@@ -866,91 +866,91 @@ void send_password(void)
 
 static void playlist_support_help_button_clicked(GObject *a)
 {
-	open_help("ghelp:gmpc?ProblemSolving");
+    open_help("ghelp:gmpc?ProblemSolving");
 
 }
 
 static int error_callback(MpdObj * mi,
-				int error_id,
-				char *error_msg,
-				gpointer data)
+                int error_id,
+                char *error_msg,
+                gpointer data)
 {
-	int autoconnect = cfg_get_single_value_as_int_with_default(config,
-			"connection",
-			"autoconnect",
-			DEFAULT_AUTOCONNECT);
+    int autoconnect = cfg_get_single_value_as_int_with_default(config,
+            "connection",
+            "autoconnect",
+            DEFAULT_AUTOCONNECT);
 
-	/* if we are not connected we show a reconnect */
-	if (!mpd_check_connected(mi))
-	{
-		GtkWidget *button;
-		char *str;
-		/* no response? then we just ignore it when autoconnecting. */
-		if (error_id == 15 && autoconnect)
-			return FALSE;
+    /* if we are not connected we show a reconnect */
+    if (!mpd_check_connected(mi))
+    {
+        GtkWidget *button;
+        char *str;
+        /* no response? then we just ignore it when autoconnecting. */
+        if (error_id == 15 && autoconnect)
+            return FALSE;
 
-		str = g_markup_printf_escaped("<b>%s %i: %s</b>",
-				_("error code"),
-				error_id,
-				error_msg);
-		playlist3_show_error_message(str, ERROR_CRITICAL);
-		button = gtk_button_new_from_stock(GTK_STOCK_CONNECT);
-		g_signal_connect(G_OBJECT(button),
-				"clicked",
-				G_CALLBACK(connect_to_mpd), NULL);
-		playlist3_error_add_widget(button);
-		g_free(str);
-	} else
-	{
-		if (setup_assistant_is_running()
-				&& (error_id == MPD_ACK_ERROR_PERMISSION ||
-					error_id == MPD_ACK_ERROR_PASSWORD))
-		{
-			gchar *str = g_markup_printf_escaped("<b>%s</b>",
-					_("Insufficient permission to connect to mpd. Check password"));
-			setup_assistant_set_error(str);
-			q_free(str);
-			return TRUE;
-		}
-		if(error_id == MPD_ACK_ERROR_SYSTEM || error_id == MPD_ACK_ERROR_NO_EXIST) {
-			if(g_regex_match_simple(".*{.*playlist.*}.*", error_msg,
-						0,G_REGEX_MATCH_NOTEMPTY))
-			{
-				GtkWidget *button = NULL;
-				if(favorites != NULL) {
-					gmpc_favorites_list_set_disable(favorites,TRUE);
-				}
-				playlist_editor_set_disabled();
-				playlist3_show_error_message(
-						_("Playlist support in MPD is not working. See the "
-						"manual on possible fixes.\n"
-						"Playlist editor and favorites are now disabled."
-						)
-						, ERROR_WARNING);
-				
-				button = gtk_button_new_from_stock(GTK_STOCK_HELP);
-				g_signal_connect(G_OBJECT(button), "clicked",
-						G_CALLBACK(playlist_support_help_button_clicked), NULL);
-				playlist3_error_add_widget(button);
-				return FALSE;
-			}
-		}
-		if (error_id == MPD_ACK_ERROR_PASSWORD)
-		{
-			password_dialog(TRUE);
-		} else if (error_id == MPD_ACK_ERROR_PERMISSION)
-		{
-			password_dialog(FALSE);
-		} else
-		{
-			gchar *str = g_markup_printf_escaped("<b>%s %i: %s</b>",
-					_("error code"), error_id,
-					error_msg);
-			playlist3_show_error_message(str, ERROR_CRITICAL);
-			g_free(str);
-		}
-	}
-	return FALSE;
+        str = g_markup_printf_escaped("<b>%s %i: %s</b>",
+                _("error code"),
+                error_id,
+                error_msg);
+        playlist3_show_error_message(str, ERROR_CRITICAL);
+        button = gtk_button_new_from_stock(GTK_STOCK_CONNECT);
+        g_signal_connect(G_OBJECT(button),
+                "clicked",
+                G_CALLBACK(connect_to_mpd), NULL);
+        playlist3_error_add_widget(button);
+        g_free(str);
+    } else
+    {
+        if (setup_assistant_is_running()
+                && (error_id == MPD_ACK_ERROR_PERMISSION ||
+                    error_id == MPD_ACK_ERROR_PASSWORD))
+        {
+            gchar *str = g_markup_printf_escaped("<b>%s</b>",
+                    _("Insufficient permission to connect to mpd. Check password"));
+            setup_assistant_set_error(str);
+            q_free(str);
+            return TRUE;
+        }
+        if(error_id == MPD_ACK_ERROR_SYSTEM || error_id == MPD_ACK_ERROR_NO_EXIST) {
+            if(g_regex_match_simple(".*{.*playlist.*}.*", error_msg,
+                        0,G_REGEX_MATCH_NOTEMPTY))
+            {
+                GtkWidget *button = NULL;
+                if(favorites != NULL) {
+                    gmpc_favorites_list_set_disable(favorites,TRUE);
+                }
+                playlist_editor_set_disabled();
+                playlist3_show_error_message(
+                        _("Playlist support in MPD is not working. See the "
+                        "manual on possible fixes.\n"
+                        "Playlist editor and favorites are now disabled."
+                        )
+                        , ERROR_WARNING);
+
+                button = gtk_button_new_from_stock(GTK_STOCK_HELP);
+                g_signal_connect(G_OBJECT(button), "clicked",
+                        G_CALLBACK(playlist_support_help_button_clicked), NULL);
+                playlist3_error_add_widget(button);
+                return FALSE;
+            }
+        }
+        if (error_id == MPD_ACK_ERROR_PASSWORD)
+        {
+            password_dialog(TRUE);
+        } else if (error_id == MPD_ACK_ERROR_PERMISSION)
+        {
+            password_dialog(FALSE);
+        } else
+        {
+            gchar *str = g_markup_printf_escaped("<b>%s %i: %s</b>",
+                    _("error code"), error_id,
+                    error_msg);
+            playlist3_show_error_message(str, ERROR_CRITICAL);
+            g_free(str);
+        }
+    }
+    return FALSE;
 }
 
 
@@ -963,9 +963,9 @@ static void connection_changed(MpdObj * mi, int connected, gpointer data)
     if (mpd_check_connected(mi) != connected)
     {
         g_log(LOG_DOMAIN,
-    			G_LOG_LEVEL_ERROR,
-    			"Connection state differs from actual state: act: %i\n",
-    			!connected);
+                G_LOG_LEVEL_ERROR,
+                "Connection state differs from actual state: act: %i\n",
+                !connected);
     }
     /**
      * Check version
@@ -1009,27 +1009,27 @@ static void connection_changed(MpdObj * mi, int connected, gpointer data)
 
     /* remove this when it does not fix it */
     g_signal_emit_by_name(gmpcconn,
-				"connection-changed",
-				mi,
-				mpd_check_connected(mi));
+                "connection-changed",
+                mi,
+                mpd_check_connected(mi));
 }
 
 
 static void connection_changed_real(
-						GmpcConnection * obj,
-						MpdObj * mi,
-						int connected,
-						gpointer data)
+                        GmpcConnection * obj,
+                        MpdObj * mi,
+                        int connected,
+                        gpointer data)
 {
     /**
      * propegate signals
      */
     g_log(LOG_DOMAIN,
-			G_LOG_LEVEL_DEBUG,
-			"Connection changed %i-%i \n",
-			connected,
-			mpd_check_connected(mi));
-	plugin_manager_connection_changed(mi, connected);
+            G_LOG_LEVEL_DEBUG,
+            "Connection changed %i-%i \n",
+            connected,
+            mpd_check_connected(mi));
+    plugin_manager_connection_changed(mi, connected);
 
     /**
      * force an update of status
@@ -1050,7 +1050,7 @@ static void connection_changed_real(
         if (autoconnect_timeout)
             g_source_remove(autoconnect_timeout);
         autoconnect_timeout = g_timeout_add_seconds(5,
-    			(GSourceFunc) autoconnect_callback, NULL);
+                (GSourceFunc) autoconnect_callback, NULL);
         autoconnect_backoff = 0;
     }
 }
@@ -1076,11 +1076,11 @@ static void print_version(void)
     printf(GMPC_COPYRIGHT "\n\n");
     printf("%-25s: %s\n", _("Tagline"), GMPC_TAGLINE);
     printf("%-25s: %i.%i.%i\n", _("Version"),
-			GMPC_MAJOR_VERSION,
-			GMPC_MINOR_VERSION,
-			GMPC_MICRO_VERSION);
-	if (revision && revision[0] != '\0')
-	{
+            GMPC_MAJOR_VERSION,
+            GMPC_MINOR_VERSION,
+            GMPC_MICRO_VERSION);
+    if (revision && revision[0] != '\0')
+    {
         printf("%-25s: %s\n", _("Revision"), revision);
     }
 }
@@ -1090,134 +1090,134 @@ static void print_version(void)
  */
 static void gmpc_easy_command_set_default_entries(void)
 {
-	gmpc_easy_command_add_entry_stock_id(gmpc_easy_command,
-			_("quit"), "",
-			_("Quit gmpc"),
-			(GmpcEasyCommandCallback *) main_quit,
-			NULL,GTK_STOCK_QUIT);
+    gmpc_easy_command_add_entry_stock_id(gmpc_easy_command,
+            _("quit"), "",
+            _("Quit gmpc"),
+            (GmpcEasyCommandCallback *) main_quit,
+            NULL,GTK_STOCK_QUIT);
 
-	gmpc_easy_command_add_entry(gmpc_easy_command,
-			_("hide"), "",
-			_("Hide gmpc"),
-			(GmpcEasyCommandCallback *) pl3_hide,
-			NULL);
+    gmpc_easy_command_add_entry(gmpc_easy_command,
+            _("hide"), "",
+            _("Hide gmpc"),
+            (GmpcEasyCommandCallback *) pl3_hide,
+            NULL);
 
-	gmpc_easy_command_add_entry(gmpc_easy_command,
-			_("show"), "",
-			_("Show gmpc"),
-			(GmpcEasyCommandCallback *) create_playlist3,
-			NULL);
+    gmpc_easy_command_add_entry(gmpc_easy_command,
+            _("show"), "",
+            _("Show gmpc"),
+            (GmpcEasyCommandCallback *) create_playlist3,
+            NULL);
 
-	gmpc_easy_command_add_entry(gmpc_easy_command,
-			_("toggle"), "",
-			_("Toggle gmpc visibility"),
-			(GmpcEasyCommandCallback *) pl3_toggle_hidden,
-			NULL);
+    gmpc_easy_command_add_entry(gmpc_easy_command,
+            _("toggle"), "",
+            _("Toggle gmpc visibility"),
+            (GmpcEasyCommandCallback *) pl3_toggle_hidden,
+            NULL);
 
-	gmpc_easy_command_add_entry(gmpc_easy_command,
-			_("show notification"), "",
-			_("Show trayicon notification"),
-			(GmpcEasyCommandCallback *) tray_icon2_create_tooltip,
-			NULL);
-	gmpc_easy_command_add_entry_stock_id(gmpc_easy_command,
-			_("preferences"), "",
-			_("Show preferences window"),
-			(GmpcEasyCommandCallback *) create_preferences_window,
-			NULL, GTK_STOCK_PREFERENCES);
+    gmpc_easy_command_add_entry(gmpc_easy_command,
+            _("show notification"), "",
+            _("Show trayicon notification"),
+            (GmpcEasyCommandCallback *) tray_icon2_create_tooltip,
+            NULL);
+    gmpc_easy_command_add_entry_stock_id(gmpc_easy_command,
+            _("preferences"), "",
+            _("Show preferences window"),
+            (GmpcEasyCommandCallback *) create_preferences_window,
+            NULL, GTK_STOCK_PREFERENCES);
 
-	gmpc_easy_command_add_entry(gmpc_easy_command,
-			_("bug information"), "",
-			_("Show bug information"),
-			(GmpcEasyCommandCallback *) bug_information_window_new,
-			NULL);
+    gmpc_easy_command_add_entry(gmpc_easy_command,
+            _("bug information"), "",
+            _("Show bug information"),
+            (GmpcEasyCommandCallback *) bug_information_window_new,
+            NULL);
 
-	gmpc_easy_command_add_entry_icon_name(gmpc_easy_command,
-			_("url"), "",
-			_("Show add url window"),
-			(GmpcEasyCommandCallback *) url_start,
-			NULL,"add-url");
+    gmpc_easy_command_add_entry_icon_name(gmpc_easy_command,
+            _("url"), "",
+            _("Show add url window"),
+            (GmpcEasyCommandCallback *) url_start,
+            NULL,"add-url");
 
-	gmpc_easy_command_add_entry_icon_name(gmpc_easy_command,
-			_("url"), ".*://.*",
-			_("Add url <scheme>://<path>"),
-			(GmpcEasyCommandCallback *) url_start_easy_command,
-			NULL,"add-url");
+    gmpc_easy_command_add_entry_icon_name(gmpc_easy_command,
+            _("url"), ".*://.*",
+            _("Add url <scheme>://<path>"),
+            (GmpcEasyCommandCallback *) url_start_easy_command,
+            NULL,"add-url");
 }
 
 static void  gmpc_mmkeys_connect_signals(GObject *keys)
 {
-	g_signal_connect(keys,
-			"mm_playpause",
-			G_CALLBACK(play_song), NULL);
+    g_signal_connect(keys,
+            "mm_playpause",
+            G_CALLBACK(play_song), NULL);
 
-	g_signal_connect(keys,
-			"mm_play",
-			G_CALLBACK(real_play_song), NULL);
+    g_signal_connect(keys,
+            "mm_play",
+            G_CALLBACK(real_play_song), NULL);
 
-	g_signal_connect(keys,
-			"mm_pause",
-			G_CALLBACK(real_pause_song), NULL);
+    g_signal_connect(keys,
+            "mm_pause",
+            G_CALLBACK(real_pause_song), NULL);
 
-	g_signal_connect(keys,
-			"mm_next",
-			G_CALLBACK(next_song), NULL);
+    g_signal_connect(keys,
+            "mm_next",
+            G_CALLBACK(next_song), NULL);
 
-	g_signal_connect(keys,
-			"mm_prev",
-			G_CALLBACK(prev_song), NULL);
+    g_signal_connect(keys,
+            "mm_prev",
+            G_CALLBACK(prev_song), NULL);
 
-	g_signal_connect(keys,
-			"mm_stop",
-			G_CALLBACK(stop_song), NULL);
+    g_signal_connect(keys,
+            "mm_stop",
+            G_CALLBACK(stop_song), NULL);
 
-	g_signal_connect(keys,
-			"mm_fastforward",
-			G_CALLBACK(song_fastforward), NULL);
+    g_signal_connect(keys,
+            "mm_fastforward",
+            G_CALLBACK(song_fastforward), NULL);
 
-	g_signal_connect(keys,
-			"mm_fastbackward",
-			G_CALLBACK(song_fastbackward), NULL);
+    g_signal_connect(keys,
+            "mm_fastbackward",
+            G_CALLBACK(song_fastbackward), NULL);
 
-	g_signal_connect(keys,
-			"mm_repeat",
-			G_CALLBACK(repeat_toggle), NULL);
+    g_signal_connect(keys,
+            "mm_repeat",
+            G_CALLBACK(repeat_toggle), NULL);
 
-	g_signal_connect(keys,
-			"mm_random",
-			G_CALLBACK(random_toggle), NULL);
+    g_signal_connect(keys,
+            "mm_random",
+            G_CALLBACK(random_toggle), NULL);
 
-	g_signal_connect(keys,
-			"mm_raise",
-			G_CALLBACK(create_playlist3), NULL);
+    g_signal_connect(keys,
+            "mm_raise",
+            G_CALLBACK(create_playlist3), NULL);
 
-	g_signal_connect(keys,
-			"mm_hide",
-			G_CALLBACK(pl3_hide), NULL);
+    g_signal_connect(keys,
+            "mm_hide",
+            G_CALLBACK(pl3_hide), NULL);
 
-	g_signal_connect(keys,
-			"mm_toggle_hidden",
-			G_CALLBACK(pl3_toggle_hidden), NULL);
+    g_signal_connect(keys,
+            "mm_toggle_hidden",
+            G_CALLBACK(pl3_toggle_hidden), NULL);
 
-	g_signal_connect(keys,
-			"mm_volume_up",
-			G_CALLBACK(volume_up), NULL);
+    g_signal_connect(keys,
+            "mm_volume_up",
+            G_CALLBACK(volume_up), NULL);
 
-	g_signal_connect(keys,
-			"mm_volume_down",
-			G_CALLBACK(volume_down), NULL);
+    g_signal_connect(keys,
+            "mm_volume_down",
+            G_CALLBACK(volume_down), NULL);
 
-	g_signal_connect(keys,
-			"mm_toggle_mute",
-			G_CALLBACK(volume_toggle_mute), NULL);
+    g_signal_connect(keys,
+            "mm_toggle_mute",
+            G_CALLBACK(volume_toggle_mute), NULL);
 
-	g_signal_connect(keys,
-			"mm_show_notification",
-			G_CALLBACK(tray_icon2_create_tooltip), NULL);
+    g_signal_connect(keys,
+            "mm_show_notification",
+            G_CALLBACK(tray_icon2_create_tooltip), NULL);
 
-	g_signal_connect_swapped(keys,
-			"mm_show_easy_command",
-			G_CALLBACK(gmpc_easy_command_popup),
-			gmpc_easy_command);
+    g_signal_connect_swapped(keys,
+            "mm_show_easy_command",
+            G_CALLBACK(gmpc_easy_command_popup),
+            gmpc_easy_command);
 }
 
 /* vim: set noexpandtab ts=4 sw=4 sts=4 tw=80: */

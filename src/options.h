@@ -22,18 +22,18 @@
 /* see options.h entries[]  to see the use of every entry. */
 typedef struct _Options
 {
-	gboolean show_version;
-	gboolean disable_plugins;
-	gboolean start_hidden;
-	gboolean clean_config;
-	gboolean quit;
-	gboolean do_debug_updates;
-	gboolean show_bug_information;
-	gboolean fullscreen;
-	gchar *config_path;
-	gint debug_level;
-	gchar *profile_name;
-	char *icon_theme;
+    gboolean show_version;
+    gboolean disable_plugins;
+    gboolean start_hidden;
+    gboolean clean_config;
+    gboolean quit;
+    gboolean do_debug_updates;
+    gboolean show_bug_information;
+    gboolean fullscreen;
+    gchar *config_path;
+    gint debug_level;
+    gchar *profile_name;
+    char *icon_theme;
 }Options;
 
 extern Options settings;

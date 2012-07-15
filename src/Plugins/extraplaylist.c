@@ -1,7 +1,7 @@
 /* gmpc-extraplaylist (GMPC plugin)
  * Copyright (C) 2006-2009 Qball Cow <qball@gmpclient.org>
  * Project homepage: http://gmpcwiki.sarine.nl/
- 
+
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -35,15 +35,15 @@ static GtkWidget *cb_include_sidebar = NULL;
 static void extra_playlist_add(void);
 
 static void extra_playlist_save(void) {
-	if(extraplaylist) {
-		int pos = gtk_paned_get_position(GTK_PANED(extraplaylist_paned));
-		if(pos>0)
-			cfg_set_single_value_as_int(config, "extraplaylist", "paned-pos", pos);
-	}
+    if(extraplaylist) {
+        int pos = gtk_paned_get_position(GTK_PANED(extraplaylist_paned));
+        if(pos>0)
+            cfg_set_single_value_as_int(config, "extraplaylist", "paned-pos", pos);
+    }
 }
 
 static int get_enabled(void) {
-	return cfg_get_single_value_as_int_with_default(config,"extraplaylist", "enabled", 0); 
+    return cfg_get_single_value_as_int_with_default(config,"extraplaylist", "enabled", 0);
 }
 
 static void ep_view_changed(GtkTreeSelection *selection, gpointer user_data)
@@ -64,7 +64,7 @@ static void ep_view_changed(GtkTreeSelection *selection, gpointer user_data)
                     if(extraplaylist){
                         gtk_widget_hide(extraplaylist);
                         if(gtk_bin_get_child(GTK_BIN(extraplaylist)))
-                            gmpc_plugin_browser_iface_browser_unselected(GMPC_PLUGIN_BROWSER_IFACE(play_queue_plugin),GTK_CONTAINER(extraplaylist)); 
+                            gmpc_plugin_browser_iface_browser_unselected(GMPC_PLUGIN_BROWSER_IFACE(play_queue_plugin),GTK_CONTAINER(extraplaylist));
                     }
                     return;
                 }
@@ -83,7 +83,7 @@ static void ep_view_changed(GtkTreeSelection *selection, gpointer user_data)
             }else if(extraplaylist){
                 gtk_widget_hide(extraplaylist);
                 if(gtk_bin_get_child(GTK_BIN(extraplaylist)))
-                    gmpc_plugin_browser_iface_browser_unselected(GMPC_PLUGIN_BROWSER_IFACE(play_queue_plugin),GTK_CONTAINER(extraplaylist)); 
+                    gmpc_plugin_browser_iface_browser_unselected(GMPC_PLUGIN_BROWSER_IFACE(play_queue_plugin),GTK_CONTAINER(extraplaylist));
             }
         }
     }
@@ -144,7 +144,7 @@ static void extra_playlist_add(void) {
     extra_playlist_remove();
 
     GtkWidget *temp = NULL;
-	if(pl3_xml == NULL) return;
+    if(pl3_xml == NULL) return;
     if(extraplaylist == NULL  && get_enabled() == FALSE) return;
     if(extraplaylist != NULL) return;
 
@@ -159,9 +159,9 @@ static void extra_playlist_add(void) {
     }
     g_object_ref(temp);
 
-	/**
-	 * Hack it into the main view
-	 */
+    /**
+     * Hack it into the main view
+     */
     extraplaylist = gtk_event_box_new();
     /* Set border to fits gmpc's standard  */
     gtk_container_set_border_width(GTK_CONTAINER(extraplaylist), 0);
@@ -182,11 +182,11 @@ static void extra_playlist_add(void) {
 
     if(!cfg_get_single_value_as_int_with_default(config, "extraplaylist", "vertical-layout-swapped",FALSE))
     {
-        gtk_paned_pack1(GTK_PANED(extraplaylist_paned), temp, TRUE, TRUE); 
-        gtk_paned_pack2(GTK_PANED(extraplaylist_paned), extraplaylist, TRUE, TRUE); 
+        gtk_paned_pack1(GTK_PANED(extraplaylist_paned), temp, TRUE, TRUE);
+        gtk_paned_pack2(GTK_PANED(extraplaylist_paned), extraplaylist, TRUE, TRUE);
     }else{
-        gtk_paned_pack2(GTK_PANED(extraplaylist_paned), temp, TRUE, TRUE); 
-        gtk_paned_pack1(GTK_PANED(extraplaylist_paned), extraplaylist, TRUE, TRUE); 
+        gtk_paned_pack2(GTK_PANED(extraplaylist_paned), temp, TRUE, TRUE);
+        gtk_paned_pack1(GTK_PANED(extraplaylist_paned), extraplaylist, TRUE, TRUE);
     }
 
     if (includes_sidebar) {
@@ -197,10 +197,10 @@ static void extra_playlist_add(void) {
     }
 
 
-	gtk_paned_set_position(GTK_PANED(extraplaylist_paned),
-			cfg_get_single_value_as_int_with_default(config, "extraplaylist", "paned-pos", 400));
+    gtk_paned_set_position(GTK_PANED(extraplaylist_paned),
+            cfg_get_single_value_as_int_with_default(config, "extraplaylist", "paned-pos", 400));
 
-	gtk_widget_show(extraplaylist_paned);
+    gtk_widget_show(extraplaylist_paned);
     gtk_widget_hide(extraplaylist);
 
     if(play_queue_plugin == NULL) {
@@ -217,28 +217,28 @@ static void extra_playlist_add(void) {
 
 static void extra_playlist_init(void ) {
     if( cfg_get_single_value_as_int_with_default(config,"extraplaylist", "enabled", 0)) {
-		gtk_init_add((GtkFunction )extra_playlist_add, NULL);
-	}
+        gtk_init_add((GtkFunction )extra_playlist_add, NULL);
+    }
 }
 static void set_enabled(int enable) {
     cfg_set_single_value_as_int(config,"extraplaylist", "enabled", enable);
     if(enable)
-	{
-		if(!extraplaylist) {
-			extra_playlist_add();
-		}else{
+    {
+        if(!extraplaylist) {
+            extra_playlist_add();
+        }else{
             ep_view_changed(gtk_tree_view_get_selection(playlist3_get_category_tree_view()),NULL);
         }
 
     } else if(extraplaylist){
-		gtk_widget_hide(extraplaylist);
+        gtk_widget_hide(extraplaylist);
         if(gtk_bin_get_child(GTK_BIN(extraplaylist)))
-            gmpc_plugin_browser_iface_browser_unselected(GMPC_PLUGIN_BROWSER_IFACE(play_queue_plugin),GTK_CONTAINER(extraplaylist)); 
-	}
+            gmpc_plugin_browser_iface_browser_unselected(GMPC_PLUGIN_BROWSER_IFACE(play_queue_plugin),GTK_CONTAINER(extraplaylist));
+    }
 }
 
 /**
- * Preferences 
+ * Preferences
  */
 static void preferences_layout_changed(GtkToggleButton *but, gpointer user_data)
 {
@@ -295,7 +295,7 @@ static  void preferences_construct(GtkWidget *container)
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(label), cfg_get_single_value_as_int_with_default(config, "extraplaylist", "vertical-layout-swapped", FALSE));
     gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, FALSE, 0);
     g_signal_connect(G_OBJECT(label), "toggled", G_CALLBACK(preferences_layout_swapped_changed), NULL);
-   
+
 
     /* show and add */
     gtk_container_add(GTK_CONTAINER(align), vbox);
@@ -317,12 +317,12 @@ static void preferences_destroy(GtkWidget *container)
 
 gmpcPlugin extraplaylist_plugin = {
     .name = "Extra playlist",
-	.version = {0, 0, 1},
-	.plugin_type = GMPC_PLUGIN_NO_GUI | GMPC_INTERNALL,
-	.init = extra_playlist_init,            /* initialization */
-	.save_yourself = extra_playlist_save,         /* Destroy */
-	.get_enabled = get_enabled,
-	.set_enabled = set_enabled,
+    .version = {0, 0, 1},
+    .plugin_type = GMPC_PLUGIN_NO_GUI | GMPC_INTERNALL,
+    .init = extra_playlist_init,            /* initialization */
+    .save_yourself = extra_playlist_save,         /* Destroy */
+    .get_enabled = get_enabled,
+    .set_enabled = set_enabled,
 
     .pref = &extra_playlist_preferences,
 };

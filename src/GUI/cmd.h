@@ -7,7 +7,7 @@
 void show_command_line(void);
 
 /**
- * @param entry The CMD #GtkEntry 
+ * @param entry The CMD #GtkEntry
  * @param event the #GdkEvent to process
  * @param data  user data.
  *
@@ -55,7 +55,7 @@ void show_command_line_icon_release(
  * Handle change event on the entry.
  * Used by the history.
  */
-void show_command_line_entry_changed( 
+void show_command_line_entry_changed(
                             GtkWidget *entry,
                             gpointer data);
 #endif

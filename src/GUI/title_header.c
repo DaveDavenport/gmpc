@@ -16,7 +16,7 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
- 
+
 #include <gtk/gtk.h>
 #include "main.h"
 #include "title_header.h"
@@ -82,7 +82,7 @@ void playlist3_new_header(void)
         title_header_top_alignment = gtk_alignment_new(0,0.5,1.0,0);
         // set a 3 px top/bottom border (looks better then 6)
         gtk_alignment_set_padding(GTK_ALIGNMENT(title_header_top_alignment), 3,3,0,0);
-        
+
         // set minimum width 300 pixels.
         gtk_widget_set_size_request(title_header_top_alignment, 300, -1);
         /** Title */

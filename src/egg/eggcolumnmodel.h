@@ -61,18 +61,18 @@ GType           egg_column_model_get_type           (void);
 EggColumnModel *egg_column_model_new                (GtkTreeView    *tree_view);
 
 void            egg_column_model_set_column_visible (EggColumnModel *model,
-						     GtkTreeIter    *iter,
-						     gboolean        visible);
+                             GtkTreeIter    *iter,
+                             gboolean        visible);
 gboolean        egg_column_model_get_column_visible (EggColumnModel *model,
-						     GtkTreeIter    *iter);
+                             GtkTreeIter    *iter);
 gboolean        egg_column_model_is_column_first    (EggColumnModel *model,
-						     GtkTreeIter    *iter);
+                             GtkTreeIter    *iter);
 gboolean        egg_column_model_is_column_last     (EggColumnModel *model,
-						     GtkTreeIter    *iter);
+                             GtkTreeIter    *iter);
 void            egg_column_model_move_down_column   (EggColumnModel *model,
-						     GtkTreeIter    *iter);
+                             GtkTreeIter    *iter);
 void            egg_column_model_move_up_column     (EggColumnModel *model,
-						     GtkTreeIter    *iter);
+                             GtkTreeIter    *iter);
 
 
 G_END_DECLS

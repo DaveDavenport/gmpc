@@ -35,7 +35,7 @@ void plugin_manager_destroy_plugins(void);
 void plugin_manager_save_state(void);
 
 /**
- * @param mi the #MpdObj 
+ * @param mi the #MpdObj
  * @param connected the new connected state (1 is connected, 0 is disconnected)
  *
  * Tell all plugins that the connection changed

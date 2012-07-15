@@ -1,7 +1,7 @@
 /* Gnome Music Player Client (GMPC)
  * Copyright (C) 2004-2012 Qball Cow <qball@gmpclient.org>
  * Project homepage: http://gmpclient.org/
- 
+
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -24,7 +24,7 @@
 #include <libmpd/libmpd.h>
 #include "metadata.h"
 /**
- * format time into 
+ * format time into
  * Total time: %i days %i hours %i minutes
  */
 gchar * format_time(unsigned long seconds);

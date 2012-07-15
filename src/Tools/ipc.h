@@ -33,14 +33,14 @@
  */
 typedef enum
 {
-	COMMAND_0, /* unused: 0 is an invalid command */
-	COMMAND_STREAM,
-	COMMAND_EASYCOMMAND
+    COMMAND_0, /* unused: 0 is an invalid command */
+    COMMAND_STREAM,
+    COMMAND_EASYCOMMAND
 } GmpcToolsIPCCommands;
 
 /**
  * @param ipc: the GmpcToolsIPC object
- * 
+ *
  * Check if gmpc is allready running.
  *
  * @returns true if gmpc is allready running
@@ -58,19 +58,19 @@ GObject *gmpc_tools_ipc_new(void);
  * @param command: The #GmpcToolsIPCCommands to send.
  * @param command_param: The message to send along the command or NULL
  *
- * send a command (with possible message) to the running gmpc. 
+ * send a command (with possible message) to the running gmpc.
  *
  * @returns TRUE is succesfull.
  */
 
-gboolean gmpc_tools_ipc_send(GObject *ipc, GmpcToolsIPCCommands command,const char *command_param); 
+gboolean gmpc_tools_ipc_send(GObject *ipc, GmpcToolsIPCCommands command,const char *command_param);
 #ifndef CLIENT_ONLY
 
 /**
  * @param ipc: the GmpcToolsIPC object
  * @param win: A GtkWindow
  *
- * watch a window. (see libunique documentation) 
+ * watch a window. (see libunique documentation)
  *
  */
 void gmpc_tools_ipc_watch_window(GObject *ipc, GtkWindow *win);

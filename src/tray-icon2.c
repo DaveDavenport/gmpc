@@ -637,39 +637,39 @@ static void tray_icon2_create_tooltip_real(int position)
      * In first box we have image/coverart
      * Re-use the gmpc-metaimage widget
      */
-    if(cfg_get_single_value_as_int_with_default(config, "Interface", "hide-album-art", 0) == 0) 
+    if(cfg_get_single_value_as_int_with_default(config, "Interface", "hide-album-art", 0) == 0)
     {
-	    coverimg = (GtkWidget *)gmpc_metaimage_new_size(META_ALBUM_ART, 80);
-	    gmpc_metaimage_set_squared(GMPC_METAIMAGE(coverimg), TRUE);
-	    gmpc_metaimage_set_connection(GMPC_METAIMAGE(coverimg), connection);
-	    gmpc_metaimage_set_no_cover_icon(GMPC_METAIMAGE(coverimg), (char *)"gmpc");
-	    /**
-	     * Force an update if mpd is playing
-	     */
-	    state = mpd_player_get_state(connection);
-	    if (state == MPD_PLAYER_PLAY || state == MPD_PLAYER_PAUSE)
-	    {
-		    gmpc_metaimage_update_cover(GMPC_METAIMAGE(coverimg), connection, MPD_CST_SONGID, NULL);
-	    } else
-	    {
-		    gmpc_metaimage_set_cover_na(GMPC_METAIMAGE(coverimg));
-	    }
+        coverimg = (GtkWidget *)gmpc_metaimage_new_size(META_ALBUM_ART, 80);
+        gmpc_metaimage_set_squared(GMPC_METAIMAGE(coverimg), TRUE);
+        gmpc_metaimage_set_connection(GMPC_METAIMAGE(coverimg), connection);
+        gmpc_metaimage_set_no_cover_icon(GMPC_METAIMAGE(coverimg), (char *)"gmpc");
+        /**
+         * Force an update if mpd is playing
+         */
+        state = mpd_player_get_state(connection);
+        if (state == MPD_PLAYER_PLAY || state == MPD_PLAYER_PAUSE)
+        {
+            gmpc_metaimage_update_cover(GMPC_METAIMAGE(coverimg), connection, MPD_CST_SONGID, NULL);
+        } else
+        {
+            gmpc_metaimage_set_cover_na(GMPC_METAIMAGE(coverimg));
+        }
 
-	    /**
-	     * Pack the widget in a eventbox so we can set background color
-	     */
-	    event = gtk_event_box_new();
-	    gtk_widget_set_size_request(event, 86, 86);
-	    gtk_widget_modify_bg(GTK_WIDGET(event), GTK_STATE_NORMAL, &(pl3_win->style->bg[GTK_STATE_SELECTED]));
-	    gtk_container_add(GTK_CONTAINER(event), coverimg);
-	    gtk_box_pack_start(GTK_BOX(hbox), event, FALSE, TRUE, 0);
+        /**
+         * Pack the widget in a eventbox so we can set background color
+         */
+        event = gtk_event_box_new();
+        gtk_widget_set_size_request(event, 86, 86);
+        gtk_widget_modify_bg(GTK_WIDGET(event), GTK_STATE_NORMAL, &(pl3_win->style->bg[GTK_STATE_SELECTED]));
+        gtk_container_add(GTK_CONTAINER(event), coverimg);
+        gtk_box_pack_start(GTK_BOX(hbox), event, FALSE, TRUE, 0);
     }
     g_signal_connect(G_OBJECT(tray_icon2_tooltip), "enter-notify-event", G_CALLBACK(popup_enter_notify_event), NULL);
     g_signal_connect(G_OBJECT(tray_icon2_tooltip), "leave-notify-event", G_CALLBACK(popup_leave_notify_event), NULL);
     /**
      * 2
      *
-     * 	Right (2) view
+     *     Right (2) view
      */
     /**
      * Create white background label box
@@ -776,7 +776,7 @@ static void tray_icon2_create_tooltip_real(int position)
         g_free(value);
     }
     /**
-     * 	Position the popup
+     *     Position the popup
      */
     if (position == TI2_AT_TOOLTIP && tray_icon2_get_available())
     {
@@ -1054,9 +1054,9 @@ static void tray_icon2_connection_changed(MpdObj * mi, int connect, void *user_d
 gboolean trayicon2_have_appindicator_support( void )
 {
 #ifdef HAVE_APP_INDICATOR
-	return TRUE;
+    return TRUE;
 #else
-	return FALSE;
+    return FALSE;
 #endif
 }
 
@@ -1081,7 +1081,7 @@ void tray_enable_toggled(GtkToggleButton * but)
 
 void trayicon2_toggle_use_appindicator(void)
 {
-	 cfg_set_single_value_as_int(config, TRAY_ICON2_ID, "use_appindicator", !cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "use_appindicator", TRUE));
+     cfg_set_single_value_as_int(config, TRAY_ICON2_ID, "use_appindicator", !cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "use_appindicator", TRUE));
 
     if (cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "enable", DEFAULT_TRAY_ICON_ENABLE))
     {

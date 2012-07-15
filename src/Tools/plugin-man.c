@@ -197,22 +197,22 @@ void plugin_manager_status_changed(MpdObj *mi, const ChangedStatusType what)
 /* \todo change this away from ~/.config/*/
 static void plugin_manager_load_userspace_plugins(void)
 {
-	char *url = gmpc_get_user_path("plugins");
+    char *url = gmpc_get_user_path("plugins");
     /**
      * if dir exists, try to load the plugins.
      */
     if (g_file_test(url, G_FILE_TEST_IS_DIR))
     {
         g_log(LOG_DOMAIN,
-				G_LOG_LEVEL_DEBUG,
-				"Trying to load plugins in: %s", url);
-  		plugin_load_dir(url);
+                G_LOG_LEVEL_DEBUG,
+                "Trying to load plugins in: %s", url);
+          plugin_load_dir(url);
     }
     g_free(url);
 }
 static void plugin_manager_load_env_path(void)
 {
-	/* Load plugin from $PLUGIN_DIR if set */
+    /* Load plugin from $PLUGIN_DIR if set */
     if (g_getenv("PLUGIN_DIR") != NULL)
     {
         gchar *path = g_build_filename(g_getenv("PLUGIN_DIR"), NULL);
@@ -226,12 +226,12 @@ static void plugin_manager_load_env_path(void)
 }
 static void plugin_manager_load_global_plugins(void)
 {
-	gchar *url = NULL;
+    gchar *url = NULL;
 #ifdef WIN32
     gchar *packdir = g_win32_get_package_installation_directory_of_module(NULL);
     g_log(LOG_DOMAIN,
-	    G_LOG_LEVEL_DEBUG,
-		"Got %s as package installation dir", packdir);
+        G_LOG_LEVEL_DEBUG,
+        "Got %s as package installation dir", packdir);
     url = g_build_filename(packdir, "lib", "gmpc", "plugins", NULL);
     g_free(packdir);
 
@@ -247,9 +247,9 @@ static void plugin_manager_load_global_plugins(void)
 
 void plugin_manager_load_plugins(void)
 {
-	plugin_manager_load_global_plugins();
-	plugin_manager_load_env_path();
-	plugin_manager_load_userspace_plugins();
+    plugin_manager_load_global_plugins();
+    plugin_manager_load_env_path();
+    plugin_manager_load_userspace_plugins();
 }
 
 /* vim: set noexpandtab ts=4 sw=4 sts=4 tw=80: */
