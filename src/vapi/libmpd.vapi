@@ -1,16 +1,13 @@
 [CCode (cprefix = "mpd_", cheader_filename = "libmpd/libmpd.h")]
-
 namespace MPD {
 
     [CCode (cname = "MpdObj",cprefix="mpd_", cheader_filename="libmpd/libmpd.h")]
     [Compact]
     public class Server {
-
         [CCode (cname="mpd_check_connected")]
         public bool check_connected();
 
         public bool connected { get { return check_connected();}}
-
 
         public MPD.Song playlist_get_song(int songid);
         public unowned MPD.Song playlist_get_current_song();
@@ -24,12 +21,8 @@ namespace MPD {
     }
 
 
-    [CCode (cname = "mpd_Song",
-    free_function = "mpd_freeSong",
-	copy_function = "mpd_songDup",
-	has_type_id = false,
-    cheader_filename = "libmpd/libmpdclient.h,libmpd/libmpd.h,misc.h")]
-	[Compact]
+    [CCode (cname = "mpd_Song",free_function = "mpd_freeSong",copy_function = "mpd_songDup",has_type_id = false,cheader_filename = "libmpd/libmpdclient.h,libmpd/libmpd.h,misc.h")]
+    [Compact]
     public class Song {
         [CCode (cname = "mpd_newSong")]
         public Song ();
@@ -53,17 +46,18 @@ namespace MPD {
         [CCode (instance_pos = -1)]
         public void markup (char[] buffer, string markup);
     }
+
     namespace Sticker {
         namespace Song {
             public void     set(MPD.Server connection, string file, string tag, string value);
             public string   get(MPD.Server connection, string file, string tag);
         }
+
         public bool supported(MPD.Server connection);
     }
+
     namespace Status {
-        [CCode (cname="ChangedStatusType", cprefix = "MPD_CST_", 
-            cheader_filename = "libmpd/libmpd.h",
-            has_type_id=false)]
+        [CCode (cname="ChangedStatusType", cprefix = "MPD_CST_",cheader_filename = "libmpd/libmpd.h", has_type_id=false)]
             public enum Changed {
                 /** The playlist has changed */
                 PLAYLIST      = 0x0001,
@@ -83,17 +77,17 @@ namespace MPD {
                 ELAPSED_TIME  = 0x0080,
                 /** The crossfade time has changed. */
                 CROSSFADE     = 0x0100,
-                /** The random state is changed.     */                 
+                /** The random state is changed.     */
                 RANDOM        = 0x0200,
-                /** repeat state is changed.     */                
+                /** repeat state is changed.     */
                 REPEAT        = 0x0400,
-                /** Not implemented  */                                  
+                /** Not implemented  */
                 AUDIO         = 0x0800,
-                /** The state of the player has changed.*/               
+                /** The state of the player has changed.*/
                 STATE         = 0x1000,
-                /** The permissions the client has, has changed.*/  
+                /** The permissions the client has, has changed.*/
                 PERMISSION    = 0x2000,
-                /** The bitrate of the playing song has changed.    */ 
+                /** The bitrate of the playing song has changed.    */
                 BITRATE       = 0x4000,
                 /** the audio format of the playing song changed.*/
                 AUDIOFORMAT   = 0x8000,
@@ -117,6 +111,7 @@ namespace MPD {
             [CCode (cname="mpd_status_get_channels")]
             public int get_channels(MPD.Server server);
     }
+
     namespace Data{
         [CCode (cname="MpdDataType", cprefix = "MPD_DATA_TYPE_", cheader_filename = "libmpd/libmpd.h")]
             public enum Type {
@@ -127,10 +122,8 @@ namespace MPD {
                 PLAYLIST,
                 OUTPUT_DEV
             }
-    [CCode (cname = "mpd_PlaylistFile",
-    free_function = "mpd_freePlaylistFile",
-    copy_function = "mpd_playlistFileDup",
-    cheader_filename = "libmpd/libmpdclient.h,libmpd/libmpd.h")]
+
+    [CCode (cname = "mpd_PlaylistFile", free_function = "mpd_freePlaylistFile", copy_function = "mpd_playlistFileDup", cheader_filename = "libmpd/libmpdclient.h,libmpd/libmpd.h")]
     [Compact]
     [Immutable]
     public class Playlist{
@@ -141,16 +134,14 @@ namespace MPD {
         public string *mtime;
     }
 
-            [CCode (cname = "MpdData",
-                free_function = "mpd_data_free", 
-                cheader_filename = "libmpd/libmpd.h")]
+            [CCode (cname = "MpdData", free_function = "mpd_data_free", cheader_filename = "libmpd/libmpd.h")]
             [Compact]
             public class Item {
                 public Data.Type type;
                 public MPD.Song?  song;
                 public string tag;
                 public Playlist playlist;
-              
+
                 [CCode (cname="mpd_data_get_next")]
                 [ReturnsModifiedPointer ()]
                 public void next_free();
@@ -164,29 +155,27 @@ namespace MPD {
                 [ReturnsModifiedPointer ()]
                 public void remove_duplicate_songs();
 
-                [CCode (cname="mpd_data_get_next_real", cheader_filename="libmpd/libmpd-internal.h")] 
+                [CCode (cname="mpd_data_get_next_real", cheader_filename="libmpd/libmpd-internal.h")]
                 [ReturnsModifiedPointer ()]
                 public void next(bool free);
 
-                [CCode (cname="mpd_data_get_first")] 
+                [CCode (cname="mpd_data_get_first")]
                 public unowned Item? get_first();
 
-                [CCode (cname="mpd_data_get_first")] 
+                [CCode (cname="mpd_data_get_first")]
                 [ReturnsModifiedPointer ()]
                 public void first();
 
                 [CCode (cname="mpd_data_concatenate")]
                 [ReturnsModifiedPointer ()]
-                public void concatenate(owned MPD.Data.Item b); 
+                public void concatenate(owned MPD.Data.Item b);
 
                 [CCode (cname="mpd_new_data_struct_append")]
                 [ReturnsModifiedPointer ()]
                 public void append_new();
             }
 
-            [CCode (cname = "mpd_SearchStats",
-                free_function = "mpd_freeSearchStats",
-                cheader_filename = "libmpd/libmpdclient.h")]
+            [CCode (cname = "mpd_SearchStats", free_function = "mpd_freeSearchStats", cheader_filename = "libmpd/libmpdclient.h")]
             [Compact]
             public class SearchStats
             {
@@ -194,6 +183,7 @@ namespace MPD {
                 public ulong playTime;
             }
     }
+
     namespace PlayQueue {
         [CCode (cname="mpd_playlist_add")]
         public void add_song(MPD.Server server, string path);
@@ -206,7 +196,7 @@ namespace MPD {
         public void clear(MPD.Server server);
 		[CCode (cname="mpd_playlist_get_playlist_length")]
 		public int length(MPD.Server server);
-        
+
         public void add_artist(MPD.Server server, string artist)
         {
             MPD.Database.search_start(server,true);
@@ -214,13 +204,14 @@ namespace MPD {
             var data = MPD.Database.search_commit(server);
             if(data != null) {
                 data.sort_album_disc_track();
-                while(data != null){ 
+                while(data != null){
                     MPD.PlayQueue.queue_add_song(server, data.song.file);
                     data.next_free();
                 }
                 MPD.PlayQueue.queue_commit(server);
             }
         }
+
         public void add_album(MPD.Server server, string? artist, string? album, string? album_artist=null)
         {
             MPD.Database.search_start(server,true);
@@ -232,7 +223,7 @@ namespace MPD {
             var data = MPD.Database.search_commit(server);
             if(data != null) {
                 data.sort_album_disc_track();
-                while(data != null){ 
+                while(data != null){
                     MPD.PlayQueue.queue_add_song(server, data.song.file);
                     data.next_free();
                 }
@@ -249,6 +240,7 @@ namespace MPD {
         public void pause(MPD.Server server);
         public void stop(MPD.Server server);
         public MPD.Player.State get_state(MPD.Server server);
+
         [CCode (cprefix="MPD_STATUS_STATE_", cname="int")]
         public enum State{
             UNKNOWN = 0,
@@ -259,7 +251,7 @@ namespace MPD {
     }
 
     namespace Database {
-        public MPD.Data.Item? get_playlist_content(MPD.Server server, string playlist_name); 
+        public MPD.Data.Item? get_playlist_content(MPD.Server server, string playlist_name);
         [CCode (cname="mpd_database_playlist_list")]
         public MPD.Data.Item? get_playlist_list(MPD.Server server);
         public void playlist_list_add(MPD.Server server, string playlist_name, string path);

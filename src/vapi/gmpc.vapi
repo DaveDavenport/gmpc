@@ -28,15 +28,12 @@ namespace Gmpc {
     public class MetaWatcher {
         public signal void data_changed(MPD.Song song,  Gmpc.MetaData.Type type, Gmpc.MetaData.Result result,MetaData.Item? met);
 
-
         [CCode ( cname="gmpc_meta_watcher_get_meta_path", cheader_filename="gmpc-meta-watcher.h" )]
         public Gmpc.MetaData.Result query(MPD.Song song, Gmpc.MetaData.Type type, out MetaData.Item met);
-
     }
 
    [CCode (cheader_filename="metadata.h")]
    namespace MetaData {
-
         [CCode (cname="MetaDataContentType", cprefix = "META_DATA_CONTENT_", cheader_filename = "libmpd/libmpd.h,metadata.h")]
         public enum ContentType {
             EMPTY,
@@ -48,13 +45,8 @@ namespace Gmpc {
             TEXT_LIST
         }
 
+        [CCode (cname="MetaData",free_function="meta_data_free",copy_function="meta_data_dup",has_type_id = false)]
         [Compact]
-        [CCode (
-	cname="MetaData",
-	free_function="meta_data_free",
-	copy_function="meta_data_dup",
-	has_type_id = false
-	)]
         public class Item {
             [CCode (cname="meta_data_new")]
             public Item ();
@@ -64,7 +56,7 @@ namespace Gmpc {
 			[CCode (cname="meta_data_dup")]
 			public Item dup();
 
-			
+
            public unowned string plugin_name;
            public int size;
            public void * content;
@@ -116,6 +108,7 @@ namespace Gmpc {
            [CCode (cname="meta_data_dup_steal")]
            public MetaData.Item dup_steal();
         }
+
         [CCode (cname="MetaDataType", cprefix = "META_", cheader_filename = "metadata.h")]
         public enum Type {
             ALBUM_ART       = 1,
@@ -138,7 +131,6 @@ namespace Gmpc {
             UNAVAILABLE,
             FETCHING
         }
-
 
 
         public delegate void Callback (void *handle,string? plugin_name, GLib.List<MetaData.Item>? list);
@@ -180,6 +172,7 @@ namespace Gmpc {
             public void set_scale_up(bool scale);
 
         }
+
         [CCode ( cname="GmpcMetaTextView", cheader_filename="gmpc-meta-text-view.h")]
         public class TextView: Gtk.TextView {
                 public bool use_monospace;
@@ -191,6 +184,7 @@ namespace Gmpc {
         }
 
    }
+
    namespace Messages {
        [CCode (cprefix = "ERROR_", cheader_filename = "playlist3-messages.h")]
        public enum Level{
@@ -242,7 +236,6 @@ namespace Gmpc {
         }
 
 
-
         public delegate void Callback (Gmpc.AsyncDownload.Handle handle, Gmpc.AsyncDownload.Status status);
         public delegate void CallbackVala (Gmpc.AsyncDownload.Handle handle, Gmpc.AsyncDownload.Status status, void *p);
 
@@ -264,9 +257,7 @@ namespace Gmpc {
     [CCode (cname="open_help", cheader_filename="misc.h")]
 	public void open_help(string uri);
 
-
     namespace Playlist {
-
 		[CCode (cname="Pl3CatBrowserType", cprefix="PL3_CAT_BROWSER_", cheader_filename="plugin.h")]
 		public enum BrowserType{
 			TOP,
@@ -286,7 +277,7 @@ namespace Gmpc {
         public void show();
         [CCode (cname="playlist3_get_accel_group", cheader_filename="playlist3.h")]
         public unowned Gtk.AccelGroup get_accel_group();
-        
+
         [CCode (cname="playlist3_get_widget_by_id", cheader_filename="playlist3.h")]
         public Gtk.Widget get_widget_by_id(string id);
 
@@ -329,6 +320,7 @@ namespace Gmpc {
         [CCode (cname="cfg_get_class_list", cheader_filename="config1.h")]
         public SettingsList get_class_list();
     }
+
     [CCode (cheader_filename="config1.h", cname="conf_mult_obj", free_function="cfg_free_multiple")]
         [Compact]
         [Immutable]
@@ -357,20 +349,29 @@ namespace Gmpc {
         public string format_time(ulong seconds, string pre="");
         [CCode (cname="format_time_real_newline", cheader_filename="misc.h")]
         public string format_time_newline(ulong seconds, string pre="");
+
+
+        [CCode (cname="mpd_song_checksum",cheader_filename="misc.h")]
+        public string? song_checksum(MPD.Song? song);
+        [CCode (cname="mpd_song_checksum_type",cheader_filename="misc.h")]
+        public string? song_checksum_type(MPD.Song? song, Gmpc.MetaData.Type type);
     }
 
     /* Browser */
     namespace Browser{
         [CCode (cname="playlist3_insert_browser")]
         public void insert(out Gtk.TreeIter iter, int position);
+
         namespace File {
             [CCode (cname="pl3_file_browser_open_path")]
             public void open_path(string path);
         }
+
         namespace Find {
             [CCode (cname="pl3_find2_ec_database")]
             public void query_database(void *user_data, string query);
         }
+
         namespace Metadata {
             [CCode (cname="info2_fill_artist_view")]
             public void show_artist(string artist);
@@ -379,6 +380,7 @@ namespace Gmpc {
             public void show_album(string artist,string album);
         }
     }
+
     namespace Playlist3 {
         [CCode (cname="playlist3_get_category_tree_view")]
         public unowned Gtk.TreeView get_category_tree_view();
@@ -417,6 +419,7 @@ namespace Gmpc {
             public unowned string get_request_artist();
             public int icon_size;
         }
+
         [CCode (cheader_filename="gmpc-mpddata-model-playlist.h")]
         public class ModelPlaylist : Gmpc.MpdData.Model {
 			public signal void total_playtime_changed(ulong loaded_songs, ulong total_playtime);
@@ -427,14 +430,6 @@ namespace Gmpc {
     }
 
 
-    namespace Misc {
-        [CCode (cname="mpd_song_checksum",cheader_filename="misc.h")]
-        public string? song_checksum(MPD.Song? song);
-        [CCode (cname="mpd_song_checksum_type",cheader_filename="misc.h")]
-        public string? song_checksum_type(MPD.Song? song, Gmpc.MetaData.Type type);
-
-
-    }
     namespace MpdInteraction {
         [CCode (cname="play_path",cheader_filename="mpdinteraction.h")]
         public void play_path(string path);
@@ -460,6 +455,7 @@ namespace Gmpc {
         [CCode (cname="pango_attr_list_change", cheader_filename="pango/pango.h")]
             public void change (Pango.AttrList list,owned Pango.Attribute attr);
     }
+
     [CCode (cheader_filename="pixbuf-cache.h")]
     namespace PixbufCache {
         [CCode (cname="pixbuf_cache_lookup_icon")]
@@ -468,6 +464,7 @@ namespace Gmpc {
             public void add_icon(int size,[CCode (array_length = false)] uchar[] url, Gdk.Pixbuf pb);
 
     }
+
     [CCode (cheader_filename="advanced-search.h")]
     namespace Query{
         [CCode (cname="advanced_search")]
@@ -491,7 +488,6 @@ namespace Gmpc {
 	static weak ParentPlugin[] plugins;
 	[CCode (cname="num_plugins",cheader_filename="main.h")]
 	static int num_plugins;
-
 
     namespace Preferences {
         [CCode (cname="preferences_window_update", cheader_filename="preferences.h")]
