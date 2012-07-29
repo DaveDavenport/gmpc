@@ -89,10 +89,12 @@ public class Gmpc.Plugins.SidebarNextSong : Gmpc.Plugin.Base, Gmpc.Plugin.Sideba
     private void update()
     {
         int id= Gmpc.server.player_get_next_song_id();
+
+        // Make sure the image is redrawn.
+        AlbumImage.set_dirty();
         if(id >= 0)
         {
             MPD.Song? song = Gmpc.server.playlist_get_song(id);
-            AlbumImage.set_cover_na();
             AlbumImage.update_from_song(song);
             char[] buffer = new char[1024];
             song.markup(buffer, "%title%[\n%artist%]");

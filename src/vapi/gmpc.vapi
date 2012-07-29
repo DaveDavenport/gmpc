@@ -171,6 +171,8 @@ namespace Gmpc {
             [CCode (cname="gmpc_metaimage_set_scale_up")]
             public void set_scale_up(bool scale);
 
+            [CCode (cname="gmpc_metaimage_set_dirty")]
+            public void set_dirty();
         }
 
         [CCode ( cname="GmpcMetaTextView", cheader_filename="gmpc-meta-text-view.h")]
