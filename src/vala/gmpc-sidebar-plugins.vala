@@ -60,6 +60,8 @@ public class Gmpc.Sidebar.Plugins
 
             alignment.add(label);
             vbox.pack_start(alignment, false, false, 0);
+
+            store.set(iter, 5, alignment, -1);
         }
 
         if ( position >= 0)
@@ -192,9 +194,19 @@ public class Gmpc.Sidebar.Plugins
         {
             do
             {
+                Widget? widget;
                 SidebarIface pl;
-                store.get(iter, 3, out pl, -1);
+                store.get(iter, 3, out pl,5, out widget, -1);
                 pl.sidebar_set_state(state);
+
+                // Hide the sidebar name widget in collapsed mode.
+                if(widget != null) {
+                    if(state == Gmpc.Plugin.SidebarState.COLLAPSED) {
+                        widget.hide();
+                    } else {
+                        widget.show();
+                    }
+                }
             }
             while(store.iter_next(ref iter));
         }
@@ -204,11 +216,12 @@ public class Gmpc.Sidebar.Plugins
     public static void init(SidebarIface plugin)
     {
         if (store == null)
-            store = new ListStore(5, typeof(bool),          // enabled
+            store = new ListStore(6, typeof(bool),          // enabled
                                   typeof(string),        // name
                                   typeof(int),           // position
                                   typeof(SidebarIface),  // plugin
-                                  typeof(VBox));         // Widget
+                                  typeof(VBox),         // Widget
+                                  typeof(Widget));      // Label
         log(GSBP_LOG_DOMAIN, GLib.LogLevelFlags.LEVEL_DEBUG, "Initializing sidebar plugin");
         TreeIter iter;
         store.append(out iter);
@@ -217,6 +230,7 @@ public class Gmpc.Sidebar.Plugins
                   2, plugin.sidebar_get_position(),
                   3, plugin,
                   4, null,
+                  5, null,
                   -1);
 
 

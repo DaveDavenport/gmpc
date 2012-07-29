@@ -28,9 +28,9 @@ private const string some_unique_name_sbv = Config.VERSION;
 
 public class MyCellRenderer : Gtk.CellRenderer
 {
-public bool show_number { set; get; default=false;}
+    public bool show_number { set; get; default=false;}
     public int number { set; get; default=0;}
-            private CellRendererPixbuf cr_pb = new Gtk.CellRendererPixbuf();
+    private CellRendererPixbuf cr_pb = new Gtk.CellRendererPixbuf();
     private CellRendererText cr_text = new Gtk.CellRendererText();
     public string icon_name
     {
@@ -67,13 +67,13 @@ public bool show_number { set; get; default=false;}
     {
         set;
         get;
-    default = true;
+        default = true;
     }
     public int image_width
     {
         set;
         get;
-    default = 16;
+        default = 16;
     }
     public new float xalign
     {
@@ -86,11 +86,11 @@ public bool show_number { set; get; default=false;}
 
     /* get_size method, always request a 50x50 area */
     public override void get_size (Gtk.Widget widget,
-                                   Gdk.Rectangle? cell_area,
-                                   out int x_offset,
-                                   out int y_offset,
-                                   out int width,
-                                   out int height)
+            Gdk.Rectangle? cell_area,
+            out int x_offset,
+            out int y_offset,
+            out int width,
+            out int height)
     {
         int x_o=0;
         int y_o =0;
@@ -116,11 +116,11 @@ public bool show_number { set; get; default=false;}
 
     /* render method */
     public override void render (Gdk.Window    window,
-                                 Gtk.Widget    widget,
-                                 Gdk.Rectangle background_area,
-                                 Gdk.Rectangle cell_area,
-                                 Gdk.Rectangle expose_area,
-                                 Gtk.CellRendererState flags)
+            Gtk.Widget    widget,
+            Gdk.Rectangle background_area,
+            Gdk.Rectangle cell_area,
+            Gdk.Rectangle expose_area,
+            Gtk.CellRendererState flags)
     {
         var ct = Gdk.cairo_create(window);
         int x_o=0;
@@ -150,7 +150,7 @@ public bool show_number { set; get; default=false;}
             var l = widget.create_pango_layout("%0i".printf(number));
             l.get_pixel_size(out pw, out ph);
 
-//			Gdk.cairo_set_source_color(ct, widget.style.bg[Gtk.StateType.SELECTED]);
+            //			Gdk.cairo_set_source_color(ct, widget.style.bg[Gtk.StateType.SELECTED]);
             ct.set_source_rgb(0.8,0,0);
             ct.rectangle(cell_area.x, cell_area.y+cell_area.height/2-ph/2-0.5, pw+4, ph);
             ct.fill_preserve();
