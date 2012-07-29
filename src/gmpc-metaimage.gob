@@ -813,7 +813,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 	void
 	reload_image(self)
 	{
-		//gmpc_meta_image_async_clear(GMPC_META_IMAGE_ASYNC(self->_priv->image));
         gmpc_meta_image_async_clear_now(GMPC_META_IMAGE_ASYNC(self->_priv->image));
         switch(self->_priv->state)
 		{
@@ -826,17 +825,8 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 					self_set_cover_fetching(self);
 					break;
 			case STATE_IMAGE:
-                    if(self->_priv->image_url)
-                    {
-						// How to fix this? for raw image.
-	/*
-                        gchar *temp = self->_priv->image_url;
-                        self->_priv->image_url = NULL;
-
-                        self_set_cover_from_path(self, temp);
-                        g_free(temp);
-*/
-                    }
+                    // Set dirty state.
+                    self_set_dirty(self);
             /* fix bitching */
             case STATE_EMPTY:
             case NUM_STATES:

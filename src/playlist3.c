@@ -88,8 +88,7 @@
 
 
 
-#define ALBUM_SIZE_SMALL 42
-#define ALBUM_SIZE_LARGE 42
+#define ALBUM_SIZE 42
 
 #define LOG_DOMAIN "Playlist"
 
@@ -1165,7 +1164,7 @@ void create_playlist3(void)
 
     gtk_box_reorder_child(GTK_BOX
         (gtk_builder_get_object(pl3_xml, "hbox_playlist_player")), metaimage_album_art, 0);
-    gmpc_metaimage_set_size(GMPC_METAIMAGE(metaimage_album_art), ALBUM_SIZE_LARGE);
+    gmpc_metaimage_set_size(GMPC_METAIMAGE(metaimage_album_art), ALBUM_SIZE);
     gmpc_metaimage_set_no_cover_icon(GMPC_METAIMAGE(metaimage_album_art), (char *)"gmpc");
     gmpc_metaimage_set_connection(GMPC_METAIMAGE(metaimage_album_art), connection);
     /** make sure size is updated */
@@ -1546,18 +1545,10 @@ static void playlist_zoom_level_changed(void)
         g_object_unref(box);
         gtk_widget_show(box);
         gmpc_progress_set_hide_text(GMPC_PROGRESS(new_pb), FALSE);
-
-        /* Album image only if enabled. */
-        if(metaimage_album_art != NULL)
-        {
-            gmpc_metaimage_set_size(GMPC_METAIMAGE(metaimage_album_art), ALBUM_SIZE_LARGE);
-            gmpc_metaimage_reload_image(GMPC_METAIMAGE(metaimage_album_art));
-        }
-
     }
     if (pl3_old_zoom != PLAYLIST_MINI && pl3_zoom == PLAYLIST_MINI)
     {
-        GtkWidget *box =GTK_WIDGET(gtk_builder_get_object(pl3_xml, "pl3_button_control_box"));
+        GtkWidget *box = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "pl3_button_control_box"));
         GtkWidget *top = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "hbox10"));
         GtkWidget *vtop = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "vbox_playlist_player"));
         /* add my own reference */
@@ -1569,14 +1560,6 @@ static void playlist_zoom_level_changed(void)
         gtk_widget_show(box);
 
         gmpc_progress_set_hide_text(GMPC_PROGRESS(new_pb), TRUE);
-
-        /* Album image only if enabled. */
-        if(metaimage_album_art != NULL)
-        {
-            gmpc_metaimage_set_size(GMPC_METAIMAGE(metaimage_album_art), ALBUM_SIZE_SMALL);
-            gmpc_metaimage_reload_image(GMPC_METAIMAGE(metaimage_album_art));
-        }
-
     }
 
     /* Show full view */
