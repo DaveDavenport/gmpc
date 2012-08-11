@@ -446,13 +446,7 @@ static void pl3_find2_browser_replace_selected(void)
 
 static int pl3_find2_browser_playlist_key_press(GtkWidget * tree, GdkEventKey * event)
 {
-    if (event->state == GDK_CONTROL_MASK && (event->keyval == GDK_Insert || event->keyval == GDK_KP_Insert))
-    {
-        pl3_find2_browser_replace_selected();
-    } else if (event->keyval == GDK_Insert || event->keyval == GDK_KP_Insert)
-    {
-        pl3_find2_browser_add_selected();
-    } else if (event->keyval == GDK_i && event->state & GDK_MOD1_MASK)
+    if (event->keyval == GDK_i && event->state & GDK_MOD1_MASK)
     {
         pl3_find2_browser_show_info();
     }

@@ -1,7 +1,7 @@
 /* Gnome Music Player Client (GMPC)
  * Copyright (C) 2004-2012 Qball Cow <qball@gmpclient.org>
  * Project homepage: http://gmpclient.org/
- 
+
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -95,7 +95,7 @@ static const gchar *col_names[NUM_COLS] = {
     N_("AlbumArtist"),
     N_("Extension"),
     N_("Directory")
-}; 
+};
 
 static gint  col_enabled[NUM_COLS] = {
     FALSE,//"Markup",
@@ -167,7 +167,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 
 
 
-	public 
+	public
 		GtkWidget * new (const char *name (check null), gboolean sort, Gtk:Tree:Model *model (check type null))
 		{
 			Self *self = GET_NEW;
@@ -194,19 +194,19 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 			gchar *conf_size,*conf_opt = g_strdup_printf("%s-colpos", self->_priv->name);
 			GtkTreeViewColumn *col = NULL;
 			for(i = 0;i< NUM_COLS;i++)
-			{ 
-				int conf_pos = cfg_get_single_value_as_int_with_default(config, conf_opt,col_names[i], col_position[i]); 
+			{
+				int conf_pos = cfg_get_single_value_as_int_with_default(config, conf_opt,col_names[i], col_position[i]);
 				col = self_add_column(self,col_names[i],col_ids[i],conf_pos);
-				g_object_set_data(G_OBJECT(col), "id",GINT_TO_POINTER(i));	
+				g_object_set_data(G_OBJECT(col), "id",GINT_TO_POINTER(i));
 			}
 			q_free(conf_opt);
 			conf_opt = g_strdup_printf("%s-colshow", self->_priv->name);
 			conf_size = g_strdup_printf("%s-colsize", self->_priv->name);
 			for(i = 0;i< NUM_COLS;i++)
-			{ 
+			{
 				int id = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(self->_priv->columns[i]), "id"));
-				int col_size= cfg_get_single_value_as_int_with_default(config, conf_size,col_names[id], 200); 
-				int col_show= cfg_get_single_value_as_int_with_default(config, conf_opt,col_names[id], col_enabled[id]); 
+				int col_size= cfg_get_single_value_as_int_with_default(config, conf_size,col_names[id], 200);
+				int col_show= cfg_get_single_value_as_int_with_default(config, conf_opt,col_names[id], col_enabled[id]);
 				gtk_tree_view_column_set_visible(self->_priv->columns[i],col_show);
 				gtk_tree_view_append_column(GTK_TREE_VIEW(self), self->_priv->columns[i]);
 				/* don't set the icon column */
@@ -232,7 +232,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 				int sort_col = cfg_get_single_value_as_int_with_default(config, self->_priv->name, "sort-column",MPDDATA_MODEL_COL_SONG_TITLE);
 				int sort_order = cfg_get_single_value_as_int_with_default(config, self->_priv->name, "sort-order", GTK_SORT_ASCENDING);
 				if(((sort_col < MPDDATA_MODEL_N_COLUMNS && sort_col >= 0) || sort_col == GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID )&& (sort_order == GTK_SORT_ASCENDING || sort_order == GTK_SORT_DESCENDING)) {
-					gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(gtk_tree_view_get_model(GTK_TREE_VIEW(self))),sort_col, sort_order); 
+					gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(gtk_tree_view_get_model(GTK_TREE_VIEW(self))),sort_col, sort_order);
 				}
 			}
 		}
@@ -240,8 +240,8 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 	/**
 	 * Save Column Setup
 	 */
-	private	
-		void 
+	private
+		void
 		save_column_setup (self)
 		{
 			int i=0;
@@ -280,14 +280,14 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 			{
 				int sort_col;
 				GtkSortType sort_order;
-				gtk_tree_sortable_get_sort_column_id(GTK_TREE_SORTABLE(gtk_tree_view_get_model(GTK_TREE_VIEW(self))), &sort_col, &sort_order); 
+				gtk_tree_sortable_get_sort_column_id(GTK_TREE_SORTABLE(gtk_tree_view_get_model(GTK_TREE_VIEW(self))), &sort_col, &sort_order);
 				cfg_set_single_value_as_int(config, self->_priv->name, "sort-column",sort_col);
 				cfg_set_single_value_as_int(config, self->_priv->name, "sort-order", sort_order);
 			}
 		}
 
 	override (G:Object)
-		void 
+		void
 		dispose (G:Object *obj)
 		{
 			Self *self = GMPC_MPDDATA_TREEVIEW(obj);
@@ -309,7 +309,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 				g_object_set(G_OBJECT(cell), "weight", 400,NULL);
 
 		}
-	private 
+	private
 		void
 		column_width(self, GParamSpec *argc, GtkTreeViewColumn *column)
 		{
@@ -321,14 +321,14 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 				int w = cfg_get_single_value_as_int(config, conf_size, col_names[id]);
 				if(w != width)
 				{
-					cfg_set_single_value_as_int(config, conf_size, col_names[id],width); 
+					cfg_set_single_value_as_int(config, conf_size, col_names[id],width);
 				}
 				q_free(conf_size);
 			}
 		}
 
 	private
-		GtkTreeViewColumn * 
+		GtkTreeViewColumn *
 		add_column(self, const char *columnname, int valuerow, int position)
 		{
 			GtkCellRenderer *renderer;
@@ -340,7 +340,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 				renderer = gtk_cell_renderer_pixbuf_new();
 				g_value_init(&value, G_TYPE_FLOAT);
 				g_value_set_float(&value, 0.0);
-				g_object_set_property(G_OBJECT(renderer), "xalign", &value); 
+				g_object_set_property(G_OBJECT(renderer), "xalign", &value);
 
 				column = gtk_tree_view_column_new ();
 				gtk_tree_view_column_pack_start (column, renderer, TRUE);
@@ -355,7 +355,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 						"text", valuerow,NULL);
 				g_value_init(&value, G_TYPE_INT);
 				g_value_set_int(&value, PANGO_ELLIPSIZE_END);
-				g_object_set_property(G_OBJECT(renderer), "ellipsize", &value);	
+				g_object_set_property(G_OBJECT(renderer), "ellipsize", &value);
 				gtk_tree_view_column_set_resizable(column, TRUE);
 				if(GMPC_IS_MPDDATA_MODEL_PLAYLIST(gtk_tree_view_get_model(GTK_TREE_VIEW(self))))
 				{
@@ -371,15 +371,15 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 
 			if(self->_priv->do_sort)
 			{
-				gtk_tree_view_column_set_sort_column_id(column,valuerow); 
+				gtk_tree_view_column_set_sort_column_id(column,valuerow);
 				gtk_tree_view_column_set_sort_indicator(column, TRUE);
 			}
 
 			return column;
 		}
 	/**
-	 * Opens a column editor 
-	 */	
+	 * Opens a column editor
+	 */
 	public
 		void
 		edit_columns(self)
@@ -418,9 +418,9 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 	 * TREEVIEW POPUP
 	 */
 	private gboolean query_tooltip(self,
-			gint x, gint y, 
+			gint x, gint y,
 			gboolean keyboard_tip,
-			GtkTooltip *tooltip, 
+			GtkTooltip *tooltip,
 			gpointer data)
 	{
 		GtkTreeView *treeview = GTK_TREE_VIEW(self);
@@ -446,7 +446,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 			if(self->_priv->file && song->file && strcmp(self->_priv->file, song->file))
 			{
 				show = FALSE;
-				g_free(self->_priv->file);self->_priv->file = NULL; 
+				g_free(self->_priv->file);self->_priv->file = NULL;
 			}
 			else if(!(self->_priv->file && song->file && strcmp(self->_priv->file, song->file) == 0))
 			{
@@ -498,7 +498,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 		{
 			int stripe_x = 1;
 			int stripe_y = 1;
-			int stripe_height = widget->allocation.height;// 128+8; 
+			int stripe_height = widget->allocation.height;// 128+8;
 			GdkColor color;
 			GtkStyle *style = gtk_widget_get_style(widget);
 			GdkColor *background_color = &style->base[GTK_STATE_NORMAL];
@@ -678,7 +678,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 		g_free(markup);
 		gtk_misc_set_alignment(GTK_MISC(label), 1.0,0.5);
 		gtk_table_attach(GTK_TABLE(table), label, 0,1,3,4,GTK_FILL, GTK_FILL,0,0);
-		self->_priv->tw_genre = gtk_label_new("n/a"); 
+		self->_priv->tw_genre = gtk_label_new("n/a");
 		gtk_misc_set_alignment(GTK_MISC(self->_priv->tw_genre), 0.0,0.5);
 		gtk_label_set_ellipsize(GTK_LABEL(self->_priv->tw_genre),PANGO_ELLIPSIZE_END);
 		gtk_table_attach(GTK_TABLE(table), self->_priv->tw_genre, 1,2,3,4,GTK_EXPAND|GTK_FILL, GTK_FILL,0,0);
@@ -690,7 +690,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 		g_free(markup);
 		gtk_misc_set_alignment(GTK_MISC(label), 1.0,0.5);
 		gtk_table_attach(GTK_TABLE(table), label, 0,1,4,5,GTK_FILL, GTK_FILL,0,0);
-		self->_priv->tw_date = gtk_label_new("n/a"); 
+		self->_priv->tw_date = gtk_label_new("n/a");
 		gtk_misc_set_alignment(GTK_MISC(self->_priv->tw_date), 0.0,0.5);
 		gtk_label_set_ellipsize(GTK_LABEL(self->_priv->tw_date),PANGO_ELLIPSIZE_END);
 		gtk_table_attach(GTK_TABLE(table), self->_priv->tw_date, 1,2,4,5,GTK_EXPAND|GTK_FILL, GTK_FILL,0,0);
@@ -702,7 +702,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 		g_free(markup);
 		gtk_misc_set_alignment(GTK_MISC(label), 1.0,0.5);
 		gtk_table_attach(GTK_TABLE(table), label, 0,1,5,6,GTK_FILL, GTK_FILL,0,0);
-		self->_priv->tw_length = gtk_label_new("n/a"); 
+		self->_priv->tw_length = gtk_label_new("n/a");
 		gtk_misc_set_alignment(GTK_MISC(self->_priv->tw_length), 0.0,0.5);
 		gtk_label_set_ellipsize(GTK_LABEL(self->_priv->tw_length),PANGO_ELLIPSIZE_END);
 		gtk_table_attach(GTK_TABLE(table), self->_priv->tw_length, 1,2,5,6,GTK_EXPAND|GTK_FILL, GTK_FILL,0,0);
@@ -716,10 +716,10 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 
 
 
-		g_signal_connect(G_OBJECT(treeview), 
+		g_signal_connect(G_OBJECT(treeview),
 				"query-tooltip",
 				G_CALLBACK(self_query_tooltip),
-				NULL); 
+				NULL);
 		gtk_widget_set_tooltip_window(treeview, GTK_WINDOW(self->_priv->tooltip_window));
 		gtk_widget_show_all(vbox);
 	}
@@ -728,16 +728,16 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 
 
 
-	/** 
-	 * Right mouse click behaviour fix 
+	/**
+	 * Right mouse click behaviour fix
 	 */
-	private 
+	private
 		gboolean click_fix (self, GdkEventButton *event)
 		{
 			GtkTreePath *path = NULL;
 			self->_priv->pressed = TRUE;
 			if(event->button == 3 && event->window != NULL && gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(self), event->x, event->y,&path,NULL,NULL,NULL))
-			{	
+			{
 				GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(self));
 				if(gtk_tree_selection_path_is_selected(sel, path))
 				{
@@ -752,7 +752,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 			return FALSE;
 		}
 
-	private 
+	private
 		gboolean click_released (self, GdkEventButton *event)
 		{
 			self->_priv->pressed = FALSE;
@@ -786,23 +786,65 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 		{
 		}
 
-	private 
+        private void insert_selected_rows(self,gboolean replace)
+        {
+            GtkTreeModel *model = NULL;
+            GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(self));
+            GList *iter, *list = gtk_tree_selection_get_selected_rows(selection, &model);
+            int added = 0;
+            for(iter = g_list_first(list); iter != NULL; iter = g_list_next(iter))
+            {
+                gchar *name;
+                gint type;
+                GtkTreeIter titer;
+                GtkTreePath *path = iter->data;
+                gtk_tree_model_get_iter(model, &titer, path);
+                gtk_tree_model_get(model, &titer, MPDDATA_MODEL_COL_PATH, &name, MPDDATA_MODEL_ROW_TYPE, &type, -1);
+                if (type == MPD_DATA_TYPE_SONG || type == MPD_DATA_TYPE_DIRECTORY) {
+                    /* add them to the add list */
+                    mpd_playlist_queue_add(connection, name);
+                    added++;
+                } else if (type == MPD_DATA_TYPE_PLAYLIST) {
+                    mpd_playlist_queue_load(connection, name);
+                    added++;
+                }
+            }
+            if(replace && added > 0) {
+                mpd_playlist_clear(connection);
+            }
+            mpd_playlist_queue_commit(connection);
+            if(replace && added > 0) {
+                mpd_player_play(connection);
+            }
+            g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);
+            g_list_free (list);
+        }
+
+	private
 		int
 		paste_key_release_event(self, GdkEventKey *event,gpointer data)
 		{
-			if(event->keyval == GDK_Menu) {
-				GdkEventButton bevent;
-				gboolean value = FALSE;
-				bevent.window = NULL;
-				bevent.button = 3;
-				bevent.time = event->time;
-				g_signal_emit_by_name(self, "button-press-event", &bevent, &value,NULL);
-				if(!value){ 
-					g_signal_emit_by_name(self, "button-release-event", &bevent, &value,NULL);
-					}
+            if(event->keyval == GDK_Insert || event->keyval == GDK_KP_Insert) {
+                if(mpd_check_connected(connection))
+                {
+                    self_insert_selected_rows(self,((event->state & GDK_CONTROL_MASK) > 0));
+                    return TRUE;
+                }
 
-				return TRUE;
-			}
+            }
+            if(event->keyval == GDK_Menu) {
+                GdkEventButton bevent;
+                gboolean value = FALSE;
+                bevent.window = NULL;
+                bevent.button = 3;
+                bevent.time = event->time;
+                g_signal_emit_by_name(self, "button-press-event", &bevent, &value,NULL);
+                if(!value){
+                    g_signal_emit_by_name(self, "button-release-event", &bevent, &value,NULL);
+                }
+
+                return TRUE;
+            }
 			if (event->keyval == GDK_c && event->state&GDK_CONTROL_MASK)
 			{
 				self_paste_copy_songs(self, NULL);
@@ -855,7 +897,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 		paste_paste_after_songs(self, GtkMenuItem *menuitem)
 		{
 			self_paste_after(self, g_list_first(paste_queue));
-			/* free old entries 
+			/* free old entries
 			   g_list_foreach(paste_queue, (GFunc)g_free, NULL);
 			   g_list_free(paste_queue);
 			   paste_queue = NULL;
@@ -867,14 +909,14 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 		paste_paste_before_songs(self, GtkMenuItem *menuitem)
 		{
 			self_paste_before(self, g_list_first(paste_queue));
-			/* free old entries  
+			/* free old entries
 			   g_list_foreach(paste_queue, (GFunc)g_free, NULL);
 			   g_list_free(paste_queue);
 			   paste_queue = NULL;
 			 */
 		}
 
-	private 
+	private
 		void
 		paste_copy_songs(self, GtkMenuItem *menitem)
 		{
@@ -903,10 +945,10 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 						char *path = NULL;
 						int type = 0;
 						/* this one allready has the pos. */
-						gtk_tree_model_get (model, &iter, 
-								MPDDATA_MODEL_ROW_TYPE,&type, 
-								MPDDATA_MODEL_COL_PATH, &path, 
-								-1);			
+						gtk_tree_model_get (model, &iter,
+								MPDDATA_MODEL_ROW_TYPE,&type,
+								MPDDATA_MODEL_COL_PATH, &path,
+								-1);
 						g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Copying song, into queue: %s\n", path);
 						if(type == MPD_DATA_TYPE_SONG) {
 							paste_queue = g_list_prepend(paste_queue, path);
@@ -927,7 +969,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 							}
 							g_free(path);
 						}
-					} 
+					}
 				} while ((llist = g_list_previous (llist)));
 				/* free list */
 				g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);
@@ -937,7 +979,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 		}
 
 	public
-		int 
+		int
 		right_mouse_intergration(self, GtkMenu *menu)
 		{
 			int retv = 0;
@@ -971,7 +1013,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 			/**
 			 * Paste integration
 			 */
-			
+
 			selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(self));
 			if(selection && gtk_tree_selection_count_selected_rows(selection))
 			{
@@ -985,7 +1027,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 				menu_item = gtk_image_menu_item_new_from_stock(GTK_STOCK_COPY, NULL);
 				gtk_menu_shell_append(GTK_MENU_SHELL(menu), menu_item);
 				g_signal_connect_swapped(G_OBJECT(menu_item), "activate", G_CALLBACK(self_paste_copy_songs), self);
-				retv++; 
+				retv++;
 			}
 			if(paste_queue )
 			{
@@ -1041,7 +1083,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 			return retv;
 		}
 
-	public 
+	public
 		void
 		cleanup(void)
 		{
