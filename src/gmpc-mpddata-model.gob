@@ -442,7 +442,7 @@ end:
                             song = mpd_newSong();
                             song->artist = g_strdup(data->tag);
                             song->album = NULL;
-                            gmpc_meta_watcher_get_meta_path_callback(gmw,song, META_ARTIST_ART, (MetaDataCallback)self_cover_art_fetched, (gpointer)ref);
+                            meta_data_get_path_callback(song, META_ARTIST_ART, (MetaDataCallback)self_cover_art_fetched, (gpointer)ref);
                             mpd_freeSong(song);
                         }
 
@@ -456,7 +456,7 @@ end:
                             song->artist = g_strdup(self->_priv->req_artist);
                             song->albumartist = g_strdup(self->_priv->req_artist);
                             song->album = g_strdup(data->tag);
-                            gmpc_meta_watcher_get_meta_path_callback(gmw,song, META_ALBUM_ART, (MetaDataCallback)self_cover_art_fetched, ref);
+                            meta_data_get_path_callback(song, META_ALBUM_ART, (MetaDataCallback)self_cover_art_fetched, ref);
                             mpd_freeSong(song);
                         }
                         else if(data->type == MPD_DATA_TYPE_SONG&& data->song && data->song->album && (data->song->artist || self->_priv->req_artist))
@@ -473,7 +473,7 @@ end:
                                 song->artist = g_strdup((data->song->artist)?data->song->artist:self->_priv->req_artist);
                                 song->albumartist = g_strdup((data->song->albumartist)?data->song->albumartist:self->_priv->req_artist);
                                 song->album = g_strdup(data->song->album);
-                                gmpc_meta_watcher_get_meta_path_callback(gmw,song, META_ALBUM_ART, (MetaDataCallback)self_cover_art_fetched, ref);
+                                meta_data_get_path_callback(song, META_ALBUM_ART, (MetaDataCallback)self_cover_art_fetched, ref);
                                 mpd_freeSong(song);
                             }
                         }

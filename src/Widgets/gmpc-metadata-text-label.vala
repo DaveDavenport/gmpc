@@ -111,7 +111,7 @@ namespace Gmpc.MetaData.Widgets
 
             /** Query */
             Gmpc.MetaData.Item item = null;
-            var a = metawatcher.query(cur_song, type, out item);
+            var a = MetaData.get_path(cur_song, type, out item);
             if(a == Gmpc.MetaData.Result.AVAILABLE)
             {
                 this.set_from_item(item);
@@ -131,7 +131,7 @@ namespace Gmpc.MetaData.Widgets
                 mitem.set_image(
                     new Gtk.Image.from_stock("gtk-refresh", Gtk.IconSize.MENU));
                 mitem.activate.connect((source)=>{
-                    metawatcher.query(cur_song, type|Gmpc.MetaData.Type.QUERY_NO_CACHE, out item);
+                    MetaData.get_path(cur_song, type|Gmpc.MetaData.Type.QUERY_NO_CACHE, out item);
                 });
                 menu.append(mitem);
                 mitem.show();

@@ -1,7 +1,7 @@
 /* Gnome M usic Player Client (GMPC)
  * Copyright (C) 2004-2012 Qball Cow <qball@gmpclient.org>
  * Project homepage: http://gmpclient.org/
- 
+
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -42,7 +42,7 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 
     public gboolean force_ro       = {FALSE};
     public gboolean use_monospace       = {FALSE};
-    
+
 
     private gboolean
     key_press_event(self, GdkEventKey *key, gpointer user_data)
@@ -67,14 +67,14 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 		g_signal_connect(G_OBJECT(self), "populate-popup", G_CALLBACK(self_menu_populate_callback), NULL);
 		self->_priv->meta_id= g_signal_connect(G_OBJECT(gmw), "data-changed", G_CALLBACK(self_meta_callback), self);
 	}
-	
-	public 
+
+	public
 	Gmpc:Meta:Text:View * new (int type)
 	{
 		Self *gmi =  GET_NEW;
 		gmi->_priv->type = type;
         gtk_text_buffer_create_tag (gmi->_priv->buffer, "not_editable",
-                "editable", FALSE, 
+                "editable", FALSE,
                 NULL);
 
         gtk_text_buffer_create_tag (gmi->_priv->buffer, "monospace",
@@ -84,7 +84,7 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 		return gmi;
 	}
 
-	private 
+	private
 	void
 	menu_populate_callback(self, GtkMenu *menu, gpointer data)
 	{
@@ -123,7 +123,7 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 		gmpc_meta_data_edit_window_new(self->_priv->song,self->_priv->type);
     }
 
-	public 
+	public
 	void
 	query_refetch(self)
 	{
@@ -131,7 +131,7 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 		{
 			MetaData *met= NULL;
 			MetaDataResult ret;
-			ret = gmpc_meta_watcher_get_meta_path(gmw,self->_priv->song, self->_priv->type|META_QUERY_NO_CACHE, &met);
+			ret = meta_data_get_path(self->_priv->song, self->_priv->type|META_QUERY_NO_CACHE, &met, NULL, NULL);
 			if(ret == META_DATA_FETCHING) {
 				self_set_text_fetching(self);
 			}else if (ret == META_DATA_AVAILABLE) {
@@ -146,7 +146,7 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 		}
 	}
 
-	public 
+	public
 	void
 	query_text_from_song(self, mpd_Song *song)
     {
@@ -160,12 +160,12 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
         self->_priv->song = mpd_songDup(song);
 
 
-        ret = gmpc_meta_watcher_get_meta_path(gmw,self->_priv->song, self->_priv->type, &met);
+        ret = meta_data_get_path(self->_priv->song, self->_priv->type, &met, NULL, NULL);
         if(ret == META_DATA_FETCHING)
         {
             self_set_text_fetching(self);
         }else if (ret == META_DATA_AVAILABLE) {
-            self_set_text_from_metadata(self,met); 
+            self_set_text_from_metadata(self,met);
         } else {
             self_set_text_na(self);
         }
@@ -224,7 +224,7 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
         }
 
     }
-    private 
+    private
     void
     set_text(self,const gchar *text, gsize length, int ro)
     {
@@ -240,8 +240,8 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
         if(!ro && !self->force_ro)
         {
             GtkTextChildAnchor *anch;
-            self->_priv->edit = gtk_button_new_from_stock(GTK_STOCK_EDIT); 
-            self->_priv->cancel = gtk_button_new_from_stock(GTK_STOCK_CANCEL); 
+            self->_priv->edit = gtk_button_new_from_stock(GTK_STOCK_EDIT);
+            self->_priv->cancel = gtk_button_new_from_stock(GTK_STOCK_CANCEL);
 
             gtk_text_view_set_editable(GTK_TEXT_VIEW(self), FALSE);
             gtk_widget_set_no_show_all(self->_priv->cancel, TRUE);
@@ -275,7 +275,7 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
         gtk_text_buffer_place_cursor(self->_priv->buffer, &iter);
     }
 
-	signal last NONE (STRING)	
+	signal last NONE (STRING)
 	void
 	set_text_from_path(self,const gchar *path)
 	{
@@ -317,14 +317,14 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
             self_set_text_from_path(self, path);
         }else if(met->content_type == META_DATA_CONTENT_TEXT) {
             const gchar *text = meta_data_get_text(met);
-            self_set_text(self,text, -1, FALSE); 
+            self_set_text(self,text, -1, FALSE);
         }else if (met->content_type == META_DATA_CONTENT_HTML) {
             /* TODO: make utf-8 compatible */
             gchar *text = meta_data_get_text_from_html(met);
             if(text)
             {
                 /* Get byte length */
-                self_set_text(self,text, -1, FALSE); 
+                self_set_text(self,text, -1, FALSE);
                 g_free(text);
             }else{
                 self_set_text_na(self);
@@ -333,8 +333,8 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
         if(self->_priv->met) meta_data_free(self->_priv->met);
         self->_priv->met = meta_data_dup(met);
     }
-	
-	signal last NONE (NONE)	
+
+	signal last NONE (NONE)
 	void
 	set_text_fetching(self)
 	{
@@ -358,7 +358,7 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 		}
 	}
 
-	signal last NONE (NONE)	
+	signal last NONE (NONE)
 	void
 	set_text_na(self)
 	{
@@ -384,7 +384,7 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 			return;
 		}
 		if(ret == META_DATA_AVAILABLE) {
-            self_set_text_from_metadata(self,met); 
+            self_set_text_from_metadata(self,met);
         } else if (ret == META_DATA_FETCHING) {
 			self_set_text_fetching(self);
 		} else {
@@ -399,10 +399,10 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 		PARENT_HANDLER(obj);
 	}
 	override (G:Object)
-	void 
+	void
 	dispose (G:Object *obj)
 	{
-		Self *self = GMPC_META_TEXT_VIEW(obj); 
+		Self *self = GMPC_META_TEXT_VIEW(obj);
 		if(self->_priv->meta_id)
 		{
 			g_signal_handler_disconnect(G_OBJECT(gmw),self->_priv->meta_id);
@@ -411,7 +411,7 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 
 		PARENT_HANDLER(obj);
 	}
-	public 
+	public
 	void
 	clear_entry(self)
 	{
@@ -432,13 +432,13 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 				      NULL);
 		gtk_file_filter_set_name(gff, _("Text Document"));
 		gtk_file_filter_add_mime_type(gff, "text/plain");
-		gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(fcd), gff);   
+		gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(fcd), gff);
 		gff = gtk_file_filter_new();
 		gtk_file_filter_set_name(gff, _("All"));
 		gtk_file_filter_add_pattern(gff, "*");
-		gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(fcd), gff);   
+		gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(fcd), gff);
 
-        p = cfg_get_single_value_as_string(config, "MetaData", "text-file-chooser"); 
+        p = cfg_get_single_value_as_string(config, "MetaData", "text-file-chooser");
         if(p) {
             gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(fcd), p);
             g_free(p);
@@ -447,7 +447,7 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 		switch(gtk_dialog_run(GTK_DIALOG(fcd)))
 		{
 			case GTK_RESPONSE_ACCEPT:
-				{	
+				{
 					gchar *filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(fcd));
                     MetaData *met = meta_data_new();
                     met->type = type;
@@ -456,13 +456,13 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
                     met->content = filename; met->size =-1;
 
 					meta_data_set_entry(self->_priv->song, met);
-					cfg_set_single_value_as_string(config, "MetaData", "text-file-chooser", filename); 
+					cfg_set_single_value_as_string(config, "MetaData", "text-file-chooser", filename);
 
                     meta_data_free(met);
                 }
             default:
 				break;
-		} 
+		}
 		gtk_widget_destroy(fcd);
 		mpd_freeSong(song);
 

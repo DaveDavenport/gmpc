@@ -251,7 +251,7 @@ public class Gmpc.MetaData.Widgets.SimilarArtists : Gtk.Table
             metawatcher.data_changed.connect(metadata_changed);
             this.size_allocate.connect(size_changed);
 
-            Gmpc.MetaData.Result gm_result = metawatcher.query(song, Gmpc.MetaData.Type.ARTIST_SIMILAR,out item);
+            Gmpc.MetaData.Result gm_result = MetaData.get_path(song, Gmpc.MetaData.Type.ARTIST_SIMILAR,out item);
             if(gm_result == Gmpc.MetaData.Result.AVAILABLE)
             {
                 this.metadata_changed(metawatcher, this.song, Gmpc.MetaData.Type.ARTIST_SIMILAR, gm_result, item);

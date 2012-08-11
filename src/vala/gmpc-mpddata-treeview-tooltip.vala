@@ -87,7 +87,7 @@ public class Gmpc.MpdData.Treeview.Tooltip : Gtk.Window
 
             this.checksum = new_check;
             Gmpc.MetaData.Item met = null;
-            var result = metawatcher.query(song, this.mtype, out met);
+            var result = MetaData.get_path(song, this.mtype, out met);
             metadata_changed(metawatcher, song, this.mtype,result, met);
         }
         if(this.image.get_storage_type() == Gtk.ImageType.EMPTY) return false;

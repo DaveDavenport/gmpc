@@ -62,9 +62,9 @@ public class  Gmpc.Tools.MetadataPrefetcher : Gmpc.Plugin.Base
 
                     GLib.log("MetadataPrefetcher", GLib.LogLevelFlags.LEVEL_DEBUG, "Pre-fetching %s", song.file);
                     /* Query artist */
-                    md_result = Gmpc.metawatcher.query(song, Gmpc.MetaData.Type.ARTIST_ART, out met);
+                    md_result = Gmpc.MetaData.get_path(song, Gmpc.MetaData.Type.ARTIST_ART, out met);
                     /* Query album art */
-                    md_result = Gmpc.metawatcher.query(song, Gmpc.MetaData.Type.ALBUM_ART, out met);
+                    md_result = Gmpc.MetaData.get_path(song, Gmpc.MetaData.Type.ALBUM_ART, out met);
                 }
             }
         }

@@ -1632,4 +1632,17 @@ const GList *meta_data_get_text_list(const MetaData *data)
     return (const GList *)data->content;
 }
 
+/**
+ * Wrapper to get full 'callback based' api.
+ */
+void meta_data_get_path_callback(mpd_Song *song, MetaDataType type,  MetaDataCallback callback, gpointer data)
+{
+    MetaData *met = NULL;
+    MetaDataResult ret;
+
+    ret = meta_data_get_path(song, type, &met,callback,data);
+    callback(song,ret,met,data);
+    if(met) meta_data_free(met);
+}
+
 /* vim: set noexpandtab ts=4 sw=4 sts=4 tw=120: */

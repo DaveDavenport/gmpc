@@ -1,7 +1,7 @@
 /* Gnome Music Player Client (GMPC)
  * Copyright (C) 2004-2012 Qball Cow <qball@gmpclient.org>
  * Project homepage: http://gmpclient.org/
- 
+
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -40,7 +40,7 @@ class Gmpc:Meta:Watcher from  G:Object {
     signal last NONE (POINTER, INT, INT, POINTER)
     void
     data_changed(self, mpd_Song *song, MetaDataType type,MetaDataResult result, MetaData *met)
-    { 
+    {
     }
 
     /**
@@ -83,7 +83,7 @@ class Gmpc:Meta:Watcher from  G:Object {
 				}
 			case META_ARTIST_SIMILAR:
 			case META_ARTIST_TXT:
-			case META_ARTIST_ART: 
+			case META_ARTIST_ART:
 			case META_BACKDROP_ART:
                 if(song1->albumartist && song2->albumartist && !strcmp(song1->albumartist, song2->albumartist))
                 {
@@ -122,37 +122,5 @@ class Gmpc:Meta:Watcher from  G:Object {
 				break;
 		}
 		return FALSE;
-	}
-
-	public
-	void	
-	get_meta_path_callback(self, mpd_Song *song, MetaDataType type,  MetaDataCallback callback, gpointer data)
-	{
-        MetaData *met = NULL;
-		MetaDataResult ret;
-
-		if(!self_match_data(type&META_QUERY_DATA_TYPES, song,song))
-		{
-			callback(song, META_DATA_UNAVAILABLE, NULL, data);			
-            g_warning("Query is invalid");
-            return;
-		}
-		ret = meta_data_get_path(song, type, &met,callback,data);
-		callback(song,ret,met,data);
-		if(met) meta_data_free(met);
-	}
-
-	public 
-	MetaDataResult
-	get_meta_path(self, mpd_Song *song, MetaDataType type, MetaData **met)
-	{
-		g_assert(met != NULL);
-			
-		if(!self_match_data(type&META_QUERY_DATA_TYPES, song,song))
-		{
-			return META_DATA_UNAVAILABLE;
-		}
-
-		return meta_data_get_path(song, type, met,NULL,NULL);
 	}
 }

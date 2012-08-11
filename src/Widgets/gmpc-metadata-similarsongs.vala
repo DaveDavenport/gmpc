@@ -271,7 +271,7 @@ public class Gmpc.MetaData.Widgets.SimilarSongs : Gtk.Alignment
     {
         MetaData.Item item = null;
         metawatcher.data_changed.connect(metadata_changed);
-        Gmpc.MetaData.Result gm_result = metawatcher.query(song, Gmpc.MetaData.Type.SONG_SIMILAR,out item);
+        Gmpc.MetaData.Result gm_result = MetaData.get_path(song, Gmpc.MetaData.Type.SONG_SIMILAR,out item);
         this.metadata_changed(metawatcher, this.song, Gmpc.MetaData.Type.SONG_SIMILAR, gm_result, item);
     }
 

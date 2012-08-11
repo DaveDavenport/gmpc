@@ -408,7 +408,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 			}
             self->_priv->song = mpd_songDup(song);
 
-			ret = gmpc_meta_watcher_get_meta_path(gmw,self->_priv->song, self->image_type, &met);
+			ret = meta_data_get_path(self->_priv->song, self->image_type, &met, NULL, NULL);
 			if(ret == META_DATA_FETCHING)
 			{
 				self_set_cover_fetching(self);
@@ -431,7 +431,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
         update_cover_from_song_delayed_real(self)
         {
             MetaData *met= NULL;
-            int ret = gmpc_meta_watcher_get_meta_path(gmw,self->_priv->song, self->image_type, &met);
+            int ret = meta_data_get_path(self->_priv->song, self->image_type, &met, NULL, NULL);
             if(ret == META_DATA_FETCHING)
             {
                 self_set_cover_fetching(self);
@@ -676,7 +676,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 			MetaDataResult ret;
 			MetaData *met = NULL;
 
-			ret = gmpc_meta_watcher_get_meta_path(gmw,self->_priv->song, self->image_type|META_QUERY_NO_CACHE, &met);
+			ret = meta_data_get_path(self->_priv->song, self->image_type|META_QUERY_NO_CACHE, &met, NULL, NULL);
 			if(ret == META_DATA_FETCHING)
 			{
 				self_set_cover_fetching(self);

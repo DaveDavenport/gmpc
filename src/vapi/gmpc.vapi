@@ -28,8 +28,6 @@ namespace Gmpc {
     public class MetaWatcher {
         public signal void data_changed(MPD.Song song,  Gmpc.MetaData.Type type, Gmpc.MetaData.Result result,MetaData.Item? met);
 
-        [CCode ( cname="gmpc_meta_watcher_get_meta_path", cheader_filename="gmpc-meta-watcher.h" )]
-        public Gmpc.MetaData.Result query(MPD.Song song, Gmpc.MetaData.Type type, out MetaData.Item met);
     }
 
    [CCode (cheader_filename="metadata.h")]
@@ -107,6 +105,7 @@ namespace Gmpc {
            public bool  is_text_list();
            [CCode (cname="meta_data_dup_steal")]
            public MetaData.Item dup_steal();
+
         }
 
         [CCode (cname="MetaDataType", cprefix = "META_", cheader_filename = "metadata.h")]
@@ -132,6 +131,8 @@ namespace Gmpc {
             FETCHING
         }
 
+        [CCode (cname="meta_data_get_path")]
+        public MetaData.Result get_path(MPD.Song song, Type type, out MetaData.Item item, Callback? callback=null);
 
         public delegate void Callback (void *handle,string? plugin_name, GLib.List<MetaData.Item>? list);
         [CCode ( cname="metadata_get_list", cheader_filename="libmpd/libmpd.h,metadata.h" )]

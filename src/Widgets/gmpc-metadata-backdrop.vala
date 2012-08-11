@@ -86,7 +86,7 @@ namespace Gmpc
 
                 song_checksum = Gmpc.Misc.song_checksum_type(song, cur_type);
                 Gmpc.MetaData.Item item = null;
-                var a = metawatcher.query(song, cur_type, out item);
+                var a = Gmpc.MetaData.get_path(song, cur_type,out item); //metawatcher.query(song, cur_type, out item);
                 if(a == Gmpc.MetaData.Result.AVAILABLE)
                 {
                     this.set_from_item(item);
@@ -152,7 +152,8 @@ namespace Gmpc
                 {
                     MetaData.Item mitem = null;
                     stdout.printf("Push backdrop update\n");
-                    var a = metawatcher.query(cur_song, cur_type|Gmpc.MetaData.Type.QUERY_NO_CACHE, out mitem);
+                    var a = MetaData.get_path(cur_song, cur_type|Gmpc.MetaData.Type.QUERY_NO_CACHE, out mitem);
+                    //metawatcher.query(cur_song, cur_type|Gmpc.MetaData.Type.QUERY_NO_CACHE, out mitem);
                     if(a == Gmpc.MetaData.Result.AVAILABLE)
                     {
                         this.set_from_item(mitem);

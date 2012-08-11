@@ -153,13 +153,13 @@ void metadata_import_old_db(char *url);
 #include "gmpc-meta-watcher.h"
 extern GmpcMetaWatcher *gmw;
 
-/*guint meta_data_get_path_callback(mpd_Song *song, MetaDataType type, MetaDataCallback callback, gpointer data);*/
 
 void meta_data_init(void);
 void meta_data_handle_remove_request(guint id);
 void meta_data_destroy(void);
 
 MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData **met,MetaDataCallback callback, gpointer data);
+void meta_data_get_path_callback(mpd_Song *song, MetaDataType type,  MetaDataCallback callback, gpointer data);
 
 
 gchar * gmpc_get_metadata_filename(MetaDataType  type, mpd_Song *song, char *extension);
