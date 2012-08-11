@@ -147,6 +147,12 @@ void pixbuf_cache_destroy(void)
     g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG,"remaining size: %u\n", total_size);
 }
 
+void pixbuf_cache_clear(void)
+{
+    pixbuf_cache_destroy();
+    pixbuf_cache_create();
+}
+
 void pixbuf_cache_add_icon(int size, const gchar * url, GdkPixbuf * pb)
 {
     int *mdd= (int *)url;

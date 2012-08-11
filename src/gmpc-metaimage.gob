@@ -414,10 +414,10 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 				self_set_cover_fetching(self);
 			}else if (ret == META_DATA_AVAILABLE) {
 				if (met->content_type == META_DATA_CONTENT_RAW) {
-					self_set_cover_raw(self, met->content, met->size,met->md5sum);
-                    }else{
-                        self_set_cover_na(self);
-                    }
+                    self_set_cover_raw(self, met->content, met->size,met->md5sum);
+                }else{
+                    self_set_cover_na(self);
+                }
 			} else {
 				self_set_cover_na(self);
 			}
@@ -834,6 +834,17 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 			case STATE_IMAGE:
                     // Set dirty state.
                     self_set_dirty(self);
+                    if(self->_priv->song != NULL) {
+                        // Steal song.
+                        mpd_Song *song = self->_priv->song;
+                        self->_priv->song = NULL;
+                        // self update.
+                        self_update_cover_from_song(self,song);
+                        // free.
+                        mpd_freeSong(song);
+                    } else {
+                        self_set_cover_na(self);
+                    }
             /* fix bitching */
             case STATE_EMPTY:
             case NUM_STATES:

@@ -43,4 +43,8 @@ void pixbuf_cache_add_icon(int size,const gchar *mdd, GdkPixbuf *pb);
  */
 GdkPixbuf *pixbuf_cache_lookup_icon(int size, const gchar *mdd);
 
+/**
+* @brief clear the pixbuf cache.
+*/
+void pixbuf_cache_clear(void);
 #endif
