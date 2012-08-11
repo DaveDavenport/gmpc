@@ -379,10 +379,20 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
 		if(self->_priv->type != type)
 			return;
 
-		if(!gmpc_meta_watcher_match_data(self->_priv->type, self->_priv->song, song))
-		{
-			return;
-		}
+        // Compare if callback is about 'our' song.
+        // TODO: optimize, by keeping checksum of current song around?
+        {
+            char *ck_a = mpd_song_checksum_type(self->_priv->song, self->_priv->type);
+            char *ck_b = mpd_song_checksum_type(song, self->_priv->type);
+            if(ck_a == NULL || ck_b == NULL || strcmp(ck_a, ck_b) != 0) {
+                g_free(ck_a);
+                g_free(ck_b);
+                return;
+            }
+            g_free(ck_a);
+            g_free(ck_b);
+        }
+
 		if(ret == META_DATA_AVAILABLE) {
             self_set_text_from_metadata(self,met);
         } else if (ret == META_DATA_FETCHING) {

@@ -478,12 +478,19 @@ class Gmpc:MetaImage from Gtk:Event:Box{
         if(self->image_type != type)
             return;
 
-		printf("aa: %i  %p - %p\n", self->image_type, self->_priv->song, song);
-        if(!gmpc_meta_watcher_match_data(self->image_type, self->_priv->song, song))
+        // Compare if callback is about 'our' song.
+        // TODO: optimize, by keeping checksum of current song around?
         {
-            return;
+            char *ck_a = mpd_song_checksum_type(self->_priv->song, self->image_type);
+            char *ck_b = mpd_song_checksum_type(song, self->image_type);
+            if(ck_a == NULL || ck_b == NULL || strcmp(ck_a, ck_b) != 0) {
+                g_free(ck_a);
+                g_free(ck_b);
+                return;
+            }
+            g_free(ck_a);
+            g_free(ck_b);
         }
-		printf("bb\n");
 
         /**
          * If mpd is stopped before the result is back, set the cover to na, and ignore the result
