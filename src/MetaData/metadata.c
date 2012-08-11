@@ -301,7 +301,7 @@ static gboolean glyr_return_queue(void *user_data)
         g_log(LOG_DOMAIN, G_LOG_LEVEL_MESSAGE,"Process results: %i\n", mtd->action);
         if(mtd->action == MTD_ACTION_QUERY_METADATA)
         {
-            gmpc_meta_watcher_data_changed(gmw,mtd->ori_song, (mtd->type)&META_QUERY_DATA_TYPES, mtd->result,mtd->met);
+            gmpc_meta_watcher_data_changed_cb(gmw,mtd->ori_song, (mtd->type)&META_QUERY_DATA_TYPES, mtd->result,mtd->met);
             if(mtd->callback)
             {
                 mtd->callback(mtd->ori_song, mtd->result, mtd->met, mtd->data);
@@ -318,7 +318,7 @@ static gboolean glyr_return_queue(void *user_data)
         }else if (mtd->action == MTD_ACTION_CLEAR_ENTRY) {
             g_log(LOG_DOMAIN, G_LOG_LEVEL_MESSAGE,"Signal no longer available.\n");
             // Signal that this item is now no longer available.
-            gmpc_meta_watcher_data_changed(gmw, mtd->ori_song, (mtd->type)&META_QUERY_DATA_TYPES, META_DATA_UNAVAILABLE, NULL);
+            gmpc_meta_watcher_data_changed_cb(gmw, mtd->ori_song, (mtd->type)&META_QUERY_DATA_TYPES, META_DATA_UNAVAILABLE, NULL);
         }
 
         meta_thread_data_free(mtd);
@@ -1025,7 +1025,7 @@ void meta_data_set_entry ( mpd_Song *song, MetaData *met )
     /* set result NULL */
     mtd->met = meta_data_dup(met);;
     /* signal we are fetching. */
-    gmpc_meta_watcher_data_changed(gmw,mtd->ori_song, (mtd->type)&META_QUERY_DATA_TYPES, META_DATA_FETCHING,NULL);
+    gmpc_meta_watcher_data_changed_cb(gmw,mtd->ori_song, (mtd->type)&META_QUERY_DATA_TYPES, META_DATA_FETCHING,NULL);
     /* Set entry */
     g_log(LOG_DOMAIN, G_LOG_LEVEL_MESSAGE,"Request setting entry\n");
     g_async_queue_push(gaq, mtd);
@@ -1122,7 +1122,7 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData *
     else
     {
         g_log(LOG_DOMAIN, G_LOG_LEVEL_MESSAGE,"signal fetching\n");
-        gmpc_meta_watcher_data_changed(gmw,mtd->ori_song, (mtd->type)&META_QUERY_DATA_TYPES, META_DATA_FETCHING,NULL);
+        gmpc_meta_watcher_data_changed_cb(gmw,mtd->ori_song, (mtd->type)&META_QUERY_DATA_TYPES, META_DATA_FETCHING,NULL);
         if(mtd->callback)
         {
             mtd->callback(mtd->ori_song, META_DATA_FETCHING, NULL, mtd->data);

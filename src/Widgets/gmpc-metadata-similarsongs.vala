@@ -227,7 +227,7 @@ public class Gmpc.MetaData.Widgets.SimilarSongs : Gtk.Alignment
         this.show_all();
         return false;
     }
-    private void metadata_changed(MetaWatcher gmw2, MPD.Song song, Gmpc.MetaData.Type type, Gmpc.MetaData.Result result, Gmpc.MetaData.Item? met)
+    private void metadata_changed(Meta.Watcher gmw2, MPD.Song song, Gmpc.MetaData.Type type, Gmpc.MetaData.Result result, Gmpc.MetaData.Item? met)
     {
         if(this.song.artist.collate(song.artist)!=0) return;
         if(type != Gmpc.MetaData.Type.SONG_SIMILAR) return;

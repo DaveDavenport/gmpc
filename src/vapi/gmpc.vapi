@@ -13,7 +13,7 @@ namespace Gmpc {
     static MPD.Server server;
 
     [CCode (cname = "gmw", cheader_filename="main.h")]
-    static MetaWatcher metawatcher;
+    static Meta.Watcher metawatcher;
 
     [CCode (cname = "gmpc_profiles", cheader_filename="plugin.h")]
     static Profiles profiles;
@@ -24,11 +24,6 @@ namespace Gmpc {
 	[CCode (cname = "playlist", cheader_filename="main.h")]
 	static Gmpc.MpdData.ModelPlaylist playlist;
 
-    [CCode (cheader_filename="gmpc-meta-watcher.h")	]
-    public class MetaWatcher {
-        public signal void data_changed(MPD.Song song,  Gmpc.MetaData.Type type, Gmpc.MetaData.Result result,MetaData.Item? met);
-
-    }
 
    [CCode (cheader_filename="metadata.h")]
    namespace MetaData {
@@ -108,7 +103,7 @@ namespace Gmpc {
 
         }
 
-        [CCode (cname="MetaDataType", cprefix = "META_", cheader_filename = "metadata.h")]
+        [CCode (cname="MetaDataType", cprefix = "META_", cheader_filename = "metadata.h", has_type_id = false)]
         public enum Type {
             ALBUM_ART       = 1,
             ARTIST_ART      = 2,
@@ -124,7 +119,7 @@ namespace Gmpc {
             QUERY_NO_CACHE   = 65536
         }
 
-        [CCode (cname="MetaDataResult", cprefix = "META_DATA_", cheader_filename = "metadata.h")]
+        [CCode (cname="MetaDataResult", cprefix = "META_DATA_", cheader_filename = "metadata.h", has_type_id = false)]
         public enum Result {
             AVAILABLE,
             UNAVAILABLE,

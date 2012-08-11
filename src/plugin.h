@@ -272,4 +272,6 @@ GmpcPluginSidebarState playlist3_get_sidebar_state(void);
 * hide the main window
 */
 int pl3_hide(void);
+
+extern GmpcMetaWatcher *gmw;
 #endif

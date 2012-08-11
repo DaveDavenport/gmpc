@@ -63,7 +63,7 @@ public class Gmpc.MetaData.Widgets.SimilarArtists : Gtk.Table
     /**
      * Handle signals from the metadata object.
      */
-    private void metadata_changed(MetaWatcher gmw2,
+    private void metadata_changed(Meta.Watcher gmw2,
                                   MPD.Song song,
                                   Gmpc.MetaData.Type type,
                                   Gmpc.MetaData.Result result,

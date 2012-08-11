@@ -54,8 +54,9 @@ gmpc_WIDGETS_FILES=\
 gmpc_TOOLS_FILES=\
     Tools/gmpc-database-update-tracker.vala\
     Tools/gmpc-metadata-prefetcher.vala\
+    Tools/gmpc-metadata-appearance.vala\
     Tools/gmpc-liststore-sort.vala\
-    Tools/gmpc-metadata-appearance.vala \
+    Tools/gmpc-meta-watcher.vala\
     Tools/gmpc_easy_download.c\
     Tools/mpd-easy-commands.c\
     Tools/advanced-search.c\
@@ -229,7 +230,6 @@ endif
 
 
 nodist_gmpcinclude_HEADERS=\
-        gmpc-meta-watcher.h\
         gmpc-mpddata-model.h\
         gmpc-mpddata-model-sort.h\
         gmpc-mpddata-treeview.h\
@@ -310,7 +310,6 @@ CLEANFILES=\
 # GOB stuff
 ##
 gmpc_GOBFILES = \
-		gmpc-meta-watcher.gob\
 		gmpc-metaimage.gob\
 		gmpc-meta-text-view.gob\
 		gmpc-mpddata-model.gob\

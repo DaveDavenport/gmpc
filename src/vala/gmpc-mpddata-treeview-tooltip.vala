@@ -94,7 +94,7 @@ public class Gmpc.MpdData.Treeview.Tooltip : Gtk.Window
         return true;
     }
 
-    private void metadata_changed(MetaWatcher gmw2, MPD.Song song, Gmpc.MetaData.Type type, Gmpc.MetaData.Result result, Gmpc.MetaData.Item? met)
+    private void metadata_changed(Meta.Watcher gmw2, MPD.Song song, Gmpc.MetaData.Type type, Gmpc.MetaData.Result result, Gmpc.MetaData.Item? met)
     {
         if(type != this.mtype) return;
 

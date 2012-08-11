@@ -150,9 +150,6 @@ void meta_data_set_text(MetaData *data, const gchar *text);
 /* ****************************************** */
 void metadata_import_old_db(char *url);
 
-#include "gmpc-meta-watcher.h"
-extern GmpcMetaWatcher *gmw;
-
 
 void meta_data_init(void);
 void meta_data_handle_remove_request(guint id);

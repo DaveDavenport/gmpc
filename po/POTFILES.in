@@ -52,7 +52,6 @@ src/gmpc-mpddata-model-sort.gob
 src/gmpc-mpddata-treeview.gob
 src/gmpc-meta-text-view.gob
 src/gmpc-metaimage.gob
-src/gmpc-meta-watcher.gob
 
 # Vala
 src/vala/gmpc-connection.c
@@ -75,6 +74,7 @@ src/Tools/url-fetcher.c
 src/Tools/mm-keys.c
 src/Tools/misc.c
 src/Tools/ipc.c
+src/Tools/gmpc-meta-watcher.c
 
 #Widgets
 src/Widgets/gmpc-metadata-similarartists.c
