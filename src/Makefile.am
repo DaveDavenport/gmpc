@@ -21,7 +21,8 @@ PLUGIN_FILES=\
     Plugins/AutoMPD.vala\
     Plugins/sidebar-search.vala\
 	Plugins/sidebar-play-queue-time.vala\
-    Plugins/sidebar-next-song.vala
+    Plugins/sidebar-next-song.vala\
+    Plugins/ExportHTML.vala
 
 
 
