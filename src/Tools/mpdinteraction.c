@@ -535,6 +535,7 @@ void add_artist(const gchar * artist)
     data = mpd_database_search_commit(connection);
     if (data)
     {
+        data = misc_sort_mpddata_by_album_disc_track(data);
         for (; data; data = mpd_data_get_next(data))
         {
             mpd_playlist_queue_add(connection, data->song->file);
@@ -556,6 +557,7 @@ void add_album(const gchar * artist, const gchar * album)
     data = mpd_database_search_commit(connection);
     if (data)
     {
+        data = misc_sort_mpddata_by_album_disc_track(data);
         for (; data; data = mpd_data_get_next(data))
         {
             mpd_playlist_queue_add(connection, data->song->file);
@@ -575,6 +577,7 @@ void add_genre(const gchar * genre)
     data = mpd_database_search_commit(connection);
     if (data)
     {
+        data = misc_sort_mpddata_by_album_disc_track(data);
         for (; data; data = mpd_data_get_next(data))
         {
             mpd_playlist_queue_add(connection, data->song->file);
@@ -587,14 +590,18 @@ void add_directory(const gchar * path)
 {
     gchar *dirpath = g_path_get_dirname(path);
     MpdData *data = mpd_database_get_directory(connection, dirpath);
-    for (; data; data = mpd_data_get_next(data))
+    if(data)
     {
-        if (data->type == MPD_DATA_TYPE_SONG)
+        data = misc_sort_mpddata_by_album_disc_track(data);
+        for (; data; data = mpd_data_get_next(data))
         {
-            mpd_playlist_queue_add(connection, data->song->file);
+            if (data->type == MPD_DATA_TYPE_SONG)
+            {
+                mpd_playlist_queue_add(connection, data->song->file);
+            }
         }
+        mpd_playlist_queue_commit(connection);
     }
-    mpd_playlist_queue_commit(connection);
     g_free(dirpath);
 }
 
