@@ -130,49 +130,6 @@ static int plugin_validate(gmpcPlugin * plug, GError ** error)
             return FALSE;
         }
     }
-    if (plug->plugin_type & GMPC_PLUGIN_META_DATA)
-    {
-        if (plug->metadata == NULL)
-        {
-            g_set_error(error, plugin_quark(), 0, "%s: %s",
-                        _("Failed to load plugin"),
-                        _("plugin metadata structure is incorrect"));
-            g_log(PLUGIN_LOG_DOMAIN, G_LOG_LEVEL_CRITICAL,
-                  "%s: plugin_type&GMPC_PLUGIN_META_DATA && plugin->metadata != NULL Failed",
-                  plug->name);
-            return FALSE;
-        }
-        if (plug->metadata->get_priority == NULL)
-        {
-            g_set_error(error, plugin_quark(), 0, "%s: %s",
-                        _("Failed to load plugin"),
-                        _("plugin metadata structure is incorrect"));
-            g_log(PLUGIN_LOG_DOMAIN, G_LOG_LEVEL_CRITICAL,
-                  "%s: plugin_type&GMPC_PLUGIN_META_DATA && plugin->metadata->get_priority != NULL Failed",
-                  plug->name);
-            return FALSE;
-        }
-        if (plug->metadata->set_priority == NULL)
-        {
-            g_set_error(error, plugin_quark(), 0, "%s: %s",
-                        _("Failed to load plugin"),
-                        _("plugin metadata structure is incorrect"));
-            g_log(PLUGIN_LOG_DOMAIN, G_LOG_LEVEL_CRITICAL,
-                  "%s: plugin_type&GMPC_PLUGIN_META_DATA && plugin->metadata->set_priority != NULL Failed",
-                  plug->name);
-            return FALSE;
-        }
-        if (plug->metadata->get_metadata == NULL)
-        {
-            g_set_error(error, plugin_quark(), 0, "%s: %s",
-                        _("Failed to load plugin"),
-                        _("plugin metadata structure is incorrect"));
-            g_log(PLUGIN_LOG_DOMAIN, G_LOG_LEVEL_CRITICAL,
-                  "%s: plugin_type&GMPC_PLUGIN_META_DATA && plugin->metadata->get_image != NULL Failed",
-                  plug->name);
-            return FALSE;
-        }
-    }
     /* if there is a browser field, check validity */
     if (plug->browser)
     {
@@ -876,65 +833,6 @@ int gmpc_plugin_get_id(gmpcPluginParent * plug)
         return plug->new->id;
     }
     return plug->old->id;
-}
-
-gboolean gmpc_plugin_is_metadata(gmpcPluginParent * plug)
-{
-    if (plug->new)
-    {
-        return GMPC_PLUGIN_IS_META_DATA_IFACE(plug->new);
-    }
-    return (plug->old->metadata != NULL);
-}
-
-int gmpc_plugin_metadata_get_priority(gmpcPluginParent * plug)
-{
-    if (gmpc_plugin_is_metadata(plug))
-    {
-        if (plug->new)
-            return
-                gmpc_plugin_meta_data_iface_get_priority
-                (GMPC_PLUGIN_META_DATA_IFACE(plug->new));
-        return plug->old->metadata->get_priority();
-    }
-    return 100;
-}
-
-void gmpc_plugin_metadata_set_priority(gmpcPluginParent * plug, int priority)
-{
-    if (gmpc_plugin_is_metadata(plug))
-    {
-        if (plug->new)
-            return
-                gmpc_plugin_meta_data_iface_set_priority
-                (GMPC_PLUGIN_META_DATA_IFACE(plug->new), priority);
-        return plug->old->metadata->set_priority(priority);
-    }
-}
-
-void gmpc_plugin_metadata_query_metadata_list(gmpcPluginParent * plug,
-                                              mpd_Song * song,
-                                              MetaDataType type,
-                                              void (*callback) (GList * uris,
-                                                                gpointer data),
-                                              gpointer data)
-{
-    if (gmpc_plugin_is_metadata(plug))
-    {
-        if (plug->new)
-        {
-            gmpc_plugin_meta_data_iface_get_metadata(GMPC_PLUGIN_META_DATA_IFACE
-                                                     (plug->new), song, type,
-                                                     callback, data);
-            return;
-        }
-        if (plug->old->metadata->get_metadata)
-        {
-            plug->old->metadata->get_metadata(song, type, callback, data);
-            return;
-        }
-    }
-    callback(NULL, data);
 }
 
 gint gmpc_plugin_tool_menu_integration(gmpcPluginParent * plug, GtkMenu * menu)

@@ -188,27 +188,6 @@ static void bug_information_generate_message(GtkTextBuffer * buffer)
             }
         }
     }
-    if (num_plugins > 0)
-    {
-        gtk_text_buffer_insert_with_tags(buffer, &iter, "\n\nMetadata Plugins:\n", -1, bold_tag, larger_tag, NULL);
-        for (i = 0; i < num_plugins; i++)
-        {
-            if (gmpc_plugin_is_metadata(plugins[i]))
-            {
-                const gchar *name = gmpc_plugin_get_name(plugins[i]);
-                const int *version = gmpc_plugin_get_version(plugins[i]);
-                if(gmpc_plugin_get_enabled(plugins[i])) {
-                    gtk_text_buffer_insert(buffer, &iter, "☑ ", -1);
-                }else  {
-                    gtk_text_buffer_insert(buffer, &iter, "☐ ", -1);
-                }
-                gtk_text_buffer_insert_with_tags(buffer, &iter, name, -1, bold_tag, NULL);
-                temp = g_strdup_printf("\t%i.%i.%i\n", version[0], version[1], version[2]);
-                gtk_text_buffer_insert(buffer, &iter, temp, -1);
-                g_free(temp);
-            }
-        }
-    }
 
     if (mpd_check_connected(connection))
     {

@@ -105,16 +105,7 @@ public interface ToolMenuIface :
         {
             public abstract int tool_menu_integration(Gtk.Menu menu);
         }
-        public delegate void MetaDataCallback(owned GLib.List<Gmpc.MetaData.Item>? list);
         /* untested */
-public interface MetaDataIface :
-        Base
-        {
-            public abstract void get_metadata (MPD.Song? song, Gmpc.MetaData.Type type, MetaDataCallback callback);
-            /* Set get priority */
-            public abstract int get_priority ();
-            public abstract void set_priority (int priority);
-        }
 public interface BrowserIface :
         Base
         {

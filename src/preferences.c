@@ -412,12 +412,6 @@ static void plugin_stats_construct(GtkWidget * container)
                     case GMPC_PLUGIN_PL_BROWSER:
                         gtk_list_store_set(store, &iter, 2, _("Browser Extension"), -1);
                         break;
-                    case GMPC_PLUGIN_META_DATA:
-                        gtk_list_store_set(store, &iter, 2, _("Metadata Provider"), -1);
-                        break;
-                    case GMPC_PLUGIN_PL_BROWSER | GMPC_PLUGIN_META_DATA:
-                        gtk_list_store_set(store, &iter, 2, _("Metadata Provider and Browser Extension"), -1);
-                        break;
                     case GMPC_PLUGIN_NO_GUI:
                         gtk_list_store_set(store, &iter, 2, _("Misc."), -1);
                         break;

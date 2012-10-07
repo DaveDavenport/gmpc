@@ -42,14 +42,14 @@ typedef struct _gmpcPluginParent gmpcPluginParent;
 /* Plugin Type's */
 /* This is a bitmask.*/
 typedef enum {
-    GMPC_PLUGIN_DUMMY        = 1,
+    GMPC_PLUGIN_DUMMY         = 1,
     GMPC_PLUGIN_PL_BROWSER    = 2,
     GMPC_PLUGIN_NO_GUI        = 4,
     GMPC_INTERNALL            = 8,
-    GMPC_DEPRECATED            = 16,
-    GMPC_PLUGIN_META_DATA    = 32,
+    GMPC_DEPRECATED           = 16,
+    GMPC_DEPRECATED2          = 32,
     /* Make compiler happy about GMPC_PLUGIN_PL_BROWSER|GMPC_PLUGIN_METADATA */
-    GMPC_BROWSER_META       = 34
+    GMPC_BROWSER_META         = 34
 } PluginType;
 
 /* the gtk_tree_store row's */
@@ -67,10 +67,10 @@ typedef enum
 
 typedef enum
 {
-PL3_CAT_BROWSER_TOP             = 0,
-PL3_CAT_BROWSER_LIBRARY         = 1000,
-PL3_CAT_BROWSER_ONLINE_MEDIA     = 2000,
-PL3_CAT_BROWSER_MISC            = 3000
+    PL3_CAT_BROWSER_TOP             = 0,
+    PL3_CAT_BROWSER_LIBRARY         = 1000,
+    PL3_CAT_BROWSER_ONLINE_MEDIA    = 2000,
+    PL3_CAT_BROWSER_MISC            = 3000
 } Pl3CatBrowserType;
 /* structures */
 /** gmpcPrefPlugin: need to be instant apply.
@@ -115,24 +115,6 @@ typedef struct {
     void (*padding3)                (void);
 } gmpcPlBrowserPlugin;
 
-/**
- * Metadata fetching plugin.
- * All fields required
- */
-
-typedef struct {
-    /* Set and get priority */
-    int (*get_priority)                (void);
-    void (*set_priority)            (int priority);
-    int (*get_image)                (mpd_Song *song, MetaDataType type, char **path) G_GNUC_DEPRECATED;
-
-    /* Padding */
-    void (*get_uris)                (mpd_Song *song, MetaDataType type, void (*callback)(GList *uris, gpointer data), gpointer data) G_GNUC_DEPRECATED;
-    /*  New api, return linked list of MetaData Objects (see metadata.h) */
-    void (*get_metadata)            (mpd_Song *song, MetaDataType, void (*callback)(GList *metadata, gpointer data), gpointer data);
-    void (*padding3)                (void);
-} gmpcMetaDataPlugin;
-
 /* Unique number                */
 /* 16 == 0.14 release           */
 /* 17 == 0.15.5 release         */
@@ -170,8 +152,8 @@ typedef struct {
     ConnectionChangedCallback         mpd_connection_changed;
     /* structure to let the plugin intergrate it's preferences */
     gmpcPrefPlugin                    *pref;
-    /** Meta data */
-    gmpcMetaDataPlugin                 *metadata;
+    /** Meta data, this is deprecated, do not use.*/
+    void                                *padding;
 
     /** Plugin control functions
      */

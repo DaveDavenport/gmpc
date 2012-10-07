@@ -88,18 +88,6 @@ int gmpc_plugin_get_type(gmpcPluginParent * plug);
 const int *gmpc_plugin_get_version(gmpcPluginParent * plug);
 gboolean gmpc_plugin_is_internal(gmpcPluginParent * plug);
 
-/* metadata */
-gboolean gmpc_plugin_is_metadata(gmpcPluginParent * plug);
-int gmpc_plugin_metadata_get_priority(gmpcPluginParent * plug);
-void gmpc_plugin_metadata_set_priority(gmpcPluginParent * plug, int priority);
-
-void gmpc_plugin_metadata_query_metadata_list(gmpcPluginParent * plug,
-                                              mpd_Song * song,
-                                              MetaDataType type,
-                                              void (*callback) (GList * uris,
-                                                                gpointer data),
-                                              gpointer data);
-
 typedef struct _gmpcPluginParent
 {
     gmpcPlugin *old;
