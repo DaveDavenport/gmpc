@@ -1901,17 +1901,15 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
     if (what & MPD_CST_VOLUME)
     {
         GtkWidget *volume_button = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "volume_button"));
-                                 //gtk_scale_button_get_value(GTK_SCALE_BUTTON(volume_button)) * 100;
-        int volume = gmpc_widgets_volume_get_volume_level(GMPC_WIDGETS_VOLUME(volume_button));
         int new_volume = mpd_status_get_volume(connection);
         if (new_volume >= 0 &&
             mpd_server_check_command_allowed(connection, "setvol") == MPD_SERVER_COMMAND_ALLOWED
             )
         {
+            int volume = gmpc_widgets_volume_get_volume_level(GMPC_WIDGETS_VOLUME(volume_button));
             gtk_action_set_sensitive(GTK_ACTION(gtk_builder_get_object(pl3_xml, "MPDMuted")),
                 TRUE
                 );
-            gtk_widget_set_sensitive(volume_button, TRUE);
             /* don't do anything if nothing is changed */
             if (new_volume != volume)
             {
@@ -1919,10 +1917,10 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
             }
         } else
         {
+            gmpc_widgets_volume_set_volume_level(GMPC_WIDGETS_VOLUME(volume_button), -1);
             gtk_action_set_sensitive(GTK_ACTION(gtk_builder_get_object(pl3_xml, "MPDMuted")),
                 FALSE
                 );
-            gtk_widget_set_sensitive(volume_button, FALSE);
         }
     }
     if (what & MPD_CST_SERVER_ERROR)

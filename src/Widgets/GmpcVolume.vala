@@ -19,15 +19,14 @@ public class Gmpc.Widgets.Volume : Gtk.EventBox
     {
         get { return _volume_level; }
         set {
-            int temp = (value > 100)? 100: (value < 0)?0:value;
-            if(temp != _volume_level)
+            if(value != _volume_level)
             {
-                if(!value_changed(temp))
+                if(!value_changed(value))
                 {
-                    _volume_level = temp;
-                    if(temp > 0)
+                    _volume_level = value;
+                    if(value > 0)
                     {
-                        this.set_tooltip_text("%s: %i%%".printf(_("Volume"), temp));
+                        this.set_tooltip_text("%s: %i%%".printf(_("Volume"), value));
                     }
                     else
                     {
@@ -35,6 +34,7 @@ public class Gmpc.Widgets.Volume : Gtk.EventBox
                     }
 
                     this.queue_draw();
+                    check_state();
                 }
             }
         }
@@ -51,6 +51,7 @@ public class Gmpc.Widgets.Volume : Gtk.EventBox
     {
         this.set_app_paintable(true);
         this.set_has_window(false);
+        this.set_no_show_all(true);
         // Enable the events you wish to get notified about.
         add_events (Gdk.EventMask.BUTTON_PRESS_MASK
         | Gdk.EventMask.BUTTON_RELEASE_MASK
@@ -59,6 +60,18 @@ public class Gmpc.Widgets.Volume : Gtk.EventBox
         this.scroll_event.connect((source, event) => {
             return this.b_scroll_event(event);
         });
+    }
+
+    /**
+     * Check if we need to show/hide the plugin.
+     */
+    private void check_state()
+    {
+        if(_volume_level < 0) {
+            this.hide();
+        }else{
+            this.show();
+        }
     }
 
     private void set_volume_level_from_y_pos(double y)
@@ -162,6 +175,9 @@ public class Gmpc.Widgets.Volume : Gtk.EventBox
      */
     public override bool expose_event (Gdk.EventExpose event)
     {
+        // if volume level is disabled, don't draw anything.
+        if(volume_level < 0) return true;
+
         // Cairo context to draw on
         var cr = Gdk.cairo_create (this.window);
 
