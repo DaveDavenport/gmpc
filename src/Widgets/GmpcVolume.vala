@@ -90,13 +90,20 @@ public class Gmpc.Widgets.Volume : Gtk.EventBox
     private bool b_scroll_event(Gdk.EventScroll event)
     {
         int tvolume_level = _volume_level;
+        int scroll_step;
+        if((state&Gdk.ModifierType.MOD1_MASK) == Gdk.ModifierType.MOD1_MASK)
+        {
+            scroll_step = config.get_int_with_default("Volume", "scroll-sensitivity-fine", 1);
+        } else {
+            scroll_step = config.get_int_with_default("Volume", "scroll-sensitivity", 5);
+        }
         if(event.direction ==  Gdk.ScrollDirection.UP)
         {
-            volume_level = tvolume_level + config.get_int_with_default("Volume", "scroll-sensitivity", 5);
+            volume_level = tvolume_level + scroll_step;
         }
         else if(event.direction == Gdk.ScrollDirection.DOWN)
         {
-            volume_level  = tvolume_level - config.get_int_with_default("Volume", "scroll-sensitivity", 5);
+            volume_level  = tvolume_level - scroll_step;
         }
         return false;
     }
