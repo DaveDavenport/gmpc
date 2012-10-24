@@ -302,7 +302,7 @@ namespace Gmpc {
         [CCode (cname="cfg_get_single_value_as_string_with_default", cheader_filename="config1.h")]
         public string get_string_with_default(string class, string key, string value);
         [CCode (cname="cfg_get_single_value_as_string", cheader_filename="config1.h")]
-        public string get_string(string @class, string key);
+        public string? get_string(string @class, string key);
         [CCode (cname="cfg_get_single_value_as_int_with_default", cheader_filename="config1.h")]
         public int get_int_with_default(string class, string key, int value);
         [CCode (cname="cfg_get_single_value_as_int", cheader_filename="config1.h")]

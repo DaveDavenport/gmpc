@@ -22,7 +22,8 @@ PLUGIN_FILES=\
     Plugins/sidebar-search.vala\
 	Plugins/sidebar-play-queue-time.vala\
     Plugins/sidebar-next-song.vala\
-    Plugins/ExportHTML.vala
+    Plugins/ExportHTML.vala\
+    Plugins/ExternalCommand.vala
 
 
 
