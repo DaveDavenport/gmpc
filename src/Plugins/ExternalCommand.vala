@@ -89,6 +89,18 @@ namespace Gmpc
             //  +1 (closing NULL)
             argv.resize((args+1));
 
+
+            // Path.
+            weak string? music_directory = null;
+            var  cp = Gmpc.profiles.get_current();
+            if( cp != null )
+            {
+                if(Gmpc.profiles.get_music_directory(cp) != null)
+                {
+                    music_directory = Gmpc.profiles.get_music_directory(cp);
+                }
+            }
+
             // Set song paths as arguments.
             Gtk.TreeModel model;
             var rows = sel.get_selected_rows(out model);
@@ -97,7 +109,11 @@ namespace Gmpc
                 Gtk.TreeIter iter;
                 if(model.get_iter(out iter, path)){
                     model.get(iter,3, out file);
-                    argv[index] = file;
+                    if(music_directory != null) {
+                        argv[index] = Path.build_filename(music_directory,file);
+                    }else{
+                        argv[index] = file;
+                    }
                     index++;
                 }
             }
