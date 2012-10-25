@@ -94,3 +94,4 @@ src/GUI/title_header.c
 #Plugins
 src/Plugins/AutoMPD.c
 src/Plugins/sidebar-play-queue-time.c
+src/Plugins/ExternalCommand.c
