@@ -42,7 +42,10 @@ private const string log_domain_externalcommand = "Gmpc.Plugins.ExternalCommand"
 
 namespace Gmpc
 {
-    public class ExternalCommand : Gmpc.Plugin.Base, Gmpc.Plugin.SongListIface
+    public class ExternalCommand :
+        Gmpc.Plugin.Base,
+        Gmpc.Plugin.SongListIface,
+        Gmpc.Plugin.PreferencesIface
     {
         private const int[]     version           = {0,0,0};
         private Gmpc.Settings   cfg_ec            = null;
@@ -58,6 +61,7 @@ namespace Gmpc
         construct {
             string settings_path = Gmpc.user_path("external-command.cfg");
             cfg_ec = new Gmpc.Settings.from_file(settings_path);
+            this.plugin_type = 8;
         }
 
         ~ExternalCommand() {
@@ -155,6 +159,36 @@ namespace Gmpc
                 iter = iter.next;
             }
             return retv;
+        }
+
+
+        /************************
+         * Preferences
+         ************************/
+        private Gtk.Builder pref_builder = null;
+
+        /* Destroy preferences construct */
+        public void preferences_pane_construct(Gtk.Container container)
+        {
+            if(pref_builder != null) return;
+            pref_builder = new Gtk.Builder();
+            try
+            {
+                pref_builder.add_from_file(Gmpc.data_path("preferences-external-command.ui"));
+            }
+            catch (GLib.Error e)
+            {
+                GLib.error("Failed to load GtkBuilder file: %s", e.message);
+            }
+
+            var b = pref_builder.get_object("main_box") as Gtk.Widget;
+            container.add(b);
+        }
+        /* Destroy preferences pane */
+        public void preferences_pane_destroy(Gtk.Container container)
+        {
+            container.remove((container as Gtk.Bin).get_child());
+            pref_builder = null;
         }
     }
 }
