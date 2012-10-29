@@ -317,6 +317,8 @@ namespace Gmpc {
         public int set_bool(string @class, string key, bool @value);
         [CCode (cname="cfg_get_class_list", cheader_filename="config1.h")]
         public SettingsList get_class_list();
+        [CCode (cname="cfg_remove_class", cheader_filename="config1.h")]
+        public void remove_class(string key);
     }
 
     [CCode (cheader_filename="config1.h", cname="conf_mult_obj", free_function="cfg_free_multiple")]

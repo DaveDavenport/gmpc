@@ -4,7 +4,7 @@
   <object class="GtkListStore" id="commands_list">
     <columns>
       <!-- column-name uid -->
-      <column type="gint"/>
+      <column type="gchararray"/>
       <!-- column-name name -->
       <column type="gchararray"/>
     </columns>
@@ -13,7 +13,6 @@
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="border_width">8</property>
-    <property name="orientation">vertical</property>
     <property name="spacing">6</property>
     <child>
       <object class="GtkFrame" id="frame1">
@@ -32,7 +31,6 @@
               <object class="GtkVBox" id="box2">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="orientation">vertical</property>
                 <property name="spacing">6</property>
                 <child>
                   <object class="GtkHBox" id="box3">
@@ -53,11 +51,11 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkEntry" id="entry1">
+                      <object class="GtkEntry" id="entry_name">
                         <property name="visible">True</property>
+                        <property name="sensitive">False</property>
                         <property name="can_focus">True</property>
                         <property name="invisible_char">●</property>
-                        <property name="sensitive">False</property>
                       </object>
                       <packing>
                         <property name="expand">True</property>
@@ -92,11 +90,11 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkEntry" id="entry2">
+                      <object class="GtkEntry" id="entry_cmd">
                         <property name="visible">True</property>
+                        <property name="sensitive">False</property>
                         <property name="can_focus">True</property>
                         <property name="invisible_char">●</property>
-                        <property name="sensitive">False</property>
                       </object>
                       <packing>
                         <property name="expand">True</property>
@@ -138,6 +136,12 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="model">commands_list</property>
+                <child>
+                  <object class="GtkCellRendererText" id="cb_cellrend_name"/>
+                  <attributes>
+                    <attribute name="text">1</attribute>
+                  </attributes>
+                </child>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -164,11 +168,11 @@
               <object class="GtkButton" id="button_delete">
                 <property name="label">gtk-delete</property>
                 <property name="visible">True</property>
+                <property name="sensitive">False</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="use_action_appearance">False</property>
                 <property name="use_stock">True</property>
-                <property name="sensitive">False</property>
               </object>
               <packing>
                 <property name="expand">False</property>
