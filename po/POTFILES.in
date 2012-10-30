@@ -28,6 +28,7 @@ src/options.c
 [type: gettext/glade]glade/playlist3.ui
 [type: gettext/glade]glade/preferences-metadata-appearance.ui
 [type: gettext/glade]glade/preferences-autompd.ui
+[type: gettext/glade]glade/preferences-external-command.ui
 
 
 
