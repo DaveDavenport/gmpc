@@ -44,8 +44,11 @@ public class Gmpc.MpdData.Treeview.Tooltip : Gtk.Window
             this.checksum = null;
             return false;
         }
-
+#if VALA_0_18
+        if(!this.par_widget.get_tooltip_context(ref x, ref y,keyboard_tip, out model, out path, out iter))
+#else
         if(!this.par_widget.get_tooltip_context(out x, out y,keyboard_tip, out model, out path, out iter))
+#endif
         {
             this.checksum = null;
             return false;
