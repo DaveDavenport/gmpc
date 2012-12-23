@@ -1213,7 +1213,7 @@ static void playlist_editor_activate(GtkWidget * item, gpointer data)
 static void favorites_add_current_song(void)
 {
     mpd_Song *song = mpd_playlist_get_current_song(connection);
-    if (song->file)
+    if (song != NULL && song->file != NULL)
     {
         if(favorites)
         {
