@@ -75,6 +75,15 @@ public static void advanced_settings()
     });
     vbox.add(ck);
 
+    /** use backdrops  */
+    ck = new Gtk.CheckButton.with_label("Do not confirm clear");
+    ck.set_active((bool)config.get_int_with_default("playlist","no-confirm-clear",0));
+    ck.toggled.connect((source) =>
+    {
+        config.set_int("playlist","no-confirm-clear",(int)source.get_active());
+    });
+    vbox.add(ck);
+
     /** Use legacy tray icon  */
     if (Gmpc.TrayIcon2.have_appindicator_support())
     {
