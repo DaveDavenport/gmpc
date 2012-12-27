@@ -118,10 +118,6 @@ void plugin_manager_load_internal_plugins(void)
             0, NULL);
 
     plugin_add_new((GmpcPluginBase *)
-            gmpc_export_html_new(),
-            0, NULL);
-
-    plugin_add_new((GmpcPluginBase *)
             gmpc_external_command_new(),
             0, NULL);
 }
