@@ -1,17 +1,17 @@
-# Portuguese translation for gmpc
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Catalan translation for gmpc
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the gmpc package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-12-27 14:12+0100\n"
-"PO-Revision-Date: 2012-04-10 12:36+0000\n"
-"Last-Translator: Tiago Silva <Unknown>\n"
-"Language-Team: Portuguese <pt@li.org>\n"
-"Language: pt\n"
+"PO-Revision-Date: 2012-06-22 13:58+0000\n"
+"Last-Translator: Rafael Ferran i Peralta <rferran@terra.es>\n"
+"Language-Team: Catalan <ca@li.org>\n"
+"Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -24,23 +24,25 @@ msgstr ""
 #: ../src/browsers/gmpc-nowplaying2.c:4378
 #: ../src/browsers/gmpc-nowplaying2.c:4385
 msgid "Gnome Music Player Client"
-msgstr "Um reprodutor de música Gnome"
+msgstr ""
+"Client de reproducció\n"
+"de música del GNOME"
 
 #: ../data/gmpc.desktop.in.h:2
 msgid "A gnome frontend for the mpd daemon"
-msgstr "Um cliente gnome para o mpd daemon"
+msgstr "Un frontal GNOME per al dimoni MPD"
 
 #: ../src/main.c:326
 msgid "Failed to load the configuration system."
-msgstr "Falha ao carregar as configurações do sistema"
+msgstr "No s'ha pogut carregar el sistema de configuració."
 
 #: ../src/main.c:424
 msgid "Failed to setup libmpd"
-msgstr "Falha ao configurar o libmpd"
+msgstr "No s'ha pogut configurar el LIBMPD"
 
 #: ../src/main.c:810
 msgid "GMPC has insufficient permissions on the mpd server."
-msgstr "O GMPC não tem permissões suficientes no servidor mpd"
+msgstr "El GMPC no té prou permisos pel que fa al servidor MPD."
 
 #: ../src/main.c:842
 #, c-format
@@ -48,21 +50,22 @@ msgid ""
 "Failed to set password on: '%s'\n"
 "Please try again"
 msgstr ""
-"Falha ao definir senha no: '%s'\n"
-"Por favor tente novamente"
+"No s'ha pogut establir la contrasenya per a «%s».\n"
+"Torneu-ho a intentar."
 
 #: ../src/main.c:847
 #, c-format
 msgid "Please enter your password for: '%s'"
-msgstr "Por favor insira a sua senha para: '%s'"
+msgstr "Introduïu la contrasenya per a «%s»"
 
 #: ../src/main.c:893 ../src/main.c:947
 msgid "error code"
-msgstr "erro de código"
+msgstr "codi d'error"
 
 #: ../src/main.c:910
 msgid "Insufficient permission to connect to mpd. Check password"
-msgstr "Permissões insuficientes para ligar ao mpd. Verifique a senha"
+msgstr ""
+"No es pot connectar a l'MPD per manca de permisos. Comproveu la contrasenya."
 
 #: ../src/main.c:925
 msgid ""
@@ -72,97 +75,97 @@ msgstr ""
 
 #: ../src/main.c:976
 msgid "MPD versions before 0.13.0 are not supported"
-msgstr "Versões do MPD inferiores a 0.13.0 não são suportadas"
+msgstr "No s'admeten versions de l'MPD anteriors a la 0.13.0"
 
 #: ../src/main.c:1042
 msgid "Connected to mpd"
-msgstr "Ligado ao mpd"
+msgstr "S'ha establert la connexió amb l'MPD."
 
 #: ../src/main.c:1045
 msgid "Disconnected from mpd"
-msgstr "Desligado do mpd"
+msgstr "S'ha desconnectat de l'MPD."
 
 #: ../src/main.c:1077
 msgid "Tagline"
-msgstr ""
+msgstr "Etiquetes"
 
 #. * Mpd version
 #: ../src/main.c:1078 ../src/preferences.c:385
 #: ../src/browsers/server-information.c:337
 msgid "Version"
-msgstr "Versão"
+msgstr "Versió"
 
 #: ../src/main.c:1084
 msgid "Revision"
-msgstr "Versão"
+msgstr "Revisió"
 
 #: ../src/main.c:1094
 msgid "quit"
-msgstr "Sair"
+msgstr "surt"
 
 #: ../src/main.c:1095
 msgid "Quit gmpc"
-msgstr "Sair do gmpc"
+msgstr "Surt del GMPC"
 
 #: ../src/main.c:1100
 msgid "hide"
-msgstr "esconder"
+msgstr "amaga"
 
 #: ../src/main.c:1101
 msgid "Hide gmpc"
-msgstr "Esconder o gmpc"
+msgstr "Amaga el GMPC"
 
 #: ../src/main.c:1106
 msgid "show"
-msgstr "mostrar"
+msgstr "mostra"
 
 #: ../src/main.c:1107
 msgid "Show gmpc"
-msgstr "Mostrar o gmpc"
+msgstr "Mostra el GMPC"
 
 #: ../src/main.c:1112
 msgid "toggle"
-msgstr ""
+msgstr "commuta"
 
 #: ../src/main.c:1113
 msgid "Toggle gmpc visibility"
-msgstr ""
+msgstr "Commuta la visibilitat del GMPC"
 
 #: ../src/main.c:1118
 msgid "show notification"
-msgstr "mostrar notificação"
+msgstr "mostra una notificació"
 
 #: ../src/main.c:1119
 msgid "Show trayicon notification"
-msgstr "Mostrar notificação do ícone de bandeja"
+msgstr "Mostra una notificació a la safata d'icones"
 
 #: ../src/main.c:1123
 msgid "preferences"
-msgstr "preferências"
+msgstr "preferències"
 
 #: ../src/main.c:1124
 msgid "Show preferences window"
-msgstr ""
+msgstr "Mostra la finestra de preferències"
 
 #: ../src/main.c:1129
 msgid "bug information"
-msgstr "informação de debug"
+msgstr "informació de l'error de programació"
 
 #: ../src/main.c:1130 ../src/options.c:83
 msgid "Show bug information"
-msgstr "Mostrar a informação de debug"
+msgstr "Mostra la informació de l'error de programació"
 
 #: ../src/main.c:1135 ../src/main.c:1141
 msgid "url"
-msgstr "url"
+msgstr "URL"
 
 #: ../src/main.c:1136
 msgid "Show add url window"
-msgstr ""
+msgstr "Mostra la finestra d'afegir URL"
 
 #: ../src/main.c:1142
 msgid "Add url <scheme>://<path>"
-msgstr ""
+msgstr "Afegeix un URL <combinació>://<camí>"
 
 #: ../src/playlist3.c:847 ../src/playlist3.c:853 ../src/playlist3.c:866
 #: ../src/playlist3.c:872 ../src/playlist3.c:1762 ../src/playlist3.c:1768
@@ -171,22 +174,22 @@ msgstr "GMPC"
 
 #: ../src/playlist3.c:848 ../src/playlist3.c:853
 msgid "Connected to"
-msgstr "Ligado a"
+msgstr "Connectat a"
 
 #: ../src/playlist3.c:867 ../src/playlist3.c:872
 msgid "Disconnected"
-msgstr "Desligado"
+msgstr "Desconnectat"
 
 #. *
 #. * Set paused in Window string
 #.
 #: ../src/playlist3.c:1724 ../src/playlist3.c:1728
 msgid "paused"
-msgstr "Pausa"
+msgstr "en pausa"
 
 #: ../src/playlist3.c:1932
 msgid "MPD Reported the following error"
-msgstr "O MPC Reportou o seguinte erro"
+msgstr "L'MPD informa del següent error"
 
 #: ../src/playlist3.c:2294
 msgid "Library"
@@ -198,167 +201,170 @@ msgstr ""
 
 #: ../src/playlist3.c:2310 ../src/preferences.c:416
 msgid "Misc."
-msgstr "Diversos."
+msgstr "Diversos"
 
 #: ../src/playlist3.c:2373 ../src/Widgets/advanced_settings.c:249
 #: ../src/Widgets/advanced_settings.c:256
 msgid "Interface"
-msgstr "Interface"
+msgstr "Interfície"
 
 #: ../src/playlist3.c:2493
 msgid ""
 "To playback local files, you need to be connected using unix socket.\n"
 "See the MPD website for more information."
 msgstr ""
+"Per tal de reproduir fitxers locals heu de connectar-vos usant un sòcol "
+"UNIX.\n"
+"Consulteu el web de l'MPD per obtenir més informació."
 
 #: ../src/plugin.c:93 ../src/plugin.c:103 ../src/plugin.c:113
 #: ../src/plugin.c:125 ../src/plugin.c:140 ../src/plugin.c:154
 #: ../src/plugin.c:236
 msgid "Failed to load plugin"
-msgstr "Falha ao carregar o plugin"
+msgstr "No s'ha pogut carregar el connector"
 
 #: ../src/plugin.c:93
 msgid "plugin has no name"
-msgstr "O plugin não contêm um nome"
+msgstr "el connector no té nom"
 
 #: ../src/plugin.c:104
 msgid "plugin with same name already exists"
-msgstr "Um plugin com o mesmo nome já existe"
+msgstr "ja hi ha un connector amb aquest nom"
 
 #: ../src/plugin.c:114
 msgid "plugin is missing set/get enable function"
-msgstr "O plugin está em falta para activar a função"
+msgstr "no s'ha trobat la funció del connector d'activar obtenir/establir"
 
 #: ../src/plugin.c:126 ../src/plugin.c:141
 msgid "plugin browser structure is incorrect"
-msgstr "A estrutura do plugin está incorrecta"
+msgstr "l'estructura de navegació del connector no és correcta"
 
 #: ../src/plugin.c:155
 msgid "plugin preferences structure is incorrect"
-msgstr "A estrutura das preferências do plugin está incorrecta"
+msgstr "l'estructura de preferències del connector no és correcta"
 
 #: ../src/plugin.c:250
 msgid "Failed to create plugin instance"
-msgstr "Falha ao carregar uma instância do plugin"
+msgstr "No s'ha pogut crear la instància del connector"
 
 #: ../src/plugin.c:267
 msgid "Failed to bind symbol in plugin"
-msgstr ""
+msgstr "No s'ha pogut vincular un símbol al connector"
 
 #: ../src/plugin.c:281
 #, c-format
 msgid "Plugin %s has wrong api version: %i"
-msgstr "Plugin %s tem a versão api errada: %i"
+msgstr "El connector %s té una versió d'API (%i) incorrecta."
 
 #: ../src/plugin.c:295 ../src/plugin.c:304
 #, c-format
 msgid "Plugin %s has wrong no plugin structure: %s"
-msgstr ""
+msgstr "El connector %s té una estructura de no connector incorrecta:%s"
 
 #: ../src/plugin.c:326
 msgid ""
 "One or more plugins failed to load, see help->messages for more information"
 msgstr ""
-"Um ou mais plugins falharam ao carregar, veja na ajuda -> mensagens para "
-"mais informação"
+"Ha fallat la càrrega d'un o més connectors. Per obtenir més informació, "
+"veieu Ajuda->Missatges"
 
 #: ../src/preferences.c:91
 msgid "Plugin version"
-msgstr "Versão do plugin"
+msgstr "Versió del connector"
 
 #: ../src/preferences.c:111 ../src/preferences.c:211 ../src/preferences.c:261
 msgid "Plugins"
-msgstr "Plugins"
+msgstr "Connectors"
 
 #: ../src/preferences.c:378
 msgid "Enabled"
-msgstr "Activado"
+msgstr "Habilitat"
 
 #: ../src/preferences.c:381 ../src/gmpc-mpddata-treeview.gob:86
 msgid "Name"
-msgstr "Nome"
+msgstr "Nom"
 
 #: ../src/preferences.c:383
 msgid "Function"
-msgstr "Função"
+msgstr "Funció"
 
 #: ../src/preferences.c:410
 msgid "Dummy"
-msgstr ""
+msgstr "Dummy"
 
 #: ../src/preferences.c:413
 msgid "Browser Extension"
-msgstr "Procurar extensão"
+msgstr "Extensió de navegació"
 
 #: ../src/preferences.c:421 ../src/browsers/gmpc-metadata-browser2.c:6618
 #: ../src/browsers/gmpc-metadata-browser2.c:6640
 #: ../src/browsers/gmpc-metadata-browser2.c:8110
 #: ../src/browsers/gmpc-metadata-browser2.c:9506
 msgid "Unknown"
-msgstr "Desconhecido"
+msgstr "Desconegut"
 
 #: ../src/preferences.c:427
 #, fuzzy
 msgid "Sidebar Extension"
-msgstr "Procurar extensão"
+msgstr "Extensió de navegació"
 
 #: ../src/tray-icon2.c:134
 msgid "Sho_w GMPC"
-msgstr ""
+msgstr "Mostra el GMPC"
 
 #. * MM_PLAYPAUSE
 #: ../src/tray-icon2.c:758 ../glade/playlist3.ui.h:15
 #: ../src/Tools/mm-keys.c:76
 msgid "Next"
-msgstr "Seguinte"
+msgstr "Següent"
 
 #: ../src/tray-icon2.c:1186
 msgid "Notification"
-msgstr "Notificação"
+msgstr "Notificació"
 
 #: ../src/options.c:51
 msgid "Start the program in full screen"
-msgstr "Iniciar o programa em ecrã inteiro"
+msgstr "Inicia el programa a pantalla completa"
 
 #: ../src/options.c:55
 msgid "Show program version and revision"
-msgstr "Mostrar a versão e revisão do programa"
+msgstr "Mostra la versió i la revisió del programa"
 
 #: ../src/options.c:59
 msgid "Quits the running gmpc"
-msgstr "Sair do gmpc quando está em execução"
+msgstr "Surt del GMPC en execució"
 
 #: ../src/options.c:63
 msgid "Don't load the plugins"
-msgstr "Não carregar plugins"
+msgstr "No carreguis els connectors"
 
 #: ../src/options.c:67
 msgid "Load alternative config file"
-msgstr "Carregar o ficheiro de configuração alternativo"
+msgstr "Carrega un fitxer de configuració alternatiu"
 
 #: ../src/options.c:71
 msgid "Set the debug level"
-msgstr "Define o nível de depuração"
+msgstr "Estableix el nivell de depuració"
 
 #: ../src/options.c:75
 msgid "Start gmpc hidden to tray"
-msgstr "Iniciar o gmpc escondido na bandeja"
+msgstr "Inicial el GMPC amagat a la safata"
 
 #: ../src/options.c:79
 msgid "Remove all failed hits from metadata cache"
-msgstr "Falha ao remover os metadados da cache"
+msgstr "Esborra les errades de la memòria cau de metadades"
 
 #: ../src/options.c:87
 msgid "Shows all output from a certain log domain"
-msgstr "Mostra o o log de um determinado dominio"
+msgstr "Mostra totes les sortides d'un domini de registre determinat"
 
 #: ../src/options.c:91
 msgid "Select a profile"
-msgstr "Seleccione um perfil"
+msgstr "Selecciona un perfil"
 
 #: ../src/options.c:95
 msgid "Run GMPC with a different icon theme"
-msgstr ""
+msgstr "Executa el GMPC amb un tema d'icones diferent"
 
 #: ../glade/aboutdialog.ui.h:1
 msgid "Copyright 2003-2007 Qball Cow"
@@ -369,69 +375,62 @@ msgstr "Copyright 2003-2007 Qball Cow"
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
-"  Almufadado https://launchpad.net/~almufadado\n"
-"  Carlos Manuel https://launchpad.net/~crolidge\n"
-"  Diogo Lavareda https://launchpad.net/~diogolavareda\n"
-"  Pulsar https://launchpad.net/~gamma-pulsar\n"
-"  Qball Cow https://launchpad.net/~qball-qballcow\n"
-"  Tiago Silva https://launchpad.net/~tiagosilva\n"
-"  ilusi0n https://launchpad.net/~ha-cabrita\n"
-"  nitrofurano https://launchpad.net/~nitrofurano-3t"
+"  Rafael Ferran i Peralta https://launchpad.net/~rferran"
 
 #: ../glade/password-dialog.ui.h:1
 msgid "Password"
-msgstr "Senha"
+msgstr "Contrasenya"
 
 #: ../glade/password-dialog.ui.h:2
 msgid "Enter your password for: '<hostname>'"
-msgstr "Introduza a sua senha para: '<hostname>'"
+msgstr "Introduïu la contrasenya per a «<hostname>»."
 
 #: ../glade/password-dialog.ui.h:3
 msgid "_Save password"
-msgstr "_Guardar senha"
+msgstr "De_sa la contrasenya"
 
 #: ../glade/preferences-connection.ui.h:1
 msgid "_Autoconnect"
-msgstr "_Auto-conectar"
+msgstr "Connecta _automàticament"
 
 #: ../glade/preferences-connection.ui.h:2
 msgid "_Disconnect"
-msgstr "_Desligar"
+msgstr "_Desconnecta"
 
 #: ../glade/preferences-connection.ui.h:3
 msgid "Conn_ect"
-msgstr "Liga_r"
+msgstr "Conn_ecta"
 
 #: ../glade/preferences-connection.ui.h:4
 msgid "Timeout (s):"
-msgstr ""
+msgstr "Temps d'espera (en segons):"
 
 #: ../glade/preferences-connection.ui.h:5
 msgid "Host:"
-msgstr "Host:"
+msgstr "Ordinador central:"
 
 #: ../glade/preferences-connection.ui.h:6 ../glade/preferences-proxy.ui.h:3
 msgid "Port:"
-msgstr "Porta:"
+msgstr "Port:"
 
 #: ../glade/preferences-connection.ui.h:7
 msgid "_Use Authentication"
-msgstr "_Usar Autenticação"
+msgstr "Fes servir a_utenticació"
 
 #: ../glade/preferences-connection.ui.h:8 ../glade/preferences-proxy.ui.h:6
 msgid "Password:"
-msgstr "Senha:"
+msgstr "Contrasenya:"
 
 #: ../glade/preferences-connection.ui.h:9
 #: ../glade/preferences-external-command.ui.h:1
 #: ../src/browsers/playlist3-playlist-editor.c:646
 #: ../src/browsers/playlist3-playlist-editor.c:689
 msgid "Name:"
-msgstr "Nome:"
+msgstr "Nom:"
 
 #: ../glade/preferences-connection.ui.h:10
 msgid "Music Directory:"
-msgstr "Directoria de música"
+msgstr "Carpeta de música:"
 
 #: ../glade/preferences-connection.ui.h:11 ../src/Tools/mpdinteraction.c:1076
 msgid "(None)"
@@ -451,39 +450,39 @@ msgstr ""
 
 #: ../glade/preferences-esf-dialog.ui.h:1
 msgid "Edit Song Formatting"
-msgstr "Editar a informação da música"
+msgstr "Edita el formatat de la cançó"
 
 #: ../glade/preferences-esf-dialog.ui.h:2
 msgid "<span size=\"large\"><b>Format Rule:</b></span>"
-msgstr "<span size=\"large\"><b>Regra de formato:</b></span>"
+msgstr "<span size=\"large\"><b>Norma de format:</b></span>"
 
 #: ../glade/preferences-esf-dialog.ui.h:3
 msgid "<b>Example:</b>"
-msgstr "<b>Examplo:</b>"
+msgstr "<b>Exemple:</b>"
 
 #: ../glade/preferences-esf-dialog.ui.h:4
 msgid "example"
-msgstr "exemplo"
+msgstr "exemple"
 
 #: ../glade/preferences-esf-dialog.ui.h:5
 msgid "<b>Enable Field:</b>"
-msgstr "<b>Activar Campo:</b>"
+msgstr "<b>Habilita el camp:</b>"
 
 #: ../glade/preferences-esf-dialog.ui.h:6
 msgid "_Title"
-msgstr "_Titulo"
+msgstr "_Títol"
 
 #: ../glade/preferences-esf-dialog.ui.h:7
 msgid "_Artist"
-msgstr "_Artista"
+msgstr "Artista"
 
 #: ../glade/preferences-esf-dialog.ui.h:8
 msgid "A_lbum"
-msgstr "A_lbum"
+msgstr "À_lbum"
 
 #: ../glade/preferences-esf-dialog.ui.h:9
 msgid "T_rack"
-msgstr "F_aixa"
+msgstr "Pis_ta"
 
 #: ../glade/preferences-esf-dialog.ui.h:10
 msgid "_Date"
@@ -491,27 +490,27 @@ msgstr "_Data"
 
 #: ../glade/preferences-esf-dialog.ui.h:11
 msgid "_Stream name"
-msgstr "_Nome do stream"
+msgstr "Nom del flux"
 
 #: ../glade/preferences-playlist.ui.h:1
 msgid "Hide on close"
-msgstr "Esconder ao fechar"
+msgstr "Amaga quan es tanqui"
 
 #: ../glade/preferences-playlist.ui.h:2
 msgid "Stylize album covers"
-msgstr ""
+msgstr "Dissenya les portades dels àlbums"
 
 #: ../glade/preferences-playlist.ui.h:3
 msgid "Stop playing on exit"
-msgstr "Parar de reproduzir ao sair"
+msgstr "Atura la reproducció quan se surti"
 
 #: ../glade/preferences-playlist.ui.h:4
 msgid "Show songlist tooltip"
-msgstr ""
+msgstr "Mostra els indicadors de funció a la llista de cançons"
 
 #: ../glade/preferences-playlist.ui.h:5
 msgid "Enable search as you type. (Might be slow)"
-msgstr "Activar a pesquisa enquanto escreve. (Pode ser lento)"
+msgstr "Habilita la cerca mentre es tecleja. (Pot ser més lent)"
 
 #: ../glade/preferences-playlist.ui.h:6
 msgid "<b>Main:</b>"
@@ -519,35 +518,35 @@ msgstr "<b>Principal:</b>"
 
 #: ../glade/preferences-playlist.ui.h:7
 msgid "Center playing song"
-msgstr ""
+msgstr "Centra la cançó que s'etigui reproduint"
 
 #: ../glade/preferences-playlist.ui.h:8
 msgid "Save position and size between sessions"
-msgstr "Guardar posiçao e tamanho entre sessões"
+msgstr "Desa la posició i la mida d'una sessió a l'altra"
 
 #: ../glade/preferences-playlist.ui.h:9
 msgid "<b>Playlist:</b>"
-msgstr "<b>Lista de reprodução:</b>"
+msgstr "<b>Llista de reproducció:</b>"
 
 #: ../glade/preferences-playlist.ui.h:10
 #: ../src/Widgets/advanced_settings.c:232
 msgid "Advanced settings"
-msgstr ""
+msgstr "Paràmetres avançats"
 
 #: ../glade/preferences-plugins.ui.h:1
 msgid "<b>Loaded Plugins:</b>"
-msgstr "<b>Plugins carregados:</b>"
+msgstr "<b>Connectors carregats:</b>"
 
 #: ../glade/preferences-server.ui.h:1 ../src/Tools/mpd-easy-commands.c:76
 msgid "Off"
-msgstr "Desligado"
+msgstr "Inactiu"
 
 #: ../glade/preferences-server.ui.h:2
 #: ../src/browsers/gmpc-metadata-browser2.c:2761
 #: ../src/browsers/gmpc-metadata-browser2.c:4909
 #: ../src/gmpc-mpddata-treeview.gob:85
 msgid "Track"
-msgstr "Faixa"
+msgstr "Pista"
 
 #: ../glade/preferences-server.ui.h:3
 #: ../src/browsers/gmpc-metadata-browser2.c:2692
@@ -557,131 +556,133 @@ msgstr "Faixa"
 #: ../src/vala/gmpc-metadata-editwindow.c:1651
 #: ../src/Widgets/gmpc-song-list.c:384
 msgid "Album"
-msgstr "Album"
+msgstr "Àlbum"
 
 #: ../glade/preferences-server.ui.h:4
 msgid "Auto"
-msgstr ""
+msgstr "Automàtic"
 
 #: ../glade/preferences-server.ui.h:5
 msgid "Enable crossfade"
-msgstr "Activar o crossfade"
+msgstr "Habilita l'encadenament"
 
 #: ../glade/preferences-server.ui.h:6
 msgid "fade time (s):"
-msgstr "Tempo de desvanecimento (s)"
+msgstr "temps de fosa (s):"
 
 #: ../glade/preferences-server.ui.h:7
 msgid "<b>Crossfade:</b>"
-msgstr "<b>Crossfade:</b>"
+msgstr "<b>Encadenament:</b>"
 
 #: ../glade/preferences-server.ui.h:8
 msgid "<b>Replaygain</b>"
-msgstr ""
+msgstr "<b>Guany a la repetició</b>"
 
 #: ../glade/preferences-server.ui.h:9
 msgid "<b>Output Devices:</b>"
-msgstr "<b>Dispositivos de saida:</b>"
+msgstr "<b>Dispositius de sortida:</b>"
 
 #: ../glade/preferences-server.ui.h:10
 msgid ""
 "<span size=\"small\"><i>You need to be connected\n"
 "in order to change these settings</i></span>"
 msgstr ""
-"<span size=\"small\"><i>Precisa estar ligado\n"
-"para puder alterar estas definições</i></span>"
+"<span size=\"small\"><i>Heu d'estar connectat\n"
+"per poder canviar aquests paràmetres</i></span>"
 
 #: ../glade/preferences-trayicon.ui.h:1
 msgid "Show on song change"
-msgstr "Mostar quando a música muda"
+msgstr "Mostra als canvis de cançó"
 
 #: ../glade/preferences-trayicon.ui.h:2
 msgid "Timeout:"
-msgstr ""
+msgstr "Temps d'espera:"
 
 #: ../glade/preferences-trayicon.ui.h:3
 msgid "Position:"
-msgstr "Posição:"
+msgstr "Posició:"
 
 #: ../glade/preferences-trayicon.ui.h:4
 msgid "<b>PopUp</b>"
-msgstr "<b>PopUp</b>"
+msgstr "<b>Emergents</b>"
 
 #: ../glade/preferences-trayicon.ui.h:5
 msgid "Enable"
-msgstr "Activar"
+msgstr "Habilita"
 
 #: ../glade/preferences-trayicon.ui.h:6
 msgid "<b>Notification Area Icon</b>"
-msgstr "<b> Ícone da Área de Notificação </b>"
+msgstr "<b>Icona a l'àrea de notificació</b>"
 
 #: ../glade/preferences-trayicon.ui.h:7
 msgid "Show severity"
-msgstr ""
+msgstr "Mostra segons la gravetat"
 
 #: ../glade/preferences-trayicon.ui.h:8
 msgid "<b>Inline messages</b>"
-msgstr ""
+msgstr "<b>Missatges intercalats</b>"
 
 #: ../glade/preferences-proxy.ui.h:1
 msgid "Use a proxy for internet connectivity"
-msgstr "Usar uma proxy para a ligação á internet"
+msgstr "Fes servir un servidor intermediari per la connexió a Internet"
 
 #: ../glade/preferences-proxy.ui.h:2
 msgid "HTTP Proxy:"
-msgstr "Proxy HTTP:"
+msgstr "Servidor intermediari d'HTTP:"
 
 #: ../glade/preferences-proxy.ui.h:4
 msgid "Use authentication"
-msgstr "Usar autenticação"
+msgstr "Fes servir autenticació"
 
 #: ../glade/preferences-proxy.ui.h:5
 msgid "Username:"
-msgstr "Utilizador:"
+msgstr "Nom d'usuari:"
 
 #: ../glade/preferences-proxy.ui.h:7
 msgid "<b>Proxy settings</b>"
-msgstr "<b>Definições da proxy</b>"
+msgstr "<b>Configuració del sevidor intermediari</b>"
 
 #: ../glade/preferences-mmkeys.ui.h:1
 msgid "To disable a keybinding edit it and press 'backspace'"
-msgstr "Para desactivar uma tecla de atalho edite e carregue em 'espaço'"
+msgstr ""
+"Per desactivar una assignació de tecla, editeu-la i premeu la tecla de "
+"retrocés"
 
 #: ../glade/preferences.ui.h:1
 msgid "GMPC - Preferences"
-msgstr ""
+msgstr "GMPC - Preferències"
 
 #: ../glade/preferences.ui.h:2
 msgid ""
 "<span size=\"x-large\"><b>Plugins</b></span>\n"
 "<i>None Selected</i>"
 msgstr ""
-"<span size=\"x-large\"><b>Plugins</b></span>\n"
-"<i>Nenhum seleccionado</i>"
+"<span size=\"x-large\"><b>Connectors</b></span>\n"
+"<i>No n'hi ha cap seleccionat</i>"
 
 #: ../glade/playlist-message-window.ui.h:1
 msgid "Messages"
-msgstr "Mensagens"
+msgstr "Missatges"
 
 #: ../glade/playlist-message-window.ui.h:2
 msgid "_Copy to clipboard"
-msgstr "_Copiar para a área de transferência"
+msgstr "_Copia al porta-retalls"
 
 #: ../glade/playlist-save-dialog.ui.h:1
 msgid "Save Playlist"
-msgstr "Guardar lista de reprodução"
+msgstr "Desa la llista de reproducció"
 
 #: ../glade/playlist-save-dialog.ui.h:2
 msgid "name:"
-msgstr "nome:"
+msgstr "nom:"
 
 #: ../glade/playlist-save-dialog.ui.h:3
 msgid "<enter playlist name>"
-msgstr "<introduza o nome da lista de reprodução>"
+msgstr "<introduïu el nom de la llista de reproducció>"
 
 #: ../glade/playlist-save-dialog.ui.h:4
 msgid "<span size=\"x-small\"><i>Playlist already exists.</i></span>"
-msgstr "<span size=\"x-small\"><i>A lista de reprodução já existe.</i></span>"
+msgstr "<span size=\"x-small\"><i>La llista ja existeix.</i></span>"
 
 #. *
 #. * add url to playlist
@@ -690,83 +691,83 @@ msgstr "<span size=\"x-small\"><i>A lista de reprodução já existe.</i></span>
 #: ../src/browsers/playlist3-current-playlist-browser.c:932
 #: ../src/browsers/playlist3-playlist-editor.c:749
 msgid "Add URL"
-msgstr "Adicionar URL"
+msgstr "Afegeix un URL"
 
 #: ../glade/gmpc-add-url.ui.h:2
 msgid "Enter URL:"
-msgstr "Introduza o URL:"
+msgstr "Introduïu un URL:"
 
 #: ../glade/gmpc-add-url.ui.h:3
 msgid "gtk-close"
-msgstr "gtk-fechar"
+msgstr "tanca GTK"
 
 #: ../glade/gmpc-add-url.ui.h:4
 msgid "gtk-add"
-msgstr "gtk-adicionar"
+msgstr "afegeix GTK"
 
 #: ../glade/playlist3.ui.h:1
 msgid "Repeat Mode"
-msgstr ""
+msgstr "Mode de repetició"
 
 #. * MM_FASTBACKWARD
 #: ../glade/playlist3.ui.h:2 ../src/Tools/mm-keys.c:81
 msgid "Repeat"
-msgstr "Repetir"
+msgstr "Repeteix"
 
 #: ../glade/playlist3.ui.h:3
 msgid "Toggle repeat mode"
-msgstr ""
+msgstr "Commuta el mode de repetició"
 
 #: ../glade/playlist3.ui.h:4
 msgid "Random Mode"
-msgstr "Modo Aleatório"
+msgstr "Mode aleatori"
 
 #. * MM_REPEAT
 #: ../glade/playlist3.ui.h:5 ../src/Tools/mm-keys.c:82
 msgid "Random"
-msgstr "Aleatório"
+msgstr "Aleatori"
 
 #: ../glade/playlist3.ui.h:6
 msgid "Toggle random mode"
-msgstr ""
+msgstr "Commuta el mode aleatori"
 
 #: ../glade/playlist3.ui.h:7
 msgid "Single Mode"
-msgstr ""
+msgstr "Mode de peça única"
 
 #: ../glade/playlist3.ui.h:8 ../src/Tools/mpd-easy-commands.c:304
 #: ../src/Tools/mpd-easy-commands.c:311
 msgid "Single"
-msgstr ""
+msgstr "Peça única"
 
 #: ../glade/playlist3.ui.h:9
 msgid "Toggle single mode"
-msgstr ""
+msgstr "Commuta el mode de peça única"
 
 #: ../glade/playlist3.ui.h:10 ../src/Tools/mpd-easy-commands.c:407
 msgid "Mute"
-msgstr "Mudo"
+msgstr "Silencia"
 
 #: ../glade/playlist3.ui.h:11
 msgid "Mute the output"
-msgstr ""
+msgstr "Silencia la sortida"
 
 #: ../glade/playlist3.ui.h:12
 msgid "Consume Mode"
-msgstr "Modo de Consumo"
+msgstr "Mode de consum"
 
 #: ../glade/playlist3.ui.h:13 ../src/Tools/mpd-easy-commands.c:273
 #: ../src/Tools/mpd-easy-commands.c:280
 msgid "Consume"
-msgstr "Modo Consumo"
+msgstr "Consumeix"
 
 #: ../glade/playlist3.ui.h:14
 msgid "Toggle consume mode"
-msgstr ""
+msgstr "Commuta el mode de consum"
 
 #: ../glade/playlist3.ui.h:16
 msgid "Skip to the next song"
-msgstr "Avançar para a próxima música"
+msgstr "Salta a la cançó següent"
 
 #. * MM_NEXT
 #: ../glade/playlist3.ui.h:17 ../src/Tools/mm-keys.c:77
@@ -779,32 +780,32 @@ msgstr "Anterior"
 
 #: ../glade/playlist3.ui.h:19
 msgid "Skip to the previous song"
-msgstr "Avançar para a música anterior"
+msgstr "Salta a la cançó anterior"
 
 #. * MM_PREV
 #: ../glade/playlist3.ui.h:20 ../src/Tools/mm-keys.c:78
 msgid "Stop"
-msgstr "Parar"
+msgstr "Atura"
 
 #: ../glade/playlist3.ui.h:21
 msgid "Play/Pause"
-msgstr "Tocar/Pausa"
+msgstr "Reprodueix/Pausa"
 
 #: ../glade/playlist3.ui.h:22 ../src/Tools/mm-keys.c:91
 msgid "Play"
-msgstr "Reproduzir"
+msgstr "Reprodueix"
 
 #: ../glade/playlist3.ui.h:23
 msgid "_Control"
-msgstr "_Controlo"
+msgstr "_Control"
 
 #: ../glade/playlist3.ui.h:24
 msgid "_Open local file"
-msgstr ""
+msgstr "_Obre un fitxer local"
 
 #: ../glade/playlist3.ui.h:25
 msgid "_Profiles"
-msgstr "_Perfis"
+msgstr "_Perfils"
 
 #: ../glade/playlist3.ui.h:26
 msgid "_Music"
@@ -816,32 +817,32 @@ msgstr "_Servidor"
 
 #: ../glade/playlist3.ui.h:28
 msgid "_View"
-msgstr "_Ver"
+msgstr "_Visualitza"
 
 #: ../glade/playlist3.ui.h:29
 msgid "_Option"
-msgstr "_Opções"
+msgstr "_Opcions"
 
 #: ../glade/playlist3.ui.h:30
 msgid "_Tools"
-msgstr "_Ferramentas"
+msgstr "Eines"
 
 #: ../glade/playlist3.ui.h:31
 msgid "_Go"
-msgstr "_Ir"
+msgstr "Vés a"
 
 #: ../glade/playlist3.ui.h:32
 msgid "_Help"
-msgstr "_Ajuda"
+msgstr "Ajuda"
 
 #: ../glade/playlist3.ui.h:33
 msgid "gmpc - Playlist Manager"
-msgstr "gmpc - Gestor de Listas de Reprodução"
+msgstr "GMPC - Gestor de llistes de reproducció"
 
 #: ../glade/preferences-metadata-appearance.ui.h:1
 #: ../src/browsers/gmpc-nowplaying2.c:3033
 msgid "Lyrics"
-msgstr "Letras"
+msgstr "Lletres"
 
 #: ../glade/preferences-metadata-appearance.ui.h:2
 #: ../src/browsers/gmpc-nowplaying2.c:3121
@@ -849,7 +850,7 @@ msgstr "Letras"
 #: ../src/browsers/gmpc-metadata-browser2.c:5132
 #: ../src/browsers/gmpc-metadata-browser2.c:5138
 msgid "Guitar Tabs"
-msgstr ""
+msgstr "Acords de guitarra"
 
 #: ../glade/preferences-metadata-appearance.ui.h:3
 #: ../src/browsers/gmpc-nowplaying2.c:3234
@@ -857,11 +858,11 @@ msgstr ""
 #: ../src/browsers/gmpc-metadata-browser2.c:5204
 #: ../src/browsers/gmpc-metadata-browser2.c:5210
 msgid "Similar Songs"
-msgstr "Música semelhantes"
+msgstr "Cançons semblants"
 
 #: ../glade/preferences-metadata-appearance.ui.h:4
 msgid "Similar Artists"
-msgstr ""
+msgstr "Artistes semblants"
 
 #: ../glade/preferences-metadata-appearance.ui.h:5
 #: ../src/browsers/gmpc-nowplaying2.c:3460
@@ -869,7 +870,7 @@ msgstr ""
 #: ../src/browsers/gmpc-metadata-browser2.c:8302
 #: ../src/browsers/gmpc-metadata-browser2.c:8308
 msgid "Artist information"
-msgstr "Informação do artista"
+msgstr "Informació de l'artista"
 
 #: ../glade/preferences-metadata-appearance.ui.h:6
 msgid "Songs from album (only in Now Playing)"
@@ -877,22 +878,22 @@ msgstr ""
 
 #: ../glade/preferences-metadata-appearance.ui.h:7
 msgid "<b>Show / hide metadata tabs</b>"
-msgstr ""
+msgstr "<b>Mostra/amaga les pestanyes de metadades</b>"
 
 #: ../glade/preferences-autompd.ui.h:1
 #, fuzzy
 msgid "<b>Audio Output</b>"
-msgstr "<b>Dispositivos de saida:</b>"
+msgstr "<b>Dispositius de sortida:</b>"
 
 #: ../glade/preferences-autompd.ui.h:2
 #, fuzzy
 msgid "Pulse output"
-msgstr "saida"
+msgstr "Silencia la sortida"
 
 #: ../glade/preferences-autompd.ui.h:3
 #, fuzzy
 msgid "Alsa output"
-msgstr "saida"
+msgstr "sortida"
 
 #: ../glade/preferences-autompd.ui.h:4
 msgid "Http output (mp3, port 8000)"
@@ -905,7 +906,7 @@ msgstr ""
 #: ../glade/preferences-autompd.ui.h:6
 #, fuzzy
 msgid "<b>Generic</b>"
-msgstr "<b>Procurar:</b>"
+msgstr "<b>Cerca:</b>"
 
 #: ../glade/preferences-autompd.ui.h:7
 msgid "Close MPD on exit"
@@ -914,7 +915,7 @@ msgstr ""
 #: ../glade/preferences-autompd.ui.h:8
 #, fuzzy
 msgid "Allow remote connections"
-msgstr "Configurar a ligação"
+msgstr "Configuració de la connexió"
 
 #: ../glade/preferences-autompd.ui.h:9
 msgid "Create autostart file:"
@@ -923,20 +924,20 @@ msgstr ""
 #: ../glade/preferences-external-command.ui.h:2
 #, fuzzy
 msgid "Command:"
-msgstr "Comando"
+msgstr "Ordre"
 
 #: ../glade/preferences-external-command.ui.h:3
 #, fuzzy
 msgid "<b>Command:</b>"
-msgstr "<b>Crossfade:</b>"
+msgstr "<b>Encadenament:</b>"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:182
 msgid "switch play queue"
-msgstr ""
+msgstr "canvia la cua de reproducció"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:183
 msgid "Switch to play queue"
-msgstr ""
+msgstr "Canvia a la cua de reproducció"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:186
 msgid "Clear"
@@ -944,47 +945,45 @@ msgstr ""
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:187
 msgid "Clear play queue"
-msgstr "Limpar a lista de reprodução"
+msgstr "Esborra la cua de reproducció"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:191
 msgid "Crop current song"
-msgstr "Para a música actual"
+msgstr "Escapça la cançó actual"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:192
 msgid "Crop the playlist so it only contains the current song"
-msgstr ""
-"Cortar a lista de reprodução para que apenas contenha a música que está a "
-"ser reproduzida"
+msgstr "Escapça la llista de reproducció deixant només la canço actual"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:196
 msgid "search playlist"
-msgstr "procurar lista de reprodução"
+msgstr "Cerca a la llista de reproducció"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:197
 msgid "Search playlist <query>"
-msgstr "Procurar na lista de reprodução <query>"
+msgstr "Cerca a la llista <consulta>"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:608
 #: ../src/browsers/playlist3-current-playlist-browser.c:630
 #: ../src/browsers/playlist3-current-playlist-browser.c:675
 #: ../src/browsers/playlist3-current-playlist-browser.c:699
 msgid "Your mpd has a broken 'addid', pasting will fail."
-msgstr ""
+msgstr "No es pot enganxar ja que l'MPD té un identificador trencat"
 
 #. add the delete widget
 #: ../src/browsers/playlist3-current-playlist-browser.c:729
 msgid "Crop"
-msgstr "Recortar"
+msgstr "Escapça"
 
 #. add the shuffle widget
 #: ../src/browsers/playlist3-current-playlist-browser.c:743
 msgid "Shuffle"
-msgstr "Misturar"
+msgstr "Barreja"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:903
 #, fuzzy
 msgid "Add after current song"
-msgstr "Parar a seguir à seguinte música"
+msgstr "Atura després de la cançó actual"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:1018
 #, c-format
@@ -992,36 +991,36 @@ msgid ""
 "<i>Playlist <b>\"%s\"</b> already exists\n"
 "Overwrite?</i>"
 msgstr ""
-"<i>Lista de reprodução <b>\"%s\"</b> ja existe\n"
-"Substituir?</i>"
+"<i>La llista <b>\"%s\"</b> ja existeix\n"
+"Voleu sobreescriure-la?</i>"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:1041
 msgid "Failed to save the playlist file."
-msgstr "A gravação do ficheiro da Lista de reprodução falhou."
+msgstr "No s'ha pogut desar el fitxer de llista de reproducció."
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:1073
 msgid "Are you sure you want to clear the play queue?"
-msgstr ""
+msgstr "Voleu esborrar la cua de reproducció?"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:1123
 #: ../src/browsers/playlist3-current-playlist-browser.c:1181
 msgid "Play Queue"
-msgstr "Reproduzir fila"
+msgstr "Cua de reproducció"
 
 #: ../src/browsers/playlist3-current-playlist-browser.c:1131
 msgid "Search Playlist"
-msgstr "Procurar na lista de reprodução"
+msgstr "Cerca a la llista de reproducció"
 
 #: ../src/browsers/playlist3-file-browser.c:117
 #: ../src/browsers/playlist3-file-browser.c:367
 #: ../src/browsers/playlist3-file-browser.c:1209
 #: ../src/browsers/server-information.c:346
 msgid "Database"
-msgstr "Base de dados"
+msgstr "Base de dades"
 
 #: ../src/browsers/playlist3-file-browser.c:184
 msgid "Directories"
-msgstr "Pastas"
+msgstr "Carpetes"
 
 #: ../src/browsers/playlist3-file-browser.c:237
 msgid ""
@@ -1030,10 +1029,10 @@ msgid ""
 "your mpd config file.\n"
 "Then update the database. (Server->Update Database)"
 msgstr ""
-"Parece que não tem nenhuma música na sua base de dados.\n"
-"Para adicionar música, copie a música para <i>directoria de música</i> como "
-"especificado no ficheiro de configuração do mpd.\n"
-"A seguir actualize a base de dados. (Servidor>Actualizar a base de dados)"
+"La base de dades és buida.\n"
+"Per tal d'omplir-la, cal copiar els fitxers de música a la <i>carpeta de "
+"música</i> especificada al fitxer de configuració de l'MPD.\n"
+"Un cop fet, actualitzeu la base de dades usant l'ordre del menú «Servidor»."
 
 #. add the replace widget
 #. replace the replace widget
@@ -1049,65 +1048,65 @@ msgstr ""
 #: ../src/browsers/playlist3-tag2-browser.c:405
 #: ../src/browsers/playlist3-tag2-browser.c:1173
 msgid "Replace"
-msgstr "Substituir"
+msgstr "Reemplaça"
 
 #. add the update widget
 #: ../src/browsers/playlist3-file-browser.c:678
 #: ../src/browsers/playlist3-file-browser.c:940
 msgid "Update"
-msgstr "Actualizar"
+msgstr "Actualitza"
 
 #: ../src/browsers/playlist3-file-browser.c:1078
 #: ../src/browsers/playlist3-file-browser.c:1123
 msgid "Are you sure you want to clear the selected playlist?"
-msgstr "Tem a sertesa que deseja apagar a lista de reprodução seleccionada?"
+msgstr "Voleu esborrar la llista de reproducció seleccionada?"
 
 #: ../src/browsers/playlist3-file-browser.c:1416
 msgid "search database"
-msgstr "procurar base de dados"
+msgstr "cerca a la base de dades"
 
 #: ../src/browsers/playlist3-file-browser.c:1417
 msgid "Search database <query>"
-msgstr "Procurar na base de dados <query>"
+msgstr "Cerca a la base de dades <consulta>"
 
 #: ../src/browsers/playlist3-file-browser.c:1463
 msgid "Lookup directory in database"
-msgstr "Procurar na directoria da base de dados"
+msgstr "Cerca a una carpeta de la base de dades"
 
 #: ../src/browsers/playlist3-find2-browser.c:83
 #: ../src/vala/gmpc-metadata-editwindow.c:1751
 msgid "Query"
-msgstr "Fila"
+msgstr "Consulta"
 
 #: ../src/browsers/playlist3-find2-browser.c:309
 #: ../src/browsers/playlist3-find2-browser.c:684
 msgid "Search"
-msgstr "Pesquisar"
+msgstr "Cerca"
 
 #: ../src/browsers/playlist3-find2-browser.c:356
 msgid "Search failed"
-msgstr "A pesquisa falhou"
+msgstr "La cerca ha fallat"
 
 #: ../src/browsers/playlist3-find2-browser.c:611
 msgid "Add all"
-msgstr "Adicionar todos"
+msgstr "Afegeix-ho tot"
 
 #: ../src/browsers/playlist3-find2-browser.c:844
 msgid "switch search"
-msgstr ""
+msgstr "canvia la cerca"
 
 #: ../src/browsers/playlist3-find2-browser.c:845
 msgid "Switch to the search browser"
-msgstr "Trocar para o navegador de pesquisa"
+msgstr "Canvia al navegador de cerca"
 
 #: ../src/browsers/playlist3-find2-browser.c:879
 msgid "Search Browser"
-msgstr "Procurar no navegador"
+msgstr "Navegador de cerca"
 
 #: ../src/browsers/playlist3-playlist-editor.c:179
 #: ../src/browsers/playlist3-playlist-editor.c:1232
 msgid "Playlist Editor"
-msgstr "Editor de Lista de Ficheiros"
+msgstr "Editor de llistes de reproducció"
 
 #: ../src/browsers/playlist3-playlist-editor.c:355
 #: ../src/browsers/playlist3-playlist-editor.c:380
@@ -1116,64 +1115,64 @@ msgstr "Editor de Lista de Ficheiros"
 #: ../src/vala/gmpc-favorites.c:253 ../src/vala/gmpc-favorites.c:289
 #: ../src/vala/gmpc-favorites.c:598
 msgid "Favorites"
-msgstr "Favoritos"
+msgstr "Preferits"
 
 #: ../src/browsers/playlist3-playlist-editor.c:564
 #, c-format
 msgid "Are you sure you want to clear the playlist: '%s'"
-msgstr ""
+msgstr "Voleu esborrar la llista de reproducció «%s»?"
 
 #: ../src/browsers/playlist3-playlist-editor.c:604
 #, c-format
 msgid "Are you sure you want to delete the playlist: '%s'"
-msgstr ""
+msgstr "Voleu esborrar la llista de reproducció «%s»?"
 
 #: ../src/browsers/playlist3-playlist-editor.c:641
 msgid "New Playlist"
-msgstr ""
+msgstr "Llista de reproducció nova"
 
 #: ../src/browsers/playlist3-playlist-editor.c:684
 msgid "Rename Playlist"
-msgstr "Renomear Lista de ficheiros"
+msgstr "Canvia el nom a la llista de reproducció"
 
 #. delete
 #: ../src/browsers/playlist3-playlist-editor.c:691
 #: ../src/browsers/playlist3-playlist-editor.c:821
 msgid "Rename"
-msgstr "Renomear"
+msgstr "Canvia el nom"
 
 #: ../src/browsers/playlist3-playlist-editor.c:1045
 msgid "Playlists"
-msgstr "Listas de reprodução"
+msgstr "Llistes de reproducció"
 
 #. Add
 #: ../src/browsers/playlist3-playlist-editor.c:1182
 msgid "Add to playlist"
-msgstr "Adicionar à lista de reprodução"
+msgstr "Afegeix a la llista de reproducció"
 
 #: ../src/browsers/playlist3-playlist-editor.c:1222
 msgid "Added playing song to favorites list."
-msgstr "Adicionar musica actual á lista de favoritos"
+msgstr "S'ha afegit la cançó a la llista de preferits."
 
 #. *
 #: ../src/browsers/playlist3-playlist-editor.c:1241
 msgid "Add Current Song to favorites"
-msgstr "Adicionar musica actual aos favoritos"
+msgstr "Afegeix la cançó actual als preferits"
 
 #: ../src/browsers/playlist3-tag2-browser.c:99
 msgid "Tag based browser"
-msgstr ""
+msgstr "Navegador basat en etiquetes"
 
 #: ../src/browsers/playlist3-tag2-browser.c:1948
 msgid "Reset browser"
-msgstr "Reiniciar o navegador"
+msgstr "Reinicia el navegador"
 
 #. name
 #: ../src/browsers/server-information.c:306
 #: ../src/browsers/server-information.c:515
 #: ../src/browsers/server-information.c:541
 msgid "Server Information"
-msgstr "Informações do Servidor"
+msgstr "Informació del servidor"
 
 #: ../src/browsers/server-information.c:330
 msgid "Server"
@@ -1181,84 +1180,84 @@ msgstr "Servidor"
 
 #: ../src/browsers/server-information.c:339
 msgid "Uptime"
-msgstr "Tempo activo"
+msgstr "Temps en funcionament"
 
 #: ../src/browsers/server-information.c:340
 msgid "Time Playing"
-msgstr "Tempo de reprodução"
+msgstr "Temps en reproducció"
 
 #. * Mpd Playtime
 #: ../src/browsers/server-information.c:353
 msgid "Total Playtime"
-msgstr "Tempo toral de reprodução"
+msgstr "Temps total en reproducció"
 
 #. * Mpd Artists
 #: ../src/browsers/server-information.c:355
 msgid "Number of artists"
-msgstr "Numero de artistas"
+msgstr "Nombre d'artistes"
 
 #. * Mpd Albums
 #: ../src/browsers/server-information.c:357
 msgid "Number of albums"
-msgstr "Número de albuns"
+msgstr "Nombre d'àlbums"
 
 #. * Mpd Songs
 #: ../src/browsers/server-information.c:359
 msgid "Number of songs"
-msgstr "Número de músicas"
+msgstr "Nombre de cançons"
 
 #. * Mpd Songs
 #: ../src/browsers/server-information.c:361
 msgid "URL Handlers"
-msgstr ""
+msgstr "Gestors d'URL"
 
 #. * Mpd Songs
 #: ../src/browsers/server-information.c:363
 msgid "Tag Types"
-msgstr "Tipos de tags"
+msgstr "Tipus d'etiquetes"
 
 #: ../src/browsers/server-information.c:368
 msgid "Tag statistics"
-msgstr "Estatística da tags"
+msgstr "Estadística de les etiquetes"
 
 #: ../src/browsers/gmpc-nowplaying2.c:455
 #: ../src/browsers/gmpc-nowplaying2.c:2686
 msgid "Format"
-msgstr "Formato"
+msgstr "Format"
 
 #: ../src/browsers/gmpc-nowplaying2.c:458
 #: ../src/browsers/gmpc-nowplaying2.c:2689
 msgid "Channel"
 msgid_plural "Channels"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Canal"
+msgstr[1] "Canals"
 
 #: ../src/browsers/gmpc-nowplaying2.c:1622
 #: ../src/browsers/gmpc-nowplaying2.c:3686
 #: ../src/Widgets/gmpc-metadata-text-label.c:183
 #: ../src/Widgets/gmpc-metadata-text-label.c:190
 msgid "Not available"
-msgstr ""
+msgstr "No està disponible"
 
 #: ../src/browsers/gmpc-nowplaying2.c:2596
 #: ../src/browsers/gmpc-metadata-browser2.c:4771
 #: ../src/gmpc-mpddata-treeview.gob:84 ../src/gmpc-mpddata-treeview.gob:676
 msgid "Genre"
-msgstr "Género"
+msgstr "Gènere"
 
 #: ../src/browsers/gmpc-nowplaying2.c:2770
 #: ../src/browsers/gmpc-metadata-browser2.c:4814
 msgid "Codec"
-msgstr "Codec"
+msgstr "Còdec"
 
 #: ../src/browsers/gmpc-nowplaying2.c:2833
 #: ../src/browsers/gmpc-metadata-browser2.c:4845
 msgid "Length"
-msgstr "Tempo"
+msgstr "Durada"
 
 #: ../src/browsers/gmpc-nowplaying2.c:2922
 msgid "Track number"
-msgstr "Número do faixa"
+msgstr "Nombre de pista"
 
 #: ../src/browsers/gmpc-nowplaying2.c:3365
 #: ../src/browsers/gmpc-nowplaying2.c:3374
@@ -1267,37 +1266,37 @@ msgstr "Número do faixa"
 #: ../src/browsers/gmpc-metadata-browser2.c:8368
 #: ../src/browsers/gmpc-metadata-browser2.c:8374
 msgid "Similar Artist"
-msgstr "Artista semelhante"
+msgstr "Artista semblant"
 
 #: ../src/browsers/gmpc-nowplaying2.c:3576
 #: ../src/browsers/gmpc-nowplaying2.c:3585
 msgid "Songs from album"
-msgstr ""
+msgstr "Cançons de l'àlbum"
 
 #: ../src/browsers/gmpc-nowplaying2.c:3877
 msgid "Other albums by"
-msgstr "Outros álbuns por"
+msgstr "Altres àlbums de"
 
 #: ../src/browsers/gmpc-nowplaying2.c:4157
 #: ../src/browsers/gmpc-metadata-browser2.c:8696
 msgid "No Album"
-msgstr "Sem Álbum"
+msgstr "No hi ha cap àlbum"
 
 #: ../src/browsers/gmpc-nowplaying2.c:4512
 msgid "Now Playing"
-msgstr "A reproduzir"
+msgstr "Ara s'està reproduint"
 
 #: ../src/browsers/gmpc-nowplaying2.c:4621
 msgid "switch now playing"
-msgstr ""
+msgstr "canvia a ara s'està reproduint"
 
 #: ../src/browsers/gmpc-nowplaying2.c:4622
 msgid "Switch to Now Playing"
-msgstr ""
+msgstr "Canvia a Ara s'esta reproduint"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:794
 msgid "Search metadata"
-msgstr ""
+msgstr "Cerca a les metadades"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:2546
 #: ../src/browsers/gmpc-metadata-browser2.c:4745
@@ -1311,13 +1310,13 @@ msgstr "Artista"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:2672
 msgid "Year"
-msgstr "Ano"
+msgstr "Any"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:2786
 #: ../src/browsers/gmpc-metadata-browser2.c:6697
 #: ../src/browsers/gmpc-metadata-browser2.c:8166
 msgid "Songs"
-msgstr "Músicas"
+msgstr "Cançons"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:4784
 #: ../src/gmpc-mpddata-treeview.gob:89 ../src/gmpc-mpddata-treeview.gob:688
@@ -1327,251 +1326,252 @@ msgstr "Data"
 #: ../src/browsers/gmpc-metadata-browser2.c:4828
 #: ../src/gmpc-mpddata-treeview.gob:97
 msgid "Directory"
-msgstr "Pasta"
+msgstr "Carpeta"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:4922
 #: ../src/browsers/gmpc-metadata-browser2.c:6725
 #: ../src/browsers/gmpc-metadata-browser2.c:8194
 msgid "Add the item to the play queue"
-msgstr "Adicionar um item à playlist"
+msgstr "Afegeix l'element a la llista de reproducció"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:4936
 msgid "_Clear and play"
-msgstr ""
+msgstr "Buida i reprodueix"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:4942
 msgid "Replace the current play queue with this item"
-msgstr "Substituir o que está na play list por este item"
+msgstr "Reemplaça la cua de reproducció actual per aquest element"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:4966
 msgid "Play this song"
-msgstr ""
+msgstr "Reprodueix aquesta cançó"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:5702
 #: ../src/browsers/gmpc-metadata-browser2.c:5895
 msgid "Show sidebar"
-msgstr "Mostrar barra lateral"
+msgstr "Mostra la barra lateral"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:5711
 #: ../src/browsers/gmpc-metadata-browser2.c:5884
 msgid "Hide sidebar"
-msgstr "Esconder a barra lateral"
+msgstr "Amaga la barra lateral"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:5805
 msgid "<b>Search:</b>"
-msgstr "<b>Procurar:</b>"
+msgstr "<b>Cerca:</b>"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:6667
 #: ../src/browsers/gmpc-metadata-browser2.c:8136
 msgid "Genres"
-msgstr "Géneros"
+msgstr "Gèneres"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:6682
 #: ../src/browsers/gmpc-metadata-browser2.c:8151
 msgid "Dates"
-msgstr "Datas"
+msgstr "Dates"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:6712
 #: ../src/browsers/gmpc-metadata-browser2.c:8181
 msgid "Playtime"
-msgstr "Tempo de Reprodução"
+msgstr "Temps de reproducció"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:6744
 #: ../src/browsers/gmpc-metadata-browser2.c:8213
 msgid "Replace the current play queue with this item and play"
 msgstr ""
+"Reemplaça la cua de reproducció actual amb aquest element i reprodueix-lo"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:6833
 #: ../src/browsers/gmpc-metadata-browser2.c:6839
 msgid "Album information"
-msgstr "Informação do Album"
+msgstr "Informació de l'àlbum"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:6917
 #: ../src/browsers/gmpc-metadata-browser2.c:6923
 #: ../src/browsers/gmpc-metadata-browser2.c:8450
 #: ../src/browsers/gmpc-metadata-browser2.c:8456
 msgid "Song list"
-msgstr "Lista de músicas"
+msgstr "Llista de cançons"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:7732
 msgid "Open"
-msgstr ""
+msgstr "Obre"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:7753
 msgid "Play album"
-msgstr ""
+msgstr "Reprodueix l'àlbum"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:7769
 msgid "Add album to play-queue"
-msgstr ""
+msgstr "Afegeix l'àlbum a la cua de reproducció"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:8753
 #: ../src/browsers/gmpc-metadata-browser2.c:8759
 msgid "Albums"
-msgstr "Albums"
+msgstr "Àlbums"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:9521
 msgid "Metadata Browser"
-msgstr "Navegador de matadados"
+msgstr "Navegador de metadades"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:11196
 msgid "switch metadata"
-msgstr ""
+msgstr "canvia a metadades"
 
 #: ../src/browsers/gmpc-metadata-browser2.c:11197
 msgid "Switch to Metadata view"
-msgstr ""
+msgstr "Canvia a la vista de metadades"
 
 #: ../src/gmpc-mpddata-treeview.gob:79
 msgid "Markup"
-msgstr ""
+msgstr "Etiquetatge"
 
 #: ../src/gmpc-mpddata-treeview.gob:82 ../src/gmpc-mpddata-treeview.gob:637
 #: ../src/vala/gmpc-metadata-editwindow.c:1696
 msgid "Title"
-msgstr "Titulo"
+msgstr "Títol"
 
 #: ../src/gmpc-mpddata-treeview.gob:83
 msgid "File"
-msgstr "Ficheiro"
+msgstr "Fitxer"
 
 #: ../src/gmpc-mpddata-treeview.gob:87
 msgid "Composer"
-msgstr "Compositos"
+msgstr "Compositor"
 
 #: ../src/gmpc-mpddata-treeview.gob:88
 msgid "Performer"
-msgstr ""
+msgstr "Intèrpret"
 
 #: ../src/gmpc-mpddata-treeview.gob:90 ../src/gmpc-mpddata-treeview.gob:700
 msgid "Duration"
-msgstr "Duração"
+msgstr "Durada"
 
 #: ../src/gmpc-mpddata-treeview.gob:91 ../src/Widgets/gmpc-song-list.c:451
 msgid "Disc"
-msgstr "Disco"
+msgstr "Disc"
 
 #: ../src/gmpc-mpddata-treeview.gob:92
 msgid "Comment"
-msgstr "Comentário"
+msgstr "Comentari"
 
 #: ../src/gmpc-mpddata-treeview.gob:93
 msgid "Icon Id"
-msgstr ""
+msgstr "Identificador de la icona"
 
 #: ../src/gmpc-mpddata-treeview.gob:94
 msgid "Position"
-msgstr "Posição"
+msgstr "Posició"
 
 #: ../src/gmpc-mpddata-treeview.gob:95
 msgid "AlbumArtist"
-msgstr "ÁlbumArtista"
+msgstr "Artista de l'àlbum"
 
 #: ../src/gmpc-mpddata-treeview.gob:96
 msgid "Extension"
-msgstr "Extensão"
+msgstr "Extensió"
 
 #. Add a tools menu item with the previously generated menu as submenu
 #: ../src/gmpc-mpddata-treeview.gob:1007
 msgid "Tools"
-msgstr "Ferramentas"
+msgstr "Eines"
 
 #: ../src/gmpc-mpddata-treeview.gob:1036
 msgid "Paste before"
-msgstr "Pasta anterior"
+msgstr "Enganxa abans"
 
 #: ../src/gmpc-mpddata-treeview.gob:1045
 msgid "Paste after"
-msgstr "Pasta posterior"
+msgstr "Enganxa després"
 
 #. * Edit column
 #: ../src/gmpc-mpddata-treeview.gob:1077
 msgid "Edit Columns"
-msgstr "Editar Colunas"
+msgstr "Edita les columnes"
 
 #: ../src/gmpc-meta-text-view.gob:97 ../src/gmpc-metaimage.gob:724
 #: ../src/Widgets/gmpc-metadata-text-label.c:337
 msgid "Refetch"
-msgstr "Procurar novamente"
+msgstr "Torna a recollir"
 
 #: ../src/gmpc-meta-text-view.gob:102 ../src/gmpc-metaimage.gob:729
 msgid "Select file"
-msgstr "Seleccionar ficheiro"
+msgstr "Selecciona un fitxer"
 
 #: ../src/gmpc-meta-text-view.gob:111 ../src/gmpc-metaimage.gob:738
 #: ../src/Widgets/gmpc-metadata-text-label.c:353
 #: ../src/Widgets/gmpc-metadata-backdrop.c:546
 msgid "Metadata selector"
-msgstr "Selecionar o metadados"
+msgstr "Selector de metadades"
 
 #: ../src/gmpc-meta-text-view.gob:302
 msgid "Failed to open file:"
-msgstr "A abertura do ficheiro falhou:"
+msgstr "No s'ha pogut obrir el fitxer"
 
 #: ../src/gmpc-meta-text-view.gob:302
 msgid "because of encoding issues"
-msgstr "devido a errosde compressão"
+msgstr "per motius relacionats amb la codificació"
 
 #: ../src/gmpc-meta-text-view.gob:345
 msgid "Fetching Lyrics"
-msgstr "Procurando letras"
+msgstr "Recollint la lletra de la cançó"
 
 #: ../src/gmpc-meta-text-view.gob:349
 msgid "Fetching Artist Info"
-msgstr "Procurando a informação do artista"
+msgstr "Recollint la informació de l'artista"
 
 #: ../src/gmpc-meta-text-view.gob:353
 msgid "Fetching Guitar tab"
-msgstr ""
+msgstr "Recollint els acords de guitarra"
 
 #: ../src/gmpc-meta-text-view.gob:357
 msgid "Fetching Album Info"
-msgstr "Procurando a informação do álbum"
+msgstr "Recollint la informació de l'àlbum"
 
 #: ../src/gmpc-meta-text-view.gob:368
 msgid "Not Available"
-msgstr "Não disponivel"
+msgstr "No està disponible"
 
 #: ../src/gmpc-meta-text-view.gob:438 ../src/gmpc-metaimage.gob:770
 msgid "Select File"
-msgstr "Seleccionar ficheiro"
+msgstr "Seleccioneu un fitxer"
 
 #: ../src/gmpc-meta-text-view.gob:443
 msgid "Text Document"
-msgstr "Documento de Texto"
+msgstr "Document de text"
 
 #: ../src/gmpc-meta-text-view.gob:447 ../src/gmpc-metaimage.gob:780
 msgid "All"
-msgstr "Tudo"
+msgstr "Tot"
 
 #: ../src/gmpc-metaimage.gob:775
 msgid "Images"
-msgstr "Imagens"
+msgstr "Imatges"
 
 #: ../src/vala/gmpc-easy-command.c:94
 msgid "Gmpc Easy Command"
-msgstr "Gmpc comandos fáceis"
+msgstr "Ordre fàcil del GMPC"
 
 #: ../src/vala/gmpc-easy-command.c:1407
 #, fuzzy
 msgid "EasyCommand commands"
-msgstr "Gmpc comandos fáceis de ajuda"
+msgstr "Ajuda de l'ordre fàcil"
 
 #: ../src/vala/gmpc-easy-command.c:1455
 msgid "Command"
-msgstr "Comando"
+msgstr "Ordre"
 
 #: ../src/vala/gmpc-easy-command.c:1479
 msgid "Usage"
-msgstr "Utilização"
+msgstr "Sintaxi"
 
 #: ../src/vala/gmpc-easy-command.c:1489
 msgid ""
 "The following commands can be used in the easy command window.\n"
 "The easy command window can be opened by pressing ctrl-space"
 msgstr ""
-"Os seguintes comandos podem ser usados nos comandos fáceis.\n"
-"A janela dos comandos fáceis pode ser aberta utilizando crtl-espaço"
+"Podeu obrir la finestra d'ordre fàcil prement Ctrl+Espai.\n"
+"La finestra d'ordre fàcil admet les següents ordres:"
 
 #: ../src/vala/gmpc-easy-command.c:1616
 msgid "Help"
@@ -1579,63 +1579,63 @@ msgstr "Ajuda"
 
 #: ../src/vala/gmpc-easy-command.c:1617
 msgid "Get a list of available commands"
-msgstr "Pedir uma lista dos comandos disponíveis"
+msgstr "Obté una llista de les ordres disponibles"
 
 #: ../src/vala/gmpc-metadata-editwindow.c:166
 #: ../src/vala/gmpc-metadata-editwindow.c:403
 msgid "Provider"
-msgstr "Fornecedor"
+msgstr "Proveïdor"
 
 #: ../src/vala/gmpc-metadata-editwindow.c:186
 msgid "Filetype"
-msgstr "Tipo de Ficheiro"
+msgstr "Tipus de fitxer"
 
 #: ../src/vala/gmpc-metadata-editwindow.c:217
 #: ../src/vala/gmpc-metadata-editwindow.c:246
 msgid "Size"
-msgstr "Tamanho"
+msgstr "Mida"
 
 #: ../src/vala/gmpc-metadata-editwindow.c:224
 #: ../src/vala/gmpc-metadata-editwindow.c:253
 msgid "width x height"
-msgstr ""
+msgstr "amplada x alçada"
 
 #: ../src/vala/gmpc-metadata-editwindow.c:225
 msgid "high-res image will be downloaded"
-msgstr ""
+msgstr "es descarregara una imatge d'alta resolució"
 
 #: ../src/vala/gmpc-metadata-editwindow.c:326
 #: ../src/vala/gmpc-metadata-editwindow.c:436
 msgid "Set"
-msgstr "Colocar"
+msgstr "Estableix"
 
 #: ../src/vala/gmpc-metadata-editwindow.c:1537
 msgid "Insufficient information to store/fetch this metadata"
-msgstr "Informação insuficiente para guardar/procurar estes metadados"
+msgstr "No hi ha prou informació per desar/recollir les metadades"
 
 #: ../src/vala/gmpc-metadata-editwindow.c:1558
 msgid "Artist art"
-msgstr "Imagem do Artista"
+msgstr "Imatge de l'artista"
 
 #: ../src/vala/gmpc-metadata-editwindow.c:1561
 msgid "Album art"
-msgstr "Imagem do Álbum"
+msgstr "Imatge de l'àlbum"
 
 #: ../src/vala/gmpc-metadata-editwindow.c:1564
 msgid "Song lyrics"
-msgstr "Letra da música"
+msgstr "Lletra de la cançó"
 
 #: ../src/vala/gmpc-metadata-editwindow.c:1567
 msgid "Album Info"
-msgstr "Informação do Álbum"
+msgstr "Informació de l'àlbum"
 
 #: ../src/vala/gmpc-metadata-editwindow.c:1570
 msgid "Artist Biography"
-msgstr "Biografia do Artista"
+msgstr "Biografia de l'artista"
 
 #: ../src/vala/gmpc-metadata-editwindow.c:1573
 msgid "Guitar Tab"
-msgstr ""
+msgstr "Acords de guitarra"
 
 #: ../src/vala/gmpc-metadata-editwindow.c:1576
 msgid "Backdrop"
@@ -1643,66 +1643,67 @@ msgstr ""
 
 #: ../src/Tools/gmpc-database-update-tracker.c:113
 msgid "MPD is rescanning the database"
-msgstr "MPD está a reanalisar a base de dados"
+msgstr "L'MPD està tornant a escanejar la base de dades"
 
 #: ../src/Tools/gmpc-database-update-tracker.c:196
 msgid "MPD Database has been updated at:"
-msgstr "A base de dados do MPD foi actualizada em:"
+msgstr "La base de dades de l'MPD s'ha actualitzat a"
 
 #. Default to 'select' if no specific action given
 #: ../src/Tools/mpd-easy-commands.c:25
 msgid "select"
-msgstr "seleccionar"
+msgstr "selecciona"
 
 #: ../src/Tools/mpd-easy-commands.c:59
 msgid "enable"
-msgstr "Activado"
+msgstr "habilita"
 
 #: ../src/Tools/mpd-easy-commands.c:63
 msgid "disable"
-msgstr "Desactivado"
+msgstr "desactiva"
 
 #: ../src/Tools/mpd-easy-commands.c:125 ../src/Tools/mpd-easy-commands.c:134
 msgid "Update database"
-msgstr ""
+msgstr "Actualiza la base de dades"
 
 #: ../src/Tools/mpd-easy-commands.c:126 ../src/Tools/mpd-easy-commands.c:150
 #: ../src/Tools/mpd-easy-commands.c:176 ../src/Tools/mpd-easy-commands.c:274
 #: ../src/Tools/mpd-easy-commands.c:305
 msgid "The used MPD server is too old and does not support this."
 msgstr ""
+"L'MPD que esteu utilitzant és massa antic i no disposa d'aquesta funció."
 
 #: ../src/Tools/mpd-easy-commands.c:135 ../src/Tools/mpd-easy-commands.c:159
 #: ../src/Tools/mpd-easy-commands.c:183 ../src/Tools/mpd-easy-commands.c:281
 #: ../src/Tools/mpd-easy-commands.c:312
 msgid "You have insufficient permission to use this option."
-msgstr ""
+msgstr "No teniu els permissos necessaris per usar aquesta opció."
 
 #: ../src/Tools/mpd-easy-commands.c:149 ../src/Tools/mpd-easy-commands.c:158
 msgid "Repeat current song"
-msgstr ""
+msgstr "Repeteix la cançó actual"
 
 #: ../src/Tools/mpd-easy-commands.c:164
 msgid "The current song will be forever repeated."
-msgstr "A música actualmente será repetida para sempre."
+msgstr "La cançó actual s'anirà reproduint contínuament."
 
 #: ../src/Tools/mpd-easy-commands.c:175 ../src/Tools/mpd-easy-commands.c:182
 msgid "Stop after current song"
-msgstr ""
+msgstr "Atura després de la cançó actual"
 
 #: ../src/Tools/mpd-easy-commands.c:188
 msgid "Playback will be stopped after the current playing song."
-msgstr "Reprodução vais ser parada a seguir à música actual."
+msgstr "La reproducció s'aturarà després de la cançó actual."
 
 #. Player control
 #. basic playlist commands
 #: ../src/Tools/mpd-easy-commands.c:373 ../src/Tools/mpd-easy-commands.c:419
 msgid "play"
-msgstr "reproduzir"
+msgstr "reprodueix"
 
 #: ../src/Tools/mpd-easy-commands.c:373
 msgid "start playback"
-msgstr "Iniciar a reprodução"
+msgstr "inicia la reproducció"
 
 #: ../src/Tools/mpd-easy-commands.c:376
 msgid "pause"
@@ -1710,15 +1711,15 @@ msgstr "pausa"
 
 #: ../src/Tools/mpd-easy-commands.c:376
 msgid "pause playback"
-msgstr "Pausar a reprodução"
+msgstr "pausa la reproducció"
 
 #: ../src/Tools/mpd-easy-commands.c:379
 msgid "next"
-msgstr "próximo"
+msgstr "següent"
 
 #: ../src/Tools/mpd-easy-commands.c:379
 msgid "next song"
-msgstr "Música seguinte"
+msgstr "cançó següent"
 
 #: ../src/Tools/mpd-easy-commands.c:382
 msgid "prev"
@@ -1726,15 +1727,15 @@ msgstr "anterior"
 
 #: ../src/Tools/mpd-easy-commands.c:382
 msgid "previous song"
-msgstr "música anterior"
+msgstr "cançó anterior"
 
 #: ../src/Tools/mpd-easy-commands.c:385
 msgid "stop"
-msgstr "parar"
+msgstr "atura"
 
 #: ../src/Tools/mpd-easy-commands.c:385
 msgid "stop playback"
-msgstr "parar a reprodução"
+msgstr "atura la reproducció"
 
 #: ../src/Tools/mpd-easy-commands.c:390
 msgid "reset playmode"
@@ -1746,147 +1747,147 @@ msgstr ""
 
 #: ../src/Tools/mpd-easy-commands.c:394
 msgid "random"
-msgstr "aleatório"
+msgstr "aleatori"
 
 #: ../src/Tools/mpd-easy-commands.c:394
 msgid "Random (on|off)"
-msgstr "Aleatório (ligado|desligado)"
+msgstr "Aleatori (activa/desactiva)"
 
 #: ../src/Tools/mpd-easy-commands.c:396
 msgid "repeat"
-msgstr "repetir"
+msgstr "repeteix"
 
 #: ../src/Tools/mpd-easy-commands.c:396
 msgid "Repeat (on|off)"
-msgstr "Repetir (ligado|desligado)"
+msgstr "Repeteix (activa|desactiva)"
 
 #: ../src/Tools/mpd-easy-commands.c:399
 msgid "single"
-msgstr "único"
+msgstr "peça única"
 
 #: ../src/Tools/mpd-easy-commands.c:399
 msgid "Single (on|off)"
-msgstr "Único (ligado|desligado)"
+msgstr "Peça única (activa|desactiva)"
 
 #: ../src/Tools/mpd-easy-commands.c:401
 msgid "consume"
-msgstr "consumo"
+msgstr "consumeix"
 
 #: ../src/Tools/mpd-easy-commands.c:401
 msgid "Consume (on|off)"
-msgstr "Consumo (ligado|desligado)"
+msgstr "Consumeix (activa|descativa)"
 
 #. volume commands
 #: ../src/Tools/mpd-easy-commands.c:405
 msgid "volume"
-msgstr "volume"
+msgstr "volum"
 
 #: ../src/Tools/mpd-easy-commands.c:405
 msgid "Volume (+-)<level>"
-msgstr "Volume (+-)<nível>"
+msgstr "Volum (+|-) <nivell>"
 
 #: ../src/Tools/mpd-easy-commands.c:407
 msgid "mute"
-msgstr "Mudo"
+msgstr "silencia"
 
 #: ../src/Tools/mpd-easy-commands.c:410
 msgid "crossfade"
-msgstr "crossfade"
+msgstr "encadena"
 
 #: ../src/Tools/mpd-easy-commands.c:411
 msgctxt "Regex for matching crossfade, translate off"
 msgid "([0-9]+|Off)"
-msgstr "([0-9]+|Desligado)"
+msgstr "([0-9]+|Desactiva)"
 
 #: ../src/Tools/mpd-easy-commands.c:412
 msgid "Set Crossfade <seconds>"
-msgstr "Colocar crossfade <segundos>"
+msgstr "Ajusta l'encadenament <segons>"
 
 #: ../src/Tools/mpd-easy-commands.c:414
 msgid "output"
-msgstr "saida"
+msgstr "sortida"
 
 #: ../src/Tools/mpd-easy-commands.c:415
 msgctxt "Regex for matching output"
 msgid "[0-9]+[ ]*(Enable|Disable|Select|)"
-msgstr ""
+msgstr "[0-9]+[ ]*(Activa|Desactiva|Selecciona|)"
 
 #: ../src/Tools/mpd-easy-commands.c:416
 msgid "output X enable or disable or select"
-msgstr ""
+msgstr "activa, desactiva o selecciona la sortida X"
 
 #: ../src/Tools/mpd-easy-commands.c:419
 msgid "Play <query>"
-msgstr "Reproduzir <query>"
+msgstr "Reprodueix <query>"
 
 #: ../src/Tools/mpd-easy-commands.c:421
 msgid "add"
-msgstr "adicionar"
+msgstr "afegeix"
 
 #: ../src/Tools/mpd-easy-commands.c:421
 msgid "Add <query>"
-msgstr "Adicionar <query>"
+msgstr "Afegeix <query>"
 
 #: ../src/Tools/mpd-easy-commands.c:423
 msgid "replace"
-msgstr "substituir"
+msgstr "reemplaça"
 
 #: ../src/Tools/mpd-easy-commands.c:423
 msgid "Replace <query>"
-msgstr "Substituir <query>"
+msgstr "Reemplaça <query>"
 
 #. Basic seek commands
 #: ../src/Tools/mpd-easy-commands.c:427
 msgid "seek"
-msgstr "procurar"
+msgstr "cerca"
 
 #: ../src/Tools/mpd-easy-commands.c:427
 msgid "Seek within the current song"
-msgstr "Procurar na música actual"
+msgstr "Cerca dins la cançó actual"
 
 #: ../src/Tools/mpd-easy-commands.c:431
 msgid "stop after current song"
-msgstr "Parar a seguir à seguinte música"
+msgstr "atura després de la cançó actual"
 
 #: ../src/Tools/mpd-easy-commands.c:433
 msgid "Stop playback after the current song"
-msgstr "Parar a reprodução a seguir à seguinte música"
+msgstr "Atura la reproducció després de la cançó actual"
 
 #: ../src/Tools/mpd-easy-commands.c:437
 msgid "repeat current song"
-msgstr "Repetir esta música"
+msgstr "repeteix la cançó actual"
 
 #: ../src/Tools/mpd-easy-commands.c:439
 msgid "Repeat the current song"
-msgstr "Repetir a música actual"
+msgstr "Repeteix la cançó actual"
 
 #: ../src/Tools/mpd-easy-commands.c:443
 msgid "update database"
-msgstr "Actualizar a base de dados"
+msgstr "actualitza la base de dades"
 
 #: ../src/Tools/mpd-easy-commands.c:445
 msgid "Update the database"
-msgstr "Actualizar a base de dados"
+msgstr "Actualitza la base de dades"
 
 #: ../src/Tools/mpd-easy-commands.c:449
 msgid "disconnect"
-msgstr ""
+msgstr "desconnecta"
 
 #: ../src/Tools/mpd-easy-commands.c:451
 msgid "disconnect from MPD"
-msgstr ""
+msgstr "desconnecta de l'MPD"
 
 #: ../src/Tools/mpd-easy-commands.c:454 ../src/Tools/mpd-easy-commands.c:458
 msgid "connect"
-msgstr ""
+msgstr "connecta"
 
 #: ../src/Tools/mpd-easy-commands.c:456
 msgid "connect to MPD"
-msgstr ""
+msgstr "connecta a l'MPD"
 
 #: ../src/Tools/mpd-easy-commands.c:460
 msgid "connect to MPD using profile"
-msgstr ""
+msgstr "connecta a l'MPD usant el perfil"
 
 #: ../src/Tools/gmpc_easy_download.c:289
 msgid "Proxy"
@@ -1895,27 +1896,27 @@ msgstr "Proxy"
 #. Basic dialog with a close button
 #: ../src/Tools/bug-information.c:242
 msgid "Bug information"
-msgstr "Informação de erro"
+msgstr "Informació d'errors de programació"
 
 #: ../src/Tools/setup-assistant.c:99
 msgid "GMPC - First start assistant"
-msgstr ""
+msgstr "GMPC - Assistent de primera execució"
 
 #: ../src/Tools/setup-assistant.c:113
 msgid ""
 "It is the first time you have launched gmpc.\n"
 "This assistant will help you connect gmpc to your mpd daemon."
 msgstr ""
-"Esta é a primeira vez que executa o gmpc.\n"
-"O assistente irá ajudá-lo a ligar o gmpc ao seu mpd daemon."
+"És la primera vegada que executeu el GMPC.\n"
+"L'assistent us ajudarà a connectar el GMPC al dimoni MPD."
 
 #: ../src/Tools/setup-assistant.c:115
 msgid "Welcome to GMPC"
-msgstr "Bem vindo ao GMPC"
+msgstr "Benvinguts al GMPC"
 
 #: ../src/Tools/setup-assistant.c:134
 msgid "Setup connection"
-msgstr "Configurar a ligação"
+msgstr "Configuració de la connexió"
 
 #. *
 #. * End
@@ -1925,117 +1926,117 @@ msgid ""
 "Gmpc is now ready for use.\n"
 "Enjoy using gmpc."
 msgstr ""
-"O Gmpc está preparado para ser utilizado.\n"
-"Aprecie o gmpc."
+"El GMPC ja està preparat.\n"
+"Disfruteu-lo."
 
 #: ../src/Tools/setup-assistant.c:144
 msgid "Finish"
-msgstr "Acabar"
+msgstr "Finalitza"
 
 #: ../src/Tools/mpdinteraction.c:83
 msgid "Server Settings"
-msgstr "Definições do Servidor"
+msgstr "Configuració del servidor"
 
 #: ../src/Tools/mpdinteraction.c:105
 msgid "Connection"
-msgstr "Ligação"
+msgstr "Connexió"
 
 #: ../src/Tools/mpdinteraction.c:198
 msgid "Connecting"
-msgstr "A ligar"
+msgstr "S'està connectant"
 
 #: ../src/Tools/mpdinteraction.c:872
 #, fuzzy
 msgid "Select the music directory"
-msgstr "Directoria de música"
+msgstr "Carpeta de música:"
 
 #. Add all from album
 #: ../src/Tools/mpdinteraction.c:1357
 msgid "All from album"
-msgstr "Ttudo do álbum"
+msgstr "Totes les d'aquest àlbum"
 
 #. Add all from artist
 #: ../src/Tools/mpdinteraction.c:1370
 msgid "All from artist"
-msgstr "Tudo do artista"
+msgstr "Totes les d'aquest l'artista"
 
 #. Add all from genre
 #: ../src/Tools/mpdinteraction.c:1381
 msgid "All from genre"
-msgstr "Tudo do género"
+msgstr "Totes les d'aquest gènere"
 
 #. Add all from file
 #: ../src/Tools/mpdinteraction.c:1389
 msgid "All from same directory"
-msgstr "Tudo da mesma pasta"
+msgstr "Totes les de la carpeta"
 
 #. Create sub menu
 #. Add
 #: ../src/Tools/mpdinteraction.c:1398
 msgid "Add more"
-msgstr "Adicionar mais"
+msgstr "Afegeix-ne més"
 
 #: ../src/Tools/url-fetcher.c:453
 msgid "Failed to open local file"
-msgstr "Falha ao abrir o ficheiro local"
+msgstr "No s'ha pogut obrir el fitxer local"
 
 #: ../src/Tools/url-fetcher.c:476
 msgid "Uri scheme not supported"
-msgstr ""
+msgstr "No s'admet aquesta combinació d'URI"
 
 #: ../src/Tools/mm-keys.c:75
 msgid "PlayPause"
-msgstr "Reproduzir/Parar"
+msgstr "Reprodueix/Pausa"
 
 #. * MM_STOP
 #: ../src/Tools/mm-keys.c:79
 msgid "Fast Forward"
-msgstr "Para a frente rápido"
+msgstr "Avanç ràpid"
 
 #. * MM_FASTFORWARD
 #: ../src/Tools/mm-keys.c:80
 msgid "Fast Backward"
-msgstr "Para trás rápido"
+msgstr "Retrocés ràpid"
 
 #. * MM_RANDOM
 #: ../src/Tools/mm-keys.c:83
 msgid "Raise window"
-msgstr "Aumentar a janela"
+msgstr "Alça la finestra"
 
 #. * MM_RAISE
 #: ../src/Tools/mm-keys.c:84
 msgid "Hide window"
-msgstr "Esconder janela"
+msgstr "Amaga la finestra"
 
 #. * MM_HIDE
 #: ../src/Tools/mm-keys.c:85
 msgid "Toggle window"
-msgstr "Alternar janela"
+msgstr "Commuta la finestra"
 
 #. * MM_TOGGLE_HIDDEN
 #: ../src/Tools/mm-keys.c:86
 msgid "Volume Up"
-msgstr "Aumentar Volume"
+msgstr "Apuja el volum"
 
 #. * MM_VOLUME_UP
 #: ../src/Tools/mm-keys.c:87
 msgid "Volume Down"
-msgstr "Baixar Volume"
+msgstr "Abaixa el volum"
 
 #. * MM_VOLUME_DOWN
 #: ../src/Tools/mm-keys.c:88
 msgid "Show song"
-msgstr "Mostrar musica"
+msgstr "Mostra la cançó"
 
 #. * MM_SHOW_NOTIFICATION
 #: ../src/Tools/mm-keys.c:89
 msgid "Toggle Mute"
-msgstr "Alternar modo silencioso"
+msgstr "Commuta el silenci"
 
 #. * MM_TOGGLE_MUTE
 #: ../src/Tools/mm-keys.c:90
 msgid "Show easy command entry"
-msgstr "Mostrar a entrada do comando"
+msgstr "Mostra l'entrada de l'ordre fàcil"
 
 #. * MM_PLAY
 #: ../src/Tools/mm-keys.c:92
@@ -2048,7 +2049,7 @@ msgid ""
 "Could not grab the following multimedia keys:\n"
 "\n"
 msgstr ""
-"Não conseguiu usar as seguintes teclas multimédia:\n"
+"Les tecles multimèdia següents no s'han pogut capturar:\n"
 "\n"
 
 #: ../src/Tools/mm-keys.c:328
@@ -2058,8 +2059,9 @@ msgid ""
 "bound this key for some other function, then restart gmpc."
 msgstr ""
 "\n"
-"Confirme que o seu gestor de janelas (ou outras aplicações) não estão a usar "
-"esta tecla para outras funções, a seguir reinicie o gmpc."
+"Comproveu que aquesta tecla no estigui assignada ja a alguna altra funció "
+"del gestor de finestres (o d'una altra aplicació) i, aleshores, reinicieu el "
+"GMPC."
 
 #: ../src/Tools/mm-keys.c:337
 msgid ""
@@ -2068,10 +2070,14 @@ msgid ""
 "Some duplicate multimedia key mappings were detected, and disabled.  Please "
 "revisit the preferences and ensure your settings are now correct."
 msgstr ""
+"S'han detectat mapatges duplicats.\n"
+"\n"
+"S'han desactivat alguns mapatges duplicats de tecles multimèdia. Torneu a "
+"mirar les preferències i comproveu si la configuració és correcta."
 
 #: ../src/Tools/mm-keys.c:482
 msgid "Multimedia Keys"
-msgstr "Teclas multimédia"
+msgstr "Tecles multimèdia"
 
 #: ../src/Tools/mm-keys.c:544
 #, c-format
@@ -2080,6 +2086,9 @@ msgid ""
 "\n"
 "%s is already mapped to %s"
 msgstr ""
+"S'ha detectat un mapatge duplicat\n"
+"\n"
+"%s ja està assignat a %s."
 
 #: ../src/Tools/mm-keys.c:568
 #, c-format
@@ -2091,112 +2100,119 @@ msgid ""
 "Ensure that your window manager (or other applications) have not already "
 "bound this key for some other function, then restart gmpc."
 msgstr ""
+"No s'ha pogut capturar la tecla multimèdia:\n"
+"\n"
+"\t%s: %s\n"
+"\n"
+"Comproveu que aquesta tecla no estigui assignada ja a alguna altra funció "
+"del gestor de finestres (o d'una altra aplicació) i, aleshores, reinicieu el "
+"GMPC."
 
 #: ../src/Tools/mm-keys.c:623
 msgid "Action"
-msgstr "Acção"
+msgstr "Acció"
 
 #: ../src/Tools/mm-keys.c:635
 msgid "Shortcut"
-msgstr "Atalho"
+msgstr "Drecera"
 
 #: ../src/Tools/misc.c:40
 msgid "Total time"
-msgstr "Tempo total"
+msgstr "Temps total"
 
 #: ../src/Tools/misc.c:60 ../src/Tools/misc.c:97
 msgid "day"
 msgid_plural "days"
 msgstr[0] "dia"
-msgstr[1] "dias"
+msgstr[1] "dies"
 
 #: ../src/Tools/misc.c:64 ../src/Tools/misc.c:105
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] "hora"
-msgstr[1] "horas"
+msgstr[1] "hores"
 
 #: ../src/Tools/misc.c:68 ../src/Tools/misc.c:113
 msgid "minute"
 msgid_plural "minutes"
-msgstr[0] "minuto"
-msgstr[1] "minutos"
+msgstr[0] "minut"
+msgstr[1] "minuts"
 
 #: ../src/Tools/misc.c:72 ../src/Tools/misc.c:121
 msgid "second"
 msgid_plural "seconds"
-msgstr[0] "segundo"
-msgstr[1] "segundos"
+msgstr[0] "segon"
+msgstr[1] "segons"
 
 #: ../src/Tools/misc.c:389
 msgid "Failed to execute"
-msgstr "Falhou ao executar"
+msgstr "Ha fallat l'execució"
 
 #: ../src/Widgets/gmpc-metadata-similarartists.c:288
 #: ../src/Widgets/gmpc-metadata-similarsongs.c:758
 #: ../src/Widgets/gmpc-metadata-similarsongs.c:853
 #: ../src/Widgets/gmpc-metadata-similarsongs.c:891
 msgid "Unavailable"
-msgstr "Indisponível"
+msgstr "No disponible"
 
 #: ../src/Widgets/gmpc-metadata-similarartists.c:304
 msgid "Fetching"
-msgstr "Procurando"
+msgstr "S'esta recollint"
 
 #: ../src/Widgets/gmpc-metadata-similarsongs.c:515
 msgid "_Replace"
-msgstr "_Substituir"
+msgstr "Canvia"
 
 #: ../src/Widgets/gmpc-metadata-similarsongs.c:828
 msgid "Fetching .. "
-msgstr "A procurar .. "
+msgstr "S'està recollint... "
 
 #: ../src/Widgets/advanced_settings.c:328
 #: ../src/Widgets/advanced_settings.c:336
 msgid "Browsers"
-msgstr ""
+msgstr "Navegadors"
 
 #: ../src/Widgets/GmpcVolume.c:601 ../src/Widgets/GmpcVolume.c:612
 msgid "Volume"
-msgstr "Volume"
+msgstr "Volum"
 
 #: ../src/Widgets/GmpcVolume.c:613
 msgid "Muted"
-msgstr "Sem som"
+msgstr "En silenci"
 
 #: ../src/Widgets/playlist3-messages.c:36
 msgid "Info"
-msgstr "Informação"
+msgstr "Informació"
 
 #: ../src/Widgets/playlist3-messages.c:37
 msgid "Warning"
-msgstr "Aviso"
+msgstr "Avís"
 
 #: ../src/Widgets/playlist3-messages.c:38
 msgid "Critical"
-msgstr "Critico"
+msgstr "Crític"
 
 #: ../src/Widgets/playlist3-messages.c:39
 msgid "User question"
-msgstr ""
+msgstr "Pregunta de l'usuari"
 
 #: ../src/Widgets/playlist3-messages.c:335
 msgid "Time"
-msgstr "Tempo"
+msgstr "Temps"
 
 #: ../src/Widgets/playlist3-messages.c:338
 msgid "Message"
-msgstr "Mensagem"
+msgstr "Missatge"
 
 #: ../src/Widgets/gmpc-metadata-text-label.c:162
 #, c-format
 msgid "Error reading file: %s"
-msgstr ""
+msgstr "Hi ha hagut un error en llegir el fitxer %s"
 
 #: ../src/Widgets/gmpc-metadata-text-label.c:257
 #: ../src/Widgets/gmpc-metadata-text-label.c:436
 msgid "Fetching..."
-msgstr ""
+msgstr "S'esta recollint..."
 
 #: ../src/Widgets/gmpc-metadata-backdrop.c:532
 msgid "Refresh backdrop"
@@ -2204,76 +2220,77 @@ msgstr ""
 
 #: ../src/Widgets/gmpc-profiles.c:417
 msgid "Added profile"
-msgstr "Perfil adicionado"
+msgstr "S'ha afegit el perfil"
 
 #: ../src/Widgets/gmpc-profiles.c:1117
 msgid "Removed profile"
-msgstr "Perfil removido"
+msgstr "S'ha esborrat el perfil"
 
 #: ../src/Widgets/gmpc-stats-label.c:335 ../src/Widgets/gmpc-stats-label.c:437
 #: ../src/Plugins/sidebar-play-queue-time.c:198
 msgid "n/a"
-msgstr "n/d"
+msgstr "no disponible"
 
 #: ../src/Widgets/gmpc-stats-label.c:460
 msgid "Loading"
-msgstr "A carregar"
+msgstr "S'està carregant"
 
 #: ../src/GUI/status_icon.c:43
 msgid "Single Mode enabled"
-msgstr "Modo Único activado"
+msgstr "El mode de peça única és actiu"
 
 #: ../src/GUI/status_icon.c:47
 msgid "Single Mode disabled"
-msgstr "Modo Único desactivado"
+msgstr "El mode de peça única és inactiu"
 
 #: ../src/GUI/status_icon.c:56
 msgid "Consume Mode enabled"
-msgstr "Modo Consumo activado"
+msgstr "El mode de consum és actiu"
 
 #: ../src/GUI/status_icon.c:60
 msgid "Consume Mode disabled"
-msgstr "Modo Consumo desactivado"
+msgstr "El mode de consum és inactiu"
 
 #: ../src/GUI/status_icon.c:69
 msgid "Repeat enabled"
-msgstr "Repetição activada"
+msgstr "El mode de repetició és actiu"
 
 #: ../src/GUI/status_icon.c:73
 msgid "Repeat disabled"
-msgstr "Repetição desactivada"
+msgstr "El mode de repetició és inactiu"
 
 #: ../src/GUI/status_icon.c:82
 msgid "Random enabled"
-msgstr "Modo aleatório activado"
+msgstr "El mode aleatori és actiu"
 
 #: ../src/GUI/status_icon.c:86
 msgid "Random disabled"
-msgstr "Modo aleatório desactivado"
+msgstr "El mode aleatori és inactiu"
 
 #: ../src/GUI/title_header.c:94
 msgid "By"
-msgstr "Por"
+msgstr "per"
 
 #: ../src/GUI/title_header.c:99
 msgid "From"
-msgstr "De"
+msgstr "a"
 
 #: ../src/GUI/title_header.c:176
 msgid "Not Playing"
-msgstr "Não está a Reproduzir"
+msgstr "No s'està reproduint"
 
 #: ../src/GUI/title_header.c:185
 msgid "Not Connected"
-msgstr "Desconectado"
+msgstr "No connectat"
 
 #: ../src/Plugins/AutoMPD.c:235
 msgid "Local (started by GMPC) MPD is running"
 msgstr ""
 
 #: ../src/Plugins/AutoMPD.c:1083
+#, fuzzy
 msgid "Auto MPD"
-msgstr ""
+msgstr "Automàtic"
 
 #: ../src/Plugins/AutoMPD.c:1323
 msgid "Auto MPD failed to create autostart file."
@@ -2286,12 +2303,12 @@ msgstr ""
 #: ../src/Plugins/sidebar-play-queue-time.c:174
 #, fuzzy
 msgid "(estimation)"
-msgstr "(Estimaticva)"
+msgstr "(Estimació)"
 
 #: ../src/Plugins/ExternalCommand.c:224
 #, fuzzy
 msgid "Failed to parse command"
-msgstr "Falha ao configurar o libmpd"
+msgstr "No s'ha pogut configurar el LIBMPD"
 
 #: ../src/Plugins/ExternalCommand.c:386
 msgid "Failed to start external command"
@@ -2301,183 +2318,243 @@ msgstr ""
 #~ "A new metadata plugin was added, gmpc has purged all failed hits from the "
 #~ "cache"
 #~ msgstr ""
-#~ "Um novo metadados foi adicionado, gmpc limpou todas as falhas na cache"
+#~ "S'ha afegit un connector de metadades nou; el GMPC ha netejat les errades "
+#~ "de la memòria cau."
 
 #~ msgid "Metadata Handler"
-#~ msgstr "Manipulador de metadados"
+#~ msgstr "Gestor de metadades"
 
 #~ msgid "Connected"
-#~ msgstr "Ligado"
+#~ msgstr "Connectat"
 
 #~ msgid "Repeat: %s"
-#~ msgstr "Repetir: %s"
+#~ msgstr "Repeteix %s"
 
 #~ msgid "On"
-#~ msgstr "Ligado"
+#~ msgstr "Actiu"
 
 #~ msgid "Random: %s"
-#~ msgstr "Aleatório: %s"
+#~ msgstr "Reprodueix %s de manera aleatòria"
 
 #~ msgid "Single mode: %s"
-#~ msgstr "Modo único:: %s"
+#~ msgstr "Reprodueix únicament %s"
 
 #~ msgid "Consume: %s"
-#~ msgstr "Consumo: %s"
+#~ msgstr "Després de reproduir %s, treu-la de la llista"
 
 #~ msgid "Profile"
 #~ msgstr "Perfil"
 
 #~ msgid "added"
-#~ msgstr "adicionado"
+#~ msgstr "s'ha afegit"
 
 #~ msgid "changed hostname to:"
-#~ msgstr "mudar o hostame para:"
+#~ msgstr "el nom de l'ordinador ara és:"
 
 #~ msgid "plugin metadata structure is incorrect"
-#~ msgstr "A estrutura da metadata do plugin está incorrecta"
+#~ msgstr "l'estructura de metadades del connector no és correcta"
+
+#~ msgid "Metadata Provider"
+#~ msgstr "Proveïdor de metadades"
+
+#~ msgid "Metadata Provider and Browser Extension"
+#~ msgstr "Proveidor de metadades i extensió de navegació"
+
+#~ msgid "File is not a valid .desktop file"
+#~ msgstr "El fitxer .desktop no és correcte."
+
+#~ msgid "Unrecognized desktop file Version '%s'"
+#~ msgstr "No es reconeix la versió (%s) del fitxer d'escriptori."
 
 #~ msgid "Starting %s"
-#~ msgstr "A reproduzir %s"
+#~ msgstr "S'està iniciant %s"
 
 #~ msgid "Application does not accept documents on command line"
-#~ msgstr "A aplicação não aceita documentos pela linha de comandos"
+#~ msgstr "L'aplicació no accepta documents des de la línia d'ordres."
 
 #~ msgid "Unrecognized launch option: %d"
-#~ msgstr "Opção de execução desconhecida: %d"
+#~ msgstr "L'opció d'execució %d no es reconeix"
+
+#~ msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
+#~ msgstr ""
+#~ "No es poden passar URI de documents a entrades d'escriptori del tipus "
+#~ "enllaç."
 
 #~ msgid "Not a launchable item"
-#~ msgstr "Não é um item executável"
+#~ msgstr "L'element no és executable."
 
 #~ msgid "Disable connection to session manager"
-#~ msgstr "Desactivar ligação ao gestor de sessão"
+#~ msgstr "Desactiva la connexió amb el gestor de sessió."
+
+#~ msgid "Specify file containing saved configuration"
+#~ msgstr "Indiqueu el fitxer que conté la configuració desada."
+
+#~ msgid "FILE"
+#~ msgstr "FITXER"
 
 #~ msgid "Specify session management ID"
-#~ msgstr "Especificar o ID de gestão de sessão"
+#~ msgstr "Indiqueu l'identificador de gestió de sessió"
 
 #~ msgid "ID"
-#~ msgstr "ID"
+#~ msgstr "Identificador"
+
+#~ msgid "Session management options:"
+#~ msgstr "Opcions de gestió de sessió:"
+
+#~ msgid "Show session management options"
+#~ msgstr "Mostra les opcions de gestió de sessió"
+
+#~ msgid "Show buttons navigation in collapsed view"
+#~ msgstr "Mostra els botons de navegació a la vista reduïda"
 
 #~ msgid "Web Links"
-#~ msgstr "Endereços da Web"
+#~ msgstr "Enllaços web"
 
 #~ msgid "item"
 #~ msgid_plural "items"
-#~ msgstr[0] "item"
-#~ msgstr[1] "itens"
+#~ msgstr[0] "element"
+#~ msgstr[1] "elements"
 
 #~ msgid "Added folder '%s' recursively"
-#~ msgstr "Adicionar a pasta '%s' recursivamente"
+#~ msgstr "S'ha afegit la carpeta «%s» de manera recursiva"
 
 #~ msgid "Loaded playlist"
-#~ msgstr "Lista de Reprodução carregada"
+#~ msgstr "S'ha carregat la llista de reproducció"
 
 #~ msgid "Added"
-#~ msgstr "Adicionado"
+#~ msgstr "S'ha afegit"
 
 #~ msgid "song"
 #~ msgid_plural "songs"
-#~ msgstr[0] "música"
-#~ msgstr[1] "músicas"
+#~ msgstr[0] "cançó"
+#~ msgstr[1] "cançons"
 
 #~ msgid "directory"
 #~ msgid_plural "directories"
-#~ msgstr[0] "pasta"
-#~ msgstr[1] "pastas"
+#~ msgstr[0] "carpeta"
+#~ msgstr[1] "carpetes"
 
 #~ msgid "playlist"
 #~ msgid_plural "playlists"
-#~ msgstr[0] "lista de reprodução"
-#~ msgstr[1] "listas de reprodução"
+#~ msgstr[0] "llista de reproducció"
+#~ msgstr[1] "llistes de reproducció"
+
+#~ msgid "Edit metadata current song"
+#~ msgstr "Edita les metadades de la cançó actual"
 
 #~ msgid "Lookup %s on %s"
-#~ msgstr "Procurar %s na %s"
+#~ msgstr "Consulta %s a %s"
+
+#~ msgid "Artist images"
+#~ msgstr "Imatges de l'artista"
+
+#~ msgid "Artist biography"
+#~ msgstr "Biografia de l'artista"
+
+#~ msgid "Similar artists"
+#~ msgstr "Artistes semblants"
+
+#~ msgid "Album cover"
+#~ msgstr "Portada de l'àlbum"
 
 #~ msgid "Similar songs"
-#~ msgstr "Musicas similares"
+#~ msgstr "Cançons semblants"
 
-#~ msgid "Plugins:"
-#~ msgstr "Plugins:"
+#~ msgid "Similar genres"
+#~ msgstr "Gèneres semblants"
 
-#~ msgid "Pla_ylist"
-#~ msgstr "Lis_ta de reprodução"
+#~ msgid "Last FM metadata fetcher (internal)"
+#~ msgstr "Cercador de metadades de Last FM (intern)"
 
-#~ msgid "localhost"
-#~ msgstr "localhost"
+#~ msgid "plugin get_image api is deprecated "
+#~ msgstr "l'API del connector get_image està desfasada "
+
+#~ msgid "plugin get_uris api is deprecated "
+#~ msgstr "l'API del connector get_uri està desfasada "
 
 #~ msgid "gmpc - Configuration"
-#~ msgstr "gmpc - Configuração"
+#~ msgstr "GMPC - Configuració"
 
 #~ msgid "Are you sure you want to clear the playlist?"
-#~ msgstr "Tem a sertesa que deseja apagar a lista de reprodução?"
+#~ msgstr "Voleu eliminar la llista de reproducció?"
+
+#~ msgid "Toogle gmpc visibility"
+#~ msgstr "Commuta la visibilitat del GMPC"
+
+#~ msgid "_help"
+#~ msgstr "ajuda"
+
+#~ msgid "localhost"
+#~ msgstr "màquina local"
+
+#~ msgid "Pla_ylist"
+#~ msgstr "Llista de reproducció"
+
+#~ msgid "Plugins:"
+#~ msgstr "Connectors:"
+
+#~ msgid "wxh"
+#~ msgstr "wxh"
+
+#~ msgid "Web links"
+#~ msgstr "Enllaços web"
+
+#~ msgid "Enable/disable metadata options"
+#~ msgstr "Activa/Desactiva les opcions de metadades"
 
 #~ msgid "kHz"
 #~ msgstr "kHz"
 
+#~ msgid "Play this item"
+#~ msgstr "Reprodueix aquest element"
+
+#~ msgid "kbps"
+#~ msgstr "kbps"
+
 #~ msgid "New playlist"
-#~ msgstr "Nova lista de reprodução"
-
-#~ msgid ""
-#~ "Repeat current song: The used MPD server is to old and does not support "
-#~ "this."
-#~ msgstr ""
-#~ "Repetir a música actual: O servidor do MPD usado é antigo e não suporta "
-#~ "isto."
-
-#~ msgid "Stop after current song: You have insufficient permission."
-#~ msgstr "Parar a seguir a música actual. Não tem permissões suficientes."
+#~ msgstr "Llista de reproducció nova"
 
 #~ msgid ""
 #~ "Stop after current song: The used MPD server is to old and does not "
 #~ "support this."
 #~ msgstr ""
-#~ "Parar a seguir a música actual. O servidor do MPD usado é antigo e não "
-#~ "suporta isto."
+#~ "El servidor MPD és molt antic i no admet l'aturada després de la peça "
+#~ "actual."
 
-#~ msgid "Update database: You have insufficient permission."
-#~ msgstr "Actualizar a base de dados. Não tem permissões suficientes."
+#~ msgid "Single: You have insufficient permission to use this option."
+#~ msgstr "No teniu prou permisos per usar l'opció de peça única."
 
-#~ msgid "Repeat current song: You have insufficient permission."
-#~ msgstr "Repetir a música actual. Não tem permissões suficientes."
+#~ msgid "Single: The used MPD server is to old and does not support this."
+#~ msgstr "El servidor MPD és molt antic i no admet el mode de peça única."
+
+#~ msgid "Consume: You have insufficient permission to use this option."
+#~ msgstr "No teniu prou permisos per usar l'opció de mode de consum."
+
+#~ msgid "Consume: The used MPD server is to old and does not support this."
+#~ msgstr "El servidor MPD és molt antic i no admet el mode de consum."
+
+#~ msgid "Show buttons instead of dropdown in collapsed view"
+#~ msgstr ""
+#~ "Mostra botons en comptes d'una llista desplegable a la vista reduïda"
 
 #~ msgid ""
 #~ "Update database: The used MPD server is to old and does not support this."
 #~ msgstr ""
-#~ "Actualizar a base de dados. O servidor do MPD usado é antigo e não "
-#~ "suporta isto."
+#~ "El servidor MPD és molt antic i no admet la funció d'actualitzar la base "
+#~ "de dades."
 
-#~ msgid "plugin get_image api is deprecated "
-#~ msgstr "plugin get_image api está desactualizado "
+#~ msgid "Update database: You have insufficient permission."
+#~ msgstr "No teniu prou permisos per actualitzar la base de dades."
 
-#~ msgid "plugin get_uris api is deprecated "
-#~ msgstr "plugin get_uris api está desactualizado "
-
-#~ msgid "kbps"
-#~ msgstr "kbps"
-
-#~ msgid "Enable/disable metadata options"
-#~ msgstr "Activar/desactivar opções de metadados"
-
-#~ msgid "Web links"
-#~ msgstr "Endereços da Web"
-
-#~ msgid "Single: You have insufficient permission to use this option."
-#~ msgstr "Modo Único: Não tem permissões suficientes para usar esta opção."
-
-#~ msgid "Single: The used MPD server is to old and does not support this."
+#~ msgid ""
+#~ "Repeat current song: The used MPD server is to old and does not support "
+#~ "this."
 #~ msgstr ""
-#~ "Modo Único: O servidor MPD que está a ser usado está desactualizado ou "
-#~ "não suporta esta opção."
+#~ "El servidor MPD és molt antic i no admet l'opció de repetir la peça "
+#~ "actual."
 
-#~ msgid "Consume: You have insufficient permission to use this option."
-#~ msgstr "Modo Consumo: Não tem permissões suficientes para usar esta opção."
+#~ msgid "Stop after current song: You have insufficient permission."
+#~ msgstr "No teniu prou permisos per aturar després de la peça actual."
 
-#~ msgid "Consume: The used MPD server is to old and does not support this."
-#~ msgstr ""
-#~ "Modo Consumo: O servidor MPD que está a ser usado está desactualizado ou "
-#~ "não suporta esta opção."
-
-#~ msgid "_help"
-#~ msgstr "_ajuda"
-
-#~ msgid "Play this item"
-#~ msgstr "Reproduzir este item"
+#~ msgid "Repeat current song: You have insufficient permission."
+#~ msgstr "No teniu prou permisos per repetir la peça actual."

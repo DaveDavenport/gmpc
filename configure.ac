@@ -273,7 +273,7 @@ AC_MSG_RESULT($PACKAGE_PREFIX)
 
 # i18n support
 dnl please keep them in alphabetical order
-ALL_LINGUAS="ar bg bn bs cs da de el et en_CA en_GB es fi fr gl he hi hu hy id it ja jv lv ml ms nb ne nl oc pl pt pt_BR ro ru sq sv th tr zh_CN zh_TW"
+ALL_LINGUAS="ar bg bn bs ca cs da de el et en_CA en_GB es fi fr gl he hi hu hy id it ja jv lv ml ms nb ne nl oc pl pt pt_BR ro ru sq sv th tr zh_CN zh_TW"
 
 
 AM_GLIB_GNU_GETTEXT

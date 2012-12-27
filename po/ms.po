@@ -3,13 +3,12 @@
 # This file is distributed under the same license as the gmpc package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
 #
-#: ../src/vala/gmpc-easy-command.c:869
 msgid ""
 msgstr ""
 "Project-Id-Version: gmpc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-08-12 12:04+0200\n"
-"PO-Revision-Date: 2011-07-30 03:48+0000\n"
+"POT-Creation-Date: 2012-12-27 14:12+0100\n"
+"PO-Revision-Date: 2011-12-20 13:47+0000\n"
 "Last-Translator: abuyop <Unknown>\n"
 "Language-Team: Malay <ms@li.org>\n"
 "Language: ms\n"
@@ -17,33 +16,33 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2011-08-12 10:01+0000\n"
-"X-Generator: Launchpad (build 13662)\n"
+"X-Launchpad-Export-Date: 2012-12-27 13:08+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
-#: ../data/gmpc.desktop.in.h:1
-msgid "A gnome frontend for the mpd daemon"
-msgstr "Frontend gnome untuk daemon mpd"
-
-#: ../data/gmpc.desktop.in.h:2 ../src/main.c:1060 ../src/playlist3.c:1974
-#: ../src/tray-icon2.c:770 ../src/options.c:101
-#: ../src/browsers/gmpc-nowplaying2.c:2641
-#: ../src/browsers/gmpc-nowplaying2.c:2645
+#: ../data/gmpc.desktop.in.h:1 ../src/main.c:1075 ../src/playlist3.c:1999
+#: ../src/tray-icon2.c:771 ../src/options.c:101
+#: ../src/browsers/gmpc-nowplaying2.c:4378
+#: ../src/browsers/gmpc-nowplaying2.c:4385
 msgid "Gnome Music Player Client"
 msgstr "Klien Pemain Musik Gnome"
 
-#: ../src/main.c:333
+#: ../data/gmpc.desktop.in.h:2
+msgid "A gnome frontend for the mpd daemon"
+msgstr "Frontend gnome untuk daemon mpd"
+
+#: ../src/main.c:326
 msgid "Failed to load the configuration system."
 msgstr "Gagal memuat sistem konfigurasi."
 
-#: ../src/main.c:431
+#: ../src/main.c:424
 msgid "Failed to setup libmpd"
 msgstr "Gagal memasang libmpd"
 
-#: ../src/main.c:824
+#: ../src/main.c:810
 msgid "GMPC has insufficient permissions on the mpd server."
 msgstr "GMPC tidak mempunyai kebenaran mencukupi pada pelayan mpd."
 
-#: ../src/main.c:856
+#: ../src/main.c:842
 #, c-format
 msgid ""
 "Failed to set password on: '%s'\n"
@@ -52,215 +51,172 @@ msgstr ""
 "Gagal menetapkan kata laluan pada: '%s'\n"
 "Sila cuba semula"
 
-#: ../src/main.c:861
+#: ../src/main.c:847
 #, c-format
 msgid "Please enter your password for: '%s'"
 msgstr "Sila masukkan kata laluan anda untuk: '%s'"
 
-#: ../src/main.c:901 ../src/main.c:932
+#: ../src/main.c:893 ../src/main.c:947
 msgid "error code"
 msgstr "kod kesalahan"
 
-#: ../src/main.c:918
+#: ../src/main.c:910
 msgid "Insufficient permission to connect to mpd. Check password"
 msgstr "kebenaran tidak mencukupi untuk menyambung ke mpd. Periksa kata laluan"
 
-#: ../src/main.c:961
+#: ../src/main.c:925
+msgid ""
+"Playlist support in MPD is not working. See the manual on possible fixes.\n"
+"Playlist editor and favorites are now disabled."
+msgstr ""
+
+#: ../src/main.c:976
 msgid "MPD versions before 0.13.0 are not supported"
 msgstr "Versi MPD sebelum 0.13.0 tidak disokong"
 
-#: ../src/main.c:1027
+#: ../src/main.c:1042
 msgid "Connected to mpd"
 msgstr "Disambungkan ke mpd"
 
-#: ../src/main.c:1030
+#: ../src/main.c:1045
 msgid "Disconnected from mpd"
 msgstr "Sambungan ke mpd dibatalkan"
 
-#: ../src/main.c:1062
+#: ../src/main.c:1077
 msgid "Tagline"
 msgstr "Garis Tag"
 
 #. * Mpd version
-#: ../src/main.c:1063 ../src/preferences.c:371
+#: ../src/main.c:1078 ../src/preferences.c:385
 #: ../src/browsers/server-information.c:337
 msgid "Version"
 msgstr "Versi"
 
-#: ../src/main.c:1069
+#: ../src/main.c:1084
 msgid "Revision"
 msgstr "Semakan"
 
-#: ../src/main.c:1079
+#: ../src/main.c:1094
 msgid "quit"
 msgstr "hentikan"
 
-#: ../src/main.c:1080
+#: ../src/main.c:1095
 msgid "Quit gmpc"
 msgstr "Hentikan gmpc"
 
-#: ../src/main.c:1085
+#: ../src/main.c:1100
 msgid "hide"
 msgstr "sembunyikan"
 
-#: ../src/main.c:1086
+#: ../src/main.c:1101
 msgid "Hide gmpc"
 msgstr "Sembunyikan gmpc"
 
-#: ../src/main.c:1091
+#: ../src/main.c:1106
 msgid "show"
 msgstr "tunjukkan"
 
-#: ../src/main.c:1092
+#: ../src/main.c:1107
 msgid "Show gmpc"
 msgstr "Tunjukkan gmpc"
 
-#: ../src/main.c:1097
+#: ../src/main.c:1112
 msgid "toggle"
 msgstr "togol"
 
-#: ../src/main.c:1098
+#: ../src/main.c:1113
 msgid "Toggle gmpc visibility"
 msgstr "Togol ketampakan gmpc"
 
-#: ../src/main.c:1103
+#: ../src/main.c:1118
 msgid "show notification"
 msgstr "tunjukkan notifikasi"
 
-#: ../src/main.c:1104
+#: ../src/main.c:1119
 msgid "Show trayicon notification"
 msgstr "Tunjukkan notifikasi bagi ikon dulang"
 
-#: ../src/main.c:1108
+#: ../src/main.c:1123
 msgid "preferences"
 msgstr "keutamaan"
 
-#: ../src/main.c:1109
+#: ../src/main.c:1124
 msgid "Show preferences window"
 msgstr "Papar tetingkap keutamaan"
 
-#: ../src/main.c:1114
+#: ../src/main.c:1129
 msgid "bug information"
 msgstr "maklumat pepijat"
 
-#: ../src/main.c:1115 ../src/options.c:83
+#: ../src/main.c:1130 ../src/options.c:83
 msgid "Show bug information"
 msgstr "Papar maklumat pepijat"
 
-#: ../src/main.c:1120 ../src/main.c:1126
+#: ../src/main.c:1135 ../src/main.c:1141
 msgid "url"
 msgstr "url"
 
-#: ../src/main.c:1121
+#: ../src/main.c:1136
 msgid "Show add url window"
 msgstr "Papar tambah tetingkap url"
 
-#: ../src/main.c:1127
+#: ../src/main.c:1142
 msgid "Add url <scheme>://<path>"
 msgstr "Tambah url <skema>://<laluan>"
 
-#: ../src/MetaData/metadata.c:297
-msgid ""
-"A new metadata plugin was added, gmpc has purged all failed hits from the "
-"cache"
-msgstr ""
-"Plugin metadata baru telah ditambah, gmpc telah keluarkan semua gagalan yang "
-"berkenaan daripada memori"
-
-#: ../src/MetaData/metadata.c:1916
-msgid "Metadata Handler"
-msgstr "Pengurus Metadata"
-
-#: ../src/playlist3.c:785
-msgid "Connected"
-msgstr "Tersambung"
-
-#: ../src/playlist3.c:797 ../src/GUI/title_header.c:184
-msgid "Not Connected"
-msgstr "Tidak disambung"
-
-#: ../src/playlist3.c:817 ../src/playlist3.c:823 ../src/playlist3.c:836
-#: ../src/playlist3.c:842 ../src/playlist3.c:1715 ../src/playlist3.c:1721
+#: ../src/playlist3.c:847 ../src/playlist3.c:853 ../src/playlist3.c:866
+#: ../src/playlist3.c:872 ../src/playlist3.c:1762 ../src/playlist3.c:1768
 msgid "GMPC"
 msgstr "GMPC"
 
-#: ../src/playlist3.c:818 ../src/playlist3.c:823
+#: ../src/playlist3.c:848 ../src/playlist3.c:853
 msgid "Connected to"
 msgstr "Disambungkan ke"
 
-#: ../src/playlist3.c:837 ../src/playlist3.c:842
+#: ../src/playlist3.c:867 ../src/playlist3.c:872
 msgid "Disconnected"
 msgstr "Diputuskan"
 
 #. *
 #. * Set paused in Window string
 #.
-#: ../src/playlist3.c:1677 ../src/playlist3.c:1681
+#: ../src/playlist3.c:1724 ../src/playlist3.c:1728
 msgid "paused"
 msgstr "dijedakan"
 
-#: ../src/playlist3.c:1753
-#, c-format
-msgid "Repeat: %s"
-msgstr "Ulangi: %s"
-
-#: ../src/playlist3.c:1754 ../src/playlist3.c:1768 ../src/playlist3.c:1785
-#: ../src/playlist3.c:1799
-msgid "On"
-msgstr "Buka"
-
-#: ../src/playlist3.c:1754 ../src/playlist3.c:1768 ../src/playlist3.c:1785
-#: ../src/playlist3.c:1799 ../glade/preferences-server.ui.h:9
-#: ../src/Tools/mpd-easy-commands.c:76
-msgid "Off"
-msgstr "Padam"
-
-#: ../src/playlist3.c:1767
-#, c-format
-msgid "Random: %s"
-msgstr "Rambang: %s"
-
-#: ../src/playlist3.c:1784
-#, c-format
-msgid "Single mode: %s"
-msgstr "Mod tunggal: %s"
-
-#: ../src/playlist3.c:1798
-#, c-format
-msgid "Consume: %s"
-msgstr "Guna: %s"
-
-#: ../src/playlist3.c:1907
+#: ../src/playlist3.c:1932
 msgid "MPD Reported the following error"
 msgstr "MPD melaporkan kesalahan berikut"
 
-#: ../src/playlist3.c:2057 ../src/playlist3.c:2064
-msgid "Profile"
-msgstr "Profil"
+#: ../src/playlist3.c:2294
+msgid "Library"
+msgstr ""
 
-#: ../src/playlist3.c:2058
-msgid "added"
-msgstr "telah ditambah"
+#: ../src/playlist3.c:2302
+msgid "Online Media"
+msgstr ""
 
-#: ../src/playlist3.c:2066
-msgid "changed hostname to:"
-msgstr "telah menukarkan nama hos kepada:"
+#: ../src/playlist3.c:2310 ../src/preferences.c:416
+msgid "Misc."
+msgstr "Lain-lain."
 
-#: ../src/playlist3.c:2340 ../src/Widgets/advanced_settings.c:182
-#: ../src/Widgets/advanced_settings.c:186
+#: ../src/playlist3.c:2373 ../src/Widgets/advanced_settings.c:249
+#: ../src/Widgets/advanced_settings.c:256
 msgid "Interface"
 msgstr "Interface"
 
-#: ../src/playlist3.c:2460
+#: ../src/playlist3.c:2493
 msgid ""
 "To playback local files, you need to be connected using unix socket.\n"
 "See the MPD website for more information."
 msgstr ""
+"Untuk main balik fail setempat, anda perlu disambungkan menggunakan soket "
+"unix.\n"
+"Rujuk laman sesawang MPD untuk maklumat lanjut."
 
 #: ../src/plugin.c:93 ../src/plugin.c:103 ../src/plugin.c:113
-#: ../src/plugin.c:125 ../src/plugin.c:138 ../src/plugin.c:148
-#: ../src/plugin.c:158 ../src/plugin.c:168 ../src/plugin.c:183
-#: ../src/plugin.c:197 ../src/plugin.c:289
+#: ../src/plugin.c:125 ../src/plugin.c:140 ../src/plugin.c:154
+#: ../src/plugin.c:236
 msgid "Failed to load plugin"
 msgstr "Gagal muatkan pemalam"
 
@@ -276,38 +232,33 @@ msgstr "pemalam dengan nama yang sama sudah wujud"
 msgid "plugin is missing set/get enable function"
 msgstr "pemalam telah kehilangan set/dapatkan fungsi yang dibenarkan"
 
-#: ../src/plugin.c:126 ../src/plugin.c:184
+#: ../src/plugin.c:126 ../src/plugin.c:141
 msgid "plugin browser structure is incorrect"
 msgstr "struktur pelayar pemalam salah"
 
-#: ../src/plugin.c:139 ../src/plugin.c:149 ../src/plugin.c:159
-#: ../src/plugin.c:169
-msgid "plugin metadata structure is incorrect"
-msgstr "struktur data meta pemalam salah"
-
-#: ../src/plugin.c:198
+#: ../src/plugin.c:155
 msgid "plugin preferences structure is incorrect"
 msgstr "struktur keutamaan pemalam salah"
 
-#: ../src/plugin.c:303
+#: ../src/plugin.c:250
 msgid "Failed to create plugin instance"
 msgstr "Gagal mencipta tika pemalam"
 
-#: ../src/plugin.c:320
+#: ../src/plugin.c:267
 msgid "Failed to bind symbol in plugin"
 msgstr "Gagal mengikat simbol dalam pemalam"
 
-#: ../src/plugin.c:334
+#: ../src/plugin.c:281
 #, c-format
 msgid "Plugin %s has wrong api version: %i"
 msgstr "Pemalam %s mempunyai versi api yang salah: %i"
 
-#: ../src/plugin.c:348 ../src/plugin.c:357
+#: ../src/plugin.c:295 ../src/plugin.c:304
 #, c-format
 msgid "Plugin %s has wrong no plugin structure: %s"
 msgstr "Pemalam %s mempunyai sturktur tiada pemalam yang salah: %s"
 
-#: ../src/plugin.c:379
+#: ../src/plugin.c:326
 msgid ""
 "One or more plugins failed to load, see help->messages for more information"
 msgstr ""
@@ -322,55 +273,49 @@ msgstr "Versi pemalam"
 msgid "Plugins"
 msgstr "Plugin"
 
-#: ../src/preferences.c:364
+#: ../src/preferences.c:378
 msgid "Enabled"
 msgstr "Dibolehkan"
 
-#: ../src/preferences.c:367 ../src/gmpc-mpddata-treeview.gob:86
+#: ../src/preferences.c:381 ../src/gmpc-mpddata-treeview.gob:86
 msgid "Name"
 msgstr "Nama"
 
-#: ../src/preferences.c:369
+#: ../src/preferences.c:383
 msgid "Function"
 msgstr "Fungsi"
 
-#: ../src/preferences.c:396
+#: ../src/preferences.c:410
 msgid "Dummy"
 msgstr "Patung"
 
-#: ../src/preferences.c:399
+#: ../src/preferences.c:413
 msgid "Browser Extension"
 msgstr "Tambahan bagi Pelayar Web"
 
-#: ../src/preferences.c:402
-msgid "Metadata Provider"
-msgstr "Pembekal Metadata"
-
-#: ../src/preferences.c:405
-msgid "Metadata Provider and Browser Extension"
-msgstr "Pembekal Metadata dan Tambahan bagi Pelayar Web"
-
-#: ../src/preferences.c:408
-msgid "Misc."
-msgstr "Lain-lain."
-
-#: ../src/preferences.c:413 ../src/browsers/gmpc-metadata-browser2.c:4072
-#: ../src/browsers/gmpc-metadata-browser2.c:4085
-#: ../src/browsers/gmpc-metadata-browser2.c:4980
-#: ../src/browsers/gmpc-metadata-browser2.c:5822
+#: ../src/preferences.c:421 ../src/browsers/gmpc-metadata-browser2.c:6618
+#: ../src/browsers/gmpc-metadata-browser2.c:6640
+#: ../src/browsers/gmpc-metadata-browser2.c:8110
+#: ../src/browsers/gmpc-metadata-browser2.c:9506
 msgid "Unknown"
 msgstr "Tidak Diketahui"
+
+#: ../src/preferences.c:427
+#, fuzzy
+msgid "Sidebar Extension"
+msgstr "Tambahan bagi Pelayar Web"
 
 #: ../src/tray-icon2.c:134
 msgid "Sho_w GMPC"
 msgstr "Papa_r GMPC"
 
 #. * MM_PLAYPAUSE
-#: ../src/tray-icon2.c:757 ../glade/playlist3.ui.h:5 ../src/Tools/mm-keys.c:74
+#: ../src/tray-icon2.c:758 ../glade/playlist3.ui.h:15
+#: ../src/Tools/mm-keys.c:76
 msgid "Next"
 msgstr "Seterusnya"
 
-#: ../src/tray-icon2.c:1185
+#: ../src/tray-icon2.c:1186
 msgid "Notification"
 msgstr "Pemberitahuan"
 
@@ -418,69 +363,6 @@ msgstr "Pilih profil"
 msgid "Run GMPC with a different icon theme"
 msgstr "Jalankan GMPC dengan tema ikon yang berbeza"
 
-#: ../src/smclient/eggdesktopfile.c:165
-#, c-format
-msgid "File is not a valid .desktop file"
-msgstr "Fail bukan fail .desktop yang sah"
-
-#: ../src/smclient/eggdesktopfile.c:188
-#, c-format
-msgid "Unrecognized desktop file Version '%s'"
-msgstr "Versi fail desktop '%s' tidak dikenalpasti"
-
-#: ../src/smclient/eggdesktopfile.c:958
-#, c-format
-msgid "Starting %s"
-msgstr "Memulakan %s"
-
-#: ../src/smclient/eggdesktopfile.c:1100
-#, c-format
-msgid "Application does not accept documents on command line"
-msgstr "Aplikasi tidak menerima dokumen pada baris perintah"
-
-#: ../src/smclient/eggdesktopfile.c:1168
-#, c-format
-msgid "Unrecognized launch option: %d"
-msgstr "Pilihan lancar tidak dikenalpasti: %d"
-
-#: ../src/smclient/eggdesktopfile.c:1373
-#, c-format
-msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
-msgstr "Tidak dapat lepaskan URI dokumen ke masukan desktop 'Type=Link'"
-
-#: ../src/smclient/eggdesktopfile.c:1393
-#, c-format
-msgid "Not a launchable item"
-msgstr "Bukan item boleh lancar"
-
-#: ../src/smclient/eggsmclient.c:225
-msgid "Disable connection to session manager"
-msgstr "Lumpuhkan sambungan ke pengurus sesi"
-
-#: ../src/smclient/eggsmclient.c:228
-msgid "Specify file containing saved configuration"
-msgstr "Nyatakan fail yang mengandungi konfigurasi tersimpan"
-
-#: ../src/smclient/eggsmclient.c:228
-msgid "FILE"
-msgstr "FAIL"
-
-#: ../src/smclient/eggsmclient.c:231
-msgid "Specify session management ID"
-msgstr "Nyatakan ID pengurusan sesi"
-
-#: ../src/smclient/eggsmclient.c:231
-msgid "ID"
-msgstr "ID"
-
-#: ../src/smclient/eggsmclient.c:252
-msgid "Session management options:"
-msgstr "Pilihan pengurusan sesi:"
-
-#: ../src/smclient/eggsmclient.c:253
-msgid "Show session management options"
-msgstr "Papar pilihan pengurusan sesi"
-
 #: ../glade/aboutdialog.ui.h:1
 msgid "Copyright 2003-2007 Qball Cow"
 msgstr "Hakcipta 2003-2007 Qball Cow"
@@ -490,171 +372,216 @@ msgstr "Hakcipta 2003-2007 Qball Cow"
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
-"  abuyop https://launchpad.net/~abuyop"
+"  Qball Cow https://launchpad.net/~qball-qballcow\n"
+"  abuyop https://launchpad.net/~abuyop\n"
+"  myromance123 https://launchpad.net/~linkinpark-neon"
 
 #: ../glade/password-dialog.ui.h:1
-msgid "Enter your password for: '<hostname>'"
-msgstr "Masukkan kata laluan anda untuk: '<hostname>'"
-
-#: ../glade/password-dialog.ui.h:2
 msgid "Password"
 msgstr "Kata laluan"
+
+#: ../glade/password-dialog.ui.h:2
+msgid "Enter your password for: '<hostname>'"
+msgstr "Masukkan kata laluan anda untuk: '<hostname>'"
 
 #: ../glade/password-dialog.ui.h:3
 msgid "_Save password"
 msgstr "_Simpan kata laluan"
 
 #: ../glade/preferences-connection.ui.h:1
-msgid "<b>Profile:</b>"
-msgstr "<b>Profil:</b>"
-
-#: ../glade/preferences-connection.ui.h:2
-msgid "Conn_ect"
-msgstr "Conn_ect"
-
-#: ../glade/preferences-connection.ui.h:3
-msgid "Host:"
-msgstr "Hos:"
-
-#: ../glade/preferences-connection.ui.h:4
-msgid "Music Directory:"
-msgstr "Direktori Muzik:"
-
-#: ../glade/preferences-connection.ui.h:5
-#: ../src/browsers/playlist3-playlist-editor.c:640
-#: ../src/browsers/playlist3-playlist-editor.c:683
-msgid "Name:"
-msgstr "Nama:"
-
-#: ../glade/preferences-connection.ui.h:6 ../glade/preferences-proxy.ui.h:3
-msgid "Password:"
-msgstr "Kata Laluan:"
-
-#: ../glade/preferences-connection.ui.h:7 ../glade/preferences-proxy.ui.h:4
-msgid "Port:"
-msgstr "Port:"
-
-#: ../glade/preferences-connection.ui.h:8
-msgid "Timeout (s):"
-msgstr "Diluar Masa (s):"
-
-#: ../glade/preferences-connection.ui.h:9
 msgid "_Autoconnect"
 msgstr "_Sambung secara automatik"
 
-#: ../glade/preferences-connection.ui.h:10
+#: ../glade/preferences-connection.ui.h:2
 msgid "_Disconnect"
 msgstr "_Putus"
 
-#: ../glade/preferences-connection.ui.h:11
+#: ../glade/preferences-connection.ui.h:3
+msgid "Conn_ect"
+msgstr "Conn_ect"
+
+#: ../glade/preferences-connection.ui.h:4
+msgid "Timeout (s):"
+msgstr "Diluar Masa (s):"
+
+#: ../glade/preferences-connection.ui.h:5
+msgid "Host:"
+msgstr "Hos:"
+
+#: ../glade/preferences-connection.ui.h:6 ../glade/preferences-proxy.ui.h:3
+msgid "Port:"
+msgstr "Port:"
+
+#: ../glade/preferences-connection.ui.h:7
 msgid "_Use Authentication"
 msgstr "_Guna Pengesahan"
 
+#: ../glade/preferences-connection.ui.h:8 ../glade/preferences-proxy.ui.h:6
+msgid "Password:"
+msgstr "Kata Laluan:"
+
+#: ../glade/preferences-connection.ui.h:9
+#: ../glade/preferences-external-command.ui.h:1
+#: ../src/browsers/playlist3-playlist-editor.c:646
+#: ../src/browsers/playlist3-playlist-editor.c:689
+msgid "Name:"
+msgstr "Nama:"
+
+#: ../glade/preferences-connection.ui.h:10
+msgid "Music Directory:"
+msgstr "Direktori Muzik:"
+
+#: ../glade/preferences-connection.ui.h:11 ../src/Tools/mpdinteraction.c:1076
+msgid "(None)"
+msgstr ""
+
+#: ../glade/preferences-connection.ui.h:12
+msgid "<b>Profile:</b>"
+msgstr "<b>Profil:</b>"
+
+#: ../glade/preferences-connection.ui.h:13
+msgid "_New"
+msgstr ""
+
+#: ../glade/preferences-connection.ui.h:14
+msgid "_Remove"
+msgstr ""
+
 #: ../glade/preferences-esf-dialog.ui.h:1
-msgid "<b>Enable Field:</b>"
-msgstr "<b>Bolehkan Lapangan:</b>"
-
-#: ../glade/preferences-esf-dialog.ui.h:2
-msgid "<b>Example:</b>"
-msgstr "<b>Contoh:</b>"
-
-#: ../glade/preferences-esf-dialog.ui.h:3
-msgid "<span size=\"large\"><b>Format Rule:</b></span>"
-msgstr "<span size=\"large\"><b>Peraturan Format:</b></span>"
-
-#: ../glade/preferences-esf-dialog.ui.h:4
-msgid "A_lbum"
-msgstr "A_lbum"
-
-#: ../glade/preferences-esf-dialog.ui.h:5
 msgid "Edit Song Formatting"
 msgstr "Edit cara Lagu diformat"
 
+#: ../glade/preferences-esf-dialog.ui.h:2
+msgid "<span size=\"large\"><b>Format Rule:</b></span>"
+msgstr "<span size=\"large\"><b>Peraturan Format:</b></span>"
+
+#: ../glade/preferences-esf-dialog.ui.h:3
+msgid "<b>Example:</b>"
+msgstr "<b>Contoh:</b>"
+
+#: ../glade/preferences-esf-dialog.ui.h:4
+msgid "example"
+msgstr "contoh"
+
+#: ../glade/preferences-esf-dialog.ui.h:5
+msgid "<b>Enable Field:</b>"
+msgstr "<b>Bolehkan Lapangan:</b>"
+
 #: ../glade/preferences-esf-dialog.ui.h:6
-msgid "T_rack"
-msgstr "T_rack"
+msgid "_Title"
+msgstr "_Tajuk"
 
 #: ../glade/preferences-esf-dialog.ui.h:7
 msgid "_Artist"
 msgstr "_Artis"
 
 #: ../glade/preferences-esf-dialog.ui.h:8
+msgid "A_lbum"
+msgstr "A_lbum"
+
+#: ../glade/preferences-esf-dialog.ui.h:9
+msgid "T_rack"
+msgstr "T_rack"
+
+#: ../glade/preferences-esf-dialog.ui.h:10
 msgid "_Date"
 msgstr "_Tarikh"
 
-#: ../glade/preferences-esf-dialog.ui.h:9
+#: ../glade/preferences-esf-dialog.ui.h:11
 msgid "_Stream name"
 msgstr "_Nama Aliran"
 
-#: ../glade/preferences-esf-dialog.ui.h:10
-msgid "_Title"
-msgstr "_Tajuk"
-
-#: ../glade/preferences-esf-dialog.ui.h:11
-msgid "example"
-msgstr "contoh"
-
 #: ../glade/preferences-playlist.ui.h:1
-msgid "<b>Main:</b>"
-msgstr "<b>Utama:</b>"
+msgid "Hide on close"
+msgstr "Sembunyikan apabila ditutup"
 
 #: ../glade/preferences-playlist.ui.h:2
-msgid "<b>Playlist:</b>"
-msgstr "<b>Senarai Memain:</b>"
+msgid "Stylize album covers"
+msgstr "Gayakan permukaan album"
 
-#: ../glade/preferences-playlist.ui.h:3 ../src/Widgets/advanced_settings.c:173
-msgid "Advanced settings"
-msgstr "Tetapan lanjutan"
+#: ../glade/preferences-playlist.ui.h:3
+msgid "Stop playing on exit"
+msgstr "Berhenti bermain apabila keluar"
 
 #: ../glade/preferences-playlist.ui.h:4
-msgid "Center playing song"
-msgstr "Pusat main lagu"
+msgid "Show songlist tooltip"
+msgstr "Tunjukkan tip peralatan senarai lagu"
 
 #: ../glade/preferences-playlist.ui.h:5
 msgid "Enable search as you type. (Might be slow)"
 msgstr "Benarkan gelintar semasa anda menaip. (Lambat)"
 
 #: ../glade/preferences-playlist.ui.h:6
-msgid "Hide on close"
-msgstr "Sembunyikan apabila ditutup"
+msgid "<b>Main:</b>"
+msgstr "<b>Utama:</b>"
 
 #: ../glade/preferences-playlist.ui.h:7
+msgid "Center playing song"
+msgstr "Pusat main lagu"
+
+#: ../glade/preferences-playlist.ui.h:8
 msgid "Save position and size between sessions"
 msgstr "Simpan posisi dan saiz diantara sesi"
 
-#: ../glade/preferences-playlist.ui.h:8
-msgid "Show buttons navigation in collapsed view"
-msgstr "Papar navigasi butang didalam paparan terkuncup"
-
 #: ../glade/preferences-playlist.ui.h:9
-msgid "Show songlist tooltip"
-msgstr "Tunjukkan tip peralatan senarai lagu"
+msgid "<b>Playlist:</b>"
+msgstr "<b>Senarai Memain:</b>"
 
 #: ../glade/preferences-playlist.ui.h:10
-msgid "Stop playing on exit"
-msgstr "Berhenti bermain apabila keluar"
-
-#: ../glade/preferences-playlist.ui.h:11
-msgid "Stylize album covers"
-msgstr "Gayakan permukaan album"
+#: ../src/Widgets/advanced_settings.c:232
+msgid "Advanced settings"
+msgstr "Tetapan lanjutan"
 
 #: ../glade/preferences-plugins.ui.h:1
 msgid "<b>Loaded Plugins:</b>"
 msgstr "<b>Plugin yang dimuat:</b>"
 
-#: ../glade/preferences-server.ui.h:1
+#: ../glade/preferences-server.ui.h:1 ../src/Tools/mpd-easy-commands.c:76
+msgid "Off"
+msgstr "Padam"
+
+#: ../glade/preferences-server.ui.h:2
+#: ../src/browsers/gmpc-metadata-browser2.c:2761
+#: ../src/browsers/gmpc-metadata-browser2.c:4909
+#: ../src/gmpc-mpddata-treeview.gob:85
+msgid "Track"
+msgstr "Track"
+
+#: ../glade/preferences-server.ui.h:3
+#: ../src/browsers/gmpc-metadata-browser2.c:2692
+#: ../src/browsers/gmpc-metadata-browser2.c:4758
+#: ../src/browsers/gmpc-metadata-browser2.c:6653
+#: ../src/gmpc-mpddata-treeview.gob:81 ../src/gmpc-mpddata-treeview.gob:664
+#: ../src/vala/gmpc-metadata-editwindow.c:1651
+#: ../src/Widgets/gmpc-song-list.c:384
+msgid "Album"
+msgstr "Album"
+
+#: ../glade/preferences-server.ui.h:4
+msgid "Auto"
+msgstr "Automatik"
+
+#: ../glade/preferences-server.ui.h:5
+msgid "Enable crossfade"
+msgstr "Bolehkan crossfade"
+
+#: ../glade/preferences-server.ui.h:6
+msgid "fade time (s):"
+msgstr "masa menghilang (s):"
+
+#: ../glade/preferences-server.ui.h:7
 msgid "<b>Crossfade:</b>"
 msgstr "<b>Crossfade:</b>"
 
-#: ../glade/preferences-server.ui.h:2
-msgid "<b>Output Devices:</b>"
-msgstr "<b>Alatan Output:</b>"
-
-#: ../glade/preferences-server.ui.h:3
+#: ../glade/preferences-server.ui.h:8
 msgid "<b>Replaygain</b>"
 msgstr "<b>Gandaan Main Semula</b>"
 
-#: ../glade/preferences-server.ui.h:4
+#: ../glade/preferences-server.ui.h:9
+msgid "<b>Output Devices:</b>"
+msgstr "<b>Alatan Output:</b>"
+
+#: ../glade/preferences-server.ui.h:10
 msgid ""
 "<span size=\"small\"><i>You need to be connected\n"
 "in order to change these settings</i></span>"
@@ -662,85 +589,57 @@ msgstr ""
 "<span size=\"small\"><i>Anda mesti disambungkan untuk menukarkan tetapan "
 "ini</i></span>"
 
-#: ../glade/preferences-server.ui.h:6
-#: ../src/browsers/gmpc-metadata-browser2.c:1819
-#: ../src/browsers/gmpc-metadata-browser2.c:3058
-#: ../src/browsers/gmpc-metadata-browser2.c:4093
-#: ../src/gmpc-mpddata-treeview.gob:81 ../src/gmpc-mpddata-treeview.gob:664
-#: ../src/vala/gmpc-test-plugin.c:1459 ../src/Widgets/gmpc-song-list.c:296
-msgid "Album"
-msgstr "Album"
-
-#: ../glade/preferences-server.ui.h:7
-msgid "Auto"
-msgstr "Automatik"
-
-#: ../glade/preferences-server.ui.h:8
-msgid "Enable crossfade"
-msgstr "Bolehkan crossfade"
-
-#: ../glade/preferences-server.ui.h:10
-#: ../src/browsers/gmpc-metadata-browser2.c:1857
-#: ../src/browsers/gmpc-metadata-browser2.c:3132
-#: ../src/gmpc-mpddata-treeview.gob:85
-msgid "Track"
-msgstr "Track"
-
-#: ../glade/preferences-server.ui.h:11
-msgid "fade time (s):"
-msgstr "masa menghilang (s):"
-
 #: ../glade/preferences-trayicon.ui.h:1
-msgid "<b>Inline messages</b>"
-msgstr "<b>Mesej-mesej Inline</b>"
+msgid "Show on song change"
+msgstr "Papar perubahan lagu"
 
 #: ../glade/preferences-trayicon.ui.h:2
-msgid "<b>Notification Area Icon</b>"
-msgstr "<b>Ikon Notifikasi Kawasan</b>"
+msgid "Timeout:"
+msgstr "Hadmasa tamat:"
 
 #: ../glade/preferences-trayicon.ui.h:3
-msgid "<b>PopUp</b>"
-msgstr "<b>PopUp</b>"
-
-#: ../glade/preferences-trayicon.ui.h:4
-msgid "Enable"
-msgstr "Bolehkan"
-
-#: ../glade/preferences-trayicon.ui.h:5
 msgid "Position:"
 msgstr "Posisi:"
 
+#: ../glade/preferences-trayicon.ui.h:4
+msgid "<b>PopUp</b>"
+msgstr "<b>PopUp</b>"
+
+#: ../glade/preferences-trayicon.ui.h:5
+msgid "Enable"
+msgstr "Bolehkan"
+
 #: ../glade/preferences-trayicon.ui.h:6
-msgid "Show on song change"
-msgstr "Papar perubahan lagu"
+msgid "<b>Notification Area Icon</b>"
+msgstr "<b>Ikon Notifikasi Kawasan</b>"
 
 #: ../glade/preferences-trayicon.ui.h:7
 msgid "Show severity"
 msgstr "Tunjukkan keterukan"
 
 #: ../glade/preferences-trayicon.ui.h:8
-msgid "Timeout:"
-msgstr "Hadmasa tamat:"
+msgid "<b>Inline messages</b>"
+msgstr "<b>Mesej-mesej Inline</b>"
 
 #: ../glade/preferences-proxy.ui.h:1
-msgid "<b>Proxy settings</b>"
-msgstr "<b>Tetapan Proxy</b>"
+msgid "Use a proxy for internet connectivity"
+msgstr "Guna proxy untuk sambungan internet"
 
 #: ../glade/preferences-proxy.ui.h:2
 msgid "HTTP Proxy:"
 msgstr "HTTP Proxy:"
 
-#: ../glade/preferences-proxy.ui.h:5
-msgid "Use a proxy for internet connectivity"
-msgstr "Guna proxy untuk sambungan internet"
-
-#: ../glade/preferences-proxy.ui.h:6
+#: ../glade/preferences-proxy.ui.h:4
 msgid "Use authentication"
 msgstr "Guna pengesahan"
 
-#: ../glade/preferences-proxy.ui.h:7
+#: ../glade/preferences-proxy.ui.h:5
 msgid "Username:"
 msgstr "Nama pengguna:"
+
+#: ../glade/preferences-proxy.ui.h:7
+msgid "<b>Proxy settings</b>"
+msgstr "<b>Tetapan Proxy</b>"
 
 #: ../glade/preferences-mmkeys.ui.h:1
 msgid "To disable a keybinding edit it and press 'backspace'"
@@ -748,16 +647,16 @@ msgstr ""
 "Untuk lumpuhkan pengikatan kekunci, suntingkannya dan tekan 'backspace'"
 
 #: ../glade/preferences.ui.h:1
+msgid "GMPC - Preferences"
+msgstr "Keutamaan - GMPC"
+
+#: ../glade/preferences.ui.h:2
 msgid ""
 "<span size=\"x-large\"><b>Plugins</b></span>\n"
 "<i>None Selected</i>"
 msgstr ""
 "<span size=\"x-large\"><b>Plugin</b></span>\n"
 "<i>Tiada yang Dipilih</i>"
-
-#: ../glade/preferences.ui.h:3
-msgid "GMPC - Preferences"
-msgstr "Keutamaan - GMPC"
 
 #: ../glade/playlist-message-window.ui.h:1
 msgid "Messages"
@@ -768,27 +667,27 @@ msgid "_Copy to clipboard"
 msgstr "_Salin ke papan keratan"
 
 #: ../glade/playlist-save-dialog.ui.h:1
-msgid "<enter playlist name>"
-msgstr "<masukkan nama senarai main>"
-
-#: ../glade/playlist-save-dialog.ui.h:2
-msgid "<span size=\"x-small\"><i>Playlist already exists.</i></span>"
-msgstr "<span size=\"x-small\"><i>Senarai main sudah wujud.</i></span>"
-
-#: ../glade/playlist-save-dialog.ui.h:3
 msgid "Save Playlist"
 msgstr "Simpan Senarai Main"
 
-#: ../glade/playlist-save-dialog.ui.h:4
+#: ../glade/playlist-save-dialog.ui.h:2
 msgid "name:"
 msgstr "nama:"
+
+#: ../glade/playlist-save-dialog.ui.h:3
+msgid "<enter playlist name>"
+msgstr "<masukkan nama senarai main>"
+
+#: ../glade/playlist-save-dialog.ui.h:4
+msgid "<span size=\"x-small\"><i>Playlist already exists.</i></span>"
+msgstr "<span size=\"x-small\"><i>Senarai main sudah wujud.</i></span>"
 
 #. *
 #. * add url to playlist
 #.
 #: ../glade/gmpc-add-url.ui.h:1
-#: ../src/browsers/playlist3-current-playlist-browser.c:928
-#: ../src/browsers/playlist3-playlist-editor.c:743
+#: ../src/browsers/playlist3-current-playlist-browser.c:932
+#: ../src/browsers/playlist3-playlist-editor.c:749
 msgid "Add URL"
 msgstr "Tambah URL"
 
@@ -797,253 +696,294 @@ msgid "Enter URL:"
 msgstr "Masukkan URL:"
 
 #: ../glade/gmpc-add-url.ui.h:3
-msgid "gtk-add"
-msgstr "gtk-add"
-
-#: ../glade/gmpc-add-url.ui.h:4
 msgid "gtk-close"
 msgstr "gtk-close"
 
-#: ../glade/playlist3.ui.h:1 ../src/Tools/mpd-easy-commands.c:273
-#: ../src/Tools/mpd-easy-commands.c:280
-msgid "Consume"
-msgstr "Guna"
+#: ../glade/gmpc-add-url.ui.h:4
+msgid "gtk-add"
+msgstr "gtk-add"
 
-#: ../glade/playlist3.ui.h:2
-msgid "Consume Mode"
-msgstr "Mod Guna"
-
-#: ../glade/playlist3.ui.h:3 ../src/Tools/mpd-easy-commands.c:394
-msgid "Mute"
-msgstr "Senyapkan"
-
-#: ../glade/playlist3.ui.h:4
-msgid "Mute the output"
-msgstr "Bisukan output"
-
-#: ../glade/playlist3.ui.h:6
-msgid "Play"
-msgstr "Main"
-
-#: ../glade/playlist3.ui.h:7
-msgid "Play/Pause"
-msgstr "Main/Berhenti untuk Sejenak"
-
-#: ../glade/playlist3.ui.h:8
-msgid "Prev"
-msgstr "Sebelumnya"
-
-#. * MM_NEXT
-#: ../glade/playlist3.ui.h:9 ../src/Tools/mm-keys.c:75
-msgid "Previous"
-msgstr "Sebelumnya"
-
-#. * MM_REPEAT
-#: ../glade/playlist3.ui.h:10 ../src/Tools/mm-keys.c:80
-msgid "Random"
-msgstr "Rambang"
-
-#: ../glade/playlist3.ui.h:11
-msgid "Random Mode"
-msgstr "Mod Rawak"
-
-#. * MM_FASTBACKWARD
-#: ../glade/playlist3.ui.h:12 ../src/Tools/mm-keys.c:79
-msgid "Repeat"
-msgstr "Ulang balik"
-
-#: ../glade/playlist3.ui.h:13
+#: ../glade/playlist3.ui.h:1
 msgid "Repeat Mode"
 msgstr "Mod Ulang"
 
-#: ../glade/playlist3.ui.h:14 ../src/Tools/mpd-easy-commands.c:304
+#. * MM_FASTBACKWARD
+#: ../glade/playlist3.ui.h:2 ../src/Tools/mm-keys.c:81
+msgid "Repeat"
+msgstr "Ulang balik"
+
+#: ../glade/playlist3.ui.h:3
+msgid "Toggle repeat mode"
+msgstr "Togol mod ulang"
+
+#: ../glade/playlist3.ui.h:4
+msgid "Random Mode"
+msgstr "Mod Rawak"
+
+#. * MM_REPEAT
+#: ../glade/playlist3.ui.h:5 ../src/Tools/mm-keys.c:82
+msgid "Random"
+msgstr "Rambang"
+
+#: ../glade/playlist3.ui.h:6
+msgid "Toggle random mode"
+msgstr "Togol mod rawak"
+
+#: ../glade/playlist3.ui.h:7
+msgid "Single Mode"
+msgstr "Mod Tunggal"
+
+#: ../glade/playlist3.ui.h:8 ../src/Tools/mpd-easy-commands.c:304
 #: ../src/Tools/mpd-easy-commands.c:311
 msgid "Single"
 msgstr "Tunggal"
 
-#: ../glade/playlist3.ui.h:15
-msgid "Single Mode"
-msgstr "Mod Tunggal"
+#: ../glade/playlist3.ui.h:9
+msgid "Toggle single mode"
+msgstr "Togol mod tunggal"
+
+#: ../glade/playlist3.ui.h:10 ../src/Tools/mpd-easy-commands.c:407
+msgid "Mute"
+msgstr "Senyapkan"
+
+#: ../glade/playlist3.ui.h:11
+msgid "Mute the output"
+msgstr "Bisukan output"
+
+#: ../glade/playlist3.ui.h:12
+msgid "Consume Mode"
+msgstr "Mod Guna"
+
+#: ../glade/playlist3.ui.h:13 ../src/Tools/mpd-easy-commands.c:273
+#: ../src/Tools/mpd-easy-commands.c:280
+msgid "Consume"
+msgstr "Guna"
+
+#: ../glade/playlist3.ui.h:14
+msgid "Toggle consume mode"
+msgstr "Togol mod guna"
 
 #: ../glade/playlist3.ui.h:16
 msgid "Skip to the next song"
 msgstr "Langkau ke lagu berikutnya"
 
-#: ../glade/playlist3.ui.h:17
+#. * MM_NEXT
+#: ../glade/playlist3.ui.h:17 ../src/Tools/mm-keys.c:77
+msgid "Previous"
+msgstr "Sebelumnya"
+
+#: ../glade/playlist3.ui.h:18
+msgid "Prev"
+msgstr "Sebelumnya"
+
+#: ../glade/playlist3.ui.h:19
 msgid "Skip to the previous song"
 msgstr "Langkau ke lagu terdahulu"
 
 #. * MM_PREV
-#: ../glade/playlist3.ui.h:18 ../src/Tools/mm-keys.c:76
+#: ../glade/playlist3.ui.h:20 ../src/Tools/mm-keys.c:78
 msgid "Stop"
 msgstr "Berhenti"
 
-#: ../glade/playlist3.ui.h:19
-msgid "Toggle consume mode"
-msgstr "Togol mod guna"
-
-#: ../glade/playlist3.ui.h:20
-msgid "Toggle random mode"
-msgstr "Togol mod rawak"
-
 #: ../glade/playlist3.ui.h:21
-msgid "Toggle repeat mode"
-msgstr "Togol mod ulang"
+msgid "Play/Pause"
+msgstr "Main/Berhenti untuk Sejenak"
 
-#: ../glade/playlist3.ui.h:22
-msgid "Toggle single mode"
-msgstr "Togol mod tunggal"
+#: ../glade/playlist3.ui.h:22 ../src/Tools/mm-keys.c:91
+msgid "Play"
+msgstr "Main"
 
 #: ../glade/playlist3.ui.h:23
 msgid "_Control"
 msgstr "_Kawalan"
 
 #: ../glade/playlist3.ui.h:24
-msgid "_Go"
-msgstr "_Pergi"
+msgid "_Open local file"
+msgstr "_Buka fail setempat"
 
 #: ../glade/playlist3.ui.h:25
-msgid "_Help"
-msgstr "_Bantuan"
+msgid "_Profiles"
+msgstr "_Profil"
 
 #: ../glade/playlist3.ui.h:26
 msgid "_Music"
 msgstr "_Muzik"
 
 #: ../glade/playlist3.ui.h:27
-msgid "_Open local file"
-msgstr ""
-
-#: ../glade/playlist3.ui.h:28
-msgid "_Option"
-msgstr "_Opsyen"
-
-#: ../glade/playlist3.ui.h:29
-msgid "_Profiles"
-msgstr "_Profil"
-
-#: ../glade/playlist3.ui.h:30
 msgid "_Server"
 msgstr "_Server"
 
-#: ../glade/playlist3.ui.h:31
+#: ../glade/playlist3.ui.h:28
+msgid "_View"
+msgstr "_Lihat"
+
+#: ../glade/playlist3.ui.h:29
+msgid "_Option"
+msgstr "_Opsyen"
+
+#: ../glade/playlist3.ui.h:30
 msgid "_Tools"
 msgstr "_Alat"
 
+#: ../glade/playlist3.ui.h:31
+msgid "_Go"
+msgstr "_Pergi"
+
 #: ../glade/playlist3.ui.h:32
-msgid "_View"
-msgstr "_Lihat"
+msgid "_Help"
+msgstr "_Bantuan"
 
 #: ../glade/playlist3.ui.h:33
 msgid "gmpc - Playlist Manager"
 msgstr "gmpc - Pengurus Senarai Main"
 
 #: ../glade/preferences-metadata-appearance.ui.h:1
-msgid "<b>Show / hide metadata tabs</b>"
-msgstr ""
-
-#: ../glade/preferences-metadata-appearance.ui.h:2
-#: ../src/browsers/gmpc-nowplaying2.c:2183
-#: ../src/browsers/gmpc-nowplaying2.c:2188
-#: ../src/browsers/gmpc-metadata-browser2.c:5083
-#: ../src/browsers/gmpc-metadata-browser2.c:5088
-msgid "Artist information"
-msgstr "Informasi mengenai Artis"
-
-#: ../glade/preferences-metadata-appearance.ui.h:3
-#: ../src/browsers/gmpc-nowplaying2.c:2006
-#: ../src/browsers/gmpc-nowplaying2.c:2011
-#: ../src/browsers/gmpc-metadata-browser2.c:3256
-#: ../src/browsers/gmpc-metadata-browser2.c:3261
-msgid "Guitar Tabs"
-msgstr "Tab Gitar"
-
-#: ../glade/preferences-metadata-appearance.ui.h:4
+#: ../src/browsers/gmpc-nowplaying2.c:3033
 msgid "Lyrics"
 msgstr "Lirik"
 
-#: ../glade/preferences-metadata-appearance.ui.h:5
-msgid "Similar Artists"
-msgstr ""
+#: ../glade/preferences-metadata-appearance.ui.h:2
+#: ../src/browsers/gmpc-nowplaying2.c:3121
+#: ../src/browsers/gmpc-nowplaying2.c:3130
+#: ../src/browsers/gmpc-metadata-browser2.c:5132
+#: ../src/browsers/gmpc-metadata-browser2.c:5138
+msgid "Guitar Tabs"
+msgstr "Tab Gitar"
 
-#: ../glade/preferences-metadata-appearance.ui.h:6
-#: ../src/browsers/gmpc-nowplaying2.c:2053
-#: ../src/browsers/gmpc-nowplaying2.c:2058
-#: ../src/browsers/gmpc-metadata-browser2.c:3297
-#: ../src/browsers/gmpc-metadata-browser2.c:3302
+#: ../glade/preferences-metadata-appearance.ui.h:3
+#: ../src/browsers/gmpc-nowplaying2.c:3234
+#: ../src/browsers/gmpc-nowplaying2.c:3243
+#: ../src/browsers/gmpc-metadata-browser2.c:5204
+#: ../src/browsers/gmpc-metadata-browser2.c:5210
 msgid "Similar Songs"
 msgstr "Lagu Sama"
 
+#: ../glade/preferences-metadata-appearance.ui.h:4
+msgid "Similar Artists"
+msgstr "Artis Serupa"
+
+#: ../glade/preferences-metadata-appearance.ui.h:5
+#: ../src/browsers/gmpc-nowplaying2.c:3460
+#: ../src/browsers/gmpc-nowplaying2.c:3469
+#: ../src/browsers/gmpc-metadata-browser2.c:8302
+#: ../src/browsers/gmpc-metadata-browser2.c:8308
+msgid "Artist information"
+msgstr "Informasi mengenai Artis"
+
+#: ../glade/preferences-metadata-appearance.ui.h:6
+msgid "Songs from album (only in Now Playing)"
+msgstr ""
+
 #: ../glade/preferences-metadata-appearance.ui.h:7
-#: ../src/browsers/gmpc-nowplaying2.c:2144
-#: ../src/browsers/gmpc-nowplaying2.c:2149
-#: ../src/browsers/gmpc-metadata-browser2.c:3384
-#: ../src/browsers/gmpc-metadata-browser2.c:3389
-#: ../src/browsers/gmpc-metadata-browser2.c:4272
-#: ../src/browsers/gmpc-metadata-browser2.c:4277
-#: ../src/browsers/gmpc-metadata-browser2.c:5201
-#: ../src/browsers/gmpc-metadata-browser2.c:5206
-#: ../src/Widgets/gmpc-song-links.c:125
-msgid "Web Links"
-msgstr "Pautan Sesawang"
+msgid "<b>Show / hide metadata tabs</b>"
+msgstr "<b>Papar / sembunyi tab data meta</b>"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:158
-msgid "item"
-msgid_plural "items"
-msgstr[0] "barang"
-msgstr[1] "barang"
+#: ../glade/preferences-autompd.ui.h:1
+#, fuzzy
+msgid "<b>Audio Output</b>"
+msgstr "<b>Alatan Output:</b>"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:164
-msgid "(Estimation)"
-msgstr "(Jangkaan)"
+#: ../glade/preferences-autompd.ui.h:2
+#, fuzzy
+msgid "Pulse output"
+msgstr "Bisukan output"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:222
+#: ../glade/preferences-autompd.ui.h:3
+#, fuzzy
+msgid "Alsa output"
+msgstr "output"
+
+#: ../glade/preferences-autompd.ui.h:4
+msgid "Http output (mp3, port 8000)"
+msgstr ""
+
+#: ../glade/preferences-autompd.ui.h:5
+msgid "Http output (ogg, port 8001)"
+msgstr ""
+
+#: ../glade/preferences-autompd.ui.h:6
+#, fuzzy
+msgid "<b>Generic</b>"
+msgstr "<b>Gelintar:</b>"
+
+#: ../glade/preferences-autompd.ui.h:7
+msgid "Close MPD on exit"
+msgstr ""
+
+#: ../glade/preferences-autompd.ui.h:8
+#, fuzzy
+msgid "Allow remote connections"
+msgstr "Sediakan sambungan"
+
+#: ../glade/preferences-autompd.ui.h:9
+msgid "Create autostart file:"
+msgstr ""
+
+#: ../glade/preferences-external-command.ui.h:2
+#, fuzzy
+msgid "Command:"
+msgstr "Perintah"
+
+#: ../glade/preferences-external-command.ui.h:3
+#, fuzzy
+msgid "<b>Command:</b>"
+msgstr "<b>Crossfade:</b>"
+
+#: ../src/browsers/playlist3-current-playlist-browser.c:182
 msgid "switch play queue"
 msgstr "tukar barisan main"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:223
+#: ../src/browsers/playlist3-current-playlist-browser.c:183
 msgid "Switch to play queue"
 msgstr "Tukarkan kepada barisan main"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:226
-#: ../src/browsers/playlist3-current-playlist-browser.c:227
+#: ../src/browsers/playlist3-current-playlist-browser.c:186
+msgid "Clear"
+msgstr ""
+
+#: ../src/browsers/playlist3-current-playlist-browser.c:187
 msgid "Clear play queue"
 msgstr "Jernihkan barisan main"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:231
+#: ../src/browsers/playlist3-current-playlist-browser.c:191
 msgid "Crop current song"
 msgstr "Potong lagu semasa"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:232
+#: ../src/browsers/playlist3-current-playlist-browser.c:192
 msgid "Crop the playlist so it only contains the current song"
 msgstr "Potong senarai main supaya ia mengandungi lagu semasa"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:236
+#: ../src/browsers/playlist3-current-playlist-browser.c:196
 msgid "search playlist"
 msgstr "geladah senarai main"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:237
+#: ../src/browsers/playlist3-current-playlist-browser.c:197
 msgid "Search playlist <query>"
 msgstr "Geladah senarai main <pertanyaan>"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:648
-#: ../src/browsers/playlist3-current-playlist-browser.c:670
-#: ../src/browsers/playlist3-current-playlist-browser.c:715
-#: ../src/browsers/playlist3-current-playlist-browser.c:739
+#: ../src/browsers/playlist3-current-playlist-browser.c:608
+#: ../src/browsers/playlist3-current-playlist-browser.c:630
+#: ../src/browsers/playlist3-current-playlist-browser.c:675
+#: ../src/browsers/playlist3-current-playlist-browser.c:699
 msgid "Your mpd has a broken 'addid', pasting will fail."
 msgstr "mpd anda mempunyai 'addid' yang rosak, menampal akan gagal."
 
 #. add the delete widget
-#: ../src/browsers/playlist3-current-playlist-browser.c:769
+#: ../src/browsers/playlist3-current-playlist-browser.c:729
 msgid "Crop"
 msgstr "Potong"
 
 #. add the shuffle widget
-#: ../src/browsers/playlist3-current-playlist-browser.c:783
+#: ../src/browsers/playlist3-current-playlist-browser.c:743
 msgid "Shuffle"
-msgstr "Mengocok"
+msgstr "Kocok"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:1014
+#: ../src/browsers/playlist3-current-playlist-browser.c:903
+#, fuzzy
+msgid "Add after current song"
+msgstr "Henti selepas lagu semasa"
+
+#: ../src/browsers/playlist3-current-playlist-browser.c:1018
 #, c-format
 msgid ""
 "<i>Playlist <b>\"%s\"</b> already exists\n"
@@ -1052,35 +992,35 @@ msgstr ""
 "<i>Senarai main <b>\"%s\"</b> sudah wujud\n"
 "Gantikan ia?</i>"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:1037
+#: ../src/browsers/playlist3-current-playlist-browser.c:1041
 msgid "Failed to save the playlist file."
 msgstr "Gagal menyimpan fail senarai main."
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:1071
+#: ../src/browsers/playlist3-current-playlist-browser.c:1073
 msgid "Are you sure you want to clear the play queue?"
-msgstr ""
+msgstr "Anda pasti ingin mengosongkan baris gilir main?"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:1116
-#: ../src/browsers/playlist3-current-playlist-browser.c:1174
+#: ../src/browsers/playlist3-current-playlist-browser.c:1123
+#: ../src/browsers/playlist3-current-playlist-browser.c:1181
 msgid "Play Queue"
 msgstr "Baris Gilir Main"
 
-#: ../src/browsers/playlist3-current-playlist-browser.c:1124
+#: ../src/browsers/playlist3-current-playlist-browser.c:1131
 msgid "Search Playlist"
 msgstr "Gelintar Senarai Main"
 
 #: ../src/browsers/playlist3-file-browser.c:117
-#: ../src/browsers/playlist3-file-browser.c:355
-#: ../src/browsers/playlist3-file-browser.c:1215
+#: ../src/browsers/playlist3-file-browser.c:367
+#: ../src/browsers/playlist3-file-browser.c:1209
 #: ../src/browsers/server-information.c:346
 msgid "Database"
-msgstr "Database"
+msgstr "Pengkalan Data"
 
 #: ../src/browsers/playlist3-file-browser.c:184
 msgid "Directories"
 msgstr "Direktori"
 
-#: ../src/browsers/playlist3-file-browser.c:233
+#: ../src/browsers/playlist3-file-browser.c:237
 msgid ""
 "It seems you have no music in your database.\n"
 "To add music, copy the music to your <i>music_directory</i> as specified in "
@@ -1092,157 +1032,123 @@ msgstr ""
 "ditentukan didalam fail config mpd anda..\n"
 "Selepas itu kemaskini database anda. (Server->Update Database)"
 
-#: ../src/browsers/playlist3-file-browser.c:264
-#, c-format
-msgid "Added folder '%s' recursively"
-msgstr "Telah menambahkan folder '%s' secara mengulang"
-
 #. add the replace widget
 #. replace the replace widget
 #. add the replace widget
 #. replace
 #. add the replace widget
-#: ../src/browsers/playlist3-file-browser.c:641
-#: ../src/browsers/playlist3-file-browser.c:939
-#: ../src/browsers/playlist3-file-browser.c:970
-#: ../src/browsers/playlist3-find2-browser.c:641
-#: ../src/browsers/playlist3-playlist-editor.c:727
+#: ../src/browsers/playlist3-file-browser.c:653
+#: ../src/browsers/playlist3-file-browser.c:950
+#: ../src/browsers/playlist3-file-browser.c:980
+#: ../src/browsers/playlist3-find2-browser.c:619
+#: ../src/browsers/playlist3-playlist-editor.c:733
 #: ../src/browsers/playlist3-playlist-editor.c:800
 #: ../src/browsers/playlist3-tag2-browser.c:405
-#: ../src/browsers/playlist3-tag2-browser.c:1135
+#: ../src/browsers/playlist3-tag2-browser.c:1173
 msgid "Replace"
 msgstr "Gantikan"
 
 #. add the update widget
-#: ../src/browsers/playlist3-file-browser.c:666
-#: ../src/browsers/playlist3-file-browser.c:928
+#: ../src/browsers/playlist3-file-browser.c:678
+#: ../src/browsers/playlist3-file-browser.c:940
 msgid "Update"
 msgstr "Kemaskini"
 
-#: ../src/browsers/playlist3-file-browser.c:784
-msgid "Loaded playlist"
-msgstr "Senarai main telah dimuat"
-
-#: ../src/browsers/playlist3-file-browser.c:1055
-#: ../src/browsers/playlist3-playlist-editor.c:533
-msgid "Added"
-msgstr "Ditambah"
-
-#: ../src/browsers/playlist3-file-browser.c:1057
-#: ../src/browsers/playlist3-playlist-editor.c:533
-msgid "song"
-msgid_plural "songs"
-msgstr[0] "lagu"
-msgstr[1] "lagu"
-
-#: ../src/browsers/playlist3-file-browser.c:1060
-msgid "directory"
-msgid_plural "directories"
-msgstr[0] "direktori"
-msgstr[1] "direktori"
-
-#: ../src/browsers/playlist3-file-browser.c:1063
-msgid "playlist"
-msgid_plural "playlists"
-msgstr[0] "senarai main"
-msgstr[1] "senarai main"
-
-#: ../src/browsers/playlist3-file-browser.c:1084
-#: ../src/browsers/playlist3-file-browser.c:1129
+#: ../src/browsers/playlist3-file-browser.c:1078
+#: ../src/browsers/playlist3-file-browser.c:1123
 msgid "Are you sure you want to clear the selected playlist?"
 msgstr "Adakah anda pasti ingin menjernihkan senarai main yang dipilih?"
 
-#: ../src/browsers/playlist3-file-browser.c:1422
+#: ../src/browsers/playlist3-file-browser.c:1416
 msgid "search database"
 msgstr "geladah database"
 
-#: ../src/browsers/playlist3-file-browser.c:1423
+#: ../src/browsers/playlist3-file-browser.c:1417
 msgid "Search database <query>"
 msgstr "Geladah database <pertanyaan>"
 
-#: ../src/browsers/playlist3-file-browser.c:1469
+#: ../src/browsers/playlist3-file-browser.c:1463
 msgid "Lookup directory in database"
 msgstr "Cari direktori didalam pengkalan data"
 
 #: ../src/browsers/playlist3-find2-browser.c:83
-#: ../src/vala/gmpc-test-plugin.c:1503
+#: ../src/vala/gmpc-metadata-editwindow.c:1751
 msgid "Query"
 msgstr "Pertanyaan"
 
-#: ../src/browsers/playlist3-find2-browser.c:315
-#: ../src/browsers/playlist3-find2-browser.c:706
+#: ../src/browsers/playlist3-find2-browser.c:309
+#: ../src/browsers/playlist3-find2-browser.c:684
 msgid "Search"
 msgstr "Carian"
 
-#: ../src/browsers/playlist3-find2-browser.c:360
+#: ../src/browsers/playlist3-find2-browser.c:356
 msgid "Search failed"
-msgstr "Carian gagal"
+msgstr "Gelintar gagal"
 
-#: ../src/browsers/playlist3-find2-browser.c:633
+#: ../src/browsers/playlist3-find2-browser.c:611
 msgid "Add all"
 msgstr "Tambah semua"
 
-#: ../src/browsers/playlist3-find2-browser.c:866
+#: ../src/browsers/playlist3-find2-browser.c:844
 msgid "switch search"
 msgstr "tukarkan carian"
 
-#: ../src/browsers/playlist3-find2-browser.c:867
+#: ../src/browsers/playlist3-find2-browser.c:845
 msgid "Switch to the search browser"
 msgstr "Tukar kepada pelayar carian"
 
-#: ../src/browsers/playlist3-find2-browser.c:901
+#: ../src/browsers/playlist3-find2-browser.c:879
 msgid "Search Browser"
 msgstr "Pelayar Carian"
 
-#: ../src/browsers/playlist3-playlist-editor.c:166
+#: ../src/browsers/playlist3-playlist-editor.c:179
 #: ../src/browsers/playlist3-playlist-editor.c:1232
 msgid "Playlist Editor"
 msgstr "Pengedit Senarai Main"
 
-#: ../src/browsers/playlist3-playlist-editor.c:342
-#: ../src/browsers/playlist3-playlist-editor.c:367
-#: ../src/browsers/playlist3-playlist-editor.c:1168
-#: ../src/browsers/playlist3-playlist-editor.c:1222
-#: ../src/vala/gmpc-favorites.c:143 ../src/vala/gmpc-favorites.c:165
-#: ../src/vala/gmpc-favorites.c:215 ../src/vala/gmpc-favorites.c:229
-#: ../src/vala/gmpc-favorites.c:394
+#: ../src/browsers/playlist3-playlist-editor.c:355
+#: ../src/browsers/playlist3-playlist-editor.c:380
+#: ../src/browsers/playlist3-playlist-editor.c:1164
+#: ../src/vala/gmpc-favorites.c:128 ../src/vala/gmpc-favorites.c:166
+#: ../src/vala/gmpc-favorites.c:253 ../src/vala/gmpc-favorites.c:289
+#: ../src/vala/gmpc-favorites.c:598
 msgid "Favorites"
 msgstr "Kegemaran"
 
-#: ../src/browsers/playlist3-playlist-editor.c:558
+#: ../src/browsers/playlist3-playlist-editor.c:564
 #, c-format
 msgid "Are you sure you want to clear the playlist: '%s'"
-msgstr ""
+msgstr "Anda pasti ingin mengosongkan senarai main: '%s'"
 
-#: ../src/browsers/playlist3-playlist-editor.c:598
+#: ../src/browsers/playlist3-playlist-editor.c:604
 #, c-format
 msgid "Are you sure you want to delete the playlist: '%s'"
-msgstr ""
+msgstr "Anda pasti ingin memadam senarai main: '%s'"
 
-#: ../src/browsers/playlist3-playlist-editor.c:635
+#: ../src/browsers/playlist3-playlist-editor.c:641
 msgid "New Playlist"
 msgstr "Senarai Main Baru"
 
-#: ../src/browsers/playlist3-playlist-editor.c:678
+#: ../src/browsers/playlist3-playlist-editor.c:684
 msgid "Rename Playlist"
 msgstr "Namakan kembali Senarai-main"
 
 #. delete
-#: ../src/browsers/playlist3-playlist-editor.c:685
+#: ../src/browsers/playlist3-playlist-editor.c:691
 #: ../src/browsers/playlist3-playlist-editor.c:821
 msgid "Rename"
 msgstr "Namakan semula"
 
-#: ../src/browsers/playlist3-playlist-editor.c:1049
+#: ../src/browsers/playlist3-playlist-editor.c:1045
 msgid "Playlists"
 msgstr "Senarai Main"
 
 #. Add
-#: ../src/browsers/playlist3-playlist-editor.c:1186
+#: ../src/browsers/playlist3-playlist-editor.c:1182
 msgid "Add to playlist"
 msgstr "Tambahkan kepada senarai main"
 
-#: ../src/browsers/playlist3-playlist-editor.c:1223
+#: ../src/browsers/playlist3-playlist-editor.c:1222
 msgid "Added playing song to favorites list."
 msgstr "Telah menambahkan lagu yang sedang bermain kepada senarai kegemaran."
 
@@ -1255,7 +1161,7 @@ msgstr "Tambah lagu sekarang kepada kegemaran"
 msgid "Tag based browser"
 msgstr "Pelayar berdasarkan label"
 
-#: ../src/browsers/playlist3-tag2-browser.c:1914
+#: ../src/browsers/playlist3-tag2-browser.c:1948
 msgid "Reset browser"
 msgstr "Mulakan balik pelayar"
 
@@ -1312,205 +1218,204 @@ msgstr "Jenis Label"
 msgid "Tag statistics"
 msgstr "Statistik label"
 
-#: ../src/browsers/gmpc-nowplaying2.c:395
-#: ../src/browsers/gmpc-nowplaying2.c:1801
+#: ../src/browsers/gmpc-nowplaying2.c:455
+#: ../src/browsers/gmpc-nowplaying2.c:2686
 msgid "Format"
 msgstr "Format"
 
-#: ../src/browsers/gmpc-nowplaying2.c:396
-#: ../src/browsers/gmpc-nowplaying2.c:1802
+#: ../src/browsers/gmpc-nowplaying2.c:458
+#: ../src/browsers/gmpc-nowplaying2.c:2689
 msgid "Channel"
 msgid_plural "Channels"
 msgstr[0] "Saluran"
 msgstr[1] "Saluran"
 
-#: ../src/browsers/gmpc-nowplaying2.c:1205
-#: ../src/browsers/gmpc-nowplaying2.c:2272
-#: ../src/Widgets/gmpc-metadata-text-label.c:151
-#: ../src/Widgets/gmpc-metadata-text-label.c:158
+#: ../src/browsers/gmpc-nowplaying2.c:1622
+#: ../src/browsers/gmpc-nowplaying2.c:3686
+#: ../src/Widgets/gmpc-metadata-text-label.c:183
+#: ../src/Widgets/gmpc-metadata-text-label.c:190
 msgid "Not available"
 msgstr "Tiada"
 
-#: ../src/browsers/gmpc-nowplaying2.c:1757
-#: ../src/browsers/gmpc-metadata-browser2.c:3063
+#: ../src/browsers/gmpc-nowplaying2.c:2596
+#: ../src/browsers/gmpc-metadata-browser2.c:4771
 #: ../src/gmpc-mpddata-treeview.gob:84 ../src/gmpc-mpddata-treeview.gob:676
 msgid "Genre"
 msgstr "Genre"
 
-#: ../src/browsers/gmpc-nowplaying2.c:1840
-#: ../src/browsers/gmpc-metadata-browser2.c:3082
+#: ../src/browsers/gmpc-nowplaying2.c:2770
+#: ../src/browsers/gmpc-metadata-browser2.c:4814
 msgid "Codec"
 msgstr "Kodek"
 
-#: ../src/browsers/gmpc-nowplaying2.c:1873
-#: ../src/browsers/gmpc-metadata-browser2.c:3099
+#: ../src/browsers/gmpc-nowplaying2.c:2833
+#: ../src/browsers/gmpc-metadata-browser2.c:4845
 msgid "Length"
 msgstr "Panjang"
 
-#: ../src/browsers/gmpc-nowplaying2.c:1919
+#: ../src/browsers/gmpc-nowplaying2.c:2922
 msgid "Track number"
 msgstr "Nombor trek"
 
-#: ../src/browsers/gmpc-nowplaying2.c:2106
-#: ../src/browsers/gmpc-nowplaying2.c:2111
-#: ../src/browsers/gmpc-metadata-browser2.c:3348
-#: ../src/browsers/gmpc-metadata-browser2.c:3353
-#: ../src/browsers/gmpc-metadata-browser2.c:5120
-#: ../src/browsers/gmpc-metadata-browser2.c:5125
+#: ../src/browsers/gmpc-nowplaying2.c:3365
+#: ../src/browsers/gmpc-nowplaying2.c:3374
+#: ../src/browsers/gmpc-metadata-browser2.c:5302
+#: ../src/browsers/gmpc-metadata-browser2.c:5308
+#: ../src/browsers/gmpc-metadata-browser2.c:8368
+#: ../src/browsers/gmpc-metadata-browser2.c:8374
 msgid "Similar Artist"
 msgstr "Artis Sama"
 
-#: ../src/browsers/gmpc-nowplaying2.c:2228
-#: ../src/browsers/gmpc-nowplaying2.c:2233
+#: ../src/browsers/gmpc-nowplaying2.c:3576
+#: ../src/browsers/gmpc-nowplaying2.c:3585
 msgid "Songs from album"
 msgstr "Lagu dari album"
 
-#: ../src/browsers/gmpc-nowplaying2.c:2363
+#: ../src/browsers/gmpc-nowplaying2.c:3877
 msgid "Other albums by"
 msgstr "Album lain oleh"
 
-#: ../src/browsers/gmpc-nowplaying2.c:2496
-#: ../src/browsers/gmpc-metadata-browser2.c:5330
+#: ../src/browsers/gmpc-nowplaying2.c:4157
+#: ../src/browsers/gmpc-metadata-browser2.c:8696
 msgid "No Album"
 msgstr "Tiada Album"
 
-#: ../src/browsers/gmpc-nowplaying2.c:2742
+#: ../src/browsers/gmpc-nowplaying2.c:4512
 msgid "Now Playing"
 msgstr "Sekarang Dimainkan"
 
-#: ../src/browsers/gmpc-nowplaying2.c:2824
+#: ../src/browsers/gmpc-nowplaying2.c:4621
 msgid "switch now playing"
 msgstr "tukar sekarang dimainkan"
 
-#: ../src/browsers/gmpc-nowplaying2.c:2825
+#: ../src/browsers/gmpc-nowplaying2.c:4622
 msgid "Switch to Now Playing"
 msgstr "Tukar ke Dimainkan Sekarang"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:674
+#: ../src/browsers/gmpc-metadata-browser2.c:794
 msgid "Search metadata"
-msgstr ""
+msgstr "Gelintar data meta"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:1741
-#: ../src/browsers/gmpc-metadata-browser2.c:3053
-#: ../src/browsers/gmpc-metadata-browser2.c:4079
-#: ../src/browsers/gmpc-metadata-browser2.c:4987
+#: ../src/browsers/gmpc-metadata-browser2.c:2546
+#: ../src/browsers/gmpc-metadata-browser2.c:4745
+#: ../src/browsers/gmpc-metadata-browser2.c:6630
+#: ../src/browsers/gmpc-metadata-browser2.c:8122
 #: ../src/gmpc-mpddata-treeview.gob:80 ../src/gmpc-mpddata-treeview.gob:650
-#: ../src/vala/gmpc-test-plugin.c:1440 ../src/Widgets/gmpc-song-list.c:198
-#: ../src/Widgets/gmpc-song-list.c:205
+#: ../src/vala/gmpc-metadata-editwindow.c:1614
+#: ../src/Widgets/gmpc-song-list.c:253 ../src/Widgets/gmpc-song-list.c:264
 msgid "Artist"
 msgstr "Artis"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:1808
+#: ../src/browsers/gmpc-metadata-browser2.c:2672
 msgid "Year"
 msgstr "Tahun"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:1870
-#: ../src/browsers/gmpc-metadata-browser2.c:4116
-#: ../src/browsers/gmpc-metadata-browser2.c:5010
+#: ../src/browsers/gmpc-metadata-browser2.c:2786
+#: ../src/browsers/gmpc-metadata-browser2.c:6697
+#: ../src/browsers/gmpc-metadata-browser2.c:8166
 msgid "Songs"
 msgstr "Lagu"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:3068
+#: ../src/browsers/gmpc-metadata-browser2.c:4784
 #: ../src/gmpc-mpddata-treeview.gob:89 ../src/gmpc-mpddata-treeview.gob:688
 msgid "Date"
 msgstr "Tarikh"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:3089
+#: ../src/browsers/gmpc-metadata-browser2.c:4828
 #: ../src/gmpc-mpddata-treeview.gob:97
 msgid "Directory"
 msgstr "Direktori"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:3141
-#: ../src/browsers/gmpc-metadata-browser2.c:4131
-#: ../src/browsers/gmpc-metadata-browser2.c:5025
+#: ../src/browsers/gmpc-metadata-browser2.c:4922
+#: ../src/browsers/gmpc-metadata-browser2.c:6725
+#: ../src/browsers/gmpc-metadata-browser2.c:8194
 msgid "Add the item to the play queue"
 msgstr "Tambah item ke baris gilir"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:3150
+#: ../src/browsers/gmpc-metadata-browser2.c:4936
 msgid "_Clear and play"
-msgstr ""
+msgstr "_Kosongkan dan main"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:3154
+#: ../src/browsers/gmpc-metadata-browser2.c:4942
 msgid "Replace the current play queue with this item"
 msgstr "Ganti baris gilir semasa dengan item ini"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:3170
+#: ../src/browsers/gmpc-metadata-browser2.c:4966
 msgid "Play this song"
-msgstr ""
+msgstr "Main lagu ini"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:3597
-#: ../src/browsers/gmpc-metadata-browser2.c:3688
+#: ../src/browsers/gmpc-metadata-browser2.c:5702
+#: ../src/browsers/gmpc-metadata-browser2.c:5895
 msgid "Show sidebar"
 msgstr "Papar palang sisi"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:3602
-#: ../src/browsers/gmpc-metadata-browser2.c:3682
+#: ../src/browsers/gmpc-metadata-browser2.c:5711
+#: ../src/browsers/gmpc-metadata-browser2.c:5884
 msgid "Hide sidebar"
 msgstr "Sembunyi palang sisi"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:3649
+#: ../src/browsers/gmpc-metadata-browser2.c:5805
 msgid "<b>Search:</b>"
 msgstr "<b>Gelintar:</b>"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:4100
-#: ../src/browsers/gmpc-metadata-browser2.c:4994
+#: ../src/browsers/gmpc-metadata-browser2.c:6667
+#: ../src/browsers/gmpc-metadata-browser2.c:8136
 msgid "Genres"
 msgstr "Genre"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:4108
-#: ../src/browsers/gmpc-metadata-browser2.c:5002
+#: ../src/browsers/gmpc-metadata-browser2.c:6682
+#: ../src/browsers/gmpc-metadata-browser2.c:8151
 msgid "Dates"
 msgstr "Tarikh"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:4124
-#: ../src/browsers/gmpc-metadata-browser2.c:5018
+#: ../src/browsers/gmpc-metadata-browser2.c:6712
+#: ../src/browsers/gmpc-metadata-browser2.c:8181
 msgid "Playtime"
 msgstr "Masa Main"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:4143
-#: ../src/browsers/gmpc-metadata-browser2.c:5037
+#: ../src/browsers/gmpc-metadata-browser2.c:6744
+#: ../src/browsers/gmpc-metadata-browser2.c:8213
 msgid "Replace the current play queue with this item and play"
-msgstr ""
+msgstr "Ganti baris gilir main semasa dengan item dan main ini"
 
-#. Fetch album info
-#: ../src/browsers/gmpc-metadata-browser2.c:4189
-#: ../src/browsers/gmpc-metadata-browser2.c:4194 ../src/Providers/LastFM.c:549
+#: ../src/browsers/gmpc-metadata-browser2.c:6833
+#: ../src/browsers/gmpc-metadata-browser2.c:6839
 msgid "Album information"
 msgstr "Informasi mengenai Album"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:4233
-#: ../src/browsers/gmpc-metadata-browser2.c:4238
-#: ../src/browsers/gmpc-metadata-browser2.c:5162
-#: ../src/browsers/gmpc-metadata-browser2.c:5167
+#: ../src/browsers/gmpc-metadata-browser2.c:6917
+#: ../src/browsers/gmpc-metadata-browser2.c:6923
+#: ../src/browsers/gmpc-metadata-browser2.c:8450
+#: ../src/browsers/gmpc-metadata-browser2.c:8456
 msgid "Song list"
 msgstr "Senarai lagu"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:4787
+#: ../src/browsers/gmpc-metadata-browser2.c:7732
 msgid "Open"
 msgstr "Buka"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:4801
+#: ../src/browsers/gmpc-metadata-browser2.c:7753
 msgid "Play album"
 msgstr "Mainkan album"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:4811
+#: ../src/browsers/gmpc-metadata-browser2.c:7769
 msgid "Add album to play-queue"
 msgstr "Tambah album ke main-baris gilir"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:5367
-#: ../src/browsers/gmpc-metadata-browser2.c:5372
+#: ../src/browsers/gmpc-metadata-browser2.c:8753
+#: ../src/browsers/gmpc-metadata-browser2.c:8759
 msgid "Albums"
 msgstr "Album"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:5831
+#: ../src/browsers/gmpc-metadata-browser2.c:9521
 msgid "Metadata Browser"
 msgstr "Pelayar Metadata"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:6805
+#: ../src/browsers/gmpc-metadata-browser2.c:11196
 msgid "switch metadata"
 msgstr "tukar data meta"
 
-#: ../src/browsers/gmpc-metadata-browser2.c:6806
+#: ../src/browsers/gmpc-metadata-browser2.c:11197
 msgid "Switch to Metadata view"
 msgstr "Tukar paparan data Meta"
 
@@ -1519,7 +1424,7 @@ msgid "Markup"
 msgstr "Tandakan"
 
 #: ../src/gmpc-mpddata-treeview.gob:82 ../src/gmpc-mpddata-treeview.gob:637
-#: ../src/vala/gmpc-test-plugin.c:1481
+#: ../src/vala/gmpc-metadata-editwindow.c:1696
 msgid "Title"
 msgstr "Tajuk"
 
@@ -1539,7 +1444,7 @@ msgstr "Pelaku"
 msgid "Duration"
 msgstr "Jangka masa"
 
-#: ../src/gmpc-mpddata-treeview.gob:91 ../src/Widgets/gmpc-song-list.c:347
+#: ../src/gmpc-mpddata-treeview.gob:91 ../src/Widgets/gmpc-song-list.c:451
 msgid "Disc"
 msgstr "Cakera"
 
@@ -1564,117 +1469,100 @@ msgid "Extension"
 msgstr "Tokokan"
 
 #. Add a tools menu item with the previously generated menu as submenu
-#: ../src/gmpc-mpddata-treeview.gob:965
+#: ../src/gmpc-mpddata-treeview.gob:1007
 msgid "Tools"
 msgstr "Peralatan"
 
-#: ../src/gmpc-mpddata-treeview.gob:994
+#: ../src/gmpc-mpddata-treeview.gob:1036
 msgid "Paste before"
 msgstr "Tampal sebelum"
 
-#: ../src/gmpc-mpddata-treeview.gob:1003
+#: ../src/gmpc-mpddata-treeview.gob:1045
 msgid "Paste after"
 msgstr "Tampal selepas"
 
 #. * Edit column
-#: ../src/gmpc-mpddata-treeview.gob:1035
+#: ../src/gmpc-mpddata-treeview.gob:1077
 msgid "Edit Columns"
 msgstr "Edit Ruangan"
 
-#: ../src/gmpc-profiles.gob:99
-msgid "Added profile"
-msgstr "Telah menambahkan profil"
-
-#. Generate removal message before the actual profile is destroyed
-#: ../src/gmpc-profiles.gob:426
-msgid "Removed profile"
-msgstr "Telah membuang profil"
-
-#: ../src/gmpc-meta-text-view.gob:98 ../src/gmpc-metaimage.gob:740
-#: ../src/Widgets/gmpc-metadata-text-label.c:271
+#: ../src/gmpc-meta-text-view.gob:97 ../src/gmpc-metaimage.gob:724
+#: ../src/Widgets/gmpc-metadata-text-label.c:337
 msgid "Refetch"
 msgstr "Mengambil semula"
 
-#: ../src/gmpc-meta-text-view.gob:103 ../src/gmpc-metaimage.gob:745
+#: ../src/gmpc-meta-text-view.gob:102 ../src/gmpc-metaimage.gob:729
 msgid "Select file"
 msgstr "Pilih fail"
 
-#: ../src/gmpc-meta-text-view.gob:112 ../src/gmpc-metaimage.gob:754
-#: ../src/vala/gmpc-test-plugin.c:1862
-#: ../src/Widgets/gmpc-metadata-text-label.c:281
-#: ../src/Widgets/gmpc-metadata-backdrop.c:356
+#: ../src/gmpc-meta-text-view.gob:111 ../src/gmpc-metaimage.gob:738
+#: ../src/Widgets/gmpc-metadata-text-label.c:353
+#: ../src/Widgets/gmpc-metadata-backdrop.c:546
 msgid "Metadata selector"
 msgstr "Pemilih Data Meta"
 
-#: ../src/gmpc-meta-text-view.gob:304
+#: ../src/gmpc-meta-text-view.gob:302
 msgid "Failed to open file:"
 msgstr "Gagal membuka fail:"
 
-#: ../src/gmpc-meta-text-view.gob:304
+#: ../src/gmpc-meta-text-view.gob:302
 msgid "because of encoding issues"
 msgstr "disebabkan isu encoding"
 
-#: ../src/gmpc-meta-text-view.gob:347
+#: ../src/gmpc-meta-text-view.gob:345
 msgid "Fetching Lyrics"
 msgstr "Memperoleh Lirik"
 
-#: ../src/gmpc-meta-text-view.gob:351
+#: ../src/gmpc-meta-text-view.gob:349
 msgid "Fetching Artist Info"
 msgstr "Mendapatkan Info Artis"
 
-#: ../src/gmpc-meta-text-view.gob:355
+#: ../src/gmpc-meta-text-view.gob:353
 msgid "Fetching Guitar tab"
 msgstr "Memperoleh tab Gitar"
 
-#: ../src/gmpc-meta-text-view.gob:359
+#: ../src/gmpc-meta-text-view.gob:357
 msgid "Fetching Album Info"
 msgstr "Mendapatkan Info Album"
 
-#: ../src/gmpc-meta-text-view.gob:370
+#: ../src/gmpc-meta-text-view.gob:368
 msgid "Not Available"
 msgstr "Tidak Ada"
 
-#: ../src/gmpc-meta-text-view.gob:436 ../src/gmpc-metaimage.gob:793
+#: ../src/gmpc-meta-text-view.gob:438 ../src/gmpc-metaimage.gob:770
 msgid "Select File"
 msgstr "Pilih Fail"
 
-#: ../src/gmpc-meta-text-view.gob:441
+#: ../src/gmpc-meta-text-view.gob:443
 msgid "Text Document"
 msgstr "Dokumen Teks"
 
-#: ../src/gmpc-meta-text-view.gob:445 ../src/gmpc-metaimage.gob:803
+#: ../src/gmpc-meta-text-view.gob:447 ../src/gmpc-metaimage.gob:780
 msgid "All"
 msgstr "Semua"
 
-#: ../src/gmpc-metaimage.gob:798
+#: ../src/gmpc-metaimage.gob:775
 msgid "Images"
 msgstr "Imej"
 
-#: ../src/gmpc-stats-label.gob:106 ../src/gmpc-stats-label.gob:128
-msgid "n/a"
-msgstr "Tiada"
-
-#: ../src/gmpc-stats-label.gob:141
-msgid "Loading"
-msgstr "Memuat"
-
-#: ../src/vala/gmpc-easy-command.c:93
+#: ../src/vala/gmpc-easy-command.c:94
 msgid "Gmpc Easy Command"
 msgstr "Perintah Mudah Gmpc"
 
-#: ../src/vala/gmpc-easy-command.c:846
-msgid "Easy Command help"
+#: ../src/vala/gmpc-easy-command.c:1407
+#, fuzzy
+msgid "EasyCommand commands"
 msgstr "Bantuan Perintah Mudah"
 
-#: ../src/vala/gmpc-easy-command.c:880
+#: ../src/vala/gmpc-easy-command.c:1455
 msgid "Command"
 msgstr "Perintah"
 
-#: ../src/vala/gmpc-easy-command.c:893
+#: ../src/vala/gmpc-easy-command.c:1479
 msgid "Usage"
 msgstr "Penggunaan"
 
-#: ../src/vala/gmpc-easy-command.c:899
+#: ../src/vala/gmpc-easy-command.c:1489
 msgid ""
 "The following commands can be used in the easy command window.\n"
 "The easy command window can be opened by pressing ctrl-space"
@@ -1682,75 +1570,79 @@ msgstr ""
 "Perintah berikut boleh digunakan pada tetingkap perintah mudah.\n"
 "Tetingkap perintah mudah boleh dibuka dengan menekan kekunci ctrl-space"
 
-#: ../src/vala/gmpc-easy-command.c:978
+#: ../src/vala/gmpc-easy-command.c:1616
 msgid "Help"
 msgstr "Bantuan"
 
-#: ../src/vala/gmpc-easy-command.c:979
+#: ../src/vala/gmpc-easy-command.c:1617
 msgid "Get a list of available commands"
 msgstr "Dapatkan senarai perintah"
 
-#: ../src/vala/gmpc-test-plugin.c:167 ../src/vala/gmpc-test-plugin.c:327
+#: ../src/vala/gmpc-metadata-editwindow.c:166
+#: ../src/vala/gmpc-metadata-editwindow.c:403
 msgid "Provider"
 msgstr "Penyedia"
 
-#: ../src/vala/gmpc-test-plugin.c:181
+#: ../src/vala/gmpc-metadata-editwindow.c:186
 msgid "Filetype"
 msgstr "Jenis Fail"
 
-#: ../src/vala/gmpc-test-plugin.c:200 ../src/vala/gmpc-test-plugin.c:219
+#: ../src/vala/gmpc-metadata-editwindow.c:217
+#: ../src/vala/gmpc-metadata-editwindow.c:246
 msgid "Size"
 msgstr "Saiz"
 
-#: ../src/vala/gmpc-test-plugin.c:203 ../src/vala/gmpc-test-plugin.c:222
+#: ../src/vala/gmpc-metadata-editwindow.c:224
+#: ../src/vala/gmpc-metadata-editwindow.c:253
 msgid "width x height"
 msgstr "lebar x tinggi"
 
-#: ../src/vala/gmpc-test-plugin.c:204
+#: ../src/vala/gmpc-metadata-editwindow.c:225
 msgid "high-res image will be downloaded"
 msgstr "imej resolusi-tinggi akan dimuat turun"
 
-#: ../src/vala/gmpc-test-plugin.c:267 ../src/vala/gmpc-test-plugin.c:353
+#: ../src/vala/gmpc-metadata-editwindow.c:326
+#: ../src/vala/gmpc-metadata-editwindow.c:436
 msgid "Set"
 msgstr "Tetap"
 
-#: ../src/vala/gmpc-test-plugin.c:1395
+#: ../src/vala/gmpc-metadata-editwindow.c:1537
 msgid "Insufficient information to store/fetch this metadata"
 msgstr "Maklumat tidak mencukupi untuk menyimpan/peroleh data meta ini"
 
-#: ../src/vala/gmpc-test-plugin.c:1410
+#: ../src/vala/gmpc-metadata-editwindow.c:1558
 msgid "Artist art"
 msgstr "Seni artis"
 
-#: ../src/vala/gmpc-test-plugin.c:1412
+#: ../src/vala/gmpc-metadata-editwindow.c:1561
 msgid "Album art"
 msgstr "Seni album"
 
-#: ../src/vala/gmpc-test-plugin.c:1414
+#: ../src/vala/gmpc-metadata-editwindow.c:1564
 msgid "Song lyrics"
 msgstr "Lirik lagu"
 
-#: ../src/vala/gmpc-test-plugin.c:1416
+#: ../src/vala/gmpc-metadata-editwindow.c:1567
 msgid "Album Info"
 msgstr "Maklumat album"
 
-#: ../src/vala/gmpc-test-plugin.c:1418
+#: ../src/vala/gmpc-metadata-editwindow.c:1570
 msgid "Artist Biography"
 msgstr "Biografi Artis"
 
-#: ../src/vala/gmpc-test-plugin.c:1420
+#: ../src/vala/gmpc-metadata-editwindow.c:1573
 msgid "Guitar Tab"
 msgstr "Tab Gitar"
 
-#: ../src/vala/gmpc-test-plugin.c:1914
-msgid "Edit metadata current song"
-msgstr "Sunting data meta lagu semasa"
+#: ../src/vala/gmpc-metadata-editwindow.c:1576
+msgid "Backdrop"
+msgstr ""
 
-#: ../src/Tools/gmpc-database-update-tracker.c:101
+#: ../src/Tools/gmpc-database-update-tracker.c:113
 msgid "MPD is rescanning the database"
 msgstr "MPD sedang mengimbas semula pengkalan data"
 
-#: ../src/Tools/gmpc-database-update-tracker.c:165
+#: ../src/Tools/gmpc-database-update-tracker.c:196
 msgid "MPD Database has been updated at:"
 msgstr "Pengkalan Data MPD telah dikemaskini di:"
 
@@ -1801,187 +1693,195 @@ msgstr "Main balik akan dihentikan selepas lagu yang sedang dimainkan."
 
 #. Player control
 #. basic playlist commands
-#: ../src/Tools/mpd-easy-commands.c:365 ../src/Tools/mpd-easy-commands.c:406
+#: ../src/Tools/mpd-easy-commands.c:373 ../src/Tools/mpd-easy-commands.c:419
 msgid "play"
 msgstr "main"
 
-#: ../src/Tools/mpd-easy-commands.c:365
+#: ../src/Tools/mpd-easy-commands.c:373
 msgid "start playback"
 msgstr "mulakan main balik"
 
-#: ../src/Tools/mpd-easy-commands.c:368
+#: ../src/Tools/mpd-easy-commands.c:376
 msgid "pause"
 msgstr "berhenti untuk sejenak"
 
-#: ../src/Tools/mpd-easy-commands.c:368
+#: ../src/Tools/mpd-easy-commands.c:376
 msgid "pause playback"
 msgstr "hentikan main balik untuk sejenak"
 
-#: ../src/Tools/mpd-easy-commands.c:371
+#: ../src/Tools/mpd-easy-commands.c:379
 msgid "next"
 msgstr "seterusnya"
 
-#: ../src/Tools/mpd-easy-commands.c:371
+#: ../src/Tools/mpd-easy-commands.c:379
 msgid "next song"
 msgstr "lagu seterusnya"
 
-#: ../src/Tools/mpd-easy-commands.c:374
+#: ../src/Tools/mpd-easy-commands.c:382
 msgid "prev"
 msgstr "sebelum ini"
 
-#: ../src/Tools/mpd-easy-commands.c:374
+#: ../src/Tools/mpd-easy-commands.c:382
 msgid "previous song"
 msgstr "sebelum lagu ini"
 
-#: ../src/Tools/mpd-easy-commands.c:377
+#: ../src/Tools/mpd-easy-commands.c:385
 msgid "stop"
 msgstr "henti"
 
-#: ../src/Tools/mpd-easy-commands.c:377
+#: ../src/Tools/mpd-easy-commands.c:385
 msgid "stop playback"
 msgstr "hentikan main balik"
 
-#: ../src/Tools/mpd-easy-commands.c:381
+#: ../src/Tools/mpd-easy-commands.c:390
+msgid "reset playmode"
+msgstr ""
+
+#: ../src/Tools/mpd-easy-commands.c:392
+msgid "Reset the play mode."
+msgstr ""
+
+#: ../src/Tools/mpd-easy-commands.c:394
 msgid "random"
 msgstr "rambang"
 
-#: ../src/Tools/mpd-easy-commands.c:381
+#: ../src/Tools/mpd-easy-commands.c:394
 msgid "Random (on|off)"
 msgstr "rambang (buka|tutup)"
 
-#: ../src/Tools/mpd-easy-commands.c:383
+#: ../src/Tools/mpd-easy-commands.c:396
 msgid "repeat"
 msgstr "semula"
 
-#: ../src/Tools/mpd-easy-commands.c:383
+#: ../src/Tools/mpd-easy-commands.c:396
 msgid "Repeat (on|off)"
 msgstr "Semula (buka|tutup)"
 
-#: ../src/Tools/mpd-easy-commands.c:386
+#: ../src/Tools/mpd-easy-commands.c:399
 msgid "single"
 msgstr "tunggal"
 
-#: ../src/Tools/mpd-easy-commands.c:386
+#: ../src/Tools/mpd-easy-commands.c:399
 msgid "Single (on|off)"
 msgstr "Tunggal (aktif|mati)"
 
-#: ../src/Tools/mpd-easy-commands.c:388
+#: ../src/Tools/mpd-easy-commands.c:401
 msgid "consume"
 msgstr "guna"
 
-#: ../src/Tools/mpd-easy-commands.c:388
+#: ../src/Tools/mpd-easy-commands.c:401
 msgid "Consume (on|off)"
 msgstr "Guna (aktif|mati)"
 
 #. volume commands
-#: ../src/Tools/mpd-easy-commands.c:392
+#: ../src/Tools/mpd-easy-commands.c:405
 msgid "volume"
 msgstr "kekuatan bunyi"
 
-#: ../src/Tools/mpd-easy-commands.c:392
+#: ../src/Tools/mpd-easy-commands.c:405
 msgid "Volume (+-)<level>"
 msgstr "Volum (+-)<aras>"
 
-#: ../src/Tools/mpd-easy-commands.c:394
+#: ../src/Tools/mpd-easy-commands.c:407
 msgid "mute"
 msgstr "senyapkans"
 
-#: ../src/Tools/mpd-easy-commands.c:397
+#: ../src/Tools/mpd-easy-commands.c:410
 msgid "crossfade"
 msgstr "lenyap silang"
 
-#: ../src/Tools/mpd-easy-commands.c:398
+#: ../src/Tools/mpd-easy-commands.c:411
 msgctxt "Regex for matching crossfade, translate off"
 msgid "([0-9]+|Off)"
 msgstr "([0-9]+|Mati)"
 
-#: ../src/Tools/mpd-easy-commands.c:399
+#: ../src/Tools/mpd-easy-commands.c:412
 msgid "Set Crossfade <seconds>"
 msgstr "Tetap Lenyap Silang <saat>"
 
-#: ../src/Tools/mpd-easy-commands.c:401
+#: ../src/Tools/mpd-easy-commands.c:414
 msgid "output"
 msgstr "output"
 
-#: ../src/Tools/mpd-easy-commands.c:402
+#: ../src/Tools/mpd-easy-commands.c:415
 msgctxt "Regex for matching output"
 msgid "[0-9]+[ ]*(Enable|Disable|Select|)"
 msgstr "[0-9]+[ ]*(Benar|Lumpuh|Pilih|)"
 
-#: ../src/Tools/mpd-easy-commands.c:403
+#: ../src/Tools/mpd-easy-commands.c:416
 msgid "output X enable or disable or select"
 msgstr "output X dibenarkan atau dilumpuhkan atau pilih"
 
-#: ../src/Tools/mpd-easy-commands.c:406
+#: ../src/Tools/mpd-easy-commands.c:419
 msgid "Play <query>"
 msgstr "Main <pertanyaan>"
 
-#: ../src/Tools/mpd-easy-commands.c:408
+#: ../src/Tools/mpd-easy-commands.c:421
 msgid "add"
 msgstr "tambah"
 
-#: ../src/Tools/mpd-easy-commands.c:408
+#: ../src/Tools/mpd-easy-commands.c:421
 msgid "Add <query>"
 msgstr "Tambah <pertanyaan>"
 
-#: ../src/Tools/mpd-easy-commands.c:410
+#: ../src/Tools/mpd-easy-commands.c:423
 msgid "replace"
 msgstr "gantikan"
 
-#: ../src/Tools/mpd-easy-commands.c:410
+#: ../src/Tools/mpd-easy-commands.c:423
 msgid "Replace <query>"
 msgstr "Gantikan <pertanyaan>"
 
 #. Basic seek commands
-#: ../src/Tools/mpd-easy-commands.c:414
+#: ../src/Tools/mpd-easy-commands.c:427
 msgid "seek"
 msgstr "jangkau"
 
-#: ../src/Tools/mpd-easy-commands.c:414
+#: ../src/Tools/mpd-easy-commands.c:427
 msgid "Seek within the current song"
 msgstr "Jangkau dalam lagu semasa"
 
-#: ../src/Tools/mpd-easy-commands.c:418
+#: ../src/Tools/mpd-easy-commands.c:431
 msgid "stop after current song"
 msgstr "henti selepas lagu semasa"
 
-#: ../src/Tools/mpd-easy-commands.c:420
+#: ../src/Tools/mpd-easy-commands.c:433
 msgid "Stop playback after the current song"
 msgstr "Henti main balik selepas lagu semasa"
 
-#: ../src/Tools/mpd-easy-commands.c:424
+#: ../src/Tools/mpd-easy-commands.c:437
 msgid "repeat current song"
 msgstr "ulang lagu semasa"
 
-#: ../src/Tools/mpd-easy-commands.c:426
+#: ../src/Tools/mpd-easy-commands.c:439
 msgid "Repeat the current song"
 msgstr "Ulang lagu semasa"
 
-#: ../src/Tools/mpd-easy-commands.c:430
+#: ../src/Tools/mpd-easy-commands.c:443
 msgid "update database"
 msgstr "kemaskini pengkalan data"
 
-#: ../src/Tools/mpd-easy-commands.c:432
+#: ../src/Tools/mpd-easy-commands.c:445
 msgid "Update the database"
 msgstr "Kemaskini pengkalan data"
 
-#: ../src/Tools/mpd-easy-commands.c:436
+#: ../src/Tools/mpd-easy-commands.c:449
 msgid "disconnect"
 msgstr "diputuskan"
 
-#: ../src/Tools/mpd-easy-commands.c:438
+#: ../src/Tools/mpd-easy-commands.c:451
 msgid "disconnect from MPD"
 msgstr "diputuskan dari MPD"
 
-#: ../src/Tools/mpd-easy-commands.c:441 ../src/Tools/mpd-easy-commands.c:445
+#: ../src/Tools/mpd-easy-commands.c:454 ../src/Tools/mpd-easy-commands.c:458
 msgid "connect"
 msgstr "sambung"
 
-#: ../src/Tools/mpd-easy-commands.c:443
+#: ../src/Tools/mpd-easy-commands.c:456
 msgid "connect to MPD"
 msgstr "sambung ke MPD"
 
-#: ../src/Tools/mpd-easy-commands.c:447
+#: ../src/Tools/mpd-easy-commands.c:460
 msgid "connect to MPD using profile"
 msgstr "sambung ke MPD menggunakn profil"
 
@@ -1990,13 +1890,13 @@ msgid "Proxy"
 msgstr "Proxy"
 
 #. Basic dialog with a close button
-#: ../src/Tools/bug-information.c:263
+#: ../src/Tools/bug-information.c:242
 msgid "Bug information"
 msgstr "Maklumat pepijat"
 
 #: ../src/Tools/setup-assistant.c:99
 msgid "GMPC - First start assistant"
-msgstr ""
+msgstr "GMPC - Pembantu Permulaan Kali Pertama"
 
 #: ../src/Tools/setup-assistant.c:113
 msgid ""
@@ -2037,33 +1937,38 @@ msgstr "Tetapan Pelayan"
 msgid "Connection"
 msgstr "Sambungan"
 
-#: ../src/Tools/mpdinteraction.c:193
+#: ../src/Tools/mpdinteraction.c:198
 msgid "Connecting"
 msgstr "Disambungkan"
 
+#: ../src/Tools/mpdinteraction.c:872
+#, fuzzy
+msgid "Select the music directory"
+msgstr "Direktori Muzik:"
+
 #. Add all from album
-#: ../src/Tools/mpdinteraction.c:1307
+#: ../src/Tools/mpdinteraction.c:1357
 msgid "All from album"
 msgstr "Semua dari album"
 
 #. Add all from artist
-#: ../src/Tools/mpdinteraction.c:1320
+#: ../src/Tools/mpdinteraction.c:1370
 msgid "All from artist"
 msgstr "Semua dari artis"
 
 #. Add all from genre
-#: ../src/Tools/mpdinteraction.c:1331
+#: ../src/Tools/mpdinteraction.c:1381
 msgid "All from genre"
 msgstr "Semua dari aliran"
 
 #. Add all from file
-#: ../src/Tools/mpdinteraction.c:1339
+#: ../src/Tools/mpdinteraction.c:1389
 msgid "All from same directory"
 msgstr "Semuar dari direktori sama"
 
 #. Create sub menu
 #. Add
-#: ../src/Tools/mpdinteraction.c:1348
+#: ../src/Tools/mpdinteraction.c:1398
 msgid "Add more"
 msgstr "Tambah lebih"
 
@@ -2075,61 +1980,67 @@ msgstr "Gagal membuka fail setempat"
 msgid "Uri scheme not supported"
 msgstr "Skema Uri tidak disokong"
 
-#: ../src/Tools/mm-keys.c:73
+#: ../src/Tools/mm-keys.c:75
 msgid "PlayPause"
 msgstr "MainBerhentiSejenak"
 
 #. * MM_STOP
-#: ../src/Tools/mm-keys.c:77
+#: ../src/Tools/mm-keys.c:79
 msgid "Fast Forward"
 msgstr "Kedepan"
 
 #. * MM_FASTFORWARD
-#: ../src/Tools/mm-keys.c:78
+#: ../src/Tools/mm-keys.c:80
 msgid "Fast Backward"
 msgstr "Kebelakang"
 
 #. * MM_RANDOM
-#: ../src/Tools/mm-keys.c:81
+#: ../src/Tools/mm-keys.c:83
 msgid "Raise window"
 msgstr "Naikkan window"
 
 #. * MM_RAISE
-#: ../src/Tools/mm-keys.c:82
+#: ../src/Tools/mm-keys.c:84
 msgid "Hide window"
 msgstr "Sembunyikan window"
 
 #. * MM_HIDE
-#: ../src/Tools/mm-keys.c:83
+#: ../src/Tools/mm-keys.c:85
 msgid "Toggle window"
 msgstr "Selaraskan window"
 
 #. * MM_TOGGLE_HIDDEN
-#: ../src/Tools/mm-keys.c:84
+#: ../src/Tools/mm-keys.c:86
 msgid "Volume Up"
 msgstr "Naik Bunyi"
 
 #. * MM_VOLUME_UP
-#: ../src/Tools/mm-keys.c:85
+#: ../src/Tools/mm-keys.c:87
 msgid "Volume Down"
 msgstr "Rendahkan bunyi"
 
 #. * MM_VOLUME_DOWN
-#: ../src/Tools/mm-keys.c:86
+#: ../src/Tools/mm-keys.c:88
 msgid "Show song"
 msgstr "Tunjukkan lagu"
 
 #. * MM_SHOW_NOTIFICATION
-#: ../src/Tools/mm-keys.c:87
+#: ../src/Tools/mm-keys.c:89
 msgid "Toggle Mute"
 msgstr "Selaraskan kesenyapan"
 
 #. * MM_TOGGLE_MUTE
-#: ../src/Tools/mm-keys.c:88
+#: ../src/Tools/mm-keys.c:90
 msgid "Show easy command entry"
 msgstr "Tunjukkan entri arahan senang"
 
-#: ../src/Tools/mm-keys.c:303
+#. * MM_PLAY
+#: ../src/Tools/mm-keys.c:92
+#, fuzzy
+msgid "Pause"
+msgstr "berhenti untuk sejenak"
+
+#: ../src/Tools/mm-keys.c:315
 msgid ""
 "Could not grab the following multimedia keys:\n"
 "\n"
@@ -2137,7 +2048,7 @@ msgstr ""
 "Tidak dapat mengambil kunci-kunci multimedia berikut:\n"
 "\n"
 
-#: ../src/Tools/mm-keys.c:316
+#: ../src/Tools/mm-keys.c:328
 msgid ""
 "\n"
 "Ensure that your window manager (or other applications) have not already "
@@ -2147,7 +2058,7 @@ msgstr ""
 "Pastikan pengurus window anda (atau aplikasi lain) belum mengguna kunci ini "
 "untuk fungsi lain, selepasa itu mulakan balik gmpc."
 
-#: ../src/Tools/mm-keys.c:325
+#: ../src/Tools/mm-keys.c:337
 msgid ""
 "Duplicate mapping(s) detected\n"
 "\n"
@@ -2160,11 +2071,11 @@ msgstr ""
 "Sila melawat balik ke tetapan dan memastikan tetapan anda sekarang adalah "
 "betul."
 
-#: ../src/Tools/mm-keys.c:470
+#: ../src/Tools/mm-keys.c:482
 msgid "Multimedia Keys"
 msgstr "Kunci-kunci Multimedia"
 
-#: ../src/Tools/mm-keys.c:523
+#: ../src/Tools/mm-keys.c:544
 #, c-format
 msgid ""
 "Duplicate mapping detected\n"
@@ -2175,7 +2086,7 @@ msgstr ""
 "\n"
 "%s sudah dipeta kepada %s"
 
-#: ../src/Tools/mm-keys.c:547
+#: ../src/Tools/mm-keys.c:568
 #, c-format
 msgid ""
 "Could not grab multimedia key:\n"
@@ -2192,11 +2103,11 @@ msgstr ""
 "Pastikan pengurus window anda (atau aplikasi lain) belum mengguna kunci ini "
 "untuk fungsi lain, selepasa itu mulakan balik gmpc."
 
-#: ../src/Tools/mm-keys.c:602
+#: ../src/Tools/mm-keys.c:623
 msgid "Action"
 msgstr "Tindakan"
 
-#: ../src/Tools/mm-keys.c:614
+#: ../src/Tools/mm-keys.c:635
 msgid "Shortcut"
 msgstr "Jalan pintas"
 
@@ -2204,70 +2115,65 @@ msgstr "Jalan pintas"
 msgid "Total time"
 msgstr "Jumlah masa"
 
-#: ../src/Tools/misc.c:60
+#: ../src/Tools/misc.c:60 ../src/Tools/misc.c:97
 msgid "day"
 msgid_plural "days"
 msgstr[0] "hari"
 msgstr[1] "hari-hari"
 
-#: ../src/Tools/misc.c:64
+#: ../src/Tools/misc.c:64 ../src/Tools/misc.c:105
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] "jam"
 msgstr[1] "jam"
 
-#: ../src/Tools/misc.c:68
+#: ../src/Tools/misc.c:68 ../src/Tools/misc.c:113
 msgid "minute"
 msgid_plural "minutes"
 msgstr[0] "minit"
 msgstr[1] "minit"
 
-#: ../src/Tools/misc.c:72
+#: ../src/Tools/misc.c:72 ../src/Tools/misc.c:121
 msgid "second"
 msgid_plural "seconds"
 msgstr[0] "saat"
 msgstr[1] "saat"
 
-#: ../src/Tools/misc.c:339
+#: ../src/Tools/misc.c:389
 msgid "Failed to execute"
 msgstr "Gagal menjalankan"
 
-#: ../src/Widgets/gmpc-metadata-similarartists.c:210
-#: ../src/Widgets/gmpc-metadata-similarsongs.c:532
-#: ../src/Widgets/gmpc-metadata-similarsongs.c:593
-#: ../src/Widgets/gmpc-metadata-similarsongs.c:619
+#: ../src/Widgets/gmpc-metadata-similarartists.c:288
+#: ../src/Widgets/gmpc-metadata-similarsongs.c:758
+#: ../src/Widgets/gmpc-metadata-similarsongs.c:853
+#: ../src/Widgets/gmpc-metadata-similarsongs.c:891
 msgid "Unavailable"
 msgstr "Tiada"
 
-#: ../src/Widgets/gmpc-metadata-similarartists.c:220
+#: ../src/Widgets/gmpc-metadata-similarartists.c:304
 msgid "Fetching"
 msgstr "Memperoleh"
 
-#: ../src/Widgets/gmpc-metadata-similarsongs.c:384
+#: ../src/Widgets/gmpc-metadata-similarsongs.c:515
 msgid "_Replace"
 msgstr "_Ganti"
 
-#: ../src/Widgets/gmpc-metadata-similarsongs.c:578
+#: ../src/Widgets/gmpc-metadata-similarsongs.c:828
 msgid "Fetching .. "
 msgstr "Memperoleh .. "
 
-#: ../src/Widgets/advanced_settings.c:225
-#: ../src/Widgets/advanced_settings.c:230
+#: ../src/Widgets/advanced_settings.c:328
+#: ../src/Widgets/advanced_settings.c:336
 msgid "Browsers"
 msgstr "Pelayar"
 
-#: ../src/Widgets/GmpcVolume.c:294 ../src/Widgets/GmpcVolume.c:304
+#: ../src/Widgets/GmpcVolume.c:601 ../src/Widgets/GmpcVolume.c:612
 msgid "Volume"
 msgstr "Volum"
 
-#: ../src/Widgets/GmpcVolume.c:305
+#: ../src/Widgets/GmpcVolume.c:613
 msgid "Muted"
 msgstr "Dibisukan"
-
-#: ../src/Widgets/gmpc-song-links.c:531
-#, c-format
-msgid "Lookup %s on %s"
-msgstr "Periksa %s pada %s"
 
 #: ../src/Widgets/playlist3-messages.c:36
 msgid "Info"
@@ -2283,7 +2189,7 @@ msgstr "Kritikal"
 
 #: ../src/Widgets/playlist3-messages.c:39
 msgid "User question"
-msgstr ""
+msgstr "Pertanyaan pengguna"
 
 #: ../src/Widgets/playlist3-messages.c:335
 msgid "Time"
@@ -2293,93 +2199,265 @@ msgstr "Masa"
 msgid "Message"
 msgstr "Mesej"
 
-#: ../src/Widgets/gmpc-metadata-text-label.c:132
+#: ../src/Widgets/gmpc-metadata-text-label.c:162
 #, c-format
 msgid "Error reading file: %s"
 msgstr "Ralat membaca fail: %s"
 
-#: ../src/Widgets/gmpc-metadata-text-label.c:211
-#: ../src/Widgets/gmpc-metadata-text-label.c:339
+#: ../src/Widgets/gmpc-metadata-text-label.c:257
+#: ../src/Widgets/gmpc-metadata-text-label.c:436
 msgid "Fetching..."
 msgstr "Mendapat..."
 
-#: ../src/GUI/status_icon.c:42
+#: ../src/Widgets/gmpc-metadata-backdrop.c:532
+msgid "Refresh backdrop"
+msgstr ""
+
+#: ../src/Widgets/gmpc-profiles.c:417
+msgid "Added profile"
+msgstr "Telah menambahkan profil"
+
+#: ../src/Widgets/gmpc-profiles.c:1117
+msgid "Removed profile"
+msgstr "Telah membuang profil"
+
+#: ../src/Widgets/gmpc-stats-label.c:335 ../src/Widgets/gmpc-stats-label.c:437
+#: ../src/Plugins/sidebar-play-queue-time.c:198
+msgid "n/a"
+msgstr "Tiada"
+
+#: ../src/Widgets/gmpc-stats-label.c:460
+msgid "Loading"
+msgstr "Memuat"
+
+#: ../src/GUI/status_icon.c:43
 msgid "Single Mode enabled"
 msgstr "Mod Tunggal dibenarkan"
 
-#: ../src/GUI/status_icon.c:46
+#: ../src/GUI/status_icon.c:47
 msgid "Single Mode disabled"
 msgstr "Mod Tunggal dilumpuhkan"
 
-#: ../src/GUI/status_icon.c:55
+#: ../src/GUI/status_icon.c:56
 msgid "Consume Mode enabled"
 msgstr "Mod Guna dibenarkan"
 
-#: ../src/GUI/status_icon.c:59
+#: ../src/GUI/status_icon.c:60
 msgid "Consume Mode disabled"
 msgstr "Mod Guna dilumpuhkan"
 
-#: ../src/GUI/status_icon.c:68
+#: ../src/GUI/status_icon.c:69
 msgid "Repeat enabled"
 msgstr "Ulang dibenarkan"
 
-#: ../src/GUI/status_icon.c:72
+#: ../src/GUI/status_icon.c:73
 msgid "Repeat disabled"
 msgstr "Ulang dilumpuhkan"
 
-#: ../src/GUI/status_icon.c:81
+#: ../src/GUI/status_icon.c:82
 msgid "Random enabled"
 msgstr "Rawak dibenarkan"
 
-#: ../src/GUI/status_icon.c:85
+#: ../src/GUI/status_icon.c:86
 msgid "Random disabled"
 msgstr "Rawak dilumpuhkan"
 
-#: ../src/GUI/title_header.c:93
+#: ../src/GUI/title_header.c:94
 msgid "By"
 msgstr "Oleh"
 
-#: ../src/GUI/title_header.c:98
+#: ../src/GUI/title_header.c:99
 msgid "From"
 msgstr "Daripada"
 
-#: ../src/GUI/title_header.c:175
+#: ../src/GUI/title_header.c:176
 msgid "Not Playing"
 msgstr "Tidak Memainkan"
 
-#. Fetch artist art
-#: ../src/Providers/LastFM.c:521
-msgid "Artist images"
-msgstr "Imej artis"
+#: ../src/GUI/title_header.c:185
+msgid "Not Connected"
+msgstr "Tidak disambung"
 
-#. Fetch artist text
-#: ../src/Providers/LastFM.c:528
-msgid "Artist biography"
-msgstr "Biografi artis"
+#: ../src/Plugins/AutoMPD.c:235
+msgid "Local (started by GMPC) MPD is running"
+msgstr ""
 
-#. Fetch similar artists
-#: ../src/Providers/LastFM.c:535
-msgid "Similar artists"
-msgstr "Artis serupa"
+#: ../src/Plugins/AutoMPD.c:1083
+#, fuzzy
+msgid "Auto MPD"
+msgstr "Automatik"
 
-#. Fetch album art
-#: ../src/Providers/LastFM.c:542
-msgid "Album cover"
-msgstr "Kulit album"
+#: ../src/Plugins/AutoMPD.c:1323
+msgid "Auto MPD failed to create autostart file."
+msgstr ""
 
-#. Fetch similar songs
-#: ../src/Providers/LastFM.c:556
-msgid "Similar songs"
-msgstr "Lagu serupa"
+#: ../src/Plugins/AutoMPD.c:1805
+msgid "Auto MPD's settings have changed, restart MPD to apply changes"
+msgstr ""
 
-#. Fetch similar genre
-#: ../src/Providers/LastFM.c:563
-msgid "Similar genres"
-msgstr "Genre serupa"
+#: ../src/Plugins/sidebar-play-queue-time.c:174
+#, fuzzy
+msgid "(estimation)"
+msgstr "(Jangkaan)"
 
-#: ../src/Providers/LastFM.c:867
-msgid "Last FM metadata fetcher (internal)"
-msgstr "Pengambil data meta Last FM (dalaman)"
+#: ../src/Plugins/ExternalCommand.c:224
+#, fuzzy
+msgid "Failed to parse command"
+msgstr "Gagal memasang libmpd"
+
+#: ../src/Plugins/ExternalCommand.c:386
+msgid "Failed to start external command"
+msgstr ""
+
+#~ msgid ""
+#~ "A new metadata plugin was added, gmpc has purged all failed hits from the "
+#~ "cache"
+#~ msgstr ""
+#~ "Plugin metadata baru telah ditambah, gmpc telah keluarkan semua gagalan "
+#~ "yang berkenaan daripada memori"
+
+#~ msgid "Metadata Handler"
+#~ msgstr "Pengurus Metadata"
+
+#~ msgid "Connected"
+#~ msgstr "Tersambung"
+
+#~ msgid "Repeat: %s"
+#~ msgstr "Ulangi: %s"
+
+#~ msgid "On"
+#~ msgstr "Buka"
+
+#~ msgid "Random: %s"
+#~ msgstr "Rambang: %s"
+
+#~ msgid "Single mode: %s"
+#~ msgstr "Mod tunggal: %s"
+
+#~ msgid "Consume: %s"
+#~ msgstr "Guna: %s"
+
+#~ msgid "Profile"
+#~ msgstr "Profil"
+
+#~ msgid "added"
+#~ msgstr "telah ditambah"
+
+#~ msgid "changed hostname to:"
+#~ msgstr "telah menukarkan nama hos kepada:"
+
+#~ msgid "plugin metadata structure is incorrect"
+#~ msgstr "struktur data meta pemalam salah"
+
+#~ msgid "Metadata Provider"
+#~ msgstr "Pembekal Metadata"
+
+#~ msgid "Metadata Provider and Browser Extension"
+#~ msgstr "Pembekal Metadata dan Tambahan bagi Pelayar Web"
+
+#~ msgid "File is not a valid .desktop file"
+#~ msgstr "Fail bukan fail .desktop yang sah"
+
+#~ msgid "Unrecognized desktop file Version '%s'"
+#~ msgstr "Versi fail desktop '%s' tidak dikenalpasti"
+
+#~ msgid "Starting %s"
+#~ msgstr "Memulakan %s"
+
+#~ msgid "Application does not accept documents on command line"
+#~ msgstr "Aplikasi tidak menerima dokumen pada baris perintah"
+
+#~ msgid "Unrecognized launch option: %d"
+#~ msgstr "Pilihan lancar tidak dikenalpasti: %d"
+
+#~ msgid "Can't pass document URIs to a 'Type=Link' desktop entry"
+#~ msgstr "Tidak dapat lepaskan URI dokumen ke masukan desktop 'Type=Link'"
+
+#~ msgid "Not a launchable item"
+#~ msgstr "Bukan item boleh lancar"
+
+#~ msgid "Disable connection to session manager"
+#~ msgstr "Lumpuhkan sambungan ke pengurus sesi"
+
+#~ msgid "Specify file containing saved configuration"
+#~ msgstr "Nyatakan fail yang mengandungi konfigurasi tersimpan"
+
+#~ msgid "FILE"
+#~ msgstr "FAIL"
+
+#~ msgid "Specify session management ID"
+#~ msgstr "Nyatakan ID pengurusan sesi"
+
+#~ msgid "ID"
+#~ msgstr "ID"
+
+#~ msgid "Session management options:"
+#~ msgstr "Pilihan pengurusan sesi:"
+
+#~ msgid "Show session management options"
+#~ msgstr "Papar pilihan pengurusan sesi"
+
+#~ msgid "Show buttons navigation in collapsed view"
+#~ msgstr "Papar navigasi butang didalam paparan terkuncup"
+
+#~ msgid "Web Links"
+#~ msgstr "Pautan Sesawang"
+
+#~ msgid "item"
+#~ msgid_plural "items"
+#~ msgstr[0] "barang"
+#~ msgstr[1] "barang"
+
+#~ msgid "Added folder '%s' recursively"
+#~ msgstr "Telah menambahkan folder '%s' secara mengulang"
+
+#~ msgid "Loaded playlist"
+#~ msgstr "Senarai main telah dimuat"
+
+#~ msgid "Added"
+#~ msgstr "Ditambah"
+
+#~ msgid "song"
+#~ msgid_plural "songs"
+#~ msgstr[0] "lagu"
+#~ msgstr[1] "lagu"
+
+#~ msgid "directory"
+#~ msgid_plural "directories"
+#~ msgstr[0] "direktori"
+#~ msgstr[1] "direktori"
+
+#~ msgid "playlist"
+#~ msgid_plural "playlists"
+#~ msgstr[0] "senarai main"
+#~ msgstr[1] "senarai main"
+
+#~ msgid "Edit metadata current song"
+#~ msgstr "Sunting data meta lagu semasa"
+
+#~ msgid "Lookup %s on %s"
+#~ msgstr "Periksa %s pada %s"
+
+#~ msgid "Artist images"
+#~ msgstr "Imej artis"
+
+#~ msgid "Artist biography"
+#~ msgstr "Biografi artis"
+
+#~ msgid "Similar artists"
+#~ msgstr "Artis serupa"
+
+#~ msgid "Album cover"
+#~ msgstr "Kulit album"
+
+#~ msgid "Similar songs"
+#~ msgstr "Lagu serupa"
+
+#~ msgid "Similar genres"
+#~ msgstr "Genre serupa"
+
+#~ msgid "Last FM metadata fetcher (internal)"
+#~ msgstr "Pengambil data meta Last FM (dalaman)"
 
 #~ msgid "Plugins:"
 #~ msgstr "Plugin:"
