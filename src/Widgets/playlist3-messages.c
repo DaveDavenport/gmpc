@@ -22,6 +22,8 @@
 #include "main.h"
 #include "playlist3.h"
 
+gboolean message_window_key_press_event_cb(GtkWidget *, GdkEventKey *, GtkBuilder *);
+
 struct _Playlist3MessagePlugin
 {
     GmpcPluginBase parent_instance;
@@ -262,6 +264,15 @@ void message_window_destroy(GtkWidget * win, GdkEvent * event, GtkBuilder * mess
     message_xml = NULL;
 }
 
+gboolean message_window_key_press_event_cb(GtkWidget *window, GdkEventKey *event, GtkBuilder *message_xml)
+{
+    if(event->keyval == GDK_KEY_Escape)
+    {
+        message_window_destroy(window, NULL, message_xml);
+        return TRUE;
+    }
+    return FALSE;
+}
 void copy_to_clipboard(GtkButton * button, GtkBuilder * xml)
 {
     GtkWidget *tree = GTK_WIDGET(gtk_builder_get_object(xml, "message_tree"));
@@ -311,14 +322,13 @@ void copy_to_clipboard(GtkButton * button, GtkBuilder * xml)
 
 static void playlist3_message_window_open(Playlist3MessagePlugin * self)
 {
-    GtkBuilder *message_xml = NULL;
     GtkWidget *win, *pl3_win = playlist3_get_window();
     GtkBuilder *xml;
     GtkCellRenderer *renderer;
     GtkWidget *tree;
     gchar *path;
     path = gmpc_get_full_glade_path("playlist-message-window.ui");
-    message_xml = xml = gtk_builder_new();
+    xml = gtk_builder_new();
     gtk_builder_add_from_file(xml, path, NULL);
     q_free(path);
     playlist3_message_init(self);
