@@ -679,6 +679,37 @@ namespace Gmpc
                 }
                 GLib.log(np2_LOG_DOMAIN, GLib.LogLevelFlags.LEVEL_DEBUG, "lyrics took: %.6f seconds.", t.elapsed());
 
+                /* Album information */
+                if(config.get_int_with_default("MetaData", "show-album-information",1) == 1)
+                {
+                    var alib = new Gtk.Alignment(0f,0f,1f,0f);
+                    var text_view = new Gmpc.MetaData.Widgets.TextLabel(song, Gmpc.MetaData.Type.ALBUM_TXT);
+                    alib.add(text_view);
+                    notebook.append_page(alib, new Gtk.Label("Album information"));
+                    var button = new Gtk.RadioButton(group);
+                    var label = new Gtk.Label(_("Album information"));
+                    label.ellipsize = Pango.EllipsizeMode.END;
+                    label.set_alignment(0.0f, 0.5f);
+
+                    if(group != null)
+                        hboxje.pack_start(new Gtk.VSeparator(), false, false, 0);
+                    group = button.get_group();
+                    hboxje.pack_start(button, false, false, 0);
+                    hboxje.pack_start(label, true, true, 0);
+                    var j = i;
+                    button.clicked.connect((source) =>
+                    {
+                        if((source as Gtk.CheckButton).get_active())
+                        {
+                            GLib.log(np2_LOG_DOMAIN,GLib.LogLevelFlags.LEVEL_DEBUG, "lyrics notebook page %i clicked", j);
+                            notebook.set_current_page(j);
+                        }
+                    });
+                    i++;
+
+                    alib.show();
+                }
+
                 /* Guitar Tabs */
                 if(config.get_int_with_default("MetaData", "show-guitar-tabs",1) == 1)
                 {
