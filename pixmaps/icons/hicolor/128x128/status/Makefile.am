@@ -8,6 +8,7 @@ dist_icons_DATA = \
 		stylized-cover.png\
 		stylized-fetching-cover.png\
 		stylized-no-cover.png\
+		stylized-invalid-tags-cover.png\
 		fetching-artist.png\
 		frame-artist.png\
 		no-artist.png\

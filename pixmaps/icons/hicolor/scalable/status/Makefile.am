@@ -17,6 +17,7 @@ dist_icons_DATA = \
 		stylized-cover.svg\
 		stylized-no-cover.svg\
 		stylized-fetching-cover.svg\
+		stylized-invalid-tags-cover.svg\
 		fetching-artist.svg\
 		frame-artist.svg\
         media-date.svg\
