@@ -42,7 +42,8 @@ typedef enum {
 typedef enum {
     META_DATA_AVAILABLE,
     META_DATA_UNAVAILABLE,
-    META_DATA_FETCHING
+    META_DATA_FETCHING,
+    META_DATA_INVALID_QUERY
 } MetaDataResult;
 
 

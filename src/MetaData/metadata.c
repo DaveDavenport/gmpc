@@ -1067,6 +1067,10 @@ MetaDataResult meta_data_get_path(mpd_Song *tsong, MetaDataType type, MetaData *
     {
         g_log(LOG_DOMAIN, G_LOG_LEVEL_MESSAGE,"Query invalid");
         *met = NULL;
+        // On images, indicate why not. TODO: FIX THIS FOR ALL TYPES.
+        if(type&(META_ALBUM_ART|META_ARTIST_ART|META_BACKDROP_ART)) {
+            return META_DATA_INVALID_QUERY;
+        }
         return META_DATA_UNAVAILABLE;
     }
 
