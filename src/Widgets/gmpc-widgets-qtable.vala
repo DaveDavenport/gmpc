@@ -123,6 +123,7 @@ public  int spacing {get; set; default=8;}
     /**
      * Calculates the size of the widget.
      */
+#if 0
     public override void size_request(out Gtk.Requisition req)
     {
         req = Gtk.Requisition();
@@ -191,6 +192,7 @@ public  int spacing {get; set; default=8;}
         req.width =  cover_width;
         req.height = rows;
     }
+#endif
 
     public override void add(Gtk.Widget widget)
     {
@@ -253,7 +255,7 @@ public  int spacing {get; set; default=8;}
                 this.queue_resize();
         }
     }
-    public override void size_allocate(Gdk.Rectangle alloc)
+    public override void size_allocate(Gtk.Allocation alloc)
     {
         int cover_width = item_width_real;
         int cover_height= item_height_real;
@@ -266,7 +268,7 @@ public  int spacing {get; set; default=8;}
         int rows = 0;
         int item = 0;
         // This fixes it so the correct taborder is calculated.
-        this.allocation = (Gtk.Allocation)alloc;
+        this.set_allocation(alloc);
 
         foreach ( var child in children)
         {
@@ -276,7 +278,7 @@ public  int spacing {get; set; default=8;}
                 if(child.type == QtableEntry.Type.ITEM)
                 {
                     Gtk.Requisition cr = {0,0};
-                    child.widget.size_request(out cr);
+                    child.widget.get_preferred_size(out cr, null);
                     cover_width = int.max(cr.width,cover_width);
                     cover_height = int.max(cr.height,cover_height);
                     item++;
@@ -284,7 +286,7 @@ public  int spacing {get; set; default=8;}
                 else
                 {
                     Gtk.Requisition cr = {0,0};
-                    child.widget.size_request(out cr);
+                    child.widget.get_preferred_size(out cr, null);
                     item = 0;
 
                     width = int.max(cr.width,width);
@@ -310,7 +312,7 @@ public  int spacing {get; set; default=8;}
             {
                 if(child.type == QtableEntry.Type.ITEM)
                 {
-                    Gdk.Rectangle ca = {0,0,0,0};
+                    Gtk.Allocation ca = {0,0,0,0};
                     ca.x = alloc.x + (item%columns)*cover_width+padding_left;
                     ca.y = rows+alloc.y + (item/columns)*cover_height;
                     ca.width = cover_width - spacing;
@@ -329,7 +331,7 @@ public  int spacing {get; set; default=8;}
                     }
                     item = 0;
 
-                    Gdk.Rectangle ca = {0,0,0,0};
+                    Gtk.Allocation ca = {0,0,0,0};
                     ca.x = alloc.x-padding_left;
                     ca.y = alloc.y+rows;
                     ca.width = cover_width*columns;

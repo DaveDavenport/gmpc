@@ -39,7 +39,7 @@ namespace Gmpc
 
         }
         private bool
-        child_destroy_event(Gtk.Widget paned, Gdk.Event event)
+        child_destroy_event(Gtk.Widget paned, Gdk.EventAny event)
         {
             list.remove((Gtk.Paned)paned);
 

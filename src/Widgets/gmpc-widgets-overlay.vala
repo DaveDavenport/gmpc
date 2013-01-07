@@ -79,18 +79,18 @@ namespace Gmpc
             {
             }
 
-            public override bool expose_event(Gdk.EventExpose event)
+            public override bool draw(Cairo.Context ct)
             {
                 // Draw the child of this box.
                 var w = (this as Gtk.Bin).get_child();
-                w.expose_event(event);
+                w.draw(ct);
                 //
                 if(show_overlay)
                 {
-                    var ct = Gdk.cairo_create(window);
                     int pw,ph;
                     var l = this.create_pango_layout(overlay_text);
-                    Gtk.Allocation cell_area = this.allocation;
+                    Gtk.Allocation cell_area;
+                    this.get_allocation(out cell_area);
                     l.get_pixel_size(out pw, out ph);
 
                     ct.set_source_rgb(0.8,0,0);

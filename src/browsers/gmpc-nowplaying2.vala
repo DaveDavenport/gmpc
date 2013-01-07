@@ -376,7 +376,7 @@ namespace Gmpc
                 var hbox = new Gtk.HBox(false, 6);
                 Gtk.Alignment ali = null;
 
-                int meta_size = (int)(this.container.allocation.width*0.20);
+                int meta_size = (int)(this.container.get_allocated_width()*0.20);
                 /* get size based on alloc */
                 meta_size = int.min(int.max(100, meta_size), 250);
                 if(config.get_int_with_default("Interface", "hide-album-art", 0) == 0)

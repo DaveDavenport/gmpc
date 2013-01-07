@@ -278,11 +278,10 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base
         return false;
     }
 
-    private bool popup_expose_handler(Gtk.Widget widget, Gdk.EventExpose event)
+    private bool popup_expose_handler(Gtk.Widget widget, Cairo.Context ctx)
     {
-        var ctx = Gdk.cairo_create(widget.window);
-        int width = widget.allocation.width;
-        int height = widget.allocation.height;
+        int width = widget.get_allocated_width();
+        int height = widget.get_allocated_height();
         Gdk.Color light = widget.style.bg[Gtk.StateType.ACTIVE];
         Gdk.Color dark = widget.style.dark[Gtk.StateType.ACTIVE];
 
@@ -385,15 +384,16 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base
 
 
 
-            /* Composite */
+            /* Composite 
             if (window.is_composited())
             {
                 var screen = window.get_screen();
                 var colormap = screen.get_rgba_colormap();
                 window.set_colormap(colormap);
             }
+             */
             window.app_paintable = true;
-            window.expose_event.connect(popup_expose_handler);
+            window.draw.connect(popup_expose_handler);
 
             /* setup entry */
             entry.set_completion(this.completion);
@@ -408,7 +408,7 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base
             });
             window.show_all();
             window.present();
-            window.window.raise();
+            window.get_window().raise();
             entry.grab_focus();
         }
         else
@@ -421,7 +421,7 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base
             int i = 10;
             while(i>0 && this.window != null)
             {
-                if(Gdk.keyboard_grab(this.window.window, true, _time) != Gdk.GrabStatus.SUCCESS)
+                if(Gdk.keyboard_grab(this.window.get_window(), true, _time) != Gdk.GrabStatus.SUCCESS)
                 {
                     GLib.debug("Failed to grab keyboard\n");
                 }
@@ -433,7 +433,7 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base
             /* Grab pointer too! */
             while(i>0 && this.window != null)
             {
-                if(Gdk.pointer_grab(this.window.window, true,
+                if(Gdk.pointer_grab(this.window.get_window(), true,
                                     Gdk.EventMask.BUTTON_PRESS_MASK |
                                     Gdk.EventMask.BUTTON_RELEASE_MASK |
                                     Gdk.EventMask.POINTER_MOTION_MASK,
@@ -525,10 +525,10 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base
         label.set_alignment(0.0f, 0.5f);
         label.set_padding(8,6);
         /* Add scrolled windows (containing tree) to dialog */
-        window.vbox.pack_start(label, false, false, 0);
+        window.get_content_area().pack_start(label, false, false, 0);
 
         /* Add scrolled windows (containing tree) to dialog */
-        window.vbox.pack_start(sw, true, true, 0);
+        window.get_content_area().pack_start(sw, true, true, 0);
 
         /* show all */
         window.show_all();

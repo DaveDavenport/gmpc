@@ -108,11 +108,12 @@ namespace Gmpc
                        type == Gmpc.MetaData.Type.ALBUM_ART);
                 cur_type = type;
 
-
+/*
                 this.realize.connect((source)=>
                 {
-                    source.window.set_back_pixmap(null, true);
+                    source.get_window().set_back_pixmap(null, true);
                 });
+*/
                 // Set visible window
                 this.set_visible_window(true);
                 // Set paintable
@@ -136,7 +137,7 @@ namespace Gmpc
                 });
 
                 // Add expose event
-                this.expose_event.connect(container_expose);
+                this.draw.connect(container_expose);
 
                 this.button_press_event.connect(button_press_event_callback);
             }
@@ -179,13 +180,11 @@ namespace Gmpc
             /**
              * Draw the background. (only exposed part)
              */
-            private bool container_expose(Gtk.Widget ev, Gdk.EventExpose event)
+            private bool container_expose(Gtk.Widget ev, Cairo.Context gc) 
             {
                 /* If there is an background image set. */
                 if(pb != null)
                 {
-                    var gc = Gdk.cairo_create(ev.window);
-                    Gdk.cairo_region(gc,event.region);
                     gc.set_source_rgb(0.0,0.0,0.0);
                     gc.fill_preserve();
                     Gdk.cairo_set_source_pixbuf(gc, pb,0.0,0.0);
@@ -194,8 +193,6 @@ namespace Gmpc
                 /* no image set */
                 else
                 {
-                    var gc = Gdk.cairo_create(ev.window);
-                    Gdk.cairo_region(gc,event.region);
                     gc.set_source_rgb(0.0,0.0,0.0);
                     gc.fill();
                 }

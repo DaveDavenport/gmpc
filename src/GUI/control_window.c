@@ -32,11 +32,10 @@ void pl3_pb_seek_event(GtkWidget * pb, guint seek_time, gpointer user_data);
  * Draw background of control box.
  */
 static gboolean
-expose_window(GtkWidget *widget, GdkEventExpose *event, gpointer date)
+expose_window(GtkWidget *widget, cairo_t *cr, gpointer date)
 {
-    /* Create */
-    cairo_t *cr = gdk_cairo_create(widget->window);
-
+    GtkAllocation allocation;
+    gtk_widget_get_allocation(widget, &allocation);
     /* Paint background */
     cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, .7);
     cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
@@ -45,12 +44,9 @@ expose_window(GtkWidget *widget, GdkEventExpose *event, gpointer date)
     /* Paint border */
     cairo_set_source_rgba(cr, .8, .8, .8, .7);
     cairo_rectangle(cr, 0.5,0.5,
-        widget->allocation.width-1.0,
-        widget->allocation.height-1.0);
+        allocation.width-1.0,
+        allocation.height-1.0);
     cairo_stroke(cr);
-
-    /* Destroy */
-    cairo_destroy(cr);
 
     return FALSE;
 }
@@ -65,12 +61,14 @@ static void control_window_modify_colors(GtkWidget *base)
     GList *iter;
     if(GTK_IS_HSCALE(base) == FALSE)
     {
+/* TODO:
         gtk_widget_modify_bg(base,
                 GTK_STATE_NORMAL,&(base->style->black));
         gtk_widget_modify_fg(base,
                 GTK_STATE_NORMAL,&(base->style->white));
         gtk_widget_modify_text(base,
                 GTK_STATE_NORMAL,&(base->style->white));
+*/
     }
     if(GTK_IS_CONTAINER(base))
     {
@@ -136,7 +134,7 @@ GtkWidget *create_control_window(GtkWidget *parent)
             G_CALLBACK(control_window_leave_notify_event), NULL);
     /* Overwrite background drawing */
     gtk_widget_set_app_paintable(base, TRUE);
-    g_signal_connect(G_OBJECT(base), "expose-event",
+    g_signal_connect(G_OBJECT(base), "draw",
         G_CALLBACK(expose_window), NULL);
 
     hbox = gtk_hbox_new(FALSE, 6);

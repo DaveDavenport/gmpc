@@ -31,7 +31,6 @@
 #include "gmpc-mpddata-model.h"
 #include "gmpc-mpddata-model-playlist.h"
 #include "gmpc-mpddata-treeview.h"
-#include "eggcolumnchooserdialog.h"
 #include "advanced-search.h"
 #include "playlist3-messages.h"
 
@@ -286,7 +285,7 @@ static gboolean mod_fill_entry_key_press_event(GtkWidget * entry, GdkEventKey * 
 
     if (strlen(text) == 0)
     {
-        if (event->keyval == GDK_BackSpace || event->keyval == GDK_Escape)
+        if (event->keyval == GDK_KEY_BackSpace || event->keyval == GDK_KEY_Escape)
         {
             self->priv->search_keep_open = FALSE;
             gtk_tree_view_set_model(GTK_TREE_VIEW(self->priv->pl3_cp_tree), playlist);
@@ -297,11 +296,11 @@ static gboolean mod_fill_entry_key_press_event(GtkWidget * entry, GdkEventKey * 
             gtk_widget_grab_focus(self->priv->pl3_cp_tree);
             return TRUE;
         }
-    } else if (event->keyval == GDK_Escape)
+    } else if (event->keyval == GDK_KEY_Escape)
     {
         self->priv->search_keep_open = FALSE;
         gtk_entry_set_text(GTK_ENTRY(entry), "");
-    } else if (event->keyval == GDK_Up || event->keyval == GDK_Down)
+    } else if (event->keyval == GDK_KEY_Up || event->keyval == GDK_KEY_Down)
     {
         gtk_widget_grab_focus(self->priv->pl3_cp_tree);
         return TRUE;
@@ -941,20 +940,20 @@ static int pl3_current_playlist_tool_menu_integration(GmpcPluginToolMenuIface * 
 static int pl3_current_playlist_browser_key_release_event(GtkTreeView * tree, GdkEventKey * event,
                                                           PlayQueuePlugin * self)
 {
-    if (event->keyval == GDK_Delete)
+    if (event->keyval == GDK_KEY_Delete)
     {
         pl3_current_playlist_browser_delete_selected_songs(self);
         return TRUE;
-    } else if (event->keyval == GDK_i && event->state & GDK_MOD1_MASK)
+    } else if (event->keyval == GDK_KEY_i && event->state & GDK_MOD1_MASK)
     {
         pl3_current_playlist_browser_show_info(self);
         return TRUE;
-    } else if (event->keyval == GDK_space)
+    } else if (event->keyval == GDK_KEY_space)
     {
         pl3_current_playlist_browser_scroll_to_current_song(self);
         pl3_current_playlist_browser_select_current_song(self);
         return TRUE;
-    } else if (event->keyval == GDK_f && event->state & GDK_CONTROL_MASK)
+    } else if (event->keyval == GDK_KEY_f && event->state & GDK_CONTROL_MASK)
     {
         mod_fill_entry_changed(self->priv->filter_entry, self);
         gtk_widget_grab_focus(self->priv->filter_entry);
@@ -1124,7 +1123,7 @@ static int pl3_current_playlist_browser_add_go_menu(GmpcPluginBrowserIface * obj
     gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
                                   gtk_image_new_from_icon_name("playlist-browser", GTK_ICON_SIZE_MENU));
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-    gtk_widget_add_accelerator(GTK_WIDGET(item), "activate", gtk_menu_get_accel_group(GTK_MENU(menu)), GDK_F1, 0,
+    gtk_widget_add_accelerator(GTK_WIDGET(item), "activate", gtk_menu_get_accel_group(GTK_MENU(menu)), GDK_KEY_F1, 0,
                                GTK_ACCEL_VISIBLE);
     g_signal_connect_swapped(G_OBJECT(item), "activate", G_CALLBACK(pl3_current_playlist_browser_activate), obj);
 
@@ -1132,7 +1131,7 @@ static int pl3_current_playlist_browser_add_go_menu(GmpcPluginBrowserIface * obj
     gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
                                   gtk_image_new_from_icon_name("gtk-find", GTK_ICON_SIZE_MENU));
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-    gtk_widget_add_accelerator(GTK_WIDGET(item), "activate", gtk_menu_get_accel_group(GTK_MENU(menu)), GDK_j,
+    gtk_widget_add_accelerator(GTK_WIDGET(item), "activate", gtk_menu_get_accel_group(GTK_MENU(menu)), GDK_KEY_j,
                                GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
     g_signal_connect_swapped(G_OBJECT(item), "activate", G_CALLBACK(pl3_current_playlist_do_playlist_search), obj);
     return 2;

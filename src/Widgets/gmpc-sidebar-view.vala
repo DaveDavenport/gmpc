@@ -115,14 +115,12 @@ public class MyCellRenderer : Gtk.CellRenderer
     }
 
     /* render method */
-    public override void render (Gdk.Window    window,
+    public override void render (Cairo.Context ct,
             Gtk.Widget    widget,
             Gdk.Rectangle background_area,
             Gdk.Rectangle cell_area,
-            Gdk.Rectangle expose_area,
             Gtk.CellRendererState flags)
     {
-        var ct = Gdk.cairo_create(window);
         int x_o=0;
         int y_o =0;
         int w=0;
@@ -136,13 +134,13 @@ public class MyCellRenderer : Gtk.CellRenderer
 
         if(cr_pb.icon_name != null || cr_pb.stock_id != null )
         {
-            cr_pb.render(window, widget, background_area, ca, expose_area, flags);
+            cr_pb.render(ct, widget, background_area, ca, flags);
 
             ca.x+=6+image_width;
             ca.width-=6+image_width;
         }
         if(show_text)
-            cr_text.render(window, widget, background_area, ca, expose_area, flags);
+            cr_text.render(ct, widget, background_area, ca, flags);
 
         if(show_number)
         {

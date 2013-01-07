@@ -140,7 +140,7 @@ namespace Gmpc.MetaData
         /* This implements lazy loading, the data will only be fetched when the widget is visible for the first time. */
         private
         bool
-        expose_event_handler(Gdk.EventExpose event)
+        expose_event_handler(Cairo.Context ct)
         {
             var text = GLib.Markup.printf_escaped("<i>%s</i>", _("Loading"));
             this.set_markup(text);
@@ -160,7 +160,7 @@ namespace Gmpc.MetaData
             this.song = song.copy();
             this.ltype = ltype;
             /* Set expose signal, so I know when it is visible for the first time */
-            this.ll_signal = this.expose_event.connect(this.expose_event_handler);
+            this.ll_signal = this.draw.connect(this.expose_event_handler);
         }
     }
 }

@@ -30,7 +30,7 @@ public class Gmpc.MetaData.Widgets.SimilarArtists : Gtk.Table
     private MPD.Song? song = null;
     private int columns = 1;
     private int button_width = 200;
-    private void size_changed(Gdk.Rectangle alloc)
+    private void size_changed(Gtk.Allocation alloc)
     {
         int t_column = alloc.width/button_width;
         t_column = (t_column < 1)?1:t_column;
@@ -171,7 +171,7 @@ public class Gmpc.MetaData.Widgets.SimilarArtists : Gtk.Table
             i=0;
             this.hide();
             uint llength = in_db_list.length();
-            columns = this.allocation.width/button_width;
+            columns = this.get_allocated_width()/button_width;
             columns = (columns < 1)?1:columns;
             this.resize(llength/columns+1, columns);
             foreach(Gtk.Widget item in in_db_list)
@@ -206,7 +206,8 @@ public class Gmpc.MetaData.Widgets.SimilarArtists : Gtk.Table
         var event = new Gtk.EventBox();
         event.app_paintable = true;
         event.set_visible_window(true);
-        event.expose_event.connect(Gmpc.Misc.misc_header_expose_event);
+        // TODO
+//        event.draw.connect(Gmpc.Misc.misc_header_expose_event);
         event.set_size_request(button_width-20,60);
 
         var image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ARTIST_ART, 48);

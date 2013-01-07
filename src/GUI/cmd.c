@@ -147,7 +147,7 @@ gboolean show_command_line_key_press_event(
 {
 
     /* Go back in history */
-    if(event->keyval == GDK_Up)
+    if(event->keyval == GDK_KEY_Up)
     {
         if(current == NULL) current = g_list_first(history);
         else if(current->next != NULL) current = g_list_next(current);
@@ -158,7 +158,7 @@ gboolean show_command_line_key_press_event(
         return TRUE;
     }
     /* Go forward in history */
-    else if (event->keyval == GDK_Down)
+    else if (event->keyval == GDK_KEY_Down)
     {
         if(current != NULL) {
             current = g_list_previous(current);
@@ -175,7 +175,7 @@ gboolean show_command_line_key_press_event(
         return TRUE;
     }
     else
-    if(event->keyval == GDK_Escape)
+    if(event->keyval == GDK_KEY_Escape)
     {
         gtk_widget_hide(entry);
         /* Clear the entry */
@@ -183,7 +183,7 @@ gboolean show_command_line_key_press_event(
         return TRUE;
     }
     if(gtk_entry_get_text_length(GTK_ENTRY(entry)) == 0 &&
-        event->keyval == GDK_BackSpace)
+        event->keyval == GDK_KEY_BackSpace)
     {
         gtk_widget_hide(entry);
         return TRUE;

@@ -697,7 +697,8 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
             this.header = new Gtk.EventBox();
             header.app_paintable = true;
             header.set_visible_window(true);
-            header.expose_event.connect(Gmpc.Misc.misc_header_expose_event);
+// TODO
+//            header.draw.connect(Gmpc.Misc.misc_header_expose_event);
 
             vb.pack_start(header, false, false,0);
             header.show();
@@ -1011,8 +1012,8 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         var hbox = new Gtk.HBox(false, 6);
         /* Album image */
         var ali = new Gtk.Alignment(0f,0f,0f,0f);
-        int meta_size =  (int)(this.metadata_box.allocation.width*0.20);
-        meta_size = int.min(meta_size, (int)(this.metadata_sw.allocation.height*0.30));
+        int meta_size =  (int)(this.metadata_box.get_allocated_width()*0.20);
+        meta_size = int.min(meta_size, (int)(this.metadata_sw.get_allocated_height()*0.30));
         meta_size = int.min(int.max(100, meta_size), 250);
         var album_image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ALBUM_ART, meta_size);
         album_image.set_scale_up(true);
@@ -1531,8 +1532,8 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         var hbox = new Gtk.HBox(false, 6);
         var ali = new Gtk.Alignment(0f,0f,0f,0f);
 
-        int meta_size =  (int)(this.metadata_box.allocation.width*0.20);
-        meta_size = int.min(meta_size, (int)(this.metadata_sw.allocation.height*0.30));
+        int meta_size =  (int)(this.metadata_box.get_allocated_width()*0.20);
+        meta_size = int.min(meta_size, (int)(this.metadata_sw.get_allocated_height()*0.30));
         meta_size = int.min(int.max(100, meta_size), 250);
         var artist_image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ALBUM_ART, meta_size);
         artist_image.set_squared(false);
@@ -1811,8 +1812,8 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         /* Artist image */
         var hbox = new Gtk.HBox(false, 6);
         var ali = new Gtk.Alignment(0f,0f,0f,0f);
-        int meta_size =  (int)(this.metadata_box.allocation.width*0.20);
-        meta_size = int.min(meta_size, (int)(this.metadata_sw.allocation.height*0.30));
+        int meta_size =  (int)(this.metadata_box.get_allocated_width()*0.20);
+        meta_size = int.min(meta_size, (int)(this.metadata_sw.get_allocated_height()*0.30));
         meta_size = int.min(int.max(100, meta_size), 250);
         var artist_image = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ARTIST_ART, meta_size);
 

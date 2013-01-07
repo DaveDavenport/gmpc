@@ -76,10 +76,10 @@ public class Gmpc.Widgets.Volume : Gtk.EventBox
 
     private void set_volume_level_from_y_pos(double y)
     {
-        if(y > BORDER_WIDTH && y < (this.allocation.height-BORDER_WIDTH))
+        if(y > BORDER_WIDTH && y < (this.get_allocated_height()-BORDER_WIDTH))
         {
             double block_height =GLib.Math.floor(
-                                     (this.allocation.height-BORDER_WIDTH*2)/(double)num_blocks);
+                                     (this.get_allocated_height()-BORDER_WIDTH*2)/(double)num_blocks);
             double tvolume_level = 1-(y-BORDER_WIDTH-block_height*0.5)/(block_height*(num_blocks-1));
             this.volume_level = (int)(tvolume_level*100.0);
         }
@@ -91,7 +91,7 @@ public class Gmpc.Widgets.Volume : Gtk.EventBox
     {
         int tvolume_level = _volume_level;
         int scroll_step;
-        if((state&Gdk.ModifierType.MOD1_MASK) == Gdk.ModifierType.MOD1_MASK)
+        if((event.state&Gdk.ModifierType.MOD1_MASK) == Gdk.ModifierType.MOD1_MASK)
         {
             scroll_step = config.get_int_with_default("Volume", "scroll-sensitivity-fine", 1);
         } else {
@@ -117,7 +117,7 @@ public class Gmpc.Widgets.Volume : Gtk.EventBox
         }
 
         /* Inside X */
-        if(event.x > BORDER_WIDTH && event.x < (this.allocation.width-BORDER_WIDTH))
+        if(event.x > BORDER_WIDTH && event.x < (this.get_allocated_width()-BORDER_WIDTH))
         {
             this.set_volume_level_from_y_pos(event.y);
         }
@@ -151,12 +151,13 @@ public class Gmpc.Widgets.Volume : Gtk.EventBox
      * the widget how large it wishes to be. It's not guaranteed
      * that Gtk+ will actually give this size to the widget.
      */
+/*
     public override void size_request (out Gtk.Requisition requisition)
     {
         requisition.width = BORDER_WIDTH*2+DEFAULT_WIDTH;
         requisition.height =  BORDER_WIDTH*2+DEFAULT_HEIGHT;
     }
-
+*/
 
     /*
      * This method gets called by Gtk+ when the actual size is known
@@ -164,7 +165,7 @@ public class Gmpc.Widgets.Volume : Gtk.EventBox
      * It is called every time the widget size changes, for example when the
      * user resizes the window.
      */
-    public override void size_allocate (Gdk.Rectangle allocation)
+    public override void size_allocate (Gtk.Allocation allocation)
     {
         // The base method will save the allocation and move/resize the
         // widget's GDK window if the widget is already realized.
@@ -180,35 +181,34 @@ public class Gmpc.Widgets.Volume : Gtk.EventBox
      * a good idea to write this code as optimized as it can be, don't
      * create any resources in here.
      */
-    public override bool expose_event (Gdk.EventExpose event)
+    public override bool draw (Cairo.Context cr)
     {
         // if volume level is disabled, don't draw anything.
         if(volume_level < 0) return true;
 
-        // Cairo context to draw on
-        var cr = Gdk.cairo_create (this.window);
-
         cr.set_line_width (1.0);
         cr.set_line_join (LineJoin.ROUND);
 
-        Gdk.cairo_set_source_color (cr, this.style.fg[this.state]);
+        Gdk.cairo_set_source_color (cr, this.style.fg[this.get_state()]);
 
 
         /* Calculate the height of one block */
         /* Clip it to full intergers so it is pixel aligned. */
         double svol = volume_level/100.0;
         double block_height =GLib.Math.floor(
-                                 (this.allocation.height-BORDER_WIDTH*2)/(double)num_blocks);
+                                 (this.get_allocated_height()-BORDER_WIDTH*2)/(double)num_blocks);
 
-        double block_width = this.allocation.width-2*BORDER_WIDTH-BLOCK_SPACING;
+        double block_width = this.get_allocated_width()-2*BORDER_WIDTH-BLOCK_SPACING;
+        Gtk.Allocation alloc;
+        this.get_allocation(out alloc);
         for( int i=0; i < num_blocks; i++)
         {
             /* get the block volume_level */
             double bvolume_level = (1.0-i/(double)num_blocks);
             int bw = (int)(block_width*(bvolume_level)+BLOCK_SPACING);
             cr.rectangle (
-                this.allocation.x + this.allocation.width-BORDER_WIDTH-bw+0.5,
-                this.allocation.y +GLib.Math.ceil(BORDER_WIDTH+block_height*i)+0.5+BLOCK_SPACING,
+                alloc.x + alloc.width-BORDER_WIDTH-bw+0.5,
+                alloc.y +GLib.Math.ceil(BORDER_WIDTH+block_height*i)+0.5+BLOCK_SPACING,
                 bw,
                 block_height-2*BLOCK_SPACING
             );
@@ -225,8 +225,8 @@ public class Gmpc.Widgets.Volume : Gtk.EventBox
         if(volume_level == 0)
         {
             cr.arc (
-                this.allocation.x +0.5+BORDER_WIDTH+mute_size*block_height+4,
-                this.allocation.y +0.5+this.allocation.height-BORDER_WIDTH-mute_size*block_height-4,
+                alloc.x +0.5+BORDER_WIDTH+mute_size*block_height+4,
+                alloc.y +0.5+alloc.height-BORDER_WIDTH-mute_size*block_height-4,
                 mute_size*block_height,
                 0, 2 * GLib.Math.PI
             );
@@ -237,16 +237,16 @@ public class Gmpc.Widgets.Volume : Gtk.EventBox
             cr.set_source_rgb(1.0,0.0,0.0);
             cr.stroke_preserve();
             cr.clip();
-            Gdk.cairo_set_source_color (cr, this.style.fg[this.state]);
+            Gdk.cairo_set_source_color (cr, this.style.fg[this.get_state()]);
             cr.new_path ();  /* current path is not
                                      consumed by cairo_clip() */
             cr.move_to(
-                this.allocation.x + BORDER_WIDTH+4,
-                this.allocation.y + this.allocation.height-BORDER_WIDTH-3
+                alloc.x + BORDER_WIDTH+4,
+                alloc.y + alloc.height-BORDER_WIDTH-3
             );
             cr.line_to(
-                this.allocation.x +BORDER_WIDTH+2*mute_size*block_height+4,
-                this.allocation.y + this.allocation.height-BORDER_WIDTH-2*mute_size*block_height-3
+                alloc.x +BORDER_WIDTH+2*mute_size*block_height+4,
+                alloc.y + alloc.height-BORDER_WIDTH-2*mute_size*block_height-3
             );
             cr.set_line_width(3.5);
             cr.stroke_preserve();

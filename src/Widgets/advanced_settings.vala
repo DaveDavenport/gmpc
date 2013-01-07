@@ -37,7 +37,7 @@ public static void advanced_settings()
     var vbox = new Gmpc.Widgets.Qtable();
     win.set_size_request(450, -1);
     vbox.header_height = 32;
-    win.vbox.add(vbox);
+    win.get_content_area().add(vbox);
     /* TODO: Warning */
 
     vbox.border_width=8;

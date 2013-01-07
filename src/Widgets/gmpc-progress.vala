@@ -69,16 +69,14 @@ public class Gmpc.Progress : Gtk.VBox
     /**
      * Paint a nice box around it
      */
-    private bool tooltip_expose_event_callback(Gtk.Widget tooltip, Gdk.EventExpose event)
+    private bool tooltip_expose_event_callback(Gtk.Widget tooltip, Cairo.Context ctx) 
     {
-        Gtk.paint_box(tooltip.style,
-                      event.window,
-                      Gtk.StateType.NORMAL,
-                      Gtk.ShadowType.OUT,
-                      null, tooltip,
-                      "tooltip", 0,0,
-                      tooltip.allocation.width, tooltip.allocation.height);
-
+/* TODO:
+        Gtk.render_frame(tooltip.get_style_context(),
+                      Gdk.cairo_create(tooltip.get_window()),
+                    0,0,
+                      tooltip.get_allocated_width(), tooltip.get_allocated_height());
+*/
         return false;
     }
 
@@ -93,7 +91,7 @@ public class Gmpc.Progress : Gtk.VBox
             tooltip.add(tooltip_label);
             tooltip.border_width = 4;
             tooltip.set_app_paintable(true);
-            tooltip.expose_event.connect(tooltip_expose_event_callback);
+            tooltip.draw.connect(tooltip_expose_event_callback);
         }
         /* Destroy tooltip if mouse leaves the event window */
         if (event.type == Gdk.EventType.LEAVE_NOTIFY)
@@ -117,7 +115,7 @@ public class Gmpc.Progress : Gtk.VBox
                 int t_minutes = (int) this.total%3600/60;
                 int t_seconds = (int) this.total%60;
                 string a = "";
-                uint p = (uint)(this.total * (event.x/(double)(scale.allocation.width-scale.style.xthickness)));
+                uint p = (uint)(this.total * (event.x/(double)(scale.get_allocated_width()-scale.style.xthickness)));
                 /* Don't show beyond end time */
                 p = (p > this.total)? this.total:p;
                 if(this.do_countdown)
@@ -150,7 +148,7 @@ public class Gmpc.Progress : Gtk.VBox
 
                 tooltip.show_all();
                 tooltip.realize();
-                tooltip.move((int)event.x_root-tooltip.allocation.width/2, (int)event.y_root+tooltip.allocation.height);
+                tooltip.move((int)event.x_root-tooltip.get_allocated_width()/2, (int)event.y_root+tooltip.get_allocated_height());
             }
         }
         return false;
@@ -164,7 +162,7 @@ public class Gmpc.Progress : Gtk.VBox
         this.scale.set_range(0.0,1.0);
         this.scale.draw_value = false;
         this.set_value_handler = GLib.Signal.connect_swapped(this.scale,"value_changed",(GLib.Callback)value_changed,this);
-        this.scale.update_policy = Gtk.UpdateType.DISCONTINUOUS;//DELAYED;//DISCONTINUOUS;
+//        this.scale.update_policy = Gtk.UpdateType.DISCONTINUOUS;//DELAYED;//DISCONTINUOUS;
         this.scale.sensitive = false;
         this.set_spacing(0);
         this.scale.add_events((int)Gdk.EventMask.SCROLL_MASK);
@@ -224,7 +222,7 @@ public class Gmpc.Progress : Gtk.VBox
             }
             if(event.button == 2 || event.button == 1)
             {
-                uint p = (uint)(this.total * (event.x/(double)(scale.allocation.width-scale.style.xthickness)));
+                uint p = (uint)(this.total * (event.x/(double)(scale.get_allocated_width()-scale.style.xthickness)));
                 p = (p > this.total)? this.total:p;
                 seek_event(p);
                 return true;
@@ -234,7 +232,7 @@ public class Gmpc.Progress : Gtk.VBox
         {
             if(event.button == 2 || event.button == 1)
             {
-                uint p = (uint)(this.total * (event.x/(double)(scale.allocation.width-scale.style.xthickness)));
+                uint p = (uint)(this.total * (event.x/(double)(scale.get_allocated_width()-scale.style.xthickness)));
                 p = (p > this.total)? this.total:p;
                 seek_event(p);
                 return true;

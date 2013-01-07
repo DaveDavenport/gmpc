@@ -41,7 +41,7 @@ public class PopupMenu : Gtk.Window
         this.size_allocate.connect(sig_realize);
     }
 
-    private void sig_realize(Gdk.Rectangle alloc)
+    private void sig_realize(Gtk.Allocation alloc)
     {
         this.width = alloc.width;
         this.height = alloc.height;

@@ -63,11 +63,13 @@ static void playlist3_header_album(void)
 }
 static void playlist3_header_update_style(GtkWidget *widget, GtkStyle *prev, gpointer data)
 {
+/* TODO
     gtk_widget_modify_text(header_labels[1], GTK_STATE_NORMAL, &(widget->style->text[GTK_STATE_INSENSITIVE]));
     gtk_widget_modify_fg(header_labels[1], GTK_STATE_NORMAL, &(widget->style->text[GTK_STATE_INSENSITIVE]));
 
     gtk_widget_modify_text(header_labels[3], GTK_STATE_NORMAL, &(widget->style->text[GTK_STATE_INSENSITIVE]));
     gtk_widget_modify_fg(header_labels[3], GTK_STATE_NORMAL, &(widget->style->text[GTK_STATE_INSENSITIVE]));
+*/
 }
 
 void playlist3_new_header(void)
