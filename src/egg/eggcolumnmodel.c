@@ -20,8 +20,7 @@
 
 #include "eggcolumnmodel.h"
 
-#include <gtk/gtktreemodel.h>
-#include <gtk/gtktreednd.h>
+#include <gtk/gtk.h>
 #include "plugin.h"
 static void update_columns (GtkTreeView *tree_view, EggColumnModel *column_model);
 

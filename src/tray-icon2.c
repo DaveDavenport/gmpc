@@ -561,7 +561,7 @@ static void tray_icon2_create_tooltip_real(int position)
     GtkWidget *label = NULL;
     GtkWidget *event = NULL;
     GtkWidget *coverimg = NULL;
-    GdkColormap *colormap;
+//    GdkColormap *colormap;
     mpd_Song *song = NULL;
     int tooltip_timeout = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "tooltip-timeout", 5);
     int state = 0;
@@ -607,7 +607,7 @@ static void tray_icon2_create_tooltip_real(int position)
      */
     tray_icon2_tooltip = gtk_window_new(GTK_WINDOW_POPUP);
     screen = gtk_window_get_screen(GTK_WINDOW(tray_icon2_tooltip));
-
+/*
     if (gdk_screen_is_composited(screen))
     {
         colormap = gdk_screen_get_rgba_colormap(screen);
@@ -615,9 +615,9 @@ static void tray_icon2_create_tooltip_real(int position)
             gtk_widget_set_colormap(tray_icon2_tooltip, colormap);
         gtk_window_set_opacity(GTK_WINDOW(tray_icon2_tooltip), 0.9);
     }
-
+*/
     /* causes the border */
-    gtk_widget_modify_bg(GTK_WIDGET(tray_icon2_tooltip), GTK_STATE_NORMAL, &(pl3_win->style->black));
+//    gtk_widget_modify_bg(GTK_WIDGET(tray_icon2_tooltip), GTK_STATE_NORMAL, &(pl3_win->style->black));
     gtk_container_set_border_width(GTK_CONTAINER(tray_icon2_tooltip), 1);
     gtk_window_set_default_size(GTK_WINDOW(tray_icon2_tooltip), 300, -1);
     gtk_window_set_transient_for(GTK_WINDOW(tray_icon2_tooltip), GTK_WINDOW(pl3_win));
@@ -660,7 +660,7 @@ static void tray_icon2_create_tooltip_real(int position)
          */
         event = gtk_event_box_new();
         gtk_widget_set_size_request(event, 86, 86);
-        gtk_widget_modify_bg(GTK_WIDGET(event), GTK_STATE_NORMAL, &(pl3_win->style->bg[GTK_STATE_SELECTED]));
+//        gtk_widget_modify_bg(GTK_WIDGET(event), GTK_STATE_NORMAL, &(pl3_win->style->bg[GTK_STATE_SELECTED]));
         gtk_container_add(GTK_CONTAINER(event), coverimg);
         gtk_box_pack_start(GTK_BOX(hbox), event, FALSE, TRUE, 0);
     }
@@ -676,7 +676,7 @@ static void tray_icon2_create_tooltip_real(int position)
      */
     event = gtk_event_box_new();
     vbox = gtk_vbox_new(FALSE, 0);
-    gtk_widget_modify_bg(GTK_WIDGET(event), GTK_STATE_NORMAL, &(pl3_win->style->light[GTK_STATE_NORMAL]));
+//    gtk_widget_modify_bg(GTK_WIDGET(event), GTK_STATE_NORMAL, &(pl3_win->style->light[GTK_STATE_NORMAL]));
     gtk_container_set_border_width(GTK_CONTAINER(vbox), 3);
     gtk_container_add(GTK_CONTAINER(event), vbox);
     gtk_box_pack_start(GTK_BOX(hbox), event, TRUE, TRUE, 0);
@@ -742,8 +742,8 @@ static void tray_icon2_create_tooltip_real(int position)
 
         g_signal_connect(G_OBJECT(tray_icon2_tooltip_pb), "seek-event", G_CALLBACK(tray_icon2_seek_event), NULL);
 
-        gtk_widget_modify_bg(GTK_WIDGET(tray_icon2_tooltip_pb), GTK_STATE_NORMAL,
-            &(pl3_win->style->light[GTK_STATE_NORMAL]));
+//        gtk_widget_modify_bg(GTK_WIDGET(tray_icon2_tooltip_pb), GTK_STATE_NORMAL,
+  //          &(pl3_win->style->light[GTK_STATE_NORMAL]));
         g_object_set_data_full(G_OBJECT(tray_icon2_tooltip), "song", mpd_songDup(song), (GDestroyNotify) mpd_freeSong);
         gtk_box_pack_start(GTK_BOX(vbox), tray_icon2_tooltip_pb, TRUE, FALSE, 0);
 
@@ -790,7 +790,7 @@ static void tray_icon2_create_tooltip_real(int position)
             // choosing 50px above right corner
             screen = gtk_widget_get_screen(pl3_win);
 
-            monitor = gdk_screen_get_monitor_at_window(screen, pl3_win->window);
+            monitor = gdk_screen_get_monitor_at_window(screen, gtk_widget_get_window(pl3_win));
             gdk_screen_get_monitor_geometry(screen, monitor, &rect2);
             /** Set Y = window height - size; */
             y = rect2.y + rect2.height - 50 - 95;
@@ -845,7 +845,7 @@ static void tray_icon2_create_tooltip_real(int position)
         GdkRectangle rect2;
         screen = gtk_widget_get_screen(pl3_win);
 
-        monitor = gdk_screen_get_monitor_at_window(screen, pl3_win->window);
+        monitor = gdk_screen_get_monitor_at_window(screen, gtk_widget_get_window(pl3_win));
         gdk_screen_get_monitor_geometry(screen, monitor, &rect2);
         gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), rect2.x + 5 + x_offset, rect2.y + 5 + y_offset);
     } else if (position == TI2_AT_UPPER_RIGHT)
@@ -853,7 +853,7 @@ static void tray_icon2_create_tooltip_real(int position)
         GdkRectangle rect2;
         screen = gtk_widget_get_screen(pl3_win);
 
-        monitor = gdk_screen_get_monitor_at_window(screen, pl3_win->window);
+        monitor = gdk_screen_get_monitor_at_window(screen, gtk_widget_get_window(pl3_win));
         gdk_screen_get_monitor_geometry(screen, monitor, &rect2);
         /** Set Y = 0; */
         y = rect2.y + 5;
@@ -865,7 +865,7 @@ static void tray_icon2_create_tooltip_real(int position)
         GdkRectangle rect2;
         screen = gtk_widget_get_screen(pl3_win);
 
-        monitor = gdk_screen_get_monitor_at_window(screen, pl3_win->window);
+        monitor = gdk_screen_get_monitor_at_window(screen, gtk_widget_get_window(pl3_win));
         gdk_screen_get_monitor_geometry(screen, monitor, &rect2);
         /** Set Y = window height - size; */
         y = rect2.y + rect2.height - 5 - 95;
@@ -877,7 +877,7 @@ static void tray_icon2_create_tooltip_real(int position)
         GdkRectangle rect2;
         screen = gtk_widget_get_screen(pl3_win);
 
-        monitor = gdk_screen_get_monitor_at_window(screen, pl3_win->window);
+        monitor = gdk_screen_get_monitor_at_window(screen, gtk_widget_get_window(pl3_win));
         gdk_screen_get_monitor_geometry(screen, monitor, &rect2);
         /** Set Y = window height - size; */
         y = rect2.y + rect2.height - 5 - 95;

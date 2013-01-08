@@ -651,7 +651,7 @@ static void playlist_editor_new_playlist(GtkWidget * item, gpointer data)
     g_signal_connect(G_OBJECT(entry), "changed", G_CALLBACK(playlist_editor_new_entry_changed), button);
     g_signal_connect(G_OBJECT(entry), "activate", G_CALLBACK(playlist_editor_new_entry_activate), button);
     gtk_widget_set_sensitive(button, FALSE);
-    gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox), hbox, TRUE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog))), hbox, TRUE, TRUE, 0);
 
     gtk_misc_set_alignment(GTK_MISC(label), 1, 0.5);
     gtk_box_pack_start(GTK_BOX(hbox), label, TRUE, FALSE, 0);
@@ -692,7 +692,7 @@ static void playlist_editor_rename_playlist(GtkWidget * item, gpointer data)
     g_signal_connect(G_OBJECT(entry), "changed", G_CALLBACK(playlist_editor_new_entry_changed), button);
     gtk_entry_set_text(GTK_ENTRY(entry), name);
     gtk_widget_set_sensitive(button, FALSE);
-    gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox), hbox, TRUE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(dialog)), hbox, TRUE, TRUE, 0);
 
     gtk_misc_set_alignment(GTK_MISC(label), 1, 0.5);
     gtk_box_pack_start(GTK_BOX(hbox), label, TRUE, FALSE, 0);
@@ -763,7 +763,7 @@ static gboolean playlist_editor_key_released(GtkTreeView * tree, GdkEventButton 
 
 static gboolean playlist_editor_key_pressed(GtkWidget * giv, GdkEventKey * event, gpointer data)
 {
-    if (event->keyval == GDK_Delete)
+    if (event->keyval == GDK_KEY_Delete)
     {
         playlist_editor_list_delete_songs(NULL, GTK_TREE_VIEW(giv));
     }
@@ -1234,14 +1234,14 @@ static int playlist_editor_add_go_menu(GtkWidget * menu)
                                   gtk_image_new_from_icon_name("media-playlist", GTK_ICON_SIZE_MENU));
 
     gtk_widget_add_accelerator(GTK_WIDGET(item),
-                               "activate", gtk_menu_get_accel_group(GTK_MENU(menu)), GDK_F5, 0, GTK_ACCEL_VISIBLE);
+                               "activate", gtk_menu_get_accel_group(GTK_MENU(menu)), GDK_KEY_F5, 0, GTK_ACCEL_VISIBLE);
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
     g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(playlist_editor_activate), NULL);
     /** */
     item = gtk_image_menu_item_new_with_label(_("Add Current Song to favorites"));
     gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
                                   gtk_image_new_from_icon_name("emblem-favorite", GTK_ICON_SIZE_MENU));
-    gtk_widget_add_accelerator(GTK_WIDGET(item), "activate", gtk_menu_get_accel_group(GTK_MENU(menu)), GDK_Return,
+    gtk_widget_add_accelerator(GTK_WIDGET(item), "activate", gtk_menu_get_accel_group(GTK_MENU(menu)), GDK_KEY_Return,
                                GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
     g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(favorites_add_current_song), NULL);
 

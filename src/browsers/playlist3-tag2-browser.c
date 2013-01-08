@@ -432,7 +432,7 @@ static gboolean tag2_key_entry_key_press_event(GtkWidget * entry, GdkEventKey * 
 
     if (strlen(text) == 0)
     {
-        if (event->keyval == GDK_BackSpace || event->keyval == GDK_Escape)
+        if (event->keyval == GDK_KEY_BackSpace || event->keyval == GDK_KEY_Escape)
         {
             gtk_widget_hide(te->sentry);
             gtk_widget_grab_focus(te->tree);
@@ -445,13 +445,13 @@ static gboolean tag2_key_entry_key_press_event(GtkWidget * entry, GdkEventKey * 
 static int tag2_key_release_event(GtkTreeView * tree, GdkEventKey * event, tag_element * te)
 {
     guint32 uc;
-    if ((event->state & GDK_CONTROL_MASK) != 0 && event->keyval == GDK_f)
+    if ((event->state & GDK_CONTROL_MASK) != 0 && event->keyval == GDK_KEY_f)
     {
         gtk_widget_grab_focus(te->sentry);
         gtk_widget_show(te->sentry);
         return FALSE;
     }    /*
-           else if(event->keyval == GDK_Escape){
+           else if(event->keyval == GDK_KEY_Escape){
            gtk_entry_set_text(GTK_ENTRY(te->sentry),"");
            gtk_widget_hide(te->sentry);
            return FALSE;
@@ -1881,7 +1881,7 @@ static void tag2_browser_add_go_menu_foreach(tag_browser * browser, GtkWidget * 
                                   gtk_image_new_from_icon_name("media-tag", GTK_ICON_SIZE_MENU));
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
-    gtk_widget_add_accelerator(GTK_WIDGET(item), "activate", gtk_menu_get_accel_group(GTK_MENU(menu)), GDK_F1 + counter,
+    gtk_widget_add_accelerator(GTK_WIDGET(item), "activate", gtk_menu_get_accel_group(GTK_MENU(menu)), GDK_KEY_F1 + counter,
                                GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE);
     counter++;
     g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(tag2_browser_activate), browser);
@@ -1964,7 +1964,7 @@ static int tag2_browser_key_press_event(GtkWidget * mw, GdkEventKey * event, int
 {
     if (type != tag2_plug.id)
         return 0;
-    if (event->keyval == GDK_r && event->state & GDK_MOD1_MASK)
+    if (event->keyval == GDK_KEY_r && event->state & GDK_MOD1_MASK)
     {
         GtkTreeView *tree = playlist3_get_category_tree_view();
         GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(tree));

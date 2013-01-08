@@ -454,8 +454,8 @@ gboolean pl3_window_is_fullscreen(void)
 {
     GtkWidget *win = playlist3_get_window();
     GdkWindowState state = 0;
-    if (win->window)
-        state = gdk_window_get_state(win->window);
+    if (gtk_widget_get_window(win))
+        state = gdk_window_get_state(gtk_widget_get_window(win));
     return (state & GDK_WINDOW_STATE_FULLSCREEN) ? TRUE : FALSE;
 }
 
@@ -569,9 +569,9 @@ gboolean pl3_close(void)
     {
         GtkWidget *window = playlist3_get_window();
         int maximized = FALSE;
-        if (window->window)
+        if (gtk_widget_get_window(window))
         {
-            GdkWindowState state = gdk_window_get_state(window->window);
+            GdkWindowState state = gdk_window_get_state(gtk_widget_get_window(window));
             maximized = ((state & GDK_WINDOW_STATE_MAXIMIZED) > 0);
         }
         cfg_set_single_value_as_int(config, "playlist", "maximized", maximized);
@@ -625,9 +625,9 @@ int pl3_hide(void)
     {
         GtkWidget *window = playlist3_get_window();
         int maximized = FALSE;
-        if (window->window)
+        if (gtk_widget_get_window(window))
         {
-            GdkWindowState state = gdk_window_get_state(window->window);
+            GdkWindowState state = gdk_window_get_state(gtk_widget_get_window(window));
             maximized = ((state & GDK_WINDOW_STATE_MAXIMIZED) > 0);
         }
         cfg_set_single_value_as_int(config, "playlist", "maximized", maximized);
@@ -705,7 +705,7 @@ gint y, GtkSelectionData * data, guint info, guint time_recieved)
     if (info != 99)
     {
         int found = 0;
-        const gchar *url_data = (gchar *) data->data;
+        const guchar *url_data = gtk_selection_data_get_data(data);
         int i;
         if (url_data)
         {
@@ -736,7 +736,7 @@ gint y, GtkSelectionData * data, guint info, guint time_recieved)
         guchar *odata = gtk_selection_data_get_text(data);
         stripped = g_strsplit((gchar *) odata, "\n", 0);
         g_free(odata);
-        if (context->action == GDK_ACTION_MOVE)
+        if (gdk_drag_context_get_action(context)== GDK_ACTION_MOVE)
         {
             mpd_playlist_clear(connection);
         }
@@ -753,7 +753,7 @@ gint y, GtkSelectionData * data, guint info, guint time_recieved)
             mpd_playlist_queue_add(connection, mdata->song->file);
         }
         mpd_playlist_queue_commit(connection);
-        if (context->action == GDK_ACTION_MOVE)
+        if (gdk_drag_context_get_action(context)== GDK_ACTION_MOVE)
         {
             mpd_player_play(connection);
         }
@@ -1009,7 +1009,8 @@ void create_playlist3(void)
         "widget \"*.menubar\" style \"menubar-style\"\n");
 
     /* initial, setting the url hook */
-    gtk_about_dialog_set_url_hook((GtkAboutDialogActivateLinkFunc) about_dialog_activate, NULL, NULL);
+    // TODO
+//    gtk_about_dialog_set_url_hook((GtkAboutDialogActivateLinkFunc) about_dialog_activate, NULL, NULL);
     TEC("Setup dialog url hook")
     /* load gui desciption */
     path = gmpc_get_full_glade_path("playlist3.ui");
@@ -1606,14 +1607,14 @@ static void playlist_zoom_level_changed(void)
             gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "hpaned1-hbox")));
             gtk_action_set_visible(GTK_ACTION(gtk_builder_get_object(pl3_xml, "menu_option")),FALSE);
             gtk_action_set_visible(GTK_ACTION(gtk_builder_get_object(pl3_xml, "menu_go")),FALSE);
-            if (pl3_win->window)
+            if (pl3_gtk_widget_get_window(win))
             {
-                if (gdk_window_get_state(pl3_win->window) & GDK_WINDOW_STATE_MAXIMIZED)
+                if (gdk_window_get_state(pl3_gtk_widget_get_window(win)) & GDK_WINDOW_STATE_MAXIMIZED)
                 {
                     gtk_window_unmaximize(GTK_WINDOW(pl3_win));
                 }
 
-                if (gdk_window_get_state(pl3_win->window) & GDK_WINDOW_STATE_FULLSCREEN)
+                if (gdk_window_get_state(pl3_gtk_widget_get_window(win)) & GDK_WINDOW_STATE_FULLSCREEN)
                 {
                     gtk_window_unfullscreen(GTK_WINDOW(pl3_win));
                 }

@@ -446,12 +446,12 @@ static void pl3_find2_browser_replace_selected(void)
 
 static int pl3_find2_browser_playlist_key_press(GtkWidget * tree, GdkEventKey * event)
 {
-    if (event->keyval == GDK_i && event->state & GDK_MOD1_MASK)
+    if (event->keyval == GDK_KEY_i && event->state & GDK_MOD1_MASK)
     {
         pl3_find2_browser_show_info();
     }
     /* Make ctrl-f focus the search entry */
-    else if (event->keyval == GDK_f && event->state & GDK_CONTROL_MASK)
+    else if (event->keyval == GDK_KEY_f && event->state & GDK_CONTROL_MASK)
     {
         gtk_widget_grab_focus(GTK_WIDGET(search_entry));
         return FALSE;
@@ -686,7 +686,7 @@ static int pl3_find2_browser_add_go_menu(GtkWidget * menu)
                                   gtk_image_new_from_icon_name("gtk-find", GTK_ICON_SIZE_MENU));
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
     gtk_widget_add_accelerator(GTK_WIDGET(item),
-                               "activate", gtk_menu_get_accel_group(GTK_MENU(menu)), GDK_F3, 0, GTK_ACCEL_VISIBLE);
+                               "activate", gtk_menu_get_accel_group(GTK_MENU(menu)), GDK_KEY_F3, 0, GTK_ACCEL_VISIBLE);
     g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_find2_browser_activate), NULL);
 
     return 1;
@@ -750,7 +750,7 @@ static void pl3_find2_entry_changed(GtkWidget * entry, gpointer data)
 
 static gboolean pl3_find2_entry_key_press_event(GtkWidget * entry, GdkEventKey * event, gpointer data)
 {
-    if (event->keyval == GDK_Escape)
+    if (event->keyval == GDK_KEY_Escape)
         gtk_entry_set_text(GTK_ENTRY(entry), "");
 
     return FALSE;

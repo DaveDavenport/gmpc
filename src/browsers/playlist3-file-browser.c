@@ -694,10 +694,10 @@ static int pl3_file_browser_cat_popup(GtkWidget * wid, GdkEventButton * event, g
 
 static gboolean pl3_file_browser_cat_key_press(GtkWidget * tree, GdkEventKey * event, gpointer data)
 {
-    if (event->state & GDK_CONTROL_MASK && (event->keyval == GDK_Insert || event->keyval == GDK_KP_Insert))
+    if (event->state & GDK_CONTROL_MASK && (event->keyval == GDK_KEY_Insert || event->keyval == GDK_KEY_KP_Insert))
     {
         pl3_file_browser_replace_folder();
-    } else if (event->keyval == GDK_Insert || event->keyval == GDK_KP_Insert)
+    } else if (event->keyval == GDK_KEY_Insert || event->keyval == GDK_KEY_KP_Insert)
     {
         pl3_file_browser_add_folder();
     }
@@ -706,7 +706,7 @@ static gboolean pl3_file_browser_cat_key_press(GtkWidget * tree, GdkEventKey * e
 
 static int pl3_file_browser_playlist_key_press(GtkWidget * tree, GdkEventKey * event)
 {
-    if (event->keyval == GDK_i && event->state & GDK_MOD1_MASK)
+    if (event->keyval == GDK_KEY_i && event->state & GDK_MOD1_MASK)
     {
         pl3_file_browser_show_info();
     }
@@ -1210,7 +1210,7 @@ static int pl3_file_browser_add_go_menu(GtkWidget * menu)
     gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
                                   gtk_image_new_from_icon_name("gmpc-database", GTK_ICON_SIZE_MENU));
     gtk_widget_add_accelerator(GTK_WIDGET(item),
-                               "activate", gtk_menu_get_accel_group(GTK_MENU(menu)), GDK_F2, 0, GTK_ACCEL_VISIBLE);
+                               "activate", gtk_menu_get_accel_group(GTK_MENU(menu)), GDK_KEY_F2, 0, GTK_ACCEL_VISIBLE);
 
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
     g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_file_browser_activate), NULL);

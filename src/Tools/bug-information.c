@@ -241,7 +241,7 @@ void bug_information_window_new(GtkWidget * window)
     /* Basic dialog with a close button */
     dialog = gtk_dialog_new_with_buttons(_("Bug information"),
                                          (window) ? (GtkWindow *) playlist3_get_window() : NULL,
-                                         GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_NO_SEPARATOR,
+                                         GTK_DIALOG_DESTROY_WITH_PARENT ,
                                          GTK_STOCK_CLOSE, GTK_RESPONSE_YES, NULL);
 
     /* Set default window size */
@@ -277,7 +277,7 @@ void bug_information_window_new(GtkWidget * window)
     /* add text view to scrolled_window */
     gtk_container_add(GTK_CONTAINER(scrolled_window), text_view);
     /* add scrolled_window to dialog */
-    gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox), scrolled_window, TRUE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(dialog)), scrolled_window, TRUE, TRUE, 0);
 
     /* Add dialogs response handler */
     g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(gtk_widget_destroy), NULL);

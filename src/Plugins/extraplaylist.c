@@ -217,7 +217,7 @@ static void extra_playlist_add(void) {
 
 static void extra_playlist_init(void ) {
     if( cfg_get_single_value_as_int_with_default(config,"extraplaylist", "enabled", 0)) {
-        gtk_init_add((GtkFunction )extra_playlist_add, NULL);
+        gtk_init_add((GSourceFunc)extra_playlist_add, NULL);
     }
 }
 static void set_enabled(int enable) {

@@ -239,7 +239,7 @@ static void serverstats_combo_changed(GtkComboBox * box, GtkWidget * pb)
 
 static void serverstats_header_style_changed(GtkWidget * vbox, GtkStyle * style, GtkWidget * vp)
 {
-    gtk_widget_modify_bg(vp, GTK_STATE_NORMAL, &(GTK_WIDGET(vbox)->style->base[GTK_STATE_NORMAL]));
+//    gtk_widget_modify_bg(vp, GTK_STATE_NORMAL, &(GTK_WIDGET(vbox)->style->base[GTK_STATE_NORMAL]));
 }
 
 static void cancel_clicked(GtkWidget * cancel, gpointer data)
@@ -293,7 +293,7 @@ static void serverstats_init(void)
     gtk_widget_set_state(GTK_WIDGET(event), GTK_STATE_SELECTED);
     g_signal_connect(G_OBJECT(event), "expose-event", G_CALLBACK(misc_header_expose_event), NULL);
 
-    gtk_widget_modify_bg(serverstats_event, GTK_STATE_NORMAL, &(colw->style->base[GTK_STATE_NORMAL]));
+    //gtk_widget_modify_bg(serverstats_event, GTK_STATE_NORMAL, &(colw->style->base[GTK_STATE_NORMAL]));
     g_signal_connect(G_OBJECT(serverstats_vbox), "style-set", G_CALLBACK(serverstats_header_style_changed),
                      serverstats_event);
 
@@ -476,7 +476,7 @@ static void serverinformation_popup_close(GtkWidget * dialog, gint response_id, 
     cfg_set_single_value_as_int(config, "serverstats", "dialog-height", height);
 
     /* Remove info window, and keep it */
-    serverstats_unselected(GTK_DIALOG(dialog)->vbox);
+    serverstats_unselected(gtk_dialog_get_content_area(dialog));
 
     /* destroy dialog */
     gtk_widget_destroy(dialog);
@@ -517,7 +517,7 @@ void serverinformation_show_popup(void)
                                          GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
                                          GTK_STOCK_CLOSE, GTK_RESPONSE_OK, NULL);
     /* Add info window */
-    serverstats_selected(GTK_DIALOG(dialog)->vbox);
+    serverstats_selected(gtk_dialog_get_content_area(dialog));
     /* Restore size */
     gtk_window_resize(GTK_WINDOW(dialog),
                       cfg_get_single_value_as_int_with_default(config, "serverstats", "dialog-width", 400),

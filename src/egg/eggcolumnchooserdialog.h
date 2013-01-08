@@ -22,16 +22,14 @@
 #ifndef __EGG_COLUMN_CHOOSER_DIALOG_H__
 #define __EGG_COLUMN_CHOOSER_DIALOG_H__
 
-#include <gtk/gtkdialog.h>
-#include <gtk/gtktreeview.h>
-#include <gtk/gtkliststore.h>
+#include <gtk/gtk.h>
 
 #include "eggcolumnmodel.h"
 
 G_BEGIN_DECLS
 
 #define EGG_TYPE_COLUMN_CHOOSER_DIALOG (egg_column_chooser_dialog_get_type ())
-#define EGG_COLUMN_CHOOSER_DIALOG(obj) (GTK_CHECK_CAST ((obj), EGG_TYPE_COLUMN_CHOOSER_DIALOG, EggColumnChooserDialog))
+#define EGG_COLUMN_CHOOSER_DIALOG(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), EGG_TYPE_COLUMN_CHOOSER_DIALOG, EggColumnChooserDialog))
 #define EGG_COLUMN_CHOOSER_DIALOG_CLASS(klass) (GTK_CHECK_CLASS_CAST ((klass), EGG_TYPE_COLUMN_CHOOSER_DIALOG, EggColumnChooserDialogClass))
 #define EGG_IS_COLUMN_CHOOSER_DIALOG(obj)      (GTK_CHECK_TYPE ((obj), EGG_TYPE_COLUMN_CHOOSER_DIALOG))
 #define EGG_IS_COLUMN_CHOOSER_DIALOG_CLASS(klass) (GTK_CHECK_CLASS_TYPE ((obj), EGG_TYPE_COLUMN_CHOOSER_DIALOG))

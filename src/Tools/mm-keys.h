@@ -24,7 +24,7 @@
 #include <gdk/gdk.h>
 #include <gdk/gdkx.h>
 #include <stdio.h>
-#include <gtk/gtktogglebutton.h>
+#include <gtk/gtk.h>
 #include "main.h"
 
 #ifndef __MM_KEYS_H

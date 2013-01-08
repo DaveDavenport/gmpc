@@ -25,10 +25,6 @@
 #define __GSEAL_TRANSITION_H__
 
 #ifndef GSEAL
-#define gtk_selection_data_get_data(x) (x)->data
-#define gtk_selection_data_get_length(x) (x)->length
-#define gtk_socket_get_plug_window(x) (x)->plug_window
-#define gtk_widget_get_window(x) (x)->window
 #endif
 
 #endif

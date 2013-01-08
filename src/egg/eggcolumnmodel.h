@@ -21,7 +21,7 @@
 #ifndef __EGG_COLUMN_MODEL_H__
 #define __EGG_COLUMN_MODEL_H__
 
-#include <gtk/gtktreeview.h>
+#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 

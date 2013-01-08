@@ -713,6 +713,7 @@ gchar **tokenize_string(const gchar * string)
 
 void misc_header_style_set_process_containers(GtkWidget * container, GtkStyle * old_style, gpointer data)
 {
+/*
     GtkStyle *style = container->style;
     GList *list = NULL;
     list = gtk_container_get_children(GTK_CONTAINER(container));
@@ -730,11 +731,12 @@ void misc_header_style_set_process_containers(GtkWidget * container, GtkStyle * 
         }
         g_list_free(list);
     }
-
+*/
 }
 
 gboolean misc_header_expose_event(GtkWidget * widget, GdkEventExpose * event)
 {
+/* TODO:
     int width = widget->allocation.width;
     int height = widget->allocation.height;
 
@@ -743,6 +745,7 @@ gboolean misc_header_expose_event(GtkWidget * widget, GdkEventExpose * event)
                        GTK_STATE_SELECTED, GTK_SHADOW_NONE, &(event->area), widget, "cell_odd", 0, 0, width, height);
     gtk_paint_focus(widget->style, widget->window,
                     GTK_STATE_NORMAL, &(event->area), widget, "button", 0, 0, width, height);
+*/
     return FALSE;
 }
 

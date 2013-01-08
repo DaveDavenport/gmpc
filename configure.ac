@@ -90,7 +90,7 @@ AC_ARG_ENABLE([unique],
 		             no)    enable_unique=false;;
 		              *)    AC_MSG_ERROR([bad value ${enableval} for --enable-unique]);;
                esac],
-               [enable_unique=true])
+               [enable_unique=false])
 # libxspf
 libxspf=0;
 libspiff=0;
@@ -377,7 +377,7 @@ APPINDICATOR_REQUIRED=0.3
 AC_ARG_ENABLE(appindicator,
                         AS_HELP_STRING([--enable-appindicator[=@<:@no/auto/yes@:>@]],[Build support for application indicators ]),
                         [enable_appindicator=$enableval],
-                        [enable_appindicator="auto"])
+                        [enable_appindicator="no"])
 
 if test x$enable_appindicator = xauto ; then
         PKG_CHECK_EXISTS([appindicator-0.1 >= $APPINDICATOR_REQUIRED],
