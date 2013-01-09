@@ -96,7 +96,7 @@ void playlist3_new_header(void)
         header_labels[1] = gtk_label_new(_("By"));
         /** Artist */
         header_labels[2] = (GtkWidget *)gmpc_clicklabel_new("");
-        gmpc_clicklabel_set_ellipsize(GMPC_CLICKLABEL(header_labels[2]), PANGO_ELLIPSIZE_NONE);
+        gmpc_clicklabel_set_ellipsize(GMPC_CLICKLABEL(header_labels[2]), PANGO_ELLIPSIZE_END);
 
         header_labels[3] = gtk_label_new(_("From"));
         /** Albumr */
@@ -112,7 +112,7 @@ void playlist3_new_header(void)
         gtk_box_pack_start(GTK_BOX(hbox), header_labels[1], FALSE, TRUE, 0);
         gtk_box_pack_start(GTK_BOX(hbox), header_labels[2], FALSE, TRUE, 0);
         gtk_box_pack_start(GTK_BOX(hbox), header_labels[3], FALSE, TRUE, 0);
-        gtk_box_pack_start(GTK_BOX(hbox), header_labels[4], TRUE, TRUE, 0);
+        gtk_box_pack_start(GTK_BOX(hbox), header_labels[4], FALSE, TRUE, 0);
 
         g_signal_connect(G_OBJECT(header_labels[0]), "clicked", G_CALLBACK(playlist3_header_song), NULL);
         g_signal_connect(G_OBJECT(header_labels[2]), "clicked", G_CALLBACK(playlist3_header_artist), NULL);
