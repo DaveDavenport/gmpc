@@ -276,7 +276,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
          */
         private
         gboolean
-        expose_event(self, GdkEventExpose *event, gpointer data)
+        expose_event(self, cairo_t *ct, gpointer data)
         {
             g_signal_handler_disconnect(G_OBJECT(self), self->_priv->expose_id);
             self->_priv->expose_id = 0;
@@ -466,7 +466,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
             gtk_widget_set_size_request(GTK_WIDGET(self), self->size, self->size);
             self->_priv->song = mpd_songDup(song);
             /* hack to make it load when it gets visible */
-            self->_priv->expose_id = g_signal_connect(G_OBJECT(self), "expose-event", G_CALLBACK(self_expose_event) , NULL);
+            self->_priv->expose_id = g_signal_connect(G_OBJECT(self), "draw", G_CALLBACK(self_expose_event) , NULL);
         }
 
 	private

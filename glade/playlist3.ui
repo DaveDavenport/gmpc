@@ -388,6 +388,7 @@
     <signal name="focus-out-event" handler="pl3_window_focus_out_event" swapped="no"/>
     <child>
       <object class="GtkVBox" id="vbox1">
+        <property name="orientation">vertical</property>
         <property name="spacing">0</property>
         <property name="visible">True</property>
         <child>
@@ -402,6 +403,7 @@
         </child>
         <child>
           <object class="GtkVBox" id="vbox_control">
+            <property name="orientation">vertical</property>
             <property name="visible">True</property>
             <child>
               <object class="GtkEventBox" id="header">
@@ -419,9 +421,11 @@
                     <property name="bottom_padding">0</property>
                     <child>
                       <object class="GtkVBox" id="vbox_playlist_player">
+                        <property name="orientation">vertical</property>
                         <property name="visible">True</property>
                         <child>
                           <object class="GtkHBox" id="hbox_playlist_player">
+                            <property name="orientation">horizontal</property>
                             <property name="visible">True</property>
                             <property name="border_width">1</property>
                             <property name="spacing">6</property>
@@ -583,7 +587,8 @@
                             </child>
                           </object>
                           <packing>
-                            <property name="position">0</property>
+                          <property name="expand">False</property>
+                          <property name="position">0</property>
                           </packing>
                         </child>
                       </object>
@@ -605,7 +610,8 @@
             </child>
             <child>
               <object class="GtkVBox" id="hpaned1_vbox">
-                <property name="visible">True</property>
+              <property name="orientation">vertical</property>
+              <property name="visible">True</property>
                 <property name="spacing">0</property>
                 <child>
                   <object class="GtkHBox" id="hpaned1-hbox">
@@ -614,6 +620,7 @@
                     <property name="can_focus">True</property>
                     <child>
                       <object class="GtkVBox" id="sidebar">
+                        <property name="orientation">vertical</property>
                         <property name="name">sidebar</property>
                         <property name="visible">True</property>
                         <property name="spacing">0</property>
@@ -631,10 +638,12 @@
                                 <property name="shadow_type">none</property>
                                 <child>
                                   <object class="GtkVBox" id="vbox5">
+                                    <property name="orientation">vertical</property>
                                     <property name="visible">True</property>
                                     <property name="spacing">16</property>
                                     <child>
                                       <object class="GtkVBox" id="browsers_vbox">
+                                        <property name="orientation">vertical</property>
                                         <property name="visible">True</property>
                                         <property name="spacing">4</property>
                                         <child>
@@ -659,6 +668,7 @@
                                     </child>
                                     <child>
                                       <object class="GtkVBox" id="sidebar_plugins_top">
+                                        <property name="orientation">vertical</property>
                                         <property name="visible">True</property>
                                         <property name="spacing">25</property>
                                         <child>
@@ -695,6 +705,7 @@
                             <property name="right_padding">0</property>
                             <child>
                               <object class="GtkVBox" id="sidebar_plugins_bottom">
+                                <property name="orientation">vertical</property>
                                 <property name="visible">True</property>
                                 <property name="spacing">3</property>
                                 <child>
@@ -792,6 +803,7 @@
                     </child>
                     <child>
                       <object class="GtkVBox" id="vbox7">
+                        <property name="orientation">vertical</property>
                         <property name="visible">True</property>
                         <property name="spacing">3</property>
                         <child>

@@ -182,6 +182,9 @@ namespace Gmpc
              */
             private bool container_expose(Gtk.Widget ev, Cairo.Context gc) 
             {
+                Gtk.Allocation alloc;
+                ev.get_allocation(out alloc);
+                gc.rectangle(alloc.x, alloc.y, alloc.width, alloc.height);
                 /* If there is an background image set. */
                 if(pb != null)
                 {
