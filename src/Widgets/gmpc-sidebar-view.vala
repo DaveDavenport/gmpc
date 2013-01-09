@@ -84,6 +84,11 @@ public class MyCellRenderer : Gtk.CellRenderer
     /* dumb constructor */
     public MyCellRenderer () {}
 
+    public override Gtk.SizeRequestMode get_request_mode()
+    {
+        return Gtk.SizeRequestMode.CONSTANT_SIZE;
+    }
+
     /* get_size method, always request a 50x50 area */
     public override void get_size (Gtk.Widget widget,
             Gdk.Rectangle? cell_area,
@@ -129,7 +134,7 @@ public class MyCellRenderer : Gtk.CellRenderer
         Gdk.Rectangle ca = Gdk.Rectangle();
         ca.x = cell_area.x;
         ca.y = cell_area.y;
-        ca.width = image_width+6;//cell_area.height;
+        ca.width = w+6;//cell_area.height;
         ca.height = cell_area.height;
 
         if(cr_pb.icon_name != null || cr_pb.stock_id != null )
@@ -137,7 +142,11 @@ public class MyCellRenderer : Gtk.CellRenderer
             cr_pb.render(ct, widget, background_area, ca, flags);
 
             ca.x+=6+image_width;
-            ca.width-=6+image_width;
+            ca.width = cell_area.width-ca.width;
+        }
+        else
+        {
+            ca.width = cell_area.width;
         }
         if(show_text)
             cr_text.render(ct, widget, background_area, ca, flags);

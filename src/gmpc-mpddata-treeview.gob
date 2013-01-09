@@ -502,7 +502,6 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 			GdkColor color;
 			GtkStyle *style = gtk_widget_get_style(widget);
 			GdkColor *background_color = &style->base[GTK_STATE_NORMAL];
-			cairo_t *context;
 			cairo_surface_t *surface;
 			cairo_t *cr;
 			GdkScreen *screen = gtk_window_get_screen(GTK_WINDOW(widget));
@@ -515,7 +514,6 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 #endif
 
 
-//			context = gdk_cairo_create(widget->window);
 
 			cairo_set_operator(context, CAIRO_OPERATOR_SOURCE);
 			surface = cairo_surface_create_similar(cairo_get_target(context),
@@ -588,7 +586,6 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 			cairo_set_source_surface(context, surface, 0, 0);
 			cairo_paint(context);
 			cairo_surface_destroy(surface);
-			cairo_destroy(context);
 
 			return FALSE;//GTK_WIDGET_CLASS(parent_class)->expose_event(widget, event);
 		}
