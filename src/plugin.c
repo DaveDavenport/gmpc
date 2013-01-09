@@ -366,7 +366,9 @@ void plugin_load_dir(const gchar * path)
     }
     if (failure)
     {
-        gtk_init_add(__show_plugin_load_error, NULL);
+        // TODO
+        g_idle_add(__show_plugin_load_error, NULL);
+        //gtk_init_add(__show_plugin_load_error, NULL);
     }
 }
 

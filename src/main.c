@@ -194,7 +194,8 @@ int main(int argc, char **argv)
     textdomain(GETTEXT_PACKAGE);
     #endif
 
-    gtk_set_locale();
+    //gtk_set_locale();
+//    setlocale();
 
     TEC("Setting up locale");
 
@@ -537,10 +538,11 @@ int main(int argc, char **argv)
      * Call this when entering the main loop,
      *  so you are connected on startup, not 5 seconds later
      */
-    gtk_init_add((GSourceFunc) autoconnect_callback, NULL);
+    // TODO
+//    gtk_init_add((GSourceFunc) autoconnect_callback, NULL);
     if (settings.fullscreen)
     {
-        gtk_init_add((GSourceFunc) pl3_window_fullscreen, NULL);
+//        gtk_init_add((GSourceFunc) pl3_window_fullscreen, NULL);
     }
 
     /**

@@ -180,7 +180,8 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 
 	    win = gtk_window_new(GTK_WINDOW_POPUP);
 	    gtk_window_set_resizable(GTK_WINDOW(win), FALSE);
-	    gtk_widget_modify_bg(win, GTK_STATE_NORMAL, &(GTK_WIDGET(self)->style->black));
+        //TODO
+//	    gtk_widget_modify_bg(win, GTK_STATE_NORMAL, &(GTK_WIDGET(self)->style->black));
 	    gtk_container_set_border_width(GTK_CONTAINER(win), 6);
 	    gtk_container_add(GTK_CONTAINER(win), GTK_WIDGET(self->_priv->tooltip_image));
 
@@ -298,7 +299,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                     GDK_ACTION_COPY|GDK_ACTION_LINK|GDK_ACTION_DEFAULT|GDK_ACTION_MOVE);
 
             g_signal_connect_swapped (G_OBJECT (gmi),"drag-data-received",
-                    GTK_SIGNAL_FUNC (self_drag_data_recieved),gmi);
+                    G_CALLBACK (self_drag_data_recieved),gmi);
 
             gmi->_priv->metadata_force_reload = g_signal_connect_swapped(G_OBJECT(gmw), "force-reload", G_CALLBACK(self_reload_image), gmi);
 
@@ -316,7 +317,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
                 data_image_drag_target, num_drag_targets,
                 GDK_ACTION_COPY|GDK_ACTION_LINK|GDK_ACTION_DEFAULT|GDK_ACTION_MOVE);
         g_signal_connect_swapped (G_OBJECT (gmi),"drag-data-received",
-                GTK_SIGNAL_FUNC (self_drag_data_recieved),gmi);
+                G_CALLBACK (self_drag_data_recieved),gmi);
             gmi->_priv->metadata_force_reload = g_signal_connect_swapped(G_OBJECT(gmw), "force-reload", G_CALLBACK(self_reload_image), gmi);
             return (GtkWidget *)gmi;
 		}

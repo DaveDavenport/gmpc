@@ -494,11 +494,11 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 
 	private
 		gboolean
-		tooltip_expose_event(GtkWidget *widget, GdkEventExpose *event,gpointer data)
+		tooltip_draw (GtkWidget *widget, cairo_t *context,gpointer data)
 		{
 			int stripe_x = 1;
 			int stripe_y = 1;
-			int stripe_height = widget->allocation.height;// 128+8;
+            GtkAllocation allocation;
 			GdkColor color;
 			GtkStyle *style = gtk_widget_get_style(widget);
 			GdkColor *background_color = &style->base[GTK_STATE_NORMAL];
@@ -506,20 +506,22 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 			cairo_surface_t *surface;
 			cairo_t *cr;
 			GdkScreen *screen = gtk_window_get_screen(GTK_WINDOW(widget));
+            gtk_widget_get_allocation(widget, &allocation);
+			int stripe_height = allocation.height;// 128+8;
 #ifdef ENABLE_GRADIENT_LOOK
 			cairo_pattern_t *gradient;
 			double r, g, b;
-			int gradient_y = widget->allocation.height - BOTTOM_GRADIENT_HEIGHT;
+			int gradient_y = allocation.height - BOTTOM_GRADIENT_HEIGHT;
 #endif
 
 
-			context = gdk_cairo_create(widget->window);
+//			context = gdk_cairo_create(widget->window);
 
 			cairo_set_operator(context, CAIRO_OPERATOR_SOURCE);
 			surface = cairo_surface_create_similar(cairo_get_target(context),
 					CAIRO_CONTENT_COLOR_ALPHA,
-					widget->allocation.width,
-					widget->allocation.height);
+					allocation.width,
+					allocation.height);
 			cr = cairo_create(surface);
 
 
@@ -539,17 +541,17 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 			}
 
 			cairo_rectangle(cr, 0, 0,
-					widget->allocation.width,
-					widget->allocation.height);
+					allocation.width,
+					allocation.height);
 			cairo_fill(cr);
 
 #ifdef ENABLE_GRADIENT_LOOK
 			/* Add a very subtle gradient to the bottom of the notification */
 			gradient = cairo_pattern_create_linear(0, gradient_y, 0,
-					widget->allocation.height);
+					allocation.height);
 			cairo_pattern_add_color_stop_rgba(gradient, 0, 0, 0, 0, 0);
 			cairo_pattern_add_color_stop_rgba(gradient, 1, 0, 0, 0, 0.15);
-			cairo_rectangle(cr, 0, gradient_y, widget->allocation.width,
+			cairo_rectangle(cr, 0, gradient_y, allocation.width,
 					BOTTOM_GRADIENT_HEIGHT);
 			cairo_set_source(cr, gradient);
 			cairo_fill(cr);
@@ -558,7 +560,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 
 			cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, 1.0);
 			cairo_set_line_width(cr, 1.0);
-			cairo_rectangle(cr, 0.5, 0.5,widget->allocation.width - 0.5, widget->allocation.height - 0.5);
+			cairo_rectangle(cr, 0.5, 0.5,allocation.width - 0.5, allocation.height - 0.5);
 			cairo_stroke(cr);
 
 
@@ -595,7 +597,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 	{
 		gchar *markup = NULL;
 		GdkScreen *screen;
-		GdkColormap *colormap;
+//		GdkColormap *colormap;
 		GtkWidget *treeview = GTK_WIDGET(self);
 		GtkWidget *table = gtk_table_new(6,2, FALSE);
 		GtkWidget *vbox = gtk_hbox_new(FALSE, 0);
@@ -603,18 +605,19 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 		GtkSizeGroup *group  = gtk_size_group_new(GTK_SIZE_GROUP_HORIZONTAL);
 		self->_priv->tooltip_window = gtk_window_new(GTK_WINDOW_POPUP);
 		screen = gtk_window_get_screen(GTK_WINDOW(self->_priv->tooltip_window));
-		colormap = gdk_screen_get_rgba_colormap(screen);
+/*
+		//colormap = gdk_screen_get_rgba_colormap(screen);
 
 		if (colormap != NULL && gdk_screen_is_composited(screen))
 		{
 			gtk_widget_set_colormap(self->_priv->tooltip_window, colormap);
 		}
-
+*/
 
 		gtk_widget_set_size_request(GTK_WIDGET(self->_priv->tooltip_window), 3*128,-1);
 
 		gtk_widget_set_app_paintable(self->_priv->tooltip_window, TRUE);
-		g_signal_connect(G_OBJECT(self->_priv->tooltip_window), "expose-event", G_CALLBACK(self_tooltip_expose_event), self);
+		g_signal_connect(G_OBJECT(self->_priv->tooltip_window), "draw", G_CALLBACK(self_tooltip_draw), self);
 
 		gtk_container_add(GTK_CONTAINER(self->_priv->tooltip_window), vbox);
 		self->_priv->tw_image = gmpc_metaimage_new(META_ALBUM_ART);
@@ -824,7 +827,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 		int
 		paste_key_release_event(self, GdkEventKey *event,gpointer data)
 		{
-            if(event->keyval == GDK_Insert || event->keyval == GDK_KP_Insert) {
+            if(event->keyval == GDK_KEY_Insert || event->keyval == GDK_KEY_KP_Insert) {
                 if(mpd_check_connected(connection))
                 {
                     self_insert_selected_rows(self,((event->state & GDK_CONTROL_MASK) > 0));
@@ -832,7 +835,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
                 }
 
             }
-            if(event->keyval == GDK_Menu) {
+            if(event->keyval == GDK_KEY_Menu) {
                 GdkEventButton bevent;
                 gboolean value = FALSE;
                 bevent.window = NULL;
@@ -845,7 +848,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 
                 return TRUE;
             }
-			if (event->keyval == GDK_c && event->state&GDK_CONTROL_MASK)
+			if (event->keyval == GDK_KEY_c && event->state&GDK_CONTROL_MASK)
 			{
 				self_paste_copy_songs(self, NULL);
 				return TRUE;
@@ -854,7 +857,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 			{
 				if(g_signal_has_handler_pending(G_OBJECT(self), object_signals[PASTE_BEFORE_SIGNAL], 0, TRUE))
 				{
-					if (event->keyval == GDK_b && event->state&GDK_CONTROL_MASK)
+					if (event->keyval == GDK_KEY_b && event->state&GDK_CONTROL_MASK)
 					{
 						self_paste_paste_before_songs(self, NULL);
 						return TRUE;
@@ -864,7 +867,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 
 				if(g_signal_has_handler_pending(G_OBJECT(self), object_signals[PASTE_AFTER_SIGNAL], 0, TRUE))
 				{
-					if (event->keyval == GDK_v && event->state&GDK_CONTROL_MASK)
+					if (event->keyval == GDK_KEY_v && event->state&GDK_CONTROL_MASK)
 					{
 						self_paste_paste_after_songs(self, NULL);
 						return TRUE;
@@ -876,7 +879,7 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
 			{
 				if(g_signal_has_handler_pending(G_OBJECT(self), object_signals[CUT_SIGNAL], 0, TRUE))
 				{
-					if (event->keyval == GDK_x && event->state&GDK_CONTROL_MASK)
+					if (event->keyval == GDK_KEY_x && event->state&GDK_CONTROL_MASK)
 					{
 						self_paste_cut_songs(self, NULL);
 						return TRUE;

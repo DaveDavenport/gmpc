@@ -381,12 +381,12 @@ static void serverstats_init(void)
         GtkListStore *store;
         GtkCellRenderer *renderer;
         GtkWidget *pb = gtk_progress_bar_new();
-        combo = gtk_combo_box_new_text();
+        combo = gtk_combo_box_text_new();
         for (i = 0; i < MPD_TAG_NUM_OF_ITEM_TYPES - 1; i++)
         {
             if (mpd_server_tag_supported(connection, i))
             {
-                gtk_combo_box_append_text(GTK_COMBO_BOX(combo), mpdTagItemKeys[i]);
+                gtk_combo_box_text_append(GTK_COMBO_BOX(combo),NULL, mpdTagItemKeys[i]);
             }
         }
 

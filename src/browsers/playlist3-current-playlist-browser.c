@@ -404,7 +404,7 @@ static void pl3_current_playlist_browser_init(PlayQueuePlugin * self)
 
 static void pl3_current_playlist_browser_select_current_song(PlayQueuePlugin * self)
 {
-    if (self->priv->pl3_cp_tree == NULL || !GTK_WIDGET_REALIZED(self->priv->pl3_cp_tree))
+    if (self->priv->pl3_cp_tree == NULL || !gtk_widget_get_realized(self->priv->pl3_cp_tree))
         return;
     /* scroll to the playing song */
     if (mpd_player_get_current_song_pos(connection) >= 0 && mpd_playlist_get_playlist_length(connection) > 0)
@@ -421,7 +421,7 @@ static void pl3_current_playlist_browser_select_current_song(PlayQueuePlugin * s
 
 static void pl3_current_playlist_browser_scroll_to_current_song(PlayQueuePlugin * self)
 {
-    if (self->priv->pl3_cp_tree == NULL || !GTK_WIDGET_REALIZED(self->priv->pl3_cp_tree))
+    if (self->priv->pl3_cp_tree == NULL || !gtk_widget_get_realized(self->priv->pl3_cp_tree))
         return;
     /* scroll to the playing song */
     if (mpd_player_get_current_song_pos(connection) >= 0 && mpd_playlist_get_playlist_length(connection) > 0)

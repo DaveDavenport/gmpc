@@ -736,7 +736,7 @@ gint y, GtkSelectionData * data, guint info, guint time_recieved)
         guchar *odata = gtk_selection_data_get_text(data);
         stripped = g_strsplit((gchar *) odata, "\n", 0);
         g_free(odata);
-        if (gdk_drag_context_get_action(context)== GDK_ACTION_MOVE)
+        if (gdk_drag_context_get_actions(context)== GDK_ACTION_MOVE)
         {
             mpd_playlist_clear(connection);
         }
@@ -753,7 +753,7 @@ gint y, GtkSelectionData * data, guint info, guint time_recieved)
             mpd_playlist_queue_add(connection, mdata->song->file);
         }
         mpd_playlist_queue_commit(connection);
-        if (gdk_drag_context_get_action(context)== GDK_ACTION_MOVE)
+        if (gdk_drag_context_get_actions(context)== GDK_ACTION_MOVE)
         {
             mpd_player_play(connection);
         }
@@ -1247,7 +1247,7 @@ void create_playlist3(void)
         target_table, 6, GDK_ACTION_COPY | GDK_ACTION_LINK | GDK_ACTION_DEFAULT | GDK_ACTION_MOVE);
     g_signal_connect(G_OBJECT
         (gtk_builder_get_object(pl3_xml, "hbox_playlist_player")),
-        "drag_data_received", GTK_SIGNAL_FUNC(playlist3_source_drag_data_recieved), NULL);
+        "drag_data_received", G_CALLBACK (playlist3_source_drag_data_recieved), NULL);
 
     TEC("setup drag")
     /**
@@ -1607,14 +1607,14 @@ static void playlist_zoom_level_changed(void)
             gtk_widget_hide(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "hpaned1-hbox")));
             gtk_action_set_visible(GTK_ACTION(gtk_builder_get_object(pl3_xml, "menu_option")),FALSE);
             gtk_action_set_visible(GTK_ACTION(gtk_builder_get_object(pl3_xml, "menu_go")),FALSE);
-            if (pl3_gtk_widget_get_window(win))
+            if (pl3_win)
             {
-                if (gdk_window_get_state(pl3_gtk_widget_get_window(win)) & GDK_WINDOW_STATE_MAXIMIZED)
+                if (gdk_window_get_state(gtk_widget_get_window(pl3_win)) & GDK_WINDOW_STATE_MAXIMIZED)
                 {
                     gtk_window_unmaximize(GTK_WINDOW(pl3_win));
                 }
 
-                if (gdk_window_get_state(pl3_gtk_widget_get_window(win)) & GDK_WINDOW_STATE_FULLSCREEN)
+                if (gdk_window_get_state(gtk_widget_get_window(pl3_win)) & GDK_WINDOW_STATE_FULLSCREEN)
                 {
                     gtk_window_unfullscreen(GTK_WINDOW(pl3_win));
                 }
@@ -2213,7 +2213,7 @@ static void playlist3_fill_server_menu(void)
             gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(menu_item), data->output_dev->enabled ? TRUE : FALSE);
             gtk_widget_add_accelerator(menu_item, "activate",
                 gtk_ui_manager_get_accel_group(GTK_UI_MANAGER(ui)),
-                GDK_1 + i, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+                GDK_KEY_1 + i, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
             g_signal_connect(G_OBJECT(menu_item), "toggled", G_CALLBACK(playlist3_server_output_changed), NULL);
             g_object_set_data(G_OBJECT(menu_item), "id", GINT_TO_POINTER(data->output_dev->id));

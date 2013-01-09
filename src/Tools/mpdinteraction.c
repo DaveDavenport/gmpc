@@ -405,7 +405,7 @@ static void create_outputs_tree(void)
     gtk_tree_view_column_add_attribute(col, cell, "active", 0);
     gtk_tree_view_column_set_title(col, "Enabled");
     gtk_tree_view_append_column(tree, col);
-    g_signal_connect(GTK_OBJECT(cell), "toggled", GTK_SIGNAL_FUNC(outputs_toggled), tree);
+    g_signal_connect(G_OBJECT(cell), "toggled", G_CALLBACK(outputs_toggled), tree);
 
     cell = gtk_cell_renderer_text_new();
     col = gtk_tree_view_column_new();

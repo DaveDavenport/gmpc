@@ -47,7 +47,7 @@ class Gmpc:Meta:Text:View from Gtk:Text:View {
     private gboolean
     key_press_event(self, GdkEventKey *key, gpointer user_data)
     {
-        if(key->keyval == GDK_Escape)
+        if(key->keyval == GDK_KEY_Escape)
         {
             if(self->_priv->cancel){
                 gtk_widget_activate(self->_priv->cancel);

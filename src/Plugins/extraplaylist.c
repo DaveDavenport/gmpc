@@ -32,7 +32,7 @@ static gboolean includes_sidebar = FALSE;
 
 static GtkWidget *cb_include_sidebar = NULL;
 
-static void extra_playlist_add(void);
+static gboolean extra_playlist_add(void);
 
 static void extra_playlist_save(void) {
     if(extraplaylist) {
@@ -139,14 +139,14 @@ static void extra_playlist_remove(void) {
 }
 
 
-static void extra_playlist_add(void) {
+static gboolean extra_playlist_add(void) {
 
     extra_playlist_remove();
 
     GtkWidget *temp = NULL;
-    if(pl3_xml == NULL) return;
-    if(extraplaylist == NULL  && get_enabled() == FALSE) return;
-    if(extraplaylist != NULL) return;
+    if(pl3_xml == NULL) return FALSE;
+    if(extraplaylist == NULL  && get_enabled() == FALSE) return FALSE;
+    if(extraplaylist != NULL) return FALSE;
 
     if ((cfg_get_single_value_as_int_with_default(config, "extraplaylist", "include-sidebar",FALSE)) &&
        (cfg_get_single_value_as_int_with_default(config, "extraplaylist", "vertical-layout", TRUE))) {
@@ -212,12 +212,14 @@ static void extra_playlist_add(void) {
     g_signal_connect(G_OBJECT(gtk_tree_view_get_selection(playlist3_get_category_tree_view())), "changed",
         G_CALLBACK(ep_view_changed), NULL);
 
+    return FALSE;
 }
 
 
 static void extra_playlist_init(void ) {
     if( cfg_get_single_value_as_int_with_default(config,"extraplaylist", "enabled", 0)) {
-        gtk_init_add((GSourceFunc)extra_playlist_add, NULL);
+//        gtk_init_add((GSourceFunc)extra_playlist_add, NULL);
+            g_idle_add(extra_playlist_add, NULL);
     }
 }
 static void set_enabled(int enable) {
