@@ -960,12 +960,13 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
      * then increments i
      */
 
-    private void add_entry(Gtk.Table table, string entry_label, string? value,Gtk.Widget? extra,  ref int i, string ? image = null)
+    private void add_entry(Gtk.Grid table, string entry_label, string? value,Gtk.Widget? extra,  ref int i, string ? image = null)
     {
         int j=0;
         if(value == null && extra == null) return;
-        var box = new Gtk.HBox(false, 6);
+        var box = new Gtk.Grid();
         var label = new Gtk.Label("");
+        box.column_spacing = 6;
         label.set_alignment(0.0f, 0.0f);
         label.set_markup(Markup.printf_escaped("<b>%s:</b>",entry_label));
         if(image != null)
@@ -974,10 +975,11 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
             var ali = new Gtk.Alignment (0f, 0f, 0f, 0f);
             var wimage = new Gtk.Image.from_icon_name(image, Gtk.IconSize.MENU);
             ali.add(wimage);
-            box.pack_start(ali, false, false, 0);
+            box.attach(ali, 0,0,1,1);
         }
-        box.pack_start(label, true, true, 0);
-        table.attach(box, j,(j+1),i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
+        box.attach(label, 1,0,1,1); 
+//        table.attach(box, j,(j+1),i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
+        table.attach(box,j,i, 1, 1); 
         j++;
 
         if(value != null)
@@ -986,12 +988,14 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
             pt_label.set_selectable(true);
             pt_label.set_alignment(0.0f, 0.0f);
             pt_label.set_line_wrap(true);
-            table.attach(pt_label, j,(j+1),i,i+1,Gtk.AttachOptions.EXPAND|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
+        //    table.attach(pt_label, j,(j+1),i,i+1,Gtk.AttachOptions.EXPAND|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
+            table.attach(pt_label, j, i, 1, 1); 
             j++;
         }
         if(extra != null)
         {
-            table.attach(extra, j,(j+1),i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
+            //table.attach(extra, j,(j+1),i,i+1,Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL, Gtk.AttachOptions.SHRINK|Gtk.AttachOptions.FILL,0,0);
+            table.attach(extra,j, i, 1, 1); 
             j++;
         }
         i++;
@@ -1037,9 +1041,9 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
 
 
         /* Information box */
-        var info_box = new Gtk.Table (4,2,false);
-        info_box.set_row_spacings(3);
-        info_box.set_col_spacings(8);
+        var info_box = new Gtk.Grid(); //new Gtk.Table (4,2,false);
+        info_box.set_row_spacing(3);
+        info_box.set_column_spacing(8);
         int i=0;
         /* Title */
         if(song.title != null)
@@ -1064,7 +1068,8 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
             box.pack_start(label, true, true, 0);
             //hist_box.pack_start(box, true, true, 0);
             //vbox.pack_start(box, true, true, 0);
-            info_box.attach(box, 0,2, i, i+1,Gtk.AttachOptions.FILL,Gtk.AttachOptions.FILL,0,0);
+            //info_box.attach(box, 0,2, i, i+1,Gtk.AttachOptions.FILL,Gtk.AttachOptions.FILL,0,0);
+            info_box.attach(box, i,0, 2,1);
             i++;
         }
         else if (song.name!= null)
@@ -1075,7 +1080,8 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
                              title_color, Pango.SCALE*20, song.name));
             label.set_ellipsize(Pango.EllipsizeMode.END);
             label.set_alignment(0.0f, 0.5f);
-            info_box.attach(label, 0,2, i, i+1,Gtk.AttachOptions.FILL,Gtk.AttachOptions.FILL,0,0);
+            //info_box.attach(label, 0,2, i, i+1,Gtk.AttachOptions.FILL,Gtk.AttachOptions.FILL,0,0);
+            info_box.attach(label,i, 0, 2, 1); 
             i++;
         }
         else if (song.file != null)
@@ -1105,7 +1111,8 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
                              title_color, Pango.SCALE*20, filename));
             label.set_ellipsize(Pango.EllipsizeMode.END);
             label.set_alignment(0.0f, 0.5f);
-            info_box.attach(label, 0,2, i, i+1,Gtk.AttachOptions.FILL,Gtk.AttachOptions.FILL,0,0);
+            //info_box.attach(label, 0,2, i, i+1,Gtk.AttachOptions.FILL,Gtk.AttachOptions.FILL,0,0);
+            info_box.attach(label, 0,2, i, i+1);
             i++;
         }
         /* Artist */
@@ -1544,9 +1551,9 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         ali.add(artist_image);
         hbox.pack_start(ali, false, false, 0);
         /* Artist information */
-        var info_box = new Gtk.Table (4,2,false);
-        info_box.set_row_spacings(3);
-        info_box.set_col_spacings(8);
+        var info_box = new Gtk.Grid();//new Gtk.Table (4,2,false);
+        info_box.set_row_spacing(3);
+        info_box.set_column_spacing(8);
         hbox.pack_start(info_box, true, true, 0);
         int i=0;
 
@@ -1824,9 +1831,9 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         ali.add(artist_image);
         hbox.pack_start(ali, false, false, 0);
         /* Artist information */
-        var info_box = new Gtk.Table (4,2,false);
-        info_box.set_row_spacings(3);
-        info_box.set_col_spacings(8);
+        var info_box = new Gtk.Grid();//new Gtk.Table (4,2,false);
+        info_box.set_row_spacing(3);
+        info_box.set_column_spacing(8);
         hbox.pack_start(info_box, true, true, 0);
 
         /* Artist */
