@@ -1041,7 +1041,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
 
 
         /* Information box */
-        var info_box = new Gtk.Grid(); //new Gtk.Table (4,2,false);
+        var info_box = new Gtk.Grid();
         info_box.set_row_spacing(3);
         info_box.set_column_spacing(8);
         int i=0;
@@ -1551,7 +1551,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         ali.add(artist_image);
         hbox.pack_start(ali, false, false, 0);
         /* Artist information */
-        var info_box = new Gtk.Grid();//new Gtk.Table (4,2,false);
+        var info_box = new Gtk.Grid();
         info_box.set_row_spacing(3);
         info_box.set_column_spacing(8);
         hbox.pack_start(info_box, true, true, 0);
@@ -1831,7 +1831,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         ali.add(artist_image);
         hbox.pack_start(ali, false, false, 0);
         /* Artist information */
-        var info_box = new Gtk.Grid();//new Gtk.Table (4,2,false);
+        var info_box = new Gtk.Grid();
         info_box.set_row_spacing(3);
         info_box.set_column_spacing(8);
         hbox.pack_start(info_box, true, true, 0);
