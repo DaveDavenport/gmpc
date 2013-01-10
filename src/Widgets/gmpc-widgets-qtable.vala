@@ -127,12 +127,12 @@ public class Gmpc.Widgets.Qtable : Gtk.Container, Gtk.Buildable
     /**
      * Calculates the size of the widget.
      */
-    public override void get_preferred_height_for_width(int actual_width, out int width, out int nat_width)
+    public override void get_preferred_height_for_width(int actual_width, out int min_height, out int nat_height)
     {
         int cover_width = item_width_real;
         int cover_height= item_height_real;
         int header_height = header_height_real;
-        int items = 0;
+        int items = 0, width=0;
 
         /* determine max width/height */
         foreach ( var child in children)
@@ -142,15 +142,17 @@ public class Gmpc.Widgets.Qtable : Gtk.Container, Gtk.Buildable
                 int w,h;
                 if(child.type == QtableEntry.Type.ITEM)
                 {
-                    child.widget.get_size_request(out w, out h);
-                    cover_width = int.max(w,cover_width);
-                    cover_height = int.max(h,cover_height);
+                    Gtk.Requisition cr = {0,0};
+                    child.widget.get_preferred_size(out cr, null);
+                    cover_width = int.max(cr.width,cover_width);
+                    cover_height = int.max(cr.height,cover_height);
                 }
                 else
                 {
-                    child.widget.get_size_request(out w, out h);
-                    width = int.max(w,width);
-                    header_height = int.max(h,header_height);
+                    Gtk.Requisition cr = {0,0};
+                    child.widget.get_preferred_size(out cr, null);
+                    width = int.max(cr.width,width);
+                    header_height = int.max(cr.height,header_height);
                 }
             }
         }
@@ -160,7 +162,7 @@ public class Gmpc.Widgets.Qtable : Gtk.Container, Gtk.Buildable
             cover_height	+= spacing;
             header_height	+= spacing;
         }
-        int columns =  actual_width/cover_width;
+        columns =  int.max(actual_width/cover_width,1);
         int rows = 0;
         foreach ( var child in children)
         {
@@ -176,7 +178,7 @@ public class Gmpc.Widgets.Qtable : Gtk.Container, Gtk.Buildable
                     {
                         int nrows = items/columns;
                         int remain = (items%columns >0)?1:0;
-                        rows = rows + (nrows+remain)*cover_height;
+                        rows += (nrows+remain)*cover_height;
                     }
                     items = 0;
                     rows+=header_height;
@@ -190,8 +192,8 @@ public class Gmpc.Widgets.Qtable : Gtk.Container, Gtk.Buildable
             rows = rows + (nrows+remain)*cover_height;
         }
         /* Width of one column */
-        width =  cover_width*columns;
-        nat_width = width;
+        min_height = rows; 
+        nat_height = rows;
     }
 
     public override void add(Gtk.Widget widget)
