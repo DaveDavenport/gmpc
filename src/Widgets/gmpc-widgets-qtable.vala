@@ -42,21 +42,22 @@ public class Gmpc.Widgets.Qtable : Gtk.Container, Gtk.Buildable
     private int item_height_real    = 0;
     private int header_height_real  = 0;
     private int max_columns_real    = 0;
-    private int num_items       = 0;
-    private int columns         = 3;
-public  int spacing {get; set; default=8;}
-    public int padding_left {get; set; default=0;}
-        public int padding_right {get; set; default=0;}
-                public int max_columns
-            {
-                get {
-                    return max_columns_real;
-                }
-                set {
-                    max_columns_real = value;
-                    this.queue_resize();
-                }
-            }
+    private int num_items           = 0;
+    private int columns             = 3;
+    public  int spacing             {get; set; default=8;}
+    public  int padding_left        {get; set; default=0;}
+    public  int padding_right       {get; set; default=0;}
+
+    public int max_columns
+    {
+        get {
+            return max_columns_real;
+        }
+        set {
+            max_columns_real = value;
+            this.queue_resize();
+        }
+    }
 
     public int item_width
     {
@@ -116,21 +117,21 @@ public  int spacing {get; set; default=8;}
         this.set_has_window(false);
         this.set_redraw_on_allocate(false);
     }
+
     public Qtable()
     {
+        // Set resize mode.
+        this.resize_mode = Gtk.ResizeMode.QUEUE;
     }
 
     /**
      * Calculates the size of the widget.
      */
-#if 0
-    public override void size_request(out Gtk.Requisition req)
+    public override void get_preferred_height_for_width(int actual_width, out int width, out int nat_width)
     {
-        req = Gtk.Requisition();
         int cover_width = item_width_real;
         int cover_height= item_height_real;
         int header_height = header_height_real;
-        int width = 0;
         int items = 0;
 
         /* determine max width/height */
@@ -138,19 +139,18 @@ public  int spacing {get; set; default=8;}
         {
             if(child.widget.get_visible())
             {
+                int w,h;
                 if(child.type == QtableEntry.Type.ITEM)
                 {
-                    Gtk.Requisition cr = {0,0};
-                    child.widget.size_request(out cr);
-                    cover_width = int.max(cr.width,cover_width);
-                    cover_height = int.max(cr.height,cover_height);
+                    child.widget.get_size_request(out w, out h);
+                    cover_width = int.max(w,cover_width);
+                    cover_height = int.max(h,cover_height);
                 }
                 else
                 {
-                    Gtk.Requisition cr = {0,0};
-                    child.widget.size_request(out cr);
-                    width = int.max(cr.width,width);
-                    header_height = int.max(cr.height,header_height);
+                    child.widget.get_size_request(out w, out h);
+                    width = int.max(w,width);
+                    header_height = int.max(h,header_height);
                 }
             }
         }
@@ -160,6 +160,7 @@ public  int spacing {get; set; default=8;}
             cover_height	+= spacing;
             header_height	+= spacing;
         }
+        int new_columns =  actual_width/cover_width;
         int rows = 0;
         foreach ( var child in children)
         {
@@ -173,8 +174,8 @@ public  int spacing {get; set; default=8;}
                 {
                     if(items != 0)
                     {
-                        int nrows = items/columns;
-                        int remain = (items%columns >0)?1:0;
+                        int nrows = items/new_columns;
+                        int remain = (items%new_columns >0)?1:0;
                         rows = rows + (nrows+remain)*cover_height;
                     }
                     items = 0;
@@ -184,15 +185,18 @@ public  int spacing {get; set; default=8;}
         }
         if(items != 0)
         {
-            int nrows = items/columns;
-            int remain = (items%columns >0)?1:0;
+            int nrows = items/new_columns;
+            int remain = (items%new_columns >0)?1:0;
             rows = rows + (nrows+remain)*cover_height;
         }
         /* Width of one column */
-        req.width =  cover_width;
-        req.height = rows;
+        width =  cover_width*new_columns;
+        nat_width = width;
+        if(columns != new_columns ){
+            columns = new_columns;
+            this.queue_resize();
+        }
     }
-#endif
 
     public override void add(Gtk.Widget widget)
     {
@@ -269,7 +273,6 @@ public  int spacing {get; set; default=8;}
         int item = 0;
         // This fixes it so the correct taborder is calculated.
         this.set_allocation(alloc);
-
         foreach ( var child in children)
         {
             if(child.widget.get_visible())
@@ -305,6 +308,7 @@ public  int spacing {get; set; default=8;}
         {
             new_columns = int.min(new_columns,max_columns_real);
         }
+
         item = 0;
         foreach ( var child in children)
         {
@@ -313,8 +317,8 @@ public  int spacing {get; set; default=8;}
                 if(child.type == QtableEntry.Type.ITEM)
                 {
                     Gtk.Allocation ca = {0,0,0,0};
-                    ca.x = alloc.x + (item%columns)*cover_width+padding_left;
-                    ca.y = rows+alloc.y + (item/columns)*cover_height;
+                    ca.x = alloc.x + (item%new_columns)*cover_width+padding_left;
+                    ca.y = rows+alloc.y + (item/new_columns)*cover_height;
                     ca.width = cover_width - spacing;
                     ca.height = cover_height - spacing;
 
@@ -325,8 +329,8 @@ public  int spacing {get; set; default=8;}
                 {
                     if(item != 0)
                     {
-                        int nrows = item/columns;
-                        int remain = (item%columns >0)?1:0;
+                        int nrows = item/new_columns;
+                        int remain = (item%new_columns >0)?1:0;
                         rows = rows + (nrows+remain)*cover_height;
                     }
                     item = 0;
@@ -334,7 +338,7 @@ public  int spacing {get; set; default=8;}
                     Gtk.Allocation ca = {0,0,0,0};
                     ca.x = alloc.x-padding_left;
                     ca.y = alloc.y+rows;
-                    ca.width = cover_width*columns;
+                    ca.width = cover_width*new_columns;
                     ca.height = header_height - spacing;
 
                     child.widget.size_allocate(ca);
@@ -371,5 +375,11 @@ public  int spacing {get; set; default=8;}
         }
         children = null;
         this.queue_resize();
+    }
+
+
+    public override Gtk.SizeRequestMode get_request_mode ()
+    {
+        return Gtk.SizeRequestMode.HEIGHT_FOR_WIDTH;
     }
 }
