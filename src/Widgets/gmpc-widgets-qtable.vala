@@ -160,7 +160,7 @@ public class Gmpc.Widgets.Qtable : Gtk.Container, Gtk.Buildable
             cover_height	+= spacing;
             header_height	+= spacing;
         }
-        int new_columns =  actual_width/cover_width;
+        int columns =  actual_width/cover_width;
         int rows = 0;
         foreach ( var child in children)
         {
@@ -174,8 +174,8 @@ public class Gmpc.Widgets.Qtable : Gtk.Container, Gtk.Buildable
                 {
                     if(items != 0)
                     {
-                        int nrows = items/new_columns;
-                        int remain = (items%new_columns >0)?1:0;
+                        int nrows = items/columns;
+                        int remain = (items%columns >0)?1:0;
                         rows = rows + (nrows+remain)*cover_height;
                     }
                     items = 0;
@@ -185,17 +185,13 @@ public class Gmpc.Widgets.Qtable : Gtk.Container, Gtk.Buildable
         }
         if(items != 0)
         {
-            int nrows = items/new_columns;
-            int remain = (items%new_columns >0)?1:0;
+            int nrows = items/columns;
+            int remain = (items%columns >0)?1:0;
             rows = rows + (nrows+remain)*cover_height;
         }
         /* Width of one column */
-        width =  cover_width*new_columns;
+        width =  cover_width*columns;
         nat_width = width;
-        if(columns != new_columns ){
-            columns = new_columns;
-            this.queue_resize();
-        }
     }
 
     public override void add(Gtk.Widget widget)
