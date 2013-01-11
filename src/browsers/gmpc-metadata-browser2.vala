@@ -2485,14 +2485,6 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         var hist_box = history_buttons();
         this.header.add(hist_box);
 
-        /* The buttons are in a schrinking hbox.
-         * The final label will be placed next to it, with ellipsizing on.
-         */
-        var bc_ali = new Gtk.Alignment(0f, 0.5f, 0f, 0f);
-        var bc_box = new Gtk.HBox(false, 6);
-        bc_ali.add(bc_box);
-        hist_box.pack_start(bc_ali, false, false, 0);
-
         /* The 'BASE' button */
         if(artist == null && album == null && title==null)
         {
@@ -2500,7 +2492,8 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
             var ali = new Gtk.Alignment(0.5f,0.5f, 0f, 0f);
             ali.set_padding(6,6,6,6);
             ali.add(image);
-            bc_box.pack_start(ali, true, true, 0);
+            hist_box.attach(ali, 0, 0, 1, 1);//pack_start(ali, true, true, 0);
+            //hist_box.attach(ali, 1, 0, 1,1);
         }
         else
         {
@@ -2509,7 +2502,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
             button.set_relief(Gtk.ReliefStyle.NONE);
             button.set_image(image);
             button.clicked.connect((source)=> { set_base();});
-            bc_box.pack_start(button, true, true, 0);
+            hist_box.attach(button, 0, 0, 1, 1);//pack_start(button, true, true, 0);
         }
         /* If there is an artist, we can show more */
         if(artist != null)
@@ -2523,16 +2516,17 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
                 {
                     set_artist(artist);
                 });
-                bc_box.pack_start(button, true, true, 0);
+                hist_box.attach(button, 1, 0, 1,1);//pack_start(button, true, true, 0);
+                
             }
             else
             {
                 var label = new Gtk.Label(artist);
-                var image = new Gtk.Image.from_icon_name("media-artist", Gtk.IconSize.MENU);
                 label.set_ellipsize(Pango.EllipsizeMode.END);
+                var image = new Gtk.Image.from_icon_name("media-artist", Gtk.IconSize.MENU);
                 label.set_alignment(0.0f, 0.5f);
-                hist_box.pack_start(image, false, false, 0);
-                hist_box.pack_start(label, true, true, 0);
+                hist_box.attach(image, 2, 0, 1,1);
+                hist_box.attach(label, 3, 0, 1,1);
             }
             /* Album */
             if(album != null)
@@ -2540,48 +2534,72 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
                 if(type == HitemType.ALBUM)
                 {
                     var label = new Gtk.Label(album);
-                    var image = new Gtk.Image.from_icon_name("media-album", Gtk.IconSize.MENU);
                     label.set_ellipsize(Pango.EllipsizeMode.END);
+                    var image = new Gtk.Image.from_icon_name("media-album", Gtk.IconSize.MENU);
                     label.set_alignment(0.0f, 0.5f);
-                    hist_box.pack_start(image, false, false, 0);
-                    hist_box.pack_start(label, true, true, 0);
+                    hist_box.attach(image, 4, 0, 1,1);
+                    hist_box.attach(label, 5, 0, 1,1);
                 }
                 else
                 {
-                    var button = new Gtk.Button.with_label(album);
+                    var button = new Gtk.Button();//.with_label(album);
+    
+                    var ali = new Gtk.Alignment(0.0f, 0.5f, 0.0f, 0.0f);
+                    button.add(ali);
+
+                    var gr = new Gtk.Grid();
+                    gr.set_column_spacing(6);
+                    ali.add(gr);
+
+                    var im = new Gtk.Image.from_icon_name("media-album", Gtk.IconSize.MENU);
+//                    button.set_image(im);
+                    gr.attach(im,0,0,1,1);
+                    var label = new Gtk.Label(album);
+                    label.set_ellipsize(Pango.EllipsizeMode.END);
+                    gr.attach(label, 1,0,1,1);
+
                     button.set_relief(Gtk.ReliefStyle.NONE);
-                    button.set_image(new Gtk.Image.from_icon_name("media-album", Gtk.IconSize.MENU));
                     button.clicked.connect((source)=>
                     {
                         set_album(artist, album);
                     });
-                    bc_box.pack_start(button, true, true, 0);
+                    button.show_all();
+                    hist_box.attach(button, 4,0,1,1);//pack_start(button, true, true, 0);
                 }
             }
         }
         if(title != null)
         {
-            var label = new Gtk.Label(title);
             var image = new Gtk.Image.from_icon_name("media-audiofile", Gtk.IconSize.MENU);
-            label.set_ellipsize(Pango.EllipsizeMode.END);
-            label.set_alignment(0.0f, 0.5f);
-            hist_box.pack_start(image, false, false, 0);
-            hist_box.pack_start(label, true, true, 0);
+            hist_box.attach(image, 6, 0, 1,1);
 
+            var label = new Gtk.Label(title);
+            label.set_alignment(0.0f, 0.5f);
+            label.set_ellipsize(Pango.EllipsizeMode.END);
+            label.set_line_wrap(false);
+
+            hist_box.attach(label, 7, 0, 1,1);
         }
         this.header.show_all();
     }
 
-    private Gtk.HBox history_buttons()
+    private Gtk.Grid history_buttons()
     {
-        var box = new HBox(false, 6);
+        var box = new Gtk.Grid();
+        box.set_column_spacing(6);
         if(history == null && current == null) return box;
 
-        var next_but = new Gtk.Button.from_stock("gtk-go-forward");
-        next_but.set_relief(Gtk.ReliefStyle.NONE);
-        if(current == null || current.prev == null) next_but.sensitive = false;
-        next_but.clicked.connect(history_next);
-        box.pack_end(next_but, false, false, 0);
+        var back_but = new Gtk.Button.from_stock("gtk-go-back");
+        back_but.set_relief(Gtk.ReliefStyle.NONE);
+        if(current == null || current.next == null) back_but.sensitive = false;
+        back_but.clicked.connect(history_previous);
+
+
+        back_but.set_hexpand(true);
+        back_but.set_halign(Gtk.Align.END);
+        box.attach(back_but, 10, 0, 1, 1);
+
+
         if(current != null && (current.next != null || current.prev != null))
         {
             var dd_but = new Gtk.Button();
@@ -2589,14 +2607,15 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
             dd_but.add(arrow);
             dd_but.set_relief(Gtk.ReliefStyle.NONE);
             dd_but.clicked.connect(history_show_list);
-            box.pack_end(dd_but, false, false, 0);
-        }
-        var back_but = new Gtk.Button.from_stock("gtk-go-back");
-        back_but.set_relief(Gtk.ReliefStyle.NONE);
-        if(current == null || current.next == null) back_but.sensitive = false;
-        back_but.clicked.connect(history_previous);
-        box.pack_end(back_but, false, false, 0);
 
+            box.attach(dd_but, 11, 0, 1, 1);
+        }
+        var next_but = new Gtk.Button.from_stock("gtk-go-forward");
+        next_but.set_relief(Gtk.ReliefStyle.NONE);
+        if(current == null || current.prev == null) next_but.sensitive = false;
+        next_but.clicked.connect(history_next);
+
+        box.attach(next_but, 12, 0, 1, 1);
 
         return box;
     }
