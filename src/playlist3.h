@@ -54,7 +54,7 @@ extern GtkBuilder *pl3_xml;
 
 void serverinformation_show_popup(void);
 
-void pl3_window_fullscreen(void);
+gboolean pl3_window_fullscreen(void);
 GtkAccelGroup *playlist3_get_accel_group(void);
 
 GtkWidget* playlist3_get_widget_by_id(const char *id);

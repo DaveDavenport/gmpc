@@ -538,11 +538,10 @@ int main(int argc, char **argv)
      * Call this when entering the main loop,
      *  so you are connected on startup, not 5 seconds later
      */
-    // TODO
-//    gtk_init_add((GSourceFunc) autoconnect_callback, NULL);
+    g_idle_add((GSourceFunc) autoconnect_callback, NULL);
     if (settings.fullscreen)
     {
-//        gtk_init_add((GSourceFunc) pl3_window_fullscreen, NULL);
+        g_idle_add((GSourceFunc) pl3_window_fullscreen, NULL);
     }
 
     /**

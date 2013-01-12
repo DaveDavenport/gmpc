@@ -460,7 +460,7 @@ gboolean pl3_window_is_fullscreen(void)
 }
 
 
-void pl3_window_fullscreen(void)
+gboolean pl3_window_fullscreen(void)
 {
     GtkWidget *win = playlist3_get_window();
 
@@ -474,6 +474,7 @@ void pl3_window_fullscreen(void)
             gtk_window_fullscreen(GTK_WINDOW(win));
         }
     }
+    return FALSE;
 }
 
 
