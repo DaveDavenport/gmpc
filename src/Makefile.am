@@ -27,7 +27,6 @@ PLUGIN_FILES=\
 
 
 gmpc_WIDGETS_FILES=\
-    Widgets/GmpcVolume.vala\
     Widgets/gmpc-progress.vala\
     Widgets/mpd-async-request.c\
     Widgets/gmpc-song-list.vala\

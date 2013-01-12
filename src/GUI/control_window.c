@@ -25,7 +25,7 @@
  * Reuse code from playlist3.
  */
 extern GtkBuilder *pl3_xml;
-gboolean playlist_player_volume_changed(GtkWidget * vol_but, int new_vol);
+gboolean playlist_player_volume_changed(GtkWidget * vol_but, double new_vol);
 void pl3_pb_seek_event(GtkWidget * pb, guint seek_time, gpointer user_data);
 
 /**
@@ -153,10 +153,10 @@ GtkWidget *create_control_window(GtkWidget *parent)
     g_signal_connect(G_OBJECT(ff_button), "clicked",
         G_CALLBACK(control_window_leave_fullscreen), parent);
     /* Volume button */
-    vol = (GtkWidget *)gmpc_widgets_volume_new();
+    vol = (GtkWidget *)gtk_volume_button_new();
     gtk_box_pack_end(GTK_BOX(hbox), vol, FALSE, FALSE, 0);
     new_volume = mpd_status_get_volume(connection);
-    gmpc_widgets_volume_set_volume_level(GMPC_WIDGETS_VOLUME(vol), new_volume );
+    gtk_scale_button_set_value(GTK_SCALE_BUTTON(vol), new_volume/100.0);
     g_object_set_data(G_OBJECT(base), "vol", vol);
     g_signal_connect(G_OBJECT(vol), "value_changed",
         G_CALLBACK(playlist_player_volume_changed), NULL);
@@ -257,8 +257,7 @@ void control_window_status_update(MpdObj * mi, ChangedStatusType what, GtkWidget
     }
     if (what & MPD_CST_VOLUME)
     {
-        int volume = gmpc_widgets_volume_get_volume_level(
-                GMPC_WIDGETS_VOLUME(volume_button));
+        int volume = gtk_scale_button_get_value(GTK_SCALE_BUTTON(volume_button))*100;
         int new_volume = mpd_status_get_volume(connection);
         if (new_volume >= 0 &&
             mpd_server_check_command_allowed(connection, "setvol") ==
@@ -269,8 +268,7 @@ void control_window_status_update(MpdObj * mi, ChangedStatusType what, GtkWidget
             /* don't do anything if nothing is changed */
             if (new_volume != volume)
             {
-                gmpc_widgets_volume_set_volume_level(
-                        GMPC_WIDGETS_VOLUME(volume_button), new_volume );
+                gtk_scale_button_set_value(GTK_SCALE_BUTTON(volume_button), new_volume/100.0);
             }
         } else
         {

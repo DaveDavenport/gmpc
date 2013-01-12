@@ -130,7 +130,7 @@ void pl3_pb_seek_event(GtkWidget * pb, guint seek_time, gpointer user_data);
 void set_browser_format(void);
 void set_playlist_format(void);
 
-gboolean playlist_player_volume_changed(GtkWidget * vol_but, int new_vol);
+gboolean playlist_player_volume_changed(GtkWidget * vol_but, double new_vol);
 
 /* Glade declarations, otherwise these would be static */
 void about_window(void);
@@ -1907,18 +1907,20 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
             mpd_server_check_command_allowed(connection, "setvol") == MPD_SERVER_COMMAND_ALLOWED
             )
         {
-            int volume = gmpc_widgets_volume_get_volume_level(GMPC_WIDGETS_VOLUME(volume_button));
+            int volume = gtk_scale_button_get_value(GTK_SCALE_BUTTON(volume_button))/100.0;
+            gtk_widget_show(GTK_WIDGET(volume_button));
             gtk_action_set_sensitive(GTK_ACTION(gtk_builder_get_object(pl3_xml, "MPDMuted")),
                 TRUE
                 );
             /* don't do anything if nothing is changed */
             if (new_volume != volume)
             {
-                gmpc_widgets_volume_set_volume_level(GMPC_WIDGETS_VOLUME(volume_button), new_volume );
+                gtk_scale_button_set_value(GTK_SCALE_BUTTON(volume_button),new_volume/100.0f);
             }
         } else
         {
-            gmpc_widgets_volume_set_volume_level(GMPC_WIDGETS_VOLUME(volume_button), -1);
+            gtk_scale_button_set_value(GTK_SCALE_BUTTON(volume_button),0);
+            gtk_widget_hide(GTK_WIDGET(volume_button));
             gtk_action_set_sensitive(GTK_ACTION(gtk_builder_get_object(pl3_xml, "MPDMuted")),
                 FALSE
                 );
@@ -1964,9 +1966,9 @@ static void playlist_status_changed(MpdObj * mi, ChangedStatusType what, void *u
     }
 }
 
-gboolean playlist_player_volume_changed(GtkWidget * vol_but, int new_vol)
+gboolean playlist_player_volume_changed(GtkWidget * vol_but, double new_vol)
 {
-    int volume = new_vol;        //gtk_scale_button_get_value(GTK_SCALE_BUTTON(vol_but)) * 100;
+    int volume = new_vol*100;        //gtk_scale_button_get_value(GTK_SCALE_BUTTON(vol_but)) * 100;
     int new_volume = mpd_status_get_volume(connection);
     if (new_volume >= 0 && new_volume != volume)
     {
