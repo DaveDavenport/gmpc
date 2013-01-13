@@ -134,6 +134,7 @@ public class Gmpc.Widgets.Qtable : Gtk.Container, Gtk.Buildable
         int header_height = header_height_real;
         int items = 0, width=0;
 
+
         /* determine max width/height */
         foreach ( var child in children)
         {
@@ -143,14 +144,14 @@ public class Gmpc.Widgets.Qtable : Gtk.Container, Gtk.Buildable
                 if(child.type == QtableEntry.Type.ITEM)
                 {
                     Gtk.Requisition cr = {0,0};
-                    child.widget.get_preferred_size(out cr, null);
+                    child.widget.get_preferred_size(null, out cr);
                     cover_width = int.max(cr.width,cover_width);
                     cover_height = int.max(cr.height,cover_height);
                 }
                 else
                 {
                     Gtk.Requisition cr = {0,0};
-                    child.widget.get_preferred_size(out cr, null);
+                    child.widget.get_preferred_size(null, out cr);
                     width = int.max(cr.width,width);
                     header_height = int.max(cr.height,header_height);
                 }
@@ -163,6 +164,10 @@ public class Gmpc.Widgets.Qtable : Gtk.Container, Gtk.Buildable
             header_height	+= spacing;
         }
         columns =  int.max(actual_width/cover_width,1);
+        if(max_columns_real > 0)
+        {
+            columns = int.min(columns,max_columns_real);
+        }
         int rows = 0;
         foreach ( var child in children)
         {
@@ -279,7 +284,7 @@ public class Gmpc.Widgets.Qtable : Gtk.Container, Gtk.Buildable
                 if(child.type == QtableEntry.Type.ITEM)
                 {
                     Gtk.Requisition cr = {0,0};
-                    child.widget.get_preferred_size(out cr, null);
+                    child.widget.get_preferred_size(null, out cr);
                     cover_width = int.max(cr.width,cover_width);
                     cover_height = int.max(cr.height,cover_height);
                     item++;
@@ -287,7 +292,7 @@ public class Gmpc.Widgets.Qtable : Gtk.Container, Gtk.Buildable
                 else
                 {
                     Gtk.Requisition cr = {0,0};
-                    child.widget.get_preferred_size(out cr, null);
+                    child.widget.get_preferred_size(null, out cr);
                     item = 0;
 
                     width = int.max(cr.width,width);
