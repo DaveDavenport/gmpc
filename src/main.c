@@ -263,6 +263,34 @@ int main(int argc, char **argv)
     gtk_init(&argc, &argv);
     TEC("Gtk init");
 
+
+    {
+        GError          *error = NULL;
+        GtkCssProvider  *provider = gtk_css_provider_new ();
+        gchar           *path = g_build_filename(PACKAGE_DATA_DIR, "gmpc", "gmpc.css", NULL); 
+
+        gtk_css_provider_load_from_path(provider, path, &error);
+
+        printf("Loading: %s\n", path);
+
+
+        if(error != NULL) {
+            g_error("Failed to load css file: %s:%s",path, error->message); 
+            g_free(path);
+            g_error_free(error);
+        } 
+        GdkDisplay *display = gdk_display_get_default ();
+        GdkScreen *screen = gdk_display_get_default_screen (display);
+
+        gtk_style_context_add_provider_for_screen (
+                screen, GTK_STYLE_PROVIDER (provider),
+                GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+
+        g_object_unref (provider);
+        g_free(path);
+    }
+
+
     /* Hack to override the icon theme, on recursive zeltak request */
     if(settings.icon_theme != NULL) {
         gtk_settings_set_string_property(gtk_settings_get_default(),
