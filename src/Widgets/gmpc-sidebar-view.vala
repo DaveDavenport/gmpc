@@ -170,6 +170,7 @@ public class MyCellRenderer : Gtk.CellRenderer
             ct.stroke();
         }
         // Draw arrow.
+/*
         if((flags&Gtk.CellRendererState.SELECTED) == Gtk.CellRendererState.SELECTED)
         {
             double cax = background_area.width*0.9;
@@ -184,7 +185,7 @@ public class MyCellRenderer : Gtk.CellRenderer
             ct.line_to(background_area.x+cax, background_area.y);
             Gdk.cairo_set_source_color(ct, widget.style.bg[Gtk.StateType.NORMAL]);
             ct.fill();
-        }
+        }*/
         return;
     }
 }

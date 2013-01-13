@@ -1,0 +1,4 @@
+#sidebar * {
+    background-color: @bg_color;
+/*    color: darker(@fg_color);*/
+}
