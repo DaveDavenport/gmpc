@@ -694,12 +694,15 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
             var vb = new Gtk.VBox(false, 0);
             vb.pack_end(this.metadata_sw, true,true,0);
 
+            
             this.header = new Gtk.EventBox();
             header.app_paintable = true;
             header.set_visible_window(true);
 // TODO
 //            header.draw.connect(Gmpc.Misc.misc_header_expose_event);
-
+            var sp = new Gtk.Separator(Gtk.Orientation.HORIZONTAL);
+            sp.set_size_request(-1, 1);
+            vb.pack_start(sp, false, false, 0);
             vb.pack_start(header, false, false,0);
             header.show();
 

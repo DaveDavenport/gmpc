@@ -144,14 +144,14 @@ public class Gmpc.Widgets.Qtable : Gtk.Container, Gtk.Buildable
                 if(child.type == QtableEntry.Type.ITEM)
                 {
                     Gtk.Requisition cr = {0,0};
-                    child.widget.get_preferred_size(null, out cr);
+                    child.widget.get_preferred_size(out cr,null);
                     cover_width = int.max(cr.width,cover_width);
                     cover_height = int.max(cr.height,cover_height);
                 }
                 else
                 {
                     Gtk.Requisition cr = {0,0};
-                    child.widget.get_preferred_size(null, out cr);
+                    child.widget.get_preferred_size(out cr,null);
                     width = int.max(cr.width,width);
                     header_height = int.max(cr.height,header_height);
                 }
@@ -284,7 +284,7 @@ public class Gmpc.Widgets.Qtable : Gtk.Container, Gtk.Buildable
                 if(child.type == QtableEntry.Type.ITEM)
                 {
                     Gtk.Requisition cr = {0,0};
-                    child.widget.get_preferred_size(null, out cr);
+                    child.widget.get_preferred_size(out cr, null);
                     cover_width = int.max(cr.width,cover_width);
                     cover_height = int.max(cr.height,cover_height);
                     item++;
@@ -292,7 +292,7 @@ public class Gmpc.Widgets.Qtable : Gtk.Container, Gtk.Buildable
                 else
                 {
                     Gtk.Requisition cr = {0,0};
-                    child.widget.get_preferred_size(null, out cr);
+                    child.widget.get_preferred_size(out cr,null);
                     item = 0;
 
                     width = int.max(cr.width,width);
