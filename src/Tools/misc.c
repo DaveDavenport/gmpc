@@ -734,7 +734,7 @@ void misc_header_style_set_process_containers(GtkWidget * container, GtkStyle * 
 */
 }
 
-gboolean misc_header_expose_event(GtkWidget * widget, GdkEventExpose * event)
+gboolean misc_header_expose_event(GtkWidget * widget, cairo_t * ct)
 {
 /* TODO:
     int width = widget->allocation.width;
@@ -746,6 +746,13 @@ gboolean misc_header_expose_event(GtkWidget * widget, GdkEventExpose * event)
     gtk_paint_focus(widget->style, widget->window,
                     GTK_STATE_NORMAL, &(event->area), widget, "button", 0, 0, width, height);
 */
+    printf("test\n");
+    GtkAllocation alloc;
+    GtkStyleContext *context = gtk_widget_get_style_context(widget);
+    gtk_style_context_set_state(context, GTK_STATE_SELECTED);
+    gtk_widget_set_state(GTK_WIDGET(widget), GTK_STATE_SELECTED);
+    gtk_widget_get_allocation(GTK_WIDGET(widget), &alloc);
+    gtk_render_background(context, ct,0,0, alloc.width, alloc.height); 
     return FALSE;
 }
 

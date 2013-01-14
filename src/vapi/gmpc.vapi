@@ -342,7 +342,7 @@ namespace Gmpc {
 		[CCode (cname="screenshot_add_border",cheader_filename="misc.h")]
 		public void border_pixbuf (Gdk.Pixbuf buf);
         [CCode (cname="misc_header_expose_event",cheader_filename="misc.h")]
-        public bool misc_header_expose_event(Gtk.Widget widget, Gdk.EventExpose event);
+        public bool misc_header_expose_event(Gtk.Widget widget, Cairo.Context ct);
 
 
         [CCode (cname="format_time_real", cheader_filename="misc.h")]

@@ -55,7 +55,7 @@ MpdData *misc_mpddata_remove_duplicate_songs(MpdData *data);
 gchar ** tokenize_string(const gchar *string);
 
 
-gboolean misc_header_expose_event(GtkWidget *widget, GdkEventExpose *event);
+gboolean misc_header_expose_event(GtkWidget *widget, cairo_t *ct);
 void misc_header_style_set_process_containers(GtkWidget *container, GtkStyle *old_style, gpointer data);
 
 gchar * mpd_song_checksum(const mpd_Song *song);
