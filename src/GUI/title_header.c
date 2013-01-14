@@ -94,11 +94,13 @@ void playlist3_new_header(void)
         gmpc_clicklabel_set_ellipsize(GMPC_CLICKLABEL(header_labels[0]), PANGO_ELLIPSIZE_END);
 
         header_labels[1] = gtk_label_new(_("By"));
+        gtk_widget_set_name(header_labels[1], "by_label");
         /** Artist */
         header_labels[2] = (GtkWidget *)gmpc_clicklabel_new("");
         gmpc_clicklabel_set_ellipsize(GMPC_CLICKLABEL(header_labels[2]), PANGO_ELLIPSIZE_END);
 
         header_labels[3] = gtk_label_new(_("From"));
+        gtk_widget_set_name(header_labels[3], "from_label");
         /** Albumr */
         header_labels[4] = (GtkWidget *)gmpc_clicklabel_new("");
         gmpc_clicklabel_set_ellipsize(GMPC_CLICKLABEL(header_labels[4]), PANGO_ELLIPSIZE_END);

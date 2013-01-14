@@ -333,8 +333,10 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base
     public void
     popup_destroy()
     {
+/*
         Gdk.keyboard_ungrab(Gtk.get_current_event_time());
         Gdk.pointer_ungrab(Gtk.get_current_event_time());
+*/
         this.window.destroy();
         this.window = null;
     }
@@ -415,8 +417,10 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base
         {
             this.window.present();
         }
+
         {
             /* Make gmpc easy command grab the keyboard. Do this somewhat aggrasive. */
+/*
             uint32 _time = Gtk.get_current_event_time();
             int i = 10;
             while(i>0 && this.window != null)
@@ -429,9 +433,9 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base
                 GLib.Thread.usleep(100000);
                 i--;
             }
-
+*/
             /* Grab pointer too! */
-            while(i>0 && this.window != null)
+  /*          while(i>0 && this.window != null)
             {
                 if(Gdk.pointer_grab(this.window.get_window(), true,
                                     Gdk.EventMask.BUTTON_PRESS_MASK |
@@ -448,6 +452,7 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base
 
 
             }
+*/
         }
     }
     public static void

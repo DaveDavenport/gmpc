@@ -1,0 +1,4 @@
+#by_label,#from_label {
+    color: lighter(@text_color);
+    font-style: italic;
+}
