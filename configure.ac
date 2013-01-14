@@ -342,7 +342,7 @@ AC_ARG_ENABLE([mmkeys],
                      no)    enable_mmkeys=no;;
                       *)    AC_MSG_ERROR([bad value ${enableval} for --disable--mmkeys]);;
                 esac],
-              [enable_mmkeys=no])
+              [enable_mmkeys=yes])
 if test x${enable_mmkeys} = xyes; then
 	AC_DEFINE(ENABLE_MMKEYS, 1, [Enable multimedia support])
 fi
