@@ -44,6 +44,8 @@
  * Some gobjects
  */
 
+extern GtkApplication   *gmpc_application;
+
 extern int                 gmpc_connected;
 extern GtkTreeModel     *playlist;
 

@@ -26,7 +26,7 @@ extern GtkTreeModel *pl3_tree;
 extern GtkListStore *pl3_store;
 
 
-void pl3_show_window(void);
+void pl3_show_and_position_window(void);
 void pl3_toggle_hidden(void);
 int pl3_cat_get_selected_browser(void);
 

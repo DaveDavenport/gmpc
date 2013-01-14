@@ -40,54 +40,6 @@
 // Default size.
 #define SIDEBAR_LARGE -1
 
-#ifndef GDK_KEY_0
-#define GDK_KEY_0 GDK_0
-#endif
-
-#ifndef GDK_KEY_1
-#define GDK_KEY_1 GDK_1
-#endif
-
-#ifndef GDK_KEY_2
-#define GDK_KEY_2 GDK_2
-#endif
-
-
-#ifndef GDK_KEY_3
-#define GDK_KEY_3 GDK_3
-#endif
-
-#ifndef GDK_KEY_4
-#define GDK_KEY_4 GDK_4
-#endif
-
-
-#ifndef GDK_KEY_5
-#define GDK_KEY_5 GDK_5
-#endif
-
-
-#ifndef GDK_KEY_6
-#define GDK_KEY_6 GDK_6
-#endif
-
-
-#ifndef GDK_KEY_7
-#define GDK_KEY_7 GDK_7
-#endif
-
-
-#ifndef GDK_KEY_8
-#define GDK_KEY_8 GDK_8
-#endif
-
-
-#ifndef GDK_KEY_9
-#define GDK_KEY_9 GDK_9
-#endif
-
-
-
 #define ALBUM_SIZE 42
 
 #define LOG_DOMAIN "Playlist"
@@ -659,7 +611,7 @@ int pl3_hide(void)
 /* create the playlist view
  * This is done only once, for the rest its hidden, but still there
  */
-static void pl3_show_and_position_window(void)
+void pl3_show_and_position_window(void)
 {
     GtkWidget *pl3_win;
     if (!pl3_xml)
@@ -1272,6 +1224,9 @@ void create_playlist3(void)
     /* Update extra */
     init_extra_playlist_state();
     TEC("Setup extra playlist")
+
+    // Add window to GtkApplication.
+    gtk_application_add_window(gmpc_application, playlist3_get_window());
 }
 
 

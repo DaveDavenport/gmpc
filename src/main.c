@@ -66,6 +66,10 @@
 /**
  * Global objects that give signals
  */
+
+GtkApplication *gmpc_application = NULL;
+
+
 /* gives signal on connection changes, and state changes of mpd.*/
 GmpcConnection *gmpcconn = NULL;
 /* Implements, and gives signals on profiles */
@@ -260,7 +264,29 @@ int main(int argc, char **argv)
     #endif
 
     /* initialize gtk */
-    gtk_init(&argc, &argv);
+    gmpc_application = gtk_application_new("org.gmpclient.gmpc",  G_APPLICATION_FLAGS_NONE);
+    {
+        GError *error = NULL;
+
+
+        if(!g_application_register(G_APPLICATION(gmpc_application),NULL, &error))
+        {
+            g_error("Failed to register instance: %s", error->message);
+            return EXIT_FAILURE;
+        }
+
+        // Check if we are already running.
+        if(g_application_get_is_remote(G_APPLICATION(gmpc_application)))
+        {
+            g_debug("Already running....");
+            // Bring instance to front.
+            g_application_activate(G_APPLICATION(gmpc_application));
+            return EXIT_SUCCESS;
+        }
+
+
+        g_signal_connect(G_OBJECT(gmpc_application), "activate", G_CALLBACK(pl3_show_and_position_window), NULL);
+    }
     TEC("Gtk init");
 
 
