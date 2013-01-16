@@ -134,7 +134,6 @@ namespace Gmpc
                  * Show gtk error message and quit
                  */
                 GLib.log(LOG_DOMAIN, GLib.LogLevelFlags.LEVEL_ERROR,"Failed to save/load Profile file:\n%s\n",url);
-                Gtk.main_quit();
             }
             this.load_from_config();
             if(this.list.size() == 0)

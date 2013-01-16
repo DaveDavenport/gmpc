@@ -68,8 +68,7 @@ gmpc_TOOLS_FILES=\
     Tools/plugin-man.c\
     Tools/mm-keys.c\
     Tools/misc.c\
-    Tools/log.c\
-    Tools/ipc.c
+    Tools/log.c
 
 ##
 # Browsers
@@ -183,9 +182,6 @@ LIBS= \
 	-lz
 
 
-if HAVE_UNIQUE
-    LIBS += @unique_LIBS@
-endif
 
 if HAVE_APP_INDICATOR
     LIBS += @APP_INDICATOR_LIBS@
@@ -215,10 +211,6 @@ AM_CFLAGS = @CFLAGS@\
 	-DPACKAGE_LIB_DIR=\""$(pkglibdir)"\"\
 	-DPACKAGE_DATA_DIR=\""$(datarootdir)"\"
 
-
-if HAVE_UNIQUE
-    AM_CFLAGS += @unique_CFLAGS@
-endif
 
 if HAVE_APP_INDICATOR
     AM_CFLAGS += @APP_INDICATOR_CFLAGS@
@@ -277,7 +269,6 @@ EXTRA_DIST=\
 		egg/eggcolumnmodel.h\
 		Tools/advanced-search.h\
 		Tools/setup-assistant.h\
-		Tools/ipc.h\
 		revision.h\
 		gmpc-version.h.in\
 		Tools/bug-information.h\

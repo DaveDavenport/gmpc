@@ -6,10 +6,6 @@ SUBDIRS = src pixmaps glade data po pixmaps doc test
 #SUBDIRS = src pixmaps glade data po pixmaps doc remote
 #endif
 
-if HAVE_UNIQUE 
-SUBDIRS += remote
-endif
-
 if INTLTOOL_HIGHER_04000
 else
 EXTRA_DIST=	intltool-extract.in\

@@ -57,7 +57,6 @@
  * Get revision
  */
 #include "revision.h"
-#include "ipc.h"
 
 #include "internal-plugins.h"
 #include "log.h"
@@ -167,6 +166,26 @@ static gboolean hide_on_start(void)
     pl3_hide();
     return FALSE;
 }
+static int handle_commandline(GApplication *app, GApplicationCommandLine *cmd, gpointer data)
+{
+    gchar **argv;
+    gint argc;
+
+    argv = g_application_command_line_get_arguments(cmd, &argc);
+    printf("Commandline handler: %i\n", argc);
+    if(argc > 1) {
+        int i;
+        for ( i = 1; i < argc; i++) {
+            printf("executing: %s\n" , argv[i]);
+            gmpc_easy_command_do_query(gmpc_easy_command, argv[i]);
+        }
+    }else {
+        printf("activate\n");
+        g_application_activate(gmpc_application);
+    }
+
+    return EXIT_SUCCESS;
+}
 
 
 int main(int argc, char **argv)
@@ -176,9 +195,6 @@ int main(int argc, char **argv)
     #endif
     #ifdef ENABLE_MMKEYS
     MmKeys *keys = NULL;
-    #endif
-    #ifdef HAVE_IPC
-    GObject *ipc = NULL;
     #endif
 
     /* A string used severall times to create a path  */
@@ -264,7 +280,7 @@ int main(int argc, char **argv)
     #endif
 
     /* initialize gtk */
-    gmpc_application = gtk_application_new("org.gmpclient.gmpc",  G_APPLICATION_FLAGS_NONE);
+    gmpc_application = gtk_application_new("org.gmpclient.gmpc",  G_APPLICATION_HANDLES_COMMAND_LINE);
     {
         GError *error = NULL;
 
@@ -279,12 +295,10 @@ int main(int argc, char **argv)
         if(g_application_get_is_remote(G_APPLICATION(gmpc_application)))
         {
             g_debug("Already running....");
-            // Bring instance to front.
-            g_application_activate(G_APPLICATION(gmpc_application));
-            return EXIT_SUCCESS;
+            return g_application_run(G_APPLICATION(gmpc_application), argc, argv);
         }
 
-
+        g_signal_connect(G_OBJECT(gmpc_application), "command-line", G_CALLBACK(handle_commandline), NULL);
         g_signal_connect(G_OBJECT(gmpc_application), "activate", G_CALLBACK(pl3_show_and_position_window), NULL);
     }
     TEC("Gtk init");
@@ -331,23 +345,6 @@ int main(int argc, char **argv)
     create_gmpc_paths();
     TEC("Check version and create paths");
 
-    /**
-     * COMMANDLINE_OPTION:
-     * Cleanup the metadata database and quit.
-     */
-    if (settings.clean_config)
-    {
-        /* start the metadata system */
-        meta_data_init();
-        //printf("Cleaning up cover file..\n");
-        /* Call the cleanup */
-        //metadata_cache_cleanup();
-        printf("Done..\n");
-        /* Destroy the meta data system and exit. */
-        meta_data_destroy();
-        TEC("Database cleanup");
-        return EXIT_SUCCESS;
-    }
 
     /**
      * Open the config file
@@ -400,27 +397,6 @@ int main(int argc, char **argv)
     TEC("New version check");
 
 
-    #ifdef HAVE_IPC
-    if (cfg_get_single_value_as_int_with_default(config,
-        "Default",
-        "allow-multiple",
-        FALSE) == FALSE)
-    {
-        ipc = gmpc_tools_ipc_new();
-        if(gmpc_tools_ipc_is_running(ipc))
-        {
-            if(settings.quit)
-                gmpc_tools_ipc_send(ipc, COMMAND_EASYCOMMAND,"quit");
-            else
-                gmpc_tools_ipc_send(ipc, COMMAND_EASYCOMMAND,"show");
-
-            cfg_close(config);
-            config = NULL;
-            TEC("IPC setup and quitting");
-            return EXIT_SUCCESS;
-        }
-    }
-    #endif
     if (settings.quit)
     {
         cfg_close(config);
@@ -538,13 +514,6 @@ int main(int argc, char **argv)
      */
     create_playlist3();
     TEC("Creating playlist window");
-    #ifdef HAVE_IPC
-    if(ipc)
-    {
-        gmpc_tools_ipc_watch_window(ipc, GTK_WINDOW(playlist3_get_window()));
-        TEC("Setup unique app to watch main window");
-    }
-    #endif
 
     /**
      * First run dialog
@@ -629,7 +598,8 @@ int main(int argc, char **argv)
     /*
      * run the main loop
      */
-    gtk_main();
+    //gtk_main();
+    int retv = g_application_run(G_APPLICATION(gmpc_application), argc, argv);
 
     /**
      * Shutting Down
@@ -639,12 +609,6 @@ int main(int argc, char **argv)
     gtk_accel_map_save(url);
     q_free(url);
 
-#ifdef HAVE_IPC
-    if(ipc != NULL)
-    {
-        g_object_unref(ipc);
-    }
-#endif
     /* Quit _all_ downloads */
     gmpc_easy_async_quit();
 
@@ -695,7 +659,7 @@ int main(int argc, char **argv)
     gmpc_mpddata_treeview_cleanup();
 
     g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Quit....\n");
-    return EXIT_SUCCESS;
+    return retv;
 }
 
 
@@ -736,7 +700,7 @@ void main_quit(void)
     /**
      * Exit main loop
      */
-    gtk_main_quit();
+    gtk_widget_destroy(playlist3_get_window());
 }
 
 

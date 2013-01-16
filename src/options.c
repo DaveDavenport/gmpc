@@ -30,7 +30,6 @@ Options settings =
     .show_version = FALSE,
     .disable_plugins = FALSE,
     .start_hidden = FALSE,
-    .clean_config = FALSE,
     .quit = FALSE,
     .show_bug_information = FALSE,
     .fullscreen = FALSE,
@@ -73,10 +72,6 @@ gboolean parse_options(int *argc, char ***argv)
         {
             "start-hidden", 'h', 0, G_OPTION_ARG_NONE,
             &(settings.start_hidden), N_("Start gmpc hidden to tray"), NULL
-        },
-        {
-            "clean-cover-db", 0, 0, G_OPTION_ARG_NONE,
-            &(settings.clean_config), N_("Remove all failed hits from metadata cache"), NULL
         },
         {
             "bug-information", 'b', 0, G_OPTION_ARG_NONE,
