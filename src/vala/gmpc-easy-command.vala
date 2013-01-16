@@ -42,6 +42,7 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base
     public Gtk.ListStore store = null;
     private uint signals = 0;
     private Gtk.Window window = null;
+    private Gtk.Entry entry = null;
 
     /***
      * plugin setup
@@ -333,6 +334,7 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base
     public void
     popup_destroy()
     {
+        Gtk.grab_remove(this.entry);
 /*
         Gdk.keyboard_ungrab(Gtk.get_current_event_time());
         Gdk.pointer_ungrab(Gtk.get_current_event_time());
@@ -355,7 +357,7 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base
         if (this.window == null)
         {
             this.window = new Gtk.Window(Gtk.WindowType.TOPLEVEL);
-            var entry = new Gtk.Entry();
+            entry = new Gtk.Entry();
 
 
             entry.set_icon_from_icon_name(Gtk.EntryIconPosition.PRIMARY, "gmpc");
@@ -403,6 +405,10 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base
             entry.key_press_event.connect(this.key_press_event);
 
 
+            entry.focus_out_event.connect((source) => {
+                popup_destroy();
+                return false;
+            });
             window.button_press_event.connect((source, event) =>
             {
                 popup_destroy();
@@ -412,47 +418,11 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base
             window.present();
             window.get_window().raise();
             entry.grab_focus();
+            Gtk.grab_add(this.entry);
         }
         else
         {
             this.window.present();
-        }
-
-        {
-            /* Make gmpc easy command grab the keyboard. Do this somewhat aggrasive. */
-/*
-            uint32 _time = Gtk.get_current_event_time();
-            int i = 10;
-            while(i>0 && this.window != null)
-            {
-                if(Gdk.keyboard_grab(this.window.get_window(), true, _time) != Gdk.GrabStatus.SUCCESS)
-                {
-                    GLib.debug("Failed to grab keyboard\n");
-                }
-                else break;
-                GLib.Thread.usleep(100000);
-                i--;
-            }
-*/
-            /* Grab pointer too! */
-  /*          while(i>0 && this.window != null)
-            {
-                if(Gdk.pointer_grab(this.window.get_window(), true,
-                                    Gdk.EventMask.BUTTON_PRESS_MASK |
-                                    Gdk.EventMask.BUTTON_RELEASE_MASK |
-                                    Gdk.EventMask.POINTER_MOTION_MASK,
-                                    null, null, _time)
-                        != Gdk.GrabStatus.SUCCESS)
-                {
-                    GLib.debug("Failed to grab pointer\n");
-                }
-                else break;
-                GLib.Thread.usleep(100000);
-                i--;
-
-
-            }
-*/
         }
     }
     public static void
