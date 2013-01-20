@@ -37,7 +37,6 @@ public class Gmpc.Sidebar.Plugins
         Grid vbox;
 
         Label label;
-        Alignment alignment;
         string title;
         int position;
 
@@ -52,16 +51,13 @@ public class Gmpc.Sidebar.Plugins
 
         if (title != "")
         {
-            alignment = new Alignment(0, 0, 0, 0);
-            alignment.set_padding(0, 6, 4, 0);
 
             label = new Label(GLib.Markup.printf_escaped("<b>%s</b>",title));
             label.set_use_markup(true);
+            label.set_alignment(0f, 0.5f);
+            vbox.add(label);
 
-            alignment.add(label);
-            vbox.add(alignment);//, false, false, 0);
-
-            store.set(iter, 5, alignment, -1);
+            store.set(iter, 5, label, -1);
         }
 
         if ( position >= 0)

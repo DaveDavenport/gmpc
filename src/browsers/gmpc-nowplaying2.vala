@@ -38,6 +38,7 @@ namespace Gmpc
     {
         public class Nowplaying : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIface
         {
+            private int max_albums = 10;
             private bool    theme_colors    = (bool) config.get_int_with_default("Now Playing", "use-theme-color",1);
             private string  title_color     = config.get_string_with_default("Now Playing", "title-color", "#4d90dd");
             private string  item_color      = config.get_string_with_default("Now Playing", "item-color", "#304ab8");
@@ -1072,11 +1073,22 @@ namespace Gmpc
                     }
 
                     list.sort_album_disc_track();
+                    int count = 0;
                     if(list != null)
                     {
                         unowned MPD.Data.Item iter = list.get_first();
                         do
                         {
+                            if(count > this.max_albums)
+                            {
+                                var l = new Gtk.Label(_("More..."));
+                                l.set_alignment(0, 0.5f);
+                                album_hbox.pack_start(l, false,false, 0);
+                                // jump out.
+                                iter = null;
+                                continue;
+                            }
+                            count++;
                             var button = new Gtk.Button();
                             button.set_relief(Gtk.ReliefStyle.NONE);
                             var but_hbox = new Gtk.HBox(false, 6);
