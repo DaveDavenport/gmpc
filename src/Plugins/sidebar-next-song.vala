@@ -110,7 +110,7 @@ public class Gmpc.Plugins.SidebarNextSong : Gmpc.Plugin.Base, Gmpc.Plugin.Sideba
     public void sidebar_pane_construct(Gtk.Grid parent)
     {
         hbox = new Grid();
-        hbox.set_halign(Gtk.Align.START);
+        hbox.set_halign(Gtk.Align.FILL);
         hbox.set_column_spacing(6);
 
         AlbumImage = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ALBUM_ART, 32);
@@ -118,7 +118,11 @@ public class Gmpc.Plugins.SidebarNextSong : Gmpc.Plugin.Base, Gmpc.Plugin.Sideba
         AlbumImage.has_tooltip = false;
 
         label = new Gtk.Label("");
-        label.set_ellipsize(Pango.EllipsizeMode.MIDDLE);
+        label.set_hexpand(true);
+        label.set_alignment(0f, 0.5f);
+        label.set_halign(Gtk.Align.FILL);
+        label.set_max_width_chars(3);
+        label.set_ellipsize(Pango.EllipsizeMode.END);
         hbox.add(label);//, true, true, 0);
 
         parent.attach(hbox,0,1,1,1);//, false, false, 0);

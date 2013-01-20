@@ -631,11 +631,10 @@
                         </child>
                         <child>
                               <object class="GtkGrid" id="sidebar_plugins_bottom">
+                                <property name="margin">6</property>
                                 <property name="orientation">vertical</property>
                                 <property name="visible">True</property>
                                 <property name="row-spacing">3</property>
-                                <property name="hexpand-set">True</property>
-                                <property name="hexpand">False</property>
                                 <child>
                                 <placeholder/>
                                 </child>

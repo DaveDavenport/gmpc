@@ -42,8 +42,6 @@ public class Gmpc.Sidebar.Plugins
         int position;
 
         vbox = new Grid(); 
-        vbox.set_hexpand(false);
-        vbox.set_vexpand(false);
 
         title = plugin.sidebar_get_title();
 
