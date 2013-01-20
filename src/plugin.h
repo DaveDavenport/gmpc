@@ -62,6 +62,7 @@ typedef enum
     PL3_CAT_ORDER, /* int for sorting the list */
     PL3_CAT_BOLD,
     PL3_CAT_STOCK_ID,
+    PL3_CAT_SHOW_TEXT,
     PL3_CAT_NROWS
 } pl3_cat_store;
 

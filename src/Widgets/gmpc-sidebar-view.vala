@@ -92,6 +92,25 @@ public class MyCellRenderer : Gtk.CellRenderer
         return Gtk.SizeRequestMode.CONSTANT_SIZE;
     }
 
+    public override void get_preferred_width(Gtk.Widget widget,
+            out int min_size,
+            out int nat_size)
+    {
+
+        int ms = 0, ns = 0;
+        cr_pb.get_preferred_width(widget, out ms, out ns);
+        if(_show_text)
+        {
+            int tms = 0, tns =0;
+            cr_text.get_preferred_width(widget, out tms, out tns);
+            ms+= tms+6;
+            ns+= tns+6;
+        }
+        if(&min_size != null) min_size = ms;
+        if(&nat_size != null) nat_size = ns;
+        stdout.printf("get preferred width: %d %d\n", ms, ns);
+    }
+
     /* get_size method, always request a 50x50 area */
     public override void get_size (Gtk.Widget widget,
             Gdk.Rectangle? cell_area,
@@ -108,6 +127,7 @@ public class MyCellRenderer : Gtk.CellRenderer
         int ty_o =0;
         int tw=0;
         int th=0;
+        stdout.printf("get size\n");
 
         cr_pb.get_size(widget, null, out x_o, out y_o, out w, out h);
         if(show_text)

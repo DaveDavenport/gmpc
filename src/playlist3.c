@@ -939,7 +939,8 @@ void create_playlist3(void)
             G_TYPE_STRING,       /* icon id */
             G_TYPE_INT,          /* ordering */
             G_TYPE_INT,             /* Bold */
-            G_TYPE_STRING       /* stock id */
+            G_TYPE_STRING,       /* stock id */
+            G_TYPE_BOOLEAN          /* Show text */
         };
         /* song id, song title */
         pl3_tree = (GtkTreeModel *) gmpc_tools_liststore_sort_new();
@@ -961,7 +962,7 @@ void create_playlist3(void)
     sidebar_text = renderer = GTK_CELL_RENDERER(my_cell_renderer_new());
     g_object_set(G_OBJECT(renderer), "xalign", 0.5,NULL);
     column = gtk_tree_view_column_new();
-
+    gtk_tree_view_column_set_sizing(GTK_TREE_VIEW_COLUMN(column),GTK_TREE_VIEW_COLUMN_AUTOSIZE);
 
     gtk_tree_view_column_pack_start(column, renderer, TRUE);
     g_object_set(G_OBJECT(renderer), "stock-size", GTK_ICON_SIZE_MENU, NULL);
@@ -977,7 +978,8 @@ void create_playlist3(void)
             "icon-name", PL3_CAT_ICON_ID,
             "stock-id", PL3_CAT_STOCK_ID,
             "text", PL3_CAT_TITLE,
-            "weight", PL3_CAT_BOLD, NULL);
+            "weight", PL3_CAT_BOLD,
+            "show_text", PL3_CAT_SHOW_TEXT, NULL);
     g_object_set(renderer, "weight-set", TRUE, NULL);
 
     gtk_tree_view_append_column(GTK_TREE_VIEW(tree), column);
@@ -1414,7 +1416,18 @@ void playlist_zoom_in(void)
     pl3_zoom--;
     playlist_zoom_level_changed();
 }
-
+static void update_show_text(gboolean state)
+{
+    GtkTreeView *tree = (GtkTreeView *) gtk_builder_get_object(pl3_xml, "cat_tree");
+    GtkTreeModel *model = gtk_tree_view_get_model(tree);
+    GtkTreeIter iter;
+    if(gtk_tree_model_get_iter_first(model, &iter))
+    {
+        do{
+            gtk_list_store_set(GTK_LIST_STORE(model), &iter, PL3_CAT_SHOW_TEXT, state, -1);
+        }while(gtk_tree_model_iter_next(model, &iter));
+    }
+}
 
 /**
  * FIXME: Needs propper grouping and cleaning up
@@ -1488,13 +1501,12 @@ static void playlist_zoom_level_changed(void)
     gtk_action_set_visible(GTK_ACTION(gtk_builder_get_object(pl3_xml, "menu_go")),TRUE);
     gtk_action_set_visible(GTK_ACTION(gtk_builder_get_object(pl3_xml, "menu_option")),TRUE);
 
-    g_object_get(G_OBJECT(sidebar_text), "show_text", &st_shown, NULL);
-    if(!st_shown)
     {
+        update_show_text(TRUE);
         /* restore pane position */
-        g_object_set(sidebar_text, "show_text", TRUE, NULL);
         gtk_widget_set_size_request(GTK_WIDGET(gtk_builder_get_object(pl3_xml,"sidebar")),
-                SIDEBAR_LARGE,-1);
+                -1,-1);
+        gtk_widget_queue_resize(GTK_WIDGET(gtk_builder_get_object(pl3_xml,"sidebar")));
         gmpc_sidebar_plugins_update_state(GMPC_PLUGIN_SIDEBAR_STATE_FULL);
     }
 
@@ -1525,12 +1537,15 @@ static void playlist_zoom_level_changed(void)
             break;
         case PLAYLIST_SMALL:
             gmpc_metaimage_set_is_visible(GMPC_METAIMAGE(metaimage_artist_art), FALSE);
-            if(st_shown) {
-                g_object_set(sidebar_text, "show_text", FALSE, NULL);
-                gtk_widget_set_size_request(GTK_WIDGET(gtk_builder_get_object(pl3_xml,"sidebar")),
+            {
+                printf("set sidebar size\n");
+                gtk_widget_set_size_request(GTK_WIDGET(gtk_builder_get_object(pl3_xml,"status_icon_box")),
                         SIDEBAR_SMALL,-1);
-
-                gtk_widget_queue_draw(GTK_WIDGET(gtk_builder_get_object(pl3_xml,"sidebar")));
+                gtk_widget_set_size_request(GTK_WIDGET(gtk_builder_get_object(pl3_xml,"sidebar_artist_image_alignment")),
+                        SIDEBAR_SMALL,-1);
+                gtk_widget_set_size_request(GTK_WIDGET(gtk_builder_get_object(pl3_xml,"alignmentpb21")),
+                        SIDEBAR_SMALL,-1);
+                update_show_text(FALSE);
                 gmpc_sidebar_plugins_update_state(GMPC_PLUGIN_SIDEBAR_STATE_COLLAPSED);
             }
             gtk_widget_grab_focus(pl3_win);
@@ -2444,8 +2459,6 @@ void show_user_manual(void)
 
 GmpcPluginSidebarState playlist3_get_sidebar_state(void)
 {
-    gboolean st_shown;
-    g_object_get(G_OBJECT(sidebar_text), "show_text", &st_shown, NULL);
-    return  st_shown? GMPC_PLUGIN_SIDEBAR_STATE_FULL:GMPC_PLUGIN_SIDEBAR_STATE_COLLAPSED;
+    return  pl3_zoom == PLAYLIST_NO_ZOOM ? GMPC_PLUGIN_SIDEBAR_STATE_FULL:GMPC_PLUGIN_SIDEBAR_STATE_COLLAPSED;
 }
 /* vim: set noexpandtab ts=4 sw=4 sts=4 tw=80: */
