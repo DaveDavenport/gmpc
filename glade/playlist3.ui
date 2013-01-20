@@ -449,11 +449,6 @@
                                     <property name="visible">True</property>
                                     <property name="spacing">1</property>
                                     <child>
-                                      <object class="GmpcWidgetsOverlay" id="button_prev_overlay">
-                                        <property name="visible">True</property>
-                                        <property name="binding_overlay_notifier">binding_overlay_notify</property>
-                                        <property name="overlay_text">←</property>
-                                        <child>
                                           <object class="GtkButton" id="button_previous">
                                             <property name="visible">True</property>
                                             <property name="use_action_appearance">False</property>
@@ -468,8 +463,6 @@
                                                 <property name="stock">gtk-media-previous</property>
                                               </object>
                                             </child>
-                                          </object>
-                                        </child>
                                       </object>
                                       <packing>
                                         <property name="expand">False</property>
@@ -478,11 +471,6 @@
                                       </packing>
                                     </child>
                                     <child>
-                                      <object class="GmpcWidgetsOverlay" id="button_stop_overlay">
-                                        <property name="visible">True</property>
-                                        <property name="overlay_text">↓</property>
-                                        <property name="binding_overlay_notifier">binding_overlay_notify</property>
-                                        <child>
                                           <object class="GtkButton" id="stop_button">
                                             <property name="visible">True</property>
                                             <property name="use_action_appearance">False</property>
@@ -496,8 +484,6 @@
                                                 <property name="stock">gtk-media-stop</property>
                                               </object>
                                             </child>
-                                          </object>
-                                        </child>
                                       </object>
                                       <packing>
                                         <property name="expand">False</property>
@@ -506,11 +492,6 @@
                                       </packing>
                                     </child>
                                     <child>
-                                      <object class="GmpcWidgetsOverlay" id="button_play_overlay">
-                                        <property name="visible">True</property>
-                                        <property name="binding_overlay_notifier">binding_overlay_notify</property>
-                                        <property name="overlay_text">↑</property>
-                                        <child>
                                           <object class="GtkButton" id="play_button">
                                             <property name="visible">True</property>
                                             <property name="use_action_appearance">False</property>
@@ -524,8 +505,6 @@
                                                 <property name="stock">gtk-media-play</property>
                                               </object>
                                             </child>
-                                          </object>
-                                        </child>
                                       </object>
                                       <packing>
                                         <property name="expand">False</property>
@@ -534,11 +513,6 @@
                                       </packing>
                                     </child>
                                     <child>
-                                      <object class="GmpcWidgetsOverlay" id="button_next_overlay">
-                                        <property name="visible">True</property>
-                                        <property name="binding_overlay_notifier">binding_overlay_notify</property>
-                                        <property name="overlay_text">→</property>
-                                        <child>
                                           <object class="GtkButton" id="next_button">
                                             <property name="visible">True</property>
                                             <property name="use_action_appearance">False</property>
@@ -552,8 +526,6 @@
                                                 <property name="stock">gtk-media-next</property>
                                               </object>
                                             </child>
-                                          </object>
-                                        </child>
                                       </object>
                                       <packing>
                                         <property name="expand">False</property>
