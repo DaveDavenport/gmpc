@@ -35,11 +35,6 @@
 #include "GUI/title_header.h"
 #include "GUI/control_window.h"
 
-// Collapsed mode.
-#define SIDEBAR_SMALL 32
-// Default size.
-#define SIDEBAR_LARGE -1
-
 #define ALBUM_SIZE 42
 
 #define LOG_DOMAIN "Playlist"
@@ -1107,10 +1102,6 @@ void create_playlist3(void)
             g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "restore size %i %i\n", pl3_wsize.width, pl3_wsize.height);
             gtk_window_resize(GTK_WINDOW(playlist3_get_window()), pl3_wsize.width, pl3_wsize.height);
         }
-        TEC("resize window settings")
-        /* restore pane position */
-        gtk_widget_set_size_request(GTK_WIDGET(gtk_builder_get_object(pl3_xml,"sidebar")),
-                SIDEBAR_LARGE,-1);
         TEC("set pane window settings")
         if (maximized)
             gtk_window_maximize(GTK_WINDOW(playlist3_get_window()));
@@ -1501,14 +1492,8 @@ static void playlist_zoom_level_changed(void)
     gtk_action_set_visible(GTK_ACTION(gtk_builder_get_object(pl3_xml, "menu_go")),TRUE);
     gtk_action_set_visible(GTK_ACTION(gtk_builder_get_object(pl3_xml, "menu_option")),TRUE);
 
-    {
-        update_show_text(TRUE);
-        /* restore pane position */
-        gtk_widget_set_size_request(GTK_WIDGET(gtk_builder_get_object(pl3_xml,"sidebar")),
-                -1,-1);
-        gtk_widget_queue_resize(GTK_WIDGET(gtk_builder_get_object(pl3_xml,"sidebar")));
-        gmpc_sidebar_plugins_update_state(GMPC_PLUGIN_SIDEBAR_STATE_FULL);
-    }
+    update_show_text(TRUE);
+    gmpc_sidebar_plugins_update_state(GMPC_PLUGIN_SIDEBAR_STATE_FULL);
 
     /* Now start hiding */
     switch (pl3_zoom)
@@ -1537,17 +1522,8 @@ static void playlist_zoom_level_changed(void)
             break;
         case PLAYLIST_SMALL:
             gmpc_metaimage_set_is_visible(GMPC_METAIMAGE(metaimage_artist_art), FALSE);
-            {
-                printf("set sidebar size\n");
-                gtk_widget_set_size_request(GTK_WIDGET(gtk_builder_get_object(pl3_xml,"status_icon_box")),
-                        SIDEBAR_SMALL,-1);
-                gtk_widget_set_size_request(GTK_WIDGET(gtk_builder_get_object(pl3_xml,"sidebar_artist_image_alignment")),
-                        SIDEBAR_SMALL,-1);
-                gtk_widget_set_size_request(GTK_WIDGET(gtk_builder_get_object(pl3_xml,"alignmentpb21")),
-                        SIDEBAR_SMALL,-1);
-                update_show_text(FALSE);
-                gmpc_sidebar_plugins_update_state(GMPC_PLUGIN_SIDEBAR_STATE_COLLAPSED);
-            }
+            update_show_text(FALSE);
+            gmpc_sidebar_plugins_update_state(GMPC_PLUGIN_SIDEBAR_STATE_COLLAPSED);
             gtk_widget_grab_focus(pl3_win);
         default:
             break;
