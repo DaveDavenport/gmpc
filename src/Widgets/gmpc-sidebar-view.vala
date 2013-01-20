@@ -61,11 +61,16 @@ public class MyCellRenderer : Gtk.CellRenderer
             cr_text.text = value;
         }
     }
+
+    private bool _show_text = true;
     public bool show_text
     {
-        set;
-        get;
-        default = true;
+        set {
+            _show_text = value;
+        }
+        get{
+            return _show_text;
+        }
     }
     public int image_width
     {
@@ -146,7 +151,7 @@ public class MyCellRenderer : Gtk.CellRenderer
         {
             ca.width = cell_area.width;
         }
-        if(show_text)
+        if(_show_text)
             cr_text.render(ct, widget, background_area, ca, flags);
 
         // Draw arrow.

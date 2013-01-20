@@ -135,6 +135,8 @@ public class Gmpc.Widgets.Qtable : Gtk.Container, Gtk.Buildable
         int items = 0, width=0;
 
 
+        actual_width -= padding_left;
+        actual_width -= padding_right;
         /* determine max width/height */
         foreach ( var child in children)
         {
@@ -196,6 +198,8 @@ public class Gmpc.Widgets.Qtable : Gtk.Container, Gtk.Buildable
             int remain = (items%columns >0)?1:0;
             rows = rows + (nrows+remain)*cover_height;
         }
+
+        stdout.printf("height: %d %d: %d %d\n", rows, columns, cover_width, actual_width);
         /* Width of one column */
         min_height = rows; 
         nat_height = rows;
