@@ -31,7 +31,7 @@ private const string some_unique_name_snsong = Config.VERSION;
 public class Gmpc.Plugins.SidebarNextSong : Gmpc.Plugin.Base, Gmpc.Plugin.SidebarIface
 {
 
-    private Box hbox = null;
+    private Grid hbox = null;
     private Gmpc.MetaData.Image AlbumImage = null;
     private Label label = null;
 
@@ -107,29 +107,27 @@ public class Gmpc.Plugins.SidebarNextSong : Gmpc.Plugin.Base, Gmpc.Plugin.Sideba
             label.set_text("");
         }
     }
-    public void sidebar_pane_construct(Gtk.VBox parent)
+    public void sidebar_pane_construct(Gtk.Grid parent)
     {
-        hbox = new HBox(false, 6);
+        hbox = new Grid();
+        hbox.set_halign(Gtk.Align.START);
+        hbox.set_column_spacing(6);
 
         AlbumImage = new Gmpc.MetaData.Image(Gmpc.MetaData.Type.ALBUM_ART, 32);
-        hbox.pack_start(AlbumImage, false, true, 0);
+        hbox.add(AlbumImage);//, false, true, 0);
         AlbumImage.has_tooltip = false;
 
         label = new Gtk.Label("");
-        label.ellipsize = Pango.EllipsizeMode.END;
-        label.set_alignment(0f, 0.5f);
-        hbox.pack_start(label, true, true, 0);
+        label.set_ellipsize(Pango.EllipsizeMode.MIDDLE);
+        hbox.add(label);//, true, true, 0);
 
-        Alignment align = new Alignment(1, 1, 1, 1);
-        align.set_padding(0,0,2,2);
-        align.add(hbox);
-        parent.pack_start(align, false, false, 0);
+        parent.attach(hbox,0,1,1,1);//, false, false, 0);
 
         parent.show_all();
         this.sidebar_set_state(Gmpc.Playlist.get_sidebar_state());
     }
 
-    public void sidebar_pane_destroy(Gtk.VBox parent)
+    public void sidebar_pane_destroy(Gtk.Grid parent)
     {
         foreach(Gtk.Widget child in parent.get_children())
         {

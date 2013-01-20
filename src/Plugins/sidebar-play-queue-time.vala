@@ -105,7 +105,7 @@ public class Gmpc.Plugins.Sidebar.PlayQueueTime : Gmpc.Plugin.Base, Gmpc.Plugin.
         }
     }
 
-    public void sidebar_pane_construct(Gtk.VBox parent)
+    public void sidebar_pane_construct(Gtk.Grid parent)
     {
         stdout.printf("sidebar pane construct");
         time_label = new Gtk.Label("play time");
@@ -113,13 +113,13 @@ public class Gmpc.Plugins.Sidebar.PlayQueueTime : Gmpc.Plugin.Base, Gmpc.Plugin.
 
         (time_label as Gtk.Misc).set_alignment(0.0f, 0.5f);
         (time_label as Gtk.Misc).set_padding(5,0);
-        parent.pack_start(time_label, false, false, 0);
+        parent.attach(time_label,0,1,1,1);//, false, false, 0);
         parent.show_all();
         this.sidebar_set_state(Gmpc.Playlist.get_sidebar_state());
         update();
     }
 
-    public void sidebar_pane_destroy(Gtk.VBox parent)
+    public void sidebar_pane_destroy(Gtk.Grid parent)
     {
         foreach(Gtk.Widget child in parent.get_children())
         {

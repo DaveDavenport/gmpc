@@ -33,15 +33,17 @@ public class Gmpc.Sidebar.Plugins
         SidebarIface plugin;
         store.get(iter, 3, out plugin, -1);
 
-        VBox sidebar_vbox;
-        VBox vbox;
+        Grid sidebar_vbox;
+        Grid vbox;
 
         Label label;
         Alignment alignment;
         string title;
         int position;
 
-        vbox = new VBox(false, 0);
+        vbox = new Grid(); 
+        vbox.set_hexpand(false);
+        vbox.set_vexpand(false);
 
         title = plugin.sidebar_get_title();
 
@@ -59,29 +61,29 @@ public class Gmpc.Sidebar.Plugins
             label.set_use_markup(true);
 
             alignment.add(label);
-            vbox.pack_start(alignment, false, false, 0);
+            vbox.add(alignment);//, false, false, 0);
 
             store.set(iter, 5, alignment, -1);
         }
 
         if ( position >= 0)
         {
-            sidebar_vbox = (VBox)Playlist.get_widget_by_id("sidebar_plugins_top");
+            sidebar_vbox = (Grid)Playlist.get_widget_by_id("sidebar_plugins_top");
         }
         else
         {
-            sidebar_vbox = (VBox)Playlist.get_widget_by_id("sidebar_plugins_bottom");
+            sidebar_vbox = (Grid)Playlist.get_widget_by_id("sidebar_plugins_bottom");
 
         }
         sidebar_vbox.ref();
 
         if (position >= 0)
         {
-            sidebar_vbox.pack_start(vbox, false, false, 0);
+            sidebar_vbox.add(vbox);//, false, false, 0);
         }
         else
         {
-            sidebar_vbox.pack_end(vbox, false, false, 0);
+            sidebar_vbox.add(vbox);//, false, false, 0);
         }
 
 
@@ -95,14 +97,16 @@ public class Gmpc.Sidebar.Plugins
 
     private static void reorder()
     {
+// TODO
+#if 0
         // assumption: liststore is sorted descending by position
         TreeIter iter;
-        VBox vbox;
-        VBox sidebar_vbox;
+        Grid vbox;
+        Grid sidebar_vbox;
         bool enabled;
         int pos;
-        List<VBox> list_top = new List<VBox> ();
-        List<VBox> list_bottom = new List<VBox> ();
+        List<Grid> list_top = new List<Grid> ();
+        List<Grid> list_bottom = new List<Grid> ();
 
         store.get_iter_first(out iter);
 
@@ -124,7 +128,7 @@ public class Gmpc.Sidebar.Plugins
         }
         while (store.iter_next(ref iter));
 
-        sidebar_vbox = (VBox)Playlist.get_widget_by_id("sidebar_plugins_top");
+        sidebar_vbox = (Grid)Playlist.get_widget_by_id("sidebar_plugins_top");
         sidebar_vbox.ref();
         list_top.reverse();
         for (int i = 0; i < list_top.length(); i++)
@@ -133,24 +137,25 @@ public class Gmpc.Sidebar.Plugins
             sidebar_vbox.reorder_child((Widget)list_top.nth_data(i), i);
         }
 
-        sidebar_vbox = (VBox)Playlist.get_widget_by_id("sidebar_plugins_bottom");
+        sidebar_vbox = (Grid)Playlist.get_widget_by_id("sidebar_plugins_bottom");
         sidebar_vbox.ref();
         for (int i = 0; i < list_bottom.length(); i++)
         {
 
             sidebar_vbox.reorder_child((Widget)list_bottom.nth_data(i), i);
         }
+#endif
     }
 
     private static void destroy(TreeIter iter)
     {
         SidebarIface plugin;
-        VBox vbox;
+        Grid vbox;
         store.get(iter, 3, out plugin, 4, out vbox, -1);
 
         plugin.sidebar_pane_destroy(vbox);
         vbox.destroy();
-        vbox = (VBox)null;
+        vbox = (Grid)null;
     }
 
     private static TreeIter lookup_iter(SidebarIface plugin)
@@ -220,7 +225,7 @@ public class Gmpc.Sidebar.Plugins
                                   typeof(string),        // name
                                   typeof(int),           // position
                                   typeof(SidebarIface),  // plugin
-                                  typeof(VBox),         // Widget
+                                  typeof(Grid),         // Widget
                                   typeof(Widget));      // Label
         log(GSBP_LOG_DOMAIN, GLib.LogLevelFlags.LEVEL_DEBUG, "Initializing sidebar plugin");
         TreeIter iter;

@@ -138,8 +138,8 @@ public interface SidebarIface :
             /* This works similar to the preferences pane. The vbox will contain the generated
              * title as first element if title is not epmty, and you can pack your own widgets
              * into it. */
-            public abstract void sidebar_pane_construct (Gtk.VBox parent);
-            public abstract void sidebar_pane_destroy (Gtk.VBox parent);
+            public abstract void sidebar_pane_construct (Gtk.Grid parent);
+            public abstract void sidebar_pane_destroy (Gtk.Grid parent);
 
             public virtual void sidebar_set_state(Gmpc.Plugin.SidebarState state)
             {

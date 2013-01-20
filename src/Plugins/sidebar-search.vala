@@ -69,7 +69,7 @@ public class Gmpc.Plugins.SidebarSearch : Gmpc.Plugin.Base, Gmpc.Plugin.SidebarI
     }
 
     const string searchText="Search";
-    public void sidebar_pane_construct(Gtk.VBox parent)
+    public void sidebar_pane_construct(Gtk.Grid parent)
     {
         entry = new Entry();
         entry.set_text(searchText);
@@ -123,13 +123,13 @@ public class Gmpc.Plugins.SidebarSearch : Gmpc.Plugin.Base, Gmpc.Plugin.SidebarI
         Alignment align = new Alignment(1, 1, 1, 1);
         align.set_padding(0,0,2,2);
         align.add(entry);
-        parent.pack_start(align, false, false, 0);
+        parent.attach(align,0,1,1,1);//, false, false, 0);
 
         parent.show_all();
         this.sidebar_set_state(Gmpc.Playlist.get_sidebar_state());
     }
 
-    public void sidebar_pane_destroy(Gtk.VBox parent)
+    public void sidebar_pane_destroy(Gtk.Grid parent)
     {
         foreach(Gtk.Widget child in parent.get_children())
         {

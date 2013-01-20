@@ -385,7 +385,7 @@
     <signal name="delete-event" handler="pl3_close" swapped="no"/>
     <signal name="focus-out-event" handler="pl3_window_focus_out_event" swapped="no"/>
     <child>
-      <object class="GtkVBox" id="vbox1">
+      <object class="GtkGrid" id="vbox1">
         <property name="orientation">vertical</property>
         <property name="spacing">0</property>
         <property name="visible">True</property>
@@ -630,33 +630,15 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkAlignment" id="alignmentspb">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="top_padding">0</property>
-                            <property name="bottom_padding">0</property>
-                            <property name="left_padding">0</property>
-                            <property name="right_padding">0</property>
-                            <child>
-                              <object class="GtkVBox" id="sidebar_plugins_bottom">
+                              <object class="GtkGrid" id="sidebar_plugins_bottom">
                                 <property name="orientation">vertical</property>
                                 <property name="visible">True</property>
-                                <property name="spacing">3</property>
+                                <property name="row-spacing">3</property>
+                                <property name="hexpand-set">True</property>
+                                <property name="hexpand">False</property>
                                 <child>
-                                  <object class="GtkAlignment" id="placeholder">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">False</property>
-                                    <property name="padding">0</property>
-                                    <property name="position">0</property>
-                                    <property name="pack_type">end</property>
-                                  </packing>
+                                <placeholder/>
                                 </child>
-                              </object>
-                            </child>
                           </object>
                         </child>
                         <child>
@@ -693,12 +675,6 @@
                               </object>
                             </child>
                           </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">False</property>
-                            <property name="position">0</property>
-                            <property name="pack_type">end</property>
-                          </packing>
                         </child>
                       </object>
                     </child>
