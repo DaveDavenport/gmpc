@@ -390,14 +390,12 @@ gboolean alt_button_pressed = FALSE;
  */
 gboolean pl3_window_focus_out_event(GtkWidget *window, GdkEventFocus *event, gpointer data)
 {
-    GmpcToolsBindingOverlayNotify *p = (GmpcToolsBindingOverlayNotify *)gtk_builder_get_object(pl3_xml, "binding_overlay_notify");
     if(alt_button_pressed)
     {
         GtkWidget *tree = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "cat_tree"));
         alt_button_pressed = FALSE;
         gtk_widget_queue_draw(GTK_WIDGET(tree));
     }
-    gmpc_tools_binding_overlay_notify_key_released(p,GDK_MOD1_MASK|GDK_CONTROL_MASK);
     return FALSE;
 }
 
@@ -433,15 +431,9 @@ gboolean pl3_window_fullscreen(void)
 int pl3_window_key_release_event(GtkWidget * mw, GdkEventKey * event)
 {
     if(event->keyval == GDK_KEY_Alt_L || event->keyval == GDK_KEY_Alt_R || event->keyval == GDK_KEY_Meta_L|| event->keyval == GDK_KEY_Meta_R) {
-        GmpcToolsBindingOverlayNotify *p = (GmpcToolsBindingOverlayNotify *)gtk_builder_get_object(pl3_xml, "binding_overlay_notify");
         GtkWidget *tree = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "cat_tree"));
         alt_button_pressed = FALSE;
         gtk_widget_queue_draw(GTK_WIDGET(tree));
-        gmpc_tools_binding_overlay_notify_key_released(p,GDK_MOD1_MASK);
-    }
-    if(event->keyval == GDK_KEY_Control_L || event->keyval == GDK_KEY_Control_R) {
-        GmpcToolsBindingOverlayNotify *p =(GmpcToolsBindingOverlayNotify *) gtk_builder_get_object(pl3_xml, "binding_overlay_notify");
-        gmpc_tools_binding_overlay_notify_key_released(p,GDK_CONTROL_MASK);
     }
     return FALSE;
 }
@@ -450,16 +442,9 @@ int pl3_window_key_press_event(GtkWidget * mw, GdkEventKey * event)
     int i = 0;
     gint type = pl3_cat_get_selected_browser();
     if(event->keyval == GDK_KEY_Alt_L || event->keyval == GDK_KEY_Alt_R) {
-        GmpcToolsBindingOverlayNotify *p = (GmpcToolsBindingOverlayNotify *)gtk_builder_get_object(pl3_xml, "binding_overlay_notify");
         GtkWidget *tree = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "cat_tree"));
         alt_button_pressed = TRUE;
         gtk_widget_queue_draw(GTK_WIDGET(tree));
-        gmpc_tools_binding_overlay_notify_key_pressed(p,GDK_MOD1_MASK);
-    }
-    if(event->keyval == GDK_KEY_Control_L || event->keyval == GDK_KEY_Control_R)
-    {
-        GmpcToolsBindingOverlayNotify *p =(GmpcToolsBindingOverlayNotify *) gtk_builder_get_object(pl3_xml, "binding_overlay_notify");
-        gmpc_tools_binding_overlay_notify_key_pressed(p,GDK_CONTROL_MASK);
     }
     /**
      * Following key's are only valid when connected
@@ -872,46 +857,6 @@ static gboolean pl3_cat_select_function(GtkTreeSelection *select, GtkTreeModel *
     }
     return FALSE;
 }
-static void pl3_sidebar_text_get_key_number( GtkTreeViewColumn *column,
-        GtkCellRenderer *renderer,
-        GtkTreeModel *model,
-        GtkTreeIter *d_iter,
-        gpointer data)
-{
-    int number = 0;
-    GtkTreeIter iter;
-    GtkTreePath *pa1 = NULL;
-
-    if(!alt_button_pressed) {
-        g_object_set(G_OBJECT(renderer), "show-number", FALSE, NULL);
-        return;
-    }
-
-    pa1 = gtk_tree_model_get_path(model, d_iter);
-    if (gtk_tree_model_get_iter_first(pl3_tree, &iter))
-    {
-        do{
-            gint type =0 ;
-            gtk_tree_model_get(pl3_tree, &iter, PL3_CAT_TYPE, &type, -1);
-            if(type >= 0) number++;
-            if( type >= 0)
-            {
-                GtkTreePath *pa2 = gtk_tree_model_get_path(model, &iter);
-                if(gtk_tree_path_compare(pa2, pa1) == 0){
-                    g_object_set(G_OBJECT(renderer), "number", number%10, NULL);
-                    g_object_set(G_OBJECT(renderer), "show-number", TRUE, NULL);
-                    gtk_tree_path_free(pa2);
-                    gtk_tree_path_free(pa1);
-                    return;
-                }
-                gtk_tree_path_free(pa2);
-            }
-        }while(gtk_tree_model_iter_next(pl3_tree, &iter));
-    }
-    gtk_tree_path_free(pa1);
-    g_object_set(G_OBJECT(renderer), "number", number, NULL);
-    g_object_set(G_OBJECT(renderer), "show-number", FALSE, NULL);
-}
 
 void create_playlist3(void)
 {
@@ -1019,7 +964,6 @@ void create_playlist3(void)
 
 
     gtk_tree_view_column_pack_start(column, renderer, TRUE);
-    gtk_tree_view_column_set_cell_data_func(column, sidebar_text, pl3_sidebar_text_get_key_number, NULL, NULL);
     g_object_set(G_OBJECT(renderer), "stock-size", GTK_ICON_SIZE_MENU, NULL);
     {
         int w, h;

@@ -28,8 +28,6 @@ private const string some_unique_name_sbv = Config.VERSION;
 
 public class MyCellRenderer : Gtk.CellRenderer
 {
-    public bool show_number { set; get; default=false;}
-    public int number { set; get; default=0;}
     private CellRendererPixbuf cr_pb = new Gtk.CellRendererPixbuf();
     private CellRendererText cr_text = new Gtk.CellRendererText();
     public string icon_name
@@ -151,24 +149,6 @@ public class MyCellRenderer : Gtk.CellRenderer
         if(show_text)
             cr_text.render(ct, widget, background_area, ca, flags);
 
-        if(show_number)
-        {
-            int pw,ph;
-            var l = widget.create_pango_layout("%0i".printf(number));
-            l.get_pixel_size(out pw, out ph);
-
-            //			Gdk.cairo_set_source_color(ct, widget.style.bg[Gtk.StateType.SELECTED]);
-            ct.set_source_rgb(0.8,0,0);
-            ct.rectangle(cell_area.x, cell_area.y+cell_area.height/2-ph/2-0.5, pw+4, ph);
-            ct.fill_preserve();
-            Gdk.cairo_set_source_color(ct, widget.style.text[Gtk.StateType.SELECTED]);
-            ct.stroke();
-
-            ct.move_to(cell_area.x+2, cell_area.y+cell_area.height/2-ph/2-1.5);
-            Gdk.cairo_set_source_color(ct, widget.style.fg[Gtk.StateType.SELECTED]);
-            Pango.cairo_show_layout(ct, l);
-            ct.stroke();
-        }
         // Draw arrow.
 /*
         if((flags&Gtk.CellRendererState.SELECTED) == Gtk.CellRendererState.SELECTED)

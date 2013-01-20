@@ -374,8 +374,6 @@
       </menubar>
     </ui>
   </object>
-  <object class="GmpcToolsBindingOverlayNotify" id="binding_overlay_notify">
-  </object>
   <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkWindow" id="pl3_win">
     <property name="title" translatable="yes">gmpc - Playlist Manager</property>

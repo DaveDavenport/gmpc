@@ -101,40 +101,23 @@ void main_window_add_status_icon(GtkWidget * icon)
 
 void main_window_init_default_status_icons(void)
 {
-    GmpcToolsBindingOverlayNotify *p = gtk_builder_get_object(pl3_xml, "binding_overlay_notify");
-    si_repeat = gmpc_widgets_overlay_new();
-
-    g_object_set(G_OBJECT(si_repeat),
-                "modifier", GDK_MOD1_MASK,
-                "overlay-text", "r",
-                "binding-overlay-notifier", p,
-                NULL);
+    si_repeat = gtk_event_box_new();
 
     g_signal_connect(G_OBJECT(si_repeat), "button-release-event", G_CALLBACK(repeat_toggle), NULL);
     gtk_container_add(GTK_CONTAINER(si_repeat), gtk_image_new_from_icon_name("stock_repeat", GTK_ICON_SIZE_MENU));
     gtk_widget_show_all(si_repeat);
     main_window_add_status_icon(si_repeat);
 
-    si_random = gmpc_widgets_overlay_new();
+    si_random = gtk_event_box_new();
 
-    g_object_set(G_OBJECT(si_random),
-                "modifier", GDK_MOD1_MASK,
-                "overlay-text", "f",
-                "binding-overlay-notifier", p,
-                NULL);
 
     g_signal_connect(G_OBJECT(si_random), "button-release-event", G_CALLBACK(random_toggle), NULL);
     gtk_container_add(GTK_CONTAINER(si_random), gtk_image_new_from_icon_name("stock_shuffle", GTK_ICON_SIZE_MENU));
     gtk_widget_show_all(si_random);
     main_window_add_status_icon(si_random);
 
-    si_repeat_single = gmpc_widgets_overlay_new();
+    si_repeat_single = gtk_event_box_new();
 
-    g_object_set(G_OBJECT(si_repeat_single),
-                "modifier", GDK_MOD1_MASK,
-                "overlay-text", "t",
-                "binding-overlay-notifier", p,
-                NULL);
 
     g_signal_connect(G_OBJECT(si_repeat_single), "button-release-event", G_CALLBACK(repeat_single_toggle), NULL);
     gtk_container_add(GTK_CONTAINER(si_repeat_single),
@@ -142,12 +125,8 @@ void main_window_init_default_status_icons(void)
     gtk_widget_show_all(si_repeat_single);
     main_window_add_status_icon(si_repeat_single);
 
-    si_consume =  gmpc_widgets_overlay_new();
-    g_object_set(G_OBJECT(si_consume),
-                "modifier", GDK_MOD1_MASK,
-                "overlay-text", "y",
-                "binding-overlay-notifier", p,
-                NULL);
+    si_consume =  gtk_event_box_new();
+
     g_signal_connect(G_OBJECT(si_consume), "button-release-event", G_CALLBACK(consume_toggle), NULL);
     gtk_container_add(GTK_CONTAINER(si_consume), gtk_image_new_from_icon_name("media-consume", GTK_ICON_SIZE_MENU));
     gtk_widget_show_all(si_consume);
