@@ -878,6 +878,10 @@ void create_playlist3(void)
         return;
     }
 
+
+
+
+
     /** Ambiance / Radiance theme "dark" header */
     if (cfg_get_single_value_as_int_with_default(config, "Default", "use-dark-style-header", TRUE))
     {
@@ -921,6 +925,14 @@ void create_playlist3(void)
         abort();
     }
     g_free(path);
+
+
+    {
+        // update style.
+        GtkWidget *widget = (GtkWidget *)gtk_builder_get_object(pl3_xml, "cat_tree");
+        GtkStyleContext *ct = gtk_widget_get_style_context(widget);
+        gtk_style_context_add_class(ct, GTK_STYLE_CLASS_SIDEBAR);
+    }
     TEC("Load builder file")
 
     /* create tree store for the "category" view */
