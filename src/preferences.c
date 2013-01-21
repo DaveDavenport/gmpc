@@ -283,11 +283,24 @@ void create_preferences_window(void)
 
         GtkWidget *widget = (GtkWidget *) gtk_builder_get_object(xml_preferences_window,
             "eventbox_background");
+        GtkStyleContext *sc = gtk_widget_get_style_context(widget);
+        gtk_style_context_add_class(sc, GTK_STYLE_CLASS_VIEW);
 
-        //gtk_widget_modify_bg(widget, GTK_STATE_NORMAL, &(dialog->style->base[GTK_STATE_NORMAL]));
+        widget = (GtkWidget *) gtk_builder_get_object(xml_preferences_window,
+            "plugin_label_box");
+        sc = gtk_widget_get_style_context(widget);
+        gtk_style_context_add_class(sc, GTK_STYLE_CLASS_HIGHLIGHT);
+
+        widget = (GtkWidget *) gtk_builder_get_object(xml_preferences_window,
+            "plugin_label");
+        sc = gtk_widget_get_style_context(widget);
+        gtk_style_context_add_class(sc, GTK_STYLE_CLASS_HIGHLIGHT);
+
+        widget = (GtkWidget *) gtk_builder_get_object(xml_preferences_window,
+            "plugin_tree");
+        sc = gtk_widget_get_style_context(widget);
+        gtk_style_context_add_class(sc, GTK_STYLE_CLASS_SIDEBAR);
     }
-
-    label = (GtkWidget *) gtk_builder_get_object(xml_preferences_window, "plugin_label_box");
 
     gtk_widget_show(dialog);
     gtk_builder_connect_signals(xml_preferences_window, NULL);

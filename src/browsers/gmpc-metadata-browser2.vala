@@ -184,18 +184,6 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
     /**
      * This builds the browser
      */
-    private void browser_bg_style_changed(Gtk.Widget bg,Gtk.Style? style)
-    {
-        this.metadata_box.modify_bg(Gtk.StateType.NORMAL,this.metadata_sw.style.base[Gtk.StateType.NORMAL]);
-
-        debug("Change style signal");
-        if(this.theme_colors)
-        {
-            this.title_color = this.paned.style.text[Gtk.StateType.PRELIGHT].to_string();
-            this.item_color = this.paned.style.text[Gtk.StateType.PRELIGHT].to_string();
-        }
-        this.change_color_style(this.metadata_sw);
-    }
     /* This hack makes clicking a selected row again, unselect it */
     private bool browser_button_press_event(Gtk.Widget treel, Gdk.EventButton event)
     {
@@ -516,7 +504,6 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         {
             this.paned = new Gtk.HPaned();
             paned_size_group.add_paned(this.paned);
-            this.paned.style_set.connect(browser_bg_style_changed);
             /* Bow with browsers */
             this.browser_box = new Gtk.VBox(true, 6);
             this.paned.add1(this.browser_box);
@@ -681,7 +668,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
             this.metadata_sw = new Gtk.ScrolledWindow(null, null);
             this.metadata_sw.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC);
             this.metadata_sw.set_shadow_type(Gtk.ShadowType.ETCHED_IN);
-            //            this.metadata_sw.style_set += browser_bg_style_changed;
+
             this.metadata_box = new Gtk.EventBox();
             this.metadata_box.set_visible_window(true);
             this.metadata_sw.add_with_viewport(this.metadata_box);
@@ -690,17 +677,18 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
             (this.metadata_box as Gtk.Container).set_focus_vadjustment(
                 this.metadata_sw.get_vadjustment());
 
+
             /* header */
             var vb = new Gtk.VBox(false, 0);
             vb.pack_end(this.metadata_sw, true,true,0);
 
+            this.metadata_box.get_style_context().add_class(Gtk.STYLE_CLASS_VIEW);
             
             this.header = new Gtk.EventBox();
-            header.set_state(Gtk.StateType.SELECTED);
-//            header.app_paintable = true;
-//          header.set_visible_window(true);
-// TODO
-  //        header.draw.connect(Gmpc.Misc.misc_header_expose_event);
+            {
+                this.header.get_style_context().add_class(Gtk.STYLE_CLASS_HIGHLIGHT);
+            }
+
             var sp = new Gtk.Separator(Gtk.Orientation.HORIZONTAL);
             sp.set_size_request(-1, 1);
             vb.pack_start(sp, false, false, 0);
@@ -1267,7 +1255,6 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
                 {
                     text_view.query_from_song(song);
                     text_view_queried = true;
-                    this.change_color_style(text_view);
                 }
             });
             if(i == 0)
@@ -1303,7 +1290,6 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
                     similar_songs.update();
                     similar_songs_queried = true;
                     similar_songs_box.add(similar_songs);
-                    this.change_color_style(similar_songs_box);
                     similar_songs_box.show_all();
                 }
             });
@@ -1523,7 +1509,6 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
          */
         master_box.pack_start(vbox, false, false, 0);
         this.metadata_box.add(master_box);
-        this.change_color_style(this.metadata_sw);
         this.metadata_sw.show_all();
         //    MetadataBoxShowBaseEntry.grab_focus();
     }
@@ -1792,7 +1777,6 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
          */
         master_box.pack_start(vbox, false, false, 0);
         this.metadata_box.add(master_box);
-        this.change_color_style(this.metadata_sw);
         this.metadata_sw.show_all();
     }
     /**
@@ -2218,7 +2202,6 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
 
         master_box.pack_start(vbox, false, false, 0);
         this.metadata_box.add(master_box);
-        this.change_color_style(this.metadata_sw);
         this.metadata_box.show_all();
     }
 
@@ -2254,7 +2237,6 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
 
             var view = metadata_box_show_song(song,true);
             this.metadata_box.add(view);
-            this.change_color_style(this.metadata_sw);
             this.metadata_box.show_all();
         }
         else if(album != null && artist != null)
@@ -2803,7 +2785,6 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
 
         var view = metadata_box_show_song(song,true);
         this.metadata_box.add(view);
-        this.change_color_style(this.metadata_sw);
         this.metadata_box.show_all();
     }
     public
@@ -2822,40 +2803,6 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         }
     }
 
-    private void change_color_style(Gtk.Widget bg)
-    {
-        debug("change style");
-        if(bg is Gtk.Separator || bg is Gtk.Notebook || bg is Gtk.CheckButton)
-        {
-            /* Do nothing */
-        }
-        else
-        {
-            if(theme_colors)
-            {
-                bg.modify_bg(Gtk.StateType.NORMAL,this.paned.style.base[Gtk.StateType.NORMAL]);
-            }
-            else
-            {
-                bg.modify_bg(Gtk.StateType.NORMAL,this.background);
-                bg.modify_base(Gtk.StateType.NORMAL,this.background);
-                bg.modify_text(Gtk.StateType.NORMAL,this.foreground);
-                bg.modify_fg(Gtk.StateType.NORMAL,this.foreground);
-                bg.modify_text(Gtk.StateType.ACTIVE,this.foreground);
-                bg.modify_fg(Gtk.StateType.ACTIVE,this.foreground);
-                bg.modify_bg(Gtk.StateType.INSENSITIVE,this.background);
-                bg.modify_base(Gtk.StateType.INSENSITIVE,this.background);
-            }
-        }
-        /* Recurse into children, if the widget can hold children (so is a container */
-        if(bg is Gtk.Container)
-        {
-            foreach(Gtk.Widget child in ((Gtk.Container)bg).get_children())
-            {
-                change_color_style(child);
-            }
-        }
-    }
     private string get_extension(string path)
     {
         long length = path.length;
