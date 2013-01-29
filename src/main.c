@@ -506,14 +506,15 @@ int main(int argc, char **argv)
     {
         plugin_manager_load_plugins();
     }
-    /* time todo some initialisation of plugins */
-    plugin_manager_initialize_plugins();
 
     /**
      * Create the main window
      */
     create_playlist3();
     TEC("Creating playlist window");
+
+    /* time todo some initialisation of plugins */
+    plugin_manager_initialize_plugins();
 
     /**
      * First run dialog

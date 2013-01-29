@@ -183,7 +183,8 @@ static gboolean extra_playlist_add(void) {
 static void extra_playlist_init(void ) {
     if( cfg_get_single_value_as_int_with_default(config,"extraplaylist", "enabled", 0)) {
         // TODO Fix this.  This should be done, directly after the window is created.
-        g_idle_add(extra_playlist_add, NULL);
+//        g_idle_add(extra_playlist_add, NULL);
+        extra_playlist_add();
     }
 }
 static void set_enabled(int enable) {
