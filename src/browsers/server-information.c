@@ -258,11 +258,11 @@ static void serverstats_add_entry(GtkWidget * table, int i, const char *name, in
     markup = g_markup_printf_escaped("<b>%s:</b>", name);
     gtk_label_set_markup(GTK_LABEL(label), markup);
     g_free(markup);
-    gtk_table_attach(GTK_TABLE(table), label, 0, 1, i, i + 1, GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL, 0, 0);
+    gtk_grid_attach(GTK_GRID(table), label, 0, i, 1, 1); 
     label = serverstats_labels[stats] = gtk_label_new("");
     gtk_label_set_line_wrap(GTK_LABEL(label), TRUE);
     gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
-    gtk_table_attach(GTK_TABLE(table), label, 1, 2, i, i + 1, GTK_EXPAND | GTK_FILL, GTK_SHRINK | GTK_FILL, 0, 0);
+    gtk_grid_attach(GTK_GRID(table), label, 1, i, 1, 1); 
 }
 
 static void serverstats_init(void)
@@ -285,13 +285,20 @@ static void serverstats_init(void)
     serverstats_event = gtk_event_box_new();
     gtk_event_box_set_visible_window(GTK_EVENT_BOX(serverstats_event), TRUE);
     gtk_container_add(GTK_CONTAINER(serverstats_event), serverstats_vbox);
+    {
+        GtkStyleContext *cs = gtk_widget_get_style_context(GTK_WIDGET(serverstats_event));
+        gtk_style_context_add_class(cs, GTK_STYLE_CLASS_VIEW);
+    }
 
     /* wrap in event box to set bg color */
     event = gtk_event_box_new();
-    gtk_widget_set_app_paintable(event, TRUE);
     gtk_event_box_set_visible_window(GTK_EVENT_BOX(event), TRUE);
-    gtk_widget_set_state(GTK_WIDGET(event), GTK_STATE_SELECTED);
-    g_signal_connect(G_OBJECT(event), "expose-event", G_CALLBACK(misc_header_expose_event), NULL);
+    //gtk_widget_set_state(GTK_WIDGET(event), GTK_STATE_SELECTED);
+    {
+        GtkStyleContext *cs = gtk_widget_get_style_context(GTK_WIDGET(serverstats_event));
+        gtk_style_context_add_class(cs, GTK_STYLE_CLASS_HEADER);
+    }
+    
 
     //gtk_widget_modify_bg(serverstats_event, GTK_STATE_NORMAL, &(colw->style->base[GTK_STATE_NORMAL]));
     g_signal_connect(G_OBJECT(serverstats_vbox), "style-set", G_CALLBACK(serverstats_header_style_changed),
@@ -319,9 +326,9 @@ static void serverstats_init(void)
     /**
      * Data list
      */
-    table = gtk_table_new(SERVERSTATS_NUM_FIELDS + 2, 2, FALSE);
-    gtk_table_set_col_spacings(GTK_TABLE(table), 6);
-    gtk_table_set_row_spacings(GTK_TABLE(table), 6);
+    table = gtk_grid_new();//(SERVERSTATS_NUM_FIELDS + 2, 2, FALSE);
+    gtk_grid_set_column_spacing(GTK_GRID(table), 6);
+    gtk_grid_set_row_spacing(GTK_GRID(table), 6);
     gtk_container_set_border_width(GTK_CONTAINER(table), 12);
 
     /** Database */
@@ -330,7 +337,7 @@ static void serverstats_init(void)
     markup = g_markup_printf_escaped("<span size='x-large' weight='bold'>%s</span>", _("Server"));
     gtk_label_set_markup(GTK_LABEL(label), markup);
     g_free(markup);
-    gtk_table_attach(GTK_TABLE(table), label, 0, 2, 0, 1, GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL, 0, 0);
+    gtk_grid_attach(GTK_GRID(table), label, 0,0,2,1); 
 
     i = 1;
     /** Mpd version */
@@ -346,7 +353,7 @@ static void serverstats_init(void)
     markup = g_markup_printf_escaped("<span size='x-large' weight='bold'>%s</span>", _("Database"));
     gtk_label_set_markup(GTK_LABEL(label), markup);
     g_free(markup);
-    gtk_table_attach(GTK_TABLE(table), label, 0, 2, i, i + 1, GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL, 0, 0);
+    gtk_grid_attach(GTK_GRID(table), label, 0, i, 2, 1);
     i++;
 
     /** Mpd Playtime */
@@ -368,7 +375,7 @@ static void serverstats_init(void)
     markup = g_markup_printf_escaped("<span size='x-large' weight='bold'>%s</span>", _("Tag statistics"));
     gtk_label_set_markup(GTK_LABEL(label), markup);
     g_free(markup);
-    gtk_table_attach(GTK_TABLE(table), label, 0, 2, i, i + 1, GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL, 0, 0);
+    gtk_grid_attach(GTK_GRID(table), label, 0, i, 2, 1);
     i++;
     gtk_widget_show_all(table);
 
@@ -376,21 +383,23 @@ static void serverstats_init(void)
      * Stats treeview
      */
     {
+        int j;
         GtkWidget *combo = NULL;
         GtkWidget *sw = NULL, *cancel;
         GtkListStore *store;
         GtkCellRenderer *renderer;
         GtkWidget *pb = gtk_progress_bar_new();
         combo = gtk_combo_box_text_new();
-        for (i = 0; i < MPD_TAG_NUM_OF_ITEM_TYPES - 1; i++)
+        for (j = 0; j < MPD_TAG_NUM_OF_ITEM_TYPES - 1; j++)
         {
-            if (mpd_server_tag_supported(connection, i))
+            if (mpd_server_tag_supported(connection, j))
             {
-                gtk_combo_box_text_append(GTK_COMBO_BOX(combo),NULL, mpdTagItemKeys[i]);
+                gtk_combo_box_text_append(GTK_COMBO_BOX(combo),NULL, mpdTagItemKeys[j]);
             }
         }
 
-        gtk_table_attach(GTK_TABLE(table), combo, 0, 2, 12, 13, GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL, 0, 0);
+        gtk_grid_attach(GTK_GRID(table), combo, 0, i, 2, 1);
+        i++;
         gtk_widget_show(combo);
 
         hbox = gtk_hbox_new(FALSE, 6);
@@ -399,11 +408,12 @@ static void serverstats_init(void)
         gtk_box_pack_start(GTK_BOX(hbox), pb, TRUE, TRUE, 0);
         gtk_box_pack_start(GTK_BOX(hbox), cancel, FALSE, TRUE, 0);
 
-        gtk_table_attach(GTK_TABLE(table), hbox, 0, 2, 13, 14, GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL, 0, 0);
+        gtk_grid_attach(GTK_GRID(table), hbox, 0, i, 2, 1);
+        i++; 
         g_signal_connect(G_OBJECT(combo), "changed", G_CALLBACK(serverstats_combo_changed), pb);
 
         sw = gtk_scrolled_window_new(NULL, NULL);
-        gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+        gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw), GTK_POLICY_NEVER, GTK_POLICY_NEVER);
         gtk_container_set_border_width(GTK_CONTAINER(sw), 6);
 
         store = gtk_list_store_new(4, G_TYPE_ULONG, G_TYPE_STRING, G_TYPE_ULONG, G_TYPE_STRING);
@@ -423,7 +433,8 @@ static void serverstats_init(void)
 
         gtk_container_add(GTK_CONTAINER(sw), serverstats_tree);
 
-        gtk_table_attach(GTK_TABLE(table), sw, 0, 2, 14, 15, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0, 0);
+        gtk_grid_attach(GTK_GRID(table), sw, 0, i, 2, 1); 
+        i++;
         gtk_widget_show_all(sw);
     }
     /**
@@ -449,7 +460,7 @@ static void serverstats_selected(GtkWidget * container)
         serverstats_init();
     }
     serverstats_update();
-    gtk_container_add(GTK_CONTAINER(container), serverstats_sw);
+    gtk_box_pack_start(GTK_BOX(container), serverstats_sw,TRUE, TRUE, 0);
     gtk_widget_show(serverstats_sw);
     if (timeout_source)
         g_source_remove(timeout_source);
