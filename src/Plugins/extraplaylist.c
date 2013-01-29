@@ -28,13 +28,22 @@
 GtkWidget *extraplaylist = NULL;
 static GtkWidget *extraplaylist_paned = NULL;
 static GmpcPluginBase *play_queue_plugin = NULL;
-static gboolean includes_sidebar = FALSE;
 
 static GtkWidget *cb_include_sidebar = NULL;
 
 static gboolean extra_playlist_add(void);
 
 static void extra_playlist_save(void) {
+#if 0
+    if(extraplaylist) {
+        int pos = gtk_paned_get_position(GTK_PANED(extraplaylist_paned));
+        if(pos>0)
+            cfg_set_single_value_as_int(config, "extraplaylist", "paned-pos", pos);
+    }
+#endif
+}
+
+static void store_pane_pos(void) {
     if(extraplaylist) {
         int pos = gtk_paned_get_position(GTK_PANED(extraplaylist_paned));
         if(pos>0)
@@ -95,7 +104,6 @@ static void extra_playlist_remove(void) {
     if(extraplaylist == NULL  && get_enabled() == FALSE) return;
     if(extraplaylist == NULL) return;
 
-    if (includes_sidebar) {
         temp = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "hpaned1-hbox"));
         g_object_ref(temp);
 
@@ -114,28 +122,6 @@ static void extra_playlist_remove(void) {
         gtk_widget_destroy(extraplaylist_paned);
         extraplaylist = NULL;
         gtk_container_add(GTK_CONTAINER(gtk_builder_get_object(pl3_xml,"hpaned1_vbox")), temp);
-    }
-    else {
-        temp = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "vbox7"));
-        g_object_ref(temp);
-
-        extra_playlist_save();
-        /* Remove widget */
-        gtk_widget_hide(extraplaylist);
-        if(gtk_bin_get_child(GTK_BIN(extraplaylist)))
-                    gmpc_plugin_browser_iface_browser_unselected(GMPC_PLUGIN_BROWSER_IFACE(play_queue_plugin),GTK_CONTAINER(extraplaylist));
-
-        /* Remove it from inserted widget */
-        gtk_container_remove(GTK_CONTAINER(extraplaylist_paned), temp);
-
-        /* Destroy the previously added stuff split view */
-        gtk_widget_destroy(extraplaylist);
-        extraplaylist = NULL;
-        gtk_widget_destroy(extraplaylist_paned);
-        extraplaylist = NULL;
-        gtk_box_pack_end(GTK_BOX(gtk_builder_get_object(pl3_xml,"hpaned1-hbox")),temp, TRUE, TRUE,0);
-    }
-
 }
 
 
@@ -148,15 +134,7 @@ static gboolean extra_playlist_add(void) {
     if(extraplaylist == NULL  && get_enabled() == FALSE) return FALSE;
     if(extraplaylist != NULL) return FALSE;
 
-    if ((cfg_get_single_value_as_int_with_default(config, "extraplaylist", "include-sidebar",FALSE)) &&
-       (cfg_get_single_value_as_int_with_default(config, "extraplaylist", "vertical-layout", TRUE))) {
-        includes_sidebar = TRUE;
-        temp = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "hpaned1-hbox"));
-    }
-    else {
-        includes_sidebar = FALSE;
-        temp = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "vbox7"));
-    }
+    temp = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "hpaned1-hbox"));
     g_object_ref(temp);
 
     /**
@@ -168,33 +146,18 @@ static gboolean extra_playlist_add(void) {
 
     if(cfg_get_single_value_as_int_with_default(config, "extraplaylist", "vertical-layout", TRUE))
     {
-        extraplaylist_paned = gtk_vpaned_new();
+        extraplaylist_paned = gtk_paned_new(GTK_ORIENTATION_VERTICAL);
     }else{
-        extraplaylist_paned = gtk_hpaned_new();
+        extraplaylist_paned = gtk_paned_new(GTK_ORIENTATION_HORIZONTAL);
     }
 
-    if (includes_sidebar) {
-        gtk_container_remove(GTK_CONTAINER(gtk_builder_get_object(pl3_xml,"hpaned1_vbox")),temp);
-    }
-    else {
-        gtk_container_remove(GTK_CONTAINER(gtk_builder_get_object(pl3_xml,"hpaned1-hbox")),temp);
-    }
 
-    if(!cfg_get_single_value_as_int_with_default(config, "extraplaylist", "vertical-layout-swapped",FALSE))
-    {
-        gtk_paned_pack1(GTK_PANED(extraplaylist_paned), temp, TRUE, TRUE);
-        gtk_paned_pack2(GTK_PANED(extraplaylist_paned), extraplaylist, TRUE, TRUE);
-    }else{
-        gtk_paned_pack2(GTK_PANED(extraplaylist_paned), temp, TRUE, TRUE);
-        gtk_paned_pack1(GTK_PANED(extraplaylist_paned), extraplaylist, TRUE, TRUE);
-    }
+    gtk_container_remove(GTK_CONTAINER(gtk_builder_get_object(pl3_xml,"hpaned1_vbox")),temp);
 
-    if (includes_sidebar) {
-        gtk_container_add(GTK_CONTAINER(gtk_builder_get_object(pl3_xml,"hpaned1_vbox")),extraplaylist_paned);
-    }
-    else {
-        gtk_box_pack_end(GTK_BOX(gtk_builder_get_object(pl3_xml, "hpaned1-hbox")), extraplaylist_paned,TRUE, TRUE,0);
-    }
+    gtk_paned_pack1(GTK_PANED(extraplaylist_paned), temp, TRUE, TRUE);
+    gtk_paned_pack2(GTK_PANED(extraplaylist_paned), extraplaylist, TRUE, TRUE);
+
+    gtk_container_add(GTK_CONTAINER(gtk_builder_get_object(pl3_xml,"hpaned1_vbox")),extraplaylist_paned);
 
 
     gtk_paned_set_position(GTK_PANED(extraplaylist_paned),
@@ -212,14 +175,15 @@ static gboolean extra_playlist_add(void) {
     g_signal_connect(G_OBJECT(gtk_tree_view_get_selection(playlist3_get_category_tree_view())), "changed",
         G_CALLBACK(ep_view_changed), NULL);
 
+    g_signal_connect(G_OBJECT(extraplaylist_paned), "notify::position", G_CALLBACK(store_pane_pos), NULL);
     return FALSE;
 }
 
 
 static void extra_playlist_init(void ) {
     if( cfg_get_single_value_as_int_with_default(config,"extraplaylist", "enabled", 0)) {
-//        gtk_init_add((GSourceFunc)extra_playlist_add, NULL);
-            g_idle_add(extra_playlist_add, NULL);
+        // TODO Fix this.  This should be done, directly after the window is created.
+        g_idle_add(extra_playlist_add, NULL);
     }
 }
 static void set_enabled(int enable) {
@@ -250,12 +214,6 @@ static void preferences_layout_changed(GtkToggleButton *but, gpointer user_data)
     extra_playlist_add();
 }
 
-static void preferences_layout_swapped_changed(GtkToggleButton *but, gpointer user_data)
-{
-    gint active = gtk_toggle_button_get_active(but);
-    cfg_set_single_value_as_int(config, "extraplaylist", "vertical-layout-swapped", active);
-    extra_playlist_add();
-}
 
 static void preferences_layout_sidebar_changed(GtkToggleButton *but, gpointer user_data)
 {
@@ -281,22 +239,6 @@ static  void preferences_construct(GtkWidget *container)
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(label), cfg_get_single_value_as_int_with_default(config, "extraplaylist", "vertical-layout", TRUE));
     gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, FALSE, 0);
     g_signal_connect(G_OBJECT(label), "toggled", G_CALLBACK(preferences_layout_changed), NULL);
-
-    /* The checkbox */
-    cb_include_sidebar = gtk_check_button_new_with_label("Use full width");
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(cb_include_sidebar), cfg_get_single_value_as_int_with_default(config, "extraplaylist", "include-sidebar", FALSE));
-    gtk_widget_set_sensitive(GTK_WIDGET(cb_include_sidebar), cfg_get_single_value_as_int_with_default(config, "extraplaylist", "vertical-layout", TRUE));
-
-    GtkWidget *align2 = gtk_alignment_new(0,0,0,0);
-    gtk_alignment_set_padding(GTK_ALIGNMENT(align2), 0, 0, 20, 0);
-    gtk_container_add(GTK_CONTAINER(align2), cb_include_sidebar);
-    gtk_box_pack_start(GTK_BOX(vbox), align2, FALSE, FALSE, 0);
-    g_signal_connect(G_OBJECT(cb_include_sidebar), "toggled", G_CALLBACK(preferences_layout_sidebar_changed), NULL);
-
-    label = gtk_check_button_new_with_label("Swap position of the extra playlist");
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(label), cfg_get_single_value_as_int_with_default(config, "extraplaylist", "vertical-layout-swapped", FALSE));
-    gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, FALSE, 0);
-    g_signal_connect(G_OBJECT(label), "toggled", G_CALLBACK(preferences_layout_swapped_changed), NULL);
 
 
     /* show and add */
