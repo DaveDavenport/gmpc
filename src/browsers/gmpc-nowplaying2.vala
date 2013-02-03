@@ -251,7 +251,7 @@ namespace Gmpc
             private void change_color_style(Gtk.Widget bg)
             {
                 debug("change style");
-                if(bg is Gtk.Separator || bg is Gtk.Notebook || bg is Gtk.CheckButton)
+                if(bg is Gtk.Separator || bg is Gtk.Notebook || bg is Gtk.CheckButton || bg is Gtk.Image)
                 {
                     /* Do nothing */
                 }
