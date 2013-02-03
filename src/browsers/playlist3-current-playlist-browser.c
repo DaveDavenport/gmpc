@@ -118,7 +118,7 @@ static void pl3_current_playlist_browser_row_activated(GtkTreeView * tree, GtkTr
                                                        PlayQueuePlugin * self);
 static int pl3_current_playlist_browser_button_release_event(GtkTreeView * tree, GdkEventButton * event,
                                                              PlayQueuePlugin * self);
-static int pl3_current_playlist_browser_key_release_event(GtkTreeView * tree, GdkEventKey * event,
+static int pl3_current_playlist_browser_key_press_event(GtkTreeView * tree, GdkEventKey * event,
                                                           PlayQueuePlugin * self);
 static void pl3_current_playlist_browser_show_info(PlayQueuePlugin * self);
 static void pl3_current_playlist_save_playlist(void);
@@ -389,7 +389,7 @@ static void pl3_current_playlist_browser_init(PlayQueuePlugin * self)
     g_signal_connect(G_OBJECT(tree), "row-activated", G_CALLBACK(pl3_current_playlist_browser_row_activated), self);
     g_signal_connect(G_OBJECT(tree), "button-release-event",
                      G_CALLBACK(pl3_current_playlist_browser_button_release_event), self);
-    g_signal_connect(G_OBJECT(tree), "key-press-event", G_CALLBACK(pl3_current_playlist_browser_key_release_event),
+    g_signal_connect(G_OBJECT(tree), "key-press-event", G_CALLBACK(pl3_current_playlist_browser_key_press_event),
                      self);
 
     /* set up the scrolled window */
@@ -937,7 +937,7 @@ static int pl3_current_playlist_tool_menu_integration(GmpcPluginToolMenuIface * 
     return 1;
 }
 
-static int pl3_current_playlist_browser_key_release_event(GtkTreeView * tree, GdkEventKey * event,
+static int pl3_current_playlist_browser_key_press_event(GtkTreeView * tree, GdkEventKey * event,
                                                           PlayQueuePlugin * self)
 {
     if (event->keyval == GDK_KEY_Delete)
@@ -964,7 +964,7 @@ static int pl3_current_playlist_browser_key_release_event(GtkTreeView * tree, Gd
     {
         char data[10];
         guint32 uc = gdk_keyval_to_unicode(event->keyval);
-        if (uc)
+        if (uc && g_unichar_isalnum(uc))
         {
             memset(data, '\0', 10);
             g_unichar_to_utf8(uc, data);
