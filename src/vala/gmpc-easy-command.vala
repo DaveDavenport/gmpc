@@ -388,14 +388,13 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base
 
 
 
-            /* Composite 
+            /* Composite */ 
             if (window.is_composited())
             {
                 var screen = window.get_screen();
-                var colormap = screen.get_rgba_colormap();
-                window.set_colormap(colormap);
+                var colormap = screen.get_rgba_visual();
+                window.set_visual(colormap);
             }
-             */
             window.app_paintable = true;
             window.draw.connect(popup_expose_handler);
 
