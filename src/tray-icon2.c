@@ -561,7 +561,7 @@ static void tray_icon2_create_tooltip_real(int position)
     GtkWidget *label = NULL;
     GtkWidget *event = NULL;
     GtkWidget *coverimg = NULL;
-//    GdkColormap *colormap;
+    GtkStyleContext *sc;
     mpd_Song *song = NULL;
     int tooltip_timeout = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "tooltip-timeout", 5);
     int state = 0;
@@ -607,17 +607,18 @@ static void tray_icon2_create_tooltip_real(int position)
      */
     tray_icon2_tooltip = gtk_window_new(GTK_WINDOW_POPUP);
     screen = gtk_window_get_screen(GTK_WINDOW(tray_icon2_tooltip));
-/*
+
     if (gdk_screen_is_composited(screen))
     {
-        colormap = gdk_screen_get_rgba_colormap(screen);
-        if (colormap)
-            gtk_widget_set_colormap(tray_icon2_tooltip, colormap);
+        GdkVisual *vs = gdk_screen_get_rgba_visual(screen);
+        if (vs)
+            gtk_widget_set_visual(tray_icon2_tooltip, vs);
         gtk_window_set_opacity(GTK_WINDOW(tray_icon2_tooltip), 0.9);
     }
-*/
+
+    sc = gtk_widget_get_style_context(tray_icon2_tooltip);
+    gtk_style_context_add_class(sc, GTK_STYLE_CLASS_TOOLTIP);
     /* causes the border */
-//    gtk_widget_modify_bg(GTK_WIDGET(tray_icon2_tooltip), GTK_STATE_NORMAL, &(pl3_win->style->black));
     gtk_container_set_border_width(GTK_CONTAINER(tray_icon2_tooltip), 1);
     gtk_window_set_default_size(GTK_WINDOW(tray_icon2_tooltip), 300, -1);
     gtk_window_set_transient_for(GTK_WINDOW(tray_icon2_tooltip), GTK_WINDOW(pl3_win));
