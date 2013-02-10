@@ -74,7 +74,6 @@ src/Tools/mpdinteraction.c
 src/Tools/url-fetcher.c
 src/Tools/mm-keys.c
 src/Tools/misc.c
-src/Tools/ipc.c
 src/Tools/gmpc-meta-watcher.c
 
 #Widgets
@@ -82,7 +81,6 @@ src/Widgets/gmpc-metadata-similarartists.c
 src/Widgets/gmpc-metadata-similarsongs.c
 src/Widgets/advanced_settings.c
 src/Widgets/gmpc-progress.c
-src/Widgets/GmpcVolume.c
 src/Widgets/gmpc-song-list.c
 src/Widgets/playlist3-messages.c
 src/Widgets/gmpc-metadata-text-label.c
