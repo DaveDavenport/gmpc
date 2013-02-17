@@ -44,6 +44,9 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window
     private Gtk.ComboBox combo = null;
     private Gtk.ProgressBar bar = null;
 
+    private uint pulse_callback = 0;
+
+
     private Gtk.ScrolledWindow sw = null;
     private Gtk.EventBox ilevent = null;
 
@@ -190,6 +193,10 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window
                 if(this.handle == null && this.downloads == null)
                 {
                     this.pbox.hide();
+                    if(this.pulse_callback > 0){
+                        GLib.Source.remove(this.pulse_callback );
+                        this.pulse_callback = 0;
+                    }
                     this.refresh.sensitive = true;
                     this.ilevent.sensitive = true;
                     this.combo.sensitive = true;
@@ -203,6 +210,10 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window
                 if(this.handle == null && this.downloads == null)
                 {
                     this.pbox.hide();
+                    if(this.pulse_callback > 0){
+                        GLib.Source.remove(this.pulse_callback);
+                        this.pulse_callback = 0;
+                    }
                     this.combo.sensitive = true;
                     this.ilevent.sensitive = true;
                     this.refresh.sensitive = true;
@@ -317,6 +328,15 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window
         if(this.handle == null && this.handle2 == null)
         {
             this.pbox.show();
+            if(this.pulse_callback > 0){
+                GLib.Source.remove(this.pulse_callback);
+                this.pulse_callback = 0;
+            }
+            this.pulse_callback = GLib.Timeout.add(300, () => {
+                if(this.bar == null) return false;
+                this.bar.pulse();
+                return true;
+            });
             this.refresh.sensitive = false;
             this.combo.sensitive = false;
             this.ilevent.sensitive = false;
@@ -433,6 +453,10 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window
         this.cancel.show();
         this.pbox.no_show_all = true;
         this.pbox.hide();
+        if(this.pulse_callback > 0){
+            GLib.Source.remove(this.pulse_callback);
+            this.pulse_callback = 0;
+        }
 
         sw = new Gtk.ScrolledWindow(null, null);
 
@@ -584,6 +608,10 @@ public class Gmpc.MetaData.EditWindow : Gtk.Window
         }
 
         this.pbox.hide();
+        if(this.pulse_callback > 0){
+            GLib.Source.remove(this.pulse_callback );
+            this.pulse_callback = 0;
+        }
         this.refresh.sensitive = true;
         this.combo.sensitive = true;
     }
