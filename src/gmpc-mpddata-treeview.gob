@@ -35,7 +35,7 @@ requires 2.0.0
 
 %h{
 
-#define NUM_COLS 19
+#define NUM_COLS 20
 #define MOUSE_OFFSET 10
 #define ENABLE_GRADIENT_LOOK 1
 #define BACKGROUND_OPACITY 0.92
@@ -73,7 +73,8 @@ static int col_ids[NUM_COLS] = {
     MPDDATA_MODEL_COL_SONG_POS,
     MPDDATA_MODEL_COL_SONG_ALBUMARTIST,
 		MPDDATA_MODEL_COL_PATH_EXTENSION,				/* Extension */
-		MPDDATA_MODEL_COL_PATH_DIRECTORY				/* Directory */
+		MPDDATA_MODEL_COL_PATH_DIRECTORY,				/* Directory */
+    MPDDATA_MODEL_COL_SONG_PRIORITY,
 };
 static const gchar *col_names[NUM_COLS] = {
     N_("Markup"),
@@ -94,7 +95,8 @@ static const gchar *col_names[NUM_COLS] = {
     N_("Position"),
     N_("AlbumArtist"),
     N_("Extension"),
-    N_("Directory")
+    N_("Directory"),
+    N_("Priority")
 };
 
 static gint  col_enabled[NUM_COLS] = {
@@ -116,7 +118,8 @@ static gint  col_enabled[NUM_COLS] = {
     FALSE,//"Position"
     FALSE,//"AlbumArtist"
     FALSE,//Extension
-    FALSE//Directory
+    FALSE,//Directory
+    FALSE//Priority
 
 };
 static gint  col_position[NUM_COLS] = {
@@ -138,7 +141,8 @@ static gint  col_position[NUM_COLS] = {
     15, // "Position"
     18, // "AlbumArtist"
     16,// Extension
-    17 // Directory
+    17, // Directory
+    19
 };
 
 static GList *paste_queue = NULL;
