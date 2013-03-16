@@ -36,6 +36,10 @@
 
 #include "playlist3-playlist-editor.h"
 
+static void pl3_current_playlist_browser_priority_raise_selected_songs(PlayQueuePlugin * self);
+
+
+
 enum
 {
     PLAY_QUEUE_DUMMY_PROPERTY,
@@ -773,6 +777,11 @@ static int pl3_current_playlist_browser_button_release_event(GtkTreeView * tree,
             g_list_foreach(list, (GFunc) gtk_tree_path_free, NULL);
             g_list_free(list);
         }
+        /* priority */
+        item = gtk_menu_item_new_with_label("Raise priority");
+        gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+        g_signal_connect_swapped(G_OBJECT(item), "activate",
+                G_CALLBACK(pl3_current_playlist_browser_priority_raise_selected_songs), self);
 
         playlist_editor_right_mouse(menu, pl3_current_playlist_editor_add_to_playlist, self);
         gmpc_mpddata_treeview_right_mouse_intergration(GMPC_MPDDATA_TREEVIEW(tree), GTK_MENU(menu));
@@ -1383,4 +1392,58 @@ PlayQueuePlugin *play_queue_plugin_new(const gchar * uid)
     PlayQueuePlugin *plug = g_object_new(play_queue_plugin_get_type(), "uid", uid, NULL);
 
     return plug;
+}
+
+
+/**
+ * Priority.
+ */
+
+static void pl3_current_playlist_browser_priority_raise_selected_songs(PlayQueuePlugin * self)
+{
+    /* grab the selection from the tree */
+    GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(self->priv->pl3_cp_tree));
+
+    int sel_rows = gtk_tree_selection_count_selected_rows(selection);
+
+    if(sel_rows >= 254) {
+        playlist3_show_error_message(_("You can only queue 254 songs at the time."),
+                ERROR_WARNING);
+        return ;
+    }
+    else if (sel_rows == 0)
+    {
+        printf("SELECTED ROWS\n");
+        return;
+    }
+
+    GList *list = NULL, *llist = NULL;
+    GtkTreeModel *model = NULL;
+    /* start a command list */
+    /* grab the selected songs */
+    list = gtk_tree_selection_get_selected_rows(selection, &model);
+    /* grab the last song that is selected */
+    /* remove every selected song one by one */
+    if (list)
+    {
+        int priority = 255;
+        llist = g_list_first(list);
+        while(llist)
+        {
+            
+            GtkTreeIter iter;
+            if(gtk_tree_model_get_iter(model, &iter, (GtkTreePath *) llist->data));
+            {
+                int id;
+                gtk_tree_model_get(model, &iter, MPDDATA_MODEL_COL_SONG_ID, &id, -1);
+                printf("set priority: %i:%i\n", id, priority);
+                int err = mpd_playlist_set_priority(connection, id, priority--); 
+                printf("Error: %i\n", err);
+            }
+            llist = g_list_next(llist);
+        } 
+
+        g_list_foreach(list, (GFunc) gtk_tree_path_free, NULL);
+        g_list_free(list);
+    }
 }
