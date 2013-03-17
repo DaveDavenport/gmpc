@@ -41,6 +41,7 @@ namespace MPD {
         public int    time;
         public int    pos;
         public int    id;
+        public int    priority;
         [CCode (cname="mpd_songDup0")]
         public Song copy ();
         [CCode (instance_pos = -1)]
@@ -185,6 +186,9 @@ namespace MPD {
     }
 
     namespace PlayQueue {
+        [CCode (cname="mpd_playlist_set_priority")]
+        public void set_priority(MPD.Server server, int song_id, int priority);
+
         [CCode (cname="mpd_playlist_add")]
         public void add_song(MPD.Server server, string path);
 

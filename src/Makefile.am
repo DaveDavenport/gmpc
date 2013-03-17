@@ -57,6 +57,7 @@ gmpc_TOOLS_FILES=\
     Tools/gmpc-liststore-sort.vala\
     Tools/gmpc-meta-watcher.vala\
     Tools/gmpc_easy_download.c\
+    Tools/gmpc-auto-reset-priority.vala\
     Tools/mpd-easy-commands.c\
     Tools/advanced-search.c\
     Tools/setup-assistant.c\

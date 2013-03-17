@@ -120,6 +120,9 @@ void plugin_manager_load_internal_plugins(void)
     plugin_add_new((GmpcPluginBase *)
             gmpc_external_command_new(),
             0, NULL);
+    plugin_add_new((GmpcPluginBase *)
+            gmpc_tools_auto_reset_priority_new(),
+            0, NULL);
 }
 
 void plugin_manager_initialize_plugins(void)

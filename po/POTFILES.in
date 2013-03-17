@@ -65,6 +65,7 @@ src/vala/gmpc-metadata-editwindow.c
 src/vala/gmpc-url-fetching-gui.c
 
 # Tools
+src/Tools/gmpc-auto-reset-priority.c
 src/Tools/gmpc-database-update-tracker.c
 src/Tools/mpd-easy-commands.c
 src/Tools/gmpc_easy_download.c
