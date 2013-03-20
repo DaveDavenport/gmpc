@@ -449,17 +449,18 @@ static int pl3_find2_browser_playlist_key_press(GtkWidget * tree, GdkEventKey * 
     if (event->keyval == GDK_KEY_i && event->state & GDK_MOD1_MASK)
     {
         pl3_find2_browser_show_info();
+        return TRUE;
     }
     /* Make ctrl-f focus the search entry */
     else if (event->keyval == GDK_KEY_f && event->state & GDK_CONTROL_MASK)
     {
         gtk_widget_grab_focus(GTK_WIDGET(search_entry));
-        return FALSE;
+        return TRUE;
     } else
     {
         return pl3_window_key_press_event(tree, event);
     }
-    return TRUE;
+    return FALSE;
 }
 
 static void pl3_find2_browser_add_selected(void)

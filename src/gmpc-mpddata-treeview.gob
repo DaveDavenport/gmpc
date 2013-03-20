@@ -823,12 +823,65 @@ class Gmpc:MpdData:Treeview from Gtk:Tree:View {
             g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);
             g_list_free (list);
         }
+        /**
+         * This will add selected songs. (only songs)
+         * with priority. If song has an song-id, it only changes priority.
+         */ 
+        public void insert_selected_rows_with_priority(self)
+        {
+            GtkTreeModel *model = NULL;
+            GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(self));
+            GList *iter, *list = gtk_tree_selection_get_selected_rows(selection, &model);
+            int priority = 255;
+            int sel_rows = gtk_tree_selection_count_selected_rows(selection);
+
+            // Max count.
+            if(sel_rows >= 254) {
+                playlist3_show_error_message(_("You can only queue 254 songs at the time."),
+                        ERROR_WARNING);
+                return ;
+            }
+            for(iter = g_list_first(list); iter != NULL; iter = g_list_next(iter))
+            {
+                int id;
+                gchar *name = NULL;
+                gint type;
+                GtkTreeIter titer;
+                GtkTreePath *path = iter->data;
+                gtk_tree_model_get_iter(model, &titer, path);
+                gtk_tree_model_get(model, &titer,
+                        MPDDATA_MODEL_COL_PATH, &name,
+                        MPDDATA_MODEL_COL_SONG_ID, &id,
+                        MPDDATA_MODEL_ROW_TYPE, &type, -1);
+                if (type == MPD_DATA_TYPE_SONG ) {
+                    /* add them to the add list */
+                    if(id < 0){
+                        id = mpd_playlist_add_get_id(connection, name);
+                    }
+                    if(id >= 0) {
+                        mpd_playlist_set_priority(connection, id, priority--);
+                    }
+                }
+                g_free(name);
+            }
+            g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);
+            g_list_free (list);
+        }
 
 	private
 		int
 		paste_key_release_event(self, GdkEventKey *event,gpointer data)
 		{
-            if(event->keyval == GDK_KEY_Insert || event->keyval == GDK_KEY_KP_Insert) {
+            if(event->keyval == GDK_KEY_q && (event->state&GDK_MOD1_MASK) > 0) {
+                if(mpd_check_connected(connection) &&
+                        mpd_server_check_command_allowed(connection, "prioid") == 
+                        MPD_SERVER_COMMAND_ALLOWED) 
+                {
+                    self_insert_selected_rows_with_priority(self);
+                    return TRUE;
+                }
+            }
+            else if(event->keyval == GDK_KEY_Insert || event->keyval == GDK_KEY_KP_Insert) {
                 if(mpd_check_connected(connection))
                 {
                     self_insert_selected_rows(self,((event->state & GDK_CONTROL_MASK) > 0));

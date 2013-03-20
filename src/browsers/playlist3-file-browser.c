@@ -930,6 +930,16 @@ static gboolean pl3_file_browser_button_release_event(GtkWidget * but, GdkEventB
                     gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
                     g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_file_browser_show_info), NULL);
                 }
+                /* add the add widget */
+                if(mpd_server_check_command_allowed(connection, "prioid") == 
+                        MPD_SERVER_COMMAND_ALLOWED) 
+                {
+                    item = gtk_image_menu_item_new_with_label(_("Add (raised priority)"));
+                    gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+                    g_signal_connect_swapped(G_OBJECT(item), "activate", 
+                            G_CALLBACK(gmpc_mpddata_treeview_insert_selected_rows_with_priority),
+                            pl3_fb_tree);
+                }
             } else if (row_type == MPD_DATA_TYPE_PLAYLIST)
             {
                 item = gtk_image_menu_item_new_from_stock(GTK_STOCK_DELETE, NULL);
@@ -983,6 +993,15 @@ static gboolean pl3_file_browser_button_release_event(GtkWidget * but, GdkEventB
         gtk_menu_shell_prepend(GTK_MENU_SHELL(menu), item);
         g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_file_browser_replace_selected), NULL);
 
+        if(mpd_server_check_command_allowed(connection, "prioid") == 
+                MPD_SERVER_COMMAND_ALLOWED) 
+        {
+            item = gtk_image_menu_item_new_with_label(_("Add (raised priority)"));
+            gtk_menu_shell_prepend(GTK_MENU_SHELL(menu), item);
+            g_signal_connect_swapped(G_OBJECT(item), "activate", 
+                    G_CALLBACK(gmpc_mpddata_treeview_insert_selected_rows_with_priority),
+                    pl3_fb_tree);
+        }
         /* add the delete widget */
         item = gtk_image_menu_item_new_from_stock(GTK_STOCK_ADD, NULL);
         gtk_menu_shell_prepend(GTK_MENU_SHELL(menu), item);
