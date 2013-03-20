@@ -387,17 +387,12 @@
     <child>
       <object class="GtkGrid" id="vbox1">
         <property name="orientation">vertical</property>
-        <property name="spacing">0</property>
         <property name="visible">True</property>
         <child>
           <object class="GtkMenuBar" id="menubartest" constructor="uimanager1">
             <property name="visible">True</property>
             <property name="name">menubar</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="position">1</property>
-          </packing>
         </child>
         <child>
           <object class="GtkVBox" id="vbox_control">
@@ -582,7 +577,6 @@
               <object class="GtkGrid" id="hpaned1_vbox">
                 <property name="orientation">vertical</property>
                 <property name="visible">True</property>
-                <property name="spacing">0</property>
                 <child>
                   <object class="GtkGrid" id="hpaned1-hbox">
                   <property name="hexpand">True</property>
@@ -681,7 +675,6 @@
                       <object class="GtkGrid" id="vbox7">
                         <property name="orientation">vertical</property>
                         <property name="visible">True</property>
-                        <property name="spacing">3</property>
                         <property name="hexpand">True</property>
                         <child>
                           <object class="GtkEventBox" id="browser_container">
@@ -704,9 +697,6 @@
               </packing>
             </child>
           </object>
-          <packing>
-            <property name="position">2</property>
-          </packing>
         </child>
         <!-- entry used to quickly enter easy-command commands -->
         <child>
@@ -723,21 +713,12 @@
             <signal name="icon-release" handler="show_command_line_icon_release" swapped="no"/>
             <signal name="changed" handler="show_command_line_entry_changed" swapped="no"/>
           </object>
-          <packing>
-            <property name="expand">false</property>
-            <property name="position">3</property>
-          </packing>
         </child>
         <!-- end entry -->
         <child>
           <object class="GtkHBox" id="hbox1">
             <property name="visible">True</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="pack_type">end</property>
-            <property name="position">4</property>
-          </packing>
         </child>
       </object>
     </child>
