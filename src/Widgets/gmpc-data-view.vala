@@ -314,7 +314,19 @@ public class Gmpc.DataView : Gtk.TreeView
             }
             else if (event.keyval == Gdk.Key_d)
             {
-                return selected_songs_remove();
+                if(!selected_songs_remove())
+                {
+                    // Detach model (for some reason keeping it attached
+                    // Makes thing break, work-around for now)
+                    // TODO: fixme
+                    var model = get_model();
+                    this.model = null; 
+                    // Clear
+                    MPD.PlayQueue.clear(server);
+                    // Re-add model
+                    this.model = model;
+                    return true;
+                }
             }
         }
         else
