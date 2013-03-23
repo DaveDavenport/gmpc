@@ -43,6 +43,7 @@ gmpc_WIDGETS_FILES=\
     Widgets/gmpc-profiles.vala\
 	Widgets/gmpc-sidebar-view.vala\
     Widgets/gmpc-stats-label.vala\
+    Widgets/gmpc-data-view.vala\
     GUI/control_window.c\
     GUI/title_header.c\
     GUI/status_icon.c\

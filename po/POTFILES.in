@@ -78,6 +78,7 @@ src/Tools/misc.c
 src/Tools/gmpc-meta-watcher.c
 
 #Widgets
+src/Widgets/gmpc-data-view.c
 src/Widgets/gmpc-metadata-similarartists.c
 src/Widgets/gmpc-metadata-similarsongs.c
 src/Widgets/advanced_settings.c

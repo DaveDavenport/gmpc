@@ -428,6 +428,31 @@ namespace Gmpc {
             [CCode (cname="gmpc_mpddata_model_playlist_get_total_playtime")]
 			public void get_total_playtime( out ulong loaded_song, out ulong total_playtime);
 		}
+
+        [CCode (cname="", cprefix = "MPDDATA_MODEL_COL_", cheader_filename = "gmpc-mpddata-model.h")]
+            public enum ColumnTypes {
+                MARKUP,
+                    SONG_ARTIST,
+                    SONG_ALBUM,			      /* album name */
+                    SONG_TITLE,			      /* song title */
+                    SONG_TITLEFILE,		    /* song title */
+                    SONG_GENRE,			      /* song genre */
+                    SONG_TRACK,			      /* song track */
+                    SONG_NAME,			      /* stream name */
+                    SONG_COMPOSER,		    /* composer name */
+                    SONG_PERFORMER,		    /* performer */
+                    SONG_DATE,			      /* date */
+                    SONG_LENGTH_FORMAT,	  /* length formatted */
+                    SONG_DISC,			      /* disc */
+                    SONG_COMMENT,			    /* comment */
+                    ICON_ID,				      /* icon id */
+                    SONG_POS,
+                    SONG_ALBUMARTIST,
+                    PATH_EXTENSION,				/* Extension */
+                    PATH_DIRECTORY,				/* Directory */
+                    SONG_PRIORITY,
+            }
+
     }
 
 
