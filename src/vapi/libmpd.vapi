@@ -239,6 +239,8 @@ namespace MPD {
     namespace Player {
         [CCode (cname="mpd_player_play")]
         public void play(MPD.Server server);
+        [CCode (cname="mpd_player_play_id")]
+        public void play_id (MPD.Server server, int song_id);
         public void next(MPD.Server server);
         public void prev(MPD.Server server);
         public void pause(MPD.Server server);

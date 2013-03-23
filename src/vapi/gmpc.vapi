@@ -309,6 +309,8 @@ namespace Gmpc {
         public int get_int(string @class, string key);
         [CCode (cname="cfg_get_single_value_as_int", cheader_filename="config1.h")]
         public bool get_bool(string @class, string key);
+        [CCode (cname="cfg_get_single_value_as_int_with_default", cheader_filename="config1.h")]
+        public bool get_bool_with_default(string @class, string key, bool value);
         [CCode (cname="cfg_set_single_value_as_string", cheader_filename="config1.h")]
         public void set_string(string @class, string key, string @value);
         [CCode (cname="cfg_set_single_value_as_int", cheader_filename="config1.h")]
@@ -431,7 +433,8 @@ namespace Gmpc {
 
         [CCode (cname="", cprefix = "MPDDATA_MODEL_COL_", cheader_filename = "gmpc-mpddata-model.h")]
             public enum ColumnTypes {
-                MARKUP,
+                    PATH,
+                    MARKUP,
                     SONG_ARTIST,
                     SONG_ALBUM,			      /* album name */
                     SONG_TITLE,			      /* song title */
@@ -446,6 +449,7 @@ namespace Gmpc {
                     SONG_DISC,			      /* disc */
                     SONG_COMMENT,			    /* comment */
                     ICON_ID,				      /* icon id */
+                    SONG_ID,
                     SONG_POS,
                     SONG_ALBUMARTIST,
                     PATH_EXTENSION,				/* Extension */

@@ -354,7 +354,11 @@ static void pl3_current_playlist_browser_init(PlayQueuePlugin * self)
 
     self->priv->pl3_cp_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 6);
 
-    tree = gmpc_mpddata_treeview_new(self->priv->uid, FALSE, GTK_TREE_MODEL(playlist));
+    tree = gmpc_data_view_new(self->priv->uid);//gmpc_mpddata_treeview_new(self->priv->uid, FALSE, GTK_TREE_MODEL(playlist));
+    gmpc_data_view_set_is_play_queue(GMPC_DATA_VIEW(tree), TRUE);
+    gtk_tree_view_set_model(GTK_TREE_VIEW(tree), GTK_TREE_MODEL(playlist));
+
+    gmpc_data_view_populate(GMPC_DATA_VIEW(tree));
 
     g_signal_connect(G_OBJECT(tree), "paste_before", G_CALLBACK(pl3_current_playlist_browser_paste_before_songs), self);
     g_signal_connect(G_OBJECT(tree), "paste_after", G_CALLBACK(pl3_current_playlist_browser_paste_after_songs), self);
@@ -390,7 +394,7 @@ static void pl3_current_playlist_browser_init(PlayQueuePlugin * self)
     /* set up the tree */
     gtk_tree_view_set_enable_search(GTK_TREE_VIEW(tree), FALSE);
 
-    gmpc_mpddata_treeview_enable_click_fix(GMPC_MPDDATA_TREEVIEW(tree));
+    //gmpc_mpddata_treeview_enable_click_fix(GMPC_MPDDATA_TREEVIEW(tree));
     /* setup signals */
     g_signal_connect(G_OBJECT(tree), "row-activated", G_CALLBACK(pl3_current_playlist_browser_row_activated), self);
     g_signal_connect(G_OBJECT(tree), "button-release-event",
@@ -794,7 +798,7 @@ static int pl3_current_playlist_browser_button_release_event(GtkTreeView * tree,
         }
 
         playlist_editor_right_mouse(menu, pl3_current_playlist_editor_add_to_playlist, self);
-        gmpc_mpddata_treeview_right_mouse_intergration(GMPC_MPDDATA_TREEVIEW(tree), GTK_MENU(menu));
+        //gmpc_mpddata_treeview_right_mouse_intergration(GMPC_MPDDATA_TREEVIEW(tree), GTK_MENU(menu));
         gtk_widget_show_all(menu);
         gtk_menu_popup(GTK_MENU(menu), NULL, NULL, NULL, NULL, 0, event->time);
         return TRUE;

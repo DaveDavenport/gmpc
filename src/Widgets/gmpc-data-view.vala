@@ -1,7 +1,15 @@
 using Gmpc;
 using Gtk;
+
+
+/**
+ * List of columns.
+ * * List of column ids to show.
+ * * Name of each column
+ * * Default set of enabled columns.
+ */
 const int NUM_COLS = 20;
-const int[] col_ids = {
+const int[] gmpc_data_view_col_ids = {
     Gmpc.MpdData.ColumnTypes.MARKUP,
     Gmpc.MpdData.ColumnTypes.SONG_ARTIST,			      /* album name */
     Gmpc.MpdData.ColumnTypes.SONG_ALBUM,			      /* album name */
@@ -21,9 +29,9 @@ const int[] col_ids = {
     Gmpc.MpdData.ColumnTypes.SONG_ALBUMARTIST,
     Gmpc.MpdData.ColumnTypes.PATH_EXTENSION,				/* Extension */
     Gmpc.MpdData.ColumnTypes.PATH_DIRECTORY,				/* Directory */
-    Gmpc.MpdData.ColumnTypes.SONG_PRIORITY,
+    Gmpc.MpdData.ColumnTypes.SONG_PRIORITY
 };
-const string[] col_names = {
+const string[] gmpc_data_view_col_names = {
     N_("Markup"),
     N_("Artist"),
     N_("Album"),
@@ -46,7 +54,7 @@ const string[] col_names = {
     N_("Priority")
 };
 
-const bool[] col_enabled = {
+const bool[] gmpc_data_view_col_enabled = {
     false,//"Markup",
     true, //"Artist",
     true,//"Album",
@@ -70,7 +78,7 @@ const bool[] col_enabled = {
 
 };
 
-const int[]  col_position = {
+const int[]  gmpc_data_view_col_position = {
     14,//"Markup",
     3, //"Artist",
     2,//"Album",
@@ -95,6 +103,7 @@ const int[]  col_position = {
 
 public class Gmpc.DataView : Gtk.TreeView
 {
+    private Gtk.TreeViewColumn[] tree_columns = new Gtk.TreeViewColumn[NUM_COLS];
     /**
      * If we are a play-queue we should treat the content.
      * slightly different.
@@ -112,10 +121,22 @@ public class Gmpc.DataView : Gtk.TreeView
     /**
      * Construction function.
      */
-    public DataView()
+    public DataView(string name)
     {
+        this.uid = name;
         // Connect row activated signal.
         this.row_activated.connect(__row_activated);
+
+        this.set_rules_hint(true);
+    }
+
+
+    /**
+     * Deconstructor.
+     */
+    ~DataView()
+    {
+
     }
 
 
@@ -127,9 +148,51 @@ public class Gmpc.DataView : Gtk.TreeView
     {
         for(int i = 0; i < NUM_COLS; i++) {
             Gtk.TreeViewColumn col = new Gtk.TreeViewColumn();
-            col.set_title(col_names[i]);
+            col.set_data("id", i);
+            if(gmpc_data_view_col_ids[i] == Gmpc.MpdData.ColumnTypes.ICON_ID)
+            {
+                /**
+                 * Picture.
+                 */
+                var renderer = new Gtk.CellRendererPixbuf(); 
+                renderer.xalign = 0.0f;
+                // Set up column
+                col.pack_start(renderer, true);
+                col.set_attributes(renderer, "icon-name", Gmpc.MpdData.ColumnTypes.ICON_ID);
+                col.set_resizable(false);
+                col.set_fixed_width(20);
+            } else {
+                /**
+                 * Text column
+                 */
+                col.set_title(gmpc_data_view_col_names[i]);
+                var renderer = new Gtk.CellRendererText(); 
+                renderer.ellipsize = Pango.EllipsizeMode.END;
+                renderer.weight_set = true;
+                // Set up column
+                col.pack_start(renderer, true);
+                col.set_attributes(renderer, "text", gmpc_data_view_col_ids[i]); 
+                col.set_resizable(true);
+                if(is_play_queue) {
+                // TODO fix this.
+                //    col.set_cell_data_func(renderer, (Gtk.CellLayoutDataFunc)highlight_row_current_song_playing);
+                }
+                col.set_fixed_width(config.get_int_with_default(uid+"-colsize",gmpc_data_view_col_names[i], 200));
+            }
+            col.set_sizing(Gtk.TreeViewColumnSizing.FIXED);
+            col.set_reorderable(true);
 
-            this.insert_column(col, col_position[i]); 
+            // Fixed width.
+            int pos = config.get_int_with_default(uid+"-colpos", gmpc_data_view_col_names[i], gmpc_data_view_col_position[i]);
+            this.tree_columns[pos] = col;
+        }
+        // Add the columns (in right order)
+        for(int i = 0; i < NUM_COLS; i++) {
+            int id = this.tree_columns[i].get_data("id");
+            if(config.get_bool_with_default(uid+"-colshow", gmpc_data_view_col_names[id], gmpc_data_view_col_enabled[id]))
+            {
+                this.insert_column(this.tree_columns[i], i); 
+            }
         }
     }
 
@@ -138,8 +201,30 @@ public class Gmpc.DataView : Gtk.TreeView
     /**
      * Internal functions.
      */
-    private void __row_activated(Gtk.TreePath path, Gtk.TreeViewColumn col)
+    private void __row_activated (Gtk.TreePath path, Gtk.TreeViewColumn col)
     {
-
+        Gtk.TreeIter iter;
+        Gtk.TreeModel? model = this.get_model();
+        if(model != null) {
+            if(model.get_iter(out iter, path))
+            {
+                if(is_play_queue) {
+                    int song_id;
+                    model.get(iter, Gmpc.MpdData.ColumnTypes.SONG_ID, out song_id);
+                    MPD.Player.play_id(Gmpc.server, song_id); 
+                } else {
+                    string song_path;
+                    model.get(iter, Gmpc.MpdData.ColumnTypes.PATH, out song_path);
+                    MpdInteraction.play_path(song_path);
+                }
+            }
+        }
+    }
+    /**
+     * Check if current row is playing.
+     */
+    private void highlight_row_current_song_playing(Gtk.TreeViewColumn col, Gtk.CellRenderer renderer, Gtk.TreeModel model, Gtk.TreeIter iter)
+    {
+       (renderer as Gtk.CellRendererText).weight = Pango.Weight.BOLD;
     }
 }
