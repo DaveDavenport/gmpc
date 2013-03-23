@@ -18,6 +18,19 @@ namespace MPD {
         public bool is_updating_database();
         [CCode (cname="mpd_server_tag_supported")]
         public bool tag_supported(MPD.Tag.Type tag);
+       
+        [CCode (cname="MpdServerCommand", cprefix="MPD_SERVER_COMMAND_") ]
+        public enum Command {
+            ALLOWED,
+            NOT_ALLOWED,
+            NOT_SUPPORTED,
+            ERROR
+        }
+
+        [CCode (cname="mpd_server_check_command_allowed") ]
+        public Command check_command_allowed(string command);
+
+        
     }
 
 
@@ -191,6 +204,9 @@ namespace MPD {
 
         [CCode (cname="mpd_playlist_add")]
         public void add_song(MPD.Server server, string path);
+
+        [CCode (cname="mpd_playlist_queue_delete_id")]
+        public void queue_delete_id(MPD.Server server, int song_id);
 
         [CCode (cname="mpd_playlist_queue_add")]
         public void queue_add_song(MPD.Server server, string path);

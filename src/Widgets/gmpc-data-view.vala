@@ -1,6 +1,11 @@
 using Gmpc;
+
 using Gtk;
 
+const string log_domain = "Gmpc.DataView";
+
+/** The Default column width. */
+const int default_column_width = 200;
 
 /**
  * List of columns.
@@ -123,20 +128,50 @@ public class Gmpc.DataView : Gtk.TreeView
      */
     public DataView(string name)
     {
+        log(log_domain, LogLevelFlags.LEVEL_INFO, "Constructing dataview: "+name);
+
         this.uid = name;
         // Connect row activated signal.
         this.row_activated.connect(__row_activated);
+        this.key_release_event.connect(__key_release_event_callback);
+        // When it getst he destroy signal.
+        this.destroy.connect(store_columns);
 
         this.set_rules_hint(true);
+
+        this.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE);
+        this.set_fixed_height_mode(true);
+        // Create the view.
+        populate();
     }
 
+    /**
+     * Store the position, visibility and width of the columns
+     */
+    private void store_columns()
+    {
+        // Save the position of the columns
+        var columns = get_columns();
+        int index = 0;
+        foreach(var column in columns)
+        {
+            int id = column.get_data("id");
+            int width = column.get_width();
+            config.set_int(uid+"-colpos", gmpc_data_view_col_names[id], index);
+            config.set_bool(uid+"-colshow", gmpc_data_view_col_names[id], column.visible);
+            // Only store width if bigger then 0.
+            if(width > 0 ) {
+                config.set_int(uid+"-colsize",gmpc_data_view_col_names[id], width); 
+            }
+            index++;
+        }
+    }
 
     /**
      * Deconstructor.
      */
     ~DataView()
     {
-
     }
 
 
@@ -144,9 +179,10 @@ public class Gmpc.DataView : Gtk.TreeView
      * Populate the treeview with the right columns.
      * The treeview should have a name now.
      */
-    public void populate()
+    private void populate()
     {
-        for(int i = 0; i < NUM_COLS; i++) {
+        for(int i = 0; i < NUM_COLS; i++)
+        {
             Gtk.TreeViewColumn col = new Gtk.TreeViewColumn();
             col.set_data("id", i);
             if(gmpc_data_view_col_ids[i] == Gmpc.MpdData.ColumnTypes.ICON_ID)
@@ -177,7 +213,10 @@ public class Gmpc.DataView : Gtk.TreeView
                 // TODO fix this.
                 //    col.set_cell_data_func(renderer, (Gtk.CellLayoutDataFunc)highlight_row_current_song_playing);
                 }
-                col.set_fixed_width(config.get_int_with_default(uid+"-colsize",gmpc_data_view_col_names[i], 200));
+                
+                int width = config.get_int_with_default(uid+"-colsize",gmpc_data_view_col_names[i], default_column_width);
+                // Do not set to size 0, then revert back to 200.
+                col.set_fixed_width(width>0?width:default_column_width);
             }
             col.set_sizing(Gtk.TreeViewColumnSizing.FIXED);
             col.set_reorderable(true);
@@ -189,10 +228,8 @@ public class Gmpc.DataView : Gtk.TreeView
         // Add the columns (in right order)
         for(int i = 0; i < NUM_COLS; i++) {
             int id = this.tree_columns[i].get_data("id");
-            if(config.get_bool_with_default(uid+"-colshow", gmpc_data_view_col_names[id], gmpc_data_view_col_enabled[id]))
-            {
-                this.insert_column(this.tree_columns[i], i); 
-            }
+            this.insert_column(this.tree_columns[i], i); 
+            this.tree_columns[i].set_visible(config.get_bool_with_default(uid+"-colshow", gmpc_data_view_col_names[id], gmpc_data_view_col_enabled[id]));
         }
     }
 
@@ -201,30 +238,162 @@ public class Gmpc.DataView : Gtk.TreeView
     /**
      * Internal functions.
      */
+
+    /**
+     * Function handles the row-activate signal.
+     */
     private void __row_activated (Gtk.TreePath path, Gtk.TreeViewColumn col)
     {
-        Gtk.TreeIter iter;
         Gtk.TreeModel? model = this.get_model();
-        if(model != null) {
-            if(model.get_iter(out iter, path))
-            {
-                if(is_play_queue) {
-                    int song_id;
-                    model.get(iter, Gmpc.MpdData.ColumnTypes.SONG_ID, out song_id);
-                    MPD.Player.play_id(Gmpc.server, song_id); 
-                } else {
-                    string song_path;
-                    model.get(iter, Gmpc.MpdData.ColumnTypes.PATH, out song_path);
-                    MpdInteraction.play_path(song_path);
-                }
+        if(model != null)
+        {
+            Gtk.TreeIter iter;
+            if(!model.get_iter(out iter, path)) return;
+            if(is_play_queue) {
+                /* If we are play-queue, play the selected song. */
+                int song_id;
+                model.get(iter, Gmpc.MpdData.ColumnTypes.SONG_ID, out song_id);
+                MPD.Player.play_id(Gmpc.server, song_id); 
+            } else {
+                /* If we are a song browser, add the path and play it. */
+                string song_path;
+                model.get(iter, Gmpc.MpdData.ColumnTypes.PATH, out song_path);
+                MpdInteraction.play_path(song_path);
             }
         }
     }
     /**
      * Check if current row is playing.
+     * TODO
      */
     private void highlight_row_current_song_playing(Gtk.TreeViewColumn col, Gtk.CellRenderer renderer, Gtk.TreeModel model, Gtk.TreeIter iter)
     {
        (renderer as Gtk.CellRendererText).weight = Pango.Weight.BOLD;
+    }
+
+
+    /**
+     * Handle keyboard input.
+     */
+    private bool __key_release_event_callback(Gdk.EventKey event)
+    {
+        if(event.keyval == Gdk.Key_y)
+        {
+            // Copy data to clipboard
+
+        }
+        else if (event.keyval == Gdk.Key_c)
+        {
+            // Cut (if available) into clipboard
+        }
+        else if (event.keyval == Gdk.Key_P)
+        {
+            // Paste before  
+        }
+        else if (event.keyval == Gdk.Key_p)
+        {
+            // Paste after
+        }
+        else if (event.keyval == Gdk.Key_Escape)
+        {
+
+        }
+
+        // Commands specific to play_queue
+        if(is_play_queue)
+        {
+            if (event.keyval == Gdk.Key_Q) 
+            {
+                // remove priority.
+                return selected_songs_remove_priority();
+            }
+            else if (event.keyval == Gdk.Key_q)
+            {
+                // Raise priority.
+                return selected_songs_raise_priority();
+            }
+            else if (event.keyval == Gdk.Key_d)
+            {
+                return selected_songs_remove();
+            }
+        }
+        else
+        {
+            if(event.keyval == Gdk.Key_i)
+            {
+                // Insert
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Interaction on selected songs.
+     */
+    // Set priority on the selected songs.
+    private bool selected_songs_raise_priority()
+    {
+        if(server.check_command_allowed("prioid") != MPD.Server.Command.ALLOWED) return false;
+        var selection = this.get_selection();
+
+        if(selection.count_selected_rows() > 254) {
+            Gmpc.Messages.show(_("You can only queue 254 songs at the time."), Gmpc.Messages.Level.WARNING);
+            return false;
+        }
+
+        int priority = 255;
+        Gtk.TreeModel model;
+        foreach(var path in selection.get_selected_rows(out model))
+        {
+            Gtk.TreeIter iter;
+            if(model.get_iter(out iter, path))
+            {
+                int song_id;
+                model.get(iter,Gmpc.MpdData.ColumnTypes.SONG_ID, out song_id);
+                MPD.PlayQueue.set_priority(server, song_id, priority--);
+            }            
+        }
+        return true;
+    }
+    // Remove the set priority from the selected songs.
+    private bool selected_songs_remove_priority()
+    {
+        if(server.check_command_allowed("prioid") != MPD.Server.Command.ALLOWED) return false;
+        var selection = this.get_selection();
+
+        Gtk.TreeModel model;
+        foreach(var path in selection.get_selected_rows(out model))
+        {
+            Gtk.TreeIter iter;
+            if(model.get_iter(out iter, path))
+            {
+                int song_id;
+                model.get(iter,Gmpc.MpdData.ColumnTypes.SONG_ID, out song_id);
+                MPD.PlayQueue.set_priority(server, song_id, 0);
+            }            
+        }
+        return true;
+    }
+    // Remove the selected songs from the play queue.
+    private bool selected_songs_remove()
+    {
+        int deleted_rows = 0;
+        var selection = this.get_selection();
+
+        Gtk.TreeModel model;
+        foreach(var path in selection.get_selected_rows(out model))
+        {
+            Gtk.TreeIter iter;
+            if(model.get_iter(out iter, path))
+            {
+                int song_id;
+                model.get(iter,Gmpc.MpdData.ColumnTypes.SONG_ID, out song_id);
+                MPD.PlayQueue.queue_delete_id(server, song_id);
+                deleted_rows++;
+            }            
+        }
+        MPD.PlayQueue.queue_commit(server);
+        return (deleted_rows > 0);
+
     }
 }
