@@ -133,13 +133,14 @@ public class Gmpc.DataView : Gtk.TreeView
         this.uid = name;
         // Connect row activated signal.
         this.row_activated.connect(__row_activated);
-        this.key_release_event.connect(__key_release_event_callback);
+        this.key_press_event.connect(__key_press_event_callback);
         this.button_press_event.connect(__button_press_event_callback);
         this.button_release_event.connect(__button_release_event_callback);
         // When it getst he destroy signal.
         this.destroy.connect(column_store_state);
 
         this.set_rules_hint(true);
+        this.set_enable_search(false);
 
         this.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE);
         this.set_fixed_height_mode(true);
@@ -165,6 +166,12 @@ public class Gmpc.DataView : Gtk.TreeView
                     selected_songs_play();
                     });
             menu.append(item);
+
+            item = new Gtk.ImageMenuItem.from_stock(Gtk.STOCK_INFO, null);
+            item.activate.connect((source)=>{
+                selected_songs_info();
+            });
+            menu.append(item);
         }
 
         if(is_play_queue)
@@ -175,6 +182,16 @@ public class Gmpc.DataView : Gtk.TreeView
                 item.activate.connect((source)=>{
                     selected_songs_remove();
                 });
+                menu.append(item);
+            }
+            if(server.check_command_allowed("prioid") == MPD.Server.Command.ALLOWED)
+            {
+                var item = new Gtk.MenuItem.with_label(_("Queue"));
+                item.activate.connect((source)=>{ selected_songs_raise_priority();});
+                menu.append(item);
+
+                item = new Gtk.MenuItem.with_label(_("Dequeue"));
+                item.activate.connect((source)=>{ selected_songs_remove_priority();});
                 menu.append(item);
             }
         }
@@ -333,7 +350,7 @@ public class Gmpc.DataView : Gtk.TreeView
     /**
      * Handle keyboard input.
      */
-    private bool __key_release_event_callback_play_queue(Gdk.EventKey event)
+    private bool __key_press_event_callback_play_queue(Gdk.EventKey event)
     {
         if (event.keyval == Gdk.Key_Q) 
         {
@@ -363,9 +380,19 @@ public class Gmpc.DataView : Gtk.TreeView
         }
         return false;
     }
-    private bool __key_release_event_callback(Gdk.EventKey event)
+    private bool __key_press_event_callback(Gdk.EventKey event)
     {
-        if(event.keyval == Gdk.Key_y)
+        if(event.keyval == Gdk.Key_j)
+        {
+            // Move cursor down.
+            move_cursor_down();
+        }
+        else if (event.keyval == Gdk.Key_k)
+        {
+            // Move cursor up
+            move_cursor_up();
+        }
+        else if(event.keyval == Gdk.Key_y)
         {
             // Copy data to clipboard
 
@@ -404,7 +431,7 @@ public class Gmpc.DataView : Gtk.TreeView
         // Commands specific to play_queue
         if(is_play_queue)
         {
-            if(__key_release_event_callback_play_queue(event)) return true;
+            if(__key_press_event_callback_play_queue(event)) return true;
         }
         else
         {
@@ -535,5 +562,55 @@ public class Gmpc.DataView : Gtk.TreeView
         MPD.PlayQueue.queue_commit(server);
         return (deleted_rows > 0);
 
+    }
+    private bool selected_songs_info()
+    {
+        var selection = this.get_selection();
+        Gtk.TreeModel model;
+        foreach(var path in selection.get_selected_rows(out model))
+        {
+            Gtk.TreeIter iter;
+            if(model.get_iter(out iter, path))
+            {
+                MPD.Song? song = null; 
+                model.get(iter, Gmpc.MpdData.ColumnTypes.MPDSONG, out song);
+                if(song != null) {
+                    Browser.Metadata.show();
+                    Browser.Metadata.show_song(song);
+                    return true;
+                }
+            }
+        }
+        return selection.count_selected_rows() > 0;
+    }
+
+
+    private void move_cursor_down()
+    {
+        Gtk.TreePath? path;
+        Gtk.TreeViewColumn? col;
+        this.get_cursor(out path, out col);
+        if(path != null)
+        {
+            Gtk.TreeIter iter;
+            path.next();
+            if(this.model.get_iter(out iter, path))
+            {
+                this.set_cursor(path, col, false);
+            }
+        }
+    }
+    private void move_cursor_up()
+    {
+        Gtk.TreePath? path;
+        Gtk.TreeViewColumn? col;
+        this.get_cursor(out path, out col);
+        if(path != null)
+        {
+            if(path.prev())
+            {
+                this.set_cursor(path, col, false);
+            }
+        }
     }
 }

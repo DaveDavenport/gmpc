@@ -375,6 +375,10 @@ namespace Gmpc {
         }
 
         namespace Metadata {
+            [CCode (cname="info2_activate")]
+            public void show();
+            [CCode (cname="info2_fill_song_view")]
+            public void show_song(MPD.Song song);
             [CCode (cname="info2_fill_artist_view")]
             public void show_artist(string artist);
 
@@ -433,6 +437,7 @@ namespace Gmpc {
 
         [CCode (cname="", cprefix = "MPDDATA_MODEL_COL_", cheader_filename = "gmpc-mpddata-model.h")]
             public enum ColumnTypes {
+                    MPDSONG,
                     PATH,
                     MARKUP,
                     SONG_ARTIST,
