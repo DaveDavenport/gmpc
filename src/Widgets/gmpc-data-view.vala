@@ -304,6 +304,36 @@ public class Gmpc.DataView : Gtk.TreeView
     /**
      * Handle keyboard input.
      */
+    private bool __key_release_event_callback_play_queue(Gdk.EventKey event)
+    {
+        if (event.keyval == Gdk.Key_Q) 
+        {
+            // remove priority.
+            return selected_songs_remove_priority();
+        }
+        else if (event.keyval == Gdk.Key_q)
+        {
+            // Raise priority.
+            return selected_songs_raise_priority();
+        }
+        else if (event.keyval == Gdk.Key_d)
+        {
+            if(!selected_songs_remove())
+            {
+                // Detach model (for some reason keeping it attached
+                // Makes thing break, work-around for now)
+                // TODO: fixme
+                var model = get_model();
+                this.model = null; 
+                // Clear
+                MPD.PlayQueue.clear(server);
+                // Re-add model
+                this.model = model;
+                return true;
+            }
+        }
+        return false;
+    }
     private bool __key_release_event_callback(Gdk.EventKey event)
     {
         if(event.keyval == Gdk.Key_y)
@@ -327,36 +357,17 @@ public class Gmpc.DataView : Gtk.TreeView
         {
 
         }
+        else if (event.keyval == Gdk.Key_m)
+        {
+            // Configure columns
+            column_show_selection_menu();
+            return true;
+        }
 
         // Commands specific to play_queue
         if(is_play_queue)
         {
-            if (event.keyval == Gdk.Key_Q) 
-            {
-                // remove priority.
-                return selected_songs_remove_priority();
-            }
-            else if (event.keyval == Gdk.Key_q)
-            {
-                // Raise priority.
-                return selected_songs_raise_priority();
-            }
-            else if (event.keyval == Gdk.Key_d)
-            {
-                if(!selected_songs_remove())
-                {
-                    // Detach model (for some reason keeping it attached
-                    // Makes thing break, work-around for now)
-                    // TODO: fixme
-                    var model = get_model();
-                    this.model = null; 
-                    // Clear
-                    MPD.PlayQueue.clear(server);
-                    // Re-add model
-                    this.model = model;
-                    return true;
-                }
-            }
+            if(__key_release_event_callback_play_queue(event)) return true;
         }
         else
         {

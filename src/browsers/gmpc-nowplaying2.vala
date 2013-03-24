@@ -900,22 +900,10 @@ namespace Gmpc
                     hboxje.pack_start(button, false, false, 0);
                     hboxje.pack_start(label, true, true, 0);
                     var j = i;
-                    var sl = new Gmpc.Widgets.Songlist();
+                    var sl = new Gmpc.DataView("now-playing-song-from-album");
+                    var sl_model = new Gmpc.MpdData.Model();
+                    sl.set_model(sl_model);
 
-                    sl.song_clicked.connect((source, song) =>
-                    {
-                        if(song.file != null)
-                        {
-                            Gmpc.MpdInteraction.play_path(song.file);
-                        }
-                    });
-                    sl.play_song_clicked.connect((source, song) =>
-                    {
-                        if(song.file != null)
-                        {
-                            Gmpc.MpdInteraction.play_path(song.file);
-                        }
-                    });
                     alib.add(sl);
                     button.clicked.connect((source) =>
                     {
@@ -941,8 +929,9 @@ namespace Gmpc
                                     MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM, song.album);
                                     var data = MPD.Database.search_commit(server);
                                     data.sort_album_disc_track();
-                                    sl.set_from_data((owned)data, true);
-                                    this.change_color_style(sl);
+                                    sl_model.set_mpd_data((owned)data);
+//                                    sl.set_from_data((owned)data, true);
+  //                                  this.change_color_style(sl);
                                 }
                                 else
                                 {
@@ -962,7 +951,8 @@ namespace Gmpc
                             MPD.Database.search_add_constraint(server, MPD.Tag.Type.ALBUM, song.album);
                             var data = MPD.Database.search_commit(server);
                             data.sort_album_disc_track();
-                            sl.set_from_data((owned)data, true);
+                            sl_model.set_mpd_data((owned)data);
+                            //sl.set_from_data((owned)data, true);
                         }
                         else
                         {
