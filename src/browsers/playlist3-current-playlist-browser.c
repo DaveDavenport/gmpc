@@ -103,7 +103,8 @@ static void play_queue_set_property(GObject * object, guint property_id, const G
     }
 }
 
-static void pl3_current_playlist_browser_delete_selected_songs(PlayQueuePlugin * self);
+static int pl3_current_playlist_browser_key_press_event(GtkTreeView * tree, GdkEventKey * event,
+                                                          PlayQueuePlugin * self);
 
 static void pl3_current_playlist_browser_add(GmpcPluginBrowserIface * obj, GtkWidget * cat_tree);
 
@@ -113,13 +114,6 @@ static void pl3_current_playlist_browser_unselected(GmpcPluginBrowserIface * obj
 static void pl3_current_playlist_browser_activate(PlayQueuePlugin * self);
 
 /* just for here */
-static void pl3_current_playlist_browser_row_activated(GtkTreeView * tree, GtkTreePath * path, GtkTreeViewColumn * col,
-                                                       PlayQueuePlugin * self);
-static int pl3_current_playlist_browser_button_release_event(GtkTreeView * tree, GdkEventButton * event,
-                                                             PlayQueuePlugin * self);
-static int pl3_current_playlist_browser_key_press_event(GtkTreeView * tree, GdkEventKey * event,
-                                                          PlayQueuePlugin * self);
-static void pl3_current_playlist_browser_show_info(PlayQueuePlugin * self);
 static void pl3_current_playlist_save_playlist(void);
 static void pl3_current_playlist_browser_shuffle_playlist(void);
 static void pl3_current_playlist_browser_clear_playlist(void);
@@ -384,8 +378,6 @@ static void pl3_current_playlist_browser_init(PlayQueuePlugin * self)
 
     //gmpc_mpddata_treeview_enable_click_fix(GMPC_MPDDATA_TREEVIEW(tree));
     /* setup signals */
-    g_signal_connect(G_OBJECT(tree), "button-release-event",
-                     G_CALLBACK(pl3_current_playlist_browser_button_release_event), self);
     g_signal_connect(G_OBJECT(tree), "key-press-event", G_CALLBACK(pl3_current_playlist_browser_key_press_event),
                      self);
 
@@ -456,51 +448,6 @@ static void pl3_current_playlist_browser_add(GmpcPluginBrowserIface * obj, GtkWi
     }
 }
 
-/* delete all selected songs,
- * if no songs select ask the user if he want's to clear the list
- */
-static void pl3_current_playlist_browser_delete_selected_songs(PlayQueuePlugin * self)
-{
-    /* grab the selection from the tree */
-    GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(self->priv->pl3_cp_tree));
-    /* check if where connected */
-    /* see if there is a row selected */
-    if (gtk_tree_selection_count_selected_rows(selection) > 0)
-    {
-        GList *list = NULL, *llist = NULL;
-        GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(self->priv->pl3_cp_tree));
-        /* start a command list */
-        /* grab the selected songs */
-        list = gtk_tree_selection_get_selected_rows(selection, &model);
-        /* grab the last song that is selected */
-        llist = g_list_last(list);
-        /* remove every selected song one by one */
-        do
-        {
-            GtkTreeIter iter;
-            int value;
-            gtk_tree_model_get_iter(model, &iter, (GtkTreePath *) llist->data);
-            gtk_tree_model_get(model, &iter, MPDDATA_MODEL_COL_SONG_ID, &value, -1);
-            mpd_playlist_queue_delete_id(connection, value);
-        } while ((llist = g_list_previous(llist)));
-
-        /* close the list, so it will be executed */
-        mpd_playlist_queue_commit(connection);
-        /* unselect all if multiple songs were selected */
-        if (g_list_length(list) > 1)
-            gtk_tree_selection_unselect_all(selection);
-        /* free list */
-        g_list_foreach(list, (GFunc) gtk_tree_path_free, NULL);
-        g_list_free(list);
-    } else
-    {
-        pl3_current_playlist_browser_clear_playlist();
-    }
-
-    /* update everything if where still connected */
-    mpd_status_queue_update(connection);
-}
-
 static void pl3_current_playlist_browser_crop_selected_songs(PlayQueuePlugin * self)
 {
     GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(self->priv->pl3_cp_tree));
@@ -565,110 +512,7 @@ static void pl3_current_playlist_editor_add_to_playlist(GtkWidget * menu, gpoint
 
 
 
-static int pl3_current_playlist_browser_button_release_event(GtkTreeView * tree, GdkEventButton * event,
-                                                             PlayQueuePlugin * self)
-{
-    if (event->button == 3)
-    {
-        /* del, crop */
-        GtkWidget *item;
-        GtkWidget *menu = gtk_menu_new();
 
-        int rows = gtk_tree_selection_count_selected_rows(gtk_tree_view_get_selection(tree));
-        /* add the delete widget */
-        item = gtk_image_menu_item_new_from_stock(GTK_STOCK_REMOVE, NULL);
-        gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-        g_signal_connect_swapped(G_OBJECT(item), "activate",
-                                 G_CALLBACK(pl3_current_playlist_browser_delete_selected_songs), self);
-
-        if (rows)
-        {
-            /* add the delete widget */
-            item = gtk_image_menu_item_new_with_label(_("Crop"));
-            gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
-                                          gtk_image_new_from_stock(GTK_STOCK_CUT, GTK_ICON_SIZE_MENU));
-            g_signal_connect_swapped(G_OBJECT(item), "activate",
-                                     G_CALLBACK(pl3_current_playlist_browser_crop_selected_songs), self);
-            gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-        }
-        gtk_menu_shell_append(GTK_MENU_SHELL(menu), gtk_separator_menu_item_new());
-        /* add the clear widget */
-        item = gtk_image_menu_item_new_from_stock(GTK_STOCK_CLEAR, NULL);
-        gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-        g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_current_playlist_browser_clear_playlist), NULL);
-
-        /* add the shuffle widget */
-        item = gtk_image_menu_item_new_with_label(_("Shuffle"));
-        gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
-                                      gtk_image_new_from_stock(GTK_STOCK_REFRESH, GTK_ICON_SIZE_MENU));
-        g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(pl3_current_playlist_browser_shuffle_playlist), NULL);
-        gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-
-        gtk_menu_shell_append(GTK_MENU_SHELL(menu), gtk_separator_menu_item_new());
-
-
-        if (rows == 1)
-        {
-            mpd_Song *song;
-            GtkTreePath *path;
-            GtkTreeModel *model = gtk_tree_view_get_model(tree);
-            GtkTreeIter iter;
-            GList *list =
-                gtk_tree_selection_get_selected_rows(gtk_tree_view_get_selection(GTK_TREE_VIEW(tree)), &model);
-            path = list->data;
-            if (path && gtk_tree_model_get_iter(model, &iter, path))
-            {
-                gtk_tree_model_get(model, &iter, MPDDATA_MODEL_COL_MPDSONG, &song, -1);
-                if (song)
-                {
-                    item = gtk_image_menu_item_new_from_stock(GTK_STOCK_DIALOG_INFO, NULL);
-                    gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-                    g_signal_connect_swapped(G_OBJECT(item), "activate",
-                                             G_CALLBACK(pl3_current_playlist_browser_show_info), self);
-
-                    /* Add song sebmenu */
-                    submenu_for_song(menu, song);
-                }
-            }
-            g_list_foreach(list, (GFunc) gtk_tree_path_free, NULL);
-            g_list_free(list);
-        }
-
-        playlist_editor_right_mouse(menu, pl3_current_playlist_editor_add_to_playlist, self);
-        //gmpc_mpddata_treeview_right_mouse_intergration(GMPC_MPDDATA_TREEVIEW(tree), GTK_MENU(menu));
-        gtk_widget_show_all(menu);
-        gtk_menu_popup(GTK_MENU(menu), NULL, NULL, NULL, NULL, 0, event->time);
-        return TRUE;
-    }
-    return FALSE;
-}
-
-static void pl3_current_playlist_browser_show_info(PlayQueuePlugin * self)
-{
-
-    GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(self->priv->pl3_cp_tree));
-    GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(self->priv->pl3_cp_tree));
-    if (gtk_tree_selection_count_selected_rows(selection) > 0)
-    {
-        GList *list = NULL;
-        list = gtk_tree_selection_get_selected_rows(selection, &model);
-
-        list = g_list_last(list);
-
-        {
-            GtkTreeIter iter;
-            mpd_Song *song = NULL;
-            gtk_tree_model_get_iter(model, &iter, (GtkTreePath *) list->data);
-            gtk_tree_model_get(model, &iter, MPDDATA_MODEL_COL_MPDSONG, &song, -1);
-
-            info2_activate();
-            info2_fill_song_view(song);
-        }
-
-        g_list_foreach(list, (GFunc) gtk_tree_path_free, NULL);
-        g_list_free(list);
-    }
-}
 
 static void pl3_current_playlist_browser_selected(GmpcPluginBrowserIface * obj, GtkContainer * container)
 {
@@ -776,51 +620,13 @@ static int pl3_current_playlist_tool_menu_integration(GmpcPluginToolMenuIface * 
 static int pl3_current_playlist_browser_key_press_event(GtkTreeView * tree, GdkEventKey * event,
                                                           PlayQueuePlugin * self)
 {
-    if (event->keyval == GDK_KEY_Delete)
-    {
-        pl3_current_playlist_browser_delete_selected_songs(self);
-        return TRUE;
-    } else if (event->keyval == GDK_KEY_i && event->state & GDK_MOD1_MASK)
-    {
-        pl3_current_playlist_browser_show_info(self);
-        return TRUE;
-    } else if (event->keyval == GDK_KEY_space)
-    {
-        pl3_current_playlist_browser_scroll_to_current_song(self);
-        pl3_current_playlist_browser_select_current_song(self);
-        return TRUE;
-    } else if (event->keyval == GDK_KEY_f && event->state & GDK_CONTROL_MASK)
+    if (event->keyval == GDK_KEY_slash)
     {
         mod_fill_entry_changed(self->priv->filter_entry, self);
         gtk_widget_grab_focus(self->priv->filter_entry);
         self->priv->search_keep_open = TRUE;
         return TRUE;
-    } else if (event->keyval == GDK_KEY_slash)
-     {
-        mod_fill_entry_changed(self->priv->filter_entry, self);
-        gtk_widget_grab_focus(self->priv->filter_entry);
-        self->priv->search_keep_open = TRUE;
-        return TRUE;
-     }
-#if 0
-
-    else if ((event->state & (GDK_CONTROL_MASK | GDK_MOD1_MASK)) == 0)    /*&&
-                                                                            ((event->keyval >= GDK_space && event->keyval <= GDK_z))) */
-    {
-        char data[10];
-        guint32 uc = gdk_keyval_to_unicode(event->keyval);
-        if (uc && g_unichar_isalnum(uc))
-        {
-            memset(data, '\0', 10);
-            g_unichar_to_utf8(uc, data);
-            gtk_widget_grab_focus(self->priv->filter_entry);
-            gtk_entry_set_text(GTK_ENTRY(self->priv->filter_entry), data);
-            gtk_editable_set_position(GTK_EDITABLE(self->priv->filter_entry), 1);
-
-            return TRUE;
-        }
     }
-#endif
     return pl3_window_key_press_event(GTK_WIDGET(tree), event);
 }
 

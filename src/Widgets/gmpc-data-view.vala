@@ -187,6 +187,7 @@ public class Gmpc.DataView : Gtk.TreeView
             }
             if(server.check_command_allowed("prioid") == MPD.Server.Command.ALLOWED)
             {
+                menu.append( new Gtk.SeparatorMenuItem());
                 var item = new Gtk.MenuItem.with_label(_("Queue"));
                 item.activate.connect((source)=>{ selected_songs_raise_priority();});
                 menu.append(item);
@@ -223,9 +224,6 @@ public class Gmpc.DataView : Gtk.TreeView
                 item.activate.connect((source)=>{ selected_songs_paste_after();});
                 menu.append(item);
             }
-
-            item = new Gtk.SeparatorMenuItem();
-            menu.append(item);
 
         }
 
@@ -460,8 +458,11 @@ public class Gmpc.DataView : Gtk.TreeView
         else if(event.keyval == Gdk.Key_y)
         {
             // Copy data to clipboard
-            selected_songs_paste_queue_copy();
-
+            return selected_songs_paste_queue_copy();
+        }
+        else if (event.keyval == Gdk.Key_o)
+        {
+            return selected_songs_info();
         }
         else if (event.keyval == Gdk.Key_Escape)
         {
@@ -629,7 +630,7 @@ public class Gmpc.DataView : Gtk.TreeView
             Gtk.TreeIter iter;
             if(model.get_iter(out iter, path))
             {
-                MPD.Song? song = null; 
+                unowned MPD.Song? song = null; 
                 model.get(iter, Gmpc.MpdData.ColumnTypes.MPDSONG, out song);
                 if(song != null) {
                     Browser.Metadata.show();
