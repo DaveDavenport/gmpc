@@ -103,10 +103,6 @@ static void play_queue_set_property(GObject * object, guint property_id, const G
     }
 }
 
-static void pl3_current_playlist_browser_paste_after_songs(GtkTreeView * tree, GList * paste_list,
-                                                           PlayQueuePlugin * self);
-static void pl3_current_playlist_browser_paste_before_songs(GtkTreeView * tree, GList * paste_list,
-                                                            PlayQueuePlugin * self);
 static void pl3_current_playlist_browser_delete_selected_songs(PlayQueuePlugin * self);
 
 static void pl3_current_playlist_browser_add(GmpcPluginBrowserIface * obj, GtkWidget * cat_tree);
@@ -356,10 +352,6 @@ static void pl3_current_playlist_browser_init(PlayQueuePlugin * self)
     gtk_tree_view_set_model(GTK_TREE_VIEW(tree), GTK_TREE_MODEL(playlist));
 
 
-    g_signal_connect(G_OBJECT(tree), "paste_before", G_CALLBACK(pl3_current_playlist_browser_paste_before_songs), self);
-    g_signal_connect(G_OBJECT(tree), "paste_after", G_CALLBACK(pl3_current_playlist_browser_paste_after_songs), self);
-    g_signal_connect_swapped(G_OBJECT(tree), "cut", G_CALLBACK(pl3_current_playlist_browser_delete_selected_songs),
-                             self);
 
 
     /* Enable this for this model only */
@@ -571,144 +563,7 @@ static void pl3_current_playlist_editor_add_to_playlist(GtkWidget * menu, gpoint
     playlist_editor_fill_list();
 }
 
-static void pl3_current_playlist_browser_paste_after_songs(GtkTreeView * tree, GList * paste_list,
-                                                           PlayQueuePlugin * self)
-{
-    /* grab the selection from the tree */
-    GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(self->priv->pl3_cp_tree));
 
-    int seen = 0;
-    /* check if where connected */
-    /* see if there is a row selected */
-    if (gtk_tree_selection_count_selected_rows(selection) > 0)
-    {
-        GList *list = NULL, *llist = NULL;
-        GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(self->priv->pl3_cp_tree));
-        /* start a command list */
-        /* grab the selected songs */
-        list = gtk_tree_selection_get_selected_rows(selection, &model);
-        /* grab the last song that is selected */
-        llist = g_list_last(list);
-        /* remove every selected song one by one */
-        if (llist)
-        {
-            GtkTreeIter iter;
-            gtk_tree_model_get_iter(model, &iter, (GtkTreePath *) llist->data);
-            /* Trick that avoids roundtrip to mpd */
-            {
-                int id;
-                char *path = NULL;
-                int length = mpd_playlist_get_playlist_length(connection);
-                GList *liter = g_list_first(paste_list);
-                gtk_tree_model_get(model, &iter, MPDDATA_MODEL_COL_SONG_POS, &id, -1);
-                while (liter)
-                {
-                    int song_id;
-                    path = liter->data;
-                    song_id = mpd_playlist_add_get_id(connection, path);
-                    if (song_id == -1 && !seen)
-                    {
-                        playlist3_show_error_message(_("Your mpd has a broken 'addid', pasting will fail."),
-                                                     ERROR_WARNING);
-                        seen = 1;
-                    }
-                    mpd_playlist_move_pos(connection, length, id);
-                    length++;
-                    liter = g_list_next(liter);
-                }
-            }
-        }
-        /* free list */
-        g_list_foreach(list, (GFunc) gtk_tree_path_free, NULL);
-        g_list_free(list);
-    } else
-    {
-        GList *liter = g_list_first(paste_list);;
-        while (liter)
-        {
-            char *path = liter->data;
-            int song_id = mpd_playlist_add_get_id(connection, path);
-            if (song_id == -1 && !seen)
-            {
-                playlist3_show_error_message(_("Your mpd has a broken 'addid', pasting will fail."), ERROR_WARNING);
-                seen = 1;
-            }
-            liter = g_list_next(liter);
-        }
-
-    }
-    gtk_tree_selection_unselect_all(selection);
-}
-
-static void pl3_current_playlist_browser_paste_before_songs(GtkTreeView * tree, GList * paste_list,
-                                                            PlayQueuePlugin * self)
-{
-    /* grab the selection from the tree */
-    GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(self->priv->pl3_cp_tree));
-
-    int seen = 0;
-    /* check if where connected */
-    /* see if there is a row selected */
-    if (gtk_tree_selection_count_selected_rows(selection) > 0)
-    {
-        GList *list = NULL, *llist = NULL;
-        GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(self->priv->pl3_cp_tree));
-        /* start a command list */
-        /* grab the selected songs */
-        list = gtk_tree_selection_get_selected_rows(selection, &model);
-        /* grab the last song that is selected */
-        llist = g_list_first(list);
-        /* remove every selected song one by one */
-        if (llist)
-        {
-            GtkTreeIter iter;
-            gtk_tree_model_get_iter(model, &iter, (GtkTreePath *) llist->data);
-            /* Trick that avoids roundtrip to mpd */
-            {
-                int id;
-                int length = mpd_playlist_get_playlist_length(connection);
-                GList *liter = g_list_first(paste_list);
-                gtk_tree_model_get(model, &iter, MPDDATA_MODEL_COL_SONG_POS, &id, -1);
-                while (liter)
-                {
-                    char *path = liter->data;
-                    int song_id = mpd_playlist_add_get_id(connection, path);
-                    if (song_id == -1 && !seen)
-                    {
-                        playlist3_show_error_message(_("Your mpd has a broken 'addid', pasting will fail."),
-                                                     ERROR_WARNING);
-                        seen = 1;
-                    }
-                    mpd_playlist_move_pos(connection, length, id - 1);
-                    /* The song is now one lower */
-                    /* length one longer */
-                    length++;
-                    liter = g_list_next(liter);
-                }
-            }
-        }
-        /* free list */
-        g_list_foreach(list, (GFunc) gtk_tree_path_free, NULL);
-        g_list_free(list);
-    } else
-    {
-        GList *liter = g_list_first(paste_list);
-        while (liter)
-        {
-            char *path = liter->data;
-            int song_id = mpd_playlist_add_get_id(connection, path);
-            if (song_id == -1 && !seen)
-            {
-                playlist3_show_error_message(_("Your mpd has a broken 'addid', pasting will fail."), ERROR_WARNING);
-                seen = 1;
-            }
-            liter = g_list_next(liter);
-        }
-
-    }
-
-    gtk_tree_selection_unselect_all(selection);
-}
 
 static int pl3_current_playlist_browser_button_release_event(GtkTreeView * tree, GdkEventButton * event,
                                                              PlayQueuePlugin * self)

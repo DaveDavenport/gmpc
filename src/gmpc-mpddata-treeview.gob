@@ -145,7 +145,7 @@ static gint  col_position[NUM_COLS] = {
     19
 };
 
-static GList *paste_queue = NULL;
+//extern GList *paste_queue = NULL;
 #define LOG_DOMAIN "MpdData.TreeView"
 %}
 

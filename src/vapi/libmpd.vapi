@@ -205,6 +205,12 @@ namespace MPD {
         [CCode (cname="mpd_playlist_add")]
         public void add_song(MPD.Server server, string path);
 
+        [CCode (cname="mpd_playlist_add_get_id")]
+        public int add_song_get_id(MPD.Server server, string path);
+
+        [CCode (cname="mpd_playlist_move_id")]
+        public void song_move_id(MPD.Server server, int songid, int position);
+
         [CCode (cname="mpd_playlist_queue_delete_id")]
         public void queue_delete_id(MPD.Server server, int song_id);
 

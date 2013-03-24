@@ -2,6 +2,7 @@ using Gmpc;
 
 using Gtk;
 
+public List<string> paste_queue;
 const string log_domain = "Gmpc.DataView";
 
 /** The Default column width. */
@@ -161,13 +162,13 @@ public class Gmpc.DataView : Gtk.TreeView
     {
         int selected_rows = this.get_selection().count_selected_rows();
         if(selected_rows == 1) {
-            var item = new Gtk.ImageMenuItem.from_stock(Gtk.STOCK_MEDIA_PLAY,null);
+            var item = new Gtk.ImageMenuItem.from_stock(Gtk.Stock.MEDIA_PLAY,null);
             item.activate.connect((source)=>{
                     selected_songs_play();
                     });
             menu.append(item);
 
-            item = new Gtk.ImageMenuItem.from_stock(Gtk.STOCK_INFO, null);
+            item = new Gtk.ImageMenuItem.from_stock(Gtk.Stock.INFO, null);
             item.activate.connect((source)=>{
                 selected_songs_info();
             });
@@ -178,7 +179,7 @@ public class Gmpc.DataView : Gtk.TreeView
         {
             // Add play if there is one selected row.
             if(selected_rows > 0) {
-                var item = new Gtk.ImageMenuItem.from_stock(Gtk.STOCK_REMOVE,null);
+                var item = new Gtk.ImageMenuItem.from_stock(Gtk.Stock.REMOVE,null);
                 item.activate.connect((source)=>{
                     selected_songs_remove();
                 });
@@ -195,7 +196,38 @@ public class Gmpc.DataView : Gtk.TreeView
                 menu.append(item);
             }
         }
+        // Copy paste.
+        if(selected_rows > 0)
+        {
+            Gtk.MenuItem item;
+            item = new Gtk.SeparatorMenuItem();
+            menu.append(item);
+            if(is_play_queue) {
+                item = new Gtk.ImageMenuItem.from_stock(Gtk.Stock.CUT, null);
+                item.activate.connect((source)=>{ selected_songs_paste_queue_cut();});
+                menu.append(item);
+            }
 
+            item = new Gtk.ImageMenuItem.from_stock(Gtk.Stock.COPY, null);
+            item.activate.connect((source)=>{ selected_songs_paste_queue_copy();});
+            menu.append(item);
+
+            if(is_play_queue && paste_queue != null) {
+                item = new Gtk.ImageMenuItem.with_label(_("Paste before"));
+                (item as Gtk.ImageMenuItem).set_image(new Image.from_stock(Gtk.Stock.PASTE, Gtk.IconSize.MENU));
+                item.activate.connect((source)=>{ selected_songs_paste_before();});
+                menu.append(item);
+
+                item = new Gtk.ImageMenuItem.with_label(_("Paste after"));
+                (item as Gtk.ImageMenuItem).set_image(new Image.from_stock(Gtk.Stock.PASTE, Gtk.IconSize.MENU));
+                item.activate.connect((source)=>{ selected_songs_paste_after();});
+                menu.append(item);
+            }
+
+            item = new Gtk.SeparatorMenuItem();
+            menu.append(item);
+
+        }
 
     }
 
@@ -375,6 +407,21 @@ public class Gmpc.DataView : Gtk.TreeView
             // remove priority.
             return selected_songs_remove_priority();
         }
+        else if (event.keyval == Gdk.Key_c)
+        {
+            // Cut (if available) into clipboard
+            selected_songs_paste_queue_cut();
+        }
+        else if (event.keyval == Gdk.Key_P)
+        {
+            // Paste before  
+            return selected_songs_paste_before();
+        }
+        else if (event.keyval == Gdk.Key_p)
+        {
+            // Paste after
+            return selected_songs_paste_after();
+        }
         else if (event.keyval == Gdk.Key_q)
         {
             // Raise priority.
@@ -413,19 +460,8 @@ public class Gmpc.DataView : Gtk.TreeView
         else if(event.keyval == Gdk.Key_y)
         {
             // Copy data to clipboard
+            selected_songs_paste_queue_copy();
 
-        }
-        else if (event.keyval == Gdk.Key_c)
-        {
-            // Cut (if available) into clipboard
-        }
-        else if (event.keyval == Gdk.Key_P)
-        {
-            // Paste before  
-        }
-        else if (event.keyval == Gdk.Key_p)
-        {
-            // Paste after
         }
         else if (event.keyval == Gdk.Key_Escape)
         {
@@ -578,8 +614,11 @@ public class Gmpc.DataView : Gtk.TreeView
             }            
         }
         MPD.PlayQueue.queue_commit(server);
-        return (deleted_rows > 0);
-
+        if(deleted_rows > 0) {
+            selection.unselect_all();
+            return true;
+        }
+        return false;
     }
     private bool selected_songs_info()
     {
@@ -600,6 +639,94 @@ public class Gmpc.DataView : Gtk.TreeView
             }
         }
         return selection.count_selected_rows() > 0;
+    }
+
+    // Cut the selected songs in the play queue 
+    private bool selected_songs_paste_queue_cut()
+    {
+        if(selected_songs_paste_queue_copy()){
+            selected_songs_remove();
+        }
+        return false;
+    }
+    // Copy the selected songs in the play queue 
+    private bool selected_songs_paste_queue_copy()
+    {
+        var selection = this.get_selection();
+        // If nothing to copy , do nothing.
+        if(selection.count_selected_rows() == 0) return false;
+        // Clear paste_queue
+        paste_queue = null;
+        Gtk.TreeModel model;
+        foreach(var path in selection.get_selected_rows(out model))
+        {
+            Gtk.TreeIter iter;
+            if(model.get_iter(out iter, path))
+            {
+                string insert_path;
+                model.get(iter,Gmpc.MpdData.ColumnTypes.PATH, out insert_path);
+                paste_queue.prepend(insert_path);
+            }            
+        }
+        paste_queue.reverse();
+        return true;
+
+    }
+    
+    private bool selected_songs_paste_before()
+    {
+        var selection = this.get_selection();
+        // If nothing selected. 
+        if(selection.count_selected_rows() == 0|| paste_queue == null)
+        {
+            return false;
+        }
+        Gtk.TreeModel model;
+        Gtk.TreeIter iter;
+        Gtk.TreePath path = selection.get_selected_rows(out model).last().data;
+        if(model.get_iter(out iter, path))
+        {
+            int songpos;
+            model.get(iter, Gmpc.MpdData.ColumnTypes.SONG_POS, out songpos);
+            if(songpos> 0) {
+                songpos--;
+                paste_queue.reverse();
+                foreach(var fpath in paste_queue)
+                {
+                    int nsongid = MPD.PlayQueue.add_song_get_id(server,fpath);
+                    MPD.PlayQueue.song_move_id(server, nsongid, songpos);
+                }
+                paste_queue.reverse();
+            }
+        }
+        return true; 
+    }
+    private bool selected_songs_paste_after()
+    {
+        var selection = this.get_selection();
+        // If nothing selected. 
+        if(selection.count_selected_rows() == 0|| paste_queue == null)
+        {
+            return false;
+        }
+        Gtk.TreeModel model;
+        Gtk.TreeIter iter;
+        Gtk.TreePath path = selection.get_selected_rows(out model).last().data;
+        if(model.get_iter(out iter, path))
+        {
+            int songpos;
+            model.get(iter, Gmpc.MpdData.ColumnTypes.SONG_POS, out songpos);
+            if(songpos> 0) {
+                paste_queue.reverse();
+                foreach(var fpath in paste_queue)
+                {
+                    int nsongid = MPD.PlayQueue.add_song_get_id(server,fpath);
+                    MPD.PlayQueue.song_move_id(server, nsongid, songpos);
+                }
+                paste_queue.reverse();
+            }
+        }
+        return true; 
     }
 
     /**

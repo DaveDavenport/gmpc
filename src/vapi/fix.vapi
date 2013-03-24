@@ -17,5 +17,5 @@ namespace FixGtk
 	}
 
     [CCode (cname="gettext")]
-    public weak string gettext(string in);
+    public unowned string gettext(string in);
 }
