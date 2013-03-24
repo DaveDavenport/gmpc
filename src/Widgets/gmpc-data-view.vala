@@ -185,13 +185,21 @@ public class Gmpc.DataView : Gtk.TreeView
                 });
                 menu.append(item);
             }
-            if(server.check_command_allowed("prioid") == MPD.Server.Command.ALLOWED)
-            {
-                menu.append( new Gtk.SeparatorMenuItem());
-                var item = new Gtk.MenuItem.with_label(_("Queue"));
-                item.activate.connect((source)=>{ selected_songs_raise_priority();});
-                menu.append(item);
+        }else{
+            var item = new Gtk.ImageMenuItem.from_stock(Gtk.Stock.ADD,null);
+            item.activate.connect((source)=>{
+                    selected_songs_add();
+                    });
+            menu.append(item);
+        }
+        if(server.check_command_allowed("prioid") == MPD.Server.Command.ALLOWED)
+        {
+            menu.append( new Gtk.SeparatorMenuItem());
+            var item = new Gtk.MenuItem.with_label(_("Queue"));
+            item.activate.connect((source)=>{ selected_songs_raise_priority();});
+            menu.append(item);
 
+            if(is_play_queue) {
                 item = new Gtk.MenuItem.with_label(_("Dequeue"));
                 item.activate.connect((source)=>{ selected_songs_remove_priority();});
                 menu.append(item);
@@ -429,6 +437,18 @@ public class Gmpc.DataView : Gtk.TreeView
     /**
      * Handle keyboard input.
      */
+    private bool __key_press_event_callback_song_list(Gdk.EventKey event)
+    {
+        if(event.keyval == Gdk.Key_i)
+        {
+            return selected_songs_add();
+        }
+        else if (event.keyval == Gdk.Key_r)
+        {
+
+        }
+        return false;
+    }
     private bool __key_press_event_callback_play_queue(Gdk.EventKey event)
     {
         if (event.keyval == Gdk.Key_Q) 
@@ -450,11 +470,6 @@ public class Gmpc.DataView : Gtk.TreeView
         {
             // Paste after
             return selected_songs_paste_after();
-        }
-        else if (event.keyval == Gdk.Key_q)
-        {
-            // Raise priority.
-            return selected_songs_raise_priority();
         }
         else if (event.keyval == Gdk.Key_d)
         {
@@ -505,6 +520,11 @@ public class Gmpc.DataView : Gtk.TreeView
             column_show_selection_menu();
             return true;
         }
+        else if (event.keyval == Gdk.Key_q)
+        {
+            // Raise priority.
+            return selected_songs_raise_priority();
+        }
         else if (event.keyval == Gdk.Key_Menu)
         {
             __button_press_menu = new Gtk.Menu();
@@ -526,10 +546,7 @@ public class Gmpc.DataView : Gtk.TreeView
         }
         else
         {
-            if(event.keyval == Gdk.Key_i)
-            {
-                // Insert
-            }
+            if(__key_press_event_callback_song_list(event)) return true;
         }
         return false;
     }
@@ -581,7 +598,14 @@ public class Gmpc.DataView : Gtk.TreeView
             {
                 int song_id;
                 model.get(iter,Gmpc.MpdData.ColumnTypes.SONG_ID, out song_id);
-                MPD.PlayQueue.set_priority(server, song_id, priority--);
+                if(song_id >= 0) {
+                    MPD.PlayQueue.set_priority(server, song_id, priority--);
+                } else {
+                    string song_path;
+                    model.get(iter, Gmpc.MpdData.ColumnTypes.PATH, out song_path);
+                    song_id = MPD.PlayQueue.add_song_get_id(server,song_path);
+                    MPD.PlayQueue.set_priority(server, song_id, priority--);
+                }
             }            
         }
         return true;
@@ -604,6 +628,30 @@ public class Gmpc.DataView : Gtk.TreeView
             }            
         }
         return true;
+    }
+    // Add the selected song
+    private bool selected_songs_add()
+    {
+        int added_rows = 0;
+        var selection = this.get_selection();
+
+        Gtk.TreeModel model;
+        foreach(var path in selection.get_selected_rows(out model))
+        {
+            Gtk.TreeIter iter;
+            if(model.get_iter(out iter, path))
+            {
+                string song_path;
+                model.get(iter,Gmpc.MpdData.ColumnTypes.PATH, out song_path);
+                MPD.PlayQueue.queue_add_song(server, song_path);
+                added_rows++;
+            }            
+        }
+        MPD.PlayQueue.queue_commit(server);
+        if(added_rows > 0) {
+            return true;
+        }
+        return false;
     }
     // Play the selected song
     private bool selected_songs_play()
