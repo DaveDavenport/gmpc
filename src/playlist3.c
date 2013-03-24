@@ -378,19 +378,12 @@ static gboolean pl3_win_state_event(GtkWidget * window, GdkEventWindowState * ev
     return FALSE;
 }
 
-gboolean alt_button_pressed = FALSE;
 /**
  * This avoids the 'keybinding help' to become sticky when moving the window, or chainging
  * focus to other window.
  */
 gboolean pl3_window_focus_out_event(GtkWidget *window, GdkEventFocus *event, gpointer data)
 {
-    if(alt_button_pressed)
-    {
-        GtkWidget *tree = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "cat_tree"));
-        alt_button_pressed = FALSE;
-        gtk_widget_queue_draw(GTK_WIDGET(tree));
-    }
     return FALSE;
 }
 
@@ -425,22 +418,12 @@ gboolean pl3_window_fullscreen(void)
 
 int pl3_window_key_release_event(GtkWidget * mw, GdkEventKey * event)
 {
-    if(event->keyval == GDK_KEY_Alt_L || event->keyval == GDK_KEY_Alt_R || event->keyval == GDK_KEY_Meta_L|| event->keyval == GDK_KEY_Meta_R) {
-        GtkWidget *tree = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "cat_tree"));
-        alt_button_pressed = FALSE;
-        gtk_widget_queue_draw(GTK_WIDGET(tree));
-    }
     return FALSE;
 }
 int pl3_window_key_press_event(GtkWidget * mw, GdkEventKey * event)
 {
     int i = 0;
     gint type = pl3_cat_get_selected_browser();
-    if(event->keyval == GDK_KEY_Alt_L || event->keyval == GDK_KEY_Alt_R) {
-        GtkWidget *tree = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "cat_tree"));
-        alt_button_pressed = TRUE;
-        gtk_widget_queue_draw(GTK_WIDGET(tree));
-    }
     /**
      * Following key's are only valid when connected
      */
@@ -454,6 +437,11 @@ int pl3_window_key_press_event(GtkWidget * mw, GdkEventKey * event)
         {
             gmpc_plugin_browser_key_press_event(plugins[i], mw, event, type);
         }
+    }
+    if(event->keyval == GDK_KEY_colon)
+    {
+        show_command_line();
+        return TRUE;
     }
     if((event->state&GDK_MOD1_MASK) > 0)
     {
