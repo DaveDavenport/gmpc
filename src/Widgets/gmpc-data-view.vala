@@ -226,7 +226,38 @@ public class Gmpc.DataView : Gtk.TreeView
             }
 
         }
+        if(selected_rows == 1)
+        {
+            Gtk.TreeModel model;
+            var list = get_selection().get_selected_rows(out model);
+            var path = list.first().data;
+            Gtk.TreeIter iter;
+            if(model.get_iter(out iter, path))
+            { 
+                unowned MPD.Song? song;
+                model.get(iter, MpdData.ColumnTypes.MPDSONG, out song);
+                if(song != null){
+                    MpdInteraction.submenu_for_song(menu, song);
+                }
+            }
+        }
 
+        // Tool menu integration.
+        bool initial = false;
+        var item = new Gtk.MenuItem.with_label(_("Tools"));
+        var smenu = new Gtk.Menu();
+        item.set_submenu(smenu);
+        for(int i = 0; i < Gmpc.num_plugins; i++){
+            if(plugins[i].get_enabled() &&
+                    plugins[i].browser_song_list_option_menu(this,smenu) > 0){
+                stdout.printf("adding entry\n");
+                initial = true;
+            }
+        } 
+        if(initial) {
+            __button_press_menu.append(new Gtk.SeparatorMenuItem());
+            __button_press_menu.append(item);
+        }
     }
 
     /**
@@ -477,7 +508,12 @@ public class Gmpc.DataView : Gtk.TreeView
         else if (event.keyval == Gdk.Key_Menu)
         {
             __button_press_menu = new Gtk.Menu();
+
             right_mouse_menu(__button_press_menu);
+
+
+
+
             __button_press_menu.show_all();
             __button_press_menu.popup(null, null,null,0, Gtk.get_current_event_time()); 
             return true;
@@ -505,19 +541,19 @@ public class Gmpc.DataView : Gtk.TreeView
     private Gtk.Menu __button_press_menu = null;
     private bool __button_press_event_callback(Gdk.EventButton event)
     {
-        if(event.button == 3) return true;
-        return false;
-    }
-    private bool __button_release_event_callback(Gdk.EventButton event)
-    {
         if(event.button == 3)
         {
             __button_press_menu = new Gtk.Menu();
             right_mouse_menu(__button_press_menu);
+
             __button_press_menu.show_all();
             __button_press_menu.popup(null, null,null, event.button, event.time);
             return true;
         }
+        return false;
+    }
+    private bool __button_release_event_callback(Gdk.EventButton event)
+    {
         return false;
     }
 
@@ -621,6 +657,7 @@ public class Gmpc.DataView : Gtk.TreeView
         }
         return false;
     }
+    // Show the Information of the first selected song.
     private bool selected_songs_info()
     {
         var selection = this.get_selection();

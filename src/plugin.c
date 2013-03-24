@@ -687,7 +687,7 @@ int gmpc_plugin_browser_add_go_menu(gmpcPluginParent * plug, GtkWidget * menu)
 }
 
 int gmpc_plugin_browser_song_list_option_menu(gmpcPluginParent * plug,
-                                              GmpcMpdDataTreeview * tree,
+                                              GtkTreeView * tree,
                                               GtkMenu * menu)
 {
     if (plug->new)

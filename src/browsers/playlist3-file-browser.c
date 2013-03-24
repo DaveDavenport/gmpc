@@ -39,7 +39,7 @@ static void pl3_file_browser_plugin_init(void);
 static gboolean pl3_file_browser_is_field_supported(int tag);
 static MpdData *pl3_file_browser_is_search(const int num_field, const gchar * search_string, GError ** error);
 
-static int pl3_file_browser_option_menu(GmpcMpdDataTreeview *tree, GtkMenu *menu);
+static int pl3_file_browser_option_menu(GtkTreeView *tree, GtkMenu *menu);
 
 static void pl3_file_browser_destroy(void);
 static void pl3_file_browser_add(GtkWidget * cat_tree);
@@ -1463,10 +1463,13 @@ static void pl3_file_browser_option_menu_activate (GtkMenuItem *item, gpointer d
         /* This function calls the file browser and opens the path */
         pl3_file_browser_open_path(path);
     }
+    else{
+        g_warning("No path set on menu item\n");
+    }
 }
 
 /* add item to menu */
-static int pl3_file_browser_option_menu(GmpcMpdDataTreeview *tree, GtkMenu *menu)
+static int pl3_file_browser_option_menu(GtkTreeView *tree, GtkMenu *menu)
 {
     int retv = 0;
     GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(tree));

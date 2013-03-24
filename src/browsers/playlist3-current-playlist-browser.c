@@ -376,7 +376,6 @@ static void pl3_current_playlist_browser_init(PlayQueuePlugin * self)
     /* set up the tree */
     gtk_tree_view_set_enable_search(GTK_TREE_VIEW(tree), FALSE);
 
-    //gmpc_mpddata_treeview_enable_click_fix(GMPC_MPDDATA_TREEVIEW(tree));
     /* setup signals */
     g_signal_connect(G_OBJECT(tree), "key-press-event", G_CALLBACK(pl3_current_playlist_browser_key_press_event),
                      self);

@@ -67,7 +67,7 @@ int gmpc_plugin_browser_key_press_event(gmpcPluginParent * plug, GtkWidget * mw,
                                         GdkEventKey * event, int type);
 int gmpc_plugin_browser_add_go_menu(gmpcPluginParent * plug, GtkWidget * menu);
 int gmpc_plugin_browser_song_list_option_menu(gmpcPluginParent * plug,
-                                              GmpcMpdDataTreeview * tree,
+                                              GtkTreeView * tree,
                                               GtkMenu * menu);
 gboolean gmpc_plugin_browser_has_integrate_search(gmpcPluginParent * plug);
 MpdData *gmpc_plugin_browser_integrate_search(gmpcPluginParent * plug,

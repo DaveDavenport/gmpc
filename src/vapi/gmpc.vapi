@@ -517,10 +517,13 @@ namespace Gmpc {
 	{
 		public int get_id();
 		public unowned string get_name();
-		public int get_enabled();
+		public bool get_enabled();
 		public bool has_enabled();
 		public void set_enabled(int e);
 		public bool is_browser();
+        public int tool_menu_integration(Gtk.Menu menu);
+        public int browser_cat_right_mouse_menu(Gtk.Menu menu, int type, Gtk.TreeView tree, Gdk.EventButton button);
+        public int browser_song_list_option_menu(Gtk.TreeView tree, Gtk.Menu menu);
 	}
 	[CCode (cheader_filename="main.h", array_length = false, cname="plugins")]
 	static weak ParentPlugin[] plugins;
