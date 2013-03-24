@@ -427,7 +427,7 @@ namespace Gmpc {
             public int icon_size;
         }
 
-        [CCode (cheader_filename="gmpc-mpddata-model-playlist.h",type_check_function="GMPC_IS_MPDDATA_MODEL_PLAYLIST")]
+        [CCode (cheader_filename="gmpc-mpddata-model-playlist.h",type_check_function="GMPC_IS_MPDDATA_MODEL_PLAYLIST", type_id="GMPC_TYPE_MPDDATA_MODEL_PLAYLIST")]
         public class ModelPlaylist : Gmpc.MpdData.Model {
 			public signal void total_playtime_changed(ulong loaded_songs, ulong total_playtime);
 

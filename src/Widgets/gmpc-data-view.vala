@@ -445,7 +445,12 @@ public class Gmpc.DataView : Gtk.TreeView
         }
         else if (event.keyval == Gdk.Key_r)
         {
-
+            // If there are songs selected, clear the play queue,
+            // and add selection.
+            if(this.get_selection().count_selected_rows() > 0) {
+                MPD.PlayQueue.clear(server);
+                return selected_songs_add();
+            }
         }
         return false;
     }
