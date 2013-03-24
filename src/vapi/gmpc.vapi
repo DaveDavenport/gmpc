@@ -427,12 +427,15 @@ namespace Gmpc {
             public int icon_size;
         }
 
-        [CCode (cheader_filename="gmpc-mpddata-model-playlist.h")]
+        [CCode (cheader_filename="gmpc-mpddata-model-playlist.h",type_check_function="GMPC_IS_MPDDATA_MODEL_PLAYLIST")]
         public class ModelPlaylist : Gmpc.MpdData.Model {
 			public signal void total_playtime_changed(ulong loaded_songs, ulong total_playtime);
 
             [CCode (cname="gmpc_mpddata_model_playlist_get_total_playtime")]
 			public void get_total_playtime( out ulong loaded_song, out ulong total_playtime);
+    
+            [CCode (cname="gmpc_mpddata_model_playlist_is_current_song")]
+            public bool is_current_song(Gtk.TreeIter iter);
 		}
 
         [CCode (cname="", cprefix = "MPDDATA_MODEL_COL_", cheader_filename = "gmpc-mpddata-model.h")]

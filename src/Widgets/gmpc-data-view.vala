@@ -126,10 +126,10 @@ public class Gmpc.DataView : Gtk.TreeView
     /**
      * Construction function.
      */
-    public DataView(string name)
+    public DataView(string name, bool play_queue = false)
     {
         log(log_domain, LogLevelFlags.LEVEL_INFO, "Constructing dataview: "+name);
-
+        this.is_play_queue = play_queue;
         this.uid = name;
         // Connect row activated signal.
         this.row_activated.connect(__row_activated);
@@ -281,15 +281,16 @@ public class Gmpc.DataView : Gtk.TreeView
                 col.set_title(gmpc_data_view_col_names[i]);
                 var renderer = new Gtk.CellRendererText(); 
                 renderer.ellipsize = Pango.EllipsizeMode.END;
-                renderer.weight_set = true;
                 // Set up column
+                if(is_play_queue) {
+                    renderer.weight_set = true;
+                    renderer.style_set = true;
+                    // TODO fix this.
+                    col.set_cell_data_func(renderer, highlight_row_current_song_playing);
+                }
                 col.pack_start(renderer, true);
                 col.set_attributes(renderer, "text", gmpc_data_view_col_ids[i]); 
                 col.set_resizable(true);
-                if(is_play_queue) {
-                // TODO fix this.
-                //    col.set_cell_data_func(renderer, (Gtk.CellLayoutDataFunc)highlight_row_current_song_playing);
-                }
                 
                 int width = config.get_int_with_default(uid+"-colsize",gmpc_data_view_col_names[i], default_column_width);
                 // Do not set to size 0, then revert back to 200.
@@ -341,9 +342,25 @@ public class Gmpc.DataView : Gtk.TreeView
      * Check if current row is playing.
      * TODO
      */
-    private void highlight_row_current_song_playing(Gtk.TreeViewColumn col, Gtk.CellRenderer renderer, Gtk.TreeModel model, Gtk.TreeIter iter)
+    private void highlight_row_current_song_playing(
+            Gtk.CellLayout col,
+            Gtk.CellRenderer renderer, 
+            Gtk.TreeModel model,
+            Gtk.TreeIter iter)
     {
-       (renderer as Gtk.CellRendererText).weight = Pango.Weight.BOLD;
+        if(model is Gmpc.MpdData.ModelPlaylist && 
+                (model as Gmpc.MpdData.ModelPlaylist).is_current_song(iter)){
+            (renderer as Gtk.CellRendererText).weight = Pango.Weight.BOLD;
+        }else{
+            (renderer as Gtk.CellRendererText).weight = Pango.Weight.NORMAL;
+        }
+        int prio = 0;
+        model.get(iter, Gmpc.MpdData.ColumnTypes.SONG_PRIORITY, out prio);
+        if(prio > 0) {
+            (renderer as Gtk.CellRendererText).style = Pango.Style.ITALIC;
+        }else {
+            (renderer as Gtk.CellRendererText).style = Pango.Style.NORMAL;
+        }
     }
 
 

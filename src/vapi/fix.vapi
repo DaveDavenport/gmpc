@@ -15,4 +15,5 @@ namespace FixGtk
 		public virtual void set_buildable_property (Gtk.Builder builder, string name, GLib.Value value);
 		public virtual void set_name (string name);
 	}
+
 }
