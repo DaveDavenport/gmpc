@@ -135,37 +135,16 @@ public class Gmpc.DataView : Gtk.TreeView
         this.row_activated.connect(__row_activated);
         this.key_release_event.connect(__key_release_event_callback);
         // When it getst he destroy signal.
-        this.destroy.connect(store_columns);
+        this.destroy.connect(column_store_state);
 
         this.set_rules_hint(true);
 
         this.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE);
         this.set_fixed_height_mode(true);
         // Create the view.
-        populate();
+        column_populate();
     }
 
-    /**
-     * Store the position, visibility and width of the columns
-     */
-    private void store_columns()
-    {
-        // Save the position of the columns
-        var columns = get_columns();
-        int index = 0;
-        foreach(var column in columns)
-        {
-            int id = column.get_data("id");
-            int width = column.get_width();
-            config.set_int(uid+"-colpos", gmpc_data_view_col_names[id], index);
-            config.set_bool(uid+"-colshow", gmpc_data_view_col_names[id], column.visible);
-            // Only store width if bigger then 0.
-            if(width > 0 ) {
-                config.set_int(uid+"-colsize",gmpc_data_view_col_names[id], width); 
-            }
-            index++;
-        }
-    }
 
     /**
      * Deconstructor.
@@ -174,17 +153,64 @@ public class Gmpc.DataView : Gtk.TreeView
     {
     }
 
+    /**
+     * Internal functions.
+     */
 
+    /**
+     * Store the position, visibility and width of the columns
+     */
+    private void column_store_state()
+    {
+        // Save the position of the columns
+        var columns = get_columns();
+        int index = 0;
+        foreach(var column in columns)
+        {
+            int col_index = column.get_data("index");
+            int width = column.get_width();
+            config.set_int(uid+"-colpos", gmpc_data_view_col_names[col_index], index);
+            config.set_bool(uid+"-colshow", gmpc_data_view_col_names[col_index], column.visible);
+            // Only store width if bigger then 0.
+            if(width > 0 ) {
+                config.set_int(uid+"-colsize",gmpc_data_view_col_names[col_index], width); 
+            }
+            index++;
+        }
+    }
+    // Hack to make vala not destroy the menu directly.
+    private Gtk.Menu column_selection_menu = null;
+    private void column_show_selection_menu()
+    {
+        column_selection_menu = new Gtk.Menu();
+        foreach(var col in tree_columns)
+        {
+            int index = col.get_data("index");
+            // Do not show the icon id in the selection list.
+            if(gmpc_data_view_col_ids[index] == MpdData.ColumnTypes.ICON_ID) continue;
+            var item = new Gtk.CheckMenuItem.with_label(gmpc_data_view_col_names[index]);
+            if(col.visible) {
+                item.set_active(true);
+            }
+            // On activation toggle the state.
+            item.activate.connect((source) => {
+                col.visible = (source as Gtk.CheckMenuItem).get_active();
+            });
+            column_selection_menu.append(item);
+        }
+        column_selection_menu.show_all();
+        column_selection_menu.popup(null, null, null, 0, Gtk.get_current_event_time());
+    }
     /**
      * Populate the treeview with the right columns.
      * The treeview should have a name now.
      */
-    private void populate()
+    private void column_populate()
     {
         for(int i = 0; i < NUM_COLS; i++)
         {
             Gtk.TreeViewColumn col = new Gtk.TreeViewColumn();
-            col.set_data("id", i);
+            col.set_data("index", i);
             if(gmpc_data_view_col_ids[i] == Gmpc.MpdData.ColumnTypes.ICON_ID)
             {
                 /**
@@ -197,6 +223,11 @@ public class Gmpc.DataView : Gtk.TreeView
                 col.set_attributes(renderer, "icon-name", Gmpc.MpdData.ColumnTypes.ICON_ID);
                 col.set_resizable(false);
                 col.set_fixed_width(20);
+                col.clickable = true;
+                // If the user clicks on the column, show dropdown allowing to enable/disable columns.
+                col.clicked.connect((source) => {
+                        column_show_selection_menu();
+                        });
             } else {
                 /**
                  * Text column
@@ -227,17 +258,15 @@ public class Gmpc.DataView : Gtk.TreeView
         }
         // Add the columns (in right order)
         for(int i = 0; i < NUM_COLS; i++) {
-            int id = this.tree_columns[i].get_data("id");
+            int index = this.tree_columns[i].get_data("index");
             this.insert_column(this.tree_columns[i], i); 
-            this.tree_columns[i].set_visible(config.get_bool_with_default(uid+"-colshow", gmpc_data_view_col_names[id], gmpc_data_view_col_enabled[id]));
+            this.tree_columns[i].set_visible(config.get_bool_with_default(uid+"-colshow", gmpc_data_view_col_names[index], gmpc_data_view_col_enabled[index]));
         }
     }
 
 
 
-    /**
-     * Internal functions.
-     */
+    
 
     /**
      * Function handles the row-activate signal.
