@@ -16,4 +16,6 @@ namespace FixGtk
 		public virtual void set_name (string name);
 	}
 
+    [CCode (cname="gettext")]
+    public weak string gettext(string in);
 }

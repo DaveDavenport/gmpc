@@ -234,7 +234,7 @@ public class Gmpc.DataView : Gtk.TreeView
             int index = col.get_data("index");
             // Do not show the icon id in the selection list.
             if(gmpc_data_view_col_ids[index] == MpdData.ColumnTypes.ICON_ID) continue;
-            var item = new Gtk.CheckMenuItem.with_label(gmpc_data_view_col_names[index]);
+            var item = new Gtk.CheckMenuItem.with_label(FixGtk.gettext(gmpc_data_view_col_names[index]));
             if(col.visible) {
                 item.set_active(true);
             }
@@ -278,14 +278,13 @@ public class Gmpc.DataView : Gtk.TreeView
                 /**
                  * Text column
                  */
-                col.set_title(gmpc_data_view_col_names[i]);
+                col.set_title(FixGtk.gettext(gmpc_data_view_col_names[i]));
                 var renderer = new Gtk.CellRendererText(); 
                 renderer.ellipsize = Pango.EllipsizeMode.END;
                 // Set up column
                 if(is_play_queue) {
                     renderer.weight_set = true;
                     renderer.style_set = true;
-                    // TODO fix this.
                     col.set_cell_data_func(renderer, highlight_row_current_song_playing);
                 }
                 col.pack_start(renderer, true);
@@ -340,7 +339,6 @@ public class Gmpc.DataView : Gtk.TreeView
     }
     /**
      * Check if current row is playing.
-     * TODO
      */
     private void highlight_row_current_song_playing(
             Gtk.CellLayout col,
@@ -348,12 +346,15 @@ public class Gmpc.DataView : Gtk.TreeView
             Gtk.TreeModel model,
             Gtk.TreeIter iter)
     {
+        // The current song we make bold.
         if(model is Gmpc.MpdData.ModelPlaylist && 
                 (model as Gmpc.MpdData.ModelPlaylist).is_current_song(iter)){
             (renderer as Gtk.CellRendererText).weight = Pango.Weight.BOLD;
         }else{
             (renderer as Gtk.CellRendererText).weight = Pango.Weight.NORMAL;
         }
+
+        // A prioritized song we make italic.
         int prio = 0;
         model.get(iter, Gmpc.MpdData.ColumnTypes.SONG_PRIORITY, out prio);
         if(prio > 0) {
@@ -601,7 +602,9 @@ public class Gmpc.DataView : Gtk.TreeView
         return selection.count_selected_rows() > 0;
     }
 
-
+    /**
+     * Move
+     */
     private void move_cursor_down()
     {
         Gtk.TreePath? path;
