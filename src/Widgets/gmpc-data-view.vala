@@ -134,6 +134,8 @@ public class Gmpc.DataView : Gtk.TreeView
         // Connect row activated signal.
         this.row_activated.connect(__row_activated);
         this.key_release_event.connect(__key_release_event_callback);
+        this.button_press_event.connect(__button_press_event_callback);
+        this.button_release_event.connect(__button_release_event_callback);
         // When it getst he destroy signal.
         this.destroy.connect(column_store_state);
 
@@ -151,6 +153,33 @@ public class Gmpc.DataView : Gtk.TreeView
      */
     ~DataView()
     {
+    }
+
+
+    public void right_mouse_menu(Gtk.Menu menu)
+    {
+        int selected_rows = this.get_selection().count_selected_rows();
+        if(selected_rows == 1) {
+            var item = new Gtk.ImageMenuItem.from_stock(Gtk.STOCK_MEDIA_PLAY,null);
+            item.activate.connect((source)=>{
+                    selected_songs_play();
+                    });
+            menu.append(item);
+        }
+
+        if(is_play_queue)
+        {
+            // Add play if there is one selected row.
+            if(selected_rows > 0) {
+                var item = new Gtk.ImageMenuItem.from_stock(Gtk.STOCK_REMOVE,null);
+                item.activate.connect((source)=>{
+                    selected_songs_remove();
+                });
+                menu.append(item);
+            }
+        }
+
+
     }
 
     /**
@@ -363,6 +392,14 @@ public class Gmpc.DataView : Gtk.TreeView
             column_show_selection_menu();
             return true;
         }
+        else if (event.keyval == Gdk.Key_Menu)
+        {
+            __button_press_menu = new Gtk.Menu();
+            right_mouse_menu(__button_press_menu);
+            __button_press_menu.show_all();
+            __button_press_menu.popup(null, null,null,0, Gtk.get_current_event_time()); 
+            return true;
+        }
 
         // Commands specific to play_queue
         if(is_play_queue)
@@ -378,6 +415,30 @@ public class Gmpc.DataView : Gtk.TreeView
         }
         return false;
     }
+
+    /**
+     * Right mouse popup.
+     */
+    // Hack to stop vala from destroying my menu.
+    private Gtk.Menu __button_press_menu = null;
+    private bool __button_press_event_callback(Gdk.EventButton event)
+    {
+        if(event.button == 3) return true;
+        return false;
+    }
+    private bool __button_release_event_callback(Gdk.EventButton event)
+    {
+        if(event.button == 3)
+        {
+            __button_press_menu = new Gtk.Menu();
+            right_mouse_menu(__button_press_menu);
+            __button_press_menu.show_all();
+            __button_press_menu.popup(null, null,null, event.button, event.time);
+            return true;
+        }
+        return false;
+    }
+
 
     /**
      * Interaction on selected songs.
@@ -425,6 +486,33 @@ public class Gmpc.DataView : Gtk.TreeView
             }            
         }
         return true;
+    }
+    // Play the selected song
+    private bool selected_songs_play()
+    {
+        var selection = this.get_selection();
+        Gtk.TreeModel model;
+        foreach(var path in selection.get_selected_rows(out model))
+        {
+            Gtk.TreeIter iter;
+            if(model.get_iter(out iter, path))
+            {
+                if(is_play_queue) {
+                int song_id;
+                model.get(iter, Gmpc.MpdData.ColumnTypes.SONG_ID, out song_id);
+                if(song_id >= 0){
+                    MPD.Player.play_id(server, song_id);
+                    return true; 
+                }
+                }else{
+                    string song_path;
+                    model.get(iter, Gmpc.MpdData.ColumnTypes.PATH, out song_path);
+                    MpdInteraction.play_path(song_path);
+                    return true;
+                }
+            }
+        }
+        return selection.count_selected_rows() > 0;
     }
     // Remove the selected songs from the play queue.
     private bool selected_songs_remove()
