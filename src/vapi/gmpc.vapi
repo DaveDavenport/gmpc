@@ -385,6 +385,13 @@ namespace Gmpc {
             [CCode (cname="info2_fill_album_view")]
             public void show_album(string artist,string album);
         }
+        namespace PlaylistEditor {
+        
+
+            public delegate void Callback (Gtk.MenuItem item);
+            [CCode (cname="playlist_editor_right_mouse")]
+            public void right_mouse(Gtk.Menu menu, Callback cb);
+        }
     }
 
     namespace Playlist3 {

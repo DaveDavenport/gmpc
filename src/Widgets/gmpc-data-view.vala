@@ -156,7 +156,12 @@ public class Gmpc.DataView : Gtk.TreeView
     ~DataView()
     {
     }
-
+    /** small wrapper.. */
+    private void playlist_editor_add_new(Gtk.Widget menu)
+    {
+        string playlist = menu.get_data("playlist");
+        selected_songs_add_to_playlist(playlist);
+    }
 
     public void right_mouse_menu(Gtk.Menu menu)
     {
@@ -233,6 +238,8 @@ public class Gmpc.DataView : Gtk.TreeView
                 menu.append(item);
             }
 
+            // Add to playlist integration.
+            
         }
         if(selected_rows == 1)
         {
@@ -266,6 +273,8 @@ public class Gmpc.DataView : Gtk.TreeView
             __button_press_menu.append(new Gtk.SeparatorMenuItem());
             __button_press_menu.append(item);
         }
+
+        Gmpc.Browser.PlaylistEditor.right_mouse(menu, playlist_editor_add_new);
     }
 
     /**
@@ -821,6 +830,32 @@ public class Gmpc.DataView : Gtk.TreeView
             }
         }
         return true; 
+    }
+
+    private bool selected_songs_add_to_playlist(string playlist)
+    {
+        int songs_added = 0;
+        var selection = this.get_selection();
+        // If nothing selected. 
+        if(selection.count_selected_rows() == 0)
+        {
+            return false;
+        }
+        Gtk.TreeModel model;
+        foreach (var path in selection.get_selected_rows(out model))
+        {
+            Gtk.TreeIter iter;
+            if(model.get_iter(out iter, path))
+            {
+                string? song_path = null;
+                model.get(iter, Gmpc.MpdData.ColumnTypes.PATH, out song_path);
+                if(song_path != null) {
+                    MPD.Database.playlist_list_add(server, playlist, song_path); 
+                    songs_added++;
+                }
+            }
+        }
+        return (songs_added > 0);
     }
 
     /**

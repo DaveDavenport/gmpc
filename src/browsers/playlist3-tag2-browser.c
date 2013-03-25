@@ -916,7 +916,7 @@ static void tag_browser_clear_search_entry(GtkEntry * entry, GtkEntryIconPositio
     {
         if (strlen(gtk_entry_get_text(GTK_ENTRY(entry))) == 0)
         {
-            gtk_widget_hide(entry);
+            gtk_widget_hide(GTK_WIDGET(entry));
         }
         else
         {
@@ -947,7 +947,7 @@ static void tag2_songlist_add_tag(tag_browser * browser, const gchar * name, int
     gtk_entry_set_icon_activatable(GTK_ENTRY(te->sentry), GTK_ENTRY_ICON_PRIMARY, FALSE);
     g_signal_connect_swapped(G_OBJECT(te->sentry), "activate", G_CALLBACK(tag2_sentry_changed_real), te);
     te->sw = gtk_scrolled_window_new(NULL, NULL);
-    te->vbox = gtk_vbox_new(FALSE, 6);
+    te->vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 6);
     te->tree = gtk_tree_view_new_with_model(GTK_TREE_MODEL(te->model));
     te->tool = gmpc_mpd_data_treeview_tooltip_new(GTK_TREE_VIEW(te->tree), 0);
     te->browser = browser;
@@ -986,7 +986,7 @@ static void tag2_songlist_add_tag(tag_browser * browser, const gchar * name, int
 
 
     /* Set search icon next to the label */
-    hbox = gtk_hbox_new(FALSE, 6);
+    hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 6);
     gtk_box_pack_start(GTK_BOX(hbox),
             gtk_image_new_from_stock(GTK_STOCK_FIND, GTK_ICON_SIZE_MENU),
             FALSE, FALSE, 0);
@@ -1063,177 +1063,6 @@ static void tag2_create_tags(tag_browser * browser)
     gtk_widget_show_all(browser->tag2_vbox);
 }
 
-/**
- * Add all selected songs
- */
-
-static void tag2_songlist_add_selected_songs(GtkWidget * bug, tag_browser * browser)
-{
-    GtkTreeSelection *sel = gtk_tree_view_get_selection(browser->tag_songlist);
-    GtkTreeModel *model = gtk_tree_view_get_model(browser->tag_songlist);
-    /* get a list of selected paths */
-    GList *list = gtk_tree_selection_get_selected_rows(sel, &model);
-    if (list)
-    {
-        GtkTreeIter piter;
-        GList *iter = g_list_first(list);
-        /* iterate over all the selected rows */
-        for (; iter; iter = g_list_next(iter))
-        {
-            /* get iter from path */
-            if (gtk_tree_model_get_iter(model, &piter, iter->data))
-            {
-                gchar *path;
-                gtk_tree_model_get(model, &piter, MPDDATA_MODEL_COL_PATH, &path, -1);
-                mpd_playlist_queue_add(connection, path);
-                g_free(path);
-            }
-        }
-        mpd_playlist_queue_commit(connection);
-        /* cleanup */
-        g_list_foreach(list, (GFunc) gtk_tree_path_free, NULL);
-        g_list_free(list);
-
-    }
-}
-
-/**
- * Replace with selected songs
- */
-static void tag2_songlist_replace_selected_songs(GtkWidget * bug, tag_browser * browser)
-{
-    GtkTreeSelection *sel = gtk_tree_view_get_selection(browser->tag_songlist);
-    /* if no song is selected don't do anything */
-    if (gtk_tree_selection_count_selected_rows(sel) > 0)
-    {
-        /* clear the current playlist */
-        mpd_playlist_clear(connection);
-        /* Add selected songs */
-        tag2_songlist_add_selected_songs(bug, browser);
-        /* start playing, as is standard in gmpc */
-        mpd_player_play(connection);
-    }
-}
-
-/**
- * Callback function for right-mouse menu on a song.
- */
-static void pl3_tag_browser_add_to_playlist(GtkWidget * menu, gpointer cb_data)
-{
-    GtkWidget *tree = GTK_TREE_VIEW(cb_data);
-    GtkTreeModel *model = gtk_tree_view_get_model(tree);
-    GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(tree));
-    gchar *data = g_object_get_data(G_OBJECT(menu), "playlist");
-    GList *iter, *list = gtk_tree_selection_get_selected_rows(selection, &model);
-    if (list)
-    {
-        iter = g_list_first(list);
-        do
-        {
-            GtkTreeIter giter;
-            if (gtk_tree_model_get_iter(model, &giter, (GtkTreePath *) iter->data))
-            {
-                gchar *file = NULL;
-                int type = 0;
-                gtk_tree_model_get(model, &giter, MPDDATA_MODEL_COL_PATH, &file, MPDDATA_MODEL_ROW_TYPE, &type, -1);
-                if (type == MPD_DATA_TYPE_SONG)
-                {
-                    mpd_database_playlist_list_add(connection, data, file);
-                }
-                g_free(file);
-            }
-        } while ((iter = g_list_next(iter)));
-
-        g_list_foreach(list, (GFunc) gtk_tree_path_free, NULL);
-        g_list_free(list);
-    }
-}
-/**
- * Handles right mouse release on song list
- */
-static gboolean tag2_song_list_button_release_event(GtkTreeView * tree, GdkEventButton * event, tag_browser * browser)
-{
-    /* only on right mouse click */
-    if (event->button == 3)
-    {
-        GtkWidget *menu, *item;
-        GtkTreeSelection *selection = gtk_tree_view_get_selection(tree);
-        int count = gtk_tree_selection_count_selected_rows(selection);
-
-        /* create menu to popup */
-        menu = gtk_menu_new();
-        /* only show when soething is selected */
-        if (count > 0)
-        {
-            /* add the add widget */
-            item = gtk_image_menu_item_new_from_stock(GTK_STOCK_ADD, NULL);
-            gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-            g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(tag2_songlist_add_selected_songs), browser);
-            /* add the replace widget */
-            item = gtk_image_menu_item_new_with_label(_("Replace"));
-            gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
-                                          gtk_image_new_from_stock(GTK_STOCK_REDO, GTK_ICON_SIZE_MENU));
-            gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-            g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(tag2_songlist_replace_selected_songs), browser);
-            /* */
-            if (count == 1)
-            {
-                mpd_Song *song;
-                GtkTreeIter iter;
-                GtkTreePath *path;
-                GtkTreeModel *model = gtk_tree_view_get_model(tree);
-                GList *list =
-                    gtk_tree_selection_get_selected_rows(gtk_tree_view_get_selection(GTK_TREE_VIEW(tree)), &model);
-                path = list->data;
-                /* free result */
-                g_list_free(list);
-                if (path && gtk_tree_model_get_iter(model, &iter, path))
-                {
-                    gtk_tree_model_get(model, &iter, MPDDATA_MODEL_COL_MPDSONG, &song, -1);
-                    if (song)
-                    {
-                        submenu_for_song(menu, song);
-                    }
-                    if (path)
-                        gtk_tree_path_free(path);
-                }
-
-            }
-        }
-
-        playlist_editor_right_mouse(menu, pl3_tag_browser_add_to_playlist, tree);
-        gmpc_mpddata_treeview_right_mouse_intergration(GMPC_MPDDATA_TREEVIEW(tree), GTK_MENU(menu));
-        /* popup */
-        gtk_widget_show_all(GTK_WIDGET(menu));
-        gtk_menu_popup(GTK_MENU(menu), NULL, NULL, NULL, NULL, 0, event->time);
-        return TRUE;
-
-    }
-    return FALSE;
-}
-
-/**
- * Handles a double click/activate on a row of the song list
- */
-static void tag2_row_activate(GtkTreeView * tree, GtkTreePath * path, GtkTreeViewColumn * column, tag_browser * browser)
-{
-    GtkTreeIter iter;
-    if (gtk_tree_model_get_iter(gtk_tree_view_get_model(tree), &iter, path))
-    {
-        gchar *song_path;
-        gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter, MPDDATA_MODEL_COL_PATH, &song_path, -1);
-        if (song_path)
-        {
-            /* gcc complains that this function is declared implicit.
-             * This is correct, but it exists in the gmpc program space
-             */
-            play_path(song_path);
-            /* free */
-            g_free(song_path);
-        }
-    }
-}
-
 static void tag2_init(void)
 {
     int i;
@@ -1288,17 +1117,13 @@ static void tag2_init_browser(tag_browser * browser)
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
     /* create the actual treeview, use the GmpcTreeview type, so all the handling is done automatic */
 
-    browser->tag_songlist = (GtkTreeView *) gmpc_mpddata_treeview_new(key, TRUE, GTK_TREE_MODEL(model));
-    gmpc_mpddata_treeview_enable_click_fix(GMPC_MPDDATA_TREEVIEW(browser->tag_songlist));
+    browser->tag_songlist = (GtkTreeView *) gmpc_data_view_new(key, FALSE);
+    gtk_tree_view_set_model(GTK_TREE_VIEW(browser->tag_songlist), model);
     g_free(key);
     /* add the treeview to the scrolled window */
     gtk_container_add(GTK_CONTAINER(sw), GTK_WIDGET(browser->tag_songlist));
     /* add the scrolled window to the 2nd pane */
     gtk_paned_add2(GTK_PANED(browser->tag2_vbox), sw);
-    /* connect some of the signals */
-    g_signal_connect(G_OBJECT(browser->tag_songlist), "row-activated", G_CALLBACK(tag2_row_activate), browser);
-    g_signal_connect(G_OBJECT(browser->tag_songlist), "button-release-event",
-                     G_CALLBACK(tag2_song_list_button_release_event), browser);
     /* Create an extra reference to the paned window containing everything, this way
      * I can add/remove it from gmpc's container withouth it being destroyed by gtk
      */
@@ -1764,10 +1589,10 @@ void tag2_pref_construct(GtkWidget * container)
     /**
      * Create the parent widget where the preferences window is packed in
      */
-    pref_vbox = gtk_vbox_new(FALSE, 6);
+    pref_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 6);
 
     /* select browser to edit */
-    hbox = gtk_hbox_new(FALSE, 6);
+    hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 6);
     model = (GtkTreeModel *) gtk_list_store_new(3, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_POINTER);
     pref_combo = combo = gtk_combo_box_new_with_model(model);
     renderer = gtk_cell_renderer_text_new();
@@ -1784,7 +1609,7 @@ void tag2_pref_construct(GtkWidget * container)
     gtk_box_pack_start(GTK_BOX(hbox), but, FALSE, TRUE, 0);
     gtk_box_pack_start(GTK_BOX(pref_vbox), hbox, FALSE, TRUE, 0);
 
-    hbox = gtk_hbox_new(FALSE, 6);
+    hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 6);
     label = gtk_label_new("Name:");
     gtk_misc_set_alignment(GTK_MISC(label), 1, 0.5);
     gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, TRUE, 0);
@@ -1820,7 +1645,7 @@ void tag2_pref_construct(GtkWidget * container)
 
     /* scrolled window used to pack the treeview */
 
-    hbox = gtk_hbox_new(FALSE, 6);
+    hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 6);
     sw = gtk_scrolled_window_new(NULL, NULL);
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
     gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(sw), GTK_SHADOW_ETCHED_IN);
@@ -1841,7 +1666,7 @@ void tag2_pref_construct(GtkWidget * container)
     gtk_container_add(GTK_CONTAINER(sw), tree);
 
     /* vbox */
-    vbox = gtk_vbox_new(FALSE, 6);
+    vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 6);
 
     but = gtk_button_new_from_stock(GTK_STOCK_ADD);
     gtk_box_pack_start(GTK_BOX(vbox), but, FALSE, TRUE, 0);

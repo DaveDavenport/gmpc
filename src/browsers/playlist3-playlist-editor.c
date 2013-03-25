@@ -1133,7 +1133,7 @@ static void playlist_editor_add_to_new(GtkWidget * item, gpointer data)
 
 }
 
-void playlist_editor_right_mouse(GtkWidget * menu, void (*add_to_playlist) (GtkWidget * menu, gpointer data),
+void playlist_editor_right_mouse(GtkWidget * menu, void (*add_to_playlist) (GtkWidget *menu, gpointer data),
                                  gpointer cb_data)
 {
     GtkWidget *sitem;
