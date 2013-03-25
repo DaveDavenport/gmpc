@@ -120,46 +120,6 @@ public class Gmpc.MetaData.Widgets.SimilarSongs : Gtk.Alignment
 
         this.play_clicked(item);
     }
-    private void tree_row_activated(Gtk.Widget tree, Gtk.TreePath path , Gtk.TreeViewColumn column)
-    {
-        var model = (tree as Gtk.TreeView).get_model();
-        Gtk.TreeIter iter;
-        if(model.get_iter(out iter, path))
-        {
-            unowned MPD.Song? song = null;
-            model.get(iter, 0, out song, -1);
-            if(song != null)
-            {
-                Gmpc.MpdInteraction.play_path(song.file);
-            }
-        }
-    }
-    private bool tree_right_menu(Gtk.Widget tree, Gdk.EventButton event)
-    {
-        if(event.button == 3)
-        {
-            var menu = new Gtk.Menu();
-            var item = new Gtk.ImageMenuItem.from_stock("gtk-media-play",null);
-            item.activate.connect(play_clicked);
-            menu.append(item);
-
-            item = new Gtk.ImageMenuItem.from_stock("gtk-add",null);
-            item.activate.connect(add_clicked);
-            menu.append(item);
-
-            item = new Gtk.ImageMenuItem.with_mnemonic(_("_Replace"));
-            item.set_image(new Gtk.Image.from_stock("gtk-redo", Gtk.IconSize.MENU));
-            item.activate.connect(replace_clicked);
-            menu.append(item);
-
-            (tree as Gmpc.MpdData.TreeView).right_mouse_integration(menu);
-            menu.popup(null, null, null, event.button, event.time);
-            menu.show_all();
-            return true;
-        }
-        return false;
-    }
-
     private Gmpc.MetaData.Item copy = null;
     MPD.Data.Item item = null;
     private unowned List <unowned string> current = null;
@@ -205,10 +165,8 @@ public class Gmpc.MetaData.Widgets.SimilarSongs : Gtk.Alignment
             var model = new Gmpc.MpdData.Model();
             item.remove_duplicate_songs();
             model.set_mpd_data((owned)item);
-            Gmpc.MpdData.TreeView tree = new Gmpc.MpdData.TreeView("similar-song", true, model);
-            tree.enable_click_fix();
-            tree.button_release_event.connect(tree_right_menu);
-            tree.row_activated.connect(tree_row_activated);
+            Gmpc.DataView tree = new Gmpc.DataView("similar-song", false);
+            tree.set_model(model);
             this.add(tree);
 
             this.pchild = tree;
