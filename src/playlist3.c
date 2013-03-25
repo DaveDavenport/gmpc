@@ -511,7 +511,7 @@ int pl3_window_key_press_event(GtkWidget * mw, GdkEventKey * event)
                             kev+=10;
                         }else{
                             gtk_tree_selection_select_iter(select, &iter);
-                            return FALSE;
+                            return TRUE;
                         }
                     }
                 }while(gtk_tree_model_iter_next(pl3_tree, &iter));
