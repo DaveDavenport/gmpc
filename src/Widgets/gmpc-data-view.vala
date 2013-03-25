@@ -360,7 +360,8 @@ public class Gmpc.DataView : Gtk.TreeView
                 col.set_attributes(renderer, "text", gmpc_data_view_col_ids[i]); 
                 col.set_resizable(true);
                 
-                int width = config.get_int_with_default(uid+"-colsize",gmpc_data_view_col_names[i], default_column_width);
+                int width = config.get_int_with_default(uid+"-colsize",
+                        gmpc_data_view_col_names[i], default_column_width);
                 // Do not set to size 0, then revert back to 200.
                 col.set_fixed_width(width>0?width:default_column_width);
             }
@@ -368,14 +369,16 @@ public class Gmpc.DataView : Gtk.TreeView
             col.set_reorderable(true);
 
             // Fixed width.
-            int pos = config.get_int_with_default(uid+"-colpos", gmpc_data_view_col_names[i], gmpc_data_view_col_position[i]);
+            int pos = config.get_int_with_default(uid+"-colpos",
+                    gmpc_data_view_col_names[i], gmpc_data_view_col_position[i]);
             this.tree_columns[pos] = col;
         }
         // Add the columns (in right order)
         for(int i = 0; i < NUM_COLS; i++) {
             int index = this.tree_columns[i].get_data("index");
             this.insert_column(this.tree_columns[i], i); 
-            this.tree_columns[i].set_visible(config.get_bool_with_default(uid+"-colshow", gmpc_data_view_col_names[index], gmpc_data_view_col_enabled[index]));
+            this.tree_columns[i].set_visible(config.get_bool_with_default(uid+"-colshow",
+                        gmpc_data_view_col_names[index], gmpc_data_view_col_enabled[index]));
         }
     }
 
@@ -461,7 +464,7 @@ public class Gmpc.DataView : Gtk.TreeView
             // remove priority.
             return selected_songs_remove_priority();
         }
-        else if (event.keyval == Gdk.Key_c)
+        else if (event.keyval == Gdk.Key_x)
         {
             // Cut (if available) into clipboard
             selected_songs_paste_queue_cut();
