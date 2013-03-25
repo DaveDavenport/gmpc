@@ -111,6 +111,7 @@ void easy_command_help_window(void);
 void pl3_style_set_event(GtkWidget *widget, GtkStyle *previous_style, gpointer user_data);
 
 void pl3_sidebar_plugins_init(void);
+static gboolean pl3_cat_select_function(GtkTreeSelection *select, GtkTreeModel *model, GtkTreePath *path, gboolean cur_select, gpointer data);
 
 /* Old category browser style */
 static int old_type = -1;
@@ -442,6 +443,48 @@ int pl3_window_key_press_event(GtkWidget * mw, GdkEventKey * event)
     {
         show_command_line();
         return TRUE;
+    }
+    else if(event->keyval == GDK_KEY_Tab && (event->state&GDK_CONTROL_MASK) > 0)
+    {
+        GtkWidget *cat_tree = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "cat_tree"));
+        GtkTreeSelection *select = gtk_tree_view_get_selection(GTK_TREE_VIEW(cat_tree));
+        GtkTreeIter iter;
+        GtkTreeModel *model;
+        if(gtk_tree_selection_get_selected(select, &model, &iter))
+        {
+            while(gtk_tree_model_iter_next(model, &iter)) {
+                GtkTreePath *path = gtk_tree_model_get_path(model, &iter);
+                if(pl3_cat_select_function(select, model, path, FALSE,NULL)) {
+                    gtk_tree_selection_select_iter(select, &iter);
+                    gtk_tree_path_free(path);
+                    return TRUE;
+                }
+                gtk_tree_path_free(path);
+            }
+            return FALSE;
+        }
+
+    }
+    else if(event->keyval == GDK_KEY_ISO_Left_Tab && (event->state&GDK_CONTROL_MASK) > 0)
+    {
+        GtkWidget *cat_tree = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "cat_tree"));
+        GtkTreeSelection *select = gtk_tree_view_get_selection(GTK_TREE_VIEW(cat_tree));
+        GtkTreeIter iter;
+        GtkTreeModel *model;
+        if(gtk_tree_selection_get_selected(select, &model, &iter))
+        {
+            while(gtk_tree_model_iter_previous(model, &iter)) {
+                GtkTreePath *path = gtk_tree_model_get_path(model, &iter);
+                if(pl3_cat_select_function(select, model, path, FALSE,NULL)) {
+                    gtk_tree_selection_select_iter(select, &iter);
+                    gtk_tree_path_free(path);
+                    return TRUE;
+                }
+                gtk_tree_path_free(path);
+            }
+            return FALSE;
+        }
+
     }
     if((event->state&GDK_MOD1_MASK) > 0)
     {
