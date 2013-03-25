@@ -421,6 +421,54 @@ int pl3_window_key_release_event(GtkWidget * mw, GdkEventKey * event)
 {
     return FALSE;
 }
+static int  pl3_window_browser_cycle_backwards()
+{
+    GtkWidget *cat_tree = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "cat_tree"));
+    GtkTreeSelection *select = gtk_tree_view_get_selection(GTK_TREE_VIEW(cat_tree));
+    GtkTreeIter iter;
+    GtkTreeModel *model;
+    if(gtk_tree_selection_get_selected(select, &model, &iter))
+    {
+        while(gtk_tree_model_iter_previous(model, &iter)) {
+            GtkTreePath *path = gtk_tree_model_get_path(model, &iter);
+            if(pl3_cat_select_function(select, model, path, FALSE,NULL)) {
+                gtk_tree_selection_select_iter(select, &iter);
+                gtk_tree_path_free(path);
+                return TRUE;
+            }
+            gtk_tree_path_free(path);
+        }
+        // Get last one
+        gtk_tree_model_iter_nth_child(model, &iter, NULL, 
+                gtk_tree_model_iter_n_children(model, NULL)-1);
+        gtk_tree_selection_select_iter(select, &iter);
+        return FALSE;
+    }
+}
+static int  pl3_window_browser_cycle_forward()
+{
+    GtkWidget *cat_tree = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "cat_tree"));
+    GtkTreeSelection *select = gtk_tree_view_get_selection(GTK_TREE_VIEW(cat_tree));
+    GtkTreeIter iter;
+    GtkTreeModel *model;
+    if(gtk_tree_selection_get_selected(select, &model, &iter))
+    {
+        while(gtk_tree_model_iter_next(model, &iter)) {
+            GtkTreePath *path = gtk_tree_model_get_path(model, &iter);
+            if(pl3_cat_select_function(select, model, path, FALSE,NULL)) {
+                gtk_tree_selection_select_iter(select, &iter);
+                gtk_tree_path_free(path);
+                return TRUE;
+            }
+            gtk_tree_path_free(path);
+        }
+        // Cycle to front.
+        gtk_tree_model_get_iter_first(model, &iter);
+        gtk_tree_selection_select_iter(select, &iter);
+        return FALSE;
+    }
+    return FALSE;
+}
 int pl3_window_key_press_event(GtkWidget * mw, GdkEventKey * event)
 {
     int i = 0;
@@ -446,45 +494,11 @@ int pl3_window_key_press_event(GtkWidget * mw, GdkEventKey * event)
     }
     else if(event->keyval == GDK_KEY_Tab && (event->state&GDK_CONTROL_MASK) > 0)
     {
-        GtkWidget *cat_tree = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "cat_tree"));
-        GtkTreeSelection *select = gtk_tree_view_get_selection(GTK_TREE_VIEW(cat_tree));
-        GtkTreeIter iter;
-        GtkTreeModel *model;
-        if(gtk_tree_selection_get_selected(select, &model, &iter))
-        {
-            while(gtk_tree_model_iter_next(model, &iter)) {
-                GtkTreePath *path = gtk_tree_model_get_path(model, &iter);
-                if(pl3_cat_select_function(select, model, path, FALSE,NULL)) {
-                    gtk_tree_selection_select_iter(select, &iter);
-                    gtk_tree_path_free(path);
-                    return TRUE;
-                }
-                gtk_tree_path_free(path);
-            }
-            return FALSE;
-        }
-
+        return pl3_window_browser_cycle_forward();
     }
     else if(event->keyval == GDK_KEY_ISO_Left_Tab && (event->state&GDK_CONTROL_MASK) > 0)
     {
-        GtkWidget *cat_tree = GTK_WIDGET(gtk_builder_get_object(pl3_xml, "cat_tree"));
-        GtkTreeSelection *select = gtk_tree_view_get_selection(GTK_TREE_VIEW(cat_tree));
-        GtkTreeIter iter;
-        GtkTreeModel *model;
-        if(gtk_tree_selection_get_selected(select, &model, &iter))
-        {
-            while(gtk_tree_model_iter_previous(model, &iter)) {
-                GtkTreePath *path = gtk_tree_model_get_path(model, &iter);
-                if(pl3_cat_select_function(select, model, path, FALSE,NULL)) {
-                    gtk_tree_selection_select_iter(select, &iter);
-                    gtk_tree_path_free(path);
-                    return TRUE;
-                }
-                gtk_tree_path_free(path);
-            }
-            return FALSE;
-        }
-
+        return pl3_window_browser_cycle_backwards();
     }
     if((event->state&GDK_MOD1_MASK) > 0)
     {
