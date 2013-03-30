@@ -435,31 +435,32 @@ namespace Gmpc {
             public bool is_current_song(Gtk.TreeIter iter);
 		}
 
-        [CCode (cname="", cprefix = "MPDDATA_MODEL_COL_", cheader_filename = "gmpc-mpddata-model.h")]
+        [CCode (cname="", cprefix = "MPDDATA_MODEL_", cheader_filename = "gmpc-mpddata-model.h")]
             public enum ColumnTypes {
-                    MPDSONG,
-                    PATH,
-                    MARKUP,
-                    SONG_ARTIST,
-                    SONG_ALBUM,			      /* album name */
-                    SONG_TITLE,			      /* song title */
-                    SONG_TITLEFILE,		    /* song title */
-                    SONG_GENRE,			      /* song genre */
-                    SONG_TRACK,			      /* song track */
-                    SONG_NAME,			      /* stream name */
-                    SONG_COMPOSER,		    /* composer name */
-                    SONG_PERFORMER,		    /* performer */
-                    SONG_DATE,			      /* date */
-                    SONG_LENGTH_FORMAT,	  /* length formatted */
-                    SONG_DISC,			      /* disc */
-                    SONG_COMMENT,			    /* comment */
-                    ICON_ID,				      /* icon id */
-                    SONG_ID,
-                    SONG_POS,
-                    SONG_ALBUMARTIST,
-                    PATH_EXTENSION,				/* Extension */
-                    PATH_DIRECTORY,				/* Directory */
-                    SONG_PRIORITY,
+                    COL_MPDSONG,
+                    COL_PATH,
+                    COL_MARKUP,
+                    COL_SONG_ARTIST,
+                    COL_SONG_ALBUM,			      /* album name */
+                    COL_SONG_TITLE,			      /* song title */
+                    COL_SONG_TITLEFILE,		    /* song title */
+                    COL_SONG_GENRE,			      /* song genre */
+                    COL_SONG_TRACK,			      /* song track */
+                    COL_SONG_NAME,			      /* stream name */
+                    COL_SONG_COMPOSER,		    /* composer name */
+                    COL_SONG_PERFORMER,		    /* performer */
+                    COL_SONG_DATE,			      /* date */
+                    COL_SONG_LENGTH_FORMAT,	  /* length formatted */
+                    COL_SONG_DISC,			      /* disc */
+                    COL_SONG_COMMENT,			    /* comment */
+                    COL_ICON_ID,				      /* icon id */
+                    COL_SONG_ID,
+                    COL_SONG_POS,
+                    COL_SONG_ALBUMARTIST,
+                    COL_PATH_EXTENSION,				/* Extension */
+                    COL_PATH_DIRECTORY,				/* Directory */
+                    COL_SONG_PRIORITY,
+                    ROW_TYPE,
             }
 
     }

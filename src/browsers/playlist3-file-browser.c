@@ -209,14 +209,20 @@ static void pl3_file_browser_init(void)
     gtk_paned_add1(GTK_PANED(pl3_fb_vbox), sw);
 
     /* set up the tree */
-    pl3_fb_tree = gmpc_mpddata_treeview_new("file-browser", TRUE, GTK_TREE_MODEL(pl3_fb_store2));
-    gmpc_mpddata_treeview_enable_click_fix(GMPC_MPDDATA_TREEVIEW(pl3_fb_tree));
-    gtk_tree_view_set_search_column(GTK_TREE_VIEW(pl3_fb_tree), MPDDATA_MODEL_COL_SONG_TITLE);
+    pl3_fb_tree = gmpc_data_view_new("file-browser", FALSE);
+    gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_fb_tree), GTK_TREE_MODEL(pl3_fb_store2));
+    //gmpc_mpddata_treeview_new("file-browser", TRUE, GTK_TREE_MODEL(pl3_fb_store2));
+    //gmpc_mpddata_treeview_enable_click_fix(GMPC_MPDDATA_TREEVIEW(pl3_fb_tree));
+    //gtk_tree_view_set_search_column(GTK_TREE_VIEW(pl3_fb_tree), MPDDATA_MODEL_COL_SONG_TITLE);
     /* setup signals */
-    g_signal_connect(G_OBJECT(pl3_fb_tree), "row-activated", G_CALLBACK(pl3_file_browser_row_activated), NULL);
-    g_signal_connect(G_OBJECT(pl3_fb_tree), "button-release-event", G_CALLBACK(pl3_file_browser_button_release_event),
-                     NULL);
-    g_signal_connect(G_OBJECT(pl3_fb_tree), "key-press-event", G_CALLBACK(pl3_file_browser_playlist_key_press), NULL);
+    // This is to handle everything the tree-view does not handle by default.
+    // E.g. directories.
+    g_signal_connect(G_OBJECT(pl3_fb_tree),
+            "row-activated", 
+            G_CALLBACK(pl3_file_browser_row_activated), NULL);
+    //  g_signal_connect(G_OBJECT(pl3_fb_tree), "button-release-event", G_CALLBACK(pl3_file_browser_button_release_event),
+                     //NULL);
+    //g_signal_connect(G_OBJECT(pl3_fb_tree), "key-press-event", G_CALLBACK(pl3_file_browser_playlist_key_press), NULL);
 
     /* set up the scrolled window */
     pl3_fb_sw = gtk_scrolled_window_new(NULL, NULL);
@@ -790,17 +796,14 @@ static void pl3_file_browser_row_activated(GtkTreeView * tree, GtkTreePath * tp)
     gint r_type;
 
     gtk_tree_model_get_iter(gtk_tree_view_get_model(tree), &iter, tp);
-    gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter, MPDDATA_MODEL_COL_PATH, &song_path, MPDDATA_MODEL_ROW_TYPE,
-                       &r_type, -1);
+    gtk_tree_model_get(gtk_tree_view_get_model(tree), &iter,
+            MPDDATA_MODEL_COL_PATH, &song_path, 
+            MPDDATA_MODEL_ROW_TYPE, &r_type, -1);
     if (song_path == NULL && r_type != -1)
     {
         return;
     }
-    if (r_type == MPD_DATA_TYPE_PLAYLIST)
-    {
-        mpd_playlist_queue_load(connection, song_path);
-        mpd_playlist_queue_commit(connection);
-    } else if (r_type == MPD_DATA_TYPE_DIRECTORY)
+    if (r_type == MPD_DATA_TYPE_DIRECTORY)
     {
         GtkTreeSelection *selec = gtk_tree_view_get_selection(GTK_TREE_VIEW(pl3_fb_dir_tree));
         GtkTreeModel *model = GTK_TREE_MODEL(pl3_fb_dir_store);
@@ -848,11 +851,7 @@ static void pl3_file_browser_row_activated(GtkTreeView * tree, GtkTreePath * tp)
                 gtk_tree_path_free(path);
             }
         }
-    } else
-    {
-        play_path(song_path);
     }
-
     q_free(song_path);
 }
 

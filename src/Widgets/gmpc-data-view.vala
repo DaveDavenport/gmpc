@@ -16,26 +16,26 @@ const int default_column_width = 200;
  */
 const int NUM_COLS = 20;
 const int[] gmpc_data_view_col_ids = {
-    Gmpc.MpdData.ColumnTypes.MARKUP,
-    Gmpc.MpdData.ColumnTypes.SONG_ARTIST,			      /* album name */
-    Gmpc.MpdData.ColumnTypes.SONG_ALBUM,			      /* album name */
-    Gmpc.MpdData.ColumnTypes.SONG_TITLE,			      /* song title */
-    Gmpc.MpdData.ColumnTypes.SONG_TITLEFILE,		    /* song title */
-    Gmpc.MpdData.ColumnTypes.SONG_GENRE,			      /* song genre */
-    Gmpc.MpdData.ColumnTypes.SONG_TRACK,			      /* song track */
-    Gmpc.MpdData.ColumnTypes.SONG_NAME,			      /* stream name */
-    Gmpc.MpdData.ColumnTypes.SONG_COMPOSER,		    /* composer name */
-    Gmpc.MpdData.ColumnTypes.SONG_PERFORMER,		    /* performer */
-    Gmpc.MpdData.ColumnTypes.SONG_DATE,			      /* date */
-    Gmpc.MpdData.ColumnTypes.SONG_LENGTH_FORMAT,	  /* length formatted */
-    Gmpc.MpdData.ColumnTypes.SONG_DISC,			      /* disc */
-    Gmpc.MpdData.ColumnTypes.SONG_COMMENT,			    /* comment */
-    Gmpc.MpdData.ColumnTypes.ICON_ID,				      /* icon id */
-    Gmpc.MpdData.ColumnTypes.SONG_POS,
-    Gmpc.MpdData.ColumnTypes.SONG_ALBUMARTIST,
-    Gmpc.MpdData.ColumnTypes.PATH_EXTENSION,				/* Extension */
-    Gmpc.MpdData.ColumnTypes.PATH_DIRECTORY,				/* Directory */
-    Gmpc.MpdData.ColumnTypes.SONG_PRIORITY
+    Gmpc.MpdData.ColumnTypes.COL_MARKUP,
+    Gmpc.MpdData.ColumnTypes.COL_SONG_ARTIST,			      /* album name */
+    Gmpc.MpdData.ColumnTypes.COL_SONG_ALBUM,			      /* album name */
+    Gmpc.MpdData.ColumnTypes.COL_SONG_TITLE,			      /* song title */
+    Gmpc.MpdData.ColumnTypes.COL_SONG_TITLEFILE,		    /* song title */
+    Gmpc.MpdData.ColumnTypes.COL_SONG_GENRE,			      /* song genre */
+    Gmpc.MpdData.ColumnTypes.COL_SONG_TRACK,			      /* song track */
+    Gmpc.MpdData.ColumnTypes.COL_SONG_NAME,			      /* stream name */
+    Gmpc.MpdData.ColumnTypes.COL_SONG_COMPOSER,		    /* composer name */
+    Gmpc.MpdData.ColumnTypes.COL_SONG_PERFORMER,		    /* performer */
+    Gmpc.MpdData.ColumnTypes.COL_SONG_DATE,			      /* date */
+    Gmpc.MpdData.ColumnTypes.COL_SONG_LENGTH_FORMAT,	  /* length formatted */
+    Gmpc.MpdData.ColumnTypes.COL_SONG_DISC,			      /* disc */
+    Gmpc.MpdData.ColumnTypes.COL_SONG_COMMENT,			    /* comment */
+    Gmpc.MpdData.ColumnTypes.COL_ICON_ID,				      /* icon id */
+    Gmpc.MpdData.ColumnTypes.COL_SONG_POS,
+    Gmpc.MpdData.ColumnTypes.COL_SONG_ALBUMARTIST,
+    Gmpc.MpdData.ColumnTypes.COL_PATH_EXTENSION,				/* Extension */
+    Gmpc.MpdData.ColumnTypes.COL_PATH_DIRECTORY,				/* Directory */
+    Gmpc.MpdData.ColumnTypes.COL_SONG_PRIORITY
 };
 const string[] gmpc_data_view_col_names = {
     N_("Markup"),
@@ -145,6 +145,7 @@ public class Gmpc.DataView : Gtk.TreeView
 
         this.get_selection().set_mode(Gtk.SelectionMode.MULTIPLE);
         this.set_fixed_height_mode(true);
+
         // Create the view.
         column_populate();
     }
@@ -250,7 +251,7 @@ public class Gmpc.DataView : Gtk.TreeView
             if(model.get_iter(out iter, path))
             { 
                 unowned MPD.Song? song;
-                model.get(iter, MpdData.ColumnTypes.MPDSONG, out song);
+                model.get(iter, MpdData.ColumnTypes.COL_MPDSONG, out song);
                 if(song != null){
                     MpdInteraction.submenu_for_song(menu, song);
                 }
@@ -311,7 +312,7 @@ public class Gmpc.DataView : Gtk.TreeView
         {
             int index = col.get_data("index");
             // Do not show the icon id in the selection list.
-            if(gmpc_data_view_col_ids[index] == MpdData.ColumnTypes.ICON_ID) continue;
+            if(gmpc_data_view_col_ids[index] == MpdData.ColumnTypes.COL_ICON_ID) continue;
             var item = new Gtk.CheckMenuItem.with_label(FixGtk.gettext(gmpc_data_view_col_names[index]));
             if(col.visible) {
                 item.set_active(true);
@@ -335,7 +336,7 @@ public class Gmpc.DataView : Gtk.TreeView
         {
             Gtk.TreeViewColumn col = new Gtk.TreeViewColumn();
             col.set_data("index", i);
-            if(gmpc_data_view_col_ids[i] == Gmpc.MpdData.ColumnTypes.ICON_ID)
+            if(gmpc_data_view_col_ids[i] == Gmpc.MpdData.ColumnTypes.COL_ICON_ID)
             {
                 /**
                  * Picture.
@@ -344,7 +345,7 @@ public class Gmpc.DataView : Gtk.TreeView
                 renderer.xalign = 0.0f;
                 // Set up column
                 col.pack_start(renderer, true);
-                col.set_attributes(renderer, "icon-name", Gmpc.MpdData.ColumnTypes.ICON_ID);
+                col.set_attributes(renderer, "icon-name", Gmpc.MpdData.ColumnTypes.COL_ICON_ID);
                 col.set_resizable(false);
                 col.set_fixed_width(20);
                 col.clickable = true;
@@ -377,10 +378,17 @@ public class Gmpc.DataView : Gtk.TreeView
             col.set_sizing(Gtk.TreeViewColumnSizing.FIXED);
             col.set_reorderable(true);
 
+            // Sorting.
+            if(!is_play_queue) {
+                col.set_sort_indicator(true);
+                col.set_sort_column_id(gmpc_data_view_col_ids[i]); 
+            }
+
             // Fixed width.
             int pos = config.get_int_with_default(uid+"-colpos",
                     gmpc_data_view_col_names[i], gmpc_data_view_col_position[i]);
             this.tree_columns[pos] = col;
+
         }
         // Add the columns (in right order)
         for(int i = 0; i < NUM_COLS; i++) {
@@ -403,18 +411,26 @@ public class Gmpc.DataView : Gtk.TreeView
         Gtk.TreeModel? model = this.get_model();
         if(model != null)
         {
+            MPD.Data.Type row_type; 
             Gtk.TreeIter iter;
             if(!model.get_iter(out iter, path)) return;
+
+            model.get(iter, Gmpc.MpdData.ColumnTypes.ROW_TYPE, out row_type);
             if(is_play_queue) {
                 /* If we are play-queue, play the selected song. */
                 int song_id;
-                model.get(iter, Gmpc.MpdData.ColumnTypes.SONG_ID, out song_id);
+                model.get(iter, Gmpc.MpdData.ColumnTypes.COL_SONG_ID, out song_id);
                 MPD.Player.play_id(Gmpc.server, song_id); 
             } else {
-                /* If we are a song browser, add the path and play it. */
                 string song_path;
-                model.get(iter, Gmpc.MpdData.ColumnTypes.PATH, out song_path);
-                MpdInteraction.play_path(song_path);
+                model.get(iter, Gmpc.MpdData.ColumnTypes.COL_PATH, out song_path);
+                if(row_type == MPD.Data.Type.SONG) {                
+                    /* If we are a song browser, add the path and play it. */
+                    MpdInteraction.play_path(song_path);
+                } else if (row_type == MPD.Data.Type.PLAYLIST) {
+                    MPD.PlayQueue.queue_load_playlist(server, song_path);
+                    MPD.PlayQueue.queue_commit(server);
+                }
             }
         }
     }
@@ -437,7 +453,7 @@ public class Gmpc.DataView : Gtk.TreeView
 
         // A prioritized song we make italic.
         int prio = 0;
-        model.get(iter, Gmpc.MpdData.ColumnTypes.SONG_PRIORITY, out prio);
+        model.get(iter, Gmpc.MpdData.ColumnTypes.COL_SONG_PRIORITY, out prio);
         if(prio > 0) {
             (renderer as Gtk.CellRendererText).style = Pango.Style.ITALIC;
         }else {
@@ -614,12 +630,12 @@ public class Gmpc.DataView : Gtk.TreeView
             if(model.get_iter(out iter, path))
             {
                 int song_id;
-                model.get(iter,Gmpc.MpdData.ColumnTypes.SONG_ID, out song_id);
+                model.get(iter,Gmpc.MpdData.ColumnTypes.COL_SONG_ID, out song_id);
                 if(song_id >= 0) {
                     MPD.PlayQueue.set_priority(server, song_id, priority--);
                 } else {
                     string song_path;
-                    model.get(iter, Gmpc.MpdData.ColumnTypes.PATH, out song_path);
+                    model.get(iter, Gmpc.MpdData.ColumnTypes.COL_PATH, out song_path);
                     song_id = MPD.PlayQueue.add_song_get_id(server,song_path);
                     MPD.PlayQueue.set_priority(server, song_id, priority--);
                 }
@@ -640,7 +656,7 @@ public class Gmpc.DataView : Gtk.TreeView
             if(model.get_iter(out iter, path))
             {
                 int song_id;
-                model.get(iter,Gmpc.MpdData.ColumnTypes.SONG_ID, out song_id);
+                model.get(iter,Gmpc.MpdData.ColumnTypes.COL_SONG_ID, out song_id);
                 MPD.PlayQueue.set_priority(server, song_id, 0);
             }            
         }
@@ -659,7 +675,7 @@ public class Gmpc.DataView : Gtk.TreeView
             if(model.get_iter(out iter, path))
             {
                 string song_path;
-                model.get(iter,Gmpc.MpdData.ColumnTypes.PATH, out song_path);
+                model.get(iter,Gmpc.MpdData.ColumnTypes.COL_PATH, out song_path);
                 MPD.PlayQueue.queue_add_song(server, song_path);
                 added_rows++;
             }            
@@ -682,14 +698,14 @@ public class Gmpc.DataView : Gtk.TreeView
             {
                 if(is_play_queue) {
                 int song_id;
-                model.get(iter, Gmpc.MpdData.ColumnTypes.SONG_ID, out song_id);
+                model.get(iter, Gmpc.MpdData.ColumnTypes.COL_SONG_ID, out song_id);
                 if(song_id >= 0){
                     MPD.Player.play_id(server, song_id);
                     return true; 
                 }
                 }else{
                     string song_path;
-                    model.get(iter, Gmpc.MpdData.ColumnTypes.PATH, out song_path);
+                    model.get(iter, Gmpc.MpdData.ColumnTypes.COL_PATH, out song_path);
                     MpdInteraction.play_path(song_path);
                     return true;
                 }
@@ -710,7 +726,7 @@ public class Gmpc.DataView : Gtk.TreeView
             if(model.get_iter(out iter, path))
             {
                 int song_id;
-                model.get(iter,Gmpc.MpdData.ColumnTypes.SONG_ID, out song_id);
+                model.get(iter,Gmpc.MpdData.ColumnTypes.COL_SONG_ID, out song_id);
                 MPD.PlayQueue.queue_delete_id(server, song_id);
                 deleted_rows++;
             }            
@@ -733,7 +749,7 @@ public class Gmpc.DataView : Gtk.TreeView
             if(model.get_iter(out iter, path))
             {
                 unowned MPD.Song? song = null; 
-                model.get(iter, Gmpc.MpdData.ColumnTypes.MPDSONG, out song);
+                model.get(iter, Gmpc.MpdData.ColumnTypes.COL_MPDSONG, out song);
                 if(song != null) {
                     Browser.Metadata.show();
                     Browser.Metadata.show_song(song);
@@ -767,7 +783,7 @@ public class Gmpc.DataView : Gtk.TreeView
             if(model.get_iter(out iter, path))
             {
                 string insert_path;
-                model.get(iter,Gmpc.MpdData.ColumnTypes.PATH, out insert_path);
+                model.get(iter,Gmpc.MpdData.ColumnTypes.COL_PATH, out insert_path);
                 paste_queue.prepend(insert_path);
             }            
         }
@@ -790,7 +806,7 @@ public class Gmpc.DataView : Gtk.TreeView
         if(model.get_iter(out iter, path))
         {
             int songpos;
-            model.get(iter, Gmpc.MpdData.ColumnTypes.SONG_POS, out songpos);
+            model.get(iter, Gmpc.MpdData.ColumnTypes.COL_SONG_POS, out songpos);
             if(songpos> 0) {
                 songpos--;
                 paste_queue.reverse();
@@ -818,7 +834,7 @@ public class Gmpc.DataView : Gtk.TreeView
         if(model.get_iter(out iter, path))
         {
             int songpos;
-            model.get(iter, Gmpc.MpdData.ColumnTypes.SONG_POS, out songpos);
+            model.get(iter, Gmpc.MpdData.ColumnTypes.COL_SONG_POS, out songpos);
             if(songpos> 0) {
                 paste_queue.reverse();
                 foreach(var fpath in paste_queue)
@@ -848,7 +864,7 @@ public class Gmpc.DataView : Gtk.TreeView
             if(model.get_iter(out iter, path))
             {
                 string? song_path = null;
-                model.get(iter, Gmpc.MpdData.ColumnTypes.PATH, out song_path);
+                model.get(iter, Gmpc.MpdData.ColumnTypes.COL_PATH, out song_path);
                 if(song_path != null) {
                     MPD.Database.playlist_list_add(server, playlist, song_path); 
                     songs_added++;

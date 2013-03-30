@@ -214,6 +214,9 @@ namespace MPD {
         [CCode (cname="mpd_playlist_queue_delete_id")]
         public void queue_delete_id(MPD.Server server, int song_id);
 
+        [CCode (cname="mpd_playlist_queue_load")]
+        public void queue_load_playlist(MPD.Server server, string path);
+
         [CCode (cname="mpd_playlist_queue_add")]
         public void queue_add_song(MPD.Server server, string path);
         [CCode (cname="mpd_playlist_queue_commit")]
