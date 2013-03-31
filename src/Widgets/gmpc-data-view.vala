@@ -168,17 +168,27 @@ public class Gmpc.DataView : Gtk.TreeView
     {
         int selected_rows = this.get_selection().count_selected_rows();
         if(selected_rows == 1) {
-            var item = new Gtk.ImageMenuItem.from_stock(Gtk.Stock.MEDIA_PLAY,null);
-            item.activate.connect((source)=>{
-                    selected_songs_play();
-                    });
-            menu.append(item);
+            Gtk.TreeModel model;
+            var path = this.get_selection().get_selected_rows(out model).first().data; 
+            Gtk.TreeIter iter;
+            if(model.get_iter(out iter, path))
+            {
+                MPD.Data.Type row_type; 
+                model.get(iter, Gmpc.MpdData.ColumnTypes.ROW_TYPE, out row_type);
+                if(row_type == MPD.Data.Type.SONG) {
+                    var item = new Gtk.ImageMenuItem.from_stock(Gtk.Stock.MEDIA_PLAY,null);
+                    item.activate.connect((source)=>{
+                            selected_songs_play();
+                            });
+                    menu.append(item);
 
-            item = new Gtk.ImageMenuItem.from_stock(Gtk.Stock.INFO, null);
-            item.activate.connect((source)=>{
-                selected_songs_info();
-            });
-            menu.append(item);
+                    item = new Gtk.ImageMenuItem.from_stock(Gtk.Stock.INFO, null);
+                    item.activate.connect((source)=>{
+                            selected_songs_info();
+                            });
+                    menu.append(item);
+                }
+            }
         }
 
         if(is_play_queue)
@@ -194,6 +204,12 @@ public class Gmpc.DataView : Gtk.TreeView
         }else{
             var item = new Gtk.ImageMenuItem.from_stock(Gtk.Stock.ADD,null);
             item.activate.connect((source)=>{
+                    selected_songs_add();
+                    });
+            menu.append(item);
+            item = new Gtk.ImageMenuItem.with_label(_("Replace"));
+            item.activate.connect((source)=>{
+                    MPD.PlayQueue.clear(server);
                     selected_songs_add();
                     });
             menu.append(item);
@@ -629,8 +645,14 @@ public class Gmpc.DataView : Gtk.TreeView
             Gtk.TreeIter iter;
             if(model.get_iter(out iter, path))
             {
+                MPD.Data.Type row_type;
                 int song_id;
-                model.get(iter,Gmpc.MpdData.ColumnTypes.COL_SONG_ID, out song_id);
+                model.get(iter,
+                        Gmpc.MpdData.ColumnTypes.COL_SONG_ID, out song_id,
+                        Gmpc.MpdData.ColumnTypes.ROW_TYPE, out row_type);
+                // Only act on songs.
+                if(row_type != MPD.Data.Type.SONG) continue;
+
                 if(song_id >= 0) {
                     MPD.PlayQueue.set_priority(server, song_id, priority--);
                 } else {
@@ -657,7 +679,9 @@ public class Gmpc.DataView : Gtk.TreeView
             {
                 int song_id;
                 model.get(iter,Gmpc.MpdData.ColumnTypes.COL_SONG_ID, out song_id);
-                MPD.PlayQueue.set_priority(server, song_id, 0);
+                if ( song_id >= 0 ) {
+                    MPD.PlayQueue.set_priority(server, song_id, 0);
+                }
             }            
         }
         return true;
@@ -675,9 +699,17 @@ public class Gmpc.DataView : Gtk.TreeView
             if(model.get_iter(out iter, path))
             {
                 string song_path;
-                model.get(iter,Gmpc.MpdData.ColumnTypes.COL_PATH, out song_path);
-                MPD.PlayQueue.queue_add_song(server, song_path);
-                added_rows++;
+                MPD.Data.Type row_type; 
+                model.get(iter,
+                        Gmpc.MpdData.ColumnTypes.ROW_TYPE, out row_type,
+                        Gmpc.MpdData.ColumnTypes.COL_PATH, out song_path);
+                if ( row_type == MPD.Data.Type.SONG || row_type == MPD.Data.Type.DIRECTORY) { 
+                    MPD.PlayQueue.queue_add_song(server, song_path);
+                    added_rows++;
+                }else if (row_type == MPD.Data.Type.PLAYLIST) {
+                    MPD.PlayQueue.queue_load_playlist(server, song_path);
+                    added_rows++;
+                }
             }            
         }
         MPD.PlayQueue.queue_commit(server);
