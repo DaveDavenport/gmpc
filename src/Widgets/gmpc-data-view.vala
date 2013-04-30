@@ -301,8 +301,8 @@ public class Gmpc.DataView : Gtk.TreeView
             }
         } 
         if(initial) {
-            __button_press_menu.append(new Gtk.SeparatorMenuItem());
-            __button_press_menu.append(item);
+            menu.append(new Gtk.SeparatorMenuItem());
+            menu.append(item);
         }
 
         Gmpc.Browser.PlaylistEditor.right_mouse(menu, playlist_editor_add_new);
@@ -310,7 +310,11 @@ public class Gmpc.DataView : Gtk.TreeView
 
 
         item = new Gtk.MenuItem.with_label(_("Edit Columns"));
-        item.activate.connect((source)=>{ column_show_selection_menu();});
+        smenu = new Gtk.Menu();
+        item.set_submenu(smenu);
+        generate_column_selection_menu(smenu);
+        
+//        item.activate.connect((source)=>{ column_show_selection_menu();});
         menu.append(item);
     }
 
@@ -349,10 +353,9 @@ public class Gmpc.DataView : Gtk.TreeView
         }
     }
     // Hack to make vala not destroy the menu directly.
-    private Gtk.Menu column_selection_menu = null;
-    private void column_show_selection_menu()
+
+    private void generate_column_selection_menu(Gtk.Menu menu)
     {
-        column_selection_menu = new Gtk.Menu();
         foreach(var col in tree_columns)
         {
             int index = col.get_data("index");
@@ -366,8 +369,16 @@ public class Gmpc.DataView : Gtk.TreeView
             item.activate.connect((source) => {
                 col.visible = (source as Gtk.CheckMenuItem).get_active();
             });
-            column_selection_menu.append(item);
+            menu.append(item);
         }
+
+    }
+
+    private Gtk.Menu column_selection_menu = null;
+    private void column_show_selection_menu()
+    {
+        column_selection_menu = new Gtk.Menu();
+        generate_column_selection_menu(column_selection_menu);
         column_selection_menu.show_all();
         column_selection_menu.popup(null, null, null, 0, Gtk.get_current_event_time());
     }
