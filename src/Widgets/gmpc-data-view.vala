@@ -292,6 +292,12 @@ public class Gmpc.DataView : Gtk.TreeView
         }
 
         Gmpc.Browser.PlaylistEditor.right_mouse(menu, playlist_editor_add_new);
+
+
+
+        item = new Gtk.MenuItem.with_label(_("Edit Columns"));
+        item.activate.connect((source)=>{ column_show_selection_menu();});
+        menu.append(item);
     }
 
     /**
@@ -366,9 +372,9 @@ public class Gmpc.DataView : Gtk.TreeView
                 col.set_fixed_width(20);
                 col.clickable = true;
                 // If the user clicks on the column, show dropdown allowing to enable/disable columns.
-                col.clicked.connect((source) => {
+/*                col.clicked.connect((source) => {
                         column_show_selection_menu();
-                        });
+                        });*/
             } else {
                 /**
                  * Text column
