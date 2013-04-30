@@ -148,6 +148,20 @@ public class Gmpc.DataView : Gtk.TreeView
 
         // Create the view.
         column_populate();
+
+        // Update the sorting when it changed.
+        this.notify["model"].connect((source) => {
+            if(this.model is Gtk.TreeSortable && !is_play_queue) {
+                int sort_column = config.get_int_with_default(uid,
+                    "sort-column", Gmpc.MpdData.ColumnTypes.COL_ICON_ID);
+                Gtk.SortType sort_order = (Gtk.SortType)config.get_int_with_default(uid,
+                    "sort-order",(int)Gtk.SortType.ASCENDING);
+
+                (this.model as Gtk.TreeSortable).set_sort_column_id(
+                    sort_column, sort_order
+                    );
+            }
+         });
     }
 
 
@@ -324,6 +338,15 @@ public class Gmpc.DataView : Gtk.TreeView
             }
             index++;
         }
+
+        if(this.model is Gtk.TreeSortable) {
+            int sort_column;
+            int sort_order;
+            if((this.model as Gtk.TreeSortable).get_sort_column_id(out sort_column, out sort_order)) {
+                config.set_int(uid, "sort-column", sort_column);
+                config.set_int(uid, "sort-order", sort_order);
+            }
+        }
     }
     // Hack to make vala not destroy the menu directly.
     private Gtk.Menu column_selection_menu = null;
@@ -371,10 +394,6 @@ public class Gmpc.DataView : Gtk.TreeView
                 col.set_resizable(false);
                 col.set_fixed_width(20);
                 col.clickable = true;
-                // If the user clicks on the column, show dropdown allowing to enable/disable columns.
-/*                col.clicked.connect((source) => {
-                        column_show_selection_menu();
-                        });*/
             } else {
                 /**
                  * Text column
@@ -391,7 +410,7 @@ public class Gmpc.DataView : Gtk.TreeView
                 col.pack_start(renderer, true);
                 col.set_attributes(renderer, "text", gmpc_data_view_col_ids[i]); 
                 col.set_resizable(true);
-                
+
                 int width = config.get_int_with_default(uid+"-colsize",
                         gmpc_data_view_col_names[i], default_column_width);
                 // Do not set to size 0, then revert back to 200.
