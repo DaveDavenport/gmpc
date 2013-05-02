@@ -133,6 +133,7 @@ public class Gmpc.DataView : Gtk.TreeView
         }
         set{
             if(view_mode == ViewType.PLAYLIST) {
+                stdout.printf("Set playlist name: %s\n", value);
                 __playlist_name = value;
             }else {
                 error("Cannot set playlist name on non-playlist view.");

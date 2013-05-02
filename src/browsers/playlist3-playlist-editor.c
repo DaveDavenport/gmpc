@@ -1063,7 +1063,7 @@ static void playlist_editor_browser_init(void)
 
     playlist_editor_song_tree = tree = gmpc_data_view_new("playlist-browser", 
             GMPC_DATA_VIEW_VIEW_TYPE_PLAYLIST);
-    gtk_tree_view_set_model(GMPC_MPDDATA_MODEL(tree), GTK_TREE_MODEL(playlist_editor_list_store));
+    gtk_tree_view_set_model(GTK_TREE_VIEW(tree), GTK_TREE_MODEL(playlist_editor_list_store));
 
     /* Copy paste routines */
 //    g_signal_connect(G_OBJECT(tree), "cut", G_CALLBACK(playlist_editor_cut_songs), NULL);
