@@ -158,6 +158,7 @@ static void connection_thread(void)
 /* the functiont that connects to mpd */
 int connect_to_mpd(void)
 {
+    GError *error = NULL;
     char *string = NULL;
     if (connecting_lock == NULL)
     {
@@ -193,7 +194,11 @@ int connect_to_mpd(void)
     {
         mpd_set_password(connection, "");
     }
-    g_thread_create((GThreadFunc) connection_thread, NULL, FALSE, NULL);
+    g_thread_create((GThreadFunc) connection_thread, NULL, FALSE, &error);
+    if(error) {
+        g_error("Failed to create thread: %s\n", error->message);
+    }
+
     connecting_pulse = g_timeout_add(200, (GSourceFunc) (connecting_pulse_callback), NULL);
     gtk_progress_bar_set_text(GTK_PROGRESS_BAR(gtk_builder_get_object(pl3_xml, "pl3_progressbar")), _("Connecting"));
     gtk_widget_show(GTK_WIDGET(gtk_builder_get_object(pl3_xml, "pl3_progressbar")));

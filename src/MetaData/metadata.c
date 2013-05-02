@@ -927,6 +927,7 @@ static void glyr_fetcher_thread(void *user_data)
 GThread *gaq_fetcher_thread = NULL;
 void meta_data_init(void)
 {
+    GError *error = NULL;
     gchar *url;
 
     /* Is this function thread safe? */
@@ -943,11 +944,16 @@ void meta_data_init(void)
     gaq = g_async_queue_new();
     return_queue = g_async_queue_new();
 #if GLIB_CHECK_VERSION(2, 31, 0)
-    gaq_fetcher_thread = g_thread_new("Glyr thread fetch", (GThreadFunc)glyr_fetcher_thread, NULL);
+    gaq_fetcher_thread = g_thread_new("Glyr thread fetch",
+            (GThreadFunc)glyr_fetcher_thread, &error);
 #else
-    gaq_fetcher_thread = g_thread_create(glyr_fetcher_thread, NULL, TRUE, NULL);
+    gaq_fetcher_thread = g_thread_create(glyr_fetcher_thread, NULL, TRUE, &error);
 #endif
 
+    if(error != NULL) {
+
+        g_error("Failed to create thread: %s\n", error->message);
+    }
 }
 
 /**
