@@ -208,7 +208,8 @@ static void pl3_file_browser_init(void)
     gtk_paned_add1(GTK_PANED(pl3_fb_vbox), sw);
 
     /* set up the tree */
-    pl3_fb_tree = gmpc_data_view_new("file-browser", FALSE);
+    pl3_fb_tree = gmpc_data_view_new("file-browser",
+            GMPC_DATA_VIEW_VIEW_TYPE_SONG_LIST);
     gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_fb_tree), GTK_TREE_MODEL(pl3_fb_store2));
     /* setup signals */
     // This is to handle everything the tree-view does not handle by default.

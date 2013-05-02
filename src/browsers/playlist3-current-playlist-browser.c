@@ -342,14 +342,15 @@ static void pl3_current_playlist_browser_init(PlayQueuePlugin * self)
 
     self->priv->pl3_cp_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 6);
 
-    tree = gmpc_data_view_new(self->priv->uid, TRUE);
+    tree = gmpc_data_view_new(self->priv->uid,
+            GMPC_DATA_VIEW_VIEW_TYPE_PLAY_QUEUE);
     gtk_tree_view_set_model(GTK_TREE_VIEW(tree), GTK_TREE_MODEL(playlist));
 
 
 
 
     /* Enable this for this model only */
-    gtk_tree_view_enable_model_drag_dest(GTK_TREE_VIEW(tree), gmt_targetentries, 1, GDK_ACTION_DEFAULT|GDK_ACTION_MOVE|GDK_ACTION_COPY);
+    //gtk_tree_view_enable_model_drag_dest(GTK_TREE_VIEW(tree), gmt_targetentries, 1, GDK_ACTION_DEFAULT|GDK_ACTION_MOVE|GDK_ACTION_COPY);
 
     /* filter */
     self->priv->mod_fill = (GtkTreeModel *) gmpc_mpddata_model_new();

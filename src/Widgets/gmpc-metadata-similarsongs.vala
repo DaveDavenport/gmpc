@@ -165,7 +165,7 @@ public class Gmpc.MetaData.Widgets.SimilarSongs : Gtk.Alignment
             var model = new Gmpc.MpdData.Model();
             item.remove_duplicate_songs();
             model.set_mpd_data((owned)item);
-            Gmpc.DataView tree = new Gmpc.DataView("similar-song", false);
+            Gmpc.DataView tree = new Gmpc.DataView("similar-song", Gmpc.DataView.ViewType.SONG_LIST);
             tree.set_model(model);
             this.add(tree);
 

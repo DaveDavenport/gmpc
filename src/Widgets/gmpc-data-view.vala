@@ -109,13 +109,36 @@ const int[]  gmpc_data_view_col_position = {
 
 public class Gmpc.DataView : Gtk.TreeView
 {
+    public enum  ViewType {
+        SONG_LIST,
+        PLAY_QUEUE,
+        PLAYLIST
+    }
+
     private Gtk.TreeViewColumn[] tree_columns = new Gtk.TreeViewColumn[NUM_COLS];
     /**
      * If we are a play-queue we should treat the content.
      * slightly different.
      * e.g. add-replace will be play-crop
      */
-    public bool is_play_queue {get; set; default=false;}
+    public ViewType view_mode {get; set;default=ViewType.SONG_LIST;}
+    /**
+     * If we 'view' a playlist, we need to know the name of the play queue.
+     * This can be set here.
+     */
+    private string __playlist_name = null;
+    public string playlist_name {
+        get{
+            return __playlist_name;
+        }
+        set{
+            if(view_mode == ViewType.PLAYLIST) {
+                __playlist_name = value;
+            }else {
+                error("Cannot set playlist name on non-playlist view.");
+            }
+        }
+    }
 
     /**
      * The name of the treeview. 
@@ -127,10 +150,10 @@ public class Gmpc.DataView : Gtk.TreeView
     /**
      * Construction function.
      */
-    public DataView(string name, bool play_queue = false)
+    public DataView(string name, ViewType mode = ViewType.SONG_LIST) 
     {
         log(log_domain, LogLevelFlags.LEVEL_INFO, "Constructing dataview: "+name);
-        this.is_play_queue = play_queue;
+        this.view_mode = mode;
         this.uid = name;
         // Connect row activated signal.
         this.row_activated.connect(__row_activated);
@@ -151,7 +174,8 @@ public class Gmpc.DataView : Gtk.TreeView
 
         // Update the sorting when it changed.
         this.notify["model"].connect((source) => {
-            if(this.model is Gtk.TreeSortable && !is_play_queue) {
+            // Only the SONG_LIST is sortable.
+            if(this.model is Gtk.TreeSortable && view_mode == ViewType.SONG_LIST) {
                 int sort_column = config.get_int_with_default(uid,
                     "sort-column", Gmpc.MpdData.ColumnTypes.COL_ICON_ID);
                 Gtk.SortType sort_order = (Gtk.SortType)config.get_int_with_default(uid,
@@ -205,9 +229,8 @@ public class Gmpc.DataView : Gtk.TreeView
             }
         }
 
-        if(is_play_queue)
+        if(view_mode == ViewType.PLAY_QUEUE || view_mode == ViewType.PLAYLIST)
         {
-            // Add play if there is one selected row.
             if(selected_rows > 0) {
                 var item = new Gtk.ImageMenuItem.from_stock(Gtk.Stock.REMOVE,null);
                 item.activate.connect((source)=>{
@@ -235,7 +258,7 @@ public class Gmpc.DataView : Gtk.TreeView
             item.activate.connect((source)=>{ selected_songs_raise_priority();});
             menu.append(item);
 
-            if(is_play_queue) {
+            if(view_mode == ViewType.PLAY_QUEUE) {
                 item = new Gtk.MenuItem.with_label(_("Dequeue"));
                 item.activate.connect((source)=>{ selected_songs_remove_priority();});
                 menu.append(item);
@@ -247,7 +270,7 @@ public class Gmpc.DataView : Gtk.TreeView
             Gtk.MenuItem item;
             item = new Gtk.SeparatorMenuItem();
             menu.append(item);
-            if(is_play_queue) {
+            if(view_mode == ViewType.PLAY_QUEUE) {
                 item = new Gtk.ImageMenuItem.from_stock(Gtk.Stock.CUT, null);
                 item.activate.connect((source)=>{ selected_songs_paste_queue_cut();});
                 menu.append(item);
@@ -257,7 +280,7 @@ public class Gmpc.DataView : Gtk.TreeView
             item.activate.connect((source)=>{ selected_songs_paste_queue_copy();});
             menu.append(item);
 
-            if(is_play_queue && paste_queue != null) {
+            if(view_mode == ViewType.PLAY_QUEUE && paste_queue != null) {
                 item = new Gtk.ImageMenuItem.with_label(_("Paste before"));
                 (item as Gtk.ImageMenuItem).set_image(new Image.from_stock(Gtk.Stock.PASTE, Gtk.IconSize.MENU));
                 item.activate.connect((source)=>{ selected_songs_paste_before();});
@@ -413,7 +436,7 @@ public class Gmpc.DataView : Gtk.TreeView
                 var renderer = new Gtk.CellRendererText(); 
                 renderer.ellipsize = Pango.EllipsizeMode.END;
                 // Set up column
-                if(is_play_queue) {
+                if(view_mode == ViewType.PLAY_QUEUE) {
                     renderer.weight_set = true;
                     renderer.style_set = true;
                     col.set_cell_data_func(renderer, highlight_row_current_song_playing);
@@ -431,7 +454,7 @@ public class Gmpc.DataView : Gtk.TreeView
             col.set_reorderable(true);
 
             // Sorting.
-            if(!is_play_queue) {
+            if(view_mode == ViewType.SONG_LIST) {
                 col.set_sort_indicator(true);
                 col.set_sort_column_id(gmpc_data_view_col_ids[i]); 
             }
@@ -468,7 +491,7 @@ public class Gmpc.DataView : Gtk.TreeView
             if(!model.get_iter(out iter, path)) return;
 
             model.get(iter, Gmpc.MpdData.ColumnTypes.ROW_TYPE, out row_type);
-            if(is_play_queue) {
+            if(view_mode == ViewType.PLAY_QUEUE) {
                 /* If we are play-queue, play the selected song. */
                 int song_id;
                 model.get(iter, Gmpc.MpdData.ColumnTypes.COL_SONG_ID, out song_id);
@@ -625,7 +648,7 @@ public class Gmpc.DataView : Gtk.TreeView
         }
 
         // Commands specific to play_queue
-        if(is_play_queue)
+        if(view_mode == ViewType.PLAY_QUEUE)
         {
             if(__key_press_event_callback_play_queue(event)) return true;
         }
@@ -764,7 +787,7 @@ public class Gmpc.DataView : Gtk.TreeView
             Gtk.TreeIter iter;
             if(model.get_iter(out iter, path))
             {
-                if(is_play_queue) {
+                if(view_mode == ViewType.PLAY_QUEUE) {
                 int song_id;
                 model.get(iter, Gmpc.MpdData.ColumnTypes.COL_SONG_ID, out song_id);
                 if(song_id >= 0){

@@ -219,6 +219,7 @@ static void playlist_editor_browser_playlist_editor_selected(GtkTreeModel * mode
     if (pl_path)
     {
         gtk_widget_set_sensitive(playlist_editor_browser, FALSE);
+        gmpc_data_view_set_playlist_name(GTK_TREE_VIEW(playlist_editor_song_tree),pl_path);
         gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(playlist_editor_list_store), NULL);
         gmpc_mpddata_model_sort_set_playlist(GMPC_MPDDATA_MODEL_SORT(playlist_editor_list_store), pl_path);
         mpd_async_request(__playlist_editor_async_callback, NULL, __playlist_editor_async_function, g_strdup(pl_path));
@@ -751,8 +752,8 @@ static gboolean playlist_editor_key_released(GtkTreeView * tree, GdkEventButton 
                 gtk_image_new_from_icon_name("add-url", GTK_ICON_SIZE_MENU));
         gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
-        gmpc_mpddata_treeview_right_mouse_intergration(GMPC_MPDDATA_TREEVIEW(tree), GTK_MENU(menu));
-        g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(playlist_editor_list_add_url), tree);
+        //gmpc_mpddata_treeview_right_mouse_intergration(GMPC_MPDDATA_TREEVIEW(tree), GTK_MENU(menu));
+        //g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(playlist_editor_list_add_url), tree);
 
         gtk_widget_show_all(menu);
         gtk_menu_popup(GTK_MENU(menu), NULL, NULL, NULL, NULL, 0, button->time);
@@ -1003,22 +1004,6 @@ static void playlist_editor_paste_before_songs(GtkTreeView * tree, GList * paste
     }
 }
 
-static void playlist_editor_row_activated(GtkTreeView * tree, GtkTreePath * path, GtkTreeViewColumn * column,
-                                          gpointer user_data)
-{
-    GtkTreeModel *model = gtk_tree_view_get_model(tree);
-    GtkTreeIter iter;
-    if (gtk_tree_model_get_iter(model, &iter, path))
-    {
-        mpd_Song *song;
-        gtk_tree_model_get(model, &iter, MPDDATA_MODEL_COL_MPDSONG, &song, -1);
-        if (song->file)
-        {
-            play_path(song->file);
-        }
-    }
-}
-
 static void playlist_editor_browser_init(void)
 {
     GtkCellRenderer *renderer = NULL;
@@ -1076,22 +1061,20 @@ static void playlist_editor_browser_init(void)
     gmpc_mpddata_model_disable_image(GMPC_MPDDATA_MODEL(playlist_editor_list_store));
     g_signal_connect(G_OBJECT(playlist_editor_list_store), "playtime_changed", G_CALLBACK(playtime_changed), NULL);
 
-    playlist_editor_song_tree = tree =
-        gmpc_mpddata_treeview_new("playlist-browser", FALSE, GTK_TREE_MODEL(playlist_editor_list_store));
-    gmpc_mpddata_treeview_enable_click_fix(GMPC_MPDDATA_TREEVIEW(playlist_editor_song_tree));
+    playlist_editor_song_tree = tree = gmpc_data_view_new("playlist-browser", 
+            GMPC_DATA_VIEW_VIEW_TYPE_PLAYLIST);
+    gtk_tree_view_set_model(GMPC_MPDDATA_MODEL(tree), GTK_TREE_MODEL(playlist_editor_list_store));
 
     /* Copy paste routines */
-    g_signal_connect(G_OBJECT(tree), "cut", G_CALLBACK(playlist_editor_cut_songs), NULL);
-    g_signal_connect(G_OBJECT(tree), "paste-after", G_CALLBACK(playlist_editor_paste_after_songs), NULL);
-    g_signal_connect(G_OBJECT(tree), "paste-before", G_CALLBACK(playlist_editor_paste_before_songs), NULL);
-
-    g_signal_connect(G_OBJECT(tree), "row-activated", G_CALLBACK(playlist_editor_row_activated), NULL);
+//    g_signal_connect(G_OBJECT(tree), "cut", G_CALLBACK(playlist_editor_cut_songs), NULL);
+  //  g_signal_connect(G_OBJECT(tree), "paste-after", G_CALLBACK(playlist_editor_paste_after_songs), NULL);
+//    g_signal_connect(G_OBJECT(tree), "paste-before", G_CALLBACK(playlist_editor_paste_before_songs), NULL);
 
     gtk_container_add(GTK_CONTAINER(sw), tree);
     gtk_tree_view_set_reorderable(GTK_TREE_VIEW(tree), TRUE);
 
-    g_signal_connect(G_OBJECT(tree), "button-release-event", G_CALLBACK(playlist_editor_key_released), NULL);
-    g_signal_connect(G_OBJECT(tree), "key-press-event", G_CALLBACK(playlist_editor_key_pressed), NULL);
+   // g_signal_connect(G_OBJECT(tree), "button-release-event", G_CALLBACK(playlist_editor_key_released), NULL);
+   // g_signal_connect(G_OBJECT(tree), "key-press-event", G_CALLBACK(playlist_editor_key_pressed), NULL);
     g_object_ref_sink(playlist_editor_browser);
 
     gtk_widget_show_all(playlist_editor_browser);

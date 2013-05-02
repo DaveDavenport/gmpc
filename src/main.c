@@ -657,7 +657,6 @@ int main(int argc, char **argv)
     initGenericErrorDefaultFunc((xmlGenericErrorFunc *) NULL);
     xmlCleanupParser();
     /* cleanup */
-    gmpc_mpddata_treeview_cleanup();
 
     g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Quit....\n");
     return retv;

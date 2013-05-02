@@ -178,7 +178,8 @@ static void pl3_find2_browser_init(void)
 
     /* Column */
     /* set up the tree */
-    pl3_find2_tree = (GtkWidget *)gmpc_data_view_new("find2-browser",FALSE);
+    pl3_find2_tree = (GtkWidget *)gmpc_data_view_new("find2-browser",
+            GMPC_DATA_VIEW_VIEW_TYPE_SONG_LIST);
     /* setup signals */
     g_signal_connect(G_OBJECT(pl3_find2_tree), "key-press-event", G_CALLBACK(pl3_find2_browser_playlist_key_press),
                      NULL);

@@ -93,8 +93,8 @@ gmpc_SOURCES=\
     vala/gmpc-connection.vala\
     vala/gmpc-easy-command.vala\
     vala/gmpc-favorites.vala\
-    vala/gmpc-mpddata-treeview-tooltip.vala\
     vala/gmpc-plugin.vala\
+    vala/gmpc-mpddata-treeview-tooltip.vala\
     vala/gmpc-url-fetching-gui.vala\
     vala/gmpc-metadata-editwindow.vala\
     vala/gmpc-paned-size-group.vala\
@@ -225,7 +225,6 @@ endif
 nodist_gmpcinclude_HEADERS=\
         gmpc-mpddata-model.h\
         gmpc-mpddata-model-sort.h\
-        gmpc-mpddata-treeview.h\
         gmpc-metaimage.h\
         gmpc-meta-text-view.h
 
@@ -306,8 +305,7 @@ gmpc_GOBFILES = \
 		gmpc-meta-text-view.gob\
 		gmpc-mpddata-model.gob\
 		gmpc-mpddata-model-playlist.gob\
-		gmpc-mpddata-model-sort.gob\
-		gmpc-mpddata-treeview.gob
+		gmpc-mpddata-model-sort.gob
 
 gmpc_GOBSTAMPFILES=\
 	$(gmpc_GOBFILES:.gob=.gob.stamp)
