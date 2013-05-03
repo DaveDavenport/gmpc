@@ -287,6 +287,8 @@ namespace MPD {
         public MPD.Data.Item? get_playlist_list(MPD.Server server);
         public void playlist_list_add(MPD.Server server, string playlist_name, string path);
         public void playlist_list_delete(MPD.Server server, string playlist_name, int pos);
+        public void playlist_clear(MPD.Server server, string playlist_name);
+        public void playlist_move(MPD.Server server, string playlist_name, int old_pos, int new_pos);
 
         [CCode (cname="mpd_database_search_field_start")]
         public void search_field_start(MPD.Server server,MPD.Tag.Type type);

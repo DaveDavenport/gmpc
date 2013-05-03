@@ -271,7 +271,7 @@ public class Gmpc.DataView : Gtk.TreeView
             Gtk.MenuItem item;
             item = new Gtk.SeparatorMenuItem();
             menu.append(item);
-            if(view_mode == ViewType.PLAY_QUEUE) {
+            if(view_mode == ViewType.PLAY_QUEUE || view_mode == ViewType.PLAYLIST) {
                 item = new Gtk.ImageMenuItem.from_stock(Gtk.Stock.CUT, null);
                 item.activate.connect((source)=>{ selected_songs_paste_queue_cut();});
                 menu.append(item);
@@ -281,7 +281,9 @@ public class Gmpc.DataView : Gtk.TreeView
             item.activate.connect((source)=>{ selected_songs_paste_queue_copy();});
             menu.append(item);
 
-            if(view_mode == ViewType.PLAY_QUEUE && paste_queue != null) {
+            if( (view_mode == ViewType.PLAY_QUEUE ||
+                 view_mode == ViewType.PLAYLIST )
+                && paste_queue != null) {
                 item = new Gtk.ImageMenuItem.with_label(_("Paste before"));
                 (item as Gtk.ImageMenuItem).set_image(new Image.from_stock(Gtk.Stock.PASTE, Gtk.IconSize.MENU));
                 item.activate.connect((source)=>{ selected_songs_paste_before();});
@@ -558,6 +560,37 @@ public class Gmpc.DataView : Gtk.TreeView
         }
         return false;
     }
+    /**
+     * Keybinding for playlists.
+     */
+    private bool __key_press_event_callback_playlist(Gdk.EventKey event)
+    {
+        if (event.keyval == Gdk.Key_x)
+        {
+            // Cut (if available) into clipboard
+            selected_songs_paste_queue_cut();
+        }
+        else if (event.keyval == Gdk.Key_P)
+        {
+            // Paste before  
+            return selected_songs_paste_before();
+        }
+        else if (event.keyval == Gdk.Key_p)
+        {
+            // Paste after
+            return selected_songs_paste_after();
+        }
+        else if (event.keyval == Gdk.Key_d)
+        {
+            if(!selected_songs_remove())
+            {
+                // Clear the playlist
+                MPD.Database.playlist_clear(server, playlist_name);
+                return true;
+            }
+        }
+        return false;
+    }
     private bool __key_press_event_callback_play_queue(Gdk.EventKey event)
     {
         if (event.keyval == Gdk.Key_Q) 
@@ -653,7 +686,11 @@ public class Gmpc.DataView : Gtk.TreeView
         {
             if(__key_press_event_callback_play_queue(event)) return true;
         }
-        else
+        else if (view_mode == ViewType.PLAYLIST)
+        {
+            if(__key_press_event_callback_playlist(event)) return true;
+        }
+        else if (view_mode == ViewType.SONG_LIST)
         {
             if(__key_press_event_callback_song_list(event)) return true;
         }
@@ -812,14 +849,24 @@ public class Gmpc.DataView : Gtk.TreeView
         var selection = this.get_selection();
 
         Gtk.TreeModel model;
-        foreach(var path in selection.get_selected_rows(out model))
+        var sel_rows = selection.get_selected_rows(out model);
+        sel_rows.reverse();
+        foreach(var path in sel_rows)
         {
             Gtk.TreeIter iter;
             if(model.get_iter(out iter, path))
             {
-                int song_id;
-                model.get(iter,Gmpc.MpdData.ColumnTypes.COL_SONG_ID, out song_id);
-                MPD.PlayQueue.queue_delete_id(server, song_id);
+                if(view_mode == ViewType.PLAY_QUEUE) {
+                    int song_id;
+                    model.get(iter,Gmpc.MpdData.ColumnTypes.COL_SONG_ID, out song_id);
+                    MPD.PlayQueue.queue_delete_id(server, song_id);
+                }else if ( view_mode == ViewType.PLAYLIST) {
+                    var indc = path.get_indices(); 
+                    int song_pos = indc[0];
+                    MPD.Database.playlist_list_delete(server, playlist_name, song_pos);
+                }else {
+                    error("Invalid state, cannot call this here.");
+                }
                 deleted_rows++;
             }            
         }
@@ -898,16 +945,33 @@ public class Gmpc.DataView : Gtk.TreeView
         if(model.get_iter(out iter, path))
         {
             int songpos;
-            model.get(iter, Gmpc.MpdData.ColumnTypes.COL_SONG_POS, out songpos);
-            if(songpos> 0) {
-                songpos--;
-                paste_queue.reverse();
-                foreach(var fpath in paste_queue)
-                {
-                    int nsongid = MPD.PlayQueue.add_song_get_id(server,fpath);
-                    MPD.PlayQueue.song_move_id(server, nsongid, songpos);
+            if( view_mode == ViewType.PLAY_QUEUE) {
+                model.get(iter, Gmpc.MpdData.ColumnTypes.COL_SONG_POS, out songpos);
+                if(songpos> 0) {
+                    songpos--;
+                    paste_queue.reverse();
+                    foreach(var fpath in paste_queue)
+                    {
+                        int nsongid = MPD.PlayQueue.add_song_get_id(server,fpath);
+                        MPD.PlayQueue.song_move_id(server, nsongid, songpos);
+                    }
+                    paste_queue.reverse();
                 }
-                paste_queue.reverse();
+            }else if (view_mode == ViewType.PLAYLIST) {
+                    int length = this.model.iter_n_children(null);
+                    var indc = path.get_indices(); 
+                    songpos = indc[0];
+                    paste_queue.reverse();
+                    foreach(var fpath in paste_queue)
+                    {
+                        MPD.Database.playlist_list_add(server, playlist_name, fpath);
+                        MPD.Database.playlist_move(server, playlist_name, length,songpos);
+                        length++;
+                    }
+                    paste_queue.reverse();
+
+            }else{
+                error("We should be able to be here.");
             }
         }
         return true; 
@@ -926,16 +990,34 @@ public class Gmpc.DataView : Gtk.TreeView
         if(model.get_iter(out iter, path))
         {
             int songpos;
-            model.get(iter, Gmpc.MpdData.ColumnTypes.COL_SONG_POS, out songpos);
-            if(songpos> 0) {
-                paste_queue.reverse();
-                foreach(var fpath in paste_queue)
-                {
-                    int nsongid = MPD.PlayQueue.add_song_get_id(server,fpath);
-                    MPD.PlayQueue.song_move_id(server, nsongid, songpos);
+            if(view_mode == ViewType.PLAY_QUEUE) {
+                model.get(iter, Gmpc.MpdData.ColumnTypes.COL_SONG_POS, out songpos);
+                if(songpos> 0) {
+                    paste_queue.reverse();
+                    foreach(var fpath in paste_queue)
+                    {
+                        int nsongid = MPD.PlayQueue.add_song_get_id(server,fpath);
+                        MPD.PlayQueue.song_move_id(server, nsongid, songpos);
+                    }
+                    paste_queue.reverse();
                 }
-                paste_queue.reverse();
             }
+            else if (view_mode == ViewType.PLAYLIST) {
+                    int length = this.model.iter_n_children(null);
+                    var indc = path.get_indices(); 
+                    songpos = indc[0]+1;
+                    paste_queue.reverse();
+                    foreach(var fpath in paste_queue)
+                    {
+                        MPD.Database.playlist_list_add(server, playlist_name, fpath);
+                        MPD.Database.playlist_move(server, playlist_name, length,songpos);
+                        length++;
+                    }
+                    paste_queue.reverse();
+            }else{
+                error("We should be able to be here.");
+            }
+
         }
         return true; 
     }
