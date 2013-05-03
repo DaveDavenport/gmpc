@@ -30,7 +30,6 @@
 #include "playlist3-find2-browser.h"
 #include "gmpc-mpddata-model.h"
 #include "gmpc-mpddata-model-playlist.h"
-#include "gmpc-mpddata-treeview.h"
 #include "advanced-search.h"
 #include "playlist3-messages.h"
 

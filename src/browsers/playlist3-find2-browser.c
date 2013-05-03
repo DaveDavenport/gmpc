@@ -26,7 +26,6 @@
 #include "playlist3.h"
 #include "playlist3-find2-browser.h"
 #include "gmpc-mpddata-model.h"
-#include "gmpc-mpddata-treeview.h"
 #include "advanced-search.h"
 #include "playlist3-playlist-editor.h"
 

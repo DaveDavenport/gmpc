@@ -22,7 +22,6 @@
 #include "metadata.h"
 #include "config1.h"
 #include "gmpc-extras.h"
-#include "gmpc-mpddata-treeview.h"
 
 //#include "gmpc-paned-size-group.h"
 
@@ -109,7 +108,7 @@ typedef struct {
     /** Song list right mouse menu intergration.
      * This is only called (And allowed to be called) if the treeview is a GmpcMpdDataTreeview with songs
      */
-    int (*song_list_option_menu)    (GmpcMpdDataTreeview *tree, GtkMenu *menu);
+    int (*song_list_option_menu)    (GtkTreeView *tree, GtkMenu *menu);
     /* Padding */
     MpdData * (*integrate_search)   (const int search_field,const gchar *search_query,GError **error);
     gboolean  (*integrate_search_field_supported) (const int search_field);

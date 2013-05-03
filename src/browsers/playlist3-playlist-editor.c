@@ -25,7 +25,6 @@
 #include "main.h"
 #include "playlist3.h"
 #include "gmpc-mpddata-model.h"
-#include "gmpc-mpddata-treeview.h"
 #include "gmpc-mpddata-model-sort.h"
 #include "gmpc-extras.h"
 #include "browsers/playlist3-playlist-editor.h"

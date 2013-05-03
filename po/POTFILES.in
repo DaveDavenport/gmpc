@@ -50,7 +50,6 @@ src/egg/eggcolumnchooserdialog.c
 # Gob files
 src/gmpc-mpddata-model.gob
 src/gmpc-mpddata-model-sort.gob
-src/gmpc-mpddata-treeview.gob
 src/gmpc-meta-text-view.gob
 src/gmpc-metaimage.gob
 

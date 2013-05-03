@@ -23,7 +23,6 @@
 #include "metadata.h"
 #include "gmpc-extras.h"
 #include "gmpc-mpddata-model.h"
-#include "gmpc-mpddata-treeview.h"
 
 #ifndef __PLUGIN_INTERNAL_H__
 #define __PLUGIN_INTERNAL_H__
