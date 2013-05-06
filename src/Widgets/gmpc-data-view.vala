@@ -340,7 +340,6 @@ public class Gmpc.DataView : Gtk.TreeView
         item.set_submenu(smenu);
         generate_column_selection_menu(smenu);
         
-//        item.activate.connect((source)=>{ column_show_selection_menu();});
         menu.append(item);
     }
 

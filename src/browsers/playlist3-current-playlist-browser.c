@@ -332,6 +332,21 @@ static void mod_fill_clear_search_entry(GtkEntry * entry, GtkEntryIconPosition i
     }
 }
 
+/**
+ * Row activation is handled by GmpcDataView.
+ * However when in quick-search it might be good to close the search mode.
+ * Do this by clearing the entry and call the entry changed.
+ */
+static void pl3_current_browser_row_activated(GtkTreeView *tree, GtkTreePath *path, 
+        GtkTreeViewColumn *column, PlayQueuePlugin *self) 
+{
+    if(self->priv->quick_search) 
+    {
+        self->priv->search_keep_open = FALSE;
+        gtk_entry_set_text(GTK_ENTRY(self->priv->filter_entry), "");
+        mod_fill_do_entry_changed(self);
+    }
+}
 
 static void pl3_current_playlist_browser_init(PlayQueuePlugin * self)
 {
@@ -347,6 +362,8 @@ static void pl3_current_playlist_browser_init(PlayQueuePlugin * self)
 
 
 
+    g_signal_connect(G_OBJECT(tree), "row-activated",
+            G_CALLBACK(pl3_current_browser_row_activated),self);
 
     /* Enable this for this model only */
     //gtk_tree_view_enable_model_drag_dest(GTK_TREE_VIEW(tree), gmt_targetentries, 1, GDK_ACTION_DEFAULT|GDK_ACTION_MOVE|GDK_ACTION_COPY);
