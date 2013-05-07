@@ -643,6 +643,12 @@ static int pl3_current_playlist_browser_key_press_event(GtkTreeView * tree, GdkE
         self->priv->search_keep_open = TRUE;
         return TRUE;
     }
+    else if (event->keyval == GDK_KEY_Escape) {
+        // Clear and close.
+        self->priv->search_keep_open = FALSE;
+        gtk_entry_set_text(GTK_ENTRY(self->priv->filter_entry), "");
+        mod_fill_do_entry_changed(self);
+    }
     return pl3_window_key_press_event(GTK_WIDGET(tree), event);
 }
 

@@ -674,10 +674,6 @@ public class Gmpc.DataView : Gtk.TreeView
         {
             return selected_songs_info();
         }
-        else if (event.keyval == Gdk.Key_Escape)
-        {
-
-        }
         else if (event.keyval == Gdk.Key_m)
         {
             // Configure columns
