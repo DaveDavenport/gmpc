@@ -642,6 +642,14 @@ public class Gmpc.DataView : Gtk.TreeView
             // Move cursor up
             move_cursor_up();
         }
+        else if (event.keyval == Gdk.Key_g)
+        {
+            move_cursor_top();
+        }
+        else if (event.keyval == Gdk.Key_G)
+        {
+            move_cursor_bottom();
+        }
         else if(event.keyval == Gdk.Key_y)
         {
             // Copy data to clipboard
@@ -1063,6 +1071,28 @@ public class Gmpc.DataView : Gtk.TreeView
             {
                 this.set_cursor(path, col, false);
             }
+        }
+    }
+    private void move_cursor_top()
+    {
+        Gtk.TreeViewColumn? col;
+        var rows = this.model.iter_n_children(null);
+        if(rows > 0){
+            Gtk.TreePath? path;
+            this.get_cursor(null, out col);
+            path = new Gtk.TreePath.from_indices(0);
+            this.set_cursor(path, col, false);
+        }
+    }
+    private void move_cursor_bottom()
+    {
+        Gtk.TreeViewColumn? col;
+        var rows = this.model.iter_n_children(null);
+        if(rows > 0){
+            Gtk.TreePath? path;
+            this.get_cursor(null, out col);
+            path = new Gtk.TreePath.from_indices(rows-1);
+            this.set_cursor(path, col, false);
         }
     }
     private void move_cursor_up()
