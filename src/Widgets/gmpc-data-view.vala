@@ -588,6 +588,11 @@ public class Gmpc.DataView : Gtk.TreeView
                 return true;
             }
         }
+        else if (event.keyval == Gdk.Key_D)
+        {
+            MPD.Database.playlist_clear(server, playlist_name);
+            return true;
+        }
         return false;
     }
     private bool __key_press_event_callback_play_queue(Gdk.EventKey event)
@@ -627,6 +632,16 @@ public class Gmpc.DataView : Gtk.TreeView
                 this.model = model;
                 return true;
             }
+        }
+        else if (event.keyval == Gdk.Key_D)
+        {
+            var model = get_model();
+            this.model = null; 
+            // Clear
+            MPD.PlayQueue.clear(server);
+            // Re-add model
+            this.model = model;
+            return true;
         }
         return false;
     }
