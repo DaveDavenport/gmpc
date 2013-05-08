@@ -647,7 +647,15 @@ public class Gmpc.DataView : Gtk.TreeView
     }
     private bool __key_press_event_callback(Gdk.EventKey event)
     {
-        if(event.keyval == Gdk.Key_j)
+        if(event.keyval == Gdk.Key_h)
+        {
+            move_cursor_left();
+        }
+        else if (event.keyval == Gdk.Key_l)
+        {
+            move_cursor_right();
+        }
+        else if(event.keyval == Gdk.Key_j)
         {
             // Move cursor down.
             move_cursor_down();
@@ -1117,6 +1125,22 @@ public class Gmpc.DataView : Gtk.TreeView
             {
                 this.set_cursor(path, col, false);
             }
+        }
+    }
+    private void move_cursor_left()
+    {
+        if(this is Gtk.Scrollable)
+        {
+            var hadj = this.get_hadjustment();
+            hadj.set_value(hadj.value-hadj.step_increment);
+        }
+    }
+    private void move_cursor_right()
+    {
+        if(this is Gtk.Scrollable)
+        {
+            var hadj = this.get_hadjustment();
+            hadj.set_value(hadj.value+hadj.step_increment);
         }
     }
 }
