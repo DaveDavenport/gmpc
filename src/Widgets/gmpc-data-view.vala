@@ -613,6 +613,20 @@ public class Gmpc.DataView : Gtk.TreeView
             // remove priority.
             return selected_songs_remove_priority();
         }
+        else if ((event.state&Gdk.ModifierType.CONTROL_MASK) == Gdk.ModifierType.CONTROL_MASK &&
+                event.keyval == Gdk.Key_X)
+        {
+           stdout.printf("Clear everything but playing song\n"); 
+            // Select the playing song:
+            unowned MPD.Song? song = server.playlist_get_current_song();
+            if(song != null) {
+                var path = new Gtk.TreePath.from_indices(song.pos);
+                this.get_selection().unselect_all();
+                this.get_selection().select_path(path);
+                selected_songs_crop();
+            } 
+            return false;
+        }
         else if (event.keyval == Gdk.Key_x)
         {
             // Cut (if available) into clipboard
