@@ -239,6 +239,11 @@ public class Gmpc.DataView : Gtk.TreeView
                     selected_songs_remove();
                 });
                 menu.append(item);
+
+                item = new Gtk.ImageMenuItem.with_label(_("Crop"));
+                item.set_image(new Gtk.Image.from_stock(Gtk.Stock.CUT, Gtk.IconSize.MENU));
+                item.activate.connect((source)=>{ selected_songs_crop(); });
+                menu.append(item);
             }
         }else{
             var item = new Gtk.ImageMenuItem.from_stock(Gtk.Stock.ADD,null);
@@ -570,6 +575,11 @@ public class Gmpc.DataView : Gtk.TreeView
             // Cut (if available) into clipboard
             selected_songs_paste_queue_cut();
         }
+        else if (event.keyval == Gdk.Key_X)
+        {
+            // Crop selected songs.
+            selected_songs_crop();
+        }
         else if (event.keyval == Gdk.Key_P)
         {
             // Paste before  
@@ -607,6 +617,11 @@ public class Gmpc.DataView : Gtk.TreeView
         {
             // Cut (if available) into clipboard
             selected_songs_paste_queue_cut();
+        }
+        else if (event.keyval == Gdk.Key_X)
+        {
+            // Crop selected songs.
+            selected_songs_crop();
         }
         else if (event.keyval == Gdk.Key_P)
         {
@@ -868,6 +883,46 @@ public class Gmpc.DataView : Gtk.TreeView
             }
         }
         return selection.count_selected_rows() > 0;
+    }
+    // Crop the selected songs.
+    private void selected_songs_crop()
+    {
+        int deleted_rows = 0;
+        var selection = this.get_selection();
+        
+        model = this.get_model();
+        List<int> items_to_delete = new List<int>();
+
+        TreeIter iter;
+        if(model.get_iter_first(out iter))
+        {
+            do{
+                if(!this.get_selection().iter_is_selected(iter))
+                {
+                    if(view_mode == ViewType.PLAY_QUEUE) {
+                        int song_id;
+                        model.get(iter,Gmpc.MpdData.ColumnTypes.COL_SONG_ID, out song_id);
+                        items_to_delete.prepend(song_id);
+                    }else if ( view_mode == ViewType.PLAYLIST) {
+                        var path = model.get_path(iter);
+                        var indc = path.get_indices(); 
+                        int song_pos = indc[0];
+                        items_to_delete.prepend(song_pos);
+                    }
+                }
+            }while(model.iter_next(ref iter));
+        }
+        foreach(int id in items_to_delete)
+        {
+            if(view_mode == ViewType.PLAY_QUEUE)
+            {
+                MPD.PlayQueue.queue_delete_id(server, id);
+            } else if (view_mode == ViewType.PLAYLIST)
+            {
+                MPD.Database.playlist_list_delete(server, playlist_name, id);
+            }
+        }
+        MPD.PlayQueue.queue_commit(server);
     }
     // Remove the selected songs from the play queue.
     private bool selected_songs_remove()
