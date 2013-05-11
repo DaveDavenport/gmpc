@@ -517,6 +517,7 @@ public class Gmpc.DataView : Gtk.TreeView
             }
         }
     }
+
     /**
      * Check if current row is playing.
      */
@@ -546,15 +547,23 @@ public class Gmpc.DataView : Gtk.TreeView
 
 
     /**
+     * Check if modifier is pressed.
+     */
+    private bool __key_mod_pressed(Gdk.EventKey event)
+    {
+        return (event.state&Gdk.ModifierType.CONTROL_MASK) == Gdk.ModifierType.CONTROL_MASK;
+    }
+
+    /**
      * Handle keyboard input.
      */
     private bool __key_press_event_callback_song_list(Gdk.EventKey event)
     {
-        if(event.keyval == Gdk.Key_i)
+        if(event.keyval == Gdk.Key_i && !__key_mod_pressed(event))
         {
             return selected_songs_add();
         }
-        else if (event.keyval == Gdk.Key_r)
+        else if (event.keyval == Gdk.Key_r && !__key_mod_pressed(event))
         {
             // If there are songs selected, clear the play queue,
             // and add selection.
@@ -570,27 +579,27 @@ public class Gmpc.DataView : Gtk.TreeView
      */
     private bool __key_press_event_callback_playlist(Gdk.EventKey event)
     {
-        if (event.keyval == Gdk.Key_x)
+        if (event.keyval == Gdk.Key_x && !__key_mod_pressed(event))
         {
             // Cut (if available) into clipboard
             selected_songs_paste_queue_cut();
         }
-        else if (event.keyval == Gdk.Key_X)
+        else if (event.keyval == Gdk.Key_X && !__key_mod_pressed(event))
         {
             // Crop selected songs.
             selected_songs_crop();
         }
-        else if (event.keyval == Gdk.Key_P)
+        else if (event.keyval == Gdk.Key_P && !__key_mod_pressed(event))
         {
             // Paste before  
             return selected_songs_paste_before();
         }
-        else if (event.keyval == Gdk.Key_p)
+        else if (event.keyval == Gdk.Key_p && !__key_mod_pressed(event))
         {
             // Paste after
             return selected_songs_paste_after();
         }
-        else if (event.keyval == Gdk.Key_d)
+        else if (event.keyval == Gdk.Key_d && !__key_mod_pressed(event))
         {
             if(!selected_songs_remove())
             {
@@ -599,7 +608,7 @@ public class Gmpc.DataView : Gtk.TreeView
                 return true;
             }
         }
-        else if (event.keyval == Gdk.Key_D)
+        else if (event.keyval == Gdk.Key_D && !__key_mod_pressed(event))
         {
             MPD.Database.playlist_clear(server, playlist_name);
             return true;
@@ -608,12 +617,12 @@ public class Gmpc.DataView : Gtk.TreeView
     }
     private bool __key_press_event_callback_play_queue(Gdk.EventKey event)
     {
-        if (event.keyval == Gdk.Key_Q) 
+        if (event.keyval == Gdk.Key_Q && !__key_mod_pressed(event)) 
         {
             // remove priority.
             return selected_songs_remove_priority();
         }
-        else if ((event.state&Gdk.ModifierType.CONTROL_MASK) == Gdk.ModifierType.CONTROL_MASK &&
+        else if (__key_mod_pressed(event) && 
                 event.keyval == Gdk.Key_X)
         {
            stdout.printf("Clear everything but playing song\n"); 
@@ -627,27 +636,27 @@ public class Gmpc.DataView : Gtk.TreeView
             } 
             return false;
         }
-        else if (event.keyval == Gdk.Key_x)
+        else if (event.keyval == Gdk.Key_x && !__key_mod_pressed(event))
         {
             // Cut (if available) into clipboard
             selected_songs_paste_queue_cut();
         }
-        else if (event.keyval == Gdk.Key_X)
+        else if (event.keyval == Gdk.Key_X && !__key_mod_pressed(event))
         {
             // Crop selected songs.
             selected_songs_crop();
         }
-        else if (event.keyval == Gdk.Key_P)
+        else if (event.keyval == Gdk.Key_P && !__key_mod_pressed(event))
         {
             // Paste before  
             return selected_songs_paste_before();
         }
-        else if (event.keyval == Gdk.Key_p)
+        else if (event.keyval == Gdk.Key_p && !__key_mod_pressed(event))
         {
             // Paste after
             return selected_songs_paste_after();
         }
-        else if (event.keyval == Gdk.Key_d)
+        else if (event.keyval == Gdk.Key_d && !__key_mod_pressed(event))
         {
             if(!selected_songs_remove())
             {
@@ -663,7 +672,7 @@ public class Gmpc.DataView : Gtk.TreeView
                 return true;
             }
         }
-        else if (event.keyval == Gdk.Key_D)
+        else if (event.keyval == Gdk.Key_D && !__key_mod_pressed(event))
         {
             var model = get_model();
             this.model = null; 
@@ -677,53 +686,53 @@ public class Gmpc.DataView : Gtk.TreeView
     }
     private bool __key_press_event_callback(Gdk.EventKey event)
     {
-        if(event.keyval == Gdk.Key_h)
+        if(event.keyval == Gdk.Key_h && !__key_mod_pressed(event))
         {
             move_cursor_left();
         }
-        else if (event.keyval == Gdk.Key_l)
+        else if (event.keyval == Gdk.Key_l && !__key_mod_pressed(event))
         {
             move_cursor_right();
         }
-        else if(event.keyval == Gdk.Key_j)
+        else if(event.keyval == Gdk.Key_j && !__key_mod_pressed(event))
         {
             // Move cursor down.
             move_cursor_down();
         }
-        else if (event.keyval == Gdk.Key_k)
+        else if (event.keyval == Gdk.Key_k && !__key_mod_pressed(event))
         {
             // Move cursor up
             move_cursor_up();
         }
-        else if (event.keyval == Gdk.Key_g)
+        else if (event.keyval == Gdk.Key_g && !__key_mod_pressed(event))
         {
             move_cursor_top();
         }
-        else if (event.keyval == Gdk.Key_G)
+        else if (event.keyval == Gdk.Key_G && !__key_mod_pressed(event))
         {
             move_cursor_bottom();
         }
-        else if(event.keyval == Gdk.Key_y)
+        else if(event.keyval == Gdk.Key_y && !__key_mod_pressed(event))
         {
             // Copy data to clipboard
             return selected_songs_paste_queue_copy();
         }
-        else if (event.keyval == Gdk.Key_o)
+        else if (event.keyval == Gdk.Key_o && !__key_mod_pressed(event))
         {
             return selected_songs_info();
         }
-        else if (event.keyval == Gdk.Key_m)
+        else if (event.keyval == Gdk.Key_m && !__key_mod_pressed(event))
         {
             // Configure columns
             column_show_selection_menu();
             return true;
         }
-        else if (event.keyval == Gdk.Key_q)
+        else if (event.keyval == Gdk.Key_q && !__key_mod_pressed(event))
         {
             // Raise priority.
             return selected_songs_raise_priority();
         }
-        else if (event.keyval == Gdk.Key_Menu)
+        else if (event.keyval == Gdk.Key_Menu && !__key_mod_pressed(event))
         {
             __button_press_menu = new Gtk.Menu();
 
