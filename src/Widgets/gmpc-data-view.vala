@@ -153,6 +153,7 @@ public class Gmpc.DataView : Gtk.TreeView
      */
     public DataView(string name, ViewType mode = ViewType.SONG_LIST) 
     {
+        this.can_focus = true;
         log(log_domain, LogLevelFlags.LEVEL_INFO, "Constructing dataview: "+name);
         this.view_mode = mode;
         this.uid = name;

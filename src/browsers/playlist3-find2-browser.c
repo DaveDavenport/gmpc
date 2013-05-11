@@ -377,6 +377,7 @@ static void pl3_find2_browser_search(void)
         }
     }
     gtk_tree_view_set_model(GTK_TREE_VIEW(pl3_find2_tree), GTK_TREE_MODEL(pl3_find2_store2));
+    gtk_widget_grab_focus(GTK_TREE_VIEW(pl3_find2_tree));
 }
 
 
@@ -490,7 +491,12 @@ static gboolean pl3_find2_entry_key_press_event(GtkWidget * entry, GdkEventKey *
 {
     if (event->keyval == GDK_KEY_Escape)
         gtk_entry_set_text(GTK_ENTRY(entry), "");
-
+    else if (event->keyval == GDK_KEY_Up || event->keyval == GDK_KEY_Down)
+    {
+        printf("grab focus\n");
+        gtk_widget_grab_focus(pl3_find2_tree);
+        return TRUE;
+    }
     return FALSE;
 }
 
