@@ -138,6 +138,7 @@
             <property name="icon-name">mpd</property>
             <signal name="activate" handler="playlist3_server_update_db" swapped="no"/>
           </object>
+          <accelerator key="u" modifiers="GDK_CONTROL_MASK"/>
         </child>
         <child>
           <object class="GtkAction" id="MPDConnect">
