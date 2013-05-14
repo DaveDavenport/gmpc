@@ -210,6 +210,25 @@
           <accelerator key="c" modifiers="GDK_CONTROL_MASK"/>
         </child>
         <child>
+          <object class="GtkAction" id="MPDSeekForward">
+            <property name="label" translatable="yes">Seek+</property>
+            <property name="short_label" translatable="yes">Seek forward</property>
+            <property name="tooltip" translatable="yes">Seek forwards in the playing song</property>
+            <property name="stock_id">gtk-go-forward</property>
+            <signal name="activate" handler="song_fastforward" swapped="no"/>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkAction" id="MPDSeekBackward">
+            <property name="label" translatable="yes">Seek-</property>
+            <property name="short_label" translatable="yes">Seek backward</property>
+            <property name="tooltip" translatable="yes">Seek backwards in the playing song</property>
+            <property name="stock_id">gtk-go-back</property>
+            <signal name="activate" handler="song_fastbackward" swapped="no"/>
+          </object>
+        </child>
+        <child>
           <object class="GtkAction" id="MPDNext">
             <property name="label" translatable="yes">Next</property>
             <property name="short_label" translatable="yes">Next</property>
@@ -329,6 +348,8 @@
           <separator/>
           <menuitem action="MPDNext"/>
           <menuitem action="MPDPrevious"/>
+          <menuitem action="MPDSeekForward"/>
+          <menuitem action="MPDSeekBackward"/>
           <separator/>
           <menuitem action="MPDMuted"/>
           <separator/>

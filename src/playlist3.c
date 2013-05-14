@@ -492,6 +492,14 @@ int pl3_window_key_press_event(GtkWidget * mw, GdkEventKey * event)
         show_command_line();
         return TRUE;
     }
+    else if (event->keyval == GDK_KEY_less && 
+            (event->state&GDK_CONTROL_MASK) == GDK_CONTROL_MASK) {
+        song_fastbackward();
+    }
+    else if (event->keyval == GDK_KEY_greater &&
+            (event->state&GDK_CONTROL_MASK) == GDK_CONTROL_MASK) {
+        song_fastforward();
+    }
     else if(event->keyval == GDK_KEY_Tab && (event->state&GDK_CONTROL_MASK) > 0)
     {
         return pl3_window_browser_cycle_forward();

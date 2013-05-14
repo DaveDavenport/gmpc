@@ -299,7 +299,12 @@ void repeat_pl(GtkToggleButton * tb)
 int seek_ps(int n)
 {
     if (mpd_server_check_command_allowed(connection, "seek") == MPD_SERVER_COMMAND_ALLOWED)
-        mpd_player_seek(connection, mpd_status_get_elapsed_song_time(connection) + n);
+    {
+
+        int elapsedTime = mpd_status_get_elapsed_song_time(connection)+n;
+        int clamped = (elapsedTime < 0)? 0:elapsedTime;
+        mpd_player_seek(connection, clamped); 
+    }
     return FALSE;
 }
 
@@ -310,12 +315,12 @@ int seek_ns(int n)
 
 void song_fastforward(void)
 {
-    seek_ps(1);
+    seek_ps(5);
 }
 
 void song_fastbackward(void)
 {
-    seek_ps(-1);
+    seek_ps(-5);
 }
 
 void repeat_toggle(void)
