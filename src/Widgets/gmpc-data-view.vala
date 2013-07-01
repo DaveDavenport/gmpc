@@ -255,6 +255,7 @@ public class Gmpc.DataView : Gtk.TreeView
             item.activate.connect((source)=>{
                     MPD.PlayQueue.clear(server);
                     selected_songs_add();
+                    MPD.Player.play(server);
                     });
             menu.append(item);
         }
