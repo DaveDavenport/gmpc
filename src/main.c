@@ -280,11 +280,11 @@ int main(int argc, char **argv)
     g_free(url);
     #endif
 
-    /* Get Display */
-    display = gdk_display_get_default ();
 
     /* initialize gtk */
     gmpc_application = gtk_application_new("org.gmpclient.gmpc",  G_APPLICATION_HANDLES_COMMAND_LINE);
+    /* Get Display */
+    display = gdk_display_get_default ();
     {
         GError *error = NULL;
 
