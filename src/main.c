@@ -190,6 +190,7 @@ static int handle_commandline(GApplication *app, GApplicationCommandLine *cmd, g
 
 int main(int argc, char **argv)
 {
+    GdkDisplay *display = NULL; 
     #ifdef WIN32
     gchar *packagedir = NULL;
     #endif
@@ -279,6 +280,9 @@ int main(int argc, char **argv)
     g_free(url);
     #endif
 
+    /* Get Display */
+    display = gdk_display_get_default ();
+
     /* initialize gtk */
     gmpc_application = gtk_application_new("org.gmpclient.gmpc",  G_APPLICATION_HANDLES_COMMAND_LINE);
     {
@@ -307,7 +311,7 @@ int main(int argc, char **argv)
     {
         GError          *error = NULL;
         GtkCssProvider  *provider = gtk_css_provider_new ();
-        gchar           *path = g_build_filename(PACKAGE_DATA_DIR, "gmpc", "gmpc.css", NULL); 
+        gchar           *path = g_build_filename(PACKAGE_DATA_DIR, "gmpc", "gmpc.css", NULL);
 
         gtk_css_provider_load_from_path(provider, path, &error);
 
@@ -315,11 +319,10 @@ int main(int argc, char **argv)
 
 
         if(error != NULL) {
-            g_error("Failed to load css file: %s:%s",path, error->message); 
+            g_error("Failed to load css file: %s:%s",path, error->message);
             g_free(path);
             g_error_free(error);
-        } 
-        GdkDisplay *display = gdk_display_get_default ();
+        }
         GdkScreen *screen = gdk_display_get_default_screen (display);
 
         gtk_style_context_add_provider_for_screen (
@@ -583,12 +586,15 @@ int main(int argc, char **argv)
     TEC("Setting up timers");
 
     #ifdef ENABLE_MMKEYS
-    /**
-     * Setup Multimedia Keys
-     */
-    keys = mmkeys_new();
-    gmpc_mmkeys_connect_signals(G_OBJECT(keys));
-    TEC("Setting up multimedia keys");
+    if (GDK_IS_X11_DISPLAY(display))
+    {
+        /**
+         * Setup Multimedia Keys
+         */
+        keys = mmkeys_new();
+        gmpc_mmkeys_connect_signals(G_OBJECT(keys));
+        TEC("Setting up multimedia keys");
+    }
     #endif
 
     url = gmpc_get_user_path("gmpc.key");

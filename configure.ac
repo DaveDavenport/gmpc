@@ -61,7 +61,7 @@ AC_PROG_CC
 AM_PROG_CC_C_O
 LT_PROG_RC
 
-dnl Checks for libm 
+dnl Checks for libm
 AC_CHECK_LIB([m],[floor])
 
 # test for zlib
@@ -313,8 +313,6 @@ AM_CONDITIONAL(PLATFORM_OSX, test x$macosx = xyes)
 ##
 # These depend on if we are or are not on windows or osX
 
-##
-# Session support
 if test x$macosx = xno && test x$win32 = xno ; then
 # Multimedia keys
 AC_ARG_ENABLE([mmkeys],
@@ -326,13 +324,13 @@ AC_ARG_ENABLE([mmkeys],
                 esac],
               [enable_mmkeys=yes])
 if test x${enable_mmkeys} = xyes; then
-	AC_DEFINE(ENABLE_MMKEYS, 1, [Enable multimedia support])
-fi
+    #libx11
+    PKG_CHECK_MODULES([libx11], [x11 gdk-x11-3.0 gtk+-x11-3.0])
+    AC_SUBST(libx11_LIBS)
+    AC_SUBST(libx11_CFLAGS)
 
-#libx11
-PKG_CHECK_MODULES([libx11], x11)
-AC_SUBST(libx11_LIBS)
-AC_SUBST(libx11_CFLAGS)
+    AC_DEFINE(ENABLE_MMKEYS, 1, [Enable multimedia support])
+fi
 
 else
 # force them off
