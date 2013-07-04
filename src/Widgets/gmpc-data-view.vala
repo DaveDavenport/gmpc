@@ -474,12 +474,20 @@ public class Gmpc.DataView : Gtk.TreeView
             this.tree_columns[pos] = col;
 
         }
+        int last_column = 0;
         // Add the columns (in right order)
         for(int i = 0; i < NUM_COLS; i++) {
             int index = this.tree_columns[i].get_data("index");
             this.insert_column(this.tree_columns[i], i); 
             this.tree_columns[i].set_visible(config.get_bool_with_default(uid+"-colshow",
                         gmpc_data_view_col_names[index], gmpc_data_view_col_enabled[index]));
+            if(config.get_bool_with_default(uid+"-colshow",
+                        gmpc_data_view_col_names[index], gmpc_data_view_col_enabled[index])){
+                last_column = i;
+            }
+        }
+        if(last_column >= 0) {
+            this.tree_columns[last_column].set_fixed_width(20);
         }
     }
 
