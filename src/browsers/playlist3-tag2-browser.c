@@ -498,7 +498,10 @@ static void tag2_changed(GtkTreeSelection * sel2, tag_element * te)
     static int working = 0;
     if (working)
     {
-        g_idle_add(tag2_changed_delayed, te);
+        // Only call the idle thing once.
+        if(working == 1)
+            g_idle_add(tag2_changed_delayed, te);
+        working++;
         return;
     }
     working = 1;
