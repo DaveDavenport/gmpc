@@ -5,7 +5,7 @@ noinst_PROGRAMS = \
 read_conf_CFLAGS = @CFLAGS@\
 		@glib_CFLAGS@\
 		@libmpd_CFLAGS@\
-		-I$(top_srcdir)/src
+		-I@top_srcdir@/src
 
 read_conf_LDADD = @LIBS@\
 		@libmpd_LIBS@\
@@ -15,6 +15,6 @@ read_conf_SOURCES = \
 		read_conf.c 
 
 nodist_read_conf_SOURCES = \
-		$(top_srcdir)/src/config1.c
+		@top_srcdir@/src/config1.c
 
 endif
