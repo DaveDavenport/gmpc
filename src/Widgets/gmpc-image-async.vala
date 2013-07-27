@@ -56,11 +56,13 @@ public class PixbufLoaderAsync : GLib.Object
         if(rref != null)
         {
             var model = rref.get_model();
-            var path = rref.get_path();
+            Gtk.TreePath? path = rref.get_path();
             Gtk.TreeIter iter;
-            if(model.get_iter(out iter, path))
+            if(path != null)
             {
-                model.row_changed(path, iter);
+                if(model.get_iter(out iter, path)) {
+                    model.row_changed(path, iter);
+                }
             }
         }
     }

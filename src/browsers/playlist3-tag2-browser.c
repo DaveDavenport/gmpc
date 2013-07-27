@@ -73,6 +73,9 @@ static void tag2_pref_destroy(GtkWidget * container);
 static GtkWidget *pref_vbox = NULL;
 static GtkWidget *pref_entry = NULL;
 static GtkWidget *pref_combo = NULL;
+
+
+
 /**
  * Preferences structure
  */
@@ -128,7 +131,10 @@ typedef struct _tag_browser
     GList *tag_lists;
     /* GtkTreeRowReference */
     GtkTreeRowReference *ref_iter;
+
 } tag_browser;
+
+
 static void tag2_save_browser(tag_browser * browser);
 
 /* The current visible browser, this is needed to workaround gmpc's limitation */
@@ -202,8 +208,14 @@ typedef struct _tag_element
     int index;
     tag_browser *browser;
     guint timeout;
+
+    /* */
+    unsigned int signal_id;
 } tag_element;
 
+static void tag2_changed(GtkTreeSelection * sel2, tag_element * te);
+
+static gboolean tag2_changed_delayed(gpointer data);
 /**
  * Get/Set enabled
  */
@@ -255,7 +267,8 @@ static void tag2_destroy_tag(tag_element * te)
  * this function fixes the behauviour of gtk to something more logic,
  * the actually handling of the press happens in the release event
  */
-static gboolean tag2_song_list_button_press_event(GtkWidget * but, GdkEventButton * event)
+static gboolean tag2_song_list_button_press_event(GtkWidget * but, GdkEventButton * event,
+        tag_element *te)
 {
     GtkTreePath *path = NULL;
     if (gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(but), event->x, event->y, &path, NULL, NULL, NULL))
@@ -269,11 +282,10 @@ static gboolean tag2_song_list_button_press_event(GtkWidget * but, GdkEventButto
                 return TRUE;
             } else
             {
-                gtk_tree_selection_unselect_path(sel, path);
+                gtk_tree_selection_unselect_all(sel);
                 gtk_tree_path_free(path);
                 return TRUE;
             }
-
         }
     }
     if (path)
@@ -480,14 +492,13 @@ static int tag2_key_release_event(GtkTreeView * tree, GdkEventKey * event, tag_e
  * To avoid this, we "delay" the update callbacks to after the update on column A is completely handled.
  * TODO: This needs to be handled nicer.
  */
-static void tag2_changed(GtkTreeSelection * sel2, tag_element * te);
 static gboolean tag2_changed_delayed(gpointer data)
 {
     tag2_changed(NULL, (tag_element *) data);
     return FALSE;
 }
 
-static void tag2_changed(GtkTreeSelection * sel2, tag_element * te)
+void tag2_changed(GtkTreeSelection * sel2, tag_element * te)
 {
     int nfilter = cfg_get_single_value_as_int_with_default(config, "tag2-plugin", "don't filter", 0);
     int found = 0;
@@ -951,6 +962,8 @@ static void tag2_songlist_add_tag(tag_browser * browser, const gchar * name, int
     te->sw = gtk_scrolled_window_new(NULL, NULL);
     te->vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 6);
     te->tree = gtk_tree_view_new_with_model(GTK_TREE_MODEL(te->model));
+    gtk_tree_selection_set_mode(gtk_tree_view_get_selection(GTK_TREE_VIEW(te->tree)),
+            GTK_SELECTION_SINGLE);
     te->tool = gmpc_mpd_data_treeview_tooltip_new(GTK_TREE_VIEW(te->tree), 0);
     te->browser = browser;
 
@@ -1037,7 +1050,7 @@ static void tag2_songlist_add_tag(tag_browser * browser, const gchar * name, int
     g_signal_connect(G_OBJECT(te->tree), "button-release-event", G_CALLBACK(tag2_browser_button_release_event), te);
 
     /* Signal */
-    g_signal_connect(G_OBJECT(gtk_tree_view_get_selection(GTK_TREE_VIEW(te->tree))),
+    te->signal_id = g_signal_connect(G_OBJECT(gtk_tree_view_get_selection(GTK_TREE_VIEW(te->tree))),
                      "changed", G_CALLBACK(tag2_changed), te);
 
 }
