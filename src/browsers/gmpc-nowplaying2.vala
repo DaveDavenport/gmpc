@@ -268,8 +268,10 @@ namespace Gmpc
                     }
                     else
                     {
-                        bg.modify_bg(Gtk.StateType.NORMAL,this.background);
-                        bg.modify_base(Gtk.StateType.NORMAL,this.background);
+                        if(!( bg is Gtk.Label)) {
+                            bg.modify_bg(Gtk.StateType.NORMAL,this.background);
+                            bg.modify_base(Gtk.StateType.NORMAL,this.background);
+                        }
                         bg.modify_text(Gtk.StateType.NORMAL,this.foreground);
                         bg.modify_fg(Gtk.StateType.NORMAL,this.foreground);
                         bg.modify_text(Gtk.StateType.ACTIVE,this.foreground);
