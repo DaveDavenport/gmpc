@@ -1067,9 +1067,9 @@ end:
             }
         }
 
-        private
+    public 
         int
-        test_sort_func(gpointer ppaa, gpointer ppbb, Self *self)
+        test_sort_func(gpointer ppaa, gpointer ppbb, GmpcMpdDataModel *self)
         {
             MpdData_real *a = *(MpdData_real **)ppaa;
             MpdData_real *b = *(MpdData_real **)ppbb;

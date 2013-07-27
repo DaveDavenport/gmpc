@@ -641,19 +641,29 @@ void tag2_changed(GtkTreeSelection * sel2, tag_element * te)
              */
             sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(te_i->tree));
 
-            gmpc_mpddata_model_set_mpd_data_slow(GMPC_MPDDATA_MODEL(te_i->model), data);
-            /* this make sure the selected row is centered in the middle of the treeview.
-             * Otherwise the user could have the tedious job of finding it again
-             */
+            
             /* get the selected row, if any */
-            if (gtk_tree_selection_get_selected(sel, &(te_i->model), &iter))
+            if (gtk_tree_selection_get_selected(sel, NULL, NULL))
             {
-                /* get the path to the selected row */
-                GtkTreePath *path = gtk_tree_model_get_path(te_i->model, &iter);
-                /* scroll to the path, and center it in the middle of the treeview, at the left of the column */
-                gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(te_i->tree), path, NULL, TRUE, 0.5, 0);
-                /* free the path */
-                gtk_tree_path_free(path);
+                gmpc_mpddata_model_set_mpd_data_slow(GMPC_MPDDATA_MODEL(te_i->model), data);
+                /* this make sure the selected row is centered in the middle of the treeview.
+                 * Otherwise the user could have the tedious job of finding it again
+                 */
+
+                if (gtk_tree_selection_get_selected(sel, NULL, &iter))
+                {
+                    /* get the path to the selected row */
+                    GtkTreePath *path = gtk_tree_model_get_path(te_i->model, &iter);
+                    /* scroll to the path, and center it in the middle of the treeview, at the left of the column */
+                    gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(te_i->tree), path, NULL, TRUE, 0.5, 0);
+                    /* free the path */
+                    gtk_tree_path_free(path);
+                }
+            }else {
+
+                data = misc_sort_mpddata(data,
+                        (GCompareDataFunc)gmpc_mpddata_model_test_sort_func,te_i->model);
+                gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(te_i->model), data);
             }
         }
         tel = tel->next;
