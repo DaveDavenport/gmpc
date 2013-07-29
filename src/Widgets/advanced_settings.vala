@@ -84,6 +84,18 @@ public static void advanced_settings()
     });
     vbox.add(ck);
 
+    /** Orientation. */
+    ck = new Gtk.CheckButton.with_label("Horizontal tag browser orientation.");
+    ck.set_active((bool)config.get_int_with_default("tag2-plugin","orientation",0));
+    ck.toggled.connect((source) =>
+    {
+        config.set_int("tag2-plugin","orientation",(int)source.get_active());
+        Gmpc.browsers_metadata.set_orientation();
+        Gmpc.tag2_browser_update_orientation();
+    });
+    vbox.add(ck);
+    
+
     /** Use legacy tray icon  */
     if (Gmpc.TrayIcon2.have_appindicator_support())
     {

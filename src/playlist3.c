@@ -2194,7 +2194,6 @@ static void playlist3_fill_server_menu(void)
  */
 /* glue code */
 
-extern GmpcBrowsersMetadata *browsers_metadata;
 
 void info2_activate(void)
 {

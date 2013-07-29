@@ -112,6 +112,7 @@ void gmpc_easy_async_quit(void);
 void   GmpcStatusChangedCallback(MpdObj *mi, ChangedStatusType what, void *userdata);
 
 
+extern GmpcBrowsersMetadata *browsers_metadata;
 #ifdef DEBUG_TIMING
 /* Tic Tac system */
 #define TIMER_SUB(start,stop,diff)  diff.tv_usec = stop.tv_usec - start.tv_usec;\

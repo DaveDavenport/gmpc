@@ -22,4 +22,5 @@
 
 extern gmpcPlugin tag2_plug;
 
+void tag2_browser_update_orientation();
 #endif

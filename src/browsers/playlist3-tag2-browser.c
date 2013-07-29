@@ -1597,10 +1597,8 @@ static void tag2_pref_column_remove(GtkWidget * but, GtkComboBox * box)
     }
 }
 
-void tag2_pref_orientation_changed(GtkToggleButton *toggle) 
+void tag2_browser_update_orientation()
 {
-   int state = gtk_toggle_button_get_active(toggle)?1:0; 
-   cfg_set_single_value_as_int(config,"tag2-plugin","orientation", state);
    g_list_foreach(tag2_ht, (GFunc)tag2_set_orientation, NULL);
 }
 
@@ -1709,14 +1707,6 @@ void tag2_pref_construct(GtkWidget * container)
     gtk_box_pack_start(GTK_BOX(pref_vbox), hbox, TRUE, TRUE, 0);
 
 
-    GtkWidget *chk_but = gtk_check_button_new_with_label(_("Swap orientation"));
-    gtk_box_pack_start(GTK_BOX(pref_vbox), chk_but, FALSE, TRUE,0);
-    if(cfg_get_single_value_as_int_with_default(config,"tag2-plugin", "orientation", 0)){
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(chk_but), TRUE);
-    }
-    g_signal_connect(G_OBJECT(chk_but), "toggled",
-            G_CALLBACK(tag2_pref_orientation_changed),
-            NULL);
 
 
     gtk_container_add(GTK_CONTAINER(container), pref_vbox);

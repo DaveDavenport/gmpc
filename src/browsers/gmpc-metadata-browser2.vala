@@ -498,6 +498,19 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         }
         return false;
     }
+    public void set_orientation()
+    {
+        if(paned != null) {
+            if(config.get_int_with_default("tag2-plugin", "orientation", 0) == 1)
+            {
+                (paned as Gtk.Orientable).set_orientation(Gtk.Orientation.VERTICAL);
+                (browser_box as Gtk.Orientable).set_orientation(Gtk.Orientation.HORIZONTAL);
+            }else{
+                (paned as Gtk.Orientable).set_orientation(Gtk.Orientation.HORIZONTAL);
+                (browser_box as Gtk.Orientable).set_orientation(Gtk.Orientation.VERTICAL);
+            }
+        }
+    }
     private void browser_init()
     {
         if(this.paned == null)
@@ -709,6 +722,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         {
             this.browser_box.hide();
         }
+        this.set_orientation();
     }
 
     private void reload_browsers()

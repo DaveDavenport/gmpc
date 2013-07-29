@@ -3,6 +3,12 @@ namespace Gmpc {
     [CCode (cname="TRUE",cheader_filename="gtk/gtk.h,gtktransition.h")]
     static const bool use_transition;
 
+    [CCode (cname="browsers_metadata")]
+    static Gmpc.Browsers.Metadata browsers_metadata;
+
+    [CCode (cname="tag2_browser_update_orientation")]
+    static void tag2_browser_update_orientation();
+
     [CCode (cname="paned_size_group", cheader_filename="plugin.h")]
     static PanedSizeGroup paned_size_group;
 
