@@ -1113,7 +1113,20 @@ static void tag2_init(void)
     }
 
 }
-
+static void tag2_set_orientation(tag_browser *browser)
+{
+    if(cfg_get_single_value_as_int_with_default(config,"tag2-plugin", "orientation", 0)) {
+        gtk_orientable_set_orientation(GTK_ORIENTABLE(browser->tag2_vbox),
+                GTK_ORIENTATION_VERTICAL);
+        gtk_orientable_set_orientation(GTK_ORIENTABLE(browser->tag_hbox),
+                GTK_ORIENTATION_HORIZONTAL);
+    }else{
+        gtk_orientable_set_orientation(GTK_ORIENTABLE(browser->tag2_vbox),
+                GTK_ORIENTATION_HORIZONTAL);
+        gtk_orientable_set_orientation(GTK_ORIENTABLE(browser->tag_hbox),
+                GTK_ORIENTATION_VERTICAL);
+    }
+}
 static void tag2_init_browser(tag_browser * browser)
 {
     gchar *key;
@@ -1125,7 +1138,7 @@ static void tag2_init_browser(tag_browser * browser)
     gmpc_paned_size_group_add_paned(GMPC_PANED_SIZE_GROUP(paned_size_group), GTK_PANED(browser->tag2_vbox));
 
     /* box with tag treeviews (browsers) */
-    browser->tag_hbox = gtk_vbox_new(TRUE, 6);
+    browser->tag_hbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 6);
 
     /* Add this to the 1st pane */
     gtk_paned_add1(GTK_PANED(browser->tag2_vbox), browser->tag_hbox);
@@ -1155,6 +1168,9 @@ static void tag2_init_browser(tag_browser * browser)
     g_object_ref_sink(browser->tag2_vbox);
     /* show everything */
     gtk_widget_show_all(browser->tag2_vbox);
+
+
+    tag2_set_orientation(browser);
 
     tag2_connection_changed_foreach(browser, NULL);
 }
@@ -1507,28 +1523,6 @@ static void tag2_pref_column_add(GtkWidget * but, GtkComboBox * box)
         tag2_pref_combo_changed(box, model2);
         gtk_widget_show_all(tb->tag_hbox);
         tag2_save_browser(tb);
-        /* if it's the first, update */
-        /*if(g_list_length(tb->tag_lists) == 1)
-           {
-           GList *giter;
-
-           giter = g_list_first(tb->tag_lists);
-           if(giter)
-           {
-           MpdData *data;
-           tag_element *te2 = giter->data;
-         *//* update the content */
-        /*      if(mpd_server_tag_supported(connection,te2->type))
-           {
-           mpd_database_search_field_start(connection, te2->type);
-           data = mpd_database_search_commit(connection);
-           gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(te2->model), data);
-           }else{
-           gmpc_mpddata_model_set_mpd_data(GMPC_MPDDATA_MODEL(te2->model), NULL);
-           }
-           }
-           }
-         */
         /* just reset the whole thing */
         tag2_songlist_clear_selection(NULL, tb);
     }
@@ -1601,6 +1595,13 @@ static void tag2_pref_column_remove(GtkWidget * but, GtkComboBox * box)
             tag2_save_browser(tb);
         }
     }
+}
+
+void tag2_pref_orientation_changed(GtkToggleButton *toggle) 
+{
+   int state = gtk_toggle_button_get_active(toggle)?1:0; 
+   cfg_set_single_value_as_int(config,"tag2-plugin","orientation", state);
+   g_list_foreach(tag2_ht, (GFunc)tag2_set_orientation, NULL);
 }
 
 void tag2_pref_construct(GtkWidget * container)
@@ -1706,6 +1707,17 @@ void tag2_pref_construct(GtkWidget * container)
     gtk_box_pack_start(GTK_BOX(hbox), sw, TRUE, TRUE, 0);
     gtk_box_pack_start(GTK_BOX(hbox), vbox, FALSE, TRUE, 0);
     gtk_box_pack_start(GTK_BOX(pref_vbox), hbox, TRUE, TRUE, 0);
+
+
+    GtkWidget *chk_but = gtk_check_button_new_with_label(_("Swap orientation"));
+    gtk_box_pack_start(GTK_BOX(pref_vbox), chk_but, FALSE, TRUE,0);
+    if(cfg_get_single_value_as_int_with_default(config,"tag2-plugin", "orientation", 0)){
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(chk_but), TRUE);
+    }
+    g_signal_connect(G_OBJECT(chk_but), "toggled",
+            G_CALLBACK(tag2_pref_orientation_changed),
+            NULL);
+
 
     gtk_container_add(GTK_CONTAINER(container), pref_vbox);
     gtk_widget_show_all(container);
