@@ -133,7 +133,7 @@ public class Gmpc.MetaData.Widgets.SimilarArtists : Gtk.Table
                         {
                             in_db_list.prepend(new_artist_button(iter.tag, true));
                             i++;
-                            var d = liter.data;
+                            weak string d = liter.data;
                             liter = liter.next;
                             list.remove(d);
                             //liter = null;
@@ -204,8 +204,8 @@ public class Gmpc.MetaData.Widgets.SimilarArtists : Gtk.Table
                 */
 
         var event = new Gtk.EventBox();
-        event.app_paintable = true;
-        event.set_visible_window(true);
+        event.app_paintable = false;
+        event.set_visible_window(false);
         // TODO
 //        event.draw.connect(Gmpc.Misc.misc_header_expose_event);
         event.set_size_request(button_width-20,60);
