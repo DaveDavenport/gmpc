@@ -129,7 +129,6 @@ public class Gmpc.Widgets.Qtable : Gtk.Container, Gtk.Buildable
      */
     public override void get_preferred_height_for_width(int actual_width, out int min_height, out int nat_height)
     {
-        stdout.printf("qtable resize\n");
         int cover_width = item_width_real;
         int cover_height= item_height_real;
         int header_height = header_height_real;
@@ -200,7 +199,6 @@ public class Gmpc.Widgets.Qtable : Gtk.Container, Gtk.Buildable
             rows = rows + (nrows+remain)*cover_height;
         }
 
-        stdout.printf("height: %d %d: %d %d\n", rows, columns, cover_width, actual_width);
         /* Width of one column */
         min_height = rows; 
         nat_height = rows;
