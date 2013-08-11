@@ -25,40 +25,11 @@ using Gmpc;
 private const bool use_transition_mdsa = Gmpc.use_transition;
 private const string some_unique_name_mdsa = Config.VERSION;
 
-public class Gmpc.MetaData.Widgets.SimilarArtists : Gtk.Table
+public class Gmpc.MetaData.Widgets.SimilarArtists : Gmpc.Widgets.Qtable
 {
     private MPD.Song? song = null;
     private int columns = 1;
     private int button_width = 200;
-    private void size_changed(Gtk.Allocation alloc)
-    {
-        int t_column = alloc.width/button_width;
-        t_column = (t_column < 1)?1:t_column;
-        if(t_column != columns )
-        {
-            var list = this.get_children();
-            foreach(Gtk.Widget child in list)
-            {
-                child.ref();
-                this.remove(child);
-            }
-
-            columns = t_column;
-            int i = 0;
-
-            this.resize(list.length()/columns+1, columns);
-            foreach(Gtk.Widget item in list)
-            {
-                this.attach(item,
-                            i%columns,i%columns+1,i/columns,i/columns+1,
-                            Gtk.AttachOptions.EXPAND|Gtk.AttachOptions.FILL,
-                            Gtk.AttachOptions.SHRINK, 0,0);
-                i++;
-            }
-            this.show_all();
-        }
-
-    }
 
     /**
      * Handle signals from the metadata object.
@@ -84,13 +55,13 @@ public class Gmpc.MetaData.Widgets.SimilarArtists : Gtk.Table
         if(result == Gmpc.MetaData.Result.UNAVAILABLE || met.is_empty() || !met.is_text_list())
         {
             var label = new Gtk.Label(_("Unavailable"));
-            this.attach(label, 0,1,0,1,Gtk.AttachOptions.SHRINK, Gtk.AttachOptions.SHRINK, 0,0);
+            this.add(label);
         }
         /* if fetching set that in a label*/
         else if(result == Gmpc.MetaData.Result.FETCHING)
         {
             var label = new Gtk.Label(_("Fetching"));
-            this.attach(label, 0,1,0,1,Gtk.AttachOptions.SHRINK, Gtk.AttachOptions.SHRINK, 0,0);
+            this.add(label);
 
         }
         /* Set result */
@@ -170,16 +141,10 @@ public class Gmpc.MetaData.Widgets.SimilarArtists : Gtk.Table
             in_db_list.reverse();
             i=0;
             this.hide();
-            uint llength = in_db_list.length();
-            columns = this.get_allocated_width()/button_width;
-            columns = (columns < 1)?1:columns;
-            this.resize(llength/columns+1, columns);
             foreach(Gtk.Widget item in in_db_list)
             {
-                this.attach(item,
-                            i%columns,i%columns+1,i/columns,i/columns+1,
-                            Gtk.AttachOptions.EXPAND|Gtk.AttachOptions.FILL,
-                            Gtk.AttachOptions.SHRINK, 0,0);
+                this.add(item);
+                            
                 i++;
             }
         }
@@ -199,6 +164,9 @@ public class Gmpc.MetaData.Widgets.SimilarArtists : Gtk.Table
     {
         var hbox = new Gtk.HBox(false, 6);
         hbox.border_width = 4;
+
+        hbox.set_hexpand(false);
+        hbox.set_vexpand(false);
         /*
                 var event = new Gtk.Frame(null);
                 */
@@ -250,8 +218,6 @@ public class Gmpc.MetaData.Widgets.SimilarArtists : Gtk.Table
         {
             MetaData.Item item = null;
             metawatcher.data_changed.connect(metadata_changed);
-            this.size_allocate.connect(size_changed);
-
             Gmpc.MetaData.Result gm_result = MetaData.get_path(song, Gmpc.MetaData.Type.ARTIST_SIMILAR,out item);
             if(gm_result == Gmpc.MetaData.Result.AVAILABLE)
             {
@@ -263,11 +229,6 @@ public class Gmpc.MetaData.Widgets.SimilarArtists : Gtk.Table
     public SimilarArtists(MPD.Server server, MPD.Song song)
     {
         this.song = song.copy();
-
-        this.set_homogeneous(true);
-
-        this.set_row_spacings(6);
-        this.set_col_spacings(6);
         this.show();
 
     }
