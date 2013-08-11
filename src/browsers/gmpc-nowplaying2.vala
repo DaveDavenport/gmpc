@@ -251,7 +251,8 @@ namespace Gmpc
             private void change_color_style(Gtk.Widget bg)
             {
                 debug("change style");
-                if(bg is Gtk.Separator || bg is Gtk.Notebook || bg is Gtk.CheckButton || bg is Gtk.Image)
+                if(bg is Gtk.Separator || bg is Gtk.Notebook || bg is Gtk.CheckButton || 
+                        bg is Gtk.Image || bg is Gmpc.DataView)
                 {
                     /* Do nothing */
                 }
@@ -757,7 +758,7 @@ namespace Gmpc
                 if(config.get_int_with_default("MetaData", "show-similar-songs",1) == 1)
                 {
                     var similar_songs_queried = false;
-                    var similar_songs_box = new Gtk.Alignment(0f,0f,0f,0f);
+                    var similar_songs_box = new Gtk.Alignment(0f,0f,1f,0f);
 
                     notebook.append_page(similar_songs_box, new Gtk.Label(_("Similar Songs")));
 
