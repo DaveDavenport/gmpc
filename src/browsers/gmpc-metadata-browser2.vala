@@ -1323,9 +1323,9 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         {
             var similar_artist = new Gmpc.MetaData.Widgets.SimilarArtists(Gmpc.server,song);
 
-            notebook.append_page(similar_artist, new Gtk.Label(_("Similar Artist")));
+            notebook.append_page(similar_artist, new Gtk.Label(_("Similar Artists")));
 
-            var button = new Gtk.RadioButton.with_label(group,_("Similar Artist"));
+            var button = new Gtk.RadioButton.with_label(group,_("Similar Artists"));
             group = button.get_group();
             hboxje.pack_start(button, false, false, 0);
 
@@ -1938,9 +1938,9 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         {
             var similar_artist = new Gmpc.MetaData.Widgets.SimilarArtists(Gmpc.server,song);
 
-            notebook.append_page(similar_artist, new Gtk.Label(_("Similar Artist")));
+            notebook.append_page(similar_artist, new Gtk.Label(_("Similar Artists")));
 
-            var button_sa = new Gtk.RadioButton.with_label(group,_("Similar Artist"));
+            var button_sa = new Gtk.RadioButton.with_label(group,_("Similar Artists"));
             group = button_sa.get_group();
             hboxje.pack_start(button_sa, false, false, 0);
 

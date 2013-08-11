@@ -806,9 +806,9 @@ namespace Gmpc
                 {
                     var similar_artist = new Gmpc.MetaData.Widgets.SimilarArtists(Gmpc.server,song);
 
-                    notebook.append_page(similar_artist, new Gtk.Label(_("Similar Artist")));
+                    notebook.append_page(similar_artist, new Gtk.Label(_("Similar Artists")));
 
-                    var button = new Gtk.RadioButton.with_label(group,_("Similar Artist"));
+                    var button = new Gtk.RadioButton.with_label(group,_("Similar Artists"));
                     ((button as Gtk.Bin).get_child() as
                      Gtk.Label).set_ellipsize(Pango.EllipsizeMode.END);
                     if(group != null)
