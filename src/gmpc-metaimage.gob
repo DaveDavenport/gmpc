@@ -170,18 +170,17 @@ class Gmpc:MetaImage from Gtk:Event:Box{
     {
 	    GtkWidget *win = NULL;
 	    gtk_container_add(GTK_CONTAINER(self), self->_priv->image);
-	    gtk_container_set_resize_mode(GTK_CONTAINER(self), GTK_RESIZE_IMMEDIATE);
+
 	    gtk_widget_show_all(GTK_WIDGET(self));
 
-	    g_signal_connect_swapped(G_OBJECT(self/*->_priv->image*/), "button-press-event", G_CALLBACK(self_menu_populate_callback), self);
-	    self->_priv->meta_id = g_signal_connect(G_OBJECT(gmw), "data-changed", G_CALLBACK(self_meta_callback), self);
+        g_signal_connect_swapped(G_OBJECT(self/*->_priv->image*/), "button-press-event",
+                G_CALLBACK(self_menu_populate_callback), self);
+        self->_priv->meta_id = g_signal_connect(G_OBJECT(gmw), "data-changed", G_CALLBACK(self_meta_callback), self);
 	    gtk_widget_add_events(GTK_WIDGET(self->_priv->image), GDK_POINTER_MOTION_MASK);
 	    gtk_widget_set_no_show_all(GTK_WIDGET(self),TRUE);
 
 	    win = gtk_window_new(GTK_WINDOW_POPUP);
 	    gtk_window_set_resizable(GTK_WINDOW(win), FALSE);
-        //TODO
-//	    gtk_widget_modify_bg(win, GTK_STATE_NORMAL, &(GTK_WIDGET(self)->style->black));
 	    gtk_container_set_border_width(GTK_CONTAINER(win), 6);
 	    gtk_container_add(GTK_CONTAINER(win), GTK_WIDGET(self->_priv->tooltip_image));
 
@@ -198,6 +197,37 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 		}
         return FALSE;
     }
+
+    override (Gtk:Widget)
+    GtkSizeRequestMode get_request_mode(self)
+    {
+        if(self->squared) {
+            return GTK_SIZE_REQUEST_CONSTANT_SIZE;
+        }
+        return gtk_widget_get_request_mode(self->_priv->image);
+    }
+    override (Gtk:Widget)
+    void get_preferred_height(self,int *min_height, int *nat_height)
+    {
+        if(self->squared) {
+            if(min_height != NULL) *min_height = self->size;
+            if(nat_height != NULL) *nat_height = self->size;
+        }else{
+            gtk_widget_get_preferred_height(self->_priv->image, min_height, nat_height);
+        }
+    }
+
+    override (Gtk:Widget)
+    void get_preferred_width(self,int *min_width, int *nat_width)
+    {
+        if(self->squared) {
+            if(min_width != NULL) *min_width = self->size;
+            if(nat_width != NULL) *nat_width = self->size;
+        }else{
+            gtk_widget_get_preferred_width(self->_priv->image, min_width, nat_width);
+        }
+    }
+
 
 	override (G:Object)
 		void
@@ -463,7 +493,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
             if(self->_priv->song)
                 mpd_freeSong(self->_priv->song);
 
-            gtk_widget_set_size_request(GTK_WIDGET(self), self->size, self->size);
             self->_priv->song = mpd_songDup(song);
             /* hack to make it load when it gets visible */
             self->_priv->expose_id = g_signal_connect(G_OBJECT(self), "draw", G_CALLBACK(self_expose_event) , NULL);
@@ -570,11 +599,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
             }
 
             if(pb2) {
-                if(self->squared) {
-                    gtk_widget_set_size_request(GTK_WIDGET(self), self->size, self->size);
-                } else {
-                    //    gtk_widget_set_size_request(GTK_WIDGET(self), gdk_pixbuf_get_width(pb2), gdk_pixbuf_get_height(pb2));
-                }
                 gmpc_meta_image_async_set_pixbuf(GMPC_META_IMAGE_ASYNC(self->_priv->image), pb2);
                 g_object_unref(pb2);
             } else {
@@ -628,11 +652,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
             }
 
             if(pb2) {
-                if(self->squared) {
-                    gtk_widget_set_size_request(GTK_WIDGET(self), self->size, self->size);
-                } else {
-                    //    gtk_widget_set_size_request(GTK_WIDGET(self), gdk_pixbuf_get_width(pb2), gdk_pixbuf_get_height(pb2));
-                }
                 gmpc_meta_image_async_set_pixbuf(GMPC_META_IMAGE_ASYNC(self->_priv->image), pb2);
                 g_object_unref(pb2);
             } else {
@@ -684,9 +703,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 
             }
 
-            if(self->squared) {
-                gtk_widget_set_size_request(GTK_WIDGET(self), self->size, self->size);
-            } else {
+            if(!self->squared) {
                 gmpc_meta_image_async_clear_now(GMPC_META_IMAGE_ASYNC(self->_priv->image));
             }
 
@@ -709,9 +726,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 					GMPC_MODIFICATION_TYPE_CASING:GMPC_MODIFICATION_TYPE_BORDER,
 					md5sum
 					);
-			if(self->squared) {
-				gtk_widget_set_size_request(GTK_WIDGET(self), self->size, self->size);
-			}
 			// Update tooltip.
 			if(gtk_widget_get_has_tooltip(GTK_WIDGET(self)))
 			{
@@ -924,6 +938,7 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 					break;
 		}
 	}
+    
 
  	public void set_dirty(self)
     {
