@@ -5,5 +5,5 @@ Exec=gmpc
 Terminal=false
 Type=Application
 Icon=gmpc
-Categories=GNOME;AudioVideo;
+Categories=GNOME;AudioVideo;Audio;
 StartupNotify=true
