@@ -252,13 +252,6 @@ PKG_CHECK_MODULES([libgio], gio-2.0)
 AC_SUBST(libgio_LIBS)
 AC_SUBST(libgio_CFLAGS)
 
-
-#sqlite3
-PKG_CHECK_MODULES([sqlite3], sqlite3)
-AC_SUBST(sqlite3_LIBS)
-AC_SUBST(sqlite3_CFLAGS)
-
-
 #libxml2
 PKG_CHECK_MODULES([libxml2], libxml-2.0)
 AC_SUBST(libxml2_LIBS)

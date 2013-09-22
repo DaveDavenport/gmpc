@@ -109,10 +109,6 @@ gmpc_SOURCES=\
     plugin.c\
     main.c
 
-#    MetaData/metadata-cache-sqlite.c\
-#    MetaData/metadata-cache.c\
-#
-
 
 nodist_gmpc_SOURCES=\
     $(gmpc_GOBCFILES)
@@ -180,7 +176,6 @@ LIBS= \
 	@libxml2_LIBS@\
 	@libx11_LIBS@\
     @libglyr_LIBS@\
-	@sqlite3_LIBS@\
     @libnotify_LIBS@\
 	-lz
 
@@ -206,7 +201,6 @@ AM_CFLAGS = @CFLAGS@\
 	@gthread_CFLAGS@\
 	@libsoup_CFLAGS@\
 	@libgio_CFLAGS@\
-    @sqlite3_CFLAGS@\
     @libxml2_CFLAGS@\
     @libx11_CFLAGS@\
     @EXTRA_CFLAGS@\
@@ -286,10 +280,6 @@ EXTRA_DIST=\
         $(VALA_VAPI_FILES)\
         $(gmpc_GOBFILES)
 
-#        GUI/thv.h
-#		MetaData/metadata-cache.h\
-#		MetaData/metadata-cache-sqlite.h\
-#
 
 DISTCLEANFILES=\
 			   revision.h\

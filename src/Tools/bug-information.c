@@ -21,7 +21,6 @@
 #include <config.h>
 #include <main.h>
 #include <bug-information.h>
-#include <sqlite3.h>
 #ifdef HAVE_UNIQUE
 #include <unique/uniqueversion.h>
 #endif
@@ -98,13 +97,6 @@ static void bug_information_generate_message(GtkTextBuffer * buffer)
     temp = g_strdup_printf("%i.%i.%i\n", GLIB_MAJOR_VERSION, GLIB_MINOR_VERSION, GLIB_MICRO_VERSION);
     gtk_text_buffer_insert(buffer, &iter, temp, -1);
     g_free(temp);
-
-    /* glib-2.0 */
-    gtk_text_buffer_insert_with_tags(buffer, &iter, "Runtime sqlite3:\t", -1, bold_tag, NULL);
-    gtk_text_buffer_insert(buffer, &iter, sqlite3_libversion(), -1);
-
-    gtk_text_buffer_insert_with_tags(buffer, &iter, "\nCompile time sqlite3:\t", -1, bold_tag, NULL);
-    gtk_text_buffer_insert(buffer, &iter, SQLITE_VERSION, -1);
 
 #ifdef HAVE_UNIQUE
     gtk_text_buffer_insert_with_tags(buffer, &iter, "\nLibunique:\t", -1, bold_tag, NULL);
