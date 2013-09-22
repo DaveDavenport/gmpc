@@ -30,6 +30,7 @@
 #include "gmpc-metaimage.h"
 #include "misc.h"
 #include "tray-icon2.h"
+#include "internal-plugins.h"
 
 #define LOG_DOMAIN "TrayIcon"
 /* name of config field */
@@ -277,42 +278,6 @@ static int tray_icon2_button_scroll_event_appindicator(AppIndicator *this_indica
 }
 #endif
 
-
-
-/* hack to delay tooltip showup on tray-icon*/
-/*
-GTimeVal current = {0,0};
-static gboolean tray_icon2_tooltip_query(GtkStatusIcon *icon,
-        gint x, gint y,
-        gboolean keyboard_mode,
-        GtkTooltip *tooltip,
-        gpointer user_data)
-{
-    if(!keyboard_mode)
-    {
-        if(tray_icon2_tooltip == NULL){
-            GTimeVal now;
-            if(current.tv_sec == 0) {
-                g_get_current_time(&current);
-                return FALSE;
-            }
-
-            g_get_current_time(&now);
-            if((now.tv_sec - current.tv_sec ) > 5) {
-                current.tv_sec = 0;
-                return FALSE;
-            }
-            if(current.tv_sec < now.tv_sec)
-            {
-                current.tv_sec = 0;
-                tray_icon2_create_tooltip_real(TI2_AT_TOOLTIP);
-                return TRUE;
-            }
-        }
-    }
-    return FALSE;
-}
-*/
 
 static void tray_icon2_init(void)
 {
@@ -1132,6 +1097,14 @@ static void update_popup_settings(void)
         cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "tooltip-position", 0));
     gtk_spin_button_set_value(GTK_SPIN_BUTTON(gtk_builder_get_object(tray_icon2_preferences_xml, "popup_timeout")),
         cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "tooltip-timeout", 5));
+#ifdef HAVE_LIBNOTIFY
+    gtk_toggle_button_set_active(
+            GTK_TOGGLE_BUTTON(gtk_builder_get_object(tray_icon2_preferences_xml,"ck_libnotify_enable")),
+            libnotify_plugin.get_enabled());
+
+#else
+    gtk_widget_hide(gtk_builder_get_object(tray_icon2_preferences_xml, "frame_libnotify"));
+#endif
 }
 
 
@@ -1151,6 +1124,14 @@ void tray_icon2_preferences_pm_combo_changed(GtkComboBox * cm, gpointer data)
 {
     int level = gtk_combo_box_get_active(cm);
     cfg_set_single_value_as_int(config, "Default", "min-error-level", level);
+}
+
+void libnotify_enable_toggled(GtkCheckButton *button, gpointer data)
+{
+#ifdef HAVE_LIBNOTIFY
+    int state = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(button));
+    libnotify_plugin.set_enabled(state); 
+#endif 
 }
 
 

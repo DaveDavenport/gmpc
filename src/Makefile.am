@@ -22,6 +22,7 @@ PLUGIN_FILES=\
     Plugins/sidebar-search.vala\
 	Plugins/sidebar-play-queue-time.vala\
     Plugins/sidebar-next-song.vala\
+    Plugins/libnotify.c\
     Plugins/ExternalCommand.vala
 
 
@@ -180,6 +181,7 @@ LIBS= \
 	@libx11_LIBS@\
     @libglyr_LIBS@\
 	@sqlite3_LIBS@\
+    @libnotify_LIBS@\
 	-lz
 
 
@@ -209,6 +211,7 @@ AM_CFLAGS = @CFLAGS@\
     @libx11_CFLAGS@\
     @EXTRA_CFLAGS@\
     @libglyr_CFLAGS@\
+    @libnotify_CFLAGS@\
 	-DPACKAGE_LIB_DIR=\""$(pkglibdir)"\"\
 	-DPACKAGE_DATA_DIR=\""$(datarootdir)"\"
 

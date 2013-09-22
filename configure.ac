@@ -130,6 +130,28 @@ if test "x${enable_libspiff}" != xno; then
 fi
 fi
 
+##
+# Check for libnotify
+##
+AC_ARG_ENABLE(libnotify,
+    [   --enable-libnotify      Use libnotify for user notifications.],
+    [ case "${enableval}" in
+        yes)    enable_libnotify=yes;;
+         no)    enable_libnotify=no;;
+          *)    AC_MSG_ERROR([bad value ${enableval} for --enable-libnotify]);;
+     esac],
+     [enable_libnotify=auto])
+
+if test "x${enable_libnotify}" != xno; then
+	PKG_CHECK_MODULES([libnotify], libnotify, enable_libnotify=true, enable_libnotify=false)
+fi
+if test "x$enable_libnotify" = "xtrue"; then
+	PKG_CHECK_MODULES([libnotify], libnotify)
+	AC_SUBST(libnotify_LIBS)
+	AC_SUBST(libnotify_CFLAGS)
+	AC_DEFINE([HAVE_LIBNOTIFY], 1, [Use notify])
+fi
+
 # Checks for header files.
 AC_HEADER_STDC
 AC_CHECK_HEADERS([stdlib.h string.h unistd.h])
@@ -529,6 +551,11 @@ if test "x$have_gdu" = "xyes"; then
 	echo "Use Gnome Documentation:          enabled"
 else
 	echo "Use Gnome Documentation:          disabled"
+fi
+if test x${enable_libnotify} = xtrue; then
+	echo "Use libnotify:                    enabled"
+else
+	echo "Use libnotify:                    disabled"
 fi
 echo "";
 echo "Now type make to build"

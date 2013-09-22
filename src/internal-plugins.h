@@ -10,5 +10,8 @@ extern gmpcPlugin playlist_editor_plugin;
 extern gmpcPlugin statistics_plugin;
 extern gmpcPlugin extraplaylist_plugin;
 
+#ifdef HAVE_LIBNOTIFY
+extern  gmpcPlugin libnotify_plugin;
+#endif
 
 #endif

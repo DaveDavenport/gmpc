@@ -123,6 +123,10 @@ void plugin_manager_load_internal_plugins(void)
     plugin_add_new((GmpcPluginBase *)
             gmpc_tools_auto_reset_priority_new(),
             0, NULL);
+
+#ifdef HAVE_LIBNOTIFY
+    plugin_add(&libnotify_plugin, 0, NULL);
+#endif
 }
 
 void plugin_manager_initialize_plugins(void)
