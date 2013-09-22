@@ -26,9 +26,9 @@
 #include <glib.h>
 #include <glib/gi18n-lib.h>
 #include <libnotify/notify.h>
-#include <gmpc/plugin.h>
-#include <gmpc/metadata.h>
-#include <gmpc/misc.h>
+#include "plugin.h"
+#include "MetaData/metadata.h"
+#include "Tools/misc.h"
 #include <config.h>
 
 #define LOG_DOMAIN "LibNotifyPlugin"
