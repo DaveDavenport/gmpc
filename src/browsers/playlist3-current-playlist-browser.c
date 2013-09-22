@@ -418,6 +418,8 @@ static void pl3_current_playlist_browser_select_current_song(PlayQueuePlugin * s
         if (path != NULL
             && GMPC_IS_MPDDATA_MODEL_PLAYLIST(gtk_tree_view_get_model(GTK_TREE_VIEW(self->priv->pl3_cp_tree))))
         {
+            gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(self->priv->pl3_cp_tree), path, NULL, TRUE,
+                    0.5, 0.0);
             gtk_tree_view_set_cursor(GTK_TREE_VIEW(self->priv->pl3_cp_tree), path, NULL, FALSE);
         }
         gtk_tree_path_free(path);
@@ -641,6 +643,10 @@ static int pl3_current_playlist_browser_key_press_event(GtkTreeView * tree, GdkE
         mod_fill_entry_changed(self->priv->filter_entry, self);
         gtk_widget_grab_focus(self->priv->filter_entry);
         self->priv->search_keep_open = TRUE;
+        return TRUE;
+    }
+    else if (event->keyval == GDK_KEY_z) {
+        pl3_current_playlist_browser_select_current_song(self);
         return TRUE;
     }
     else if (event->keyval == GDK_KEY_Escape) {
