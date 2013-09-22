@@ -183,18 +183,6 @@ if test x${enable_timing} = xtrue; then
     AC_DEFINE(DEBUG_TIMING, 1, [Enable timing output])
 fi
 
-# Maintainer mode
-AC_ARG_ENABLE([test],
-	[--enable-test Enable tests],
-	[case "${enableval}" in
-		yes) test_mode=true;;
-		no)  test_mode=false;;
-		*) AC_MSG_ERROR([bad value ${enableval} for --enable-test]);;
-	 esac],
-	[test_mode=false])
-
-AM_CONDITIONAL([ENABLE_TEST], [test x$test_mode = xtrue])
-
 # EXTRA VERSION
 AC_ARG_WITH([extra-version],
         [--with-extra-version=revision Specify extra version.],
@@ -500,16 +488,6 @@ pixmaps/icons/Humanity/scalable/actions/Makefile
 pixmaps/icons/Humanity/scalable/status/Makefile
 pixmaps/icons/Humanity/scalable/apps/Makefile
 pixmaps/icons/Humanity/scalable/categories/Makefile
-test/Makefile
-test/config/Makefile
-test/MpdDataModel/Makefile
-test/GmpcEasyDownload/Makefile
-test/MetaDataCache/Makefile
-test/PixbufCache/Makefile
-test/AsyncImage/Makefile
-test/Misc/Makefile
-test/DiscoGS/Makefile
-test/LastFM/Makefile
 ])
 AC_OUTPUT
 echo ""
