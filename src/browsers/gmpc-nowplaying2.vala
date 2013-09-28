@@ -305,6 +305,24 @@ namespace Gmpc
                     {
                         this.container = new Gtk.EventBox();
                     }
+                    // Keybindings.
+                    this.container.key_press_event.connect((source, event)=>{
+                            if(event.keyval == Gdk.Key_j &&
+                                !((event.state&Gdk.ModifierType.CONTROL_MASK) ==
+                                    Gdk.ModifierType.CONTROL_MASK ))
+                            {
+                                var va = this.paned.get_vadjustment();
+                                va.set_value(va.get_value()+va.get_step_increment());
+                            }
+                            else if(event.keyval == Gdk.Key_k &&
+                                !((event.state&Gdk.ModifierType.CONTROL_MASK) ==
+                                    Gdk.ModifierType.CONTROL_MASK ))
+                            {
+                                var va = this.paned.get_vadjustment();
+                                va.set_value(va.get_value()-va.get_step_increment());
+                            }
+                            return false;
+                            });
                     /*
                     this.container.set_focus_hadjustment(this.paned.get_hadjustment());
                     this.container.set_focus_vadjustment(this.paned.get_vadjustment());
