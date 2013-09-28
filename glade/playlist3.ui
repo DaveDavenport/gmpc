@@ -200,6 +200,26 @@
           <accelerator key="m" modifiers="GDK_CONTROL_MASK"/>
         </child>
         <child>
+          <object class="GtkAction" id="MPDVolUp">
+            <property name="label" translatable="yes">Volume Up</property>
+            <property name="short_label" translatable="yes">Volume Up</property>
+            <property name="tooltip" translatable="yes">Increase the output volume</property>
+            <property name="icon-name">audio-volume-high</property>
+            <signal name="activate" handler="volume_up" swapped="no"/>
+          </object>
+          <accelerator key="plus" modifiers="GDK_CONTROL_MASK"/>
+        </child>
+        <child>
+          <object class="GtkAction" id="MPDVolDown">
+            <property name="label" translatable="yes">Volume Down</property>
+            <property name="short_label" translatable="yes">Volume Down</property>
+            <property name="tooltip" translatable="yes">Decrease the output volume</property>
+            <property name="icon-name">audio-volume-low</property>
+            <signal name="activate" handler="volume_down" swapped="no"/>
+          </object>
+          <accelerator key="minus" modifiers="GDK_CONTROL_MASK"/>
+        </child>
+        <child>
           <object class="GtkToggleAction" id="MPDConsumeMode">
             <property name="label" translatable="yes">Consume Mode</property>
             <property name="short_label" translatable="yes">Consume</property>
@@ -352,6 +372,8 @@
           <menuitem action="MPDSeekBackward"/>
           <separator/>
           <menuitem action="MPDMuted"/>
+          <menuitem action="MPDVolUp" />
+          <menuitem action="MPDVolDown" />
           <separator/>
           <menuitem action="MPDRepeat"/>
           <menuitem action="MPDRandom"/>
