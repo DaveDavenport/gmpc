@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application>
+    <id type="desktop">gmpc.desktop</id>
+    <licence>CC0</licence>
+    <description>
+        <p>
+            Gmpc is a GNOME client for the Music Player Daemon.
+            Features include:
+        </p>
+        <ul>
+            <li>Support for loading/saving playlists</li>
+            <li>File Browser</li>
+            <li>Browser based on ID3 information (on artist and albums)</li>
+            <li>Search</li>
+            <li>Current playlist viewer with search</li>
+            <li>ID3 information</li>
+            <li>Lots more</li>
+        </ul>
+    </description>
+    <url type="homepage">http://gmpclient.org/</url>
+    <screenshots>
+        <screenshot type="default">http://static4.wikia.nocookie.net/__cb20090912110043/gmpc/images/thumb/5/52/Screenshot_026.png/1024px-Screenshot_026.png</screenshot>
+        <screenshot>http://static3.wikia.nocookie.net/__cb20121017155205/gmpc/images/1/1f/Now-playing-backdrop.png</screenshot>
+    </screenshots>
+    <updatecontact>qball _@_ sarine dot nl</updatecontact>
+</application>
