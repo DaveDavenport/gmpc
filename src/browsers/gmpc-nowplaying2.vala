@@ -1075,8 +1075,14 @@ namespace Gmpc
                             if(count > this.max_albums)
                             {
                                 var l = new Gtk.Label(_("More..."));
+                                l.set_markup("<a
+                                        href=\"artist\">%s</a>".printf(_("More...")));
                                 l.set_alignment(0, 0.5f);
                                 album_hbox.pack_start(l, false,false, 0);
+                                l.activate_link.connect((source)=>{
+                                        Gmpc.Browser.Metadata.show_artist(song.artist);
+                                        return false;
+                                        });
                                 // jump out.
                                 iter = null;
                                 continue;
