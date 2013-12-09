@@ -181,7 +181,9 @@ static int handle_commandline(GApplication *app, GApplicationCommandLine *cmd, g
         }
     }else {
         printf("activate\n");
-        g_application_activate(gmpc_application);
+        if(g_application_get_is_remote(app)) {
+            g_application_activate(gmpc_application);
+        }
     }
 
     return EXIT_SUCCESS;
