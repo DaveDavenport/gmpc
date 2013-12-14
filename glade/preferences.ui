@@ -6,7 +6,7 @@
     <property name="title" translatable="yes">GMPC - Preferences</property>
     <property name="default_width">600</property>
     <property name="default_height">450</property>
-    <property name="type_hint">normal</property>
+    <property name="role">preferences</property>
     <signal name="close" handler="preferences_window_destroy"/>
     <signal name="response" handler="preferences_window_destroy"/>
     <child internal-child="vbox">
