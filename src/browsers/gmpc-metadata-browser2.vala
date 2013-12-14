@@ -2430,9 +2430,14 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
             show_hitem(current.data);
         }
     }
+
+    // Keep the 'menu' around so the pop-up still works.
+    private Gtk.Menu menu = null; 
+
+    
     private void history_show_list()
     {
-        var menu = new Gtk.Menu();
+        menu = new Gtk.Menu();
         unowned List<Hitem?> iter = history.last();
         while(iter!= null)
         {
@@ -2471,7 +2476,6 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         }
         menu.show_all();
         menu.popup(null, null, null, 0, Gtk.get_current_event_time());
-
     }
 
     private void history_bc_header(HitemType type, string? artist, string? album, string? title)
