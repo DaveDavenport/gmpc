@@ -184,6 +184,8 @@ class Gmpc:MetaImage from Gtk:Event:Box{
 	    gtk_container_set_border_width(GTK_CONTAINER(win), 6);
 	    gtk_container_add(GTK_CONTAINER(win), GTK_WIDGET(self->_priv->tooltip_image));
 
+        gtk_widget_show(self->_priv->tooltip_image);
+        gtk_widget_set_name(win, "gtk-tooltip");
 	    gtk_widget_set_tooltip_window(GTK_WIDGET(self), GTK_WINDOW(win));
 	    g_signal_connect(G_OBJECT(self), "query-tooltip", G_CALLBACK(self_tooltip_query), win);
     }
@@ -192,7 +194,6 @@ class Gmpc:MetaImage from Gtk:Event:Box{
     {
         if(self->_priv->state == STATE_IMAGE)
         {
-			gtk_widget_show(self->_priv->tooltip_image);
 			return TRUE;
 		}
         return FALSE;
