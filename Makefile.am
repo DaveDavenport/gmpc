@@ -1,3 +1,4 @@
+ACLOCAL_AMFLAGS  = -I m4
 AUTOMAKE_OPTIONS = foreign 1.11
 
 SUBDIRS = src pixmaps glade data po pixmaps doc 

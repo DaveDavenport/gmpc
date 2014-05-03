@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<page xmlns="http://projectmallard.org/1.0/" type="topic" id="BrowserMetadataBrowser">
-  <title>Browsers - Metadata Browser</title>
-  <p/>
-  <figure>
-    <desc>The Metadata Browser</desc>
-    <media type="image" src="Images/browser-metadata-browser.png"/>
-  </figure>
-</page>

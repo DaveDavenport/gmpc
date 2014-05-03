@@ -391,8 +391,6 @@ if test x$enable_shave = xyes; then
 SHAVE_INIT([./])
 fi
 
-GNOME_DOC_INIT([0.18.0], [have_gdu=yes], [have_gdu=no])
-
 AC_CONFIG_FILES([
 shave
 shave-libtool
@@ -406,7 +404,6 @@ po/Makefile.in
 po/Makefile
 data/gmpc.pc
 doc/Makefile
-doc/Mallard/Makefile
 pixmaps/Makefile
 pixmaps/icons/Makefile
 pixmaps/icons/hicolor/Makefile
