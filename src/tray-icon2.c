@@ -72,6 +72,7 @@ enum
  */
 static GtkBuilder *tray_icon2_preferences_xml = NULL;
 void popup_timeout_changed(void);
+void popup_width_changed(void);
 void popup_position_changed(GtkComboBox * om);
 void popup_enable_toggled(GtkToggleButton * but);
 void tray_enable_toggled(GtkToggleButton * but);
@@ -532,6 +533,7 @@ static void tray_icon2_create_tooltip_real(int position)
     int state = 0;
     int x_offset = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "x-offset", 0);
     int y_offset = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "y-offset", 0);
+    int tooltip_width = cfg_get_single_value_as_int_with_default(config, TRAY_ICON2_ID, "tooltip-width", 300);
 
     song = mpd_playlist_get_current_song(connection);
     /**
@@ -585,7 +587,7 @@ static void tray_icon2_create_tooltip_real(int position)
     gtk_style_context_add_class(sc, GTK_STYLE_CLASS_TOOLTIP);
     /* causes the border */
     gtk_container_set_border_width(GTK_CONTAINER(tray_icon2_tooltip), 1);
-    gtk_window_set_default_size(GTK_WINDOW(tray_icon2_tooltip), 300, -1);
+    gtk_window_set_default_size(GTK_WINDOW(tray_icon2_tooltip), tooltip_width, -1);
     gtk_window_set_transient_for(GTK_WINDOW(tray_icon2_tooltip), GTK_WINDOW(pl3_win));
 
     /*
@@ -761,7 +763,7 @@ static void tray_icon2_create_tooltip_real(int position)
             /** Set Y = window height - size; */
             y = rect2.y + rect2.height - 50 - 95;
             /** X =window width - width */
-            x = rect2.x + rect2.width - 5 - 300;
+            x = rect2.x + rect2.width - 5 - tooltip_width;
             gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), x + x_offset, y + y_offset);
 
         } else
@@ -782,15 +784,15 @@ static void tray_icon2_create_tooltip_real(int position)
                 y = 0;
 
             /* Get X */
-            x = rect.x - 300 / 2 - rect2.x + x_offset;
-            if ((x + 300) > rect2.width)
+            x = rect.x - tooltip_width / 2 - rect2.x + x_offset;
+            if ((x + tooltip_width) > rect2.width)
             {
                 if (orientation == GTK_ORIENTATION_VERTICAL)
                 {
-                    x = rect2.width + -300 - rect.width - 5;
+                    x = rect2.width + -tooltip_width - rect.width - 5;
                 } else
                 {
-                    x = rect2.width - 300;
+                    x = rect2.width - tooltip_width;
                 }
             }
             if (x < 0)
@@ -824,7 +826,7 @@ static void tray_icon2_create_tooltip_real(int position)
         /** Set Y = 0; */
         y = rect2.y + 5;
         /** X is upper right - width */
-        x = rect2.x + rect2.width - 5 - 300;
+        x = rect2.x + rect2.width - 5 - tooltip_width;
         gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), x + x_offset, y + y_offset);
     } else if (position == TI2_AT_LOWER_LEFT)
     {
@@ -848,7 +850,7 @@ static void tray_icon2_create_tooltip_real(int position)
         /** Set Y = window height - size; */
         y = rect2.y + rect2.height - 5 - 95;
         /** X =window width - width */
-        x = rect2.x + rect2.width - 5 - 300;
+        x = rect2.x + rect2.width - 5 - tooltip_width;
         gtk_window_move(GTK_WINDOW(tray_icon2_tooltip), x + x_offset, y + y_offset);
     }
 
@@ -1087,6 +1089,13 @@ void popup_timeout_changed(void)
         (tray_icon2_preferences_xml, "popup_timeout"))));
 }
 
+void popup_width_changed(void)
+{
+    cfg_set_single_value_as_int(config, TRAY_ICON2_ID, "tooltip-width",
+        gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON
+        (gtk_builder_get_object
+        (tray_icon2_preferences_xml, "popup_width"))));
+}
 
 static void update_popup_settings(void)
 {

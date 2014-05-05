@@ -9,6 +9,14 @@
     <property name="page_size">0</property>
     <property name="value">5</property>
   </object>
+  <object class="GtkAdjustment" id="adjustment2">
+    <property name="upper">9999</property>
+    <property name="lower">100</property>
+    <property name="page_increment">10</property>
+    <property name="step_increment">1</property>
+    <property name="page_size">0</property>
+    <property name="value">300</property>
+  </object>
   <object class="GtkListStore" id="model1">
     <columns>
       <column type="gchararray"/>
@@ -123,14 +131,55 @@
               </packing>
             </child>
             <child>
+              <object class="GtkAlignment" id="alignment99">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="xscale">0</property>
+                <child>
+                  <object class="GtkSpinButton" id="popup_width">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="adjustment">adjustment2</property>
+                    <property name="climb_rate">1</property>
+                    <property name="snap_to_ticks">True</property>
+                    <property name="numeric">True</property>
+                    <property name="wrap">True</property>
+                    <property name="update_policy">GTK_UPDATE_IF_VALID</property>
+                    <signal handler="popup_width_changed" name="value_changed"/>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+                <property name="top_attach">2</property>
+                <property name="bottom_attach">3</property>
+                <property name="x_options">GTK_SHRINK | GTK_FILL</property>
+                <property name="y_options">GTK_FILL</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label199">
+                <property name="visible">True</property>
+                <property name="xalign">1</property>
+                <property name="label" translatable="yes">Width:</property>
+              </object>
+              <packing>
+                <property name="top_attach">2</property>
+                <property name="bottom_attach">3</property>
+                <property name="x_options">GTK_FILL</property>
+                <property name="y_options"/>
+              </packing>
+            </child>
+            <child>
               <object class="GtkLabel" id="label143">
                 <property name="visible">True</property>
                 <property name="xalign">1</property>
                 <property name="label" translatable="yes">Position:</property>
               </object>
               <packing>
-                <property name="top_attach">2</property>
-                <property name="bottom_attach">3</property>
+                <property name="top_attach">3</property>
+                <property name="bottom_attach">4</property>
                 <property name="x_options">GTK_FILL</property>
                 <property name="y_options"/>
               </packing>
@@ -150,8 +199,8 @@
               <packing>
                 <property name="left_attach">1</property>
                 <property name="right_attach">2</property>
-                <property name="top_attach">2</property>
-                <property name="bottom_attach">3</property>
+                <property name="top_attach">3</property>
+                <property name="bottom_attach">4</property>
                 <property name="x_options">GTK_FILL</property>
                 <property name="y_options">GTK_FILL</property>
               </packing>
