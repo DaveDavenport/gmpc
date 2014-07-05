@@ -908,6 +908,7 @@ namespace Gmpc
                     hboxje.pack_start(button, false, false, 0);
                     var j = i;
                     var sl = new Gmpc.DataView("now-playing-song-from-album");
+                    sl.set_opacity(0.6);
                     var sl_model = new Gmpc.MpdData.Model();
                     sl.set_model(sl_model);
 
