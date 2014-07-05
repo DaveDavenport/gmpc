@@ -286,7 +286,7 @@ namespace Gmpc
         */
         public
         unowned string
-        create_new_item(string id)
+        create_new_item(string? id)
         {
             return this.create_new_item_with_name(id, "New Profile");
         }
