@@ -251,10 +251,14 @@ namespace Gmpc
             private void change_color_style(Gtk.Widget bg)
             {
                 debug("change style");
-                if(bg is Gtk.Separator || bg is Gtk.Notebook || bg is Gtk.CheckButton || 
-                        bg is Gtk.Image || bg is Gmpc.DataView)
+                if( bg is Gtk.Notebook || bg is Gtk.CheckButton ||
+                        bg is Gtk.Image || bg is Gmpc.DataView || bg is Gtk.Container)
                 {
                     /* Do nothing */
+                }
+                else if (bg is Gtk.Separator)
+                {
+                    bg.modify_fg(Gtk.StateType.NORMAL,this.foreground);
                 }
                 else
                 {
