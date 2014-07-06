@@ -611,13 +611,17 @@ end:
                         break;
 										case MPDDATA_MODEL_COL_PATH_EXTENSION:
 												{
-													int j = strlen(song->file);
+                                                    if(!song->file)
+                                                        break;
+                                                    int j = strlen(song->file);
 													for(;j>0&&song->file[j] != '.';j--);
 													g_value_set_string(value, &(song->file)[j+1]);
 													break;
 												}
 										case MPDDATA_MODEL_COL_PATH_DIRECTORY:
 												{
+                                                    if(!song->file)
+                                                        break;
 													gchar *dir = g_path_get_dirname(song->file);
 													g_value_set_string(value, dir);
 													g_free(dir);
@@ -643,6 +647,7 @@ end:
                         }
                         break;
                     case MPDDATA_MODEL_COL_SONG_TITLEFILE:
+                        if (song->file)
                         {
                             gchar *path = g_path_get_basename(song->file);
                             g_value_set_string(value, path);
@@ -699,7 +704,7 @@ end:
                         break;
 
                     case MPDDATA_MODEL_COL_ICON_ID:
-                        if (strstr(song->file, "://")) {
+                        if (song->file && strstr(song->file, "://")) {
                             g_value_set_string(value, "media-stream");
                         } else {
                             g_value_set_string(value, "media-audiofile");
