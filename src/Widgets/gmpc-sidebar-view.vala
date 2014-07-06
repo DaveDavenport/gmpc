@@ -108,7 +108,6 @@ public class MyCellRenderer : Gtk.CellRenderer
         }
         if(&min_size != null) min_size = ms;
         if(&nat_size != null) nat_size = ns;
-        stdout.printf("get preferred width: %d %d\n", ms, ns);
     }
 
     /* get_size method, always request a 50x50 area */

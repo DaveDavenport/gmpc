@@ -891,12 +891,6 @@ void send_password(void)
     password_dialog(FALSE);
 }
 
-static void playlist_support_help_button_clicked(GObject *a)
-{
-    open_help("ghelp:gmpc?ProblemSolving");
-
-}
-
 static int error_callback(MpdObj * mi,
                 int error_id,
                 char *error_msg,
@@ -943,6 +937,9 @@ static int error_callback(MpdObj * mi,
             if(g_regex_match_simple(".*{.*playlist.*}.*", error_msg,
                         0,G_REGEX_MATCH_NOTEMPTY))
             {
+                static int show_once = 0;
+                if(show_once) return FALSE;
+                show_once = 1;
                 GtkWidget *button = NULL;
                 if(favorites != NULL) {
                     gmpc_favorites_list_set_disable(favorites,TRUE);
@@ -955,10 +952,6 @@ static int error_callback(MpdObj * mi,
                         )
                         , ERROR_WARNING);
 
-                button = gtk_button_new_from_stock(GTK_STOCK_HELP);
-                g_signal_connect(G_OBJECT(button), "clicked",
-                        G_CALLBACK(playlist_support_help_button_clicked), NULL);
-                playlist3_error_add_widget(button);
                 return FALSE;
             }
         }
