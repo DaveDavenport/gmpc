@@ -530,12 +530,27 @@ GEADAsyncHandler *gmpc_easy_async_downloader(const gchar * uri, GEADAsyncCallbac
     return gmpc_easy_async_downloader_with_headers(uri, callback, user_data, NULL);
 }
 
-GEADAsyncHandler *gmpc_easy_async_downloader_with_headers(const gchar * uri, GEADAsyncCallback callback,
-                                                          gpointer user_data, ...)
+GEADAsyncHandler *gmpc_easy_async_downloader2(const gchar *uri,
+											  GEADMethod method,
+											  const gchar *post_data,
+											  const gchar *content_type,
+											  GEADAsyncCallback callback,
+											  gpointer user_data)
+{
+    if (uri == NULL)
+    {
+        g_log(LOG_DOMAIN,G_LOG_LEVEL_WARNING, "No download uri specified.");
+        return NULL;
+    }
+    return gmpc_easy_async_downloader_with_headers2(uri, method, post_data,
+													content_type, callback,
+													user_data, NULL);
+}
+
+static GEADAsyncHandler *gmpc_easy_async_downloader_with_headers_common(const gchar * uri, GEADMethod method, const gchar *post_data, const gchar *content_type, GEADAsyncCallback callback, gpointer user_data, va_list ap)
 {
     SoupMessage *msg;
     _GEADAsyncHandler *d;
-    va_list ap;
     char *va_entry;
     if (soup_session == NULL)
     {
@@ -546,12 +561,17 @@ GEADAsyncHandler *gmpc_easy_async_downloader_with_headers(const gchar * uri, GEA
         g_object_set(soup_session, "user-agent", "gmpc ",NULL);
     }
 
-    msg = soup_message_new("GET", uri);
+    msg = soup_message_new(method == GEAD_GET ? "GET" : "POST", uri);
     if (!msg)
         return NULL;
 
+	if (method == GEAD_POST)
+	  {
+		soup_message_set_request(msg, content_type, SOUP_MEMORY_COPY,
+								 post_data, strlen(post_data));
+	  }
+
     soup_message_headers_append(msg->request_headers, "Accept-Encoding", "deflate,gzip");
-    va_start(ap, user_data);
     va_entry = va_arg(ap, typeof(va_entry));
     while (va_entry)
     {
@@ -559,7 +579,6 @@ GEADAsyncHandler *gmpc_easy_async_downloader_with_headers(const gchar * uri, GEA
         soup_message_headers_append(msg->request_headers, va_entry, value);
         va_entry = va_arg(ap, typeof(va_entry));
     }
-    va_end(ap);
 
     d = g_malloc0(sizeof(*d));
     d->uid = ++uid;
@@ -579,6 +598,45 @@ GEADAsyncHandler *gmpc_easy_async_downloader_with_headers(const gchar * uri, GEA
     soup_session_queue_message(soup_session, msg, gmpc_easy_async_callback, d);
 
     return (GEADAsyncHandler *) d;
+}
+
+GEADAsyncHandler *gmpc_easy_async_downloader_with_headers2(const gchar *uri,
+														   GEADMethod method,
+														   const gchar *post_data,
+														   const gchar *content_type,
+														   GEADAsyncCallback callback,
+														   gpointer user_data,
+														   ...)
+{
+    va_list ap, cp;
+	GEADAsyncHandler *ret;
+
+	va_start(ap, user_data);
+	va_copy(cp, ap);
+	ret = gmpc_easy_async_downloader_with_headers_common(uri, method, post_data,
+														 content_type, callback,
+														 user_data, cp);
+	va_end(ap);
+	va_end(cp);
+	return ret;
+}
+
+GEADAsyncHandler *gmpc_easy_async_downloader_with_headers(const gchar *uri,
+														  GEADAsyncCallback callback,
+														  gpointer user_data,
+														  ...)
+{
+    va_list ap, cp;
+	GEADAsyncHandler *ret;
+
+	va_start(ap, user_data);
+	va_copy(cp, ap);
+	ret = gmpc_easy_async_downloader_with_headers_common(uri, GEAD_GET, NULL,
+														 NULL, callback,
+														 user_data, cp);
+	va_end(ap);
+	va_end(cp);
+	return ret;
 }
 
 void gmpc_easy_async_quit(void)
@@ -622,5 +680,20 @@ GEADAsyncHandler * gmpc_easy_async_downloader_vala(const char *path, gpointer us
     return gmpc_easy_async_downloader(path, temp_callback, f);
 }
 
+GEADAsyncHandler *gmpc_easy_async_downloader_vala2(const char *path,
+												   GEADMethod method,
+												   const gchar *post_data,
+												   const gchar *content_type,
+												   gpointer user_data2,
+												   GEADAsyncCallbackVala callback,
+												   gpointer user_data)
+{
+	valaf *f = g_malloc0(sizeof(*f));
+	f->a = user_data;
+	f->b =user_data2;
+	f->callback = callback;
+	return gmpc_easy_async_downloader2(path, method, post_data, content_type,
+									   temp_callback, f);
+}
 
 /* vim: set noexpandtab ts=4 sw=4 sts=4 tw=120: */

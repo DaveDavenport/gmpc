@@ -24,6 +24,11 @@
  * This is based on libsoup
  */
 
+typedef enum {
+	GEAD_GET,
+	GEAD_POST
+} GEADMethod;
+
 typedef struct _GEADAsyncHandler GEADAsyncHandler;
 typedef enum {
     GEAD_DONE,
@@ -44,8 +49,21 @@ gpointer userdata_callback);
  */
 GEADAsyncHandler *gmpc_easy_async_downloader(const gchar * uri, GEADAsyncCallback callback, gpointer user_data);
 
+/**
+ * @param uri       the http uri to download
+ * @param method    the http method to use
+ * @param post_data when method is GEAD_POST; the data to send
+ * @param content_type the content-type of post_data
+ * @param callback  the callback function. Giving status updates on the download.
+ * @param user_data Data to pass along to callback.
+ *
+ * returns: a GEADAsyncHandler (or NULL on failure), remember you need to free this. This can be done f.e. in the callback. (same Handler get passed)
+ */
+GEADAsyncHandler *gmpc_easy_async_downloader2(const gchar * uri, GEADMethod method, const gchar *post_data, const gchar *content_type, GEADAsyncCallback callback, gpointer user_data);
+
 GEADAsyncHandler *gmpc_easy_async_downloader_with_headers(const gchar * uri,
                                                           GEADAsyncCallback callback, gpointer user_data, ...);
+GEADAsyncHandler *gmpc_easy_async_downloader_with_headers2(const gchar * uri, GEADMethod method, const gchar *post_data, const gchar *content_type, GEADAsyncCallback callback, gpointer user_data, ...);
 /**
  * Cancel download, triggers GEAD_CANCEL in callback
  */
@@ -77,5 +95,6 @@ char *gmpc_easy_download_uri_escape(const char *part);
 GEADAsyncHandler * gmpc_easy_async_downloader_vala(const char *path, gpointer user_data2, GEADAsyncCallbackVala callback,
                                                           gpointer user_data
                                                           );
+GEADAsyncHandler * gmpc_easy_async_downloader_vala2(const char *path, GEADMethod method, const gchar *post_data, const gchar *content_type, gpointer user_data2, GEADAsyncCallbackVala callback, gpointer user_data);
 #endif
 /* vim: set noexpandtab ts=4 sw=4 sts=4 tw=120: */
