@@ -30,6 +30,8 @@ PLUGIN_FILES=\
 gmpc_WIDGETS_FILES=\
     Widgets/gmpc-progress.vala\
     Widgets/mpd-async-request.c\
+	Widgets/gmpc-menu-item-rating.vala\
+	Widgets/gmpc-rating.vala\
     Widgets/gmpc-song-list.vala\
     Widgets/gmpc-clicklabel.vala\
     Widgets/playlist3-messages.c\

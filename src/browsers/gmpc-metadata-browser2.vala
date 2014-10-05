@@ -1077,6 +1077,15 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
             //info_box.attach(box, 0,2, i, i+1,Gtk.AttachOptions.FILL,Gtk.AttachOptions.FILL,0,0);
             info_box.attach(box, i,0, 2,1);
             i++;
+
+            if(MPD.Sticker.supported(server))
+            {
+                var rating_button = new Gmpc.Rating(server, song);
+                ali = new Gtk.Alignment(0.0f, 0.5f,0f,0f);
+                ali.add(rating_button);
+                //hist_box.pack_start(ali, false, false, 0); 
+                this.add_entry(info_box, _("Rating"), null,ali,ref i, "rating");
+            }
         }
         else if (song.name!= null)
         {
