@@ -14,7 +14,7 @@ const int default_column_width = 200;
  * * Name of each column
  * * Default set of enabled columns.
  */
-const int NUM_COLS = 20;
+const int NUM_COLS = 21;
 const int[] gmpc_data_view_col_ids = {
     Gmpc.MpdData.ColumnTypes.COL_MARKUP,
     Gmpc.MpdData.ColumnTypes.COL_SONG_ARTIST,			      /* album name */
@@ -35,7 +35,8 @@ const int[] gmpc_data_view_col_ids = {
     Gmpc.MpdData.ColumnTypes.COL_SONG_ALBUMARTIST,
     Gmpc.MpdData.ColumnTypes.COL_PATH_EXTENSION,				/* Extension */
     Gmpc.MpdData.ColumnTypes.COL_PATH_DIRECTORY,				/* Directory */
-    Gmpc.MpdData.ColumnTypes.COL_SONG_PRIORITY
+    Gmpc.MpdData.ColumnTypes.COL_SONG_PRIORITY,
+    Gmpc.MpdData.ColumnTypes.COL_SONG_RATING
 };
 const string[] gmpc_data_view_col_names = {
     N_("Markup"),
@@ -57,7 +58,8 @@ const string[] gmpc_data_view_col_names = {
     N_("AlbumArtist"),
     N_("Extension"),
     N_("Directory"),
-    N_("Priority")
+    N_("Priority"),
+    N_("Rating")
 };
 
 const bool[] gmpc_data_view_col_enabled = {
@@ -80,7 +82,8 @@ const bool[] gmpc_data_view_col_enabled = {
     false,//"AlbumArtist"
     false,//Extension
     false,//Directory
-    false//Priority
+    false,//Priority
+    false,//Rating
 
 };
 
@@ -104,7 +107,8 @@ const int[]  gmpc_data_view_col_position = {
     18, // "AlbumArtist"
     16,// Extension
     17, // Directory
-    19
+    19,
+    20
 };
 
 public class Gmpc.DataView : Gtk.TreeView

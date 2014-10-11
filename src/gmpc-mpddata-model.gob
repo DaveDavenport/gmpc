@@ -63,6 +63,7 @@ requires 2.0.0
 		MPDDATA_MODEL_COL_SONG_ID,				      /* col id */
 		MPDDATA_MODEL_COL_ICON_ID,				      /* icon id */
 		MPDDATA_MODEL_COL_SONG_LENGTH,			    /* length */
+		MPDDATA_MODEL_COL_SONG_RATING,			    /* rating */
 		MPDDATA_MODEL_TAG_TYPE,				          /* tag type */
 		MPDDATA_MODEL_ROW_TYPE,					        /* type of the row */
 		MPDDATA_MODEL_META_DATA,                        /* metadata */
@@ -127,6 +128,7 @@ requires 2.0.0
         self->types[MPDDATA_MODEL_COL_SONG_PERFORMER]= G_TYPE_STRING;
         self->types[MPDDATA_MODEL_COL_SONG_DATE] = G_TYPE_STRING;
         self->types[MPDDATA_MODEL_COL_SONG_LENGTH] = G_TYPE_INT;
+        self->types[MPDDATA_MODEL_COL_SONG_RATING] = G_TYPE_INT;
         self->types[MPDDATA_MODEL_COL_SONG_LENGTH_FORMAT] = G_TYPE_STRING;
         self->types[MPDDATA_MODEL_COL_SONG_DISC] = G_TYPE_STRING;
         self->types[MPDDATA_MODEL_COL_SONG_COMMENT] = G_TYPE_STRING;
@@ -674,6 +676,19 @@ end:
                         break;
                     case MPDDATA_MODEL_COL_SONG_LENGTH:
                         g_value_set_int(value, song->time);
+                        break;
+                    case MPDDATA_MODEL_COL_SONG_RATING:
+                        if(song->rating < 0) {
+                            gchar *str = mpd_sticker_song_get(connection, song->file, "rating");
+                            if(str != NULL ) {
+                                song->rating = atoi(str);
+
+                                g_free(str);
+                            }
+                        }
+                        g_value_set_int(value,
+                                (song->rating > 10)? 10: ((song->rating < 0)? 0: song->rating)
+                                );
                         break;
                     case MPDDATA_MODEL_COL_SONG_LENGTH_FORMAT:
                         {

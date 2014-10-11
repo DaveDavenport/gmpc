@@ -89,6 +89,7 @@ public class Gmpc.Rating : Gtk.Frame
         this.rat = new Gtk.Image[5];
         this.event_box = new Gtk.EventBox();
         this.event_box.visible_window = false;
+        this.event_box.set_above_child(true);
 
         for(i=0;i<5;i++) {
             // Copy value.

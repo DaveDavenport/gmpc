@@ -466,6 +466,7 @@ namespace Gmpc {
                     COL_PATH_EXTENSION,				/* Extension */
                     COL_PATH_DIRECTORY,				/* Directory */
                     COL_SONG_PRIORITY,
+                    COL_SONG_RATING,
                     ROW_TYPE,
             }
 

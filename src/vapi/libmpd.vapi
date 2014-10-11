@@ -55,6 +55,7 @@ namespace MPD {
         public int    pos;
         public int    id;
         public int    priority;
+        public int    rating;
         [CCode (cname="mpd_songDup0")]
         public Song copy ();
         [CCode (instance_pos = -1)]
