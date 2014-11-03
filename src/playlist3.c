@@ -2132,7 +2132,7 @@ static void playlist3_server_output_changed(GtkWidget * item, gpointer data)
 
 void playlist3_server_update_db(void)
 {
-    mpd_database_update_dir(connection, "/");
+    mpd_database_update_dir(connection, "");
 }
 
 

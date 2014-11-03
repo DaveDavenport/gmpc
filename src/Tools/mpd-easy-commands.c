@@ -137,7 +137,7 @@ static void update_database_command(gpointer user_data, const char *param)
         g_free(mesg);
     } else if (val == MPD_SERVER_COMMAND_ALLOWED)
     {
-        mpd_database_update_dir(connection, "/");
+        mpd_database_update_dir(connection, "");
     }
 }
 static void repeat_current_song_command(gpointer user_data, const char *param)

@@ -560,7 +560,7 @@ static void pl3_file_browser_view_folder(GtkTreeSelection * selection, gpointer 
         data = mpd_database_get_playlist_content(connection, path);
     }
     /* Check, and set the up arrow in the model */
-    if (!strcmp(path, "/"))
+    if (!strcmp(path, ""))
         gmpc_mpddata_model_set_has_up(pl3_fb_store2, FALSE);
     else
         gmpc_mpddata_model_set_has_up(pl3_fb_store2, TRUE);
@@ -720,7 +720,7 @@ static void pl3_file_browser_selected(GtkWidget * container)
         pl3_file_browser_init();
         gtk_tree_store_append(pl3_fb_dir_store, &iter, NULL);
         gtk_tree_store_set(pl3_fb_dir_store, &iter,
-                PL3_FB_ICON, "gtk-open", PL3_FB_NAME, "/", PL3_FB_PATH, "/", PL3_FB_OPEN, FALSE, -1);
+                PL3_FB_ICON, "gtk-open", PL3_FB_NAME, "/", PL3_FB_PATH, "", PL3_FB_OPEN, FALSE, -1);
         gtk_tree_store_append(pl3_fb_dir_store, &child, &iter);
     }
 
