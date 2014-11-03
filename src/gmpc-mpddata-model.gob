@@ -183,6 +183,28 @@ requires 2.0.0
             }
             PARENT_HANDLER(obj);
         }
+
+    public void reset_rating(self)
+    {
+        MpdData_real *data = (MpdData_real *)self->_priv->data;
+        int i = 0;
+        for(data = data->first; data != NULL ; data= data->next) {
+            if(data->type == MPD_DATA_TYPE_SONG && data->song != NULL) {
+                GtkTreePath *path = gtk_tree_path_new();
+                GtkTreeIter iter;
+                data->song->rating = -1;
+                /* Update the view */
+                gtk_tree_path_append_index(path,i);
+                iter.stamp = self->_priv->stamp;
+                iter.user_data = data;
+                iter.user_data2 =  GINT_TO_POINTER(i);
+                /* propegate change */
+                gtk_tree_model_row_changed(GTK_TREE_MODEL(self), path, &iter);
+                gtk_tree_path_free(path);
+            }
+            i++;
+        } 
+    }
     /* function implemented for the Gtk:Tree:Model interface */
     interface Gtk:Tree:Model
         private GtkTreeModelFlags

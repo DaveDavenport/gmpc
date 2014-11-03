@@ -428,6 +428,12 @@ public class Gmpc.Plugins.AutoMPD:
         fp.printf("# MPD state file\n");
         fp.printf("state_file \"%s\"\n\n", state_file);
 
+
+        /* sticker file */
+        var sticker_file = GLib.Path.build_filename(full_path, "stickers.sqlite3");
+        fp.printf("# MPD stickers file\n");
+        fp.printf("sticker_file \"%s\"\n\n", sticker_file);
+
         /* Bind to address */
         var hostname = profiles.get_hostname(auto_mpd_id);
         fp.printf("# Host to bind to\n");

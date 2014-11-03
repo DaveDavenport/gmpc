@@ -775,6 +775,11 @@ static void pl3_current_playlist_status_changed(GmpcConnection * conn, MpdObj * 
         if (self->priv->quick_search)
             mod_fill_do_entry_changed(self);
     }
+    if (what & MPD_CST_STICKER)
+    {
+        GmpcMpdDataModel *model = (GmpcMpdDataModel*) (playlist);
+        gmpc_mpddata_model_reset_rating(model);
+    }
 }
 
 static void pl3_current_playlist_browser_activate(PlayQueuePlugin * self)
