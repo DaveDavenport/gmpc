@@ -1420,7 +1420,17 @@ void submenu_for_song(GtkWidget * menu, mpd_Song * song)
         gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
         gtk_widget_show(item);
 
-        sitem = (GtkWidget *) gmpc_menu_item_rating_new(connection, song);
+        sitem = (GtkWidget *) gmpc_menu_item_rating_new(connection, song,0);
+        gtk_menu_shell_append(GTK_MENU_SHELL(smenu), sitem);
+        sitem = (GtkWidget *) gmpc_menu_item_rating_new(connection, song,2);
+        gtk_menu_shell_append(GTK_MENU_SHELL(smenu), sitem);
+        sitem = (GtkWidget *) gmpc_menu_item_rating_new(connection, song,4);
+        gtk_menu_shell_append(GTK_MENU_SHELL(smenu), sitem);
+        sitem = (GtkWidget *) gmpc_menu_item_rating_new(connection, song,6);
+        gtk_menu_shell_append(GTK_MENU_SHELL(smenu), sitem);
+        sitem = (GtkWidget *) gmpc_menu_item_rating_new(connection, song,8);
+        gtk_menu_shell_append(GTK_MENU_SHELL(smenu), sitem);
+        sitem = (GtkWidget *) gmpc_menu_item_rating_new(connection, song,10);
         gtk_menu_shell_append(GTK_MENU_SHELL(smenu), sitem);
     }
 

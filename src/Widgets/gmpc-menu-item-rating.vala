@@ -33,6 +33,9 @@ public class Gmpc.MenuItem.Rating : Gtk.MenuItem
     private const string some_unique_name = Config.VERSION;
     public Gtk.VBox hbox = null;
     public Gmpc.Rating rating = null;
+    private int value = 0;
+    private MPD.Song song       = null;
+    private unowned MPD.Server server   = null;
 
     public int get_rating ()
     {
@@ -40,29 +43,30 @@ public class Gmpc.MenuItem.Rating : Gtk.MenuItem
     }
     bool button_press_event_callback(Gdk.EventButton event, void *userdata)
     {
-        this.rating.button_press_event_callback(this.rating.event_box, event);
         return true;
     }
 
-    bool button_release_event_callback(Gdk.EventButton event, void *userdata)
+    public Rating (MPD.Server server, MPD.Song song, int value)
     {
-        return true;
-    }
-
-    public Rating (MPD.Server server, MPD.Song song)
-    {
+        this.server = server;
+        this.song = song.copy();
+        this.value = value;
         /* this fixes vala bitching */
-        GLib.Signal.connect_swapped(this, "button-press-event",
-        (GLib.Callback)button_press_event_callback,this);
-        GLib.Signal.connect_swapped(this, "button-release-event",
-        (GLib.Callback)button_release_event_callback,this);
+        this.activate.connect(() => {
+                MPD.Sticker.Song.set(this.server, this.song.file, "rating", (value).to_string());
+        });
 
-        this.hbox = new Gtk.VBox(false,6);
-        this.rating = new Gmpc.Rating(server,song);
 
-        this.hbox.pack_start(new Gtk.Label(_("Rating:")),false,true,0);
-        this.hbox.pack_start(this.rating,false,true,0);
-        this.add(this.hbox);
+        var hbox = new Gtk.Box(Gtk.Orientation.HORIZONTAL,6);
+        for (int i =0; i < 5; i++ ){
+            var image = new Gtk.Image.from_icon_name("rating", Gtk.IconSize.MENU);
+            hbox.pack_start(image, false, false, 0);
+            if(i > (value/2.0 -0.01)) {
+                image.set_sensitive(false);
+            }
+        }
+
+        this.add(hbox);
         this.show_all();
     }
 }
