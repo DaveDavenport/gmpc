@@ -49,16 +49,17 @@ public class Gmpc.Rating : Gtk.Frame
     }
     public bool button_press_event_callback(Gtk.Widget wid, Gdk.EventButton event)
     {
-        if(event.type == Gdk.EventType.BUTTON_PRESS)
+        if(event.type == Gdk.EventType.BUTTON_RELEASE)
         {
             if(event.button == 1)
             {
                 Gtk.Allocation ns;
                 this.event_box.get_allocation(out ns);
                 int width = ns.width; 
-                int button = (int)((((event.x)/(double)width)+0.15)*10);
-                MPD.Sticker.Song.set(this.server, this.song.file, "rating", button.to_string());
-                this.set_rating(button/2);
+                int button = (int)((((event.x)/(double)width)+0.15)*5);
+                if(button == rating) { button = 0; }
+                MPD.Sticker.Song.set(this.server, this.song.file, "rating", (button*2).to_string());
+                this.set_rating(button);
             }
         }
 
@@ -99,7 +100,7 @@ public class Gmpc.Rating : Gtk.Frame
         }
 
         this.event_box.add(this.box);
-        this.event_box.button_press_event.connect(button_press_event_callback);
+        this.event_box.button_release_event.connect(button_press_event_callback);
         this.add(this.event_box);
         this.show_all();
     }
