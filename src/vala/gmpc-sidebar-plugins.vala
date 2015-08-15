@@ -26,7 +26,7 @@ const string GSBP_LOG_DOMAIN  = "Gmpc.Sidebar.Plugins";
 
 public class Gmpc.Sidebar.Plugins
 {
-    private static ListStore store;
+    private static Gtk.ListStore store;
 
     private static void embed(TreeIter iter)
     {
@@ -215,12 +215,12 @@ public class Gmpc.Sidebar.Plugins
     public static void init(SidebarIface plugin)
     {
         if (store == null)
-            store = new ListStore(6, typeof(bool),          // enabled
-                                  typeof(string),        // name
-                                  typeof(int),           // position
-                                  typeof(SidebarIface),  // plugin
-                                  typeof(Grid),         // Widget
-                                  typeof(Widget));      // Label
+            store = new Gtk.ListStore(6, typeof(bool),          // enabled
+                                      typeof(string),        // name
+                                      typeof(int),           // position
+                                      typeof(SidebarIface),  // plugin
+                                      typeof(Grid),         // Widget
+                                      typeof(Widget));      // Label
         log(GSBP_LOG_DOMAIN, GLib.LogLevelFlags.LEVEL_DEBUG, "Initializing sidebar plugin");
         TreeIter iter;
         store.append(out iter);
