@@ -40,7 +40,7 @@ AC_DEFINE(GMPC_WEBSITE,		package_website,	["Gmpc's website"])
 AC_DEFINE(GMPC_BUGTRACKER,      package_bugtracker,	["Gmpc's bugtracker"])
 AC_DEFINE(GMPC_COPYRIGHT,       package_copyright,	["Gmpc's Copyright"])
 
-AC_PREREQ([2.67])
+AC_PREREQ([2.69])
 
 # Remove the check for c++ and fortran compiler
 LT_INIT([win32-dll])
@@ -349,7 +349,7 @@ if test x${GOB2} = x""; then
 	exit 1;
 fi
 
-AM_PROG_VALAC([0.14.0])
+AM_PROG_VALAC([0.30.0])
 
 if test x${VALAC} = x""; then
     exit 1;
