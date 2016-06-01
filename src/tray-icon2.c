@@ -312,7 +312,7 @@ static void tray_icon2_init(void)
             g_signal_connect(G_OBJECT(tray_icon2_gsi), "popup-menu", G_CALLBACK(tray_icon2_populate_menu), NULL);
             g_signal_connect(G_OBJECT(tray_icon2_gsi), "activate", G_CALLBACK(tray_icon2_activate), NULL);
             g_signal_connect(G_OBJECT(tray_icon2_gsi), "notify::embedded", G_CALLBACK(tray_icon2_embedded_changed), NULL);
-            if (gtk_check_version(2, 15, 0) == NULL)
+            if (GTK_CHECK_VERSION(2, 15, 0))
             {
                 g_signal_connect(G_OBJECT(tray_icon2_gsi), "button-press-event", G_CALLBACK(tray_icon2_button_press_event), NULL);
                 g_signal_connect(G_OBJECT(tray_icon2_gsi), "scroll-event", G_CALLBACK(tray_icon2_button_scroll_event), NULL);
