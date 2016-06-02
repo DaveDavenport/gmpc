@@ -182,7 +182,7 @@ static void libnotify_song_changed(MpdObj *mi)
 		}
 		g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "libnotify version: %i %i %i\n", versions[0], versions[1], versions[2]);
 		if((versions[0] > 0) || (versions[0] == 0 && versions[1] >= 4))
-			mpd_song_markup(buffer, 1024, C_("Summary markup","%title%|%name%|%shortfile%"), song);
+			mpd_song_markup_escaped(buffer, 1024, C_("Summary markup","%title%|%name%|%shortfile%"), song);
 		else
 			mpd_song_markup_escaped(buffer, 1024, "%title%|%name%|%shortfile%", song);
 		summary = g_strdup(buffer);
