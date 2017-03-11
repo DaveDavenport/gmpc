@@ -239,14 +239,33 @@ static int tray_icon2_button_press_event(gpointer tray, GdkEventButton * event, 
 
 static int tray_icon2_button_scroll_event(gpointer tray, GdkEventScroll * event, gpointer data)
 {
+    /*
+    * Scrolling up and down changes volume.
+    * Scrolling left and right changes to the previous and next song.
+    * Since most mice don't have horizontal scroll: Holding shift and scrolling will also change the song.
+    */
     if (event->direction == GDK_SCROLL_UP)
     {
-        if (mpd_server_check_command_allowed(connection, "volume") && mpd_status_get_volume(connection) >= 0)
+        /* emulate horizontal scroll ? */
+        if (event->state & GDK_SHIFT_MASK)
+        {
+            prev_song();
+        }
+        else if (mpd_server_check_command_allowed(connection, "volume") && mpd_status_get_volume(connection) >= 0)
+        {
             mpd_status_set_volume(connection, mpd_status_get_volume(connection) + cfg_get_single_value_as_int_with_default(config, "Volume", "scroll-sensitivity", 5));
+        }
     } else if (event->direction == GDK_SCROLL_DOWN)
     {
-        if (mpd_server_check_command_allowed(connection, "volume") && mpd_status_get_volume(connection) >= 0)
+        /* emulate horizontal scroll ? */
+        if (event->state & GDK_SHIFT_MASK)
+        {
+            next_song();
+        }
+        else if (mpd_server_check_command_allowed(connection, "volume") && mpd_status_get_volume(connection) >= 0)
+        {
             mpd_status_set_volume(connection, mpd_status_get_volume(connection) - cfg_get_single_value_as_int_with_default(config, "Volume", "scroll-sensitivity", 5));
+        }
     } else if (event->direction == GDK_SCROLL_LEFT)
     {
         prev_song();
