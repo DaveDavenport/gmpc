@@ -168,8 +168,8 @@ static void libnotify_song_changed(MpdObj *mi)
 	{
 		MetaDataResult ret;
 		MetaData *met= NULL;
-		gchar buffer[1024];
-		gchar *summary;
+		gchar body_buffer[1024];
+		gchar summary_buffer[256];
 		gchar *version = NULL, *ret_name = NULL, *ret_vendor = NULL, *ret_spec_version = NULL;
 		int *versions;
 		GdkPixbuf *pb=NULL;
@@ -181,26 +181,33 @@ static void libnotify_song_changed(MpdObj *mi)
 			versions = g_malloc0(4*sizeof(int));
 		}
 		g_log(LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "libnotify version: %i %i %i\n", versions[0], versions[1], versions[2]);
+
+		/* generate the summary of the notification (unescaped, as no markup is allowed and interpreted)
+		* See: https://developer.gnome.org/notification-spec
+		*/
 		if((versions[0] > 0) || (versions[0] == 0 && versions[1] >= 4))
-			mpd_song_markup_escaped(buffer, 1024, C_("Summary markup","%title%|%name%|%shortfile%"), song);
+		{
+			/* FIXME Why should the markup string be translated? */
+			mpd_song_markup(summary_buffer, sizeof(summary_buffer)/sizeof(gchar), C_("Summary markup","%title%|%name%|%shortfile%"), song);
+		}
 		else
-			mpd_song_markup_escaped(buffer, 1024, "%title%|%name%|%shortfile%", song);
-		summary = g_strdup(buffer);
-		mpd_song_markup_escaped(buffer, 1024,
+			mpd_song_markup(summary_buffer, sizeof(summary_buffer)/sizeof(gchar), "%title%|%name%|%shortfile%", song);
+
+		/* generate the body of the notification (escaped, as markup is allowed and used)*/
+		mpd_song_markup_escaped(body_buffer, sizeof(body_buffer)/sizeof(gchar),
 				(char *)C_("Body markup", "[<b>Artist:</b> %artist%\n][<b>Album:</b> %album% [(%date%)]\n][<b>Genre:</b> %genre%\n]"),
 				song);
+
 		/* if notification exists update it, else create one */
 		if(not == NULL)
 		{
-			//            notify_notification_close(not, NULL);
-			not = notify_notification_new(summary, buffer,NULL);
+			not = notify_notification_new(summary_buffer, body_buffer,NULL);
 		}
 		else{
-			notify_notification_update(not, summary, buffer, NULL);
+			notify_notification_update(not, summary_buffer, body_buffer, NULL);
 		}
 		notify_notification_set_urgency(not, NOTIFY_URGENCY_LOW);
 
-		g_free(summary);
 		/* Add the song to the widget */
 		g_object_set_data_full(G_OBJECT(not), "mpd-song", mpd_songDup(song),  (GDestroyNotify)mpd_freeSong);
 
