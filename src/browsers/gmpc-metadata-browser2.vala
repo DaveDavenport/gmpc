@@ -2869,7 +2869,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
                     Gtk.TreeIter iter;
                     if(model.get_iter(out iter, path))
                     {
-                        model.remove(iter);
+                        model.remove(ref iter);
                     }
                 }
                 rref = null;
