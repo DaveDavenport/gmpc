@@ -224,7 +224,7 @@ namespace Gmpc
                 cb.get_model().get(iter, 0, out key);
                 cfg_ec.remove_class(key);
                 // remove entry.
-                store.remove(iter);
+                store.remove(ref iter);
                 preferences_pane_enable_remove_button();
                 (pref_builder.get_object("commands_cb") as Gtk.ComboBox).set_active(0);
             }
