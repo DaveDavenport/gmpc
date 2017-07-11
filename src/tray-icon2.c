@@ -228,7 +228,18 @@ static int tray_icon2_button_press_event(gpointer tray, GdkEventButton * event, 
     if (event->button == 2)
     {
         play_song();
-    } else
+    }
+    // mouse forward button
+    else if (event->button == 9)
+    {
+        next_song();
+    }
+    // mouse backward button
+    else if (event->button == 8)
+    {
+        prev_song();
+    }
+    else
     {
         return FALSE;
     }
