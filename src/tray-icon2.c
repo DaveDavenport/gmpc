@@ -228,7 +228,18 @@ static int tray_icon2_button_press_event(gpointer tray, GdkEventButton * event, 
     if (event->button == 2)
     {
         play_song();
-    } else
+    }
+    // mouse forward button
+    else if (event->button == 9)
+    {
+        next_song();
+    }
+    // mouse backward button
+    else if (event->button == 8)
+    {
+        prev_song();
+    }
+    else
     {
         return FALSE;
     }
@@ -323,9 +334,6 @@ static void tray_icon2_init(void)
         } else {
         #endif
             tray_icon2_gsi = gtk_status_icon_new_from_icon_name("gmpc-tray-disconnected");
-            #if GTK_CHECK_VERSION(2,15,0)
-                gtk_status_icon_set_has_tooltip(GTK_STATUS_ICON(tray_icon2_gsi), TRUE);
-            #endif
 
             /* connect the (sparse) signals */
             g_signal_connect(G_OBJECT(tray_icon2_gsi), "popup-menu", G_CALLBACK(tray_icon2_populate_menu), NULL);
@@ -333,7 +341,6 @@ static void tray_icon2_init(void)
             g_signal_connect(G_OBJECT(tray_icon2_gsi), "notify::embedded", G_CALLBACK(tray_icon2_embedded_changed), NULL);
             g_signal_connect(G_OBJECT(tray_icon2_gsi), "button-press-event", G_CALLBACK(tray_icon2_button_press_event), NULL);
             g_signal_connect(G_OBJECT(tray_icon2_gsi), "scroll-event", G_CALLBACK(tray_icon2_button_scroll_event), NULL);
-            /*g_signal_connect(G_OBJECT(tray_icon2_gsi), "query-tooltip", G_CALLBACK(tray_icon2_tooltip_query), NULL);*/
         #ifdef HAVE_APP_INDICATOR
         }
         #endif // HAVE_APP_INDICATOR
@@ -893,6 +900,8 @@ void tray_icon2_create_tooltip(void)
 
 static void tray_icon2_status_changed(MpdObj * mi, ChangedStatusType what, void *userdata)
 {
+    /* markup used for the tray icon tooltip (on hover) */
+    char const * const tooltip_markup = "[%name%: ][%title%|%shortfile%][ - %artist%]";
     char buffer[256];
     mpd_Song *song = mpd_playlist_get_current_song(connection);
     if (what & (MPD_CST_SONGID) || what & MPD_CST_SONGPOS || what & MPD_CST_PLAYLIST)
@@ -923,8 +932,8 @@ static void tray_icon2_status_changed(MpdObj * mi, ChangedStatusType what, void 
 
         if (tray_icon2_gsi)
         {
-            mpd_song_markup(buffer, 256, "[%name%: ][%title%|%shortfile%][ - %artist%]", song);
-            //gtk_status_icon_set_tooltip(tray_icon2_gsi,buffer);
+            mpd_song_markup(buffer, 256, tooltip_markup, song);
+            gtk_status_icon_set_tooltip_text(tray_icon2_gsi,buffer);
         }
     }
 
@@ -953,7 +962,7 @@ static void tray_icon2_status_changed(MpdObj * mi, ChangedStatusType what, void 
         int state = mpd_player_get_state(connection);
         if (state == MPD_PLAYER_PLAY)
         {
-            mpd_song_markup(buffer, 256, "[%name%: ][%title%|%shortfile%][ - %artist%]", song);
+            mpd_song_markup(buffer, 256, tooltip_markup, song);
 
             #ifdef HAVE_APP_INDICATOR
                 if (indicator != NULL)
@@ -962,7 +971,8 @@ static void tray_icon2_status_changed(MpdObj * mi, ChangedStatusType what, void 
             if (tray_icon2_gsi != NULL)
                 gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray-play");
 
-            //gtk_status_icon_set_tooltip(tray_icon2_gsi,buffer);
+            if (tray_icon2_gsi)
+                gtk_status_icon_set_tooltip_text(tray_icon2_gsi,buffer);
             if (has_buttons)
             {
                 gtk_button_set_image(GTK_BUTTON(play_button),
@@ -977,7 +987,8 @@ static void tray_icon2_status_changed(MpdObj * mi, ChangedStatusType what, void 
             if (tray_icon2_gsi != NULL)
                 gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray-pause");
 
-            //gtk_status_icon_set_tooltip(tray_icon2_gsi,_("Gnome Music Player Client"));
+            if (tray_icon2_gsi)
+                gtk_status_icon_set_tooltip_text(tray_icon2_gsi,_("Gnome Music Player Client"));
             if (has_buttons)
             {
                 gtk_button_set_image(GTK_BUTTON(play_button),
@@ -992,7 +1003,8 @@ static void tray_icon2_status_changed(MpdObj * mi, ChangedStatusType what, void 
             if (tray_icon2_gsi != NULL)
                 gtk_status_icon_set_from_icon_name(tray_icon2_gsi, "gmpc-tray");
 
-            //gtk_status_icon_set_tooltip(tray_icon2_gsi,_("Gnome Music Player Client"));
+            if (tray_icon2_gsi)
+                gtk_status_icon_set_tooltip_text(tray_icon2_gsi,_("Gnome Music Player Client"));
             if (has_buttons)
             {
                 gtk_button_set_image(GTK_BUTTON(play_button),
