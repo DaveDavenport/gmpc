@@ -24,7 +24,7 @@ msgstr ""
 #: ../src/browsers/gmpc-nowplaying2.c:4585
 #: ../src/browsers/gmpc-nowplaying2.c:4592
 msgid "Gnome Music Player Client"
-msgstr "Client de reproducció\nde música del GNOME"
+msgstr "Client de reproducció\\nde música del GNOME"
 
 #: ../data/gmpc.desktop.in.h:2
 msgid "A gnome frontend for the mpd daemon"
