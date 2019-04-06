@@ -152,7 +152,7 @@ public class Gmpc.Easy.Command: Gmpc.Plugin.Base
      * param data the user data passed.
      * param param a string with the extra parameters passed to the command
      */
-    public delegate void Callback(void *data, string param);
+    public static delegate void Callback(void *data, string param);
 
     /**
      * Add a match entry to the Easy command object.
