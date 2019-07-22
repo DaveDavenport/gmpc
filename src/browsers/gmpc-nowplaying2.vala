@@ -680,7 +680,7 @@ namespace Gmpc
 
                 /* Lyrics */
                 var i = 0;
-                unowned SList<unowned Gtk.RadioButton> group  = null;
+                unowned SList<Gtk.RadioButton> group  = null;
                 if(config.get_int_with_default("MetaData", "show-lyrics",1) == 1)
                 {
                     var alib = new Gtk.Alignment(0f,0f,1f,0f);
