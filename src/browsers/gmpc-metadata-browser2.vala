@@ -1230,7 +1230,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
 
         /* Lyrics */
         i = 0;
-        unowned SList<unowned Gtk.RadioButton> group  = null;
+        unowned SList<Gtk.RadioButton> group  = null;
         if(config.get_int_with_default("MetaData", "show-lyrics",1) == 1)
         {
             var alib = new Gtk.Alignment(0f,0f,1f,0f);
@@ -1641,7 +1641,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
 
         /* Lyrics */
         i = 0;
-        unowned SList<unowned Gtk.RadioButton> group  = null;
+        unowned SList<Gtk.RadioButton> group  = null;
         /* Album information */
         if(config.get_int_with_default("MetaData", "show-album-information",1) == 1)
         {
@@ -1913,7 +1913,7 @@ public class  Gmpc.Browsers.Metadata : Gmpc.Plugin.Base, Gmpc.Plugin.BrowserIfac
         notebook.set_show_tabs(false);
 
         i = 0;
-        unowned SList<unowned Gtk.RadioButton> group  = null;
+        unowned SList<Gtk.RadioButton> group  = null;
         /* Artist information */
         if(config.get_int_with_default("MetaData", "show-artist-information",1) == 1)
         {
