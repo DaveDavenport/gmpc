@@ -6,7 +6,6 @@ Requirements:
 * vala
 * libsoup2.4
 * glyr
-* libunique
 * libxspf (optional)
 * gmodule
 * libsqlite3

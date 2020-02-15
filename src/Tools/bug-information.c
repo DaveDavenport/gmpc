@@ -21,9 +21,6 @@
 #include <config.h>
 #include <main.h>
 #include <bug-information.h>
-#ifdef HAVE_UNIQUE
-#include <unique/uniqueversion.h>
-#endif
 #include "revision.h"
 
 static void bug_information_generate_message(GtkTextBuffer * buffer)
@@ -98,12 +95,6 @@ static void bug_information_generate_message(GtkTextBuffer * buffer)
     gtk_text_buffer_insert(buffer, &iter, temp, -1);
     g_free(temp);
 
-#ifdef HAVE_UNIQUE
-    gtk_text_buffer_insert_with_tags(buffer, &iter, "\nLibunique:\t", -1, bold_tag, NULL);
-    temp = g_strdup_printf("%s\n", UNIQUE_VERSION_S);
-    gtk_text_buffer_insert(buffer, &iter, temp, -1);
-    g_free(temp);
-#endif
     /* platform */
     gtk_text_buffer_insert_with_tags(buffer, &iter, "\nPlatform:\t", -1, bold_tag, NULL);
 #ifdef WIN32
@@ -146,13 +137,6 @@ static void bug_information_generate_message(GtkTextBuffer * buffer)
 
     gtk_text_buffer_insert_with_tags(buffer, &iter, "\nLibspiff support:\t", -1, bold_tag, NULL);
 #ifdef SPIFF
-    gtk_text_buffer_insert(buffer, &iter, "Enabled", -1);
-#else
-    gtk_text_buffer_insert(buffer, &iter, "Disabled", -1);
-#endif
-
-    gtk_text_buffer_insert_with_tags(buffer, &iter, "\nLibunique support:\t", -1, bold_tag, NULL);
-#ifdef HAVE_UNIQUE
     gtk_text_buffer_insert(buffer, &iter, "Enabled", -1);
 #else
     gtk_text_buffer_insert(buffer, &iter, "Disabled", -1);
